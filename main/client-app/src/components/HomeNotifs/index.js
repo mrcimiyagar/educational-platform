@@ -21,7 +21,6 @@ import RadioIcon from '@material-ui/icons/Radio';
 import RedditIcon from '@material-ui/icons/Reddit';
 import { currentNav } from '../../App';
 import SpacesGrid from '../SpacesGrid';
-import HomeNotifs from '../HomeNotifs';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -55,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HomeAppbar() {
+export default function HomeNotifs() {
   const classes = useStyles()
   const [value, setValue] = React.useState(0)
 
@@ -132,10 +131,6 @@ export default function HomeAppbar() {
         currentNav === 1 ?
           (
             <SpacesGrid/>
-          ) :
-          currentNav === 2 ?
-          (
-            <HomeNotifs/>
           )
         :
         null

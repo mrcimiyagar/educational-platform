@@ -1,4 +1,4 @@
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import createTheme from "@material-ui/core/styles/createTheme";
 
 export default class GraphicsHandler {
     
@@ -9,7 +9,7 @@ export default class GraphicsHandler {
     height = 0;
     cmWidth = 0;
     cmHeight = 0;
-    theme = createMuiTheme({
+    theme = createTheme({
         palette: {
             primary: {
                 main: '#673ab7',

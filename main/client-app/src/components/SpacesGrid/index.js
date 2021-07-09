@@ -11,16 +11,18 @@ import HomeToolbar from '../HomeToolbar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#008394',
+    backgroundColor: '#eee',
     width: '100%',
     height: '100vh'
   },
   imageList: {
-    backgroundColor: '#008394',
-    paddingTop: 64,
+    backgroundColor: '#eee',
+    paddingTop: 48,
     width: '100%',
     height: 'auto',
     paddingBottom: 56,
+    paddingLeft: 16,
+    paddingRight: 16,
     // Promote the list into its own layer in Chrome. This cost memory, but helps keep FPS high.
     transform: 'translateZ(0)',
   },
@@ -35,6 +37,78 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const itemData = [
+  {
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
+{
+    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    title: 'Room A',
+    author: 'author',
+    featured: true,
+},
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
         title: 'Room A',
@@ -119,13 +193,13 @@ export default function SpacesGrid() {
           <SpacesSearchbar/>
         </div>
       </HomeToolbar>
-      <ImageList style={{zIndex: 2}} rowHeight={232} gap={1} className={classes.imageList}>
+      <ImageList style={{zIndex: 2}} rowHeight={188} cols={3} gap={1} className={classes.imageList}>
         {itemData.map((item) => (
           <ImageListItem key={item.img} cols={1} rows={1}>
             <div style={{position: 'relative'}}>
-                <Avatar src={item.img} alt={item.title} style={{marginRight: 'calc((100% - 96px) / 2)', marginTop: 16, width: 96, height: 96}} />
-                <Card style={{borderRadius: 16, width: '75%', height: 128, marginRight: '12.5%', marginTop: -32 }}>
-                    <Typography style={{position: 'absolute', top: 128, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
+                <img src={item.img} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '2.5%', width: '95%', height: 128}} />
+                <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
+                    <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
                 </Card>
             </div>
           </ImageListItem>

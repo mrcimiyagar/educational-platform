@@ -15,10 +15,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
+    backgroundColor: '#2196f3'
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
+    color: '#fff'
   },
   iconButton: {
     padding: 10,
@@ -35,14 +37,14 @@ export default function SpacesSearchbar() {
   return (
     <Paper component="form" className={classes.root}>
       <IconButton onClick={() => setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
-        <MenuIcon />
+        <MenuIcon style={{fill: '#fff'}}/>
       </IconButton>
       <InputBase
         className={classes.input}
         placeholder="جستجو در آسمان"
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
-        <SearchIcon />
+        <SearchIcon style={{fill: '#fff'}}/>
       </IconButton>
     </Paper>
   );
