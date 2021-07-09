@@ -1,0 +1,20 @@
+.tsbuildinfo
+.cache
+dist*
+out*
+release/
+release-npm-package/
+release-standalone/
+release-packages/
+release-gcp/
+release-images/
+node_modules
+/lib/vscode/node_modules.asar
+node-*
+/plugins
+/lib/coder-cloud-agent
+.home
+coverage
+**/.DS_Store
+# Failed e2e test videos are saved here
+test/test-results

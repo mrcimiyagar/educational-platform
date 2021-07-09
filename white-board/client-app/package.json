@@ -1,0 +1,41 @@
+{
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not ie <= 11",
+      "not op_mini all",
+      "not safari < 12",
+      "not kaios <= 2.5",
+      "not edge < 79",
+      "not chrome < 70",
+      "not and_uc < 13",
+      "not samsung < 10"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "@excalidraw/excalidraw": "0.7.0",
+    "node-sass": "^4.14.1",
+    "react": "17.0.0",
+    "react-dom": "17.0.0",
+    "react-scripts": "4.0.1",
+    "socket.io-client": "^4.0.1"
+  },
+  "devDependencies": {
+    "typescript": "3.8.3"
+  },
+  "homepage": ".",
+  "name": "excalidraw",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}

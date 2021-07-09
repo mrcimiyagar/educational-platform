@@ -1,0 +1,27 @@
+{
+    "data": [
+      {
+        "title": "اطلاعات اولیه",
+        "total": 18,
+        "status":12
+      },
+      {
+        "title": "نمونه کار",
+        "total": 8,
+        "status":1
+      }, {
+        "title": "جزئیات صورت حساب",
+        "total": 6,
+        "status":2
+      }, {
+        "title": "منافع",
+        "total": 10,
+        "status":0
+      }, {
+        "title": "اسناد حقوقی",
+        "total": 2,
+        "status":1
+      }
+    ]
+  }
+  

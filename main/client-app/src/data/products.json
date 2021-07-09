@@ -1,0 +1,233 @@
+{
+    "data":[
+        {
+            "id": 1,
+            "name" :"کیک شیرین",
+            "img":"/assets/img/marble-cake-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "02.04.2018",
+            "status" : "نگه دارنده",
+            "statusColor": "primary",
+            "description" :"لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم",
+            "sales": 1647,
+            "stock": 62
+        }, {
+            "id":2,
+            "name" :"کیک ترش",
+            "category" : "کاپ کیک",
+            "img":"/assets/img/fat-rascal-thumb.jpg",
+            "createDate" : "01.04.2018",
+            "status" : "فرآوری شده",
+            "statusColor": "secondary",
+            "description" :"حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد",
+            "sales": 1240,
+            "stock": 48
+        }, {
+            "id":3,
+            "name" :"کیک شکلاتی",
+            "img":"/assets/img/chocolate-cake-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "25.3.1397",
+            "status" : "فرآوری شده",
+            "statusColor": "secondary",
+            "description" :"زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی",
+            "sales": 1080,
+            "stock": 57
+        },{
+            "id":4,
+            "name" :"کیک پرتغالی",
+            "img":"/assets/img/goose-breast-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "21.03.2018",
+            "status" : "فرآوری شده",
+            "statusColor": "secondary",
+            "description" :"کیک شکلاتی با انواع توت ها",
+            "sales": 1014,
+            "stock": 41
+        },{
+            "id":5,
+            "name" :"کیک کوچک",
+            "category" : "کاپ کیک",
+            "img":"/assets/img/petit-gateau-thumb.jpg",
+            "createDate" : "02.06.2018",
+            "status" : "نگه دارنده",
+            "statusColor": "primary",
+            "description" :"کیک شکلاتی کوچک با پنیر",
+            "sales": 985,
+            "stock": 23
+        }, {
+            "id":6,
+            "name" :"کیک توت فرنگی",
+            "img":"/assets/img/salzburger-nockerl-thumb.jpg",
+            "category" : "دسر",
+            "createDate" : "14.07.2018",
+            "status" : "فرآوری شده",
+            "statusColor": "secondary",
+            "description" :"لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم",
+            "sales": 962,
+            "stock": 34
+        },{
+            "id":7,
+            "name" :"کیک پنیری",
+            "img":"/assets/img/napoleonshat-thumb.jpg",
+            "category" : "دسر",
+            "createDate" : "05.02.2018",
+            "status" : "فرآوری شده",
+            "statusColor": "secondary",
+            "description" :"شیرینی کیک با توت تازه و نعناع برای دسر",
+            "sales": 921,
+            "stock": 31
+        },{
+            "id":8,
+            "name" :"کیک پنیر",
+            "img":"/assets/img/cheesecake-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "18.08.2018",
+            "status" : "نگه دارنده",
+            "statusColor": "primary",
+            "description" :"کیک شکلاتی خوشمزه",
+            "sales": 887,
+            "stock": 21
+        },{
+            "id":9,
+            "name" :"کیک سرد",
+            "img":"/assets/img/financier-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "15.03.2018",
+            "status" : "نگه دارنده",
+            "statusColor": "primary",
+            "description" :"کیک ماست توت فرنگی سفید شکلات",
+            "sales": 865,
+            "stock": 53
+        },{
+            "id":10,
+            "name" :"کاپ کیک",
+            "img":"/assets/img/genoise-thumb.jpg",
+            "category" : "کاپ کیک",
+            "createDate" : "11.06.2018",
+            "status" : "فرآوری شده",
+            "statusColor": "secondary",
+            "description" :"کیک میوه کیک، پودینگ در بالا",
+            "sales": 824,
+            "stock": 55
+        },{
+            "id":11,
+            "name" :"کیک موزی",
+            "img":"/assets/img/gingerbread-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "10.04.2018",
+            "status" : "نگه دارنده",
+            "statusColor": "primary",
+            "description" :"لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم",
+            "sales": 714,
+            "stock": 12
+        },{
+            "id":12,
+            "name" :"کیک پرتغالی",
+            "img":"/assets/img/magdalena-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "22.07.2018",
+            "status" : "فرآوری شده",
+            "statusColor": "secondary",
+            "description" :"لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم",
+            "sales": 702,
+            "stock": 14
+        },{
+            "id":13,
+            "name" :"کیک",
+            "img":"/assets/img/parkin-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "22.08.2018",
+            "status" : "نگه دارنده",
+            "statusColor": "primary",
+            "description" :"لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم",
+            "sales": 689,
+            "stock": 78
+        },{
+            "id":14,
+            "name" :"قهوه",
+            "img":"/assets/img/streuselkuchen-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "22.07.2018",
+            "status" : "فرآوری شده",
+            "statusColor": "secondary",
+            "description" :"لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم",
+            "sales": 645,
+            "stock": 55
+        },{
+            "id":15,
+            "name" :"چایی سبز",
+            "img":"/assets/img/tea-loaf-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "10.09.2018",
+            "status" : "نگه دارنده",
+            "statusColor": "primary",
+            "description" :"شیرینی کیک با توت تازه و نعناع برای دسر ",
+            "sales": 632,
+            "stock": 20
+        },{
+            "id":16,
+            "name" :"کیک شکلاتی",
+            "img":"/assets/img/merveilleux-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "18.02.2018",
+            "status" : "نگه دارنده",
+            "statusColor": "primary",
+            "description" :"کیک شکلاتی کوچک با پنیر",
+            "sales": 621,
+            "stock": 6
+        },{
+            "id":17,
+            "name" :"کیک میوه ای",
+            "img":"/assets/img/fruitcake-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "12.01.2019",
+            "status" : "فرآوری شده",
+            "statusColor": "secondary",
+            "description" :"کیک شکلاتی با انواع توت ها",
+            "sales": 595,
+            "stock": 17
+        },{
+            "id":18,
+            "name" :"کیک موزی",
+            "img":"/assets/img/bebinca-thumb.jpg",
+            "category" : "کیک",
+            "createDate" : "04.02.2019",
+            "status" : "فرآوری شده",
+            "statusColor" : "secondary",
+            "description" :"زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی",
+            "sales": 574,
+            "stock": 16
+        },{
+            "id":19,
+            "name" :"پن کیک",
+            "img":"/assets/img/cremeschnitte-thumb.jpg",
+            "category" : "دسر",
+            "createDate" : "04.03.2018",
+            "status" : "نگه دارنده",
+            "statusColor": "primary",
+            "description" :"حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد",
+            "sales": 562,
+            "stock": 9
+        },{
+            "id":20,
+            "name" :"سوفله",
+            "img":"/assets/img/souffle-thumb.jpg",
+            "category" : "کاپ کیک",
+            "createDate" : "16.01.2018",
+            "status" : "نگه دارنده",
+            "statusColor": "primary",
+            "description" :"لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم",
+            "sales": 524,
+            "stock": 14
+        }
+    ]
+}
+
+
+
+
+
+
+
+

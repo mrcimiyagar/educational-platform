@@ -1,0 +1,631 @@
+
+const sockets = require("../socket").sockets;
+
+const sw = require('../db/models');
+const {addUser, getRoomUsers, addGuestAcc, authenticateMember, guestAccsByUserId, removeUser, guestAccs, authenticateMemberWithoutResponse} = require('../users');
+const tools = require('../tools');
+const express = require('express');
+const bodyParser = require('body-parser');
+const { uuid } = require('uuidv4');
+const { Op } = require("sequelize");
+
+const router = express.Router();
+let jsonParser = bodyParser.json();
+
+router.post('/is_room_accessible', jsonParser, async function(req, res) {
+    authenticateMember(req, res, async (membership, session, user) => {
+        res.send({status: 'success', isAccessible: (membership !== null && membership !== undefined)})
+    })
+})
+
+router.post('/update_permissions', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user) => {
+            sw.RoomSecret.findOne({where: {roomId: membership.roomId}}).then(RoomSecret => {
+                if ((session.userId === req.body.targetUserId && session.userId !== RoomSecret.ownerId) || req.body.targetUserId === 1) {
+                    res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'});
+                    return;
+                }
+                if (RoomSecret.ownerId === session.userId || (membership.canAssignPermission && req.body.targetUserId !== RoomSecret.ownerId)) {
+                    sw.Membership.findOne({where: {roomId: req.body.roomId, userId: req.body.targetUserId}}).then(targetMem => {
+                        if (targetMem === null) {
+                            if (req.body.targetUserId in guestAccsByUserId) {
+                                let temp = guestAccsByUserId[req.body.targetUserId];
+                                const p = Object.keys(req.body.permissions)
+                                    .filter(key => key.startsWith('can'))
+                                    .reduce((obj, key) => {
+                                        obj[key] = req.body.permissions[key];
+                                        return obj;
+                                    }, {});
+                                let userId = temp.userId;
+                                let roomId = temp.roomId;
+                                for (let prop in p) {
+                                    temp[prop] = req.body.permissions[prop];
+                                }
+                                temp.userId = userId;
+                                temp.roomId = roomId;
+
+                                if (temp.canActInVideo === true) {
+                                    let members = guestAccs[req.body.roomId];
+                                    if (members !== null && members !== undefined) {
+                                    for (const [key, mem] of Object.entries(members)) {
+                                        if (mem.userId !== temp.userId) {
+                                            mem.canActInVideo = false;
+                                            try {
+                                                if (sockets[mem.userId])
+                                                    sockets[mem.userId].emit('membership-updated', mem);
+                                            } catch(ex) {}
+                                        }
+                                    }
+                                    sw.Membership.findAll({where: {roomId: req.body.roomId}}).then(mems => {
+                                        mems.forEach(mem => {
+                                            if (mem.userId !== temp.userId) {
+                                                mem.canActInVideo = false;
+                                                mem.save();
+                                                try {
+                                                    if (sockets[mem.userId])
+                                                        sockets[mem.userId].emit('membership-updated', mem);
+                                                } catch(ex) {}
+                                            }
+                                        })
+                                    })
+                                }
+                                }
+                                setTimeout(() => {
+                                    if (sockets[req.body.targetUserId]) {
+                                        sockets[req.body.targetUserId].emit('membership-updated', temp);
+                                    }
+                                }, 5000);
+                                res.send({status: 'success', permissions: temp});
+                                return;
+                            }
+                            res.send({status: 'error', errorCode: 'e0005', message: 'target membership does not exist.'});
+                            return;
+                        }
+                        let userId = targetMem.userId;
+                        let roomId = targetMem.roomId;
+                        for (let prop in req.body.permissions) {
+                            targetMem[prop] = req.body.permissions[prop];
+                        }
+                        targetMem.userId = userId;
+                        targetMem.roomId = roomId;
+                        targetMem.save();
+
+                        if (targetMem.canActInVideo === true) {
+                            let members = guestAccs[req.body.roomId];
+                            if (members !== null && members !== undefined) {
+                                for (const [key, mem] of Object.entries(members)) {
+                                    if (mem.userId !== targetMem.userId) {
+                                        mem.canActInVideo = false;
+                                        try {
+                                            if (sockets[mem.userId])
+                                                sockets[mem.userId].emit('membership-updated', mem);
+                                        } catch(ex) {}
+                                    }
+                                }
+                                sw.Membership.findAll({where: {roomId: req.body.roomId}}).then(mems => {
+                                    mems.forEach(mem => {
+                                        if (mem.userId !== targetMem.userId) {
+                                            mem.canActInVideo = false;
+                                            mem.save();
+                                            try {
+                                                if (sockets[mem.userId])
+                                                    sockets[mem.userId].emit('membership-updated', mem);
+                                            } catch(ex) {}
+                                        }
+                                    })
+                                })
+                            }
+                        }
+
+                        setTimeout(() => {
+                            if (sockets[req.body.targetUserId]) {
+                                sockets[req.body.targetUserId].emit('membership-updated', targetMem);
+                            }
+                        }, 1000);
+
+                        res.send({status: 'success', permissions: targetMem})
+                    });
+                }
+                else {
+                    res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'});
+                }
+            })
+    });
+});
+
+router.post('/get_permissions', jsonParser, async function (req, res) {
+    
+    authenticateMember(req, res, async (membership, session, user) => {
+            if (req.body.targetUserId === 1) {
+                res.send({status: 'success', isAccessible: false});
+                return;
+            }
+            sw.RoomSecret.findOne({where: {roomId: membership.roomId}}).then(RoomSecret => {
+                if (RoomSecret.ownerId === session.userId || membership.canAssignPermission && req.body.targetUserId !== RoomSecret.ownerId) {
+                    sw.Membership.findOne({where: {roomId: req.body.roomId, userId: req.body.targetUserId}}).then(targetMem => {
+                        if (targetMem === null) {
+                            if (req.body.targetUserId in guestAccsByUserId) {
+                                let temp = guestAccsByUserId[req.body.targetUserId];
+                                const permissions = Object.keys(temp)
+                                    .filter(key => key.startsWith('can'))
+                                    .reduce((obj, key) => {
+                                        obj[key] = temp[key];
+                                        return obj;
+                                    }, {});
+                                res.send({status: 'success', permissions: permissions});
+                                return;
+                            }
+                            res.send({status: 'error', errorCode: 'e0005', message: 'target membership does not exist.'});
+                            return;
+                        }
+
+                        res.send({status: 'success', permissions: targetMem});
+                    });            
+                }
+                else {
+                    res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'});
+                }
+            })
+    });
+});
+
+router.post('/is_permissions_accessible', jsonParser, async function (req, res) {
+    
+    authenticateMember(req, res, async (membership, session, user) => {
+            sw.RoomSecret.findOne({where: {roomId: membership.roomId}}).then(RoomSecret => {
+                if ((session.userId === req.body.targetUserId && session.userId !== RoomSecret.ownerId)|| req.body.targetUserId === 1) {
+                    res.send({status: 'success', isAccessible: false});
+                    return;
+                }
+                if (RoomSecret.ownerId === session.userId || membership.canAssignPermission && req.body.targetUserId !== RoomSecret.ownerId) {
+                    sw.Membership.findOne({where: {roomId: req.body.roomId, userId: req.body.targetUserId}}).then(targetMem => {
+                        if (targetMem === null) {
+                            if (req.body.targetUserId in guestAccsByUserId) {
+                                res.send({status: 'success', isAccessible: true});
+                                return;
+                            }
+                            res.send({status: 'error', errorCode: 'e0005', message: 'target membership does not exist.'});
+                            return;
+                        }
+                        res.send({status: 'success', isAccessible: true});
+                    });            
+                }
+                else {
+                    res.send({status: 'success', isAccessible: false});
+                }
+            })
+    });
+});
+
+router.post('/add_room', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        let room;
+        let roomId = 0;
+        if (req.body.spaceId !== undefined) {
+            let space = await sw.Space.findOne({where: {id: req.body.spaceId}});
+            if (space === null) {
+                res.send({status: 'error', errorCode: 'e0007', message: 'parent room does not exist.'});
+                return;
+            }
+            let rs = await sw.SpaceSecret.findOne({where: {spaceId: req.body.spaceId}})
+            if (rs.ownerId !== session.userId) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+                return;
+            }
+            room = await sw.Room.create({
+                name: req.body.name,
+                spaceId: req.body.spaceId
+            })
+            roomId = room.id
+        }
+        else {
+            let space = await sw.Space.create({
+                name: req.body.name,
+                mainRoomId: null
+            })
+            let spaceSecret = await sw.SpaceSecret.create({
+                ownerId: session.userId,
+                spaceId: space.id
+            });
+            room = await sw.Room.create({
+                name: req.body.name,
+                spaceId: space.id
+            });
+            space.mainRoomId = room.id
+            space.save()
+            roomId = room.id
+        }
+        let RoomSecret = await sw.RoomSecret.create({
+            ownerId: session.userId,
+            roomId: roomId
+        });
+        let mem = await sw.Membership.create({
+            userId: session.userId,
+            roomId: roomId,
+            ...tools.adminPermissions
+        });
+        let memAdmin = await sw.Membership.create({
+            userId: 'admin',
+            roomId: roomId,
+            ...tools.adminPermissions
+        });
+        res.send({status: 'success', room: room});
+    });
+});
+
+router.post('/remove_room', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.Room.findOne({where: {id: req.body.roomId, ownerId: req.body.ownerId}}).then(async function (room) {
+            if (room === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'room does not exist.'});
+                return;
+            }
+            await room.destroy();
+            require("../server").pushTo('room_' + room.id, 'room-removed', room);
+            res.send({status: 'success'});
+        });
+    });
+});
+
+router.post('/get_room', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user) => {
+        if (membership === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'})
+            return
+        }
+        sw.Room.findOne({where: {id: membership.roomId}}).then(async function (room) {
+            res.send({status: 'success', room: room});
+        })
+    })
+})
+
+router.post('/get_spaces', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.Membership.findAll({where: {userId: session.userId}}).then(async function (memberships) {
+            sw.Room.findAll({where: {id: memberships.map(m => m.roomId)}}).then(async function (rooms) {
+                sw.Space.findAll({where: {id: rooms.map(r => r.spaceId)}}).then(async function (spaces) {
+                    res.send({status: 'success', spaces: spaces});
+                });
+            });
+        });
+    });
+});
+
+router.post('/update_room', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.Membership.findOne({where: {userId: session.userId, roomId: req.body.roomId}}).then(async function (membership) {
+            if (membership === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'});
+                return;
+            }
+            sw.Room.findOne({where: {id: membership.roomId}}).then(async function (room) {
+                room.name = req.body.name;
+                await room.save();
+                require("../server").pushTo('room_' + membership.roomId, 'room-updated', room);
+                res.send({status: 'success'});
+            });
+        });
+    });
+});
+
+router.post('/enter_room', jsonParser, async function (req, res) {
+    
+    authenticateMember(req, res, async (membership, session, user) => {
+            if (sockets[session.userId] === undefined) {
+                    res.send({status: 'error', errorCode: 'e0005', message: 'socket undefined.', membership: membership});
+                    return;
+            }
+            sockets[user.id].join('room_' + membership.roomId);
+            sockets[user.id].roomId = membership.roomId;
+            addUser(membership.roomId, user);
+            
+            sw.Room.findOne({where: {id: req.body.roomId}}).then(room => {
+                sw.Room.findAll({raw: true, where: {spaceId: room.spaceId}}).then(async rooms => {
+                    for (let i = 0; i < rooms.length; i++) {
+                        let room = rooms[i];
+                        room.users = getRoomUsers(room.id)
+                    }
+                    if (membership === null || membership === undefined) {
+                        res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'});
+                        return;
+                    }
+                    require("../server").pushTo('room_' + membership.roomId, 'user-entered', {rooms: rooms, users: getRoomUsers(membership.roomId)});
+                })
+            })
+            res.send({status: 'success', membership: membership});
+    });
+});
+
+router.post('/exit_room', jsonParser, async function (req, res) {
+    
+    authenticateMember(req, res, async (membership, session, user) => {
+        let s = sockets[user.id];
+        if (s === undefined) return;
+        let roomId = s.roomId;
+        sockets[user.id].leave();
+        sockets[user.id].roomId = 0;
+        removeUser(roomId, user.id);
+        if (roomId !== undefined) {
+            sw.Room.findOne({where: {id: req.body.roomId}}).then(room => {
+                sw.Room.findAll({raw: true, where: {spaceId: room.spaceId}}).then(async rooms => {
+                    for (let i = 0; i < rooms.length; i++) {
+                        let room = rooms[i];
+                        room.users = getRoomUsers(room.id)
+                    }
+                    if (membership === null || membership === undefined) {
+                        res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'});
+                        return;
+                    }
+                    require("../server").pushTo('room_' + membership.roomId, 'user-exited', {rooms: rooms, users: getRoomUsers(membership.roomId)});
+                })
+            })
+            res.send({status: 'success'});
+        }
+        else {
+            res.send({status: 'success'});
+        }
+    });
+});
+
+router.post('/invite_to_room', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user) => {
+        if (!membership.canInviteToRoom) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'});
+                return;
+            }
+            sw.Account.findOne({where: {phone: req.body.phone}}).then(async acc => {
+                if (acc === null) {
+                    res.send({status: 'error', errorCode: 'e0005', message: 'account does not exist.'});
+                    return;
+                }
+                sw.Invite.findOne({where: {userId: acc.userId, roomId: membership.roomId}}).then(async invite => {
+                    if (invite !== null) {
+                        sw.Room.findOne({where: {id: membership.roomId}}).then(async room => {
+                            sw.User.findOne({where: {id: acc.userId}}).then(async user => {
+                            if (sockets[acc.userId]) {
+                                sockets[acc.userId].emit('user-invited', {invite, user, room});
+                            }
+                                res.send({status: 'success', invite: invite});
+                            });
+                        });
+                        return;
+                    }
+                    invite = await sw.Invite.create({
+                        userId: acc.userId,
+                        roomId: membership.roomId,
+                        title: req.body.title,
+                        text: req.body.text,
+                        inviteType: 'webinar'
+                    });
+                    sw.Room.findOne({where: {id: membership.roomId}}).then(async room => {
+                        sw.User.findOne({where: {id: acc.userId}}).then(async user => {
+                            if (sockets[acc.userId]) {
+                                sockets[acc.userId].emit('user-invited', {invite, user, room});
+                            }
+                            res.send({status: 'success', invite: invite});
+                        });
+                    });
+                });
+            });
+    });
+});
+
+router.post('/accept_invite', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.Invite.findOne({where: {id: req.body.inviteId, userId: session.userId}}).then(async invite => {
+            if (invite === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'invite does not exist.'});
+                return;
+            }
+            await invite.destroy();
+            let mem = await sw.Membership.create({
+                userId: session.userId,
+                roomId: invite.roomId,
+                ...tools.defaultPermissions
+            });
+            require("../server").pushTo('room_' + invite.roomId, 'invite-accepted', {});
+            res.send({status: 'success', mem});
+        });
+    });
+});
+
+router.post('/decline_invite', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.Invite.findOne({where: {id: req.body.inviteId, userId: session.userId}}).then(async invite => {
+            if (invite === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'invite does not exist.'});
+                return;
+            }
+            await invite.destroy();
+            require("../server").pushTo('room_' + invite.roomId, 'invite-declined', {});
+            res.send({status: 'success'});
+        });
+    });
+});
+
+router.post('/get_invites', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.Invite.findAll({ include: [{ all: true }], where: {userId: session.userId}}).then(async invites => {
+            res.send({status: 'success', invites: invites});
+        });
+    });
+});
+
+router.post('/make_personality', jsonParser, async function (req, res) {
+    sw.Room.findOne({where: {id: req.body.roomId}}).then(async room => {
+        if (room === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'room does not exist.'});
+            return;
+        }
+        let user = await sw.User.create({
+            id: uuid() + '-' + Date.now(),
+            firstName: req.body.name,
+            lastName: '',
+            username: tools.makeRandomCode(32),
+        });
+        let acc = {
+            id: user.id,
+            roomId: req.body.roomId,
+            user: user,
+            userId: user.id,
+            isGuest: true,
+            ...tools.defaultPermissions,
+            themeColor: tools.lightTheme,
+            token: tools.makeRandomCode(64)
+        };
+        addUser(req.body.roomId, user);
+        addGuestAcc(acc);
+        require("../server").pushTo('room_' + req.body.roomId, 'user_joined', user);
+        res.send({status: 'success', token: acc.token, user: user});
+    });
+});
+
+router.post('/leave_room', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.Membership.findOne({where: {userId: session.userId, roomId: req.body.roomId}}).then(async function (membership) {
+            if (membership === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'});
+                return;
+            }
+            await membership.destroy();
+            sw.User.findOne({where: {id: membership.userId}}).then(async function (user) {
+                require("../server").pushTo('room_' + membership.roomId, 'user_left', user);
+                res.send({status: 'success'});
+            });
+        });
+    });
+});
+
+router.post('/get_room_users', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user) => {
+        sw.Room.findAll({raw: true, where: {spaceId: req.body.spaceId}}).then(async rooms => {
+            for (let i = 0; i < rooms.length; i++) {
+                let room = rooms[i];
+                room.users = getRoomUsers(room.id)
+            }
+            if (membership === null || membership === undefined) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'});
+                return;
+            }
+            res.send({status: 'success', rooms: rooms, users: getRoomUsers(membership.roomId)});
+        })
+    })
+})
+
+router.post('/move_user', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.SpaceSecret.findOne({where: {spaceId: req.body.spaceId}}).then(async spaceSecret => {
+            if (spaceSecret === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'room does not exist.'});
+                return;
+            }
+            if (spaceSecret.ownerId !== session.userId) {
+                res.send({status: 'error', errorCode: 'e0007', message: 'access denied.'});
+                return;
+            }
+            let spaceRooms = await sw.Room.findAll({raw: true, where: {spaceId: req.body.spaceId}})
+            let fromMems = await sw.Membership.findAll({where: {roomId: spaceRooms.map(sr => sr.id), userId: req.body.userId}})
+            let isGuest = false
+            if (fromMems.length === 0) {
+                isGuest = true
+                spaceRooms.forEach(sr => {
+                    if (guestAccs[sr.id] !== undefined) {
+                        if (guestAccs[sr.id][req.body.userId] !== undefined) {
+                            fromMems.push(guestAccs[sr.id][req.body.userId])
+                        }
+                    }
+                })
+            }
+            let fromRoom = await sw.Room.findOne({where: {id: fromMems[fromMems.length - 1].roomId}})
+            if (fromRoom.spaceId !== spaceSecret.spaceId) {
+                res.send({status: 'error', errorCode: 'e0008', message: 'access denied.'});
+                return; 
+            }
+            let toRoom = await sw.Room.findOne({where: {id: req.body.toRoomId}})
+            if (toRoom.spaceId !== spaceSecret.spaceId) {
+                res.send({status: 'error', errorCode: 'e0009', message: 'access denied.'});
+                return;
+            }
+            if (isGuest) {
+                fromMems.forEach(fm => {
+                    if (guestAccs[fm.roomId] !== undefined) {
+                        guestAccs[fm.roomId][req.body.userId].roomId = toRoom.id
+                    }
+                })
+            }
+            else {
+                fromMems.forEach(fm => {
+                    fm.destroy()
+                })
+            }
+
+            if (!isGuest) {
+                let mem = await sw.Membership.create({
+                    userId: req.body.userId,
+                    roomId: req.body.toRoomId,
+                    ...tools.adminPermissions
+                });
+            }
+
+            removeUser(fromRoom.id, req.body.userId)
+            let user = await sw.User.findOne({where: {id: req.body.userId}})
+            addUser(toRoom.id, user)
+
+            if (isGuest) {
+                fromMems.forEach(fm => {
+                    if (guestAccs[fm.roomId] !== undefined) {
+                        guestAccs[fm.roomId][req.body.userId].user = user
+                    }
+                })
+            }
+
+            sw.Room.findAll({raw: true, where: {spaceId: spaceSecret.spaceId}}).then(rooms => {
+                for (let i = 0; i < rooms.length; i++) {
+                    let room = rooms[i];
+                    if (room.id !== toRoom.id) removeUser(room.id, user.id)
+                    room.users = getRoomUsers(room.id)
+                }
+                require("../server").pushTo('room_' + sockets[user.id].roomId, 'user-exited', {rooms: rooms})
+                res.send({status: 'success'});
+            })
+        })
+    });
+});
+
+module.exports = router;
