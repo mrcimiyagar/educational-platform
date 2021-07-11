@@ -22,6 +22,7 @@ import RedditIcon from '@material-ui/icons/Reddit';
 import { currentNav } from '../../App';
 import SpacesGrid from '../SpacesGrid';
 import HomeNotifs from '../HomeNotifs';
+import HomeSettings from '../HomeSettings';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -52,6 +53,7 @@ TabPanel.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    backgroundColor: '#fff'
   },
 }));
 
@@ -136,7 +138,11 @@ export default function HomeAppbar() {
           currentNav === 2 ?
           (
             <HomeNotifs/>
-          )
+          ) :
+          currentNav === 3 ?
+            (
+              <HomeSettings/>
+            )
         :
         null
       }

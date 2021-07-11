@@ -2,25 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import HomeSearchbar from '../HomeSearchbar';
-import HomeToolbar from '../HomeToolbar';
-import { Container, Fab, Toolbar } from '@material-ui/core';
+import { Container, Fab, Tab, Tabs, Toolbar } from '@material-ui/core';
+import NotifsList from '../NotifsList';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 import SwipeableViews from 'react-swipeable-views';
-import EditIcon from '@material-ui/icons/Edit';
-import ChatsList from '../ChatsList';
-import HomeDrawer from '../HomeDrawer';
-import HomeBottombar from '../HomeBottombar';
-
-import ChatIcon from '@material-ui/icons/Chat';
-import GroupIcon from '@material-ui/icons/Group';
-import RadioIcon from '@material-ui/icons/Radio';
-import RedditIcon from '@material-ui/icons/Reddit';
-import { currentNav } from '../../App';
-import SpacesGrid from '../SpacesGrid';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -68,75 +56,38 @@ export default function HomeNotifs() {
 
   return (
     <div className={classes.root}>
-      {currentNav === 0 ?
-        (
-          <div>
-            <HomeToolbar>
-        <AppBar style={{backgroundColor: '#2196f3'}}>
-          <Toolbar style={{marginTop: 16}}>
-            <HomeSearchbar/>
-          </Toolbar>
+      <AppBar style={{backgroundColor: '#2196f3'}}>
           <Tabs
             variant="fullWidth"
             value={value}
             onChange={handleChange}
             style={{marginTop: 8}}
           >
-            <Tab icon={<ChatIcon />} label="چت ها" />
-            <Tab icon={<GroupIcon />} label="گروه ها" />
-            <Tab icon={<RadioIcon />} label="کانال ها" />
-            <Tab icon={<RedditIcon />} label="ربات ها" />
+            <Tab icon={<NotificationsIcon />} label="اعلانات" />
+            <Tab icon={<AlternateEmailIcon />} label="منشن ها" />
           </Tabs>
         </AppBar>
-      </HomeToolbar>
-            <SwipeableViews
+        <SwipeableViews
           axis={'x-reverse'}
           index={value}
           onChangeIndex={handleChangeIndex}
+          style={{marginLeft: -36, marginRight: -36}}
         >
         <TabPanel value={value} index={0}>
             <Container>
                 <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
-                    <ChatsList/>
+                  <NotifsList/>
                 </Box>
             </Container>
         </TabPanel>
         <TabPanel value={value} index={1}>
             <Container>
               <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
-                <ChatsList/>
-              </Box>
-            </Container>
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-            <Container>
-                <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
-                  <ChatsList/>
-                </Box>
-            </Container>
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-            <Container>
-              <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
-                <ChatsList/>
+                  <NotifsList/>
               </Box>
             </Container>
         </TabPanel>
       </SwipeableViews>
-            <Fab color="secondary" style={{position: 'fixed', bottom: 56 + 16, left: 16}}>
-        <EditIcon />
-      </Fab>
-          </div>
-        ) :
-        currentNav === 1 ?
-          (
-            <SpacesGrid/>
-          )
-        :
-        null
-      }
-      <HomeBottombar/>
-      <HomeDrawer/>
     </div>
   )
 }

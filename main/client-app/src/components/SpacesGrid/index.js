@@ -5,9 +5,10 @@ import ImageListItem from '@material-ui/core/ImageListItem';
 import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 import IconButton from '@material-ui/core/IconButton';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import { Avatar, Card, Typography } from '@material-ui/core';
+import { Avatar, Card, Fab, Typography } from '@material-ui/core';
 import SpacesSearchbar from '../SpacesSearchbar';
 import HomeToolbar from '../HomeToolbar';
+import HomeIcon from '@material-ui/icons/Home';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -205,6 +206,9 @@ export default function SpacesGrid() {
           </ImageListItem>
         ))}
       </ImageList>
+      <Fab color="secondary" style={{position: 'fixed', bottom: 56 + 16, left: 16}}>
+        <HomeIcon />
+      </Fab>
     </div>
   );
 }

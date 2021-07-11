@@ -12,6 +12,7 @@ import SettingsPage from "./pages/settings";
 import DefaultDashboard from "./pages/main";
 import MessengerPage from './pages/messenger';
 import ChatPage from './pages/chat';
+import ProfilePage from './pages/profile';
 import { AnimatedSwitch } from 'react-router-transition';
 import '../App.css';
 
@@ -20,7 +21,6 @@ class MainApp extends Component {
 		const { match, containerClassnames} = this.props;
 		return (
 			<div id="app-container" className={containerClassnames}>
-				<Sidebar/>
 				<main>
 					<div>
           <AnimatedSwitch
@@ -32,6 +32,7 @@ class MainApp extends Component {
 							<Route path={`${match.url}/home`} component={HomePage} />
 							<Route path={`${match.url}/messenger`} component={MessengerPage} />
 							<Route path={`${match.url}/chat`} component={ChatPage} />
+							<Route path={`${match.url}/profile`} component={ProfilePage} />
 							<Route path={`${match.url}/settings`} component={SettingsPage} />
 							<Route path={`${match.url}/main`} component={DefaultDashboard} />
 							<Route
