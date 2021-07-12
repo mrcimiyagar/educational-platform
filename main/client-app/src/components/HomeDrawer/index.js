@@ -82,11 +82,13 @@ export default function HomeDrawer(props) {
             onClose={() => setDrawerOpen(false)}
             onOpen={() => setDrawerOpen(true)}
         >
-            <img alt={'drawer-image'} src={DrawerImage} style={{width: 300, height: 200}}/>
-            <Avatar style={{width: 56, height: 56, marginTop: -72, marginRight: 16}}/>
-            <div style={{position: 'relative'}}>
-                <Typography style={{marginTop: -48, position: 'absolute', right: 84, bottom: 24, color: '#fff'}}>کیهان محمدی</Typography>
-                <Typography variant={'subtitle2'} style={{position: 'absolute', right: 84, bottom: 0, color: '#fff'}}>TheProgrammerMachine</Typography>
+            <div onClick={() => {setDrawerOpen(false); gotoPage('/app/profile')}}>
+                <img alt={'drawer-image'} src={DrawerImage} style={{width: 300, height: 200}}/>
+                <Avatar style={{width: 56, height: 56, marginTop: -72, marginRight: 16}}/>
+                <div style={{position: 'relative'}}>
+                    <Typography style={{marginTop: -48, position: 'absolute', right: 84, bottom: 24, color: '#fff'}}>کیهان محمدی</Typography>
+                    <Typography variant={'subtitle2'} style={{position: 'absolute', right: 84, bottom: 0, color: '#fff'}}>TheProgrammerMachine</Typography>
+                </div>
             </div>
             <div style={{height: 24}}/>
             {list('right')}

@@ -30,7 +30,7 @@ const expressStaticGzip = require('express-static-gzip');
 
 let jsonParser = bodyParser.json();
 
-server.listen(1002);
+server.listen(3001);
 
 let kasperio = socket.setup(server);
 
