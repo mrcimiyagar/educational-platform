@@ -10,7 +10,7 @@ export const taskManagerPath = 'https://taskmanager.kaspersoft.cloud';
 export const notesPath = 'https://notes.kaspersoft.cloud';
 export const websocketPath = 'wss://kaspersoft.cloud';
 
-export const serverRoot = "https://aseman.kaspersoft.cloud";
+export const serverRoot = "https://asemanbackend.kaspersoft.cloud";
 
 export function leaveRoom(callback) {
   store.dispatch(changeConferenceMode(false));
