@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  indicator: {
+    backgroundColor: 'white',
+  },
 }));
 
 export default function HomeNotifs() {
@@ -61,6 +64,9 @@ export default function HomeNotifs() {
             variant="fullWidth"
             value={value}
             onChange={handleChange}
+            classes={{
+              indicator: classes.indicator
+            }}
             style={{marginTop: 8}}
           >
             <Tab icon={<NotificationsIcon />} label="اعلانات" />

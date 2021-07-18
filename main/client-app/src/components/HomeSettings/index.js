@@ -17,11 +17,6 @@ export default function HomeSettings() {
 
   return (
     <div className={classes.root}>
-      <AppBar style={{backgroundColor: '#2196f3'}}>
-          <Toolbar>
-            <Typography>تنظیمات</Typography>
-          </Toolbar>
-        </AppBar>
         <SettingsList/>
     </div>
   )

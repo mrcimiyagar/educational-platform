@@ -4,7 +4,6 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import HomeSearchbar from '../HomeSearchbar';
 import HomeToolbar from '../HomeToolbar';
@@ -55,6 +54,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: '#fff'
   },
+  indicator: {
+    backgroundColor: 'white',
+  },
 }));
 
 export default function HomeAppbar() {
@@ -83,6 +85,9 @@ export default function HomeAppbar() {
             variant="fullWidth"
             value={value}
             onChange={handleChange}
+            classes={{
+              indicator: classes.indicator
+            }}
             style={{marginTop: 8}}
           >
             <Tab icon={<ChatIcon />} label="چت ها" />

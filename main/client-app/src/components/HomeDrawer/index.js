@@ -46,13 +46,12 @@ export default function HomeDrawer(props) {
                             gotoPage('/app/home');
                         }
                         else if (index === 1) {
-                            gotoPage('/app/store');
                         }
                         else if (index === 2) {
 
                         }
                         else if (index === 3) {
-                            gotoPage('/app/tickets');
+                            gotoPage('/app/store');
                         }
                         else if (index === 4) {
 
