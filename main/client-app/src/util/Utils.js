@@ -258,7 +258,7 @@ export function validateToken(t, callback) {
     },
     redirect: 'follow'
   };
-  fetch(serverRoot + "/auth/fetch_config", requestOptions2)
+  fetch("https://asemanbackend.kaspersoft.cloud/auth/fetch_config", requestOptions2)
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
