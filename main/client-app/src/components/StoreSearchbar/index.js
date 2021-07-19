@@ -40,7 +40,7 @@ export default function StoreSearchbar() {
       </IconButton>
       <InputBase
         className={classes.input}
-        placeholder="جستجو در آسمان"
+        placeholder="جستجو در فروشگاه"
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
         <SearchIcon />

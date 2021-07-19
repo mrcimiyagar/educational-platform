@@ -14,6 +14,7 @@ import MessengerPage from './pages/messenger';
 import ChatPage from './pages/chat';
 import ProfilePage from './pages/profile';
 import StorePage from './pages/store';
+import StoreBotPage from './pages/storeBot';
 import { AnimatedSwitch } from 'react-router-transition';
 import '../App.css';
 
@@ -35,6 +36,7 @@ class MainApp extends Component {
 							<Route path={`${match.url}/chat`} component={ChatPage} />
 							<Route path={`${match.url}/profile`} component={ProfilePage} />
 							<Route path={`${match.url}/store`} component={StorePage} />
+							<Route path={`${match.url}/storebot`} component={StoreBotPage} />
 							<Route path={`${match.url}/main`} component={DefaultDashboard} />
 							<Route
 								path={`${match.url}/survey/:surveyid`}

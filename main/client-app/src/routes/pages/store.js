@@ -7,16 +7,19 @@ import StoreSearchbar from '../../components/StoreSearchbar';
 import HomeToolbar from '../../components/HomeToolbar';
 import HomeIcon from '@material-ui/icons/Home';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
-import AppsSharpIcon from '@material-ui/icons/AppsSharp';
+import ExtensionIcon from '@material-ui/icons/Extension';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import StoreHead from '../../components/StoreHead';
 import StoreBottombar from '../../components/StoreBottombar';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import ViewCompactIcon from '@material-ui/icons/ViewCompact';
 import './store.css';
+import { gotoPage } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#eee',
+    backgroundColor: '#ddd',
     width: '100%',
     height: '100vh',
     position: 'absolute',
@@ -26,9 +29,12 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0
   },
   imageList: {
-    backgroundColor: '#eee',
+    backgroundColor: '#ddd',
     paddingTop: 96,
+    width: '100%',
     height: 'auto',
+    marginLeft: -16,
+    marginRight: -16,
     // Promote the list into its own layer in Chrome. This cost memory, but helps keep FPS high.
     transform: 'translateZ(0)',
   },
@@ -47,97 +53,97 @@ const useStyles = makeStyles((theme) => ({
 
 const itemData = [
   {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 1
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 2
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 2
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 1
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 1
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 2
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 2
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 1
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 1
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 2
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 2
 },
 {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
     title: 'Room A',
     author: 'author',
     cols: 1
 },
     {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
         title: 'Room A',
         author: 'author',
         cols: 1
     },
     {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
         title: 'Room A',
         author: 'author',
         cols: 2
     },
     {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
         title: 'Room A',
         author: 'author',
         cols: 2
     },
     {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
+        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
         title: 'Room A',
         author: 'author',
         cols: 1
@@ -201,13 +207,13 @@ export default function Store() {
             }}
             style={{marginTop: 8}}
           >
-            <Tab icon={<AppsSharpIcon />} label="دسته ی 1"/>
+            <Tab icon={<ExtensionIcon />} label="دسته ی 1"/>
             <Tab icon={<SportsEsportsIcon />} label="دسته ی ۲" />
-            <Tab icon={<SportsEsportsIcon />} label="دسته ی ۳" />
+            <Tab icon={<ExtensionIcon />} label="دسته ی ۳" />
             <Tab icon={<SportsEsportsIcon />} label="دسته ی ۴" />
-            <Tab icon={<SportsEsportsIcon />} label="دسته ی ۵" />
+            <Tab icon={<ExtensionIcon />} label="دسته ی ۵" />
             <Tab icon={<SportsEsportsIcon />} label="دسته ی ۶" />
-            <Tab icon={<SportsEsportsIcon />} label="دسته ی ۷" />
+            <Tab icon={<ExtensionIcon />} label="دسته ی ۷" />
           </Tabs>
         </AppBar>
       </HomeToolbar>
@@ -218,18 +224,41 @@ export default function Store() {
         >
           {[0, 1, 2, 3, 4, 5, 6].map(cat => (
             <TabPanel value={value} index={cat}>
-              <ImageList rowHeight={160} className={classes.imageList} cols={3}>
+              <ImageList rowHeight={196} className={classes.imageList} cols={2}>
+                <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/644910/header.jpg?t=1542406074'} cols={2}>
+                  <div>
+                    <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/644910/header.jpg?t=1542406074'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
+                  </div>
+                </ImageListItem>
+                <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/647171/header.jpg?t=1556904675'} cols={2}>
+                  <div>
+                    <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/647171/header.jpg?t=1556904675'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
+                  </div>
+                </ImageListItem>
+                <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/644921/header.jpg?t=1542406005'} cols={2}>
+                  <div>
+                    <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/644921/header.jpg?t=1542406005'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
+                  </div>
+                </ImageListItem>
                 {itemData.map((item) => (
-                  <ImageListItem key={item.img} cols={item.cols || 1}>
-                    <img src={item.img} alt={item.title} />
+                  <ImageListItem key={item.img} cols={1} onClick={() => gotoPage('/app/storebot')}>
+                    <div style={{position: 'relative'}}>
+                      <img src={item.img} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '5%', width: '95%', height: 128}} />
+                      <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
+                        <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
+                      </Card>
+                    </div>
                   </ImageListItem>
                 ))}
               </ImageList>
             </TabPanel>
           ))}
       </SwipeableViews>
-      <Fab color="secondary" style={{position: 'fixed', bottom: 16, left: 16}}>
-        <HomeIcon />
+      <Fab color="secondary" style={{position: 'fixed', bottom: 16 + 56, left: 16}}>
+        <ShoppingCartIcon />
+      </Fab>
+      <Fab size="small" color="secondary" style={{position: 'fixed', bottom: 16 + 56 + 56 + 16, left: 24}}>
+        <ViewCompactIcon />
       </Fab>
       <StoreBottombar/>
     </div>

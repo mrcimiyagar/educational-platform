@@ -11,7 +11,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import { setCurrentNav } from '../../App';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
-import AppsSharpIcon from '@material-ui/icons/AppsSharp';
+import ExtensionIcon from '@material-ui/icons/Extension';
 
 const useStyles = makeStyles({
   root: {
@@ -49,7 +49,7 @@ export default function HomeBottombar() {
       showLabels
       className={classes.root}
     >
-      <BottomNavigationAction value={0} classes={classesAction} label="اپ بات ها" icon={<AppsSharpIcon />}/>
+      <BottomNavigationAction value={0} classes={classesAction} label="اپ بات ها" icon={<ExtensionIcon />}/>
       <BottomNavigationAction value={1} classes={classesAction} label="گیم بات ها" icon={<SportsEsportsIcon />} />
     </BottomNavigation>
   );
