@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: '#ddd',
     width: '100%',
-    height: '100vh',
-    position: 'fixed',
+    height: 'auto',
+    position: 'absolute',
     overflow: 'auto',
     left: 0,
     top: 0,
@@ -31,10 +31,9 @@ const useStyles = makeStyles((theme) => ({
   imageList: {
     backgroundColor: '#ddd',
     paddingTop: 96,
-    width: '100%',
+    width: window.innerWidth - 32 + 'px',
     height: 'auto',
-    marginLeft: -16,
-    marginRight: -16,
+    paddingRight: 24,
     // Promote the list into its own layer in Chrome. This cost memory, but helps keep FPS high.
     transform: 'translateZ(0)',
   },
@@ -201,7 +200,6 @@ export default function Store() {
             onChange={handleChange}
             variant="scrollable"
             scrollButtons="on"
-            centered
             classes={{
               indicator: classes.indicator
             }}
@@ -257,7 +255,7 @@ export default function Store() {
       <Fab color="secondary" style={{position: 'fixed', bottom: 16 + 56, left: 16}}>
         <ShoppingCartIcon />
       </Fab>
-      <Fab size="small" color="secondary" style={{position: 'fixed', bottom: 16 + 56 + 56 + 16, left: 24}}>
+      <Fab size="small" color="secondary" style={{position: 'fixed', bottom: 16 + 56 + 56 + 16, left: 24}} onClick={() => gotoPage('/app/storeads')}>
         <ViewCompactIcon />
       </Fab>
       <StoreBottombar/>
