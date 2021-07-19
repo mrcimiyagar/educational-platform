@@ -57,7 +57,6 @@ export default function StoreComments() {
           <NavigationIcon className={classes.extendedIcon} />
           نمایش همه ی کامنت ها
         </Fab>
-      <div style={{height: 200}}/>
     </div>
   );
 }

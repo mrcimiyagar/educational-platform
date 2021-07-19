@@ -17,8 +17,8 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ViewCompactIcon from '@material-ui/icons/ViewCompact';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 import StoreComments from '../../components/StoreComments';
+import StoreSimiliar from '../../components/StoreSimiliar';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import './storebot.css';
 import { gotoPage } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
@@ -93,6 +93,8 @@ export default function StoreBot() {
     setValue(index)
   };
 
+  document.body.style.backgroundColor = '#fff'
+
   return (
     <div className={classes.root}>
       <img style={{width: '100%'}} src={'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE'}/>
@@ -122,6 +124,9 @@ export default function StoreBot() {
 </div>
 
 <StoreComments/>
+
+<StoreSimiliar/>
+      <div style={{height: 100, backgroundColor: '#ddd'}}/>
 
       <Fab color="secondary" style={{position: 'fixed', bottom: 16, left: 16}}>
         <LocalMallIcon />

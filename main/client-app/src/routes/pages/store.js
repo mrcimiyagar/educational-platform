@@ -14,7 +14,6 @@ import StoreHead from '../../components/StoreHead';
 import StoreBottombar from '../../components/StoreBottombar';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ViewCompactIcon from '@material-ui/icons/ViewCompact';
-import './store.css';
 import { gotoPage } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#ddd',
     width: '100%',
     height: '100vh',
-    position: 'absolute',
+    position: 'fixed',
+    overflow: 'auto',
     left: 0,
     top: 0,
     right: 0,
