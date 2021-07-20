@@ -8,9 +8,9 @@ export const roothPath = 'https://kaspersoft.cloud';
 export const whiteboardPath = 'https://whiteboard1.kaspersoft.cloud';
 export const taskManagerPath = 'https://taskmanager.kaspersoft.cloud';
 export const notesPath = 'https://notes.kaspersoft.cloud';
-export const websocketPath = 'wss://kaspersoft.cloud';
+export const websocketPath = 'ws://localhost:2001';
 
-export const serverRoot = "https://asemanbackend.kaspersoft.cloud";
+export const serverRoot = "http://localhost:2001";
 
 export function leaveRoom(callback) {
   store.dispatch(changeConferenceMode(false));
@@ -22,7 +22,7 @@ export function leaveRoom(callback) {
     },
     redirect: 'follow'
   };
-  fetch("../room/exit_room", requestOptions2)
+  fetch(serverRoot + "/room/exit_room", requestOptions2)
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
@@ -258,7 +258,7 @@ export function validateToken(t, callback) {
     },
     redirect: 'follow'
   };
-  fetch("https://asemanbackend.kaspersoft.cloud/auth/fetch_config", requestOptions2)
+  fetch(serverRoot + "/auth/fetch_config", requestOptions2)
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));

@@ -6,12 +6,20 @@ export let CHANGE_PEOPLECHAT_MODE = 'CHANGE_PEOPLECHAT_MODE';
 export let SWITCH_ROOM_TREE_MENU = 'SWITCH_ROOM_TREE_MENU';
 export let SWITCH_WEBINAR = 'SWITCH_WEBINAR';
 export let SWITCH_CONFERENCE = 'SWITCH_CONFERENCE';
+export let SET_CURRENT_ROOM = 'SET_CURRENT_ROOM';
 export const PeopleChatModes = {
     ALL: 1,
     CHAT: 2,
     NONE: 3,
- };
- Object.freeze(PeopleChatModes);
+};
+Object.freeze(PeopleChatModes);
+
+export function setCurrentRoom(room) {
+  return {
+    type: SET_CURRENT_ROOM,
+    room,
+  }
+}
 
 export function changeConferenceMode(cm) {
     return {
@@ -53,7 +61,8 @@ export function switchConf(selector, cm) {
 const defaultState = {
     main: {
         isInConference: false,
-        peopleAndChat: PeopleChatModes.ALL
+        peopleAndChat: PeopleChatModes.ALL,
+        currentRoom: undefined,
     },
     webinar: {
       video: false,
@@ -71,6 +80,14 @@ const defaultState = {
 
 function global(state = defaultState, action) {
     switch (action.type) {
+        case SET_CURRENT_ROOM:
+          return {
+              ...state,
+              main: {
+                  ...state.main,
+                  currentRoom: action.room
+                }
+            };
         case CHANGE_CONFERENCE_MODE:
           return {
               ...state,

@@ -192,7 +192,7 @@ export let UsersBox = (props) => {
             
           });
     }, []);
-    return (<Card style={{display: props.style.display, width: '100%', backgroundColor: colors.primary, height: props.boxHeight, marginTop: 16, minWidth: 224}}>
+    return (<Card style={{width: '100%', backgroundColor: colors.primary, height: props.boxHeight, marginTop: 16, minWidth: 224}}>
       <CardBody>
         <CardTitle>
           <span style={{fontSize: 20}}><p style={{color: colors.textIcons}}>کاربران ({users.length})</p></span>

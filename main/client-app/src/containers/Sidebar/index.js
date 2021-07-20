@@ -18,7 +18,7 @@ import {reloadNavbar} from '../TopNav';
 import {reloadUsersList} from '../../modules/usersbox/usersbox';
 
 import AppsIcon from '@material-ui/icons/Apps';
-import { config, getColor, roothPath, socket } from "../../util/Utils";
+import { config, getColor, roothPath, serverRoot, socket } from "../../util/Utils";
 
 import isReachable from 'is-reachable';
 import { gotoPage } from "../../App";
@@ -167,7 +167,7 @@ class Sidebar extends Component {
       }),
       redirect: 'follow'
     };
-    fetch("../../auth/setup_profile", requestOptions2)
+    fetch(serverRoot + "/auth/setup_profile", requestOptions2)
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
@@ -192,7 +192,7 @@ class Sidebar extends Component {
       body: JSON.stringify(newItem),
       redirect: 'follow'
     };
-    fetch("../../survey/add_label", requestOptions)
+    fetch(serverRoot + "/survey/add_label", requestOptions)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
@@ -216,7 +216,7 @@ class Sidebar extends Component {
       body: JSON.stringify(newItem),
       redirect: 'follow'
     };
-    fetch("../../survey/add_category", requestOptions)
+    fetch(serverRoot + "/survey/add_category", requestOptions)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
@@ -248,7 +248,7 @@ class Sidebar extends Component {
         }),
         redirect: 'follow'
       };
-      fetch("../../room/get_permissions", requestOptions)
+      fetch(serverRoot + "/room/get_permissions", requestOptions)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
@@ -270,7 +270,7 @@ class Sidebar extends Component {
 
   fetchRooms = async (toggle) => {
     this.setState({roomsList: !this.state.roomsList});
-    let address = '../room/get_spaces';
+    let address = serverRoot + '/room/get_spaces';
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -290,7 +290,7 @@ class Sidebar extends Component {
                 roomsPreviewIntervals.push(setInterval(() => {
                   let newImage = document.getElementById('roomPreview' + space.id);
                   if (newImage !== null) {
-                    newImage.src = '../shots/get_shot?room_id=' + space.id + '&random=' + new Date().getTime();
+                    newImage.src = serverRoot + '/shots/get_shot?room_id=' + space.id + '&random=' + new Date().getTime();
                   }
                 }, 10000));
               })
@@ -328,7 +328,7 @@ class Sidebar extends Component {
       },
       redirect: 'follow'
     };
-    fetch("../room/get_invites", requestOptions2)
+    fetch(serverRoot + "/room/get_invites", requestOptions2)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
@@ -459,7 +459,7 @@ class Sidebar extends Component {
       body: JSON.stringify({survey: newItem}),
       redirect: 'follow'
     };
-    fetch("../../survey/add_survey", requestOptions)
+    fetch(serverRoot + "/survey/add_survey", requestOptions)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
@@ -482,7 +482,7 @@ class Sidebar extends Component {
       },
       redirect: 'follow'
     };
-    fetch("../../survey/get_labels", requestOptions)
+    fetch(serverRoot + "/survey/get_labels", requestOptions)
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
@@ -499,7 +499,7 @@ class Sidebar extends Component {
         },
         redirect: 'follow'
     };
-    fetch("../../survey/get_categories", requestOptions2)
+    fetch(serverRoot + "/survey/get_categories", requestOptions2)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
@@ -577,7 +577,7 @@ class Sidebar extends Component {
                     }),
                     redirect: 'follow'
                   };
-                  fetch("../room/add_room", requestOptions)
+                  fetch(serverRoot + "/room/add_room", requestOptions)
                       .then(response => response.json())
                       .then(result => {
                         console.log(JSON.stringify(result));
@@ -687,7 +687,7 @@ class Sidebar extends Component {
                     }),
                     redirect: 'follow'
                   };
-                  fetch("../room/invite_to_room", requestOptions)
+                  fetch(serverRoot + "/room/invite_to_room", requestOptions)
                       .then(response => response.json())
                       .then(result => {
                         console.log(JSON.stringify(result));
@@ -776,7 +776,7 @@ class Sidebar extends Component {
                     }),
                     redirect: 'follow'
                   };
-                  fetch("../../survey/assign_survey", requestOptions)
+                  fetch(serverRoot + "/survey/assign_survey", requestOptions)
                       .then(response => response.json())
                       .then(result => {
                         console.log(JSON.stringify(result));
@@ -1095,7 +1095,7 @@ class Sidebar extends Component {
                                 }),
                                 redirect: 'follow'
                             };
-                            fetch("../../room/update_permissions", requestOptions)
+                            fetch(serverRoot + "/room/update_permissions", requestOptions)
                                 .then(response => response.json())
                                 .then(result => {
                                   console.log(JSON.stringify(result));

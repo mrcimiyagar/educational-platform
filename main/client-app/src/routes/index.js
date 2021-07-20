@@ -4,7 +4,7 @@ import { Route, withRouter, Switch, Redirect, Link } from 'react-router-dom';
 import TopNav from '../containers/TopNav'
 import Sidebar from '../containers/Sidebar';
 
-import ConferencePage from "./pages/conference";
+import ConferencePage from "./pages/room";
 import HomePage from "./pages/home";
 import surveyDetail from "./pages/survey-detail";
 import surveyList from "./pages/survey";
@@ -26,6 +26,7 @@ class MainApp extends Component {
 			<div id="app-container" className={containerClassnames}>
 				<main>
 					<div>
+						<Sidebar/>
           <AnimatedSwitch
       atEnter={{ opacity: 0 }}
       atLeave={{ opacity: 0 }}

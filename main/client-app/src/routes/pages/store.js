@@ -224,19 +224,13 @@ export default function Store() {
             <TabPanel value={value} index={cat}>
               <ImageList rowHeight={196} className={classes.imageList} cols={2}>
                 <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/644910/header.jpg?t=1542406074'} cols={2}>
-                  <div>
                     <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/644910/header.jpg?t=1542406074'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
-                  </div>
                 </ImageListItem>
-                <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/647171/header.jpg?t=1556904675'} cols={2}>
-                  <div>
-                    <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/647171/header.jpg?t=1556904675'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
-                  </div>
+                <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/647171/header.jpg?t=1556904675'} cols={2} style={{marginTop: 16}}>
+                  <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/647171/header.jpg?t=1556904675'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
                 </ImageListItem>
-                <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/644921/header.jpg?t=1542406005'} cols={2}>
-                  <div>
-                    <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/644921/header.jpg?t=1542406005'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
-                  </div>
+                <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/644921/header.jpg?t=1542406005'} cols={2} style={{marginTop: 16}}>
+                  <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/644921/header.jpg?t=1542406005'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
                 </ImageListItem>
                 {itemData.map((item) => (
                   <ImageListItem key={item.img} cols={1} onClick={() => gotoPage('/app/storebot')}>

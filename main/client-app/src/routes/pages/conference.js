@@ -27,7 +27,7 @@ import { TaskBox } from "../../modules/taskbox/taskbox";
 import { PollBox, togglePolling } from "../../modules/pollbox/pollbox";
 import { VideoBox } from "../../modules/videobox/videobox";
 import { ConfBox } from "../../modules/confbox";
-import { ConnectToIo, leaveRoom, roothPath, setRoomId, roomId, socket, useForceUpdate, validateToken, FetchMe, conferencePath } from "../../util/Utils";
+import { ConnectToIo, leaveRoom, roothPath, setRoomId, roomId, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot } from "../../util/Utils";
 import { fetchAccessChangeCallbackNavbar, hideNavbar, reloadNavbar, reloadNavbarState, setTitle, updateActorsNavbar, updateNavbar, viewNavbar } from "../../containers/TopNav";
 
 import DivSize2 from "../../components/DivSize/DivSize2";
@@ -115,12 +115,12 @@ class ConferencePage extends Component {
       }),
       redirect: 'follow'
     };
-    fetch("../video/get_actors", requestOptions4)
+    fetch(serverRoot + "/video/get_actors", requestOptions4)
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
         this.setState({actors: result.users.map(u => u.id)})
-        updateActorsNavbar(result.users.map(u => u.id))
+        //updateActorsNavbar(result.users.map(u => u.id))
       });
   }
 
@@ -136,7 +136,7 @@ class ConferencePage extends Component {
       }),
       redirect: 'follow'
     };
-    fetch("../room/enter_room", requestOptions2)
+    fetch(serverRoot + "/room/enter_room", requestOptions2)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
@@ -169,7 +169,7 @@ class ConferencePage extends Component {
       }),
       redirect: 'follow'
     };
-    fetch("../room/make_personality", requestOptions)
+    fetch(serverRoot + "/room/make_personality", requestOptions)
       .then(response => response.json())
       .then(result => {
         leaveRoom(() => {
@@ -228,7 +228,7 @@ class ConferencePage extends Component {
           }),
           redirect: 'follow'
         };
-        fetch("../room/get_room", requestOptions)
+        fetch(serverRoot + "/room/get_room", requestOptions)
             .then(response => response.json())
             .then(result => {
               console.log(JSON.stringify(result))
@@ -322,7 +322,7 @@ class ConferencePage extends Component {
       }),
       redirect: 'follow'
     };
-    fetch("../view/update_view", requestOptions)
+    fetch(serverRoot + "/view/update_view", requestOptions)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
@@ -331,18 +331,10 @@ class ConferencePage extends Component {
   }
   
   render() {
-    
-    hideNavbar()
-
-  if (!this.state.loaded) {
-    return <div/>;
-  }
 
   if (!this.state.played && !this.noname) {
     return <Button id={'confEnter'} style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', width: 128, height: 128}} onClick={() => this.setState({played: true})}><PlayCircleFilledIcon style={{width: 56, height: 56}}/></Button>
   }
-
-  viewNavbar()
 
   let screen = store.getState().global.webinar.screen
 

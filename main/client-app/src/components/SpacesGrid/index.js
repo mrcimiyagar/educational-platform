@@ -6,6 +6,7 @@ import { Avatar, Card, Fab, Typography } from '@material-ui/core';
 import SpacesSearchbar from '../SpacesSearchbar';
 import HomeToolbar from '../HomeToolbar';
 import HomeIcon from '@material-ui/icons/Home';
+import { gotoPage } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -193,7 +194,7 @@ export default function SpacesGrid() {
       </HomeToolbar>
       <ImageList style={{zIndex: 2}} rowHeight={188} cols={3} gap={1} className={classes.imageList}>
         {itemData.map((item) => (
-          <ImageListItem key={item.img} cols={1} rows={1}>
+          <ImageListItem key={item.img} cols={1} rows={1} onClick={() => {gotoPage('/app/conf?room_id=1')}}>
             <div style={{position: 'relative'}}>
                 <img src={item.img} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '2.5%', width: '95%', height: 128}} />
                 <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
