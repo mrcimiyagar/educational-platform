@@ -43,13 +43,14 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import { toggleInvites, toggleInviteUserModal, togglePoll } from "../../containers/Sidebar";
 import RoomTreeMenu from '../../components/RoomTreeMenu';
 
-import {isDesktop, gotoPage} from '../../App';
+import {isDesktop, gotoPage, setCurrentNav} from '../../App';
 import store, { changeConferenceMode, PeopleChatModes, setCurrentRoom } from "../../redux/main";
 import { connect } from "react-redux";
 import { ThreeSixty } from "@material-ui/icons";
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { IconButton } from "@material-ui/core";
+import RoomBottombar from '../../components/RoomBottombar'
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -60,7 +61,6 @@ export let notifyMeOnAccessChangeNavbar = (callback) => {
   accessChangeCallbackNavbar = callback;
 };
 export let reloadConf = undefined
-export let updateConf = undefined
 
 export default function RoomPage(props) {
 
@@ -68,8 +68,17 @@ export default function RoomPage(props) {
 
   const [membership, setMembership] = React.useState({})
   const [loaded, setLoaded] = React.useState(false)
+  const [currentRoomNav, setCurrentRoomNav] = React.useState(0)
 
   let onSocketAuth = () => {
+    socket.off('membership-updated')
+    socket.on('membership-updated', mem => {
+      
+    })
+    socket.off('view-updated')
+    socket.on('view-updated', v => {
+      
+    })
     let requestOptions2 = {
       method: 'POST',
       headers: {
@@ -126,15 +135,7 @@ export default function RoomPage(props) {
           }
       })
       
-      socket.off('membership-updated')
-      socket.on('membership-updated', mem => {
-        
-      })
-    
-      socket.off('view-updated')
-      socket.on('view-updated', v => {
-        
-      })
+      ConnectToIo(token, onSocketAuth)
   
       window.scrollTo(0, 0);
       
@@ -154,87 +155,17 @@ export default function RoomPage(props) {
   }
 
   return (
-      <div style={{width: window.innerWidth + 'px', height: window.innerHeight + 'px', position: 'fixed', right: 0, paddingRight: 16, top: 0, backgroundColor: colors.primaryDark}}>
-        <div style={{position: 'absolute', left: 0, top: 64, width: '100%', height: 'calc(100vh - 128px)'}}> 
-          <UsersBox membership={membership} roomId={roomId} room={store.getState().global.main.room}/>
-          <ChatBox membership={membership} roomId={roomId}/>
-          <VideoBox roomId={roomId}/>
-          <PresentBox membership={membership} roomId={roomId}/>
-          <BoardBox membership={membership} roomId={roomId}/>
-          <BoardBox membership={membership} roomId={roomId}/>
-          <BottomSheet>
-            <TaskBox roomId={roomId} style={{display:'block'}} boxHeight={'calc(100vh - 64px)'} boxHeightInner={'calc(100vh - 64px)'}/>
-          </BottomSheet>
-
-          <BottomSheet setDrawerOpen={d => this.setState({drawerOpen: d})}>
-            <div style={{display: 'grid',
-                         gridTemplateColumns: '50% 50%',
-                         rowGap: '15px'
-                       }}>
-              {
-                membership.canUseWhiteboard ?
-                  <Button color="primary" className="default mb-2" style={{height: 100, marginRight: 8}} onClick={() => this.onFlagClicked(4)}>
-                    <BorderColorIcon/>
-                  </Button> :
-                  null
-              }
-              {
-                membership.canPresent ?
-                  <Button color="primary" className="default mb-2" style={{height: 100, marginRight: 16}}  onClick={() => this.onFlagClicked(3)}>
-                    <SlideshowIcon/>
-                  </Button> :
-                  null
-              }
-              {
-                membership.canUploadFile ?
-                  <Button color="primary" className="default mb-2" outline onClick={() => toggleFileBox()} style={{height: 100, marginRight: 8}}>
-                    <DescriptionIcon/>
-                  </Button> :
-                  null
-              }
-              <Button color="primary" className="default mb-2" style={{height: 100, marginRight: 16}}  onClick={() => this.onFlagClicked(2)}>
-                <VideocamIcon/>
-              </Button>
-              {
-                membership.canAddMessage ?
-                  <Button color="primary" className="default mb-2" style={{height: 100, marginRight: 8}}  onClick={() => this.onFlagClicked(1)}>
-                    <ChatIcon/>
-                  </Button> :
-                  null
-              }
-              <Button color="primary" className="default mb-2" style={{height: 100, marginRight: 16}}  onClick={() => this.onFlagClicked(0)}>
-                <PeopleIcon/>
-              </Button>
-              {
-                membership.canAddPoll ?
-                  <Button color="primary" className="default mb-2" style={{height: 100, marginRight: 8}}  onClick={() => togglePoll()}>
-                    <PollIcon/>
-                  </Button> :
-                  null
-              }
-              {
-                membership.canInviteToRoom ?
-                  <Button color="primary" className="default mb-2" style={{height: 100, marginRight: 16}}  onClick={() => toggleInviteUserModal()}>
-                    <EmailIcon/>
-                  </Button> :
-                  null
-              }
-              <Button color="primary" className="default mb-2" style={{height: 100, marginRight: 8}} onClick={() => {
-
-              }}>
-                <NoteIcon/>
-              </Button>
-              <Button color="primary" className="default mb-2" style={{height: 100, marginRight: 16}} onClick={() => this.setState({drawerOpen2: true})}>
-                <ListAltIcon/>
-              </Button>
-            </div>
-          </BottomSheet>
+      <div style={{width: '100%', height: '100%', position: 'fixed', right: 0, top: 0, backgroundColor: colors.primaryDark}}>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, backgroundColor: '#fff'}}>
+        {
+          currentRoomNav === 2 ? 
+            <ConfBox/> :
+            currentRoomNav === 1 ? 
+              <BoardBox membership={membership} roomId={roomId} style={{display: 'block'}} /> :
+            null
+        }
         </div>
-        <PollBox roomId={roomId}/>
-        <FileBox roomId={roomId}/>
-        <Button color="primary" className="mb-2" onClick={() => this.setState({drawerOpen: true})} style={{position: 'fixed', width: 56, height: 56, left: 16, bottom: 16, padding: 12, zIndex: 2000}}>
-          <EditIcon/>
-        </Button> 
+        <RoomBottombar setCurrentRoomNav={setCurrentRoomNav} currentRoomNav={currentRoomNav}/>
       </div>
     )
 }

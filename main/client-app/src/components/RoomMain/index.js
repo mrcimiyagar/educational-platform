@@ -73,7 +73,7 @@ export default function HomeAppbar() {
 
   return (
     <div className={classes.root}>
-      {value === 0 ?
+      {currentNav === 0 ?
         (
           <div>
             <HomeToolbar>
@@ -136,22 +136,22 @@ export default function HomeAppbar() {
       </Fab>
           </div>
         ) :
-        value === 1 ?
+        currentNav === 1 ?
           (
             <SpacesGrid/>
           ) :
-          value === 2 ?
+          currentNav === 2 ?
+          (
+            <HomeNotifs/>
+          ) :
+          currentNav === 3 ?
             (
-              <HomeNotifs/>
-            ) :
-            value === 3 ?
-              (
-                <HomeSettings/>
-              )
+              <HomeSettings/>
+            )
         :
         null
       }
-      <HomeBottombar setCurrentNav={setValue} currentNav={value}/>
+      <HomeBottombar/>
       <HomeDrawer/>
     </div>
   )

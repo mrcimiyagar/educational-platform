@@ -2,7 +2,7 @@ import React, {Component, Fragment} from "react";
 import {BrowserRouter, BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 import ReactDOM from 'react-dom';
 import App from "./containers/App";
-import {useTheme, useMediaQuery, createMuiTheme, ThemeProvider, colors} from '@material-ui/core';
+import {useTheme, useMediaQuery, createMuiTheme, ThemeProvider, colors, createTheme} from '@material-ui/core';
 import { AnimatedSwitch } from 'react-router-transition';
 import './App.css';
 import { ColorBase } from "./util/settings";
@@ -37,14 +37,14 @@ let DesktopDetector = (props) => {
 }
 
 function MainApp(props) {
-  [drawerOpen, setDrawerOpen] = React.useState(false);
-  [currentNav, setCurrentNav] = React.useState(0);
-  let t = createMuiTheme({
+  [drawerOpen, setDrawerOpen] = React.useState(false)
+  [currentNav, setCurrentNav] = React.useState(0)
+  let t = createTheme({
       zIndex: {
         appBar: 1048,
         modal: 1049,
       }
-  });
+  })
   return (
       <ThemeProvider theme={t}>
         <Router history={hist}>

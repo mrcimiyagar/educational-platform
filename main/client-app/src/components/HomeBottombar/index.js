@@ -9,7 +9,6 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import HomeIcon from '@material-ui/icons/Home';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import { setCurrentNav } from '../../App';
 
 const useStyles = makeStyles({
   root: {
@@ -32,7 +31,7 @@ const useStylesAction = makeStyles({
   selected: {},
 });
 
-export default function HomeBottombar() {
+export default function HomeBottombar(props) {
   const classes = useStyles();
   const classesAction = useStylesAction();
   const [value, setValue] = React.useState(0);
@@ -42,7 +41,7 @@ export default function HomeBottombar() {
       value={value}
       onChange={(event, newValue) => {
         setValue(newValue);
-        setCurrentNav(newValue)
+        props.setCurrentNav(newValue)
       }}
       showLabels
       className={classes.root}

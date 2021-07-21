@@ -5,7 +5,7 @@ import { changeConferenceMode } from "../redux/main";
 import store from "../redux/main";
 
 export const roothPath = 'https://kaspersoft.cloud';
-export const whiteboardPath = 'https://whiteboard1.kaspersoft.cloud';
+export const whiteboardPath = 'http://localhost:1000';
 export const taskManagerPath = 'https://taskmanager.kaspersoft.cloud';
 export const notesPath = 'https://notes.kaspersoft.cloud';
 export const websocketPath = 'ws://localhost:2001';
