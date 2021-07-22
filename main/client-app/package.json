@@ -80,6 +80,7 @@
     "react-tagsinput": "^3.19.0",
     "react-transition-group": "^1.2.0",
     "react-treebeard": "^3.2.4",
+    "react-trello": "^2.2.11",
     "react-yandex-maps": "^3.0.2",
     "reactstrap": "^6.5.0",
     "redux": "^4.1.0",

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import ChatAppBar from "../../components/ChatAppBar";
 import Slide from "@material-ui/core/Slide";
-import {gotoPage, selectedIndex, token} from "../../App";
+import {gotoPage, popPage, selectedIndex, token} from "../../App";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
@@ -44,7 +44,7 @@ export default function Chat(props) {
     const [open, setOpen] = React.useState(true);
     const handleClose = () => {
         setOpen(false);
-        gotoPage('/app/messenger')
+        popPage()
     };
     let [tickets, setTickets] = React.useState([]);
     let classes = useStyles();

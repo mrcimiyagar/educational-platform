@@ -62,13 +62,35 @@ export let notifyMeOnAccessChangeNavbar = (callback) => {
 };
 export let reloadConf = undefined
 
+const data = {
+  lanes: [
+    {
+      id: 'lane1',
+      title: 'Planned Tasks',
+      label: '2/2',
+      cards: [
+        {id: 'Card1', title: 'Write Blog', description: 'Can AI make memes', label: '30 mins', draggable: false},
+        {id: 'Card2', title: 'Pay Rent', description: 'Transfer via NEFT', label: '5 mins', metadata: {sha: 'be312a1'}}
+      ]
+    },
+    {
+      id: 'lane2',
+      title: 'Completed',
+      label: '0/0',
+      cards: []
+    }
+  ]
+}
+
+let currentRoomNavBackup = 0
+
 export default function RoomPage(props) {
 
   let forceUpdate = useForceUpdate()
 
   const [membership, setMembership] = React.useState({})
   const [loaded, setLoaded] = React.useState(false)
-  const [currentRoomNav, setCurrentRoomNav] = React.useState(0)
+  const [currentRoomNav, setCurrentRoomNav] = React.useState(currentRoomNavBackup)
 
   let onSocketAuth = () => {
     socket.off('membership-updated')
@@ -162,10 +184,12 @@ export default function RoomPage(props) {
             <ConfBox/> :
             currentRoomNav === 1 ? 
               <BoardBox membership={membership} roomId={roomId} style={{display: 'block'}} /> :
+              currentRoomNav === 3 ? 
+                <TaskBox /> :
             null
         }
         </div>
-        <RoomBottombar setCurrentRoomNav={setCurrentRoomNav} currentRoomNav={currentRoomNav}/>
+        <RoomBottombar setCurrentRoomNavBackup={(v) => {currentRoomNavBackup = v}} setCurrentRoomNav={setCurrentRoomNav} currentRoomNav={currentRoomNav}/>
       </div>
     )
 }

@@ -11,7 +11,8 @@ import CallEndIcon from '@material-ui/icons/CallEnd';
 import { pink } from "@material-ui/core/colors";
 import Search from "@material-ui/icons/Search";
 import SettingsIcon from '@material-ui/icons/Settings';
-import {gotoPage} from '../../App';
+import {gotoPage, popPage} from '../../App';
+import Chat from "@material-ui/icons/Chat";
 
 export let updateConfBox = undefined
 
@@ -49,7 +50,7 @@ export let ConfBox = (props) => {
           <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
           <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
             <Typography variant={'h6'}>سالن کنفرانس</Typography>
-            <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => gotoPage('/app/messenger')}><ArrowForward style={{fill: '#fff'}}/></IconButton>
+            <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() =>  popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
           </Toolbar>
         </AppBar>
         
@@ -63,7 +64,10 @@ export let ConfBox = (props) => {
 
         <div style={{position: 'fixed', bottom: 72 + 16, left: '50%', transform: 'translateX(-50%)', width: 'auto', height: 'auto', display: 'flex', flexWrap: 'nowrap'}}>
           <ThemeProvider theme={theme}>
-            <Fab id="camButton" color={'primary'} onClick={() => {
+            <Fab id="messagesButton" color={'primary'} onClick={() => {
+              gotoPage('/app/chat')
+            }}><Chat/></Fab>
+            <Fab id="camButton" color={'primary'} style={{marginLeft: 16}} onClick={() => {
               window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.audio}, 'http://localhost:1011')
               store.dispatch(switchConf('audio', !store.getState().global.conf.audio))
               forceUpdate()
@@ -76,8 +80,8 @@ export let ConfBox = (props) => {
               store.dispatch(switchConf('video', !store.getState().global.conf.video))
               forceUpdate()
             }}>{store.getState().global.conf.video ? <VideocamIcon/> : <VideocamOff/>}</Fab>
-            <Fab id="camButton" color={'primary'} style={{marginLeft: 16}} onClick={() => {
-              
+            <Fab id="settingsButton" color={'primary'} style={{marginLeft: 16}} onClick={() => {
+              gotoPage('/app/chat')
             }}><SettingsIcon/></Fab>
           </ThemeProvider>
         </div>

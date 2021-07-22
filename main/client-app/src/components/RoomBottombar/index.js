@@ -36,7 +36,7 @@ export default function RoomBottombar(props) {
   return (
     <BottomNavigation
       value={props.currentRoomNav}
-      onChange={(event, newValue) => props.setCurrentRoomNav(newValue)}
+      onChange={(event, newValue) => {props.setCurrentRoomNav(newValue); props.setCurrentRoomNavBackup(newValue)}}
       showLabels
       className={classes.root}
       style={{height: 72}}

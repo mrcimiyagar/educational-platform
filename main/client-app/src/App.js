@@ -13,10 +13,19 @@ import { createBrowserHistory } from "history";
 export const hist = createBrowserHistory();
 
 export let isDesktop;
-let pageOnTheWay, setPageOnTheWay;
+let pageOnTheWay, setPageOnTheWay, historyStack = ['messenger'];
 
 export let gotoPage = (p) => {
+  historyStack.push(p)
 	setPageOnTheWay(p);
+  setTimeout(() => {
+    document.getElementById('gotoPageOnTheWay').click();
+  }, 500);
+}
+
+export let popPage = () => {
+  historyStack.pop()
+	setPageOnTheWay(historyStack[historyStack.length - 1]);
   setTimeout(() => {
     document.getElementById('gotoPageOnTheWay').click();
   }, 500);
