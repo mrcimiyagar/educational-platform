@@ -1,14 +1,4 @@
 import React, {Component, Fragment, useEffect, useState} from "react";
-import {Link} from "react-router-dom";
-import {
-  Button
-} from "reactstrap";
-import BorderColorIcon from '@material-ui/icons/BorderColor';
-import DescriptionIcon from '@material-ui/icons/Description';
-import SlideshowIcon from '@material-ui/icons/Slideshow';
-import VideocamIcon from '@material-ui/icons/Videocam';
-import ChatIcon from '@material-ui/icons/Chat';
-import PeopleIcon from '@material-ui/icons/People';
 
 import "chartjs-plugin-datalabels";
 import "react-circular-progressbar/dist/styles.css";
@@ -17,40 +7,21 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-table/react-table.css";
 import {colors, me, setMe, setToken, token} from "../../util/settings";
 
-import { ChatBox } from "../../modules/chatbox/chatbox";
-import { reloadUsersList, UsersBox } from "../../modules/usersbox/usersbox";
 import { BoardBox } from "../../modules/boardbox/boardbox";
-import { NoteBox } from "../../modules/notebox/notebox";
-import { PresentBox } from "../../modules/presentbox/presentbox";
-import { FileBox, toggleFileBox } from "../../modules/filebox/filebox";
 import { TaskBox } from "../../modules/taskbox/taskbox";
-import { PollBox, togglePolling } from "../../modules/pollbox/pollbox";
-import { VideoBox } from "../../modules/videobox/videobox";
 import { ConfBox } from "../../modules/confbox";
-import { ConnectToIo, leaveRoom, roothPath, setRoomId, roomId, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot } from "../../util/Utils";
-import { fetchAccessChangeCallbackNavbar, hideNavbar, reloadNavbar, reloadNavbarState, setTitle, updateActorsNavbar, updateNavbar, viewNavbar } from "../../containers/TopNav";
+import { ConnectToIo, leaveRoom, roothPath, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot } from "../../util/Utils";
 
-import DivSize2 from "../../components/DivSize/DivSize2";
-import BottomSheet from '../../components/BottomSheet';
-import EditIcon from '@material-ui/icons/Edit';
-import PollIcon from '@material-ui/icons/Poll';
-import EmailIcon from '@material-ui/icons/Email';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import NoteIcon from '@material-ui/icons/Note';
-import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-
-import { toggleInvites, toggleInviteUserModal, togglePoll } from "../../containers/Sidebar";
-import RoomTreeMenu from '../../components/RoomTreeMenu';
-
-import {isDesktop, gotoPage, setCurrentNav} from '../../App';
+import {isDesktop, gotoPage, setCurrentNav, popPage} from '../../App';
 import store, { changeConferenceMode, PeopleChatModes, setCurrentRoom } from "../../redux/main";
-import { connect } from "react-redux";
-import { ThreeSixty } from "@material-ui/icons";
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import { IconButton } from "@material-ui/core";
 import RoomBottombar from '../../components/RoomBottombar'
+import { AppBar, Button, createTheme, Fab, IconButton, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
+import FilesGrid from "../../components/FilesGrid/FilesGrid";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import AddIcon from "@material-ui/icons/Add";
+import { ArrowForward, Chat, Search } from "@material-ui/icons";
+import { pink } from "@material-ui/core/colors";
+import ViewCarouselIcon from '@material-ui/icons/ViewCarousel';
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -92,6 +63,9 @@ export default function RoomPage(props) {
   const [loaded, setLoaded] = React.useState(false)
   const [currentRoomNav, setCurrentRoomNav] = React.useState(currentRoomNavBackup)
 
+  const search = props.location.search
+  let roomId = new URLSearchParams(search).get('room_id')
+
   let onSocketAuth = () => {
     socket.off('membership-updated')
     socket.on('membership-updated', mem => {
@@ -124,9 +98,6 @@ export default function RoomPage(props) {
 
   let loadData = (callback) => {
     leaveRoom(() => {
-      const search = props.location.search
-      let rId = new URLSearchParams(search).get('room_id')
-      setRoomId(rId)
       let requestOptions = {
           method: 'POST',
           headers: {
@@ -134,7 +105,7 @@ export default function RoomPage(props) {
             'token': token
           },
           body: JSON.stringify({
-            roomId: rId
+            roomId: roomId
           }),
           redirect: 'follow'
       };
@@ -142,50 +113,145 @@ export default function RoomPage(props) {
             .then(response => response.json())
             .then(result => {
               console.log(JSON.stringify(result))
-              store.dispatch(setCurrentRoom(result.room))
+      
+              setToken(localStorage.getItem('token'));
+              validateToken(token, (result) => {
+                  if (result) {
+                    onSocketAuth()
+                  }
+                  else {
+                    gotoPage('/app/register')
+                  }
+              })
+              
+              ConnectToIo(token, onSocketAuth)
+          
+              window.scrollTo(0, 0);
+              
+              store.dispatch(changeConferenceMode(true));
+
               callback()
             })
             .catch(error => console.log('error', error));
-      
-      setToken(localStorage.getItem('token'));
-      validateToken(token, (result) => {
-          if (result) {
-            onSocketAuth()
-          }
-          else {
-            gotoPage('/app/register')
-          }
-      })
-      
-      ConnectToIo(token, onSocketAuth)
-  
-      window.scrollTo(0, 0);
-      
-      store.dispatch(changeConferenceMode(true));
 
       });
   }
 
   useEffect(() => {
     loadData(() => {
+
+      let requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'token': token
+        },
+        body: JSON.stringify({
+            roomId: roomId
+        }),
+        redirect: 'follow'
+      };
+      fetch(serverRoot + "/file/get_files", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(JSON.stringify(result));
+                result.files.forEach(fi => {
+                    fi.progress = 100;
+                });
+                setFiles(result.files);
+            })
+            .catch(error => console.log('error', error));
+      
       setLoaded(true)
     })
   }, [])
 
+  const [files, setFiles] = React.useState([]);
+  let uploadBtn = React.useRef();
+  let [filesBoxOpen, setFilesBoxOpen] = React.useState(false);
+
+  function onChangeFile(event) {
+    event.stopPropagation();
+    event.preventDefault();
+    let file = event.target.files[0];
+    if (file === undefined) return
+    let data = new FormData();
+    data.append('file', file);
+    let request = new XMLHttpRequest();
+    request.open('POST', serverRoot + `/file/upload_file?token=${token}&roomId=${roomId}`);
+    request.upload.addEventListener('progress', function(e) {
+        let percent_completed = (e.loaded * 100 / e.total);
+    });
+    let f = {progress: 0, name: file.name, size: file.size, local: true};
+    if (FileReader && files && files.length) {
+        let fr = new FileReader();
+        fr.onload = function () {
+            f.src = fr.result;
+        }
+        fr.readAsDataURL(file);
+    }
+    request.send(data);
+  }
+  let openDeck = () => {
+    
+  }
+
   if (!loaded) {
     return (<div/>)
   }
-
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#2196f3',
+      },
+      secondary: pink
+    },
+  });
   return (
       <div style={{width: '100%', height: '100%', position: 'fixed', right: 0, top: 0, backgroundColor: colors.primaryDark}}>
         <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, backgroundColor: '#fff'}}>
         {
           currentRoomNav === 2 ? 
-            <ConfBox/> :
+            <ConfBox openDeck={openDeck}/> :
             currentRoomNav === 1 ? 
-              <BoardBox membership={membership} roomId={roomId} style={{display: 'block'}} /> :
+              <BoardBox openDeck={openDeck} membership={membership} roomId={roomId} style={{display: 'block'}}/> :
               currentRoomNav === 3 ? 
-                <TaskBox /> :
+                <TaskBox openDeck={openDeck}/> :
+                currentRoomNav === 4 ?
+                
+                    <div
+                      style={{backgroundColor: '#fff', width: '100%', height: '100%', minHeight: '100vh'}}>
+                        <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
+                          <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
+                            <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
+                            <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
+                              openDeck()
+                            }}><ViewCarouselIcon style={{fill: '#fff'}}/></IconButton>
+                            <Typography variant={'h6'}>فایل ها</Typography>
+                            <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
+                          </Toolbar>
+                        </AppBar>
+                        <div style={{height: 'calc(100% - 64px - 72px)', overflowY: 'auto', marginTop: 64}}>
+                          <input id="myInput"
+                            type="file"
+                            ref={(ref) => uploadBtn = ref}
+                            style={{display: 'none'}}
+                            onChange={onChangeFile}/>
+                          <PerfectScrollbar>
+                            <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
+                          </PerfectScrollbar>
+                          <ThemeProvider theme={theme}>
+                            <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}} onClick={() => uploadBtn.click()}>
+                              <AddIcon/>
+                            </Fab>
+                            <Fab color="primary" style={{position: 'fixed', bottom: 72 + 16, left: 16 + 56 + 16}} onClick={() => {
+                                gotoPage('/app/chat')
+                              }}>
+                              <Chat/>
+                            </Fab>
+                          </ThemeProvider>
+                        </div>
+                    </div> :
             null
         }
         </div>

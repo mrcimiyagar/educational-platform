@@ -13,6 +13,7 @@ import Search from "@material-ui/icons/Search";
 import SettingsIcon from '@material-ui/icons/Settings';
 import {gotoPage, popPage} from '../../App';
 import Chat from "@material-ui/icons/Chat";
+import ViewCarousel from "@material-ui/icons/ViewCarousel";
 
 export let updateConfBox = undefined
 
@@ -48,7 +49,10 @@ export let ConfBox = (props) => {
         
         <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
           <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
-          <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
+            <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
+            <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
+              props.openDeck()
+            }}><ViewCarousel style={{fill: '#fff'}}/></IconButton>
             <Typography variant={'h6'}>سالن کنفرانس</Typography>
             <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() =>  popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
           </Toolbar>

@@ -55,8 +55,8 @@ module.exports = {
         thirdText: '#666',
         divider: '#888'
     }),
-    'parentPath': '/root/marlik-community',
-    'rootPath': '/root/marlik-community/main',
+    'parentPath': '/home/keyhan/Desktop/AsemanWeb',
+    'rootPath': '/home/keyhan/Desktop/AsemanWeb/main',
     'makeRandomCode' : function(length) {
         let result = '';
         let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

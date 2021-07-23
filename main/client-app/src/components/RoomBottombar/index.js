@@ -7,6 +7,7 @@ import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import DesktopMacIcon from '@material-ui/icons/DesktopMac';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
 import VideocamIcon from '@material-ui/icons/Videocam';
+import DescriptionIcon from '@material-ui/icons/Description';
 
 const useStyles = makeStyles({
   root: {
@@ -45,6 +46,7 @@ export default function RoomBottombar(props) {
       <BottomNavigationAction value={1} classes={classesAction} label="وایت بورد" icon={<BorderColorIcon />} />
       <BottomNavigationAction value={2} classes={classesAction} label="کنفرانس" icon={<VideocamIcon />} />
       <BottomNavigationAction value={3} classes={classesAction} label="برنامه ریزی" icon={<AssignmentTurnedInIcon />} />
+      <BottomNavigationAction value={4} classes={classesAction} label="فایل ها" icon={<DescriptionIcon />} />
     </BottomNavigation>
   );
 }
