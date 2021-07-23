@@ -16,6 +16,8 @@ import ProfilePage from './pages/profile';
 import StorePage from './pages/store';
 import StoreBotPage from './pages/storeBot';
 import StoreAdsPage from './pages/storeAds';
+import DeckPage from './pages/deck';
+import NotesPage from './pages/notes';
 import { AnimatedSwitch } from 'react-router-transition';
 import '../App.css';
 
@@ -40,6 +42,8 @@ class MainApp extends Component {
 							<Route path={`${match.url}/store`} component={StorePage} />
 							<Route path={`${match.url}/storebot`} component={StoreBotPage} />
 							<Route path={`${match.url}/storeads`} component={StoreAdsPage} />
+							<Route path={`${match.url}/deck`} component={DeckPage} />
+							<Route path={`${match.url}/notes`} component={NotesPage} />
 							<Route path={`${match.url}/main`} component={DefaultDashboard} />
 							<Route
 								path={`${match.url}/survey/:surveyid`}

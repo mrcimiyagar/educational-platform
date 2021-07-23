@@ -5,9 +5,10 @@ import {Button, Card, CardBody} from 'reactstrap';
 import PresentsGrid from '../../components/FilesGrid/PresentsGrid';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { token, colors } from '../../util/settings';
-import { roothPath, socket, useForceUpdate } from '../../util/Utils';
+import { roomId, roothPath, serverRoot, socket, useForceUpdate } from '../../util/Utils';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { membership } from '../../routes/pages/room';
 
 let initialPage = '';
 
@@ -45,11 +46,11 @@ export function PresentBox(props) {
         'token': token
       },
       body: JSON.stringify({
-        roomId: props.roomId
+        roomId: roomId
       }),
       redirect: 'follow'
     };
-    fetch("../present/get_current_page", requestOptions4)
+    fetch(serverRoot + "/present/get_current_page", requestOptions4)
         .then(response => response.json())
         .then(result => {
           setPageNumber(result.pageNumber);
@@ -70,18 +71,18 @@ export function PresentBox(props) {
         'token': token
       },
       body: JSON.stringify({
-        roomId: props.roomId,
+        roomId: roomId,
         presentId: presents[i].id,
         pageNumber: pageNumber
       }),
       redirect: 'follow'
     };
-    fetch("../present/pick_present", requestOptions4)
+    fetch(serverRoot + "/present/pick_present", requestOptions4)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
         });
-    fetchSize(`../file/download_file?token=${token}&roomId=${props.roomId}&fileId=${files[i].id}`)
+    fetchSize(`../file/download_file?token=${token}&roomId=${roomId}&fileId=${files[i].id}`)
   }
   let setCurrentPage = (i) => {
     setPageNumber(i);
@@ -92,12 +93,12 @@ export function PresentBox(props) {
         'token': token
       },
       body: JSON.stringify({
-        roomId: props.roomId,
+        roomId: roomId,
         pageNumber: i
       }),
       redirect: 'follow'
     };
-    fetch("../present/swich_page", requestOptions4)
+    fetch(serverRoot + "/present/swich_page", requestOptions4)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
@@ -130,7 +131,7 @@ export function PresentBox(props) {
     let data = new FormData();
     data.append('file', file);
     let request = new XMLHttpRequest();
-    request.open('POST', `../present/upload_present?token=${token}&roomId=${props.roomId}`);
+    request.open('POST', serverRoot + `/present/upload_present?token=${token}&roomId=${roomId}`);
     let f = {progress: 0, name: file.name, size: file.size, local: true};
     request.upload.addEventListener('progress', function(e) {
         let percent_completed = (e.loaded * 100 / e.total);
@@ -158,11 +159,11 @@ export function PresentBox(props) {
           'token': token
       },
       body: JSON.stringify({
-          roomId: props.roomId
+          roomId: roomId
       }),
       redirect: 'follow'
     };
-    fetch("../present/get_presents", requestOptions)
+    fetch(serverRoot + "/present/get_presents", requestOptions)
         .then(response => response.json())
         .then(result => {
               console.log(JSON.stringify(result));
@@ -186,10 +187,10 @@ export function PresentBox(props) {
     }
   }, [pimgLoad]);
   return (
-    <div style={{height: props.boxHeight, width: '100%', marginTop: 16, 
+    <div style={{height: '100%', width: '100%', marginTop: 16, 
                 display: props.style.display === 'none' ? 'none' : 'grid', 
                 gridTemplateColumns: '40% 60%', rowGap: 8}}>
-      {(props.membership !== null && props.membership !== undefined && props.membership.canPresent === true) ?
+      {(membership !== null && membership !== undefined && membership.canPresent === true) ?
         <Card style={{height: '100%', width: '100%', backgroundColor: colors.primary}}>
           <input id="myInput"
             type="file"
@@ -198,13 +199,13 @@ export function PresentBox(props) {
             onChange={onChangeFile}/>
           <Button color={'primary'} outline style={{width: 200, marginTop: 24, marginRight: 24, marginBottom: 32}} onClick={() => uploadBtn.click()}>آپلود فایل ارائه</Button>
           <div style={{height: 'calc(100vh - 256px)'}}>
-            <PresentsGrid setIsIdsAssigned={setIsIdsAssigned} isIdsAssigned={isIdsAssigned} isPresent setCurrentPresent={setCurrentPresent} files={files} setFiles={setFiles} presents={presents} setPresents={setPresents} roomId={props.roomId}/>
+            <PresentsGrid setIsIdsAssigned={setIsIdsAssigned} isIdsAssigned={isIdsAssigned} isPresent setCurrentPresent={setCurrentPresent} files={files} setFiles={setFiles} presents={presents} setPresents={setPresents} roomId={roomId}/>
           </div>
       </Card> :
       null
       }
       <Card id={'presentView'} style={{height: '100%', width: '100%', marginRight: 16, position: 'relative', backgroundColor: colors.primary}}>
-        {(files.length > 0 && files[currentPresent].extension === 'pdf' && props.membership !== null && props.membership !== undefined && props.membership.canPresent) ? 
+        {(files.length > 0 && files[currentPresent].extension === 'pdf' && membership !== null && membership !== undefined && membership.canPresent) ? 
         (<div style={{display: 'flex', zIndex: 1900}}>
           <Button outline color={'primary'} style={{width: 56, height: 56}} onClick={() => {setCurrentPage(pageNumber + 1);}}><ArrowForwardIosIcon/></Button>
           <p style={{width: 112}}>{pageNumber}</p>
@@ -220,7 +221,7 @@ export function PresentBox(props) {
               }} alt="Thumbnail" style={{objectFit: 'contain', width: pimgHeight > pimgWidth ? 'auto' : viewWidth,
                height: pimgHeight > pimgWidth ? viewHeight : 'auto',
                position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}} 
-               src={`../file/download_file?token=${token}&roomId=${props.roomId}&fileId=${files.length > 0 ? files[currentPresent].id : 0}`} /> :
+               src={`../file/download_file?token=${token}&roomId=${roomId}&fileId=${files.length > 0 ? files[currentPresent].id : 0}`} /> :
             files[currentPresent].extension === 'pdf' ?
               <div style={{objectFit: 'contain', width: pimgHeight > pimgWidth ? 'auto' : viewWidth, height: pimgHeight > pimgWidth ? viewHeight : 'auto', 
                 position: 'absolute', right: 0, top: '50%', transform: 'translate(0, -50%)'}}>

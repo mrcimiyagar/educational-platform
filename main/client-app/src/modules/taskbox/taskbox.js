@@ -3,7 +3,7 @@ import './style.css';
 import { taskManagerPath } from "../../util/Utils";
 import Board from 'react-trello'
 import { AppBar, Fab, IconButton, Toolbar, Typography } from "@material-ui/core";
-import { ArrowForward, Search, ViewCarousel } from "@material-ui/icons";
+import { ArrowForward, Notes, Search, ViewCarousel } from "@material-ui/icons";
 import { gotoPage, popPage } from "../../App";
 import Chat from "@material-ui/icons/Chat";
 
@@ -36,7 +36,10 @@ export let TaskBox = (props) => {
           <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
             props.openDeck()
           }}><ViewCarousel style={{fill: '#fff'}}/></IconButton>
-          <Typography variant={'h6'}>برنامه ریزی</Typography>
+          <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16}} onClick={() => {
+            props.openNotes()
+          }}><Notes style={{fill: '#fff'}}/></IconButton>
+          <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>برنامه ریزی</Typography>
           <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
         </Toolbar>
       </AppBar>

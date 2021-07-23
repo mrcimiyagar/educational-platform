@@ -7,7 +7,7 @@ import {
 } from "reactstrap";
 import { whiteboardPath } from "../../util/Utils";
 import { AppBar, Fab, IconButton, Toolbar, Typography } from "@material-ui/core";
-import { ArrowForward, Search } from "@material-ui/icons";
+import { ArrowForward, Notes, Search } from "@material-ui/icons";
 import { gotoPage, popPage } from "../../App";
 import Chat from "@material-ui/icons/Chat";
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
@@ -27,7 +27,10 @@ export let BoardBox = (props) => {
                 <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
                   props.openDeck()
                 }}><ViewCarousel style={{fill: '#fff'}}/></IconButton>
-                <Typography variant={'h6'}>وایت بورد</Typography>
+                <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16}} onClick={() => {
+                  props.openNotes()
+                }}><Notes style={{fill: '#fff'}}/></IconButton>
+                <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>وایت بورد</Typography>
                 <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() =>  popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
               </Toolbar>
             </AppBar>

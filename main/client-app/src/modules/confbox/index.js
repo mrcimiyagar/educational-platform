@@ -5,7 +5,7 @@ import { conferencePath, useForceUpdate } from "../../util/Utils";
 import store, { switchConf } from "../../redux/main";
 import VideocamIcon from '@material-ui/icons/Videocam';
 import { AppBar, Button, createTheme, Fab, IconButton, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
-import { ArrowForward, Mic, MicOff, Speaker, VideocamOff, VolumeOff, VolumeUp } from "@material-ui/icons";
+import { ArrowForward, Mic, MicOff, Notes, Speaker, VideocamOff, VolumeOff, VolumeUp } from "@material-ui/icons";
 import PauseIcon from '@material-ui/icons/Pause';
 import CallEndIcon from '@material-ui/icons/CallEnd';
 import { pink } from "@material-ui/core/colors";
@@ -53,7 +53,10 @@ export let ConfBox = (props) => {
             <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
               props.openDeck()
             }}><ViewCarousel style={{fill: '#fff'}}/></IconButton>
-            <Typography variant={'h6'}>سالن کنفرانس</Typography>
+            <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16}} onClick={() => {
+              props.openNotes()
+            }}><Notes style={{fill: '#fff'}}/></IconButton>
+            <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>سالن کنفرانس</Typography>
             <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() =>  popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
           </Toolbar>
         </AppBar>
