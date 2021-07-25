@@ -17,6 +17,9 @@ import ViewListIcon from '@material-ui/icons/ViewList';
 import { membership } from './room';
 import { room, roomId } from '../../util/Utils';
 import { RoomTreeBox } from '../../components/RoomTreeBox';
+import HomeToolbar from '../../components/HomeToolbar';
+import SpacesSearchbar from '../../components/SpacesSearchbar';
+import HomeSpaceSearchbar from '../../components/HomeSpaceSearchbar';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="right" ref={ref} {...props} />;
@@ -57,13 +60,11 @@ export default function HomeSpace(props) {
     return (
         <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
             <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
-                <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
-                    <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
-                        <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                        <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>میزکار خانه</Typography>
-                        <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
-                    </Toolbar>
-                </AppBar>
+                <HomeToolbar>
+                    <div style={{width: '75%', position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}>
+                        <HomeSpaceSearchbar/>
+                    </div>
+                </HomeToolbar>
                 <div style={{width: '100%', height: 'calc(100% - 64px)', marginTop: 64, padding: 16}}>
                     
                 </div>
