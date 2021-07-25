@@ -17,7 +17,7 @@ import "react-table/react-table.css";
 
 import {Avatar, Fab, IconButton} from "@material-ui/core";
 import {colors, me, setToken, token} from "../../util/settings";
-import {FetchMe, roomId, roothPath, socket, useForceUpdate} from "../../util/Utils";
+import {FetchMe, roomId, roothPath, serverRoot, socket, useForceUpdate} from "../../util/Utils";
 import {setPermissionState, togglePermissions} from '../../containers/Sidebar';
 import { NotificationManager } from "../../components/ReactNotifications";
 
@@ -121,7 +121,7 @@ export let RoomTreeBox = (props) => {
         }),
         redirect: 'follow'
       };
-      fetch("../room/get_room_users", requestOptions)
+      fetch(serverRoot + "/room/get_room_users", requestOptions)
           .then(response => response.json())
           .then(result => {
             console.log(JSON.stringify(result))
@@ -144,9 +144,9 @@ export let RoomTreeBox = (props) => {
             
           });
     }, []);
-    return (<Card style={{width: '100%', backgroundColor: colors.primary, height: '100vh', marginTop: 16, minWidth: 224}}>
-      <CardBody>
-        <CardTitle>
+    return (<div style={{width: '100%', height: 'calc(100% - 64px)', marginTop: 16}}>
+      <div>
+        <div>
           <span style={{fontSize: 20}}><p style={{color: colors.textIcons}}>ساختار روم</p></span>
           <Button outline className="mb-2" style={{paddingTop: 8, paddingBottom: 8, paddingLeft: 4, paddingRight: 4, 
             color: colors.textIcons, border: '1px solid ' + colors.textIcons, textAlign: 'center', width: 70, fontSize: 12, marginTop: -72, marginRight: 'calc(100% - 70px)'}}
@@ -168,7 +168,7 @@ export let RoomTreeBox = (props) => {
                 }),
                 redirect: 'follow'
               };
-              fetch("../room/add_room", requestOptions)
+              fetch(serverRoot + "/room/add_room", requestOptions)
                   .then(response => response.json())
                   .then(result => {
                     console.log(JSON.stringify(result));
@@ -180,7 +180,7 @@ export let RoomTreeBox = (props) => {
             }}>
             افزودن گروه
           </Button>
-        </CardTitle>
+        </div>
         <div style={{height: '100%'}}>
           <PerfectScrollbar
               option={{ suppressScrollX: true, wheelPropagation: false }}
@@ -202,7 +202,7 @@ export let RoomTreeBox = (props) => {
                           }),
                           redirect: 'follow'
                         };
-                        fetch("../room/is_room_accessible", requestOptions)
+                        fetch(serverRoot + "/room/is_room_accessible", requestOptions)
                           .then(response => response.json())
                           .then(result => {
                             console.log(JSON.stringify(result));
@@ -238,7 +238,7 @@ export let RoomTreeBox = (props) => {
                           }),
                           redirect: 'follow'
                         };
-                        fetch("../room/is_permissions_accessible", requestOptions)
+                        fetch(serverRoot + "/room/is_permissions_accessible", requestOptions)
                           .then(response => response.json())
                           .then(result => {
                             console.log(JSON.stringify(result));
@@ -271,7 +271,7 @@ export let RoomTreeBox = (props) => {
                         }),
                         redirect: 'follow'
                       };
-                      fetch("../room/move_user", requestOptions)
+                      fetch(serverRoot + "/room/move_user", requestOptions)
                           .then(response => response.json())
                           .then(result => {
                             console.log(JSON.stringify(result));
@@ -290,6 +290,6 @@ export let RoomTreeBox = (props) => {
             </div>
           </PerfectScrollbar>
         </div>
-      </CardBody>
-    </Card>);
+      </div>
+    </div>);
 }

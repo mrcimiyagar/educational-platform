@@ -16,9 +16,9 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-table/react-table.css";
 
-import {Avatar, Fab, IconButton} from "@material-ui/core";
+import {Avatar, Fab, IconButton, Typography} from "@material-ui/core";
 import {colors, me, setToken, token} from "../../util/settings";
-import {FetchMe, roomId, roothPath, socket, useForceUpdate} from "../../util/Utils";
+import {FetchMe, room, roomId, roothPath, serverRoot, socket, useForceUpdate} from "../../util/Utils";
 import {setPermissionState, togglePermissions} from '../../containers/Sidebar';
 import { NotificationManager } from "../../components/ReactNotifications";
 
@@ -117,12 +117,12 @@ export let UsersBox = (props) => {
           'token': token
         },
         body: JSON.stringify({
-          spaceId: props.room.spaceId,
-          roomId: props.room.id
+          spaceId: room.spaceId,
+          roomId: roomId
         }),
         redirect: 'follow'
       };
-      fetch("../room/get_room_users", requestOptions)
+      fetch(serverRoot + "/room/get_room_users", requestOptions)
           .then(response => response.json())
           .then(result => {
             console.log(JSON.stringify(result))
@@ -192,30 +192,21 @@ export let UsersBox = (props) => {
             
           });
     }, []);
-    return (<Card style={{width: '100%', backgroundColor: colors.primary, height: props.boxHeight, marginTop: 16, minWidth: 224}}>
-      <CardBody>
-        <CardTitle>
-          <span style={{fontSize: 20}}><p style={{color: colors.textIcons}}>کاربران ({users.length})</p></span>
-          <Button outline className="mb-2" style={{paddingTop: 8, paddingBottom: 8, paddingLeft: 4, paddingRight: 4, 
-            color: colors.textIcons, border: '1px solid ' + colors.textIcons, textAlign: 'center', width: 70, fontSize: 12, marginTop: -72, marginRight: 'calc(100% - 70px)'}}
-            onClick={() => {
-              store.dispatch(switchRoomTreeMenu(true))
-              forceUpdateRoomTreeMenu()
-            }}>
-            گروهبندی
-          </Button>
-        </CardTitle>
-        <div style={{height: '100%', marginTop: -16}}>
+    return (
+    <div style={{width: '100%', height: 'calc(100% - 32px)', marginTop: 32}}>
+      <div>
+        <span style={{fontSize: 20, width: 'calc(100% - 16px)', marginRight: 24, marginTop: 12, marginBottom: 12}}><Typography variant={'body'} style={{color: colors.textIcons}}>کاربران ({users.length})</Typography></span>
+        <div style={{height: '100%'}}>
           <PerfectScrollbar
               option={{ suppressScrollX: true, wheelPropagation: false }}
           >
-            <div style={{height: 'auto'}}>
+            <div style={{height: 'auto', marginRight: 12, paddingTop: 24}}>
               {users.map((user, index) => {
                 return (
                   <div
                       key={index}
                       className="d-flex flex-row mb-3 pb-3"
-                      style={{marginRight: -12, direction: 'rtl', position: 'relative'}}
+                      style={{direction: 'rtl', position: 'relative', width: 'calc(100% - 16px)', marginRight: 16}}
                       onMouseEnter={() => setCurrentHover(index)}
                       onMouseLeave={() => setCurrentHover(-1)}
                   >
@@ -236,7 +227,7 @@ let requestOptions = {
   }),
   redirect: 'follow'
 };
-fetch("../room/is_permissions_accessible", requestOptions)
+fetch(serverRoot + "/room/is_permissions_accessible", requestOptions)
   .then(response => response.json())
   .then(result => {
     console.log(JSON.stringify(result));
@@ -279,6 +270,6 @@ fetch("../room/is_permissions_accessible", requestOptions)
             </div>
           </PerfectScrollbar>
         </div>
-      </CardBody>
-    </Card>);
+      </div>
+    </div>);
 }

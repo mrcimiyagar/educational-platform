@@ -64,26 +64,34 @@ router.post('/get_polls', jsonParser, async function (req, res) {
                 let done = 0;
                 if (polls.length > 0) {
                 polls.forEach(async poll => {
+                    console.log('hello 1')
                     let done2 = 0;
                     superOptions[poll.id] = {};
                     superOptions[poll.id]['myVote'] = await sw.Vote.findOne({where: {pollId: poll.id, voterId: session.userId}});
-                    sw.Option.findAll({where: {pollId: poll.id}}).then(options => {
-                        options = options.map(o => o.dataValues);
+                    console.log('hello 2')
+                    sw.Option.findAll({raw: true, where: {pollId: poll.id}}).then(options => {
                         superOptions[poll.id]['options'] = options;
+                        console.log('hello 3')
                         if (options.length > 0) {
+                            console.log('hello 4')
                             options.forEach(async option => {
+                                console.log('hello 5')
                                 option.votes = await sw.Vote.count({where: {optionId: option.id}});
                                 done2++;
-                                if (done2 === options.length) {
+                                if (done2 >= options.length) {
+                                    console.log('hello 6 ' + polls.length + ' ' + done)
                                     done++;
-                                    if (done === polls.length) {
+                                    if (done >= polls.length) {
+                                        console.log('hello 7')
                                         res.send({status: 'success', polls: polls, options: superOptions})
                                     }
                                 }
                             });
                         }
                         else {
-                            if (done === polls.length) {
+                            done++;
+                            if (done >= polls.length) {
+                                console.log('hello 8')
                                 res.send({status: 'success', polls: polls, options: superOptions})
                             }
                         }
@@ -91,6 +99,7 @@ router.post('/get_polls', jsonParser, async function (req, res) {
                 });
             }
             else {
+                console.log('hello 9')
                 res.send({status: 'success', polls: polls, options: superOptions})
             }
             });
@@ -133,24 +142,23 @@ router.post('/vote', jsonParser, async function (req, res) {
 
                             let done2 = 0;
                             let superOptions = {};
-                    sw.Option.findAll({where: {pollId: poll.id}}).then(options => {
-                        options = options.map(o => o.dataValues);
-                        superOptions['options'] = options;
-                        if (options.length > 0) {
-                            options.forEach(async option => {
-                                option.votes = await sw.Vote.count({where: {optionId: option.id}});
-                                done2++;
-                                if (done2 === options.length) {
+                            sw.Option.findAll({raw: true, where: {pollId: poll.id}}).then(options => {
+                                superOptions['options'] = options;
+                                if (options.length > 0) {
+                                    options.forEach(async option => {
+                                        option.votes = await sw.Vote.count({where: {optionId: option.id}});
+                                        done2++;
+                                        if (done2 === options.length) {
+                                            require("../server").pushTo('room_' + room.id, 'vote-added', {poll: poll, options: superOptions});
+                                            res.send({status: 'success', vote: vote});
+                                        }
+                                    });
+                                }
+                                else {
                                     require("../server").pushTo('room_' + room.id, 'vote-added', {poll: poll, options: superOptions});
-                                    res.send({status: 'success', })
+                                    res.send({status: 'success', vote: vote});
                                 }
                             });
-                        }
-                        else {
-                            require("../server").pushTo('room_' + room.id, 'vote-added', {poll: poll, options: superOptions});
-                        }
-                    });
-                            res.send({status: 'success', vote: vote});
                         });
                     });
                 });

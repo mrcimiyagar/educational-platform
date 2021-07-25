@@ -137,6 +137,12 @@ export let setRoomId = (ri) => {
   roomId = ri;
 }
 
+export let room;
+export let setRoom = (r) => {
+  if (r === undefined) return;
+  room = r;
+}
+
 export const mapOrder = (array, order, key) => {
   array.sort(function (a, b) {
     var A = a[key], B = b[key];

@@ -7,17 +7,17 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-table/react-table.css";
 import {colors, me, setMe, setToken, token} from "../../util/settings";
 
+import { BotsBox } from "../../modules/botsbox";
 import { BoardBox } from "../../modules/boardbox/boardbox";
 import { TaskBox } from "../../modules/taskbox/taskbox";
 import { ConfBox } from "../../modules/confbox";
-import { ConnectToIo, leaveRoom, roothPath, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot, setRoomId } from "../../util/Utils";
+import { ConnectToIo, leaveRoom, roothPath, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot, setRoomId, setRoom, room } from "../../util/Utils";
 
 import {isDesktop, gotoPage, setCurrentNav, popPage} from '../../App';
 import store, { changeConferenceMode, PeopleChatModes, setCurrentRoom } from "../../redux/main";
 import RoomBottombar from '../../components/RoomBottombar'
-import { AppBar, Button, createTheme, Fab, IconButton, makeStyles, Tab, Tabs, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, Avatar, Button, createTheme, Drawer, Fab, IconButton, makeStyles, Tab, Tabs, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
 import FilesGrid from "../../components/FilesGrid/FilesGrid";
-import PerfectScrollbar from "react-perfect-scrollbar";
 import AddIcon from "@material-ui/icons/Add";
 import { ArrowForward, Chat, Search } from "@material-ui/icons";
 import { pink } from "@material-ui/core/colors";
@@ -29,6 +29,16 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import NotesIcon from '@material-ui/icons/Notes';
 import SwipeableViews from "react-swipeable-views";
+import PollIcon from '@material-ui/icons/Poll';
+import Menu from "@material-ui/icons/Menu";
+import BotIcon from '../../images/robot.png';
+import PeopleIcon from '../../images/people.png';
+import RoomIcon from '../../images/room.png'
+import HomeIcon from '../../images/home.png'
+import Settings from "@material-ui/icons/Settings";
+import { UsersBox } from "../../modules/usersbox/usersbox";
+import RoomTreeMenu from "../../components/RoomTreeMenu";
+import { RoomTreeBox } from "../../components/RoomTreeBox";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -98,42 +108,14 @@ export default function RoomPage(props) {
 
   [membership, setMembership] = React.useState({})
   const [loaded, setLoaded] = React.useState(false)
+  const [menuOpen, setMenuOpen] = React.useState(false)
   const [currentRoomNav, setCurrentRoomNav] = React.useState(currentRoomNavBackup)
   const [fileMode, setFileMode] = React.useState(0)
+  const [menuMode, setMenuMode] = React.useState(0)
 
   const search = props.location.search
   let roomId = new URLSearchParams(search).get('room_id')
   setRoomId(roomId)
-
-  let onSocketAuth = () => {
-    socket.off('membership-updated')
-    socket.on('membership-updated', mem => {
-      
-    })
-    socket.off('view-updated')
-    socket.on('view-updated', v => {
-      
-    })
-    let requestOptions2 = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'token': token
-      },
-      body: JSON.stringify({
-        roomId: roomId
-      }),
-      redirect: 'follow'
-    };
-    fetch(serverRoot + "/room/enter_room", requestOptions2)
-        .then(response => response.json())
-        .then(result => {
-          console.log(JSON.stringify(result));
-          setMembership(result.membership)
-          forceUpdate()
-        })
-        .catch(error => console.log('error', error));
-  }
 
   let loadData = (callback) => {
     leaveRoom(() => {
@@ -152,24 +134,46 @@ export default function RoomPage(props) {
             .then(response => response.json())
             .then(result => {
               console.log(JSON.stringify(result))
-      
+              setRoom(result.room)
               setToken(localStorage.getItem('token'));
-              validateToken(token, (result) => {
-                  if (result) {
-                    onSocketAuth()
-                  }
-                  else {
-                    gotoPage('/app/register')
-                  }
-              })
               
-              ConnectToIo(token, onSocketAuth)
+              ConnectToIo(token, () => {
+                
+              })
+
+              socket.off('membership-updated')
+                socket.on('membership-updated', mem => {
+                  
+                })
+                socket.off('view-updated')
+                socket.on('view-updated', v => {
+                  
+                })
+                let requestOptions2 = {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'token': token
+                  },
+                  body: JSON.stringify({
+                    roomId: roomId
+                  }),
+                  redirect: 'follow'
+                };
+                fetch(serverRoot + "/room/enter_room", requestOptions2)
+                    .then(response => response.json())
+                    .then(result => {
+                      console.log(JSON.stringify(result));
+                      setMembership(result.membership)
+                      forceUpdate()
+
+                      callback()
+                    })
+                    .catch(error => console.log('error', error));
           
               window.scrollTo(0, 0);
               
               store.dispatch(changeConferenceMode(true));
-
-              callback()
             })
             .catch(error => console.log('error', error));
 
@@ -239,6 +243,9 @@ export default function RoomPage(props) {
   let openNotes = () => {
     gotoPage('/app/notes')
   }
+  let openPolls = () => {
+    gotoPage('/app/poll')
+  }
   const handleChange = (event, newValue) => {
     setFileMode(newValue)
   };
@@ -261,83 +268,107 @@ export default function RoomPage(props) {
       <div style={{width: '100%', height: '100%', position: 'fixed', right: 0, top: 0, backgroundColor: colors.primaryDark}}>
         <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, backgroundColor: '#fff'}}>
         {
-          currentRoomNav === 2 ? 
-            <ConfBox openDeck={openDeck} openNotes={openNotes}/> :
-            currentRoomNav === 1 ? 
-              <BoardBox openDeck={openDeck} openNotes={openNotes} membership={membership} roomId={roomId} style={{display: 'block'}}/> :
-              currentRoomNav === 3 ? 
-                <TaskBox openDeck={openDeck} openNotes={openNotes}/> :
-                currentRoomNav === 4 ?
-                
-                    <div
-                      style={{backgroundColor: '#eee', width: '100%', height: '100%', minHeight: '100vh'}}>
-                        <AppBar style={{width: '100%', height: 64 + 72, backgroundColor: '#2196f3'}}>
-                          <Toolbar style={{width: '100%', justifyContent: 'center', textAlign: 'center'}}>
-                            <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                            <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
-                              openDeck()
-                            }}><ViewCarouselIcon style={{fill: '#fff'}}/></IconButton>
-                            <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16}} onClick={() => {
-                              openNotes()
-                            }}><NotesIcon style={{fill: '#fff'}}/></IconButton>
-                            <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>فایل ها</Typography>
-                            <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
-                          </Toolbar>
-                          <Tabs
-                            variant="fullWidth"
-                            value={fileMode}
-                            onChange={handleChange}
-                            classes={{
-                              indicator: classes.indicator
-                            }}
-                            style={{marginTop: 8}}
-                          >
-                            <Tab icon={<PhotoIcon />} label="عکس ها" />
-                            <Tab icon={<AudiotrackIcon />} label="صدا ها" />
-                            <Tab icon={<PlayCircleFilledIcon />} label="ویدئو ها" />
-                            <Tab icon={<InsertDriveFileIcon />} label="سند ها" />
-                          </Tabs>
-                        </AppBar>
-                        <div style={{height: 'calc(100% - 64px - 72px - 48px)', marginTop: 64 + 48}}>
-                          <input id="myInput"
-                            type="file"
-                            ref={(ref) => uploadBtn = ref}
-                            style={{display: 'none'}}
-                            onChange={onChangeFile}/>
-                          <SwipeableViews
-                            axis={'x-reverse'}
-                            index={fileMode}
-                            onChangeIndex={handleChangeIndex}
-                          >
-                            <div>
-                              <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
-                            </div>
-                            <div>
-                              <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
-                            </div>
-                            <div>
-                              <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
-                            </div>
-                            <div>
-                              <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
-                            </div>
-                          </SwipeableViews>
-                          <ThemeProvider theme={theme}>
-                            <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}} onClick={() => uploadBtn.click()}>
-                              <AddIcon/>
-                            </Fab>
-                            <Fab color="primary" style={{position: 'fixed', bottom: 72 + 16, left: 16 + 56 + 16}} onClick={() => {
-                                gotoPage('/app/chat')
-                              }}>
-                              <Chat/>
-                            </Fab>
-                          </ThemeProvider>
-                        </div>
-                    </div> :
+            currentRoomNav === 0 ?
+              <BotsBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId} style={{display: 'block'}}/> :
+              currentRoomNav === 2 ?
+                <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen}/> :
+                currentRoomNav === 1 ?
+                  <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId} style={{display: 'block'}}/> :
+                  currentRoomNav === 3 ?
+                    <TaskBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen}/> :
+                    currentRoomNav === 4 ?
+                      <div
+                        style={{backgroundColor: '#eee', width: '100%', height: '100%', minHeight: '100vh'}}>
+                          <AppBar style={{width: '100%', height: 64 + 72, backgroundColor: '#2196f3'}}>
+                            <Toolbar style={{width: '100%', justifyContent: 'center', textAlign: 'center'}}>
+                              <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
+                              <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
+                                openDeck()
+                              }}><ViewCarouselIcon style={{fill: '#fff'}}/></IconButton>
+                              <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16}} onClick={() => {
+                                openNotes()
+                              }}><NotesIcon style={{fill: '#fff'}}/></IconButton>
+                              <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16 + 32 + 16}} onClick={() => {
+                                openPolls()
+                              }}><PollIcon style={{fill: '#fff'}}/></IconButton>
+                              <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>فایل ها</Typography>
+                              <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
+                            </Toolbar>
+                            <Tabs
+                              variant="fullWidth"
+                              value={fileMode}
+                              onChange={handleChange}
+                              classes={{
+                                indicator: classes.indicator
+                              }}
+                              style={{marginTop: 8}}
+                            >
+                              <Tab icon={<PhotoIcon />} label="عکس ها" />
+                              <Tab icon={<AudiotrackIcon />} label="صدا ها" />
+                              <Tab icon={<PlayCircleFilledIcon />} label="ویدئو ها" />
+                              <Tab icon={<InsertDriveFileIcon />} label="سند ها" />
+                            </Tabs>
+                          </AppBar>
+                          <div style={{height: 'calc(100% - 64px - 72px - 48px)', marginTop: 64 + 48}}>
+                            <input id="myInput"
+                              type="file"
+                              ref={(ref) => uploadBtn = ref}
+                              style={{display: 'none'}}
+                              onChange={onChangeFile}/>
+                            <SwipeableViews
+                              axis={'x-reverse'}
+                              index={fileMode}
+                              onChangeIndex={handleChangeIndex}
+                            >
+                              <div>
+                                <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
+                              </div>
+                              <div>
+                                <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
+                              </div>
+                              <div>
+                                <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
+                              </div>
+                              <div>
+                                <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
+                              </div>
+                            </SwipeableViews>
+                            <ThemeProvider theme={theme}>
+                              <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}} onClick={() => uploadBtn.click()}>
+                                <AddIcon/>
+                              </Fab>
+                              <Fab color="primary" style={{position: 'fixed', bottom: 72 + 16, left: 16 + 56 + 16}} onClick={() => {
+                                  gotoPage('/app/chat')
+                                }}>
+                                <Chat/>
+                              </Fab>
+                            </ThemeProvider>
+                          </div>
+                      </div> :
             null
         }
         </div>
         <RoomBottombar setCurrentRoomNavBackup={(v) => {currentRoomNavBackup = v}} setCurrentRoomNav={setCurrentRoomNav} currentRoomNav={currentRoomNav}/>
+        <Drawer onClose={() => setMenuOpen(false)} open={menuOpen} anchor={'right'}>
+          <div style={{width: 360, height: '100%', backgroundColor: '#fff', display: 'flex'}}>
+            <div style={{width: 80, height: '100%', backgroundColor: '#eee'}}>
+              <Avatar onClick={() => setMenuMode(0)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16, padding: 8}} src={HomeIcon} onClick={() => gotoPage('/app/homespace')}/>
+              <Avatar onClick={() => setMenuMode(1)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16 + 64 + 16, padding: 8}} src={PeopleIcon}/>
+              <Avatar onClick={() => setMenuMode(2)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16,  padding: 8}} src={BotIcon}/>
+              <Avatar onClick={() => setMenuMode(0)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16, padding: 8}} src={RoomIcon} onClick={() => gotoPage('/app/roomstree')}/>
+              <div onClick={() => setMenuMode(3)} style={{borderRadius: 32, width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16, padding: 8}}>
+                <Settings style={{fill: '#666', width: 48, height: 48}}/>
+              </div>
+            </div>
+            <div style={{width: 280, height: '100%'}}>
+              {
+                  menuMode === 1 ?
+                    <UsersBox membership={membership}/> :
+                    null
+              }
+            </div>
+          </div>
+        </Drawer>
       </div>
     )
 }

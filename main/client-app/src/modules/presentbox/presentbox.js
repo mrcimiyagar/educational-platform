@@ -9,6 +9,7 @@ import { roomId, roothPath, serverRoot, socket, useForceUpdate } from '../../uti
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { membership } from '../../routes/pages/room';
+import { Drawer, Fab, Typography } from '@material-ui/core';
 
 let initialPage = '';
 
@@ -82,7 +83,7 @@ export function PresentBox(props) {
         .then(result => {
           console.log(JSON.stringify(result));
         });
-    fetchSize(`../file/download_file?token=${token}&roomId=${roomId}&fileId=${files[i].id}`)
+    fetchSize(serverRoot + `/file/download_file?token=${token}&roomId=${roomId}&fileId=${files[i].id}`)
   }
   let setCurrentPage = (i) => {
     setPageNumber(i);
@@ -186,33 +187,33 @@ export function PresentBox(props) {
       setPimgHeight(this.height); 
     }
   }, [pimgLoad]);
+  const toggleDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    props.setOpen(open)
+  };
   return (
-    <div style={{height: '100%', width: '100%', marginTop: 16, 
+    <div style={{height: 'calc(100% - 64px)', width: '100%', marginTop: 64, 
                 display: props.style.display === 'none' ? 'none' : 'grid', 
                 gridTemplateColumns: '40% 60%', rowGap: 8}}>
       {(membership !== null && membership !== undefined && membership.canPresent === true) ?
-        <Card style={{height: '100%', width: '100%', backgroundColor: colors.primary}}>
-          <input id="myInput"
-            type="file"
-            ref={(ref) => uploadBtn = ref}
-            style={{display: 'none'}}
-            onChange={onChangeFile}/>
-          <Button color={'primary'} outline style={{width: 200, marginTop: 24, marginRight: 24, marginBottom: 32}} onClick={() => uploadBtn.click()}>آپلود فایل ارائه</Button>
-          <div style={{height: 'calc(100vh - 256px)'}}>
-            <PresentsGrid setIsIdsAssigned={setIsIdsAssigned} isIdsAssigned={isIdsAssigned} isPresent setCurrentPresent={setCurrentPresent} files={files} setFiles={setFiles} presents={presents} setPresents={setPresents} roomId={roomId}/>
-          </div>
-      </Card> :
-      null
-      }
-      <Card id={'presentView'} style={{height: '100%', width: '100%', marginRight: 16, position: 'relative', backgroundColor: colors.primary}}>
-        {(files.length > 0 && files[currentPresent].extension === 'pdf' && membership !== null && membership !== undefined && membership.canPresent) ? 
-        (<div style={{display: 'flex', zIndex: 1900}}>
-          <Button outline color={'primary'} style={{width: 56, height: 56}} onClick={() => {setCurrentPage(pageNumber + 1);}}><ArrowForwardIosIcon/></Button>
-          <p style={{width: 112}}>{pageNumber}</p>
-          <Button outline color={'primary'} style={{width: 56, height: 56}} onClick={() => {setCurrentPage(pageNumber - 1);}}><ArrowBackIosIcon/></Button>
-        </div>) :
+        <Drawer anchor={'bottom'} open={props.presentOpen} onClose={toggleDrawer(false)}>
+          <Card style={{height: '100%', width: '100%', backgroundColor: colors.primary}}>
+            <input id="myInput"
+              type="file"
+              ref={(ref) => uploadBtn = ref}
+              style={{display: 'none'}}
+              onChange={onChangeFile}/>
+            <Button color={'primary'} outline style={{width: 200, marginTop: 24, marginRight: 24, marginBottom: 32}} onClick={() => uploadBtn.click()}>آپلود فایل ارائه</Button>
+            <div style={{height: 'calc(100vh - 256px)'}}>
+              <PresentsGrid setIsIdsAssigned={setIsIdsAssigned} isIdsAssigned={isIdsAssigned} isPresent setCurrentPresent={setCurrentPresent} files={files} setFiles={setFiles} presents={presents} setPresents={setPresents} roomId={roomId}/>
+            </div>
+          </Card>
+        </Drawer> :
         null
-        }
+      }
+      <div id={'presentView'} style={{height: '100%', width: '100%', position: 'relative', backgroundColor: colors.primary}}>
         {
           (files.length > 0 ? 
             files[currentPresent].extension === 'png' || files[currentPresent].extension === 'jpg' || files[currentPresent].extension === 'jpeg' || files[currentPresent].extension === 'svg' || files[currentPresent].extension === 'gif' ?
@@ -230,6 +231,14 @@ export function PresentBox(props) {
               null :
             null)
         }
-      </Card>
+        {(files.length > 0 && files[currentPresent].extension === 'pdf' && membership !== null && membership !== undefined && membership.canPresent) ? 
+        (<div style={{display: 'flex', zIndex: 1900, width: 'auto', position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)'}}>
+          <Fab color={'secondary'} onClick={() => {setCurrentPage(pageNumber + 1);}}><ArrowForwardIosIcon/></Fab>
+          <Typography style={{backgroundColor: '#fff', width: 112, textAlign: 'center', justifyContent: 'center', alignItems: 'center', paddingTop: 12}} variant={'h6'}>{pageNumber}</Typography>
+          <Fab color={'secondary'} onClick={() => {setCurrentPage(pageNumber - 1);}}><ArrowBackIosIcon/></Fab>
+        </div>) :
+        null
+        }
+      </div>
     </div>);
 }

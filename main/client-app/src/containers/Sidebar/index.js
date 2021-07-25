@@ -795,6 +795,7 @@ class Sidebar extends Component {
                 toggle={this.togglePoll}
                 wrapClassName="modal-right"
                 backdrop={true}
+                style={{zIndex: 999999}}
             >
               <div
             style={{backgroundColor: colors.primaryLight, width: '100%', height: '100vh'}}>

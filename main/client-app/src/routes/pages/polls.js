@@ -14,6 +14,9 @@ import { PresentBox } from '../../modules/presentbox/presentbox';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { ArrowForward, Search } from '@material-ui/icons';
 import ViewListIcon from '@material-ui/icons/ViewList';
+import { PollBox } from '../../modules/pollbox/pollbox';
+import { setToken } from '../../util/settings';
+import { setRoomId } from '../../util/Utils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="right" ref={ref} {...props} />;
@@ -44,9 +47,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function Deck(props) {
+export default function PollPage(props) {
+      
+    setToken(localStorage.getItem('token'));
+    setRoomId(1)
     const [open, setOpen] = React.useState(true);
-    const [presentOpen, setPresentMenuOpen] = React.useState(false)
+    const [createPollOpen, setCreatePollOpen] = React.useState(false)
     const handleClose = () => {
         setOpen(false);
         popPage()
@@ -58,14 +64,11 @@ export default function Deck(props) {
                 <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                        <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => setPresentMenuOpen(true)}><ViewListIcon style={{fill: '#fff'}}/></IconButton>
-                        <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>تابلو</Typography>
+                        <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>رای گیزی</Typography>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
-                <div style={{width: '100%', height: 'calc(100% - 64px)', marginTop: 64}}>
-                    <PresentBox style={{display: 'block'}} setOpen={setPresentMenuOpen} presentOpen={presentOpen}/>
-                </div>
+                <PollBox style={{display: 'block'}} setOpen={setCreatePollOpen} open={createPollOpen}/>
             </div>
         </Dialog>
     );

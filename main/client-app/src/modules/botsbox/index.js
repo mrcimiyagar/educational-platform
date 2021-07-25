@@ -1,6 +1,4 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
-import './style.css';
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import {
   Card,
   CardBody
@@ -14,7 +12,7 @@ import ViewCarousel from "@material-ui/icons/ViewCarousel";
 import PollIcon from '@material-ui/icons/Poll';
 import Menu from "@material-ui/icons/Menu";
 
-export let BoardBox = (props) => {
+export let BotsBox = (props) => {
     let roomId = props.roomId + '';
     while (roomId.length < 22) {
       roomId = '0' + roomId;

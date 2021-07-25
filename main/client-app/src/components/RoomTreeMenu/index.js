@@ -31,7 +31,6 @@ export default function RoomTreeMenu(props) {
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
         >
-          <RoomTreeBox membership={props.membership} roomId={props.roomId} room={props.room}/>
         </div>
       </Drawer>
     </div>
