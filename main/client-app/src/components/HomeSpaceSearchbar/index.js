@@ -7,7 +7,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
-import { setDrawerOpen } from '../../App';
+import { popPage, setDrawerOpen } from '../../App';
+import ArrowForward from '@material-ui/icons/ArrowForward';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,8 +37,8 @@ export default function HomeSpaceSearchbar() {
 
   return (
     <Paper component="form" className={classes.root}>
-      <IconButton onClick={() => setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
-        <MenuIcon style={{fill: '#fff'}}/>
+      <IconButton onClick={() => popPage()} className={classes.iconButton} aria-label="menu">
+        <ArrowForward style={{fill: '#fff'}}/>
       </IconButton>
       <InputBase
         className={classes.input}

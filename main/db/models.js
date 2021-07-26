@@ -22,6 +22,10 @@ let MySurvey;
 let SurveyLabel;
 let SurveyCat;
 let Present;
+let Bot;
+let BotSecret;
+let Widget;
+let Workership;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
@@ -60,6 +64,10 @@ module.exports = {
         await preparePresentModel();
         await prepareSpaceSecretModel();
         await prepareRoomSecretModel();
+        await prepareBotModel();
+        await prepareBotSecretModel();
+        await prepareWidgetModel();
+        await prepareWorkershipModel();
 
         let adminAcc = await Account.findOne({where: {role: 'admin'}});
         if (adminAcc === null) {
@@ -97,6 +105,74 @@ function prepareSequelizeInstance() {
             idle: 10000
         }
     });
+}
+
+async function prepareBotModel() {
+    Bot = sequelizeClient.define('Bot', {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        username: Sequelize.STRING,
+        title: Sequelize.STRING
+    }, {
+        freezeTableName: true
+    });
+    await Bot.sync();
+    module.exports['Bot'] = Bot;
+}
+
+async function prepareBotSecretModel() {
+    BotSecret = sequelizeClient.define('Bot', {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        botId: Sequelize.BIGINT,
+        token: Sequelize.BIGINT
+    }, {
+        freezeTableName: true
+    });
+    BotSecret.belongsTo(Bot, { foreignKey: 'botId' });
+    await BotSecret.sync();
+    module.exports['BotSecret'] = BotSecret;
+}
+
+async function prepareWidgetModel() {
+    Widget = sequelizeClient.define('Widget', {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        title: Sequelize.BIGINT,
+        botId: Sequelize.BIGINT
+    }, {
+        freezeTableName: true
+    });
+    Widget.belongsTo(Bot, { foreignKey: 'botId' });
+    await Widget.sync();
+    module.exports['Widget'] = Widget;
+}
+
+async function prepareWorkershipModel() {
+    Workership = sequelizeClient.define('Workership', {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        widgetId: Sequelize.BIGINT,
+        roomId: Sequelize.BIGINT
+    }, {
+        freezeTableName: true
+    });
+    Workership.belongsTo(Widget, { foreignKey: 'widgetId' });
+    Workership.belongsTo(Room, { foreignKey: 'roomId' });
+    await Workership.sync();
+    module.exports['Workership'] = Workership;
 }
 
 async function prepareUserModel() {
