@@ -131,6 +131,10 @@ router.post('/get_bots', jsonParser, async function (req, res) {
 router.post('/create_comment', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
         let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
         if ((await sw.Comment.findOne({where: {botId: req.body.botId, authorId: session.userId}})) !== null) {
             res.send({status: 'error', errorCode: 'e0005', message: 'duplicate not allowed.'})
             return
@@ -141,7 +145,7 @@ router.post('/create_comment', jsonParser, async function (req, res) {
             text: req.body.text,
             rating: req.body.rating
         })
-        require('../server').pushTo('aseman-bot-comments-' + bot.id, 'comment-created', comment)
+        require('../server').pushTo('aseman-bot-page-' + bot.id, 'comment-created', comment)
         res.send({status: 'success', comment})
     })
 })
@@ -149,13 +153,17 @@ router.post('/create_comment', jsonParser, async function (req, res) {
 router.post('/delete_comment', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
         let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
         let comment = await sw.Comment.findOne({where: {botId: req.body.botId, authorId: session.userId}})
         if (comment === null) {
             res.send({status: 'error', errorCode: 'e0005', message: 'comment does not exist.'})
             return
         }
         await comment.destroy()
-        require('../server').pushTo('aseman-bot-comments-' + bot.id, 'comment-deleted', comment)
+        require('../server').pushTo('aseman-bot-page-' + bot.id, 'comment-deleted', comment)
         res.send({status: 'success'})
     })
 })
@@ -163,6 +171,10 @@ router.post('/delete_comment', jsonParser, async function (req, res) {
 router.post('/update_comment', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
         let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
         let comment = await sw.Comment.findOne({where: {botId: req.body.botId, authorId: session.userId}})
         if (comment === null) {
             res.send({status: 'error', errorCode: 'e0005', message: 'comment does not exist.'})
@@ -170,15 +182,337 @@ router.post('/update_comment', jsonParser, async function (req, res) {
         }
         comment.text = req.body.text
         await comment.save()
-        require('../server').pushTo('aseman-bot-comments-' + bot.id, 'comment-updated', comment)
+        require('../server').pushTo('aseman-bot-page' + bot.id, 'comment-updated', comment)
         res.send({status: 'success'})
     })
 })
 
 router.post('/get_comments', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
-        let comments = await sw.Comment.findAll({raw: true})
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let comments = await sw.Comment.findAll({raw: true, where: {botId: req.body.botId}})
         res.send({status: 'success', comments: comments})
+    })
+})
+
+router.post('/create_screenshot', jsonParser, async function (req, res) {
+    let botId = req.query.botId
+    let roomId = -1;
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+            
+            if (!acc.canModifyOwnBots) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'});
+                return;
+            }
+
+            let bot = await sw.Bot.findOne({where: {id: botId}})
+            if (bot === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'});
+                return;
+            }
+
+            let form = new formidable.IncomingForm();
+                form.parse(req, async function (err, fields, files) {
+                    if (!fs.existsSync('files')) {
+                        fs.mkdirSync('files');
+                    }
+                    let ext = '';
+                    let extIndex = files.file.name.lastIndexOf('.');
+                    if (extIndex > 0) {
+                        extIndex++;
+                        if (extIndex < files.file.name.length) {
+                            ext = files.file.name.substring(extIndex);
+                        }
+                    }
+                    let preview = await sw.File.create({
+                        extension: 'png',
+                        uploaderId: session.userId,
+                        roomId: roomId,
+                        isPreview: true,
+                        isPresent: false
+                    });
+                    let file = await sw.File.create({
+                        name: files.file.name,
+                        size: files.file.size,
+                        extension: ext,
+                        uploaderId: session.userId,
+                        roomId: roomId,
+                        previewFileId: preview.id,
+                        isPreview: false,
+                        isPresent: false
+                    });
+                    let oldPath = files.file.path;
+                    let newPath = rootPath + '/files/' + file.id;
+                    fs.copyFileSync(oldPath, newPath);
+                    if (ext === 'pdf') {
+                        let previewFactoryPath = rootPath + '/temp/' + file.id + '.pdf';
+                        fs.copyFileSync(oldPath, previewFactoryPath);
+                    }
+
+                    if (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg') {
+                        fs.copyFileSync(rootPath + '/files/' + file.id, rootPath + '/files/' + preview.id);
+                        require("../server").pushTo('aseman-bot-page' + bot.id, 'screenshot-created', file);
+                        res.send({status: 'success', file: file});
+                    }
+                    else {
+                        require("../server").pushTo('aseman-bot-page' + bot.id, 'screenshot-created', file);
+                        res.send({status: 'success', file: file});
+                    }
+                });
+    });
+})
+
+router.post('/delete_screenshot', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let screenshot = await sw.Screenshot.findOne({where: {id: req.body.screenshotId}})
+        if (screenshot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'screenshot does not exist.'})
+            return
+        }
+        await screenshot.destroy()
+        require('../server').pushTo('aseman-bot-page-' + bot.id, 'screenshot-deleted', screenshot)
+        res.send({status: 'success'})
+    })
+})
+
+router.post('/get_screenshots', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let screenshots = await sw.Screenshot.findAll({raw: true, where: {botId: req.body.botId}})
+        res.send({status: 'success', screenshots: screenshots})
+    })
+})
+
+router.post('/create_widget', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let widget = await sw.Widget.create({
+            botId: req.body.botId,
+            title: req.body.title,
+        })
+        require('../server').pushTo('aseman-bot-page-' + bot.id, 'widget-created', widget)
+        res.send({status: 'success', comment})
+    })
+})
+
+router.post('/delete_widget', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let botSecret = await sw.BotSecret.findOne({where: {botId: bot.id}})
+        if (botSecret.creatorId !== session.userId) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let widget = await sw.Widget.findOne({where: {botId: req.body.botId}})
+        if (widget === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'widget does not exist.'})
+            return
+        }
+        await widget.destroy()
+        require('../server').pushTo('aseman-bot-page-' + bot.id, 'widget-deleted', widget)
+        res.send({status: 'success'})
+    })
+})
+
+router.post('/update_widget', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let botSecret = await sw.BotSecret.findOne({where: {botId: bot.id}})
+        if (botSecret.creatorId !== session.userId) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let widget = await sw.Comment.findOne({where: {botId: req.body.botId}})
+        if (widget === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'widget does not exist.'})
+            return
+        }
+        comment.title = req.body.title
+        await comment.save()
+        require('../server').pushTo('aseman-bot-page' + bot.id, 'widget-updated', widget)
+        res.send({status: 'success'})
+    })
+})
+
+router.post('/get_widgets', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let widgets = await sw.Comment.findAll({raw: true, where: {botId: req.body.botId}})
+        res.send({status: 'success', widgets: widgets})
+    })
+})
+
+router.post('/create_workership', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let subscription = await sw.Subscription.findOne({where: {userId: session.userId, botId: req.body.botId}})
+        if (subscription === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let membership = await sw.Membership.findOne({where: {userId: session.userId, roomId: req.body.roomId}})
+        if (membership === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let widget = await sw.Widget.findOne({where: {id: req.body.widgetId, botId: req.body.botId}})
+        if (widget === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let workership = await sw.Widget.create({
+            widgetId: widget.id,
+            roomId: membership.roomId,
+            width: 150,
+            height: 150,
+            x: 100,
+            y: 100
+        })
+        require('../server').pushTo('room-' + membership.roomId, 'workership-created', workership)
+        res.send({status: 'success', workership: workership})
+    })
+})
+
+router.post('/delete_workership', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let subscription = await sw.Subscription.findOne({where: {userId: session.userId, botId: req.body.botId}})
+        if (subscription === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let membership = await sw.Membership.findOne({where: {userId: session.userId, roomId: req.body.roomId}})
+        if (membership === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let widget = await sw.Widget.findOne({where: {id: req.body.widgetId, botId: req.body.botId}})
+        if (widget === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let workership = await sw.Widget.findOne({where: {roomId: membership.roomId, widgetId: widget.id}})
+        await workership.destroy()
+        require('../server').pushTo('room-' + membership.roomId, 'workership-deleted', workership)
+        res.send({status: 'success'})
+    })
+})
+
+router.post('/update_workership', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let subscription = await sw.Subscription.findOne({where: {userId: session.userId, botId: req.body.botId}})
+        if (subscription === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let membership = await sw.Membership.findOne({where: {userId: session.userId, roomId: req.body.roomId}})
+        if (membership === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let widget = await sw.Widget.findOne({where: {id: req.body.widgetId, botId: req.body.botId}})
+        if (widget === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let workership = await sw.Widget.findOne({where: {roomId: membership.roomId, widgetId: widget.id}})
+        workership.x = req.body.x
+        workership.y = req.body.y
+        workership.width = req.body.width
+        workership.height = req.body.height
+        await workership.save()
+        require('../server').pushTo('room-' + membership.roomId, 'workership-updated', workership)
+        res.send({status: 'success'})
+    })
+})
+
+router.post('/get_widgets', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        let membership = await sw.Membership.findOne({where: {userId: session.userId, roomId: req.body.roomId}})
+        if (membership === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let workerships = await sw.Widget.findAll({raw: true, where: {roomId: membership.roomId}})
+        res.send({status: 'success', workerships: workerships})
+    })
+})
+
+router.post('/gui', jsonParser, async function (req, res) {
+    authenticateBot(req, res, async (workership, bot, widget) => {
+        if (bot === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
+            return
+        }
+        if (workership === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        if (widget === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let targetUserId = req.body.userId
+        if (targetUserId !== undefined && (await sw.Membership.findOne({where: {roomId: workership.roomId, userId: targetUserId}})) === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let isPacketGlobal = req.body.globalGui
+        let gui = req.body.gui
+        if (isPacketGlobal) {
+            require('../server').pushTo('room-' + workership.roomId, 'gui', {gui: gui, roomId: workership.roomId, widgetId: widget.id})
+        }
+        else {
+            require('../server').pushTo('user-' + targetUserId, 'gui', {gui: gui, roomId: workership.roomId, user: req.body.userId, widgetId: widget.id})
+        }
+        res.send({status: 'success'})
     })
 })
 

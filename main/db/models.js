@@ -28,6 +28,7 @@ let Comment;
 let Widget;
 let Workership;
 let Subscription;
+let Screenshot;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
@@ -72,6 +73,7 @@ module.exports = {
         await prepareWidgetModel();
         await prepareWorkershipModel();
         await prepareSubscriptionModel();
+        await prepareScreenshotModel();
 
         let adminAcc = await Account.findOne({where: {role: 'admin'}});
         if (adminAcc === null) {
@@ -109,6 +111,24 @@ function prepareSequelizeInstance() {
             idle: 10000
         }
     });
+}
+
+async function prepareScreenshotModel() {
+    Screenshot = sequelizeClient.define('Screenshot', {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        botId: Sequelize.BIGINT,
+        fileId: Sequelize.BIGINT
+    }, {
+        freezeTableName: true
+    });
+    Screenshot.belongsTo(Bot, { foreignKey: 'botId' });
+    Screenshot.belongsTo(File, { foreignKey: 'fileId' });
+    await Screenshot.sync();
+    module.exports['Screenshot'] = Screenshot;
 }
 
 async function prepareSubscriptionModel() {
@@ -221,7 +241,11 @@ async function prepareWorkershipModel() {
             primaryKey: true,
         },
         widgetId: Sequelize.BIGINT,
-        roomId: Sequelize.BIGINT
+        roomId: Sequelize.BIGINT,
+        x: Sequelize.INTEGER,
+        y: Sequelize.INTEGER,
+        width: Sequelize.INTEGER,
+        height: Sequelize.INTEGER,
     }, {
         freezeTableName: true
     });

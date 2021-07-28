@@ -12,6 +12,7 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import Menu from '@material-ui/icons/Menu';
 import { propTypes } from 'react-polls';
 import Settings from '@material-ui/icons/Settings';
+import { More, MoreVert } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,17 +42,17 @@ export default function BotsBoxSearchbar(props) {
   return (
     <Paper component="form" className={classes.root}>
       <IconButton onClick={() => props.openMenu()} className={classes.iconButton} aria-label="menu">
-        <Menu style={{fill: '#000'}}/>
+        <Menu style={{fill: '#666'}}/>
       </IconButton>
       <InputBase
         className={classes.input}
         placeholder="جستجو در خانه"
       />
       <IconButton className={classes.iconButton}>
-        <SearchIcon style={{fill: '#000'}}/>
+        <SearchIcon style={{fill: '#666'}}/>
       </IconButton>
       <IconButton className={classes.iconButton} onClick={() => {}}>
-        <Settings style={{fill: '#000'}}/>
+        <MoreVert style={{fill: '#666'}}/>
       </IconButton>
     </Paper>
   );
