@@ -40,7 +40,7 @@ export default function RoomBottombar(props) {
       onChange={(event, newValue) => {props.setCurrentRoomNav(newValue); props.setCurrentRoomNavBackup(newValue)}}
       showLabels
       className={classes.root}
-      style={{height: 72}}
+      style={{height: 72, zIndex: 99999}}
     >
       <BottomNavigationAction value={0} classes={classesAction} label="میز کار" icon={<DesktopMacIcon />} />
       <BottomNavigationAction value={1} classes={classesAction} label="وایت بورد" icon={<BorderColorIcon />} />

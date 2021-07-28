@@ -24,8 +24,10 @@ let SurveyCat;
 let Present;
 let Bot;
 let BotSecret;
+let Comment;
 let Widget;
 let Workership;
+let Subscription;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
@@ -66,8 +68,10 @@ module.exports = {
         await prepareRoomSecretModel();
         await prepareBotModel();
         await prepareBotSecretModel();
+        await prepareCommentModel();
         await prepareWidgetModel();
         await prepareWorkershipModel();
+        await prepareSubscriptionModel();
 
         let adminAcc = await Account.findOne({where: {role: 'admin'}});
         if (adminAcc === null) {
@@ -107,6 +111,30 @@ function prepareSequelizeInstance() {
     });
 }
 
+async function prepareSubscriptionModel() {
+    Subscription = sequelizeClient.define('Subscription', {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        botId: {
+            type: DataType.BIGINT,
+            unique: 'SubscriptionUnique'
+        },
+        subscriberId: {
+            type: DataType.BIGINT,
+            unique: 'SubscriptionUnique'
+        }
+    }, {
+        freezeTableName: true
+    });
+    Subscription.belongsTo(Bot, { foreignKey: 'botId' });
+    Subscription.belongsTo(User, { foreignKey: 'subscriberId' });
+    await Subscription.sync();
+    module.exports['Subscription'] = Subscription;
+}
+
 async function prepareBotModel() {
     Bot = sequelizeClient.define('Bot', {
         id: {
@@ -124,20 +152,48 @@ async function prepareBotModel() {
 }
 
 async function prepareBotSecretModel() {
-    BotSecret = sequelizeClient.define('Bot', {
+    BotSecret = sequelizeClient.define('BotSecret', {
         id: {
             type: Sequelize.STRING,
             allowNull: false,
             primaryKey: true,
         },
         botId: Sequelize.BIGINT,
-        token: Sequelize.BIGINT
+        token: Sequelize.BIGINT,
+        creatorId: Sequelize.BIGINT
     }, {
         freezeTableName: true
     });
     BotSecret.belongsTo(Bot, { foreignKey: 'botId' });
+    BotSecret.belongsTo(User, { foreignKey: 'creatorId' });
     await BotSecret.sync();
     module.exports['BotSecret'] = BotSecret;
+}
+
+async function prepareCommentModel() {
+    Comment = sequelizeClient.define('Comment', {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        botId: {
+            type: DataType.BIGINT,
+            unique: 'commentUnique'
+        },
+        authorId: {
+            type: DataType.BIGINT,
+            unique: 'commentUnique'
+        },
+        text: Sequelize.STRING,
+        rating: Sequelize.INTEGER
+    }, {
+        freezeTableName: true
+    });
+    Comment.belongsTo(Bot, { foreignKey: 'botId' });
+    Comment.belongsTo(User, { foreignKey: 'authorId' });
+    await Comment.sync();
+    module.exports['Comment'] = Comment;
 }
 
 async function prepareWidgetModel() {
@@ -505,6 +561,7 @@ async function prepareRoomSecretModel() {
             primaryKey: true,
             autoIncrement: true
         },
+        wallpaper: Sequelize.BIGINT,
         ownerId: Sequelize.STRING,
         presentId: Sequelize.BIGINT,
         roomId: Sequelize.BIGINT
@@ -513,6 +570,7 @@ async function prepareRoomSecretModel() {
     });
     RoomSecret.belongsTo(Room, { foreignKey: 'roomId'});
     RoomSecret.belongsTo(Present, { foreignKey: 'presentId'});
+    RoomSecret.belongsTo(File, { foreignKey: 'wallpaper'});
     await RoomSecret.sync();
     module.exports['RoomSecret'] = RoomSecret;
 }

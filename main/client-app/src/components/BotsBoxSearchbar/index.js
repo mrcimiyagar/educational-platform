@@ -9,6 +9,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
 import { popPage, setDrawerOpen } from '../../App';
 import ArrowForward from '@material-ui/icons/ArrowForward';
+import Menu from '@material-ui/icons/Menu';
+import { propTypes } from 'react-polls';
+import Settings from '@material-ui/icons/Settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,12 +19,12 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: '#2196f3'
+    backgroundColor: '#fff'
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
-    color: '#fff'
+    color: '#666'
   },
   iconButton: {
     padding: 10,
@@ -32,20 +35,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HomeSpaceSearchbar() {
+export default function BotsBoxSearchbar(props) {
   const classes = useStyles();
 
   return (
     <Paper component="form" className={classes.root}>
-      <IconButton onClick={() => popPage()} className={classes.iconButton} aria-label="menu">
-        <ArrowForward style={{fill: '#fff'}}/>
+      <IconButton onClick={() => props.openMenu()} className={classes.iconButton} aria-label="menu">
+        <Menu style={{fill: '#000'}}/>
       </IconButton>
       <InputBase
         className={classes.input}
         placeholder="جستجو در خانه"
       />
-      <IconButton type="submit" className={classes.iconButton} aria-label="search">
-        <SearchIcon style={{fill: '#fff'}}/>
+      <IconButton className={classes.iconButton}>
+        <SearchIcon style={{fill: '#000'}}/>
+      </IconButton>
+      <IconButton className={classes.iconButton} onClick={() => {}}>
+        <Settings style={{fill: '#000'}}/>
       </IconButton>
     </Paper>
   );

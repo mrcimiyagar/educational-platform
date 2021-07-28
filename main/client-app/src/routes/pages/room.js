@@ -1,13 +1,8 @@
 import React, {Component, Fragment, useEffect, useState} from "react";
 
-import "chartjs-plugin-datalabels";
-import "react-circular-progressbar/dist/styles.css";
-import "react-perfect-scrollbar/dist/css/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-table/react-table.css";
 import {colors, me, setMe, setToken, token} from "../../util/settings";
 
-import { BotsBox } from "../../modules/botsbox";
+import BotsBox from "../../modules/botsbox";
 import { BoardBox } from "../../modules/boardbox/boardbox";
 import { TaskBox } from "../../modules/taskbox/taskbox";
 import { ConfBox } from "../../modules/confbox";
@@ -37,8 +32,6 @@ import RoomIcon from '../../images/room.png'
 import HomeIcon from '../../images/home.png'
 import Settings from "@material-ui/icons/Settings";
 import { UsersBox } from "../../modules/usersbox/usersbox";
-import RoomTreeMenu from "../../components/RoomTreeMenu";
-import { RoomTreeBox } from "../../components/RoomTreeBox";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -269,7 +262,7 @@ export default function RoomPage(props) {
         <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, backgroundColor: '#fff'}}>
         {
             currentRoomNav === 0 ?
-              <BotsBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId} style={{display: 'block'}}/> :
+              <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId} style={{display: 'block'}}/> :
               currentRoomNav === 2 ?
                 <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen}/> :
                 currentRoomNav === 1 ?
@@ -352,17 +345,17 @@ export default function RoomPage(props) {
         <Drawer onClose={() => setMenuOpen(false)} open={menuOpen} anchor={'right'}>
           <div style={{width: 360, height: '100%', backgroundColor: '#fff', display: 'flex'}}>
             <div style={{width: 80, height: '100%', backgroundColor: '#eee'}}>
-              <Avatar onClick={() => setMenuMode(0)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16, padding: 8}} src={HomeIcon} onClick={() => gotoPage('/app/homespace')}/>
-              <Avatar onClick={() => setMenuMode(1)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16 + 64 + 16, padding: 8}} src={PeopleIcon}/>
-              <Avatar onClick={() => setMenuMode(2)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16,  padding: 8}} src={BotIcon}/>
-              <Avatar onClick={() => setMenuMode(0)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16, padding: 8}} src={RoomIcon} onClick={() => gotoPage('/app/roomstree')}/>
-              <div onClick={() => setMenuMode(3)} style={{borderRadius: 32, width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16, padding: 8}}>
+              <Avatar onClick={() => setMenuMode(0)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16, padding: 8}} src={PeopleIcon}/>
+              <Avatar onClick={() => setMenuMode(1)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16 + 64 + 16,  padding: 8}} src={BotIcon}/>
+              <Avatar onClick={() => gotoPage('/app/conf?room_id=1')} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16, padding: 8}} src={HomeIcon}/>
+              <Avatar onClick={() => gotoPage('/app/roomstree')} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16, padding: 8}} src={RoomIcon}/>
+              <div onClick={() => gotoPage('/app/settings')} style={{borderRadius: 32, width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16, padding: 8}}>
                 <Settings style={{fill: '#666', width: 48, height: 48}}/>
               </div>
             </div>
             <div style={{width: 280, height: '100%'}}>
               {
-                  menuMode === 1 ?
+                  menuMode === 0 ?
                     <UsersBox membership={membership}/> :
                     null
               }
