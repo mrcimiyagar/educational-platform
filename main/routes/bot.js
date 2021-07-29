@@ -71,7 +71,8 @@ router.post('/create_bot', jsonParser, async function (req, res) {
         }
         let bot = await sw.Bot.create({
             title: req.body.title,
-            username: req.body.username
+            username: req.body.username,
+            categoryId: req.body.categoryId
         })
         let botSecret = await sw.BotSecret.create({
             botId: bot.id,
@@ -245,6 +246,10 @@ router.post('/create_screenshot', jsonParser, async function (req, res) {
                         isPreview: false,
                         isPresent: false
                     });
+                    let screenshot = await sw.Screenshot.create({
+                        fileId: preview.id,
+                        botId: bot.id
+                    })
                     let oldPath = files.file.path;
                     let newPath = rootPath + '/files/' + file.id;
                     fs.copyFileSync(oldPath, newPath);
@@ -255,12 +260,12 @@ router.post('/create_screenshot', jsonParser, async function (req, res) {
 
                     if (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg') {
                         fs.copyFileSync(rootPath + '/files/' + file.id, rootPath + '/files/' + preview.id);
-                        require("../server").pushTo('aseman-bot-page' + bot.id, 'screenshot-created', file);
-                        res.send({status: 'success', file: file});
+                        require("../server").pushTo('aseman-bot-page' + bot.id, 'screenshot-created', screenshot);
+                        res.send({status: 'success', screenshot: screenshot});
                     }
                     else {
-                        require("../server").pushTo('aseman-bot-page' + bot.id, 'screenshot-created', file);
-                        res.send({status: 'success', file: file});
+                        require("../server").pushTo('aseman-bot-page' + bot.id, 'screenshot-created', screenshot);
+                        res.send({status: 'success', screenshot: screenshot});
                     }
                 });
     });
@@ -513,6 +518,143 @@ router.post('/gui', jsonParser, async function (req, res) {
             require('../server').pushTo('user-' + targetUserId, 'gui', {gui: gui, roomId: workership.roomId, user: req.body.userId, widgetId: widget.id})
         }
         res.send({status: 'success'})
+    })
+})
+
+router.post('/create_ad', jsonParser, async function (req, res) {
+    let roomId = -1;
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+            
+            if (!acc.canModifyOwnBots) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'});
+                return;
+            }
+
+            let bot = await sw.Bot.findOne({where: {id: botId}})
+            if (bot === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'});
+                return;
+            }
+
+            let form = new formidable.IncomingForm();
+                form.parse(req, async function (err, fields, files) {
+                    if (!fs.existsSync('files')) {
+                        fs.mkdirSync('files');
+                    }
+                    let ext = '';
+                    let extIndex = files.file.name.lastIndexOf('.');
+                    if (extIndex > 0) {
+                        extIndex++;
+                        if (extIndex < files.file.name.length) {
+                            ext = files.file.name.substring(extIndex);
+                        }
+                    }
+                    let preview = await sw.File.create({
+                        extension: 'png',
+                        uploaderId: session.userId,
+                        roomId: roomId,
+                        isPreview: true,
+                        isPresent: false
+                    });
+                    let file = await sw.File.create({
+                        name: files.file.name,
+                        size: files.file.size,
+                        extension: ext,
+                        uploaderId: session.userId,
+                        roomId: roomId,
+                        previewFileId: preview.id,
+                        isPreview: false,
+                        isPresent: false
+                    });
+                    let storeAd = await sw.StoreAd.create({
+                        fileId: preview.id
+                    })
+                    let oldPath = files.file.path;
+                    let newPath = rootPath + '/files/' + file.id;
+                    fs.copyFileSync(oldPath, newPath);
+
+                    if (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg') {
+                        fs.copyFileSync(rootPath + '/files/' + file.id, rootPath + '/files/' + preview.id);
+                        require("../server").pushTo('aseman-store-page' + bot.id, 'store-ad-created', storeAd);
+                        res.send({status: 'success', file: file});
+                    }
+                    else {
+                        require("../server").pushTo('aseman-store-page' + bot.id, 'store-ad-created', storeAd);
+                        res.send({status: 'success', file: file});
+                    }
+                });
+    });
+})
+
+router.post('/delete_ad', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let ad = await sw.StoreAd.findOne({where: {id: req.body.storeAdId}})
+        if (ad === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'ad does not exist.'})
+            return
+        }
+        await ad.destroy()
+        require('../server').pushTo('aseman-store-page', 'store-ad-deleted', ad)
+        res.send({status: 'success'})
+    })
+})
+
+router.post('/get_ads', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let ads = await sw.StoreAd.findAll({raw: true})
+        res.send({status: 'success', ads: ads})
+    })
+})
+
+router.post('/create_category', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        if (!acc.canModifyStoreCategories) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let cat = await sw.StoreCategory.create({
+            title: req.body.title
+        })
+        require('../server').pushTo('aseman-store-page', 'store-category-created', cat)
+        res.send({status: 'success', cat: cat})
+    })
+})
+
+router.post('/delete_category', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        if (!acc.canModifyStoreCategories) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let cat = await sw.StoreCategory.findOne({where: {
+            id: req.body.categoryId
+        }})
+        await cat.destroy()
+        require('../server').pushTo('aseman-store-page', 'store-category-deleted', cat)
+        res.send({status: 'success'})
+    })
+})
+
+router.post('/update_category', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        if (!acc.canModifyStoreCategories) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let cat = await sw.StoreCategory.findOne({where: {
+            id: req.body.categoryId
+        }})
+        cat.title = req.body.title
+        cat.save()
+        require('../server').pushTo('aseman-store-page', 'store-category-updated', cat)
+        res.send({status: 'success'})
+    })
+})
+
+router.post('/get_categories', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let cats = await sw.StoreCategory.findAll({raw: true})
+        res.send({status: 'success', categories: cats})
     })
 })
 

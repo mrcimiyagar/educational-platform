@@ -20,6 +20,7 @@ import DeckPage from './pages/deck'
 import NotesPage from './pages/notes'
 import PollPage from './pages/polls'
 import RoomsTreePage from './pages/roomsTree'
+import SearchEnginePage from './pages/searchEngine'
 import { AnimatedSwitch } from 'react-router-transition'
 import '../App.css'
 
@@ -47,6 +48,7 @@ class MainApp extends Component {
 							<Route path={`${match.url}/notes`} component={NotesPage} />
 							<Route path={`${match.url}/poll`} component={PollPage} />
 							<Route path={`${match.url}/roomstree`} component={RoomsTreePage} />
+							<Route path={`${match.url}/searchengine`} component={SearchEnginePage} />
 							<Route path={`${match.url}/main`} component={DefaultDashboard} />
 							<Route
 								path={`${match.url}/survey/:surveyid`}

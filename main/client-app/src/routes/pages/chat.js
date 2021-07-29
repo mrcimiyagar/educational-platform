@@ -12,7 +12,7 @@ import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import SendIcon from '@material-ui/icons/Send';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="right" ref={ref} {...props} />;
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const useStyles = makeStyles((theme) => ({

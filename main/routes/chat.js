@@ -7,7 +7,7 @@ const { authenticateMember } = require('../users');
 const router = express.Router();
 let jsonParser = bodyParser.json();
 
-router.post('/add_message', jsonParser, async function (req, res) {
+router.post('/create_message', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
             
             if (!membership.canAddMessage) {
@@ -32,7 +32,7 @@ router.post('/add_message', jsonParser, async function (req, res) {
     });
 });
 
-router.post('/remove_message', jsonParser, async function (req, res) {
+router.post('/delete_message', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
             
             if (!membership.canRemoveOwnMessage) {
@@ -62,7 +62,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     });
 });
 
-router.post('/edit_message', jsonParser, async function (req, res) {
+router.post('/update_message', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
             
             if (!membership.canEditOwnMessage) {

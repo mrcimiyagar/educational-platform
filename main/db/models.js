@@ -29,6 +29,8 @@ let Widget;
 let Workership;
 let Subscription;
 let Screenshot;
+let StoreAd;
+let StoreCategory;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
@@ -74,6 +76,8 @@ module.exports = {
         await prepareWorkershipModel();
         await prepareSubscriptionModel();
         await prepareScreenshotModel();
+        await prepareStoreAdModel();
+        await prepareStoreCategoryModel();
 
         let adminAcc = await Account.findOne({where: {role: 'admin'}});
         if (adminAcc === null) {
@@ -111,6 +115,37 @@ function prepareSequelizeInstance() {
             idle: 10000
         }
     });
+}
+
+async function prepareStoreCategoryModel() {
+    StoreCategory = sequelizeClient.define('StoreCategory', {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        title: Sequelize.STRING
+    }, {
+        freezeTableName: true
+    });
+    await StoreCategory.sync();
+    module.exports['StoreCategory'] = StoreCategory;
+}
+
+async function prepareStoreAdModel() {
+    StoreAd = sequelizeClient.define('StoreAd', {
+        id: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true,
+        },
+        fileId: Sequelize.BIGINT
+    }, {
+        freezeTableName: true
+    });
+    StoreAd.belongsTo(File, { foreignKey: 'fileId' });
+    await StoreAd.sync();
+    module.exports['StoreAd'] = StoreAd;
 }
 
 async function prepareScreenshotModel() {
@@ -163,10 +198,12 @@ async function prepareBotModel() {
             primaryKey: true,
         },
         username: Sequelize.STRING,
-        title: Sequelize.STRING
+        title: Sequelize.STRING,
+        caegoryId: Sequelize.BIGINT
     }, {
         freezeTableName: true
     });
+    Bot.belongsTo(StoreCategory, { foreignKey: 'caegoryId' });
     await Bot.sync();
     module.exports['Bot'] = Bot;
 }

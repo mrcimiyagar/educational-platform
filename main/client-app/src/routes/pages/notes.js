@@ -16,7 +16,7 @@ import { ArrowForward, Search } from '@material-ui/icons';
 import { NoteBox } from '../../modules/notebox/notebox';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="right" ref={ref} {...props} />;
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const useStyles = makeStyles((theme) => ({

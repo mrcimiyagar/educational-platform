@@ -30,6 +30,7 @@ import BotIcon from '../../images/robot.png';
 import PeopleIcon from '../../images/people.png';
 import RoomIcon from '../../images/room.png'
 import HomeIcon from '../../images/home.png'
+import WorldIcon from '../../images/world.png'
 import Settings from "@material-ui/icons/Settings";
 import { UsersBox } from "../../modules/usersbox/usersbox";
 
@@ -347,7 +348,8 @@ export default function RoomPage(props) {
             <div style={{width: 80, height: '100%', backgroundColor: '#eee'}}>
               <Avatar onClick={() => setMenuMode(0)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16, padding: 8}} src={PeopleIcon}/>
               <Avatar onClick={() => setMenuMode(1)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16 + 64 + 16,  padding: 8}} src={BotIcon}/>
-              <Avatar onClick={() => gotoPage('/app/conf?room_id=1')} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16, padding: 8}} src={HomeIcon}/>
+              <Avatar onClick={() => gotoPage('/app/conf?room_id=1')} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16 + 64 + 16, padding: 8}} src={HomeIcon}/>
+              <Avatar onClick={() => gotoPage('/app/searchengine')} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16, padding: 8}} src={WorldIcon}/>
               <Avatar onClick={() => gotoPage('/app/roomstree')} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16, padding: 8}} src={RoomIcon}/>
               <div onClick={() => gotoPage('/app/settings')} style={{borderRadius: 32, width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16, padding: 8}}>
                 <Settings style={{fill: '#666', width: 48, height: 48}}/>

@@ -172,8 +172,11 @@ export let UsersBox = (props) => {
               }
             })
             setUsers(users)
-            window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confvideo.kaspersoft.cloud')
-            window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confaudio.kaspersoft.cloud')
+            try {
+              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confvideo.kaspersoft.cloud')
+              window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confaudio.kaspersoft.cloud')
+            }
+            catch(ex){}
           });
           socket.off('user-exited');
           socket.on('user-exited', ({rooms, users}) => {
@@ -184,8 +187,11 @@ export let UsersBox = (props) => {
               }
             })
             setUsers(users)
-            window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confvideo.kaspersoft.cloud')
-            window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confaudio.kaspersoft.cloud')
+            try {
+              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confvideo.kaspersoft.cloud')
+              window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confaudio.kaspersoft.cloud')
+            }
+            catch(ex){}
           });
           socket.off('profile_updated');
           socket.on('profile_updated', user => {
