@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Route, withRouter, Switch, Redirect, Link } from 'react-router-dom';
 
-import TopNav from '../containers/TopNav'
-import Sidebar from '../containers/Sidebar';
-
 import ConferencePage from "./pages/room"
 import HomePage from "./pages/home"
 import surveyDetail from "./pages/survey-detail"
@@ -21,6 +18,7 @@ import NotesPage from './pages/notes'
 import PollPage from './pages/polls'
 import RoomsTreePage from './pages/roomsTree'
 import SearchEnginePage from './pages/searchEngine'
+import SearchEngineResultsPage from './pages/searchEngineResults'
 import { AnimatedSwitch } from 'react-router-transition'
 import '../App.css'
 
@@ -49,6 +47,7 @@ class MainApp extends Component {
 							<Route path={`${match.url}/poll`} component={PollPage} />
 							<Route path={`${match.url}/roomstree`} component={RoomsTreePage} />
 							<Route path={`${match.url}/searchengine`} component={SearchEnginePage} />
+							<Route path={`${match.url}/searchengineresults`} component={SearchEngineResultsPage} />
 							<Route path={`${match.url}/main`} component={DefaultDashboard} />
 							<Route
 								path={`${match.url}/survey/:surveyid`}

@@ -45,7 +45,6 @@ export default function SearchEngineFam(props) {
 
   const handleClose = () => {
     setOpen(false);
-    props.setOpen(false)
   };
   
   const theme = createTheme({
@@ -59,7 +58,6 @@ export default function SearchEngineFam(props) {
 
   return (
     <div className={classes.root}>
-      <Backdrop open={open} />
       <ThemeProvider theme={theme}>
       <SpeedDial
         ariaLabel=""
@@ -78,7 +76,7 @@ export default function SearchEngineFam(props) {
             tooltipTitle={action.name}
             tooltipOpen
             onClick={() => {
-              handleClose()
+              props.setOpen(false)
               if (index === 0) {
                 gotoPage('/app/messenger')
               }

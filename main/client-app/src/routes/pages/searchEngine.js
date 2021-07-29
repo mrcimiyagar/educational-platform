@@ -65,13 +65,13 @@ export default function SearchEngine(props) {
                 <SearchEngineSearchbar openMenu={() => setMenuOpen(true)}/>
                 <div style={{width: '100%', position: 'absolute', top: 'calc(35% + 56px)', textAlign: 'center', justifyContent: 'center'}}>
                     <ThemeProvider theme={theme}>
-                        <Fab color={'primary'} variant={'extended'}>
+                        <Fab color={'primary'} variant={'extended'} onClick={() => gotoPage('/app/searchengineresults')}>
                             <CloudIcon/>
                             <div style={{marginRight: 16}}>
                                 جستجو در ابر
                             </div>
                         </Fab>
-                        <Fab color={'secondary'} variant={'extended'} style={{marginRight: 16}}>
+                        <Fab color={'secondary'} variant={'extended'} style={{marginRight: 16}} onClick={() => gotoPage('/app/searchengineresults')}>
                             <AccountBalanceIcon/>
                             <div style={{marginRight: 16}}>
                                 جستجو دراتاق
@@ -94,8 +94,8 @@ export default function SearchEngine(props) {
                 <div style={{width: 112, height: 112, padding: 8, backgroundColor: '#eee', borderRadius: 56, position: 'absolute', top: 'calc(50% - 280px)', left: '50%', transform: 'translateX(-50%)'}}>
                     <Avatar src={SearchEngineIcon} style={{width: '100%', height: '100%'}}/>
                 </div>
-            </div>
             <SearchEngineFam open={open} setOpen={setOpen}/>
+            </div>
             <SearchEngineDrawer setOpen={setMenuOpen} open={menuOpen}/>
         </Dialog>
     );
