@@ -57,7 +57,7 @@ router.post('/set_wallpaper', jsonParser, async function (req, res) {
             return
         }
         roomSecret.wallpaper = req.body.wallpaperId
-        roomSecret.save()
+        await roomSecret.save()
         require('../server').pushTo('room-' + membership.roomId, 'room-wallpaper-modified', req.body.wallpaperId)
         res.send({status: 'success'})
     })
@@ -72,7 +72,7 @@ router.post('/create_bot', jsonParser, async function (req, res) {
         let bot = await sw.Bot.create({
             title: req.body.title,
             username: req.body.username,
-            categoryId: req.body.categoryId
+            categoryId: req.body.categoryId === undefined ? null : req.body.categoryId,
         })
         let botSecret = await sw.BotSecret.create({
             botId: bot.id,
@@ -616,7 +616,7 @@ router.post('/create_category', jsonParser, async function (req, res) {
             title: req.body.title
         })
         require('../server').pushTo('aseman-store-page', 'store-category-created', cat)
-        res.send({status: 'success', cat: cat})
+        res.send({status: 'success', category: cat})
     })
 })
 
@@ -645,7 +645,7 @@ router.post('/update_category', jsonParser, async function (req, res) {
             id: req.body.categoryId
         }})
         cat.title = req.body.title
-        cat.save()
+        await cat.save()
         require('../server').pushTo('aseman-store-page', 'store-category-updated', cat)
         res.send({status: 'success'})
     })
