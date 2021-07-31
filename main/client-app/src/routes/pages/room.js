@@ -260,19 +260,13 @@ export default function RoomPage(props) {
   });
   return (
       <div style={{width: '100%', height: '100%', position: 'fixed', right: 0, top: 0, backgroundColor: colors.primaryDark}}>
-        <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, backgroundColor: '#fff'}}>
-        {
-            currentRoomNav === 0 ?
-              <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId} style={{display: 'block'}}/> :
-              currentRoomNav === 2 ?
-                <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen}/> :
-                currentRoomNav === 1 ?
-                  <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId} style={{display: 'block'}}/> :
-                  currentRoomNav === 3 ?
-                    <TaskBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen}/> :
-                    currentRoomNav === 4 ?
-                      <div
-                        style={{backgroundColor: '#eee', width: '100%', height: '100%', minHeight: '100vh'}}>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, backgroundColor: '#fff'}}> 
+          <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId} style={{display: currentRoomNav === 0 ? 'block' : 'none'}}/>
+          <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 2 ? 'block' : 'none'}}/>
+          <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId}  style={{display: currentRoomNav === 1 ? 'block' : 'none'}}/>
+          <TaskBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 3 ? 'block' : 'none'}}/>
+          <div
+                        style={{display: currentRoomNav === 4 ? 'block' : 'none', backgroundColor: '#eee', width: '100%', height: '100%', minHeight: '100vh'}}>
                           <AppBar style={{width: '100%', height: 64 + 72, backgroundColor: '#2196f3'}}>
                             <Toolbar style={{width: '100%', justifyContent: 'center', textAlign: 'center'}}>
                               <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
@@ -338,9 +332,7 @@ export default function RoomPage(props) {
                               </Fab>
                             </ThemeProvider>
                           </div>
-                      </div> :
-            null
-        }
+              </div>
         </div>
         <RoomBottombar setCurrentRoomNavBackup={(v) => {currentRoomNavBackup = v}} setCurrentRoomNav={setCurrentRoomNav} currentRoomNav={currentRoomNav}/>
         <Drawer onClose={() => setMenuOpen(false)} open={menuOpen} anchor={'right'}>

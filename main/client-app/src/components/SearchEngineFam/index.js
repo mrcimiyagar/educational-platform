@@ -15,6 +15,7 @@ import Chat from '@material-ui/icons/Chat';
 import NavigationIcon from '@material-ui/icons/Navigation';
 import { pink } from '@material-ui/core/colors';
 import { gotoPage } from '../../App';
+import { reloadBotsBox } from '../../modules/botsbox';
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -7,15 +7,16 @@ import { Avatar, IconButton, Typography } from '@material-ui/core';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import { Info, More } from '@material-ui/icons';
 import MoreVert from '@material-ui/icons/MoreVert';
+import './index.css'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
     overflow: 'hidden',
-    marginLeft: -16,
-    marginRight: -16,
-    width: 'calc(100% + 32px)'
+    marginLeft: -24,
+    marginRight: -24,
+    width: 'calc(100% + 48px)'
   },
   imageList: {
     width: '100%',
@@ -38,28 +39,173 @@ export default function SearchResultsVideos() {
   return (
     <div className={classes.root}>
       <ImageList rowHeight={150} gap={1} className={classes.imageList}>
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
-          <ImageListItem key={index} cols={2} rows={2} style={{marginTop: 8}}>
-            <img src={'https://material-ui.com/static/images/image-list/breakfast.jpg'} alt={'preview'} />
+            <ImageListItem key={0} cols={2} rows={2} style={{marginTop: 0}}>
+            <div className={'roundImage'}>
+              <img src={'https://material-ui.com/static/images/image-list/breakfast.jpg'} className={'roundImage'}/>
+            </div>
             <ImageListItemBar
-              title={<Typography style={{marginRight: 8, marginTop: 12}}>کیهان محمدی</Typography>}
+              title={<Typography style={{marginRight: 8, marginTop: 24}}>کیهان محمدی</Typography>}
               position="top"
               actionIcon={
-                <Avatar style={{width: 40, height: 40, marginRight: 16, marginTop: 12}}/>
+                <Avatar style={{width: 40, height: 40, marginRight: 16, marginTop: 24}}/>
               }
               actionPosition="right"
               className={classes.titleBar}
             />
-            <IconButton style={{borderRadius: 48, backgroundColor: '#666', width: 96, height: 96, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
-                <PlayCircleFilledIcon style={{width: 96, height: 96, fill: '#fff'}}/>
+            <IconButton style={{borderRadius: 48, backgroundImage: 'radial-gradient(white, rgba(0, 0, 0, 0))', width: 96, height: 96, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+                <PlayCircleFilledIcon style={{width: 96, height: 96, fill: 'rgba(0, 0, 0, 0.65)'}}/>
             </IconButton>
             <IconButton style={{position: 'absolute', left: 8, top: 8}}>
                 <MoreVert style={{fill: '#fff'}}/>
             </IconButton>
             <ImageListItemBar
-                style={{color: '#fff'}}
-                title={'ویدئوی روم 101'}
-                subtitle={<span>{'این ویدئو در تاریخ 28 مهر ماه ضبط شده است.'}</span>}
+                style={{color: '#fff', height: 48, borderRadius: 24, marginBottom: 12, marginLeft: 12, marginRight: 12}}
+                title={'این ویدئو در تاریخ 28 مهر ماه ضبط شده است'}
+                actionIcon={
+                    <IconButton className={classes.icon}>
+                        <Info style={{fill: '#fff'}}/>
+                    </IconButton>
+                }
+            />
+          </ImageListItem>
+          <ImageListItem key={1} cols={2} rows={2} style={{marginTop: 0}}>
+            <div className={'roundImage'}>
+              <img src={'https://material-ui.com/static/images/image-list/vegetables.jpg'} className={'roundImage'}/>
+            </div>
+            <ImageListItemBar
+              title={<Typography style={{marginRight: 8, marginTop: 24}}>کیهان محمدی</Typography>}
+              position="top"
+              actionIcon={
+                <Avatar style={{width: 40, height: 40, marginRight: 16, marginTop: 24}}/>
+              }
+              actionPosition="right"
+              className={classes.titleBar}
+            />
+            <IconButton style={{borderRadius: 48, backgroundImage: 'radial-gradient(white, rgba(0, 0, 0, 0))', width: 96, height: 96, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+                <PlayCircleFilledIcon style={{width: 96, height: 96, fill: 'rgba(0, 0, 0, 0.65)'}}/>
+            </IconButton>
+            <IconButton style={{position: 'absolute', left: 8, top: 8}}>
+                <MoreVert style={{fill: '#fff'}}/>
+            </IconButton>
+            <ImageListItemBar
+                style={{color: '#fff', height: 48, borderRadius: 24, marginBottom: 12, marginLeft: 12, marginRight: 12}}
+                title={'این ویدئو در تاریخ 28 مهر ماه ضبط شده است'}
+                actionIcon={
+                    <IconButton className={classes.icon}>
+                        <Info style={{fill: '#fff'}}/>
+                    </IconButton>
+                }
+            />
+          </ImageListItem>
+          <ImageListItem key={2} cols={2} rows={2} style={{marginTop: 0}}>
+            <div className={'roundImage'}>
+              <img src={'https://material-ui.com/static/images/image-list/plant.jpg'} className={'roundImage'}/>
+            </div>
+            <ImageListItemBar
+              title={<Typography style={{marginRight: 8, marginTop: 24}}>کیهان محمدی</Typography>}
+              position="top"
+              actionIcon={
+                <Avatar style={{width: 40, height: 40, marginRight: 16, marginTop: 24}}/>
+              }
+              actionPosition="right"
+              className={classes.titleBar}
+            />
+            <IconButton style={{borderRadius: 48, backgroundImage: 'radial-gradient(white, rgba(0, 0, 0, 0))', width: 96, height: 96, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+                <PlayCircleFilledIcon style={{width: 96, height: 96, fill: 'rgba(0, 0, 0, 0.65)'}}/>
+            </IconButton>
+            <IconButton style={{position: 'absolute', left: 8, top: 8}}>
+                <MoreVert style={{fill: '#fff'}}/>
+            </IconButton>
+            <ImageListItemBar
+                style={{color: '#fff', height: 48, borderRadius: 24, marginBottom: 12, marginLeft: 12, marginRight: 12}}
+                title={'این ویدئو در تاریخ 28 مهر ماه ضبط شده است'}
+                actionIcon={
+                    <IconButton className={classes.icon}>
+                        <Info style={{fill: '#fff'}}/>
+                    </IconButton>
+                }
+            />
+          </ImageListItem>
+          <ImageListItem key={3} cols={2} rows={2} style={{marginTop: 0}}>
+            <div className={'roundImage'}>
+              <img src={'https://material-ui.com/static/images/image-list/mushroom.jpg'} className={'roundImage'}/>
+            </div>
+            <ImageListItemBar
+              title={<Typography style={{marginRight: 8, marginTop: 24}}>کیهان محمدی</Typography>}
+              position="top"
+              actionIcon={
+                <Avatar style={{width: 40, height: 40, marginRight: 16, marginTop: 24}}/>
+              }
+              actionPosition="right"
+              className={classes.titleBar}
+            />
+            <IconButton style={{borderRadius: 48, backgroundImage: 'radial-gradient(white, rgba(0, 0, 0, 0))', width: 96, height: 96, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+                <PlayCircleFilledIcon style={{width: 96, height: 96, fill: 'rgba(0, 0, 0, 0.65)'}}/>
+            </IconButton>
+            <IconButton style={{position: 'absolute', left: 8, top: 8}}>
+                <MoreVert style={{fill: '#fff'}}/>
+            </IconButton>
+            <ImageListItemBar
+                style={{color: '#fff', height: 48, borderRadius: 24, marginBottom: 12, marginLeft: 12, marginRight: 12}}
+                title={'این ویدئو در تاریخ 28 مهر ماه ضبط شده است'}
+                actionIcon={
+                    <IconButton className={classes.icon}>
+                        <Info style={{fill: '#fff'}}/>
+                    </IconButton>
+                }
+            />
+          </ImageListItem>
+          <ImageListItem key={4} cols={2} rows={2} style={{marginTop: 0}}>
+            <div className={'roundImage'}>
+              <img src={'https://material-ui.com/static/images/image-list/olive.jpg'} className={'roundImage'}/>
+            </div>
+            <ImageListItemBar
+              title={<Typography style={{marginRight: 8, marginTop: 24}}>کیهان محمدی</Typography>}
+              position="top"
+              actionIcon={
+                <Avatar style={{width: 40, height: 40, marginRight: 16, marginTop: 24}}/>
+              }
+              actionPosition="right"
+              className={classes.titleBar}
+            />
+            <IconButton style={{borderRadius: 48, backgroundImage: 'radial-gradient(white, rgba(0, 0, 0, 0))', width: 96, height: 96, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+                <PlayCircleFilledIcon style={{width: 96, height: 96, fill: 'rgba(0, 0, 0, 0.65)'}}/>
+            </IconButton>
+            <IconButton style={{position: 'absolute', left: 8, top: 8}}>
+                <MoreVert style={{fill: '#fff'}}/>
+            </IconButton>
+            <ImageListItemBar
+                style={{color: '#fff', height: 48, borderRadius: 24, marginBottom: 12, marginLeft: 12, marginRight: 12}}
+                title={'این ویدئو در تاریخ 28 مهر ماه ضبط شده است'}
+                actionIcon={
+                    <IconButton className={classes.icon}>
+                        <Info style={{fill: '#fff'}}/>
+                    </IconButton>
+                }
+            />
+          </ImageListItem>
+          <ImageListItem key={5} cols={2} rows={2} style={{marginTop: 0}}>
+            <div className={'roundImage'}>
+              <img src={'https://material-ui.com/static/images/image-list/camera.jpg'} className={'roundImage'}/>
+            </div>
+            <ImageListItemBar
+              title={<Typography style={{marginRight: 8, marginTop: 24}}>کیهان محمدی</Typography>}
+              position="top"
+              actionIcon={
+                <Avatar style={{width: 40, height: 40, marginRight: 16, marginTop: 24}}/>
+              }
+              actionPosition="right"
+              className={classes.titleBar}
+            />
+            <IconButton style={{borderRadius: 48, backgroundImage: 'radial-gradient(white, rgba(0, 0, 0, 0))', width: 96, height: 96, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+                <PlayCircleFilledIcon style={{width: 96, height: 96, fill: 'rgba(0, 0, 0, 0.65)'}}/>
+            </IconButton>
+            <IconButton style={{position: 'absolute', left: 8, top: 8}}>
+                <MoreVert style={{fill: '#fff'}}/>
+            </IconButton>
+            <ImageListItemBar
+                style={{color: '#fff', height: 48, borderRadius: 24, marginBottom: 12, marginLeft: 12, marginRight: 12}}
+                title={'این ویدئو در تاریخ 28 مهر ماه ضبط شده است'}
                 actionIcon={
                     <IconButton className={classes.icon}>
                         <Info style={{fill: '#fff'}}/>

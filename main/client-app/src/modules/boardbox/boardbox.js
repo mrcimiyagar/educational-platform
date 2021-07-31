@@ -20,7 +20,7 @@ export let BoardBox = (props) => {
       roomId = '0' + roomId;
     }
     return (
-      <Card style={{height: 'calc(100% - 72px)', display: props.style.display, width: 'calc(100% + 32px)', marginLeft: -16, marginRight: -16}}>
+      <Card style={{height: 'calc(100% - 72px)', display: props.style.display, width: 'calc(100% + 32px)', marginLeft: -16, marginRight: -16, display: props.style.display}}>
           <CardBody style={{position: 'relative', height: '100%'}}>
             
             <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>

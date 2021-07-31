@@ -2,10 +2,287 @@ import React, {useEffect} from 'react';
 import HomeToolbar from '../../components/HomeToolbar';
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar';
 import Draggable from 'react-draggable'
+import { ResizableBox } from 'react-resizable';
+import { useForceUpdate } from '../../util/Utils';
+import './index.css'
 
-var lastScrollTop = 0;
+var lastScrollTop = 0
+
+const CustomResizeHandle = React.forwardRef((props, ref) => {
+    const {handleAxis, ...restProps} = props;
+    return (
+      <div
+        className={`custom-handle custom-handle-${handleAxis} custom-resize-handle-component`}
+        ref={ref}
+        {...restProps}
+      ></div>
+    );
+  });
+
+let setupDragResizeSnap = () => {
+    var minWidth = 60;
+var minHeight = 40;
+
+// Thresholds
+var FULLSCREEN_MARGINS = -10;
+var MARGINS = 4;
+
+// End of what's configurable.
+var clicked = null;
+var onRightEdge, onBottomEdge, onLeftEdge, onTopEdge;
+
+var rightScreenEdge, bottomScreenEdge;
+
+var preSnapped;
+
+var b, x, y;
+
+var redraw = false;
+
+var pane = document.getElementById('pane');
+var ghostpane = document.getElementById('ghostpane');
+
+function setBounds(element, x, y, w, h) {
+	element.style.left = x + 'px';
+	element.style.top = y + 'px';
+	element.style.width = w + 'px';
+	element.style.height = h + 'px';
+}
+
+function hintHide() {
+  setBounds(ghostpane, b.left, b.top, b.width, b.height);
+  ghostpane.style.opacity = 0;
+
+  // var b = ghostpane.getBoundingClientRect();
+  // ghostpane.style.top = b.top + b.height / 2;
+  // ghostpane.style.left = b.left + b.width / 2;
+  // ghostpane.style.width = 0;
+  // ghostpane.style.height = 0;
+}
+
+
+// Mouse events
+pane.addEventListener('mousedown', onMouseDown);
+document.addEventListener('mousemove', onMove);
+document.addEventListener('mouseup', onUp);
+
+// Touch events	
+pane.addEventListener('touchstart', onTouchDown);
+document.addEventListener('touchmove', onTouchMove);
+document.addEventListener('touchend', onTouchEnd);
+
+
+function onTouchDown(e) {
+  onDown(e.touches[0]);
+  e.preventDefault();
+}
+
+function onTouchMove(e) {
+  onMove(e.touches[0]);		
+}
+
+function onTouchEnd(e) {
+  if (e.touches.length ==0) onUp(e.changedTouches[0]);
+}
+
+function onMouseDown(e) {
+  onDown(e);
+  e.preventDefault();
+}
+
+function onDown(e) {
+  calc(e);
+
+  var isResizing = onRightEdge || onBottomEdge || onTopEdge || onLeftEdge;
+
+  clicked = {
+    x: x,
+    y: y,
+    cx: e.clientX,
+    cy: e.clientY,
+    w: b.width,
+    h: b.height,
+    isResizing: isResizing,
+    isMoving: !isResizing && canMove(),
+    onTopEdge: onTopEdge,
+    onLeftEdge: onLeftEdge,
+    onRightEdge: onRightEdge,
+    onBottomEdge: onBottomEdge
+  };
+}
+
+function canMove() {
+  return x > 0 && x < b.width && y > 0 && y < b.height
+  && y < 30;
+}
+
+function calc(e) {
+  b = pane.getBoundingClientRect();
+  x = e.clientX - b.left;
+  y = e.clientY - b.top;
+
+  onTopEdge = y < MARGINS;
+  onLeftEdge = x < MARGINS;
+  onRightEdge = x >= b.width - MARGINS;
+  onBottomEdge = y >= b.height - MARGINS;
+
+  rightScreenEdge = window.innerWidth - MARGINS;
+  bottomScreenEdge = window.innerHeight - MARGINS;
+}
+
+var e;
+
+function onMove(ee) {
+  calc(ee);
+
+  e = ee;
+
+  redraw = true;
+
+}
+
+function animate() {
+
+  requestAnimationFrame(animate);
+
+  if (!redraw) return;
+
+  redraw = false;
+
+  if (clicked && clicked.isResizing) {
+
+    if (clicked.onRightEdge) pane.style.width = Math.max(x, minWidth) + 'px';
+    if (clicked.onBottomEdge) pane.style.height = Math.max(y, minHeight) + 'px';
+
+    if (clicked.onLeftEdge) {
+      var currentWidth = Math.max(clicked.cx - e.clientX  + clicked.w, minWidth);
+      if (currentWidth > minWidth) {
+        pane.style.width = currentWidth + 'px';
+        pane.style.left = e.clientX + 'px';	
+      }
+    }
+
+    if (clicked.onTopEdge) {
+      var currentHeight = Math.max(clicked.cy - e.clientY  + clicked.h, minHeight);
+      if (currentHeight > minHeight) {
+        pane.style.height = currentHeight + 'px';
+        pane.style.top = e.clientY + 'px';	
+      }
+    }
+
+    hintHide();
+
+    return;
+  }
+
+  if (clicked && clicked.isMoving) {
+
+    if (b.top < FULLSCREEN_MARGINS || b.left < FULLSCREEN_MARGINS || b.right > window.innerWidth - FULLSCREEN_MARGINS || b.bottom > window.innerHeight - FULLSCREEN_MARGINS) {
+      // hintFull();
+      setBounds(ghostpane, 0, 0, window.innerWidth, window.innerHeight);
+      ghostpane.style.opacity = 0.2;
+    } else if (b.top < MARGINS) {
+      // hintTop();
+      setBounds(ghostpane, 0, 0, window.innerWidth, window.innerHeight / 2);
+      ghostpane.style.opacity = 0.2;
+    } else if (b.left < MARGINS) {
+      // hintLeft();
+      setBounds(ghostpane, 0, 0, window.innerWidth / 2, window.innerHeight);
+      ghostpane.style.opacity = 0.2;
+    } else if (b.right > rightScreenEdge) {
+      // hintRight();
+      setBounds(ghostpane, window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight);
+      ghostpane.style.opacity = 0.2;
+    } else if (b.bottom > bottomScreenEdge) {
+      // hintBottom();
+      setBounds(ghostpane, 0, window.innerHeight / 2, window.innerWidth, window.innerWidth / 2);
+      ghostpane.style.opacity = 0.2;
+    } else {
+      hintHide();
+    }
+
+    if (preSnapped) {
+      setBounds(pane,
+      	e.clientX - preSnapped.width / 2,
+      	e.clientY - Math.min(clicked.y, preSnapped.height),
+      	preSnapped.width,
+      	preSnapped.height
+      );
+      return;
+    }
+
+    // moving
+    pane.style.top = (e.clientY - clicked.y) + 'px';
+    pane.style.left = (e.clientX - clicked.x) + 'px';
+
+    return;
+  }
+
+  // This code executes when mouse moves without clicking
+
+  // style cursor
+  if (onRightEdge && onBottomEdge || onLeftEdge && onTopEdge) {
+    pane.style.cursor = 'nwse-resize';
+  } else if (onRightEdge && onTopEdge || onBottomEdge && onLeftEdge) {
+    pane.style.cursor = 'nesw-resize';
+  } else if (onRightEdge || onLeftEdge) {
+    pane.style.cursor = 'ew-resize';
+  } else if (onBottomEdge || onTopEdge) {
+    pane.style.cursor = 'ns-resize';
+  } else if (canMove()) {
+    pane.style.cursor = 'move';
+  } else {
+    pane.style.cursor = 'default';
+  }
+}
+
+animate();
+
+function onUp(e) {
+  calc(e);
+
+  if (clicked && clicked.isMoving) {
+    // Snap
+    var snapped = {
+      width: b.width,
+      height: b.height
+    };
+
+    if (b.top < FULLSCREEN_MARGINS || b.left < FULLSCREEN_MARGINS || b.right > window.innerWidth - FULLSCREEN_MARGINS || b.bottom > window.innerHeight - FULLSCREEN_MARGINS) {
+      // hintFull();
+      setBounds(pane, 0, 0, window.innerWidth, window.innerHeight);
+      preSnapped = snapped;
+    } else if (b.top < MARGINS) {
+      // hintTop();
+      setBounds(pane, 0, 0, window.innerWidth, window.innerHeight / 2);
+      preSnapped = snapped;
+    } else if (b.left < MARGINS) {
+      // hintLeft();
+      setBounds(pane, 0, 0, window.innerWidth / 2, window.innerHeight);
+      preSnapped = snapped;
+    } else if (b.right > rightScreenEdge) {
+      // hintRight();
+      setBounds(pane, window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight);
+      preSnapped = snapped;
+    } else if (b.bottom > bottomScreenEdge) {
+      // hintBottom();
+      setBounds(pane, 0, window.innerHeight / 2, window.innerWidth, window.innerWidth / 2);
+      preSnapped = snapped;
+    } else {
+      preSnapped = null;
+    }
+
+    hintHide();
+
+  }
+
+  clicked = null;
+
+}
+}
 
 export default function BotsBox(props) {
+    let forceUpdate = useForceUpdate()
     useEffect(() => {
         let element = document.getElementById('botsContainer')
         let botsSearchbar = document.getElementById('botsSearchbar')
@@ -20,9 +297,13 @@ export default function BotsBox(props) {
             }
             lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
         }, false);
+        setupDragResizeSnap()
     }, [])
+    try {
+        setupDragResizeSnap()
+    } catch (ex) {}
     return (
-        <div style={{width: "100%", height: '100%'}}>
+        <div style={{width: "100%", height: '100%', display: props.style.display}}>
             <img style={{width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1}} src={'https://4kwallpapers.com/images/wallpapers/colorful-background-texture-multi-color-orange-illustration-1080x1920-3104.jpg'}/>
             <HomeToolbar>
                 <div id={'botsSearchbar'} style={{width: '75%', position: 'absolute', right: '12.5%', top: 32, zIndex: 3}}>
@@ -31,13 +312,10 @@ export default function BotsBox(props) {
             </HomeToolbar>
             <div id={'botsContainer'} style={{width: '100%', height: '100%', overflow: 'auto', zIndex: 2, position: 'absolute', left: 0, top: 0}}>
                 <div style={{width: '100%', height: 2000}}>
-                    {[0, 0, 0, 0, 0, 0, 0, 0, 0].map((item, index) => (
-                        <Draggable>
-                            <div style={{backgroundColor: '#fff', width: 150, height: 150, position: 'absolute', left: 150, top: index * 200 + 150}}>
-                                I can now be moved around!
-                            </div>
-                        </Draggable>
-                    ))}
+                    <div id="pane">
+	                    <div id="title">Resize, Drag or Snap Me!</div>
+                    </div>
+                    <div id="ghostpane"></div>
                 </div>
             </div>
         </div>

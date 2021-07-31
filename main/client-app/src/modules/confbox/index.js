@@ -47,7 +47,7 @@ export let ConfBox = (props) => {
       },
     });
     return (
-      <div style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr'}}>
+      <div style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr', display: props.style.display}}>
         
         <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
           <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>

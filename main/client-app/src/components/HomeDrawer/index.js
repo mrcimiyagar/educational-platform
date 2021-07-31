@@ -18,6 +18,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
 import {drawerOpen, gotoPage, setDrawerOpen} from "../../App";
+import Language from '@material-ui/icons/Language';
 
 const useStyles = makeStyles({
     menuList: {
@@ -40,7 +41,7 @@ export default function HomeDrawer(props) {
             onKeyDown={() => setDrawerOpen(false)}
         >
             <List>
-                {['خانه', 'مخاطبان', 'دوستان', 'فروشگاه'].map((text, index) => (
+                {['خانه', 'مخاطبان', 'دوستان', 'فروشگاه', 'گشت و گذار'].map((text, index) => (
                     <ListItem button key={text} onClick={() => {
                         if (index === 0) {
                             gotoPage('/app/home');
@@ -54,7 +55,7 @@ export default function HomeDrawer(props) {
                             gotoPage('/app/store');
                         }
                         else if (index === 4) {
-
+                            gotoPage('/app/searchengine');
                         }
                         else if (index === 5) {
 
@@ -63,7 +64,7 @@ export default function HomeDrawer(props) {
                         <ListItemIcon style={{marginRight: 16}}>{
                             index === 0 ? <HomeIcon /> : index === 1 ? <ContactPhoneIcon/> :
                                 index === 2 ? <AccessibilityIcon/> : index === 3 ? <AttachMoneyIcon /> : 
-                                    index === 4 ? <NotificationsIcon/> : index === 5 ? <SettingsIcon/> : 
+                                    index === 4 ? <Language/> : index === 5 ? <SettingsIcon/> : 
                                         null}
                         </ListItemIcon>
                         <ListItemText style={{fontFamily: 'mainFont', textAlign: 'right'}} primary={text} />

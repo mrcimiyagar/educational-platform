@@ -31,7 +31,7 @@ const data = {
 
 export let TaskBox = (props) => {
   return (
-    <div>
+    <div style={{display: props.style.display}}>
       <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
         <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
           <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
