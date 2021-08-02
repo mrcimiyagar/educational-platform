@@ -303,7 +303,9 @@ export default function BotContainer(props) {
           alignItems: el.alignChildren,
           justifyContent: el.alignChildren,
           transform: el.transform,
-          transformOrigin: el.transformOrigin
+          transformOrigin: el.transformOrigin,
+          transition: el.transition,
+          transitionDuration: el.transitionDuration
         }
         let result = <div/>
         if (el.type === 'Box') {

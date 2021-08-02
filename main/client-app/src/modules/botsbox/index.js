@@ -36,6 +36,7 @@ let widget1Gui = {
             left: '0',
             top: 'calc(50% - 12.5px)',
             transform: 'rotate(90deg)',
+            transition: 'transform 1s',
             children: [
                 {
                     type: 'Image',
@@ -55,6 +56,7 @@ let widget1Gui = {
             left: 0,
             top: 'calc(50% - 12.5px)',
             transform: 'rotate(0deg)',
+            transition: 'transform 1s',
             children: [
                 {
                     type: 'Image',
@@ -68,16 +70,24 @@ let widget1Gui = {
     ]
 }
 
+let timeMirror = {elId: 'hourHand', property: 'transform', value: 'rotate(calc(${timeSec} * 6deg))', variable: {id: 'timeSec', from: 'time.now.seconds'}}
+
 let idDict = {}
 
 export default function BotsBox(props) {
     let forceUpdate = useForceUpdate()
     let [editMode, setEditMode] = React.useState(false)
     let [guis, setGuis] = React.useState([])
+    let [mirrors, setMirrors] = React.useState([])
     useEffect(() => {
+        
         guis.push(widget1Gui)
         setGuis(guis)
+        mirrors.push(timeMirror)
+        setMirrors(mirrors)
+
         forceUpdate()
+        
         let element = document.getElementById('botsContainer')
         let botsSearchbar = document.getElementById('botsSearchbar')
         element.addEventListener("scroll", function() {
@@ -91,16 +101,15 @@ export default function BotsBox(props) {
             }
             lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
         }, false);
-        let deg = 1
-        let recursingTime = () => {
-            deg +=6
-            setTimeout(() => {
-                idDict['widget-1']['minuteHand'].obj.transform = `rotate(${deg}deg)`
-                forceUpdate()
-                recursingTime()
-            }, 1000)
-        }
-        recursingTime()
+        
+        setInterval(() => {
+            let timeNow = new Date().getSeconds()
+            let varCont = timeMirror.value
+            varCont = varCont.replace('${' + timeMirror.variable.id + '}', timeNow)
+            idDict['widget-1'][timeMirror.elId].obj[timeMirror.property] = varCont
+            forceUpdate()
+        }, 1000);
+
     }, [])
     return (
         <div style={{width: "100%", height: '100%', display: props.style.display}}>
