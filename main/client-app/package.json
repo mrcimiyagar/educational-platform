@@ -31,6 +31,7 @@
     "install": "^0.13.0",
     "is-reachable": "^5.0.0",
     "jquery": "^3.6.0",
+    "mathjs": "^9.4.4",
     "moment": "2.22.2",
     "npm": "^7.9.0",
     "particles-bg": "^2.5.5",

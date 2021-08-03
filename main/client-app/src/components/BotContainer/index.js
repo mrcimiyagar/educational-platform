@@ -294,18 +294,20 @@ export default function BotContainer(props) {
           top: el.top,
           right: el.right,
           bottom: el.bottom,
-          backgroundColor: el.backColor,
-          backgroundImage: el.backImage,
-          backgroundSize: el.backImageSize,
-          backgroundRepeat: el.backRepeat,
+          ...(el.background && {background: el.background}),
+          ...(el.backColor && {backgroundColor: el.backColor}),
+          ...(el.backImage && {backgroundImage: el.backImage}),
+          ...(el.backImageSize && {backgroundSize: el.backImageSize}),
+          ...(el.backRepeat && {backgroundRepeat: el.backRepeat}),
           borderRadius: el.borderRadius,
           textAlign: el.alignChildren,
           alignItems: el.alignChildren,
           justifyContent: el.alignChildren,
           transform: el.transform,
           transformOrigin: el.transformOrigin,
+          transitionDuration: el.transitionDuration,
           transition: el.transition,
-          transitionDuration: el.transitionDuration
+          zIndex: el.zIndex
         }
         let result = <div/>
         if (el.type === 'Box') {

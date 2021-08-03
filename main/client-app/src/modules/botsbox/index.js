@@ -9,6 +9,7 @@ import { Fab } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import ClockHand1 from '../../images/clock-hand-1.png'
 import ClockHand2 from '../../images/clock-hand-2.png'
+import {evaluate} from 'mathjs'
 
 var lastScrollTop = 0
 
@@ -25,7 +26,41 @@ let widget1Gui = {
             position: 'absolute',
             left: 0,
             top: 0,
+            zIndex: 1,
             src: 'https://i.pinimg.com/originals/eb/ad/bc/ebadbc481c675e0f2dea0cc665f72497.jpg'
+        },
+        {
+            type: 'Box', 
+            width: '100%', 
+            height: '100%',
+            borderRadius: 1000,
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            zIndex: 2,
+            background: 'rgba(255, 255, 255, 0.5)'
+        },
+        {
+            type: 'Box',
+            id: 'secondHand',
+            width: 250,
+            height: 25,
+            position: 'absolute',
+            left: 0,
+            top: 'calc(50% - 12.5px)',
+            transform: 'rotate(-90deg)',
+            transition: 'transform 1s',
+            zIndex: 3,
+            children: [
+                {
+                    type: 'Image',
+                    width: 125,
+                    height: '100%',
+                    position: 'absolute',
+                    left: '50%',
+                    src: ClockHand1
+                }
+            ]
         },
         {
             type: 'Box',
@@ -35,13 +70,15 @@ let widget1Gui = {
             position: 'absolute',
             left: '0',
             top: 'calc(50% - 12.5px)',
-            transform: 'rotate(90deg)',
+            transform: 'rotate(-90deg)',
             transition: 'transform 1s',
+            zIndex: 3,
             children: [
                 {
                     type: 'Image',
-                    width: 125,
+                    width: 100,
                     height: '100%',
+                    position: 'absolute',
                     left: '50%',
                     src: ClockHand1
                 }
@@ -55,13 +92,15 @@ let widget1Gui = {
             position: 'absolute',
             left: 0,
             top: 'calc(50% - 12.5px)',
-            transform: 'rotate(0deg)',
+            transform: 'rotate(-90deg)',
             transition: 'transform 1s',
+            zIndex: 3,
             children: [
                 {
                     type: 'Image',
                     width: 125,
                     height: '100%',
+                    position: 'absolute',
                     left: '50%',
                     src: ClockHand2
                 }
@@ -70,7 +109,9 @@ let widget1Gui = {
     ]
 }
 
-let timeMirror = {elId: 'hourHand', property: 'transform', value: 'rotate(calc(${timeSec} * 6deg))', variable: {id: 'timeSec', from: 'time.now.seconds'}}
+let timeSecMirror = {elId: 'secondHand', property: 'transform', value: 'rotate(calc((@timeSec * 6deg) - 90deg))', variable: {id: 'timeSec', from: 'time.now.seconds'}}
+let timeMinMirror = {elId: 'minuteHand', property: 'transform', value: 'rotate(calc((@timeMin * 6deg) - 90deg))', variable: {id: 'timeMin', from: 'time.now.minutes'}}
+let timeHourMirror = {elId: 'hourHand', property: 'transform', value: 'rotate(calc((@timeHour * 6deg) - 90deg))', variable: {id: 'timeHour', from: 'time.now.hours'}}
 
 let idDict = {}
 
@@ -83,7 +124,9 @@ export default function BotsBox(props) {
         
         guis.push(widget1Gui)
         setGuis(guis)
-        mirrors.push(timeMirror)
+        mirrors.push(timeSecMirror)
+        mirrors.push(timeMinMirror)
+        mirrors.push(timeHourMirror)
         setMirrors(mirrors)
 
         forceUpdate()
@@ -99,17 +142,18 @@ export default function BotsBox(props) {
                 botsSearchbar.style.transform = 'translateY(0)'
                 botsSearchbar.style.transition = 'transform .5s'
             }
-            lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+            lastScrollTop = st <= 0 ? 0 : st;
         }, false);
         
         setInterval(() => {
-            let timeNow = new Date().getSeconds()
-            let varCont = timeMirror.value
-            varCont = varCont.replace('${' + timeMirror.variable.id + '}', timeNow)
-            idDict['widget-1'][timeMirror.elId].obj[timeMirror.property] = varCont
+            mirrors.forEach(mirror => {
+                let timeNow = mirror.variable.from === 'time.now.seconds' ? new Date().getSeconds() : mirror.variable.from === 'time.now.minutes' ? new Date().getMinutes() : mirror.variable.from === 'time.now.hours' ? (new Date().getHours() % 12) : 0
+                let varCont = mirror.value
+                varCont = varCont.replace('@' + mirror.variable.id, timeNow)
+                idDict['widget-1'][mirror.elId].obj[mirror.property] = varCont
+            })
             forceUpdate()
         }, 1000);
-
     }, [])
     return (
         <div style={{width: "100%", height: '100%', display: props.style.display}}>
