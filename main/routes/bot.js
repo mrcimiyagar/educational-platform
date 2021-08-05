@@ -44,6 +44,14 @@ router.post('/unsubscribe', jsonParser, async function (req, res) {
     })
 })
 
+router.post('/get_subscriptions', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let subscriptions = await sw.Subscription.findAll({raw: true, include: {all: true}, where: {subscriberId: session.userId}})
+        let widgets = await sw.Widget.findAll({raw: true, include: {all: true}, where: {botId: subscriptions.map(s => s.botId)}})
+        res.send({status: 'success', subscriptions: subscriptions, widgets: widgets})
+    })
+})
+
 router.post('/set_wallpaper', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
         let roomSecret = await sw.RoomSecret.findOne({where: {roomId: membership.roomId}})
@@ -124,7 +132,7 @@ router.post('/update_bot', jsonParser, async function (req, res) {
 
 router.post('/get_bots', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
-        let bots = await sw.Bot.findAll({raw: true})
+        let bots = await sw.Bot.findAll({raw: true, categoryId: req.body.categoryId})
         res.send({status: 'success', bots: bots})
     })
 })
@@ -352,13 +360,13 @@ router.post('/update_widget', jsonParser, async function (req, res) {
             res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
             return
         }
-        let widget = await sw.Comment.findOne({where: {botId: req.body.botId}})
+        let widget = await sw.Widget.findOne({where: {botId: req.body.botId}})
         if (widget === null) {
             res.send({status: 'error', errorCode: 'e0005', message: 'widget does not exist.'})
             return
         }
-        comment.title = req.body.title
-        await comment.save()
+        widget.title = req.body.title
+        await widget.save()
         require('../server').pushTo('aseman-bot-page' + bot.id, 'widget-updated', widget)
         res.send({status: 'success'})
     })
@@ -371,7 +379,7 @@ router.post('/get_widgets', jsonParser, async function (req, res) {
             res.send({status: 'error', errorCode: 'e0005', message: 'bot not found.'})
             return
         }
-        let widgets = await sw.Comment.findAll({raw: true, where: {botId: req.body.botId}})
+        let widgets = await sw.Widget.findAll({raw: true, where: {botId: req.body.botId}})
         res.send({status: 'success', widgets: widgets})
     })
 })
@@ -398,7 +406,7 @@ router.post('/create_workership', jsonParser, async function (req, res) {
             res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
             return
         }
-        let workership = await sw.Widget.create({
+        let workership = await sw.Workership.create({
             widgetId: widget.id,
             roomId: membership.roomId,
             width: 150,
@@ -433,7 +441,7 @@ router.post('/delete_workership', jsonParser, async function (req, res) {
             res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
             return
         }
-        let workership = await sw.Widget.findOne({where: {roomId: membership.roomId, widgetId: widget.id}})
+        let workership = await sw.Workership.findOne({where: {roomId: membership.roomId, widgetId: widget.id}})
         await workership.destroy()
         require('../server').pushTo('room-' + membership.roomId, 'workership-deleted', workership)
         res.send({status: 'success'})
@@ -462,7 +470,7 @@ router.post('/update_workership', jsonParser, async function (req, res) {
             res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
             return
         }
-        let workership = await sw.Widget.findOne({where: {roomId: membership.roomId, widgetId: widget.id}})
+        let workership = await sw.Workership.findOne({where: {roomId: membership.roomId, widgetId: widget.id}})
         workership.x = req.body.x
         workership.y = req.body.y
         workership.width = req.body.width
@@ -473,7 +481,7 @@ router.post('/update_workership', jsonParser, async function (req, res) {
     })
 })
 
-router.post('/get_widgets', jsonParser, async function (req, res) {
+router.post('/get_workerships', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
         let bot = await sw.Bot.findOne({where: {id: req.body.botId}})
         if (bot === null) {
@@ -485,8 +493,9 @@ router.post('/get_widgets', jsonParser, async function (req, res) {
             res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
             return
         }
-        let workerships = await sw.Widget.findAll({raw: true, where: {roomId: membership.roomId}})
-        res.send({status: 'success', workerships: workerships})
+        let workerships = await sw.Workership.findAll({include: { all: true }, raw: true, where: {roomId: membership.roomId}})
+        let widgets = await sw.Widget.findAll({include: { all: true }, raw: true, where: {id: workerships.map(ws => ws.widgetId)}})
+        res.send({status: 'success', workerships: workerships, widgets: widgets})
     })
 })
 

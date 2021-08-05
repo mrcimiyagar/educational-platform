@@ -44,12 +44,12 @@ module.exports = {
             port: 5432,
             host: 'localhost'
         };
-        /*try {
+        try {
             await pgTools.dropdb(config, dbName);
         } catch (e) {console.log(e);}
         try {
             await pgTools.createdb(config, dbName);
-        } catch (e) {console.log(e);}*/
+        } catch (e) {console.log(e);}
         prepareSequelizeInstance();
         await prepareUserModel();
         await prepareAccountModel();
@@ -69,6 +69,7 @@ module.exports = {
         await preparePresentModel();
         await prepareSpaceSecretModel();
         await prepareRoomSecretModel();
+        await prepareStoreCategoryModel();
         await prepareBotModel();
         await prepareBotSecretModel();
         await prepareCommentModel();
@@ -77,7 +78,6 @@ module.exports = {
         await prepareSubscriptionModel();
         await prepareScreenshotModel();
         await prepareStoreAdModel();
-        await prepareStoreCategoryModel();
 
         let adminAcc = await Account.findOne({where: {role: 'admin'}});
         if (adminAcc === null) {
@@ -120,7 +120,7 @@ function prepareSequelizeInstance() {
 async function prepareStoreCategoryModel() {
     StoreCategory = sequelizeClient.define('StoreCategory', {
         id: {
-            type: Sequelize.STRING,
+            type: Sequelize.BIGINT,
             allowNull: false,
             primaryKey: true,
         },
@@ -135,7 +135,7 @@ async function prepareStoreCategoryModel() {
 async function prepareStoreAdModel() {
     StoreAd = sequelizeClient.define('StoreAd', {
         id: {
-            type: Sequelize.STRING,
+            type: Sequelize.BIGINT,
             allowNull: false,
             primaryKey: true,
         },
@@ -151,7 +151,7 @@ async function prepareStoreAdModel() {
 async function prepareScreenshotModel() {
     Screenshot = sequelizeClient.define('Screenshot', {
         id: {
-            type: Sequelize.STRING,
+            type: Sequelize.BIGINT,
             allowNull: false,
             primaryKey: true,
         },
@@ -169,16 +169,16 @@ async function prepareScreenshotModel() {
 async function prepareSubscriptionModel() {
     Subscription = sequelizeClient.define('Subscription', {
         id: {
-            type: Sequelize.STRING,
+            type: Sequelize.BIGINT,
             allowNull: false,
             primaryKey: true,
         },
         botId: {
-            type: DataType.BIGINT,
+            type: Sequelize.DataTypes.BIGINT,
             unique: 'SubscriptionUnique'
         },
         subscriberId: {
-            type: DataType.BIGINT,
+            type: Sequelize.DataTypes.STRING,
             unique: 'SubscriptionUnique'
         }
     }, {
@@ -193,7 +193,7 @@ async function prepareSubscriptionModel() {
 async function prepareBotModel() {
     Bot = sequelizeClient.define('Bot', {
         id: {
-            type: Sequelize.STRING,
+            type: Sequelize.BIGINT,
             allowNull: false,
             primaryKey: true,
         },
@@ -211,13 +211,13 @@ async function prepareBotModel() {
 async function prepareBotSecretModel() {
     BotSecret = sequelizeClient.define('BotSecret', {
         id: {
-            type: Sequelize.STRING,
+            type: Sequelize.BIGINT,
             allowNull: false,
             primaryKey: true,
         },
         botId: Sequelize.BIGINT,
         token: Sequelize.BIGINT,
-        creatorId: Sequelize.BIGINT
+        creatorId: Sequelize.STRING
     }, {
         freezeTableName: true
     });
@@ -230,16 +230,16 @@ async function prepareBotSecretModel() {
 async function prepareCommentModel() {
     Comment = sequelizeClient.define('Comment', {
         id: {
-            type: Sequelize.STRING,
+            type: Sequelize.BIGINT,
             allowNull: false,
             primaryKey: true,
         },
         botId: {
-            type: DataType.BIGINT,
+            type: Sequelize.DataTypes.BIGINT,
             unique: 'commentUnique'
         },
         authorId: {
-            type: DataType.BIGINT,
+            type: Sequelize.DataTypes.STRING,
             unique: 'commentUnique'
         },
         text: Sequelize.STRING,
@@ -256,7 +256,7 @@ async function prepareCommentModel() {
 async function prepareWidgetModel() {
     Widget = sequelizeClient.define('Widget', {
         id: {
-            type: Sequelize.STRING,
+            type: Sequelize.BIGINT,
             allowNull: false,
             primaryKey: true,
         },
@@ -273,7 +273,7 @@ async function prepareWidgetModel() {
 async function prepareWorkershipModel() {
     Workership = sequelizeClient.define('Workership', {
         id: {
-            type: Sequelize.STRING,
+            type: Sequelize.BIGINT,
             allowNull: false,
             primaryKey: true,
         },

@@ -27,7 +27,7 @@ export default function BotContainer(props) {
     var b, x, y;
     
     var redraw = false;
-    var pane = document.getElementById("widget-pane-" + props.widgetId);
+    var pane = document.getElementById("widget-pane-" + props.widgetId + (props.isPreview ? '-preview' : ''));
     var ghostpane = document.getElementById('ghostpane');
 
     if (!props.editMode) {
@@ -64,14 +64,13 @@ export default function BotContainer(props) {
     
     // Mouse events
     pane.onmousedown = onMouseDown
-    document.onmousemove = onMove
-    document.onmouseup = onUp
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup', onUp)
       
       // Touch events	
-    pane.ontouchstart = onTouchDown      
-    document.ontouchmove = onTouchMove
-    document.ontouchend = onTouchEnd
-    
+    pane.ontouchstart = onTouchDown
+    document.addEventListener('touchmove', onTouchMove)
+    document.addEventListener('touchend', onTouchEnd)
     
     function onTouchDown(e) {
       onDown(e.touches[0]);
@@ -313,7 +312,7 @@ export default function BotContainer(props) {
         let result = <div/>
         if (el.type === 'Box') {
           result = (
-            <div style={style}>
+            <div id={el.realId} style={style}>
               {el.children && el.children.map(child => (
                 renderGui(child)
               ))}
@@ -322,7 +321,7 @@ export default function BotContainer(props) {
         }
         else if (el.type === 'Card') {
           result = (
-            <Card style={style}>
+            <Card id={el.realId} style={style}>
               {el.children && el.children.map(child => (
                 renderGui(child)
               ))}
@@ -331,14 +330,14 @@ export default function BotContainer(props) {
         }
         else if (el.type === 'Text') {
           result = (
-            <Typography style={style}>
+            <Typography id={el.realId} style={style}>
               {el.text}
             </Typography>
           )
         }
         else if (el.type === 'Image') {
           result = (
-            <img style={style} src={el.src}/>
+            <img id={el.realId} style={style} src={el.src}/>
           )
         }
 
@@ -355,7 +354,7 @@ export default function BotContainer(props) {
 
     if (props.editMode) {
       return (
-        <div id={"widget-pane-" + props.widgetId} className={'pane'}
+        <div id={"widget-pane-" + props.widgetId + (props.isPreview ? '-preview' : '')} className={'pane'} onClick={props.onClick}
           style={{width: props.widgetWidth, height: props.widgetHeight + 30, position: 'absolute', left: props.widgetX, top: props.widgetY}}>
           <div id="title"></div>
           <div style={{width: '100%', height: 'calc(100% - 30px)', position: 'relative'}}>
@@ -363,18 +362,20 @@ export default function BotContainer(props) {
               [fullGui]
             }
           </div>
+          <div style={{width: '100%', height: '100%', position: 'relative', zIndex: 99999}} id={'widget-cover-' + props.widgetId + (props.isPreview ? '-preview' : '')}/>
         </div>
       )
     }
     else {
       return (
-        <div id={"widget-pane-" + props.widgetId}
+        <div id={"widget-pane-" + props.widgetId + (props.isPreview ? '-preview' : '')} onClick={props.onClick}
           style={{width: props.widgetWidth, height: props.widgetHeight, position: 'absolute', left: props.widgetX, top: props.widgetY}}>
           <div style={{width: '100%', height: '100%', position: 'relative'}}>
             {
               [fullGui]
             }
           </div>
+          <div style={{width: '100%', height: '100%', position: 'relative', zIndex: 99999}} id={'widget-cover-' + props.widgetId + (props.isPreview ? '-preview' : '')}/>
         </div>
       )
     }

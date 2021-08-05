@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
@@ -15,6 +15,8 @@ import StoreBottombar from '../../components/StoreBottombar';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ViewCompactIcon from '@material-ui/icons/ViewCompact';
 import { gotoPage } from '../../App';
+import { serverRoot, useForceUpdate } from '../../util/Utils';
+import { token } from '../../util/settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -177,7 +179,9 @@ TabPanel.propTypes = {
 
 export default function Store() {
   const classes = useStyles();
+  let forceUpdate = useForceUpdate()
   const [value, setValue] = React.useState(0)
+  const [categories, setCategories] = React.useState([])
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -186,6 +190,49 @@ export default function Store() {
   const handleChangeIndex = (index) => {
     setValue(index)
   };
+
+  useEffect(() => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      redirect: 'follow'
+    }
+
+    fetch(serverRoot + "/bot/get_categories", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        setCategories(result.categories)
+        result.categories.forEach(cat => {
+          let requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'token': token
+            },
+            body: JSON.stringify({
+              categoryId: cat.id
+            }),
+            redirect: 'follow'
+          }
+      
+          fetch(serverRoot + "/bot/get_bots", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+              console.log(JSON.stringify(result));
+              cat.bots = result.bots
+              setCategories(result.categories)
+              forceUpdate()
+            })
+            .catch(error => console.log('error', error));
+        });
+        forceUpdate()
+      })
+      .catch(error => console.log('error', error));
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -205,13 +252,11 @@ export default function Store() {
             }}
             style={{marginTop: 8}}
           >
-            <Tab icon={<ExtensionIcon />} label="دسته ی 1"/>
-            <Tab icon={<SportsEsportsIcon />} label="دسته ی ۲" />
-            <Tab icon={<ExtensionIcon />} label="دسته ی ۳" />
-            <Tab icon={<SportsEsportsIcon />} label="دسته ی ۴" />
-            <Tab icon={<ExtensionIcon />} label="دسته ی ۵" />
-            <Tab icon={<SportsEsportsIcon />} label="دسته ی ۶" />
-            <Tab icon={<ExtensionIcon />} label="دسته ی ۷" />
+            {
+              categories.map(cat => (
+                <Tab icon={<ExtensionIcon />} label={cat.title}/>
+              ))
+            }
           </Tabs>
         </AppBar>
       </HomeToolbar>
@@ -220,7 +265,7 @@ export default function Store() {
           index={value}
           onChangeIndex={handleChangeIndex}
         >
-          {[0, 1, 2, 3, 4, 5, 6].map(cat => (
+          {categories.map(cat => (
             <TabPanel value={value} index={cat}>
               <ImageList rowHeight={196} className={classes.imageList} cols={2}>
                 <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/644910/header.jpg?t=1542406074'} cols={2}>
@@ -232,7 +277,7 @@ export default function Store() {
                 <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/644921/header.jpg?t=1542406005'} cols={2} style={{marginTop: 16}}>
                   <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/644921/header.jpg?t=1542406005'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
                 </ImageListItem>
-                {itemData.map((item) => (
+                {cat.bots.map((item) => (
                   <ImageListItem key={item.img} cols={1} onClick={() => gotoPage('/app/storebot')}>
                     <div style={{position: 'relative'}}>
                       <img src={item.img} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '5%', width: '95%', height: 128}} />

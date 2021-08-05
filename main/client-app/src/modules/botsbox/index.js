@@ -3,13 +3,16 @@ import HomeToolbar from '../../components/HomeToolbar';
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar';
 import Draggable from 'react-draggable'
 import { ResizableBox } from 'react-resizable';
-import { socket, useForceUpdate } from '../../util/Utils';
+import { serverRoot, socket, useForceUpdate } from '../../util/Utils';
 import BotContainer, { handleGuiUpdate } from '../../components/BotContainer';
-import { Fab } from '@material-ui/core';
+import { Avatar, createTheme, Drawer, Fab, ThemeProvider } from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
 import ClockHand1 from '../../images/clock-hand-1.png'
 import ClockHand2 from '../../images/clock-hand-2.png'
 import {evaluate} from 'mathjs'
+import Add from '@material-ui/icons/Add';
+import { pink } from '@material-ui/core/colors';
+import { token } from '../../util/settings';
 
 var lastScrollTop = 0
 
@@ -154,10 +157,9 @@ let widget1Gui = {
         }
     ]
 }
-
-let timeSecMirror = {widgetId: 'widget-1', elId: 'secondHand', property: 'transform', value: 'rotate(calc((@timeSec * 6deg) - 90deg))', variable: {id: 'timeSec', from: 'time.now.seconds'}}
-let timeMinMirror = {widgetId: 'widget-1', elId: 'minuteHand', property: 'transform', value: 'rotate(calc((@timeMin * 6deg) - 90deg))', variable: {id: 'timeMin', from: 'time.now.minutes'}}
-let timeHourMirror = {widgetId: 'widget-1', elId: 'hourHand', property: 'transform', value: 'rotate(calc((@timeHour * 30deg) - 90deg))', variable: {id: 'timeHour', from: 'time.now.hours'}}
+let timeSecMirror = {widgetId: 'widget-0', elId: 'secondHand', property: 'transform', value: 'rotate(calc((@timeSec * 6deg) - 90deg))', variable: {id: 'timeSec', from: 'time.now.seconds'}}
+let timeMinMirror = {widgetId: 'widget-0', elId: 'minuteHand', property: 'transform', value: 'rotate(calc((@timeMin * 6deg) - 90deg))', variable: {id: 'timeMin', from: 'time.now.minutes'}}
+let timeHourMirror = {widgetId: 'widget-0', elId: 'hourHand', property: 'transform', value: 'rotate(calc((@timeHour * 30deg) - 90deg))', variable: {id: 'timeHour', from: 'time.now.hours'}}
 
 let timeSecShowUpdate = {elId: 'secondHand', property: 'display', newValue: 'block'}
 let timeSecHideUpdate = {elId: 'secondHand', property: 'display', newValue: 'none'}
@@ -168,21 +170,14 @@ let memDict = {}
 export default function BotsBox(props) {
     let forceUpdate = useForceUpdate()
     let [editMode, setEditMode] = React.useState(false)
+    let [widgetPreviews, setWidgetPreviews] = React.useState([])
+    let [widgets, setWidgets] = React.useState([])
     let [guis, setGuis] = React.useState({})
     let [mirrors, setMirrors] = React.useState([])
-    let [timers, setTimers] = React.useState([])
+    let [timers, setTimers] = React.useState({})
+    let [menuOpen, setMenuOpen] = React.useState(false)
     useEffect(() => {
-        
-        guis['widget-1'] = widget1Gui
-        setGuis(guis)
-        mirrors.push(timeSecMirror)
-        mirrors.push(timeMinMirror)
-        mirrors.push(timeHourMirror)
-        setMirrors(mirrors)
-
-        forceUpdate()
-        
-        let element = document.getElementById('botsContainer')
+        let element = document.getElementById('botsContainerOuter')
         let botsSearchbar = document.getElementById('botsSearchbar')
         element.addEventListener("scroll", function() {
             var st = element.scrollTop;
@@ -195,40 +190,26 @@ export default function BotsBox(props) {
             }
             lastScrollTop = st <= 0 ? 0 : st;
         }, false);
-
-        let clockBoxFlag = true
-
-        let wp1 = document.getElementById('widget-pane-1')
-        wp1.onclick = () => {
-            idDict['widget-1']['clockBox'].obj.transform = clockBoxFlag ? 'rotateY(180deg)' : 'rotateY(0deg)'
-            clockBoxFlag = !clockBoxFlag
-            setTimeout(() => {
-                if (!clockBoxFlag) {
-                    idDict['widget-1']['clockBackImage'].obj.display = 'none'
-                    idDict['widget-1']['clockBackShadow'].obj.background = 'rgba(255, 255, 255, 1)'
-                    idDict['widget-1']['secondImage'].obj.display = 'none'
-                    idDict['widget-1']['minuteImage'].obj.display = 'none'
-                    idDict['widget-1']['hourImage'].obj.display = 'none'
-                    idDict['widget-1']['clockMsg'].obj.display = 'block'
-                    idDict['widget-1']['weather'].obj.display = 'block'
-                    idDict['widget-1']['weatherMsg'].obj.display = 'block'
-                }
-                else {
-                    idDict['widget-1']['clockBackImage'].obj.display = 'block'
-                    idDict['widget-1']['clockBackShadow'].obj.background = 'rgba(255, 255, 255, 0.5)'
-                    idDict['widget-1']['secondImage'].obj.display = 'block'
-                    idDict['widget-1']['minuteImage'].obj.display = 'block'
-                    idDict['widget-1']['hourImage'].obj.display = 'block'
-                    idDict['widget-1']['clockMsg'].obj.display = 'none'
-                    idDict['widget-1']['weather'].obj.display = 'none'
-                    idDict['widget-1']['weatherMsg'].obj.display = 'none'
-                    
-                }
+        let requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'token': token
+            },
+            redirect: 'follow'
+          };
+    
+          fetch(serverRoot + "/bot/get_subscriptions", requestOptions)
+              .then(response => response.json())
+              .then(result => {
+                console.log(JSON.stringify(result));
+                setWidgetPreviews(result.widgets)
                 forceUpdate()
-            }, 300);
-            forceUpdate()
-        }
-        
+              })
+              .catch(error => console.log('error', error));
+    }, [])
+
+    useEffect(() => {
         setInterval(() => {
             mirrors.forEach(mirror => {
                 let timeNow = mirror.variable.from === 'time.now.seconds' ? 
@@ -269,12 +250,55 @@ export default function BotsBox(props) {
                     })  
                     forceUpdate()
                 }, data.interval);
-                timers.push(timer)
+                timers[data.timerId] = timer
                 setTimers(timers)
                 forceUpdate()
             }
+            else if (ev === 'untimer') {
+                let timer = timers[data.timerId]
+                clearInterval(timer)
+                delete timers[data.timerId]
+                setTimers(timers)
+                forceUpdate()
+            }
+            else if (ev === 'memorize') {
+                memDict[data.memoryId] = data.value
+            }
+            else if (ev === 'attachClick') {
+                idDict[widgetId][data.elId].view.onclick = (e) => {
+                    data.updates.forEach(d => {
+                        idDict[widgetId][d.elId].obj[d.property] = d.newValue
+                    })  
+                    forceUpdate()
+                }
+            }
         })
     }, [])
+
+    useEffect(() => {
+        if (menuOpen) {
+            setTimeout(() => {
+                widgetPreviews.forEach(wp => {
+                    let wpDiv = document.getElementById(`widget-pane-${wp.id}-preview`)
+                    wpDiv.onclick = () => {
+                        setMenuOpen(false)
+                        widgets.push(wp)
+                        setWidgets(widgets)
+                        forceUpdate()
+                    }
+                })
+            }, 500)
+        }
+    }, [menuOpen])
+
+    const theme = createTheme({
+      palette: {
+        primary: {
+          main: '#2196f3',
+        },
+        secondary: pink
+      },
+    });
     return (
         <div style={{width: "100%", height: '100%', display: props.style.display}}>
             <img style={{width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1}} src={'https://4kwallpapers.com/images/wallpapers/colorful-background-texture-multi-color-orange-illustration-1080x1920-3104.jpg'}/>
@@ -283,15 +307,50 @@ export default function BotsBox(props) {
                     <BotsBoxSearchbar openMenu={props.openMenu}/>
                 </div>
             </HomeToolbar>
-            <div id={'botsContainer'} style={{width: '100%', height: '100%', overflow: 'auto', zIndex: 2, position: 'absolute', left: 0, top: 0}}>
-                <div style={{width: '100%', height: 2000}}>
-                    <BotContainer onIdDictPrepared={(idD) => {idDict['widget-1'] = idD;}} editMode={editMode} widgetId={1} widgetWidth={250} widgetHeight={250} widgetX={150} widgetY={150} gui={guis['widget-' + 1]}/>
+            <div id={'botsContainerOuter'} style={{width: '100%', height: '100%', overflow: 'auto', zIndex: 2, position: 'absolute', left: 0, top: 0}}>
+                <div id={'botsContainerInner'} style={{width: '100%', height: 2000}}>
+                    {
+                        widgets.map(w => {
+                            return (
+                              <BotContainer 
+                                widgetId={w.id} 
+                                isPreview={false} 
+                                onIdDictPrepared={(idD) => {idDict['widget-' + w.id] = idD;}} 
+                                editMode={editMode} 
+                                widgetWidth={250} 
+                                widgetHeight={250} 
+                                widgetX={16} 
+                                widgetY={28} 
+                                gui={guis['widget-' + w.id]}/>
+                            )
+                        })
+                    }
                     <div id="ghostpane" style={{display: 'none'}}></div>
                 </div>
             </div>
-            <Fab color={'secondary'} style={{position: 'fixed', bottom: 16 + 72, left: 16, zIndex: 4}} onClick={() => setEditMode(!editMode)}>
-                <Edit/>
-            </Fab>
+            <ThemeProvider theme={theme}>
+                <Fab color={'secondary'} style={{position: 'fixed', bottom: 16 + 72, left: 16, zIndex: 4}} onClick={() => setEditMode(!editMode)}>
+                    <Edit/>
+                </Fab>
+                <Fab size={'medium'} color={'primary'} style={{position: 'fixed', bottom: 16 + 72 + 56 + 16, left: 16 + 4, zIndex: 4}} 
+                    onClick={() => setMenuOpen(true)}>
+                    <Add/>
+                </Fab>
+            </ThemeProvider>
+        <Drawer onClose={() => setMenuOpen(false)} open={menuOpen} anchor={'left'} style={{direction: 'ltr'}}>
+          <div style={{width: 360, height: '100%', backgroundColor: '#fff', display: 'flex'}}>
+            <div style={{width: 80, height: '100%', backgroundColor: '#eee'}}>
+              <Avatar style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16, padding: 8}}/>
+            </div>
+            <div style={{width: 280, height: '100%', position: 'relative'}}>
+                {
+                    widgetPreviews.map(wp => (
+                        <BotContainer widgetId={wp.id} isPreview={true} onIdDictPrepared={(idD) => {idDict['widget-' + wp.id] = idD;}} editMode={editMode} widgetWidth={250} widgetHeight={250} widgetX={16} widgetY={28} gui={guis['widget-' + wp.id]}/>
+                    ))
+                }
+            </div>
+          </div>
+        </Drawer>
         </div>
     );
 }

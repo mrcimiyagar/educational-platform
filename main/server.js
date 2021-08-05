@@ -21,6 +21,7 @@ const survey = require('./routes/survey');
 const shots = require('./routes/shots');
 const home = require('./routes/home');
 const view = require('./routes/view');
+const bot = require('./routes/bot');
 const mongo = require("./db/mongo");
 const cors = require('cors');
 const sw = require('./db/models');
@@ -59,6 +60,7 @@ models.setup().then(() => {
         app.use('/shots', shots);
         app.use('/home', home);
         app.use('/view', view);
+        app.use('/bot', bot);
 
         app.use('/fetch_rooms', (req, res) => {
             sw.Session.findAll({limit: 1}).then(async function (sessions) {
