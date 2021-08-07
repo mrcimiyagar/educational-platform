@@ -218,12 +218,31 @@ export default function Store() {
             }),
             redirect: 'follow'
           }
-      
           fetch(serverRoot + "/bot/get_bots", requestOptions)
             .then(response => response.json())
             .then(result => {
               console.log(JSON.stringify(result));
               cat.bots = result.bots
+              setCategories(result.categories)
+              forceUpdate()
+            })
+            .catch(error => console.log('error', error));
+          let requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'token': token
+            },
+            body: JSON.stringify({
+              categoryId: cat.id
+            }),
+            redirect: 'follow'
+          }
+          fetch(serverRoot + "/bot/get_packages", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+              console.log(JSON.stringify(result));
+              cat.packages = result.packages
               setCategories(result.categories)
               forceUpdate()
             })
@@ -268,19 +287,15 @@ export default function Store() {
           {categories.map(cat => (
             <TabPanel value={value} index={cat}>
               <ImageList rowHeight={196} className={classes.imageList} cols={2}>
-                <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/644910/header.jpg?t=1542406074'} cols={2}>
-                    <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/644910/header.jpg?t=1542406074'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
-                </ImageListItem>
-                <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/647171/header.jpg?t=1556904675'} cols={2} style={{marginTop: 16}}>
-                  <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/647171/header.jpg?t=1556904675'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
-                </ImageListItem>
-                <ImageListItem key={'https://cdn.cloudflare.steamstatic.com/steam/apps/644921/header.jpg?t=1542406005'} cols={2} style={{marginTop: 16}}>
-                  <img src={'https://cdn.cloudflare.steamstatic.com/steam/apps/644921/header.jpg?t=1542406005'} alt={'پکیج ۱'} style={{borderRadius: 16, width: '100%', height: '100%'}} />
-                </ImageListItem>
+                {cat.packages.map((item) => (
+                  <ImageListItem key={item.coverUrl} cols={2}>
+                    <img src={item.coverUrl} alt={item.title} style={{borderRadius: 16, width: '100%', height: '100%'}} />
+                  </ImageListItem>
+                ))}
                 {cat.bots.map((item) => (
-                  <ImageListItem key={item.img} cols={1} onClick={() => gotoPage('/app/storebot')}>
+                  <ImageListItem key={item.avatarId} cols={1} onClick={() => gotoPage('/app/storebot')}>
                     <div style={{position: 'relative'}}>
-                      <img src={item.img} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '5%', width: '95%', height: 128}} />
+                      <img src={item.avatarId} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '5%', width: '95%', height: 128}} />
                       <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
                         <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
                       </Card>

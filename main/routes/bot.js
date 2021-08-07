@@ -80,6 +80,7 @@ router.post('/create_bot', jsonParser, async function (req, res) {
         let bot = await sw.Bot.create({
             title: req.body.title,
             username: req.body.username,
+            avatarId: req.body.avatarId,
             categoryId: req.body.categoryId === undefined ? null : req.body.categoryId,
         })
         let botSecret = await sw.BotSecret.create({
@@ -124,6 +125,7 @@ router.post('/update_bot', jsonParser, async function (req, res) {
         }
         let bot = await sw.Bot.findOne({where: {id: botSecret.botId}})
         bot.title = req.body.title
+        bot.avatarId = req.body.avatarId
         await bot.save()
         require('../server').pushTo('aseman-bot-store', 'bot-updated', bot)
         res.send({status: 'success'})
@@ -664,6 +666,62 @@ router.post('/get_categories', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
         let cats = await sw.StoreCategory.findAll({raw: true})
         res.send({status: 'success', categories: cats})
+    })
+})
+
+router.post('/create_package', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        if (!acc.canModifyStorePackages) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let pack = await sw.StorePackage.create({
+            title: req.body.title,
+            coverUrl: req.body.coverUrl,
+            categoryId: req.body.categoryId
+        })
+        require('../server').pushTo('aseman-store-page', 'store-package-created', pack)
+        res.send({status: 'success', package: pack})
+    })
+})
+
+router.post('/delete_package', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        if (!acc.canModifyStorePackages) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let pack = await sw.StorePackage.findOne({where: {
+            id: req.body.packageId
+        }})
+        await pack.destroy()
+        require('../server').pushTo('aseman-store-page', 'store-package-deleted', pack)
+        res.send({status: 'success'})
+    })
+})
+
+router.post('/update_package', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        if (!acc.canModifyStorePackages) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let pack = await sw.StorePackage.findOne({where: {
+            id: req.body.packageId
+        }})
+        pack.title = req.body.title
+        pack.coverUrl = req.body.coverUrl
+        pack.categoryId = req.body.categoryId
+        await pack.save()
+        require('../server').pushTo('aseman-store-page', 'store-package-updated', pack)
+        res.send({status: 'success'})
+    })
+})
+
+router.post('/get_packages', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let packs = await sw.StorePackage.findAll({raw: true, where: {categoryId: req.body.categoryId}})
+        res.send({status: 'success', packages: packs})
     })
 })
 

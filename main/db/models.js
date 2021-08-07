@@ -31,6 +31,7 @@ let Subscription;
 let Screenshot;
 let StoreAd;
 let StoreCategory;
+let StorePackage;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
@@ -78,6 +79,7 @@ module.exports = {
         await prepareSubscriptionModel();
         await prepareScreenshotModel();
         await prepareStoreAdModel();
+        await prepareStorePackageModel();
 
         let adminAcc = await Account.findOne({where: {role: 'admin'}});
         if (adminAcc === null) {
@@ -115,6 +117,23 @@ function prepareSequelizeInstance() {
             idle: 10000
         }
     });
+}
+
+async function prepareStorePackageModel() {
+    StorePackage = sequelizeClient.define('StorePackage', {
+        id: {
+            type: Sequelize.BIGINT,
+            allowNull: false,
+            primaryKey: true,
+        },
+        title: Sequelize.STRING,
+        coverUrl: Sequelize.STRING,
+        categoryId: Sequelize.BIGINT
+    }, {
+        freezeTableName: true
+    });
+    await StorePackage.sync();
+    module.exports['StorePackage'] = StorePackage;
 }
 
 async function prepareStoreCategoryModel() {
@@ -199,11 +218,13 @@ async function prepareBotModel() {
         },
         username: Sequelize.STRING,
         title: Sequelize.STRING,
+        avatarId: Sequelize.BIGINT,
         caegoryId: Sequelize.BIGINT
     }, {
         freezeTableName: true
     });
     Bot.belongsTo(StoreCategory, { foreignKey: 'caegoryId' });
+    Bot.belongsTo(File, { foreignKey: 'avatarId' });
     await Bot.sync();
     module.exports['Bot'] = Bot;
 }
