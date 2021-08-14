@@ -13,9 +13,11 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 const useStyles = makeStyles({
   root: {
     width: '100%',
+    height: 72,
     position: 'fixed',
     bottom: 0,
-    backgroundColor: '#2196f3'
+    backgroundColor: 'rgba(21, 96, 233, 0.65)',
+    backdropFilter: 'blur(10px)'
   },
 });
 

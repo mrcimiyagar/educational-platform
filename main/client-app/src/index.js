@@ -25,7 +25,7 @@ setToken(token);
 
 (async () => {
 
-	if (await isReachable('https://kaspersoft.cloud')) {
+	if (await isReachable(serverRoot)) {
 
 		validateToken(token, (result) => {
 			if (result) {

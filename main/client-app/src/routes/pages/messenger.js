@@ -29,8 +29,6 @@ function MessengerPage(props) {
 
   setToken(localStorage.getItem('token'));
 
-
-
   ConnectToIo()
   
   return (

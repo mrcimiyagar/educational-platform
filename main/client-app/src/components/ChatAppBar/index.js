@@ -59,7 +59,7 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="fixed" style={{backgroundColor: '#2196f3'}}>
+            <AppBar position="fixed" style={{backgroundColor: 'rgba(21, 96, 233, 0.5)', backdropFilter: 'blur(10px)'}}>
                 <Toolbar>
                     <IconButton
                         edge="start"
@@ -69,7 +69,7 @@ export default function ChatAppBar(props) {
                     >
                         <ArrowBackIcon style={{transform: 'rotate(180deg)'}}/>
                     </IconButton>
-                    <Avatar alt="Profile Picture" src={''} style={{marginRight: 8}}/>
+                    <Avatar style={{width: 28, height: 28, marginRight: 8}} alt="Profile Picture" src={''}/>
                     <Typography variant="h6" style={{fontFamily: 'mainFont', marginRight: 8}}>
                         پویان
                     </Typography>

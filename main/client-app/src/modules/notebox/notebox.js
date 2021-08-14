@@ -5,7 +5,8 @@ import {
   Card,
   CardBody
 } from "reactstrap";
-import { notesPath, roomId, whiteboardPath } from "../../util/Utils";
+import { setRoomId, roomId } from '../../App'
+import { notesPath, whiteboardPath } from "../../util/Utils";
 
 export let NoteBox = (props) => {
     let rId = roomId

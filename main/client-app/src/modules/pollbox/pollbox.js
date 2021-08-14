@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { colors, token } from '../../util/settings';
-import { roomId, serverRoot, socket, useForceUpdate } from '../../util/Utils';
+import { setRoomId, roomId } from '../../App'
+import { serverRoot, socket, useForceUpdate } from '../../util/Utils';
 import Poll from 'react-polls';
 import CloseIcon from '@material-ui/icons/Close';
 import { Add } from '@material-ui/icons';

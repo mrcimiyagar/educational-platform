@@ -1,12 +1,5 @@
 
 import React, {useEffect, useState} from "react";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Button
-} from "reactstrap";
-import { NavLink, useLocation } from "react-router-dom";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import './style.css';
 
@@ -18,22 +11,17 @@ import "react-table/react-table.css";
 
 import {Avatar, Fab, IconButton, Typography} from "@material-ui/core";
 import {colors, me, setToken, token} from "../../util/settings";
-import {FetchMe, room, roomId, roothPath, serverRoot, socket, useForceUpdate} from "../../util/Utils";
+import {FetchMe, room, roothPath, serverRoot, socket, useForceUpdate} from "../../util/Utils";
 import {setPermissionState, togglePermissions} from '../../containers/Sidebar';
 import { NotificationManager } from "../../components/ReactNotifications";
 
 import VideocamIcon from '@material-ui/icons/Videocam';
-import VideocamOffIcon from '@material-ui/icons/VideocamOff';
 import MicIcon from '@material-ui/icons/Mic';
 import MicOffIcon from '@material-ui/icons/MicOff';
 
-import SortableTree from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
-import { gotoPage } from "../../App";
-import { reloadConf } from "../../routes/pages/conference";
-import store, { switchRoomTreeMenu } from "../../redux/main";
-import {forceUpdateRoomTreeMenu} from '../../components/RoomTreeMenu'
-import VideocamOff from "@material-ui/icons/VideocamOff";
+import { setRoomId, roomId } from '../../App'
+import { VideocamOff } from "@material-ui/icons";
 
 export let reloadUsersList = undefined;
 

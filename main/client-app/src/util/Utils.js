@@ -131,12 +131,6 @@ export let setConfig = (c) => {
   config = c;
 }
 
-export let roomId;
-export let setRoomId = (ri) => {
-  if (ri === undefined) return;
-  roomId = ri;
-}
-
 export let room;
 export let setRoom = (r) => {
   if (r === undefined) return;

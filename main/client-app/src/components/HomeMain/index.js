@@ -52,7 +52,6 @@ TabPanel.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: '#fff'
   },
   indicator: {
     backgroundColor: 'white',
@@ -75,9 +74,9 @@ export default function HomeAppbar() {
     <div className={classes.root}>
       {value === 0 ?
         (
-          <div>
+          <div style={{background: 'transparent'}}>
             <HomeToolbar>
-        <AppBar style={{backgroundColor: '#2196f3'}}>
+        <AppBar style={{backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
           <Toolbar style={{marginTop: 16}}>
             <HomeSearchbar/>
           </Toolbar>
@@ -97,7 +96,8 @@ export default function HomeAppbar() {
           </Tabs>
         </AppBar>
       </HomeToolbar>
-            <SwipeableViews
+      <SwipeableViews
+          style={{height: 'calc(100% - 72px)', backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(10px)'}}
           axis={'x-reverse'}
           index={value}
           onChangeIndex={handleChangeIndex}
@@ -131,7 +131,7 @@ export default function HomeAppbar() {
             </Container>
         </TabPanel>
       </SwipeableViews>
-            <Fab color="secondary" style={{position: 'fixed', bottom: 56 + 16, left: 16}}>
+      <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}}>
         <EditIcon />
       </Fab>
           </div>

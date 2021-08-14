@@ -1,5 +1,17 @@
+import { createTheme } from "@material-ui/core";
 import React, { useEffect } from "react";
 import {ConnectToIo, FetchMe, roothPath, serverRoot, setConfig, validateToken} from "./Utils";
+
+export const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#9c27b0',
+      },
+      secondary: {
+        main: 'rgba(240, 0, 120, 0.75)',
+      },
+    },
+});
 
 export let colors = {}, setColors = (c) => {};
 export let ColorBase = (props) => {

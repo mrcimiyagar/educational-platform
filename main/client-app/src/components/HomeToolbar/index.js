@@ -17,7 +17,7 @@ function HideOnScroll(props) {
   const trigger = useScrollTrigger({ target: window ? window() : undefined });
 
   return (
-    <Slide appear={false} direction="down" in={!trigger}>
+    <Slide appear={false} direction="down" in={!trigger} style={{background: 'transparent'}}>
       {children}
     </Slide>
   );
@@ -34,9 +34,9 @@ HideOnScroll.propTypes = {
 
 export default function HomeToolbar(props) {
   return (
-    <React.Fragment>
+    <React.Fragment style={{background: 'transparent'}}>
       <CssBaseline />
-      <HideOnScroll {...props}>
+      <HideOnScroll {...props} style={{background: 'transparent'}}>
         {props.children}
       </HideOnScroll>
       <Toolbar />

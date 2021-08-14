@@ -1,5 +1,4 @@
 import React, {Component, Fragment, useEffect, useState} from "react";
-import {Link} from "react-router-dom";
 import {
   Button
 } from "reactstrap";
@@ -27,7 +26,8 @@ import { TaskBox } from "../../modules/taskbox/taskbox";
 import { PollBox, togglePolling } from "../../modules/pollbox/pollbox";
 import { VideoBox } from "../../modules/videobox/videobox";
 import { ConfBox } from "../../modules/confbox";
-import { ConnectToIo, leaveRoom, roothPath, setRoomId, roomId, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot } from "../../util/Utils";
+import { setRoomId, roomId } from '../../App'
+import { ConnectToIo, leaveRoom, roothPath, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot } from "../../util/Utils";
 import { fetchAccessChangeCallbackNavbar, hideNavbar, reloadNavbar, reloadNavbarState, setTitle, updateActorsNavbar, updateNavbar, viewNavbar } from "../../containers/TopNav";
 
 import DivSize2 from "../../components/DivSize/DivSize2";

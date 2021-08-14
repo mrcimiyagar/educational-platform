@@ -227,7 +227,7 @@ export default function Store() {
               forceUpdate()
             })
             .catch(error => console.log('error', error));
-          let requestOptions = {
+          let requestOptions2 = {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -238,7 +238,7 @@ export default function Store() {
             }),
             redirect: 'follow'
           }
-          fetch(serverRoot + "/bot/get_packages", requestOptions)
+          fetch(serverRoot + "/bot/get_packages", requestOptions2)
             .then(response => response.json())
             .then(result => {
               console.log(JSON.stringify(result));

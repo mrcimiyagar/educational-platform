@@ -398,7 +398,6 @@ router.post('/create_workership', jsonParser, async function (req, res) {
             res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
             return
         }
-        let membership = await sw.Membership.findOne({where: {userId: session.userId, roomId: req.body.roomId}})
         if (membership === null) {
             res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
             return

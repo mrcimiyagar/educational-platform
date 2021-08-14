@@ -1,11 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
-import { Document, Page } from 'react-pdf';
 import {Button, Card, CardBody} from 'reactstrap';
 import PresentsGrid from '../../components/FilesGrid/PresentsGrid';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { token, colors } from '../../util/settings';
-import { roomId, roothPath, serverRoot, socket, useForceUpdate } from '../../util/Utils';
+import { setRoomId, roomId } from '../../App'
+import { roothPath, serverRoot, socket, useForceUpdate } from '../../util/Utils';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { membership } from '../../routes/pages/room';

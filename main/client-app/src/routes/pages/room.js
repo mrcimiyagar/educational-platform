@@ -107,9 +107,7 @@ export default function RoomPage(props) {
   const [fileMode, setFileMode] = React.useState(0)
   const [menuMode, setMenuMode] = React.useState(0)
 
-  const search = props.location.search
-  let roomId = new URLSearchParams(search).get('room_id')
-  setRoomId(roomId)
+  let roomId = props.roomId
 
   let loadData = (callback) => {
     leaveRoom(() => {

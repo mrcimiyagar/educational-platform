@@ -10,12 +10,10 @@ import { gotoPage } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#eee',
     width: '100%',
     height: '100vh'
   },
   imageList: {
-    backgroundColor: '#eee',
     paddingTop: 48,
     width: '100%',
     height: 'auto',
@@ -187,6 +185,7 @@ export default function SpacesGrid() {
 
   return (
     <div className={classes.root}>
+      <div style={{width: '100%', position: 'fixed', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.65)', backdropFilter: 'blur(10px)'}}/>
       <HomeToolbar>
         <div style={{width: '75%', position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}>
           <SpacesSearchbar/>
@@ -196,15 +195,15 @@ export default function SpacesGrid() {
         {itemData.map((item) => (
           <ImageListItem key={item.img} cols={1} rows={1} onClick={() => {gotoPage('/app/conf?room_id=1')}}>
             <div style={{position: 'relative'}}>
-                <img src={item.img} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '2.5%', width: '95%', height: 128}} />
+                <img src={'https://cdn.dribbble.com/users/6093092/screenshots/15548423/media/54c06b30c11db3ffd26b25c83ab9a737.jpg'} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '2.5%', width: '95%', height: 112}} />
                 <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
-                    <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
+                    <Typography style={{position: 'absolute', top: 140, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
                 </Card>
             </div>
           </ImageListItem>
         ))}
       </ImageList>
-      <Fab color="secondary" style={{position: 'fixed', bottom: 56 + 16, left: 16}}>
+      <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}}>
         <HomeIcon />
       </Fab>
     </div>

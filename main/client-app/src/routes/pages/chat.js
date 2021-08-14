@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'fixed',
         bottom: 0,
         zIndex: 1000,
-        backgroundColor: '#ddd'
+        backgroundColor: 'rgba(255, 255, 255, 0.75)'
     },
     input: {
         marginLeft: theme.spacing(1),
@@ -44,15 +44,22 @@ export default function Chat(props) {
     const [open, setOpen] = React.useState(true);
     const handleClose = () => {
         setOpen(false);
-        popPage()
+        setTimeout(popPage, 250);
     };
     let [tickets, setTickets] = React.useState([]);
     let classes = useStyles();
     return (
-        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+        <Dialog
+            onTouchStart={(e) => {e.stopPropagation();}}
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                },
+            }}
+            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
             <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
                 <ChatAppBar closeCallback={handleClose}/>
-                <img alt={'chat-wallpaper'} src={ChatWallpaper} style={{position: 'fixed', width: '100%', height: '100%'}}/>
                 <div style={{height: 64}}/>
                 <div className={classes.root}>
                     <IconButton className={classes.iconButton}>

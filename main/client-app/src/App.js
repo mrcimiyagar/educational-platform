@@ -1,42 +1,31 @@
 import React, {Component, Fragment} from "react";
-import {BrowserRouter, BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 import ReactDOM from 'react-dom';
-import App from "./containers/App";
-import {useTheme, useMediaQuery, createMuiTheme, ThemeProvider, colors, createTheme} from '@material-ui/core';
-import { AnimatedSwitch } from 'react-router-transition';
+import {useTheme, useMediaQuery, ThemeProvider, colors, createTheme} from '@material-ui/core';
 import './App.css';
-import { ColorBase } from "./util/settings";
+import { theme } from "./util/settings";
 import { Provider } from 'react-redux';
 import store from './redux/main';
-import { createBrowserHistory } from "history";
+import MessengerPage from "./routes/pages/messenger";
+import SearchEngine from "./routes/pages/searchEngine";
+import RoomWallpaper from './images/roomWallpaper.png'
+import RoomPage from "./routes/pages/room";
+import Chat from "./routes/pages/chat";
 
-export const hist = createBrowserHistory();
+let histPage, setHp;
+export let drawerOpen = null, setDrawerOpen = null;
+export let currNav = null, setCurrentNav = null;
 
 export let isDesktop;
-let pageOnTheWay, setPageOnTheWay, historyStack = ['messenger'];
+let series = ['/app/messenger'];
 
 export let gotoPage = (p) => {
-  historyStack.push(p)
-	setPageOnTheWay(p);
-  setTimeout(() => {
-    document.getElementById('gotoPageOnTheWay').click();
-  }, 500);
+  series.push(p)
+  setHp(p)
 }
 
 export let popPage = () => {
-  historyStack.pop()
-	setPageOnTheWay(historyStack[historyStack.length - 1]);
-  setTimeout(() => {
-    document.getElementById('gotoPageOnTheWay').click();
-  }, 500);
-}
-
-export let drawerOpen = null, setDrawerOpen = null;
-export let currentNav = null, setCurrentNav = null;
-
-let Goto = (props) => {
-	[pageOnTheWay, setPageOnTheWay] = React.useState('');
-	return <Link id={'gotoPageOnTheWay'} to={pageOnTheWay} style={{display: 'none'}}/>
+  series.pop()
+  setHp(series[series.length - 1])
 }
 
 let DesktopDetector = (props) => {
@@ -45,33 +34,68 @@ let DesktopDetector = (props) => {
   return <div/>;
 }
 
-function MainApp(props) {
-  [drawerOpen, setDrawerOpen] = React.useState(false)
-  [currentNav, setCurrentNav] = React.useState(0)
-  let t = createTheme({
-      zIndex: {
-        appBar: 1048,
-        modal: 1049,
-      }
-  })
-  return (
-      <ThemeProvider theme={t}>
-        <Router history={hist}>
-          <DesktopDetector/>
-          <ColorBase/>
-          <Goto/>
-          <AnimatedSwitch
-      atEnter={{ opacity: 0 }}
-      atLeave={{ opacity: 0 }}
-      atActive={{ opacity: 1 }}>
-            <Route path="/" component={App}/>
-          </AnimatedSwitch>
-        </Router>
-      </ThemeProvider>
-  );
+export let roomId;
+export function setRoomId(ri) {
+  if (ri === undefined) return;
+  roomId = ri;
 }
 
-export default  ReactDOM.render(
+let dialogs = {
+  '/app/chat': Chat,
+}
+let pages = {
+  '/app/messenger': MessengerPage,
+  '/app/room': RoomPage,
+  '/app/searchEngine': SearchEngine
+}
+
+function MainApp(props) {
+
+  document.documentElement.style.overflow = 'auto'
+
+    const url = new URL(window.location.href)
+    roomId = url.searchParams.get('room_id');
+
+    [histPage, setHp] = React.useState('/app/messenger');
+[currNav, setCurrentNav] = React.useState(0);
+let P = undefined;
+let D = undefined;
+if (dialogs[histPage] !== undefined) {
+    D = dialogs[histPage];
+    P = pages[series[series.length - 2]];
+    if (P === undefined) {
+        P = pages[series[series.length - 3]]
+    }
+}
+else {
+    P = pages[histPage];
+}
+
+if (roomId === null) {
+  return (
+    <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
+      <img src={RoomWallpaper} style={{position: 'fixed', width: '100%', height: '100%', objectFit: 'cover'}}/>
+      <ThemeProvider theme={theme}>
+          {P !== undefined ? <P /> : null}
+          {D !== undefined ? <D open={true}/> : null}
+      </ThemeProvider>
+    </div>
+);
+}
+else {
+  return (
+    <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
+      <img src={RoomWallpaper} style={{position: 'fixed', width: '100%', height: '100%', objectFit: 'cover'}}/>
+      <ThemeProvider theme={theme}>
+          {P !== undefined ? <P roomId={roomId}/> : null}
+          {D !== undefined ? <D open={true}/> : null}
+      </ThemeProvider>
+    </div>
+);
+}
+}
+
+export default ReactDOM.render(
   <Provider store={store}>
     <MainApp />
   </Provider>,
