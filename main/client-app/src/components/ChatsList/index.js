@@ -11,10 +11,9 @@ import { gotoPage } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 'calc(100% + 64px)',
-    direction: 'rtl',
-    marginLeft: -32,
-    marginRight: -32
+    minHeight: '100vh',
+    width: '100%',
+    direction: 'rtl'
   },
   inline: {
     display: 'inline',
@@ -38,7 +37,7 @@ export default function ChatsList() {
             <Typography style={{width: '100%', textAlign: 'right'}}>
                 {"کیهان محمدی"}
             </Typography>
-            <Typography style={{width: '100%', textAlign: 'left', position: 'absolute', top: 16, fontSize: 12, left: 0, color: 'rgba(0, 0, 0, 0.5)'}}>
+            <Typography style={{width: '100%', textAlign: 'left', position: 'absolute', top: 16, fontSize: 12, left: 16, color: 'rgba(0, 0, 0, 0.5)'}}>
                 {"1400/11/13"}
             </Typography>
             </React.Fragment>

@@ -28,6 +28,8 @@ export let reloadRoomsList = undefined;
 function MessengerPage(props) {
 
   setToken(localStorage.getItem('token'));
+  
+  document.documentElement.style.overflow = 'auto';
 
   ConnectToIo()
   

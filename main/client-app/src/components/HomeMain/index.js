@@ -13,15 +13,16 @@ import EditIcon from '@material-ui/icons/Edit';
 import ChatsList from '../ChatsList';
 import HomeDrawer from '../HomeDrawer';
 import HomeBottombar from '../HomeBottombar';
-
 import ChatIcon from '@material-ui/icons/Chat';
 import GroupIcon from '@material-ui/icons/Group';
 import RadioIcon from '@material-ui/icons/Radio';
 import RedditIcon from '@material-ui/icons/Reddit';
-import { currentNav } from '../../App';
 import SpacesGrid from '../SpacesGrid';
 import HomeNotifs from '../HomeNotifs';
 import HomeSettings from '../HomeSettings';
+import RoomWallpaper from '../../images/roomWallpaper.png'
+import store from '../../redux/main';
+import { useForceUpdate } from '../../util/Utils';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -58,7 +59,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export let updateHome = undefined
+
 export default function HomeAppbar() {
+  updateHome = useForceUpdate()
   const classes = useStyles()
   const [value, setValue] = React.useState(0)
 
@@ -70,9 +74,11 @@ export default function HomeAppbar() {
     setValue(index)
   };
 
+  let currNav = store.getState().global.main.currentMessengerNav
+
   return (
     <div className={classes.root}>
-      {value === 0 ?
+      {currNav === 0 ?
         (
           <div style={{background: 'transparent'}}>
             <HomeToolbar>
@@ -96,62 +102,39 @@ export default function HomeAppbar() {
           </Tabs>
         </AppBar>
       </HomeToolbar>
-      <SwipeableViews
-          style={{height: 'calc(100% - 72px)', backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(10px)'}}
-          axis={'x-reverse'}
-          index={value}
-          onChangeIndex={handleChangeIndex}
-        >
-        <TabPanel value={value} index={0}>
-            <Container>
-                <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
-                    <ChatsList/>
-                </Box>
-            </Container>
+        <TabPanel value={value} index={0} style={{marginLeft: 16, marginRight: 16, marginTop: 112, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.35)', backdropFilter: 'blur(20px)'}}>
+            <ChatsList/>          
         </TabPanel>
-        <TabPanel value={value} index={1}>
-            <Container>
-              <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
-                <ChatsList/>
-              </Box>
-            </Container>
+        <TabPanel value={value} index={1} style={{marginLeft: 16, marginRight: 16, marginTop: 112, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.35)', backdropFilter: 'blur(20px)'}}>
+            <ChatsList/>          
         </TabPanel>
-        <TabPanel value={value} index={2}>
-            <Container>
-                <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
-                  <ChatsList/>
-                </Box>
-            </Container>
+        <TabPanel value={value} index={2} style={{marginLeft: 16, marginRight: 16, marginTop: 112, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.35)', backdropFilter: 'blur(20px)'}}>
+            <ChatsList/>          
         </TabPanel>
-        <TabPanel value={value} index={3}>
-            <Container>
-              <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
-                <ChatsList/>
-              </Box>
-            </Container>
+        <TabPanel value={value} index={3} style={{marginLeft: 16, marginRight: 16, marginTop: 112, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.35)', backdropFilter: 'blur(20px)'}}>
+            <ChatsList/>          
         </TabPanel>
-      </SwipeableViews>
       <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}}>
         <EditIcon />
       </Fab>
           </div>
         ) :
-        value === 1 ?
+        currNav === 1 ?
           (
             <SpacesGrid/>
           ) :
-          value === 2 ?
+          currNav === 2 ?
             (
               <HomeNotifs/>
             ) :
-            value === 3 ?
+            currNav === 3 ?
               (
                 <HomeSettings/>
               )
         :
         null
       }
-      <HomeBottombar setCurrentNav={setValue} currentNav={value}/>
+      <HomeBottombar/>
       <HomeDrawer/>
     </div>
   )

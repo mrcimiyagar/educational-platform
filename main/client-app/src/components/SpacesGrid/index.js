@@ -36,145 +36,145 @@ const useStyles = makeStyles((theme) => ({
 const itemData = [
   {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
 {
     img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
+    title: 'Space A',
     author: 'author',
     featured: true,
 },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
     {
         img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
+        title: 'Space A',
         author: 'author',
         featured: true,
     },
@@ -185,7 +185,7 @@ export default function SpacesGrid() {
 
   return (
     <div className={classes.root}>
-      <div style={{width: '100%', position: 'fixed', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.65)', backdropFilter: 'blur(10px)'}}/>
+      <div style={{width: '100%', position: 'fixed', height: '100%'}}/>
       <HomeToolbar>
         <div style={{width: '75%', position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}>
           <SpacesSearchbar/>
@@ -193,13 +193,11 @@ export default function SpacesGrid() {
       </HomeToolbar>
       <ImageList style={{zIndex: 2}} rowHeight={188} cols={3} gap={1} className={classes.imageList}>
         {itemData.map((item) => (
-          <ImageListItem key={item.img} cols={1} rows={1} onClick={() => {gotoPage('/app/conf?room_id=1')}}>
-            <div style={{position: 'relative'}}>
-                <img src={'https://cdn.dribbble.com/users/6093092/screenshots/15548423/media/54c06b30c11db3ffd26b25c83ab9a737.jpg'} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '2.5%', width: '95%', height: 112}} />
-                <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
-                    <Typography style={{position: 'absolute', top: 140, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
-                </Card>
-            </div>
+          <ImageListItem key={item.img} cols={1} rows={1} onClick={() => {gotoPage('/app/room', {room_id: 1})}}>
+            <Card style={{position: 'relative', margin: 4, backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 16}}>
+                <img src={'https://cdn.dribbble.com/users/6093092/screenshots/15548423/media/54c06b30c11db3ffd26b25c83ab9a737.jpg'} alt={item.title} style={{borderRadius: 16, width: '100%', height: 112}} />
+                <div style={{width: '100%', height: '100%', paddingTop: 8, paddingBottom: 12, textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>{item.title}</div>
+            </Card>
           </ImageListItem>
         ))}
       </ImageList>

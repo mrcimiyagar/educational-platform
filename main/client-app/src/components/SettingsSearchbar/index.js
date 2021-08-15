@@ -15,7 +15,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: '#2196f3'
+    backgroundColor: 'rgba(21, 96, 233, 0.65)',
+    backdropFilter: 'blur(10px)'
   },
   input: {
     marginLeft: theme.spacing(1),

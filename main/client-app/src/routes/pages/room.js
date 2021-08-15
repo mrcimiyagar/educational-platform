@@ -6,9 +6,9 @@ import BotsBox from "../../modules/botsbox";
 import { BoardBox } from "../../modules/boardbox/boardbox";
 import { TaskBox } from "../../modules/taskbox/taskbox";
 import { ConfBox } from "../../modules/confbox";
-import { ConnectToIo, leaveRoom, roothPath, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot, setRoomId, setRoom, room } from "../../util/Utils";
+import { ConnectToIo, leaveRoom, roothPath, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot, setRoom, room } from "../../util/Utils";
 
-import {isDesktop, gotoPage, setCurrentNav, popPage} from '../../App';
+import {isDesktop, gotoPage, setCurrentNav, popPage, setRoomId} from '../../App';
 import store, { changeConferenceMode, PeopleChatModes, setCurrentRoom } from "../../redux/main";
 import RoomBottombar from '../../components/RoomBottombar'
 import { AppBar, Avatar, Button, createTheme, Drawer, Fab, IconButton, makeStyles, Tab, Tabs, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
@@ -95,6 +95,8 @@ let setMembership = undefined;
 
 export default function RoomPage(props) {
 
+  document.documentElement.style.overflow = 'auto';
+
   let forceUpdate = useForceUpdate()
 
   const classes = useStyles();
@@ -107,7 +109,8 @@ export default function RoomPage(props) {
   const [fileMode, setFileMode] = React.useState(0)
   const [menuMode, setMenuMode] = React.useState(0)
 
-  let roomId = props.roomId
+  let roomId = props.room_id
+  setRoomId(roomId)
 
   let loadData = (callback) => {
     leaveRoom(() => {

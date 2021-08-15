@@ -17,12 +17,10 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#eee',
     width: '100%',
     height: '100vh'
   },
   imageList: {
-    backgroundColor: '#eee',
     paddingTop: 48,
     width: '100%',
     height: 'auto',
@@ -92,9 +90,9 @@ export default function SettingsList() {
           <SettingsSearchbar/>
         </div>
       </HomeToolbar>
-      <ImageList style={{zIndex: 2}} rowHeight={188} cols={2} gap={1} className={classes.imageList}>
+      <ImageList style={{zIndex: 2}} rowHeight={224} cols={2} gap={1} className={classes.imageList}>
         <ImageListItem key={'settings-my-profile-tag'} cols={2} rows={1} style={{marginTop: 32}}>
-          <Card style={{width: 'calc(100% - 64px)', height: 96, borderRadius: 48, marginLeft: 32, marginRight: 32, display: 'flex'}}>
+          <Card style={{width: 'calc(100% - 64px)', height: 96, borderRadius: 48, marginLeft: 32, marginRight: 32, display: 'flex', backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(10px)'}}>
             <div style={{padding: 8, width: 96, height: 96}}>
               <Avatar src={'https://www.nj.com/resizer/h8MrN0-Nw5dB5FOmMVGMmfVKFJo=/450x0/smart/cloudfront-us-east-1.images.arcpublishing.com/advancelocal/SJGKVE5UNVESVCW7BBOHKQCZVE.jpg'} style={{width: '100%', height: '100%'}}></Avatar>
             </div>
@@ -104,8 +102,8 @@ export default function SettingsList() {
         {itemData.map((item, index) => {
           let IconComp = item.icon
           return (
-            <ImageListItem key={item.img} cols={1} rows={1} style={{marginTop: (index === 0 || index === 1) ? -72 : 0}}>
-              <div style={{position: 'relative'}}>
+            <ImageListItem key={item.img} cols={1} rows={1} style={{marginTop: (index === 0 || index === 1) ? -72 : 0, padding: 8}}>
+              <div style={{position: 'relative', width: '100%', height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(10px)', borderRadius: 16}}>
                   <IconComp style={{position: 'absolute', top: 32, left: '50%', transform: 'translateX(-50%)', fill: '#2196f3', width: 112, height: 112}}/>
                   <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)', fontWeight: 'bold', }}>{item.title}</Typography>
               </div>
@@ -113,7 +111,7 @@ export default function SettingsList() {
           )
         })}
       </ImageList>
-      <Fab color="secondary" style={{position: 'fixed', bottom: 56 + 16, left: 16}}>
+      <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}}>
         <VpnKeyIcon />
       </Fab>
     </div>

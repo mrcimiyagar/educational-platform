@@ -1,13 +1,15 @@
 
 import { combineReducers, createStore } from 'redux';
 
-export let CHANGE_CONFERENCE_MODE = 'CHANGE_CONFERENCE_MODE';
-export let CHANGE_PEOPLECHAT_MODE = 'CHANGE_PEOPLECHAT_MODE';
-export let SWITCH_ROOM_TREE_MENU = 'SWITCH_ROOM_TREE_MENU';
-export let SWITCH_WEBINAR = 'SWITCH_WEBINAR';
-export let SWITCH_CONFERENCE = 'SWITCH_CONFERENCE';
-export let SET_CURRENT_ROOM = 'SET_CURRENT_ROOM';
-export let SET_CURRENT_Room_NAV = 'SET_CURRENT_Room_NAV';
+export let CHANGE_CONFERENCE_MODE = 'CHANGE_CONFERENCE_MODE'
+export let CHANGE_PEOPLECHAT_MODE = 'CHANGE_PEOPLECHAT_MODE'
+export let SWITCH_ROOM_TREE_MENU = 'SWITCH_ROOM_TREE_MENU'
+export let SWITCH_WEBINAR = 'SWITCH_WEBINAR'
+export let SWITCH_CONFERENCE = 'SWITCH_CONFERENCE'
+export let SET_CURRENT_ROOM = 'SET_CURRENT_ROOM'
+export let SET_CURRENT_Room_NAV = 'SET_CURRENT_Room_NAV'
+export let SET_MESSENGER_NAV = 'SET_MESSENGER_NAV'
+export let SET_STORE_NAV = 'SET_STORE_NAV'
 
 export const PeopleChatModes = {
     ALL: 1,
@@ -15,6 +17,20 @@ export const PeopleChatModes = {
     NONE: 3,
 };
 Object.freeze(PeopleChatModes);
+
+export function setCurrentStoreNav(storeNav) {
+  return {
+    type: SET_STORE_NAV,
+    storeNav,
+  }
+}
+
+export function setCurrentMessengerNav(messengerNav) {
+  return {
+    type: SET_MESSENGER_NAV,
+    messengerNav,
+  }
+}
 
 export function setCurrentRoomNav(roomNav) {
   return {
@@ -72,7 +88,9 @@ const defaultState = {
         isInConference: false,
         peopleAndChat: PeopleChatModes.ALL,
         currentRoom: undefined,
-        currentRoomNav: 0
+        currentRoomNav: 0,
+        currentMessengerNav: 0,
+        currentStoreNav: 0
     },
     webinar: {
       video: false,
@@ -90,6 +108,22 @@ const defaultState = {
 
 function global(state = defaultState, action) {
     switch (action.type) {
+        case SET_STORE_NAV:
+          return {
+              ...state,
+              main: {
+                  ...state.main,
+                  currenStoreNav: action.storeNav
+                }
+            };
+        case SET_MESSENGER_NAV:
+          return {
+              ...state,
+              main: {
+                  ...state.main,
+                  currentMessengerNav: action.messengerNav
+                }
+            };
         case SET_CURRENT_ROOM:
           return {
               ...state,

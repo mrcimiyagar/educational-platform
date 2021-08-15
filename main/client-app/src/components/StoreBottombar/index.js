@@ -9,9 +9,10 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import HomeIcon from '@material-ui/icons/Home';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import { setCurrentNav } from '../../App';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import ExtensionIcon from '@material-ui/icons/Extension';
+import store, { setCurrentStoreNav } from '../../redux/main';
+import { useForceUpdate } from '../../util/Utils';
 
 const useStyles = makeStyles({
   root: {
@@ -35,16 +36,18 @@ const useStylesAction = makeStyles({
 });
 
 export default function HomeBottombar() {
+  let forceUpdate = useForceUpdate()
   const classes = useStyles();
   const classesAction = useStylesAction();
-  const [value, setValue] = React.useState(0);
+
+  let currNav = store.getState().global.main.currentStoreNav
 
   return (
     <BottomNavigation
-      value={value}
+      value={currNav}
       onChange={(event, newValue) => {
-        setValue(newValue);
-        setCurrentNav(newValue)
+        store.dispatch(setCurrentStoreNav(newValue))
+        forceUpdate()
       }}
       showLabels
       className={classes.root}

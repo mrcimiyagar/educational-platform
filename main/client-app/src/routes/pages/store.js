@@ -178,6 +178,9 @@ TabPanel.propTypes = {
 };
 
 export default function Store() {
+
+  document.documentElement.style.overflow = 'auto';
+
   const classes = useStyles();
   let forceUpdate = useForceUpdate()
   const [value, setValue] = React.useState(0)

@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from "react";
+import React, {Component, Fragment, useEffect} from "react";
 import ReactDOM from 'react-dom';
 import {useTheme, useMediaQuery, ThemeProvider, colors, createTheme} from '@material-ui/core';
 import './App.css';
@@ -10,22 +10,42 @@ import SearchEngine from "./routes/pages/searchEngine";
 import RoomWallpaper from './images/roomWallpaper.png'
 import RoomPage from "./routes/pages/room";
 import Chat from "./routes/pages/chat";
+import Store from "./routes/pages/store";
 
-let histPage, setHp;
+let histPage = null, setHp = null;
 export let drawerOpen = null, setDrawerOpen = null;
-export let currNav = null, setCurrentNav = null;
 
 export let isDesktop;
 let series = ['/app/messenger'];
+let paramsSeries = [{}];
 
-export let gotoPage = (p) => {
+export let gotoPage = (p, params) => {
   series.push(p)
+  paramsSeries.push(params)
   setHp(p)
+
+  let query = ''
+  for (let key in params) {
+    query += key + '=' + params[key] + '&'
+  }
+  if (query.length > 0) {
+    query = query.substr(0, query.length - 1)
+  }
+
+  window.history.pushState('', '', p + '?' + query);
 }
 
 export let popPage = () => {
-  series.pop()
-  setHp(series[series.length - 1])
+  if (series.length > 1) {
+    series.pop()
+    paramsSeries.pop()
+    setHp(series[series.length - 1])
+    let params = paramsSeries[paramsSeries.length - 1]
+
+    
+
+    window.history.pushState('', '', series[series.length - 1]);
+  }
 }
 
 let DesktopDetector = (props) => {
@@ -34,65 +54,75 @@ let DesktopDetector = (props) => {
   return <div/>;
 }
 
-export let roomId;
-export function setRoomId(ri) {
-  if (ri === undefined) return;
+export let roomId = 0;
+export let setRoomId = (ri) => {
+  if (ri === undefined || ri === null) return;
   roomId = ri;
 }
 
 let dialogs = {
-  '/app/chat': Chat,
+  '/app/chat': Chat
 }
 let pages = {
+  '/app/store': Store,
   '/app/messenger': MessengerPage,
   '/app/room': RoomPage,
   '/app/searchEngine': SearchEngine
 }
 
+let setDialogOpen = null
+export let registerDialogOpen = (setOpen) => {
+  setDialogOpen = setOpen
+}
+
 function MainApp(props) {
 
-  document.documentElement.style.overflow = 'auto'
+  [histPage, setHp] = React.useState(window.location.pathname)
 
-    const url = new URL(window.location.href)
-    roomId = url.searchParams.get('room_id');
+  window.onpopstate = function(event) {
+    if (event){
+      if (setDialogOpen !== null) {
+        setDialogOpen(false)
+      }
+      setTimeout(popPage, 250);
+    }
+  }
 
-    [histPage, setHp] = React.useState('/app/messenger');
-[currNav, setCurrentNav] = React.useState(0);
-let P = undefined;
-let D = undefined;
-if (dialogs[histPage] !== undefined) {
+  let P = undefined;
+  let D = undefined;
+  if (dialogs[histPage] !== undefined) {
     D = dialogs[histPage];
     P = pages[series[series.length - 2]];
     if (P === undefined) {
         P = pages[series[series.length - 3]]
     }
-}
-else {
+  }
+  else {
     P = pages[histPage];
-}
+  }
 
-if (roomId === null) {
+  let query = window.location.search
+  let params = {}
+  if (query !== undefined && query !== null) {
+    if (query.length > 1) {
+      query = query.substr(1)
+    }
+    let querySep = query.split('&')
+    querySep.forEach(part => {
+      let keyValue = part.split('=')
+      params[keyValue[0]] = keyValue[1]
+    })
+  }
+ 
   return (
     <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
-      <img src={RoomWallpaper} style={{position: 'fixed', width: '100%', height: '100%', objectFit: 'cover'}}/>
+      <img src={RoomWallpaper} style={{marginRight: -16, position: 'fixed', width: 'calc(100% + 16px)', height: '100%', objectFit: 'cover'}}/>
       <ThemeProvider theme={theme}>
-          {P !== undefined ? <P /> : null}
-          {D !== undefined ? <D open={true}/> : null}
+        {P !== undefined ? <P {...params}/> : null}
+        {D !== undefined ? <D open={true}/> : null}
       </ThemeProvider>
     </div>
-);
-}
-else {
-  return (
-    <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
-      <img src={RoomWallpaper} style={{position: 'fixed', width: '100%', height: '100%', objectFit: 'cover'}}/>
-      <ThemeProvider theme={theme}>
-          {P !== undefined ? <P roomId={roomId}/> : null}
-          {D !== undefined ? <D open={true}/> : null}
-      </ThemeProvider>
-    </div>
-);
-}
+  );
 }
 
 export default ReactDOM.render(

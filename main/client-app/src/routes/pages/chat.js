@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import ChatAppBar from "../../components/ChatAppBar";
 import Slide from "@material-ui/core/Slide";
-import {gotoPage, popPage, selectedIndex, token} from "../../App";
+import {gotoPage, popPage, registerDialogOpen, selectedIndex, token} from "../../App";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Chat(props) {
     const [open, setOpen] = React.useState(true);
+    registerDialogOpen(setOpen)
     const handleClose = () => {
         setOpen(false);
         setTimeout(popPage, 250);

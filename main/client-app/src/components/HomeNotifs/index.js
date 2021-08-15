@@ -59,7 +59,7 @@ export default function HomeNotifs() {
 
   return (
     <div className={classes.root}>
-      <AppBar style={{backgroundColor: '#2196f3'}}>
+      <AppBar style={{backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
           <Tabs
             variant="fullWidth"
             value={value}
@@ -73,12 +73,7 @@ export default function HomeNotifs() {
             <Tab icon={<AlternateEmailIcon />} label="منشن ها" />
           </Tabs>
         </AppBar>
-        <SwipeableViews
-          axis={'x-reverse'}
-          index={value}
-          onChangeIndex={handleChangeIndex}
-          style={{marginLeft: -36, marginRight: -36}}
-        >
+        <div style={{width: '100%', height: '100%'}}>
         <TabPanel value={value} index={0}>
             <Container>
                 <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
@@ -93,7 +88,7 @@ export default function HomeNotifs() {
               </Box>
             </Container>
         </TabPanel>
-      </SwipeableViews>
+        </div>
     </div>
   )
 }
