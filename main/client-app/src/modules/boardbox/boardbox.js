@@ -22,8 +22,9 @@ export let BoardBox = (props) => {
     return (
       <Card style={{height: 'calc(100% - 72px)', display: props.style.display, width: 'calc(100% + 32px)', marginLeft: -16, marginRight: -16, display: props.style.display}}>
           <CardBody style={{position: 'relative', height: '100%'}}>
-            
-            <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
+            <AppBar style={{width: '100%', height: 64,
+              backgroundColor: 'rgba(21, 96, 233, 0.65)',
+              backdropFilter: 'blur(10px)'}}>
               <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                 <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
                 <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
@@ -40,7 +41,7 @@ export let BoardBox = (props) => {
               </Toolbar>
             </AppBar>
             
-            <iframe name="board-frame" src={whiteboardPath + '/#room=91bd46ae3aa84dff9d20,' + roomId}
+            <iframe allowTransparency={true} name="board-frame" src={whiteboardPath + '/#room=91bd46ae3aa84dff9d20,' + roomId}
             style={{width: '100%', height: 'calc(100% - 64px)', position: 'absolute', left: 0, top: 64, bottom: 0, right: 0}} frameBorder="0"></iframe>
             {(props.membership !== undefined && props.membership !== null && props.membership.canUseWhiteboard) ?  
                 null : 

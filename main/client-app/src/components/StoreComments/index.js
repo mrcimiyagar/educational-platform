@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     maxWidth: '100٪',
-    backgroundColor: theme.palette.background.paper,
     direction: 'rtl'
   },
   inline: {
@@ -37,7 +36,7 @@ export default function StoreComments() {
           <span>
             <Avatar alt="Remy Sharp" src="https://www.nj.com/resizer/h8MrN0-Nw5dB5FOmMVGMmfVKFJo=/450x0/smart/cloudfront-us-east-1.images.arcpublishing.com/advancelocal/SJGKVE5UNVESVCW7BBOHKQCZVE.jpg" />
           </span>
-          <span style={{marginRight: 16}}>
+          <span style={{marginRight: 16, color: '#fff'}}>
             خیلی خوب بود
             <br/>
             <br/>

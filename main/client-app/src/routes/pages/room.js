@@ -261,14 +261,17 @@ export default function RoomPage(props) {
   });
   return (
       <div style={{width: '100%', height: '100%', position: 'fixed', right: 0, top: 0, backgroundColor: colors.primaryDark}}>
-        <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, backgroundColor: '#fff'}}> 
+        <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0}}> 
           <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId} style={{display: currentRoomNav === 0 ? 'block' : 'none'}}/>
           <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 2 ? 'block' : 'none'}}/>
           <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId}  style={{display: currentRoomNav === 1 ? 'block' : 'none'}}/>
           <TaskBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 3 ? 'block' : 'none'}}/>
           <div
-                        style={{display: currentRoomNav === 4 ? 'block' : 'none', backgroundColor: '#eee', width: '100%', height: '100%', minHeight: '100vh'}}>
-                          <AppBar style={{width: '100%', height: 64 + 72, backgroundColor: '#2196f3'}}>
+                        style={{display: currentRoomNav === 4 ? 'block' : 'none', width: '100%', height: '100%', minHeight: '100vh'}}>
+                          <AppBar style={{width: '100%', height: 64 + 72, 
+                            backgroundColor: 'rgba(21, 96, 233, 0.65)',
+                            backdropFilter: 'blur(10px)'
+                          }}>
                             <Toolbar style={{width: '100%', justifyContent: 'center', textAlign: 'center'}}>
                               <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
                               <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {

@@ -49,7 +49,9 @@ export let ConfBox = (props) => {
     return (
       <div style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr', display: props.style.display}}>
         
-        <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
+        <AppBar style={{width: '100%', height: 64,
+          backgroundColor: 'rgba(21, 96, 233, 0.65)',
+          backdropFilter: 'blur(10px)'}}>
           <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
             <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
             <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
@@ -66,11 +68,11 @@ export let ConfBox = (props) => {
           </Toolbar>
         </AppBar>
         
-        <iframe onLoad={() => window.frames['conf-video-frame'].postMessage({sender: 'main', userId: me.id}, 'http://localhost:1010')} 
+        <iframe allowTransparency={true} onLoad={() => window.frames['conf-video-frame'].postMessage({sender: 'main', userId: me.id}, 'http://localhost:1010')} 
             id ={'conf-video-frame'} name="conf-video-frame" src={'http://localhost:1010/video.html'} allow={'microphone; camera'}
             style={{width: '100%', height: '100%', marginTop: 64}} frameBorder="0"></iframe>
         
-        <iframe onLoad={() => window.frames['conf-audio-frame'].postMessage({sender: 'main', userId: me.id}, 'http://localhost:1011')} 
+        <iframe allowTransparency={true} onLoad={() => window.frames['conf-audio-frame'].postMessage({sender: 'main', userId: me.id}, 'http://localhost:1011')} 
             id ={'conf-audio-frame'} name="conf-audio-frame" src={'http://localhost:1011/audio.html'} allow={'microphone; camera'}
             style={{width: 400, height: 128, position: 'absolute', bottom: 32, display: 'none'}} frameBorder="0"></iframe>
 

@@ -20,7 +20,6 @@ import { token } from '../../util/settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: '#ddd',
     width: '100%',
     height: 'auto',
     position: 'absolute',
@@ -31,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0
   },
   imageList: {
-    backgroundColor: '#ddd',
     paddingTop: 96,
     width: '100%',
     height: 'auto',
@@ -177,12 +175,15 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
+export let updateStore = undefined
+
 export default function Store() {
 
   document.documentElement.style.overflow = 'auto';
 
   const classes = useStyles();
   let forceUpdate = useForceUpdate()
+  updateStore = forceUpdate
   const [value, setValue] = React.useState(0)
   const [categories, setCategories] = React.useState([])
 
@@ -260,7 +261,9 @@ export default function Store() {
     <div className={classes.root}>
       
       <HomeToolbar>
-        <AppBar style={{backgroundColor: '#2196f3'}}>
+        <AppBar style={{
+          backgroundColor: 'rgba(21, 96, 233, 0.65)',
+          backdropFilter: 'blur(10px)'}}>
           <Toolbar style={{marginTop: 16}}>
             <StoreSearchbar/>
           </Toolbar>
@@ -272,35 +275,31 @@ export default function Store() {
             classes={{
               indicator: classes.indicator
             }}
-            style={{marginTop: 8}}
+            style={{width: '100%'}}
           >
             {
-              categories.map(cat => (
-                <Tab icon={<ExtensionIcon />} label={cat.title}/>
+              ['test', 'test', 'test', 'test', 'test', 'test'].map(cat => (
+                <Tab icon={<ExtensionIcon />} label={cat}/>
               ))
             }
           </Tabs>
         </AppBar>
       </HomeToolbar>
-      <SwipeableViews
-          axis={'x-reverse'}
-          index={value}
-          onChangeIndex={handleChangeIndex}
-        >
           {categories.map(cat => (
             <TabPanel value={value} index={cat}>
-              <ImageList rowHeight={196} className={classes.imageList} cols={2}>
+              <ImageList rowHeight={212} className={classes.imageList} cols={2}>
                 {cat.packages.map((item) => (
-                  <ImageListItem key={item.coverUrl} cols={2}>
-                    <img src={item.coverUrl} alt={item.title} style={{borderRadius: 16, width: '100%', height: '100%'}} />
+                  <ImageListItem key={'store-package-'+ item.id} cols={2} style={{position: 'relative', marginTop: 8}}>
+                    <div style={{width: '100%', height: '100%', backdropFilter: 'blur(10px)', position: 'absolute', left: 0, top: 0}}></div>
+                    <img src={item.coverUrl} alt={item.title} style={{borderRadius: 16, opacity: '0.65', width: '100%', height: '100%'}} />
                   </ImageListItem>
                 ))}
                 {cat.bots.map((item) => (
-                  <ImageListItem key={item.avatarId} cols={1} onClick={() => gotoPage('/app/storebot')}>
-                    <div style={{position: 'relative'}}>
-                      <img src={item.avatarId} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '5%', width: '95%', height: 128}} />
-                      <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
-                        <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
+                  <ImageListItem key={'store-bot-'+ item.id} cols={1} onClick={() => gotoPage('/app/storebot')}>
+                    <div style={{margin: 4, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.65)', backdropFilter: 'blur(10px)', position: 'relative'}}>
+                      <img src={'https://icon-library.com/images/bot-icon/bot-icon-5.jpg'} alt={item.title} style={{opacity: 0.65, borderRadius: 16, marginRight: 16, marginLeft: 16, marginTop: 16, width: 'calc(100% - 32px)', height: 128}} />
+                      <Card style={{background: 'transparent', backgroundColor: 'transparent', width: '95%', height: 56, marginRight: '2.5%' }}>
+                        <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)', borderRadius: '0 0 16px 16px'}}>{'ربات'}</Typography>
                       </Card>
                     </div>
                   </ImageListItem>
@@ -308,11 +307,10 @@ export default function Store() {
               </ImageList>
             </TabPanel>
           ))}
-      </SwipeableViews>
-      <Fab color="secondary" style={{position: 'fixed', bottom: 16 + 56, left: 16}}>
+      <Fab color="secondary" style={{position: 'fixed', bottom: 16 + 72, left: 16}}>
         <ShoppingCartIcon />
       </Fab>
-      <Fab size="small" color="secondary" style={{position: 'fixed', bottom: 16 + 56 + 56 + 16, left: 24}} onClick={() => gotoPage('/app/storeads')}>
+      <Fab size="medium" color="secondary" style={{position: 'fixed', bottom: 16 + 72 + 56 + 16, left: 20}} onClick={() => gotoPage('/app/storeads')}>
         <ViewCompactIcon />
       </Fab>
       <StoreBottombar/>

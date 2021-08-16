@@ -13,13 +13,16 @@ import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import ExtensionIcon from '@material-ui/icons/Extension';
 import store, { setCurrentStoreNav } from '../../redux/main';
 import { useForceUpdate } from '../../util/Utils';
+import {updateStore} from '../../routes/pages/store'
 
 const useStyles = makeStyles({
   root: {
     width: '100%',
+    height: 72,
     position: 'fixed',
     bottom: 0,
-    backgroundColor: '#2196f3'
+    backgroundColor: 'rgba(21, 96, 233, 0.65)',
+    backdropFilter: 'blur(10px)'
   },
 });
 
@@ -39,15 +42,17 @@ export default function HomeBottombar() {
   let forceUpdate = useForceUpdate()
   const classes = useStyles();
   const classesAction = useStylesAction();
+  let [value, setValue] = React.useState(0)
 
   let currNav = store.getState().global.main.currentStoreNav
 
   return (
     <BottomNavigation
-      value={currNav}
+      value={value}
       onChange={(event, newValue) => {
+        setValue(newValue)
         store.dispatch(setCurrentStoreNav(newValue))
-        forceUpdate()
+        updateStore()
       }}
       showLabels
       className={classes.root}

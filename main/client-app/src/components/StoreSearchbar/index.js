@@ -9,6 +9,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
 import { gotoPage, setDrawerOpen } from '../../App';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import Menu from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,8 +36,8 @@ export default function StoreSearchbar() {
 
   return (
     <Paper component="form" className={classes.root}>
-      <IconButton onClick={() => gotoPage('/app/messenger')} className={classes.iconButton} aria-label="menu">
-        <ArrowForwardIcon />
+      <IconButton className={classes.iconButton} aria-label="menu">
+        <Menu />
       </IconButton>
       <InputBase
         className={classes.input}

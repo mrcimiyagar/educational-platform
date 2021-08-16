@@ -301,7 +301,6 @@ export default function BotsBox(props) {
     });
     return (
         <div style={{width: "100%", height: '100%', display: props.style.display}}>
-            <img style={{width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1}} src={'https://4kwallpapers.com/images/wallpapers/colorful-background-texture-multi-color-orange-illustration-1080x1920-3104.jpg'}/>
             <HomeToolbar>
                 <div id={'botsSearchbar'} style={{width: '75%', position: 'absolute', right: '12.5%', top: 32, zIndex: 3}}>
                     <BotsBoxSearchbar openMenu={props.openMenu}/>

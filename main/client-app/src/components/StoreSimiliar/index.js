@@ -6,6 +6,7 @@ import { Avatar, Card, Fab, Typography } from '@material-ui/core';
 import SpacesSearchbar from '../SpacesSearchbar';
 import HomeToolbar from '../HomeToolbar';
 import HomeIcon from '@material-ui/icons/Home';
+import BotIcon from '../../images/robot.png'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -185,14 +186,14 @@ export default function StoreSimiliar() {
 
   return (
     <div className={classes.root}>
-      <Typography variant={'h6'} style={{margin: 16}}>بات های مشابه</Typography>
+      <Typography variant={'h6'} style={{margin: 16, color: '#fff'}}>بات های مشابه</Typography>
       <ImageList style={{zIndex: 2}} rowHeight={188} cols={2.5} gap={1} className={classes.imageList}>
         {itemData.map((item) => (
           <ImageListItem key={item.img} cols={1} rows={1}>
             <div style={{position: 'relative'}}>
-                <img src={item.img} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '2.5%', width: '95%', height: 128}} />
+                <img src={BotIcon} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: 32, width: 'calc(100% - 64px)', height: 96}} />
                 <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32, backgroundColor: '#ddd'}}>
-                    <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
+                    <Typography style={{position: 'absolute', top: 120, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
                 </Card>
             </div>
           </ImageListItem>

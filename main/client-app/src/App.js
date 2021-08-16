@@ -11,6 +11,9 @@ import RoomWallpaper from './images/roomWallpaper.png'
 import RoomPage from "./routes/pages/room";
 import Chat from "./routes/pages/chat";
 import Store from "./routes/pages/store";
+import StoreBot from "./routes/pages/storeBot";
+import StoreAds from "./routes/pages/storeAds";
+import PhotoViewer from "./routes/pages/photoViewer";
 
 let histPage = null, setHp = null;
 export let drawerOpen = null, setDrawerOpen = null;
@@ -32,19 +35,26 @@ export let gotoPage = (p, params) => {
     query = query.substr(0, query.length - 1)
   }
 
-  window.history.pushState('', '', p + '?' + query);
+  window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query);
 }
 
 export let popPage = () => {
+
   if (series.length > 1) {
     series.pop()
     paramsSeries.pop()
     setHp(series[series.length - 1])
+
     let params = paramsSeries[paramsSeries.length - 1]
+    let query = ''
+    for (let key in params) {
+      query += key + '=' + params[key] + '&'
+    }
+    if (query.length > 0) {
+      query = query.substr(0, query.length - 1)
+    }
 
-    
-
-    window.history.pushState('', '', series[series.length - 1]);
+    window.history.pushState('', '', series[series.length - 1] + (query.length > 0 ? '?' : '') + query);
   }
 }
 
@@ -61,7 +71,11 @@ export let setRoomId = (ri) => {
 }
 
 let dialogs = {
-  '/app/chat': Chat
+  '/app/chat': Chat,
+  '/app/storebot': StoreBot,
+  '/app/storeads': StoreAds,
+  '/app/photoviewer': PhotoViewer
+  
 }
 let pages = {
   '/app/store': Store,
@@ -77,15 +91,46 @@ export let registerDialogOpen = (setOpen) => {
 
 function MainApp(props) {
 
+  useEffect(() => {
+
+    let query = window.location.search
+    let params = {}
+    if (query !== undefined && query !== null) {
+      if (query.length > 1) {
+        query = query.substr(1)
+      }
+      let querySep = query.split('&')
+      querySep.forEach(part => {
+        let keyValue = part.split('=')
+        params[keyValue[0]] = keyValue[1]
+      })
+    }
+
+    series = [window.location.pathname]
+    paramsSeries = [params]
+
+  }, [])
+
+  let query = window.location.search
+  let params = {}
+  if (query !== undefined && query !== null) {
+    if (query.length > 1) {
+      query = query.substr(1)
+    }
+    let querySep = query.split('&')
+    querySep.forEach(part => {
+      let keyValue = part.split('=')
+      params[keyValue[0]] = keyValue[1]
+    })
+  }
+
   [histPage, setHp] = React.useState(window.location.pathname)
 
   window.onpopstate = function(event) {
-    if (event){
       if (setDialogOpen !== null) {
         setDialogOpen(false)
       }
       setTimeout(popPage, 250);
-    }
   }
 
   let P = undefined;
@@ -99,19 +144,6 @@ function MainApp(props) {
   }
   else {
     P = pages[histPage];
-  }
-
-  let query = window.location.search
-  let params = {}
-  if (query !== undefined && query !== null) {
-    if (query.length > 1) {
-      query = query.substr(1)
-    }
-    let querySep = query.split('&')
-    querySep.forEach(part => {
-      let keyValue = part.split('=')
-      params[keyValue[0]] = keyValue[1]
-    })
   }
  
   return (
