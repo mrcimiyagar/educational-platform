@@ -181,7 +181,6 @@ export default function MainApp(props) {
  
   return (
     <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
-      <img src={RoomWallpaper} style={{marginRight: -16, position: 'fixed', width: 'calc(100% + 16px)', height: '100%', objectFit: 'cover'}}/>
       <div style={{width: '100%', height: '100%', opacity: opacity, transition: 'opacity .125s', direction: 'rtl'}}>
         <ThemeProvider theme={theme}>
           {P !== undefined ? <P {...params}/> : null}

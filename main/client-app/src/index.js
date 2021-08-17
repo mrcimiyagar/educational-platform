@@ -35,14 +35,17 @@ let Loading = (props) => {
 
 ReactDOM.render(
 	<Provider store={store}>
-	  <Suspense fallback={
-	  	<div style={{width: '100%', height: '100vh', backgroundColor: 'rgba(96, 0, 128, 1)'}}>
-		  <img src={RoomWallpaper} style={{marginRight: -16, position: 'fixed', width: 'calc(100% + 16px)', height: '100%', objectFit: 'cover'}}/>
-		  <div style={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.45)', position: 'fixed', top: 0, left: 0}}/>
-		  <Loading style={{position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
-		</div>}>
-	    <MainApp />
-	  </Suspense>
+		<div style={{width: '100%', height: '100%'}}>
+			<img src={RoomWallpaper} style={{position: 'fixed', left: 0, top: 0, width: '100%', height: '100%', objectFit: 'cover'}}/>
+	   	    <Suspense fallback={
+	  			<div style={{width: '100%', height: '100vh'}}>
+			  		<div style={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.45)', position: 'fixed', top: 0, left: 0}}/>
+		  			<Loading style={{position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
+				</div>
+			}>
+	    		<MainApp />
+	  		</Suspense>
+		</div>
 	</Provider>,
 	document.getElementById("root")
 );
