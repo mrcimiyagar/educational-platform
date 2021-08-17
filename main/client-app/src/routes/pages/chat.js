@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
         position: 'fixed',
         bottom: 0,
         zIndex: 1000,
-        backgroundColor: 'rgba(255, 255, 255, 0.75)'
+        backgroundColor: 'rgba(255, 255, 255, 0.75)',
+        direction: 'rtl'
     },
     input: {
         marginLeft: theme.spacing(1),

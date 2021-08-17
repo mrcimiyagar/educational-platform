@@ -16,6 +16,7 @@ import Avatar from "@material-ui/core/Avatar";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+        direction: 'rtl'
     },
     menuButton: {
         marginRight: -16,

@@ -29,7 +29,7 @@ function PhotoViewer(props) {
           },
         }}
         open={open} fullScreen={true} TransitionComponent={Transition} style={{backdropFilter: 'blur(5px)'}} >
-          <AppBar style={{height: 64, position: 'fixed', left: 0, top: 0, backdropFilter: 'blur(10px)', background: 'white', backgroundColor: 'rgba(255, 255, 255, 0.25)'}}>
+          <AppBar style={{direction: 'rtl', height: 64, position: 'fixed', left: 0, top: 0, backdropFilter: 'blur(10px)', background: 'white', backgroundColor: 'rgba(255, 255, 255, 0.25)'}}>
             <Toolbar style={{height: 64}}>
               <IconButton onClick={() => {setOpen(false); setTimeout(popPage, 250);}}>
                 <ArrowForwardTwoTone style={{width: 32, height: 32, fill: '#fff'}}/>

@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     marginLeft: -16,
     marginRight: -16,
+    direction: 'rtl'
   },
   imageList: {
     width: '100%',

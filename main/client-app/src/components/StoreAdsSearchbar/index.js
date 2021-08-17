@@ -42,7 +42,7 @@ export default function StoreAdsSearchbar(props) {
       </IconButton>
       <InputBase
         className={classes.input}
-        placeholder="جستجو در بلیغات"
+        placeholder="جستجو در تبلیغات"
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
         <SearchIcon style={{fill: '#fff'}}/>
