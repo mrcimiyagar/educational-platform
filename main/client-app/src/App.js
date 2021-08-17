@@ -15,6 +15,8 @@ import PhotoViewer from "./routes/pages/photoViewer";
 import PollPage from "./routes/pages/polls";
 import NotePage from "./routes/pages/notes";
 import DeckPage from "./routes/pages/deck";
+import useSound from 'use-sound';
+import StartupSound from './sounds/startup.mp3';
 
 let histPage = null, setHp = null;
 export let drawerOpen = null, setDrawerOpen = null;
@@ -178,6 +180,9 @@ export default function MainApp(props) {
   else {
     P = pages[histPage];
   }
+
+	let play = useSound(StartupSound)
+	play[0]()
  
   return (
     <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
