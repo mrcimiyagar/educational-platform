@@ -17,6 +17,7 @@ import NotePage from "./routes/pages/notes";
 import DeckPage from "./routes/pages/deck";
 import useSound from 'use-sound';
 import StartupSound from './sounds/startup.mp3';
+import Auth4 from "./routes/pages/auth4";
 
 let histPage = null, setHp = null;
 export let drawerOpen = null, setDrawerOpen = null;
@@ -105,7 +106,8 @@ let pages = {
   '/app/store': Store,
   '/app/messenger': MessengerPage,
   '/app/room': RoomPage,
-  '/app/searchengine': SearchEngine
+  '/app/searchengine': SearchEngine,
+  '/app/auth': Auth4
 }
 
 let setDialogOpen = null
@@ -115,9 +117,13 @@ export let registerDialogOpen = (setOpen) => {
 
 export let animatePageChange = undefined
 
+let played = false
+
 export default function MainApp(props) {
 
-  let [opacity, setOpacity] = React.useState(1)
+  let [opacity, setOpacity] = React.useState(0)
+  let [opacity2, setOpacity2] = React.useState(1)
+  let [display, setDisplay] = React.useState('block')
 
   animatePageChange = () => {
     setOpacity(0)
@@ -143,6 +149,13 @@ export default function MainApp(props) {
 
     series = [window.location.pathname]
     paramsSeries = [params]
+
+    animatePageChange()
+
+    setOpacity2(0)
+    setTimeout(() => {
+      setDisplay('none')
+    }, 1000);
 
   }, [])
 
@@ -181,9 +194,11 @@ export default function MainApp(props) {
     P = pages[histPage];
   }
 
-	let play = useSound(StartupSound)
-	play[0]()
- 
+  useEffect(() => {
+    let audio = new Audio(StartupSound)
+    audio.play()
+  }, [])
+
   return (
     <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
       <div style={{width: '100%', height: '100%', opacity: opacity, transition: 'opacity .125s', direction: 'rtl'}}>
@@ -191,6 +206,7 @@ export default function MainApp(props) {
           {P !== undefined ? <P {...params}/> : null}
           {D !== undefined ? <D open={true}/> : null}
         </ThemeProvider>
+			  <div style={{display: display, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 1)', opacity: opacity2, transition: 'opacity .5s', position: 'fixed', top: 0, left: 0}}/>
       </div>
     </div>
   );
