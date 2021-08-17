@@ -13,6 +13,7 @@ import CloudIcon from '@material-ui/icons/Cloud';
 import { pink } from '@material-ui/core/colors';
 import LanguageIcon from '@material-ui/icons/Language';
 import SearchEngineFam from '../../components/SearchEngineFam'
+import Jumper from '../../components/SearchEngineFam';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -20,8 +21,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const useStyles = makeStyles((theme) => ({
     root: {
+        direction: 'rtl',
         padding: '2px 4px',
-        display: 'flex',
+        top: 0,
         alignItems: 'center',
         width: '100%',
         position: 'fixed',
@@ -60,7 +62,7 @@ export default function SearchEngine(props) {
       },
     });
     return (
-        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+        <div className={classes.root}>
             <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0, backgroundColor: '#eee'}}>
                 <SearchEngineSearchbar openMenu={() => setMenuOpen(true)}/>
                 <div style={{width: '100%', position: 'absolute', top: 'calc(35% + 56px)', textAlign: 'center', justifyContent: 'center'}}>
@@ -73,7 +75,7 @@ export default function SearchEngine(props) {
                         </Fab>
                         <Fab color={'secondary'} variant={'extended'} style={{marginRight: 16}} onClick={() => gotoPage('/app/searchengineresults')}>
                             <AccountBalanceIcon/>
-                            <div style={{marginRight: 16}}>
+                            <div style={{marginLeft: 16}}>
                                 جستجو دراتاق
                             </div>
                         </Fab>
@@ -94,9 +96,11 @@ export default function SearchEngine(props) {
                 <div style={{width: 112, height: 112, padding: 8, backgroundColor: '#eee', borderRadius: 56, position: 'absolute', top: 'calc(50% - 280px)', left: '50%', transform: 'translateX(-50%)'}}>
                     <Avatar src={SearchEngineIcon} style={{width: '100%', height: '100%'}}/>
                 </div>
-            <SearchEngineFam open={open} setOpen={setOpen}/>
+            </div>
+            <div style={{position: 'fixed', right: 16, bottom: -64}}>
+                <Jumper open={open} setOpen={setOpen}/>
             </div>
             <SearchEngineDrawer setOpen={setMenuOpen} open={menuOpen}/>
-        </Dialog>
+        </div>
     );
 }

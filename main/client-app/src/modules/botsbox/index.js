@@ -314,7 +314,7 @@ export default function BotsBox(props) {
                               <BotContainer 
                                 widgetId={w.id} 
                                 isPreview={false} 
-                                onIdDictPrepared={(idD) => {idDict['widget-' + w.id] = idD;}} 
+                                onIdDictPrepared={(idD) => {idDict['widget-' + w.id] = idD;}}
                                 editMode={editMode} 
                                 widgetWidth={250} 
                                 widgetHeight={250} 

@@ -17,6 +17,7 @@ import ViewCompactIcon from '@material-ui/icons/ViewCompact';
 import { gotoPage } from '../../App';
 import { serverRoot, useForceUpdate } from '../../util/Utils';
 import { token } from '../../util/settings';
+import Jumper from '../../components/SearchEngineFam';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -184,6 +185,8 @@ export default function Store() {
   const classes = useStyles();
   let forceUpdate = useForceUpdate()
   updateStore = forceUpdate
+
+  const [jumperOpen, setJumperOpen] = React.useState(true);
   const [value, setValue] = React.useState(0)
   const [categories, setCategories] = React.useState([])
 
@@ -209,6 +212,7 @@ export default function Store() {
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
+        if (result.categories !== undefined) {
         setCategories(result.categories)
         result.categories.forEach(cat => {
           let requestOptions = {
@@ -227,7 +231,7 @@ export default function Store() {
             .then(result => {
               console.log(JSON.stringify(result));
               cat.bots = result.bots
-              setCategories(result.categories)
+              setCategories(categories)
               forceUpdate()
             })
             .catch(error => console.log('error', error));
@@ -247,12 +251,13 @@ export default function Store() {
             .then(result => {
               console.log(JSON.stringify(result));
               cat.packages = result.packages
-              setCategories(result.categories)
+              setCategories(categories)
               forceUpdate()
             })
             .catch(error => console.log('error', error));
         });
         forceUpdate()
+        }
       })
       .catch(error => console.log('error', error));
   }, [])
@@ -278,8 +283,8 @@ export default function Store() {
             style={{width: '100%'}}
           >
             {
-              ['test', 'test', 'test', 'test', 'test', 'test'].map(cat => (
-                <Tab icon={<ExtensionIcon />} label={cat}/>
+              categories.map(cat => (
+                <Tab icon={<ExtensionIcon />} label={cat.title}/>
               ))
             }
           </Tabs>
@@ -313,6 +318,9 @@ export default function Store() {
       <Fab size="medium" color="secondary" style={{position: 'fixed', bottom: 16 + 72 + 56 + 16, left: 20}} onClick={() => gotoPage('/app/storeads')}>
         <ViewCompactIcon />
       </Fab>
+      <div style={{position: 'fixed', right: 16, bottom: 4}}>
+        <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
+      </div>
       <StoreBottombar/>
     </div>
   );

@@ -12,7 +12,6 @@ import "react-table/react-table.css";
 import {Avatar, Fab, IconButton, Typography} from "@material-ui/core";
 import {colors, me, setToken, token} from "../../util/settings";
 import {FetchMe, room, roothPath, serverRoot, socket, useForceUpdate} from "../../util/Utils";
-import {setPermissionState, togglePermissions} from '../../containers/Sidebar';
 import { NotificationManager } from "../../components/ReactNotifications";
 
 import VideocamIcon from '@material-ui/icons/Videocam';
@@ -227,8 +226,7 @@ fetch(serverRoot + "/room/is_permissions_accessible", requestOptions)
     console.log(JSON.stringify(result));
     if (result.status === 'success') {
       if (result.isAccessible) {
-        setPermissionState(props.roomId, user.id);
-        togglePermissions();
+        // TODO: connect permission panel
       }
       else {
         createNotification("error", "عدم دسترسی", "دسترسی به منبع مورد نظر مجاز نمی باشد")();

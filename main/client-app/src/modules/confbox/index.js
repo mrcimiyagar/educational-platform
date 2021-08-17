@@ -76,25 +76,25 @@ export let ConfBox = (props) => {
             id ={'conf-audio-frame'} name="conf-audio-frame" src={'http://localhost:1011/audio.html'} allow={'microphone; camera'}
             style={{width: 400, height: 128, position: 'absolute', bottom: 32, display: 'none'}} frameBorder="0"></iframe>
 
-        <div style={{position: 'fixed', bottom: 72 + 16, left: '50%', transform: 'translateX(-50%)', width: 'auto', height: 'auto', display: 'flex', flexWrap: 'nowrap'}}>
+        <div style={{position: 'fixed', bottom: 72, left: 0, width: 'auto', height: 'auto'}}>
           <ThemeProvider theme={theme}>
-            <Fab id="messagesButton" color={'primary'} onClick={() => {
+            <Fab id="messagesButton" color={'primary'} style={{position: 'absolute', left: 16, bottom: 16 + 56 + 16 + 56 + 16}} onClick={() => {
               gotoPage('/app/chat')
             }}><Chat/></Fab>
-            <Fab id="camButton" color={'primary'} style={{marginLeft: 16}} onClick={() => {
+            <Fab id="audioButton" color={'primary'} style={{position: 'absolute', left: 16, bottom: 16 + 56 + 16}} onClick={() => {
               window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.audio}, 'http://localhost:1011')
               store.dispatch(switchConf('audio', !store.getState().global.conf.audio))
               forceUpdate()
             }}>{store.getState().global.conf.audio ? <Mic/> : <MicOff/>}</Fab>
-            <Fab id="camButton" color={'secondary'} style={{marginLeft: 16}} onClick={() => {
+            <Fab id="camButton" color={'secondary'} style={{position: 'absolute', left: 16, bottom: 16}} onClick={() => {
               
             }}><CallEndIcon/></Fab>
-            <Fab id="camButton" color={'primary'} style={{marginLeft: 16}} onClick={() => {
+            <Fab id="camButton" color={'primary'} style={{position: 'absolute', left: 16 + 56 + 16, bottom: 16}} onClick={() => {
               window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.video}, 'http://localhost:1010')
               store.dispatch(switchConf('video', !store.getState().global.conf.video))
               forceUpdate()
             }}>{store.getState().global.conf.video ? <VideocamIcon/> : <VideocamOff/>}</Fab>
-            <Fab id="settingsButton" color={'primary'} style={{marginLeft: 16}} onClick={() => {
+            <Fab id="settingsButton" color={'primary'} style={{position: 'absolute', left: 16 + 56 + 16 + 56 + 16, bottom: 16}} onClick={() => {
               gotoPage('/app/chat')
             }}><SettingsIcon/></Fab>
           </ThemeProvider>

@@ -32,17 +32,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function StoreAdsSearchbar() {
+export default function StoreAdsSearchbar(props) {
   const classes = useStyles();
 
   return (
     <Paper component="form" className={classes.root}>
-      <IconButton onClick={() => setDrawerOpen(true)} className={classes.iconButton} onClick={() => gotoPage('/app/store')}>
+      <IconButton onClick={() => setDrawerOpen(true)} className={classes.iconButton} onClick={() => props.handleClose()}>
         <ArrowForwardIcon style={{fill: '#fff'}}/>
       </IconButton>
       <InputBase
         className={classes.input}
-        placeholder="جستجو در آسمان"
+        placeholder="جستجو در بلیغات"
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
         <SearchIcon style={{fill: '#fff'}}/>

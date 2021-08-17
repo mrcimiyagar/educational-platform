@@ -49,18 +49,26 @@ export default function Deck(props) {
     const [presentOpen, setPresentMenuOpen] = React.useState(false)
     const handleClose = () => {
         setOpen(false);
-        popPage()
+        setTimeout(popPage, 250)
     };
     let classes = useStyles();
     return (
-        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+        
+        <Dialog
+            onTouchStart={(e) => {e.stopPropagation();}}
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                },
+            }} fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
             <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
-                <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
+                <AppBar style={{width: '100%', height: 56, backgroundColor: 'transparent'}}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => setPresentMenuOpen(true)}><ViewListIcon style={{fill: '#fff'}}/></IconButton>
                         <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>تابلو</Typography>
-                        <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
+                        <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
                 <div style={{width: '100%', height: 'calc(100% - 64px)', marginTop: 64}}>

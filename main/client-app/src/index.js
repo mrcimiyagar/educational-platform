@@ -1,92 +1,49 @@
 
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
+import React, {Component, Fragment, useEffect} from "react";
+import { Suspense } from "react";
+import ReactDOM from 'react-dom';
+import { Provider } from "react-redux";
+import store from "./redux/main";
+import { useLoading, TailSpin } from '@agney/react-loading';
+import CloudIcon from '@material-ui/icons/Cloud';
+import { Typography } from "@material-ui/core";
+import RoomWallpaper from './images/roomWallpaper.png'
 
-/*
-color options : 
-	 'light.purple'		'dark.purple'
-	 'light.blue'		  'dark.blue'
-	 'light.green'		'dark.green'
-	 'light.orange'		'dark.orange'
-	 'light.red'		  'dark.red'
-*/
-import {ConnectToIo, FetchMe, roothPath, serverRoot, setConfig, validateToken} from "./util/Utils";
-import React from "react";
-import { setToken } from "./util/settings";
-import isReachable from 'is-reachable';
+const MainApp = React.lazy(() => {
+	return Promise.all([
+	  import("./App"),
+	  new Promise(resolve => setTimeout(resolve, 5000))
+	])
+	.then(([moduleExports]) => moduleExports);
+});
 
-export let ThemeColor = 'light.purple';
-if (localStorage.getItem('themeColor')) {
-	ThemeColor = localStorage.getItem('themeColor');
+let Loading = (props) => {
+	const { containerProps, indicatorEl } = useLoading({
+	  loading: true,
+	  indicator: <TailSpin width="256" height="256"/>,
+	})
+	return (
+		<section {...props}>
+			<div style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+				<CloudIcon style={{width: 112, height: 112, fill: '#fff'}}/>
+				<Typography variant={'h5'} style={{width: '100%', textAlign: 'center', justifyContent: 'center', alignItems: 'center', color: '#fff'}}>ابر آسمان</Typography>
+			</div>
+	    	{indicatorEl}
+		</section>
+	)
 }
 
-let token = localStorage.getItem('token');
-setToken(token);
-
-(async () => {
-
-	if (await isReachable(serverRoot)) {
-
-		validateToken(token, (result) => {
-			if (result) {
-				let requestOptions4 = {
-					method: 'POST',
-					headers: {
-					  'Content-Type': 'application/json',
-					  'token': token
-					},
-					redirect: 'follow'
-				  };
-				fetch(serverRoot + "/auth/fetch_config", requestOptions4)
-					.then(response => response.json())
-					.then(result => {
-						console.log(JSON.stringify(result));
-						setConfig(result.config);
-						ConnectToIo();
-						FetchMe();
-				
-						let render = () => {
-							const css = import('./assets/css/sass/themes/gogo.light.purple.scss').then(x => {
-								const MainApp = require('./App');
-							});
-						};
-				
-						setTimeout(() => {
-							render();
-						}, 1000);
-					});
-			}
-			else {
-				let render = () => {
-					const css = import('./assets/css/sass/themes/gogo.light.purple.scss').then(x => {
-						const MainApp = require('./App');
-					});
-				};
-				
-				setTimeout(() => {
-					render();
-				}, 1000);
-			}
-		})
-	} else {
-		let render = () => {
-			const css = import('./assets/css/sass/themes/gogo.light.purple.scss').then(x => {
-				const MainApp = require('./App');
-			});
-		};
-		
-		setTimeout(() => {
-			render();
-		}, 1000);
-	}
-	
-	// If you want your app to work offline and load faster, you can change
-	// unregister() to register() below. Note this comes with some pitfalls.
-	// Learn more about service workers: https://cra.link/PWA
-	serviceWorkerRegistration.unregister();
-	
-	// If you want to start measuring performance in your app, pass a function
-	// to log results (for example: reportWebVitals(console.log))
-	// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-	reportWebVitals();
-})();
+ReactDOM.render(
+	<Provider store={store}>
+	  <Suspense fallback={
+	  	<div style={{width: '100%', height: '100vh', backgroundColor: 'rgba(96, 0, 128, 1)'}}>
+		  <img src={RoomWallpaper} style={{marginRight: -16, position: 'fixed', width: 'calc(100% + 16px)', height: '100%', objectFit: 'cover'}}/>
+		  <div style={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.45)', position: 'fixed', top: 0, left: 0}}/>
+		  <Loading style={{position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
+		</div>}>
+	    <MainApp />
+	  </Suspense>
+	</Provider>,
+	document.getElementById("root")
+);
+  

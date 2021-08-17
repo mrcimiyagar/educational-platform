@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "3d-react-carousal": "^4.0.2",
+    "@agney/react-loading": "^0.1.2",
     "@babel/runtime": "^7.3.1",
     "@bit/ivanli.ogcio.full-center-layout": "0.0.5",
     "@emotion/css": "^11.1.3",

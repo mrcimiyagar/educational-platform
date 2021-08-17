@@ -4,19 +4,11 @@ import Slide from "@material-ui/core/Slide";
 import {gotoPage, popPage, selectedIndex, token} from "../../App";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
 import {makeStyles} from "@material-ui/core/styles";
-import ChatWallpaper from '../../images/chat-wallpaper.jpg';
-import DescriptionIcon from '@material-ui/icons/Description';
-import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
-import SendIcon from '@material-ui/icons/Send';
-import { PresentBox } from '../../modules/presentbox/presentbox';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { ArrowForward, Search } from '@material-ui/icons';
-import ViewListIcon from '@material-ui/icons/ViewList';
 import { PollBox } from '../../modules/pollbox/pollbox';
 import { setToken } from '../../util/settings';
-import { setRoomId } from '../../util/Utils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -50,22 +42,32 @@ const useStyles = makeStyles((theme) => ({
 export default function PollPage(props) {
       
     setToken(localStorage.getItem('token'));
-    setRoomId(1)
     const [open, setOpen] = React.useState(true);
     const [createPollOpen, setCreatePollOpen] = React.useState(false)
     const handleClose = () => {
         setOpen(false);
-        popPage()
+        setTimeout(popPage, 250);
     };
     let classes = useStyles();
     return (
-        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+        <Dialog
+            onTouchStart={(e) => {e.stopPropagation();}}
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                },
+            }}fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
             <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
-                <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
+                <AppBar style={{
+                    width: '100%',
+                    height: 56, 
+                    backgroundColor: 'transparent'
+                }}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
                         <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>رای گیزی</Typography>
-                        <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
+                        <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
                 <PollBox style={{display: 'block'}} setOpen={setCreatePollOpen} open={createPollOpen}/>

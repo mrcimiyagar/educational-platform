@@ -1,11 +1,4 @@
 import React, {Fragment, useEffect} from "react";
-import {
-  Card,
-  CardBody
-} from "reactstrap";
-import PerfectScrollbar from "react-perfect-scrollbar";
-
-import CircularProgressbar from "react-circular-progressbar";
 
 import "chartjs-plugin-datalabels";
 import "react-circular-progressbar/dist/styles.css";
@@ -16,11 +9,6 @@ import './messenger.css';
 
 import {ConnectToIo, roothPath, validateToken, leaveRoom} from "../../util/Utils";
 import {ColorBase, colors, setToken, token} from "../../util/settings";
-import {toggleInvites, toggleRooms} from "../../containers/Sidebar";
-
-import {isDesktop, gotoPage} from '../../App';
-import HomeSearchbar from '../../components/HomeSearchbar'; 
-import { Toolbar, AppBar } from "@material-ui/core";
 import HomeAppbar from "../../components/HomeMain";
 
 export let reloadRoomsList = undefined;

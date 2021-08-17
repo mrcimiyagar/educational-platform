@@ -193,13 +193,13 @@ export function PresentBox(props) {
     }
     props.setOpen(open)
   };
+
   return (
-    <div style={{height: 'calc(100% - 64px)', width: '100%', marginTop: 64, 
-                display: props.style.display === 'none' ? 'none' : 'grid', 
-                gridTemplateColumns: '40% 60%', rowGap: 8}}>
+    <div style={{height: 'calc(100% - 56px)', width: '100%', position: 'absolute', top: 56, 
+                display: props.style.display === 'none' ? 'none' : 'block'}}>
       {(membership !== null && membership !== undefined && membership.canPresent === true) ?
-        <Drawer anchor={'bottom'} open={props.presentOpen} onClose={toggleDrawer(false)}>
-          <Card style={{height: '100%', width: '100%', backgroundColor: colors.primary}}>
+        <Drawer anchor={'bottom'} style={{minHeight: 200, backgroundColor: '#fff'}} open={props.presentOpen} onClose={toggleDrawer(false)}>
+          <Card style={{height: '100%', minHeight: 200 , width: '100%', backgroundColor: colors.primary}}>
             <input id="myInput"
               type="file"
               ref={(ref) => uploadBtn = ref}
@@ -213,7 +213,7 @@ export function PresentBox(props) {
         </Drawer> :
         null
       }
-      <div id={'presentView'} style={{height: '100%', width: '100%', position: 'relative', backgroundColor: colors.primary}}>
+      <div id={'presentView'} style={{height: '100%', width: '100%', position: 'relative', backgroundColor: 'rgba(255, 255, 255, 0.25)'}}>
         {
           (files.length > 0 ? 
             files[currentPresent].extension === 'png' || files[currentPresent].extension === 'jpg' || files[currentPresent].extension === 'jpeg' || files[currentPresent].extension === 'svg' || files[currentPresent].extension === 'gif' ?

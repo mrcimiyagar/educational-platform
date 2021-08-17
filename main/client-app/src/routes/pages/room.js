@@ -33,6 +33,7 @@ import HomeIcon from '../../images/home.png'
 import WorldIcon from '../../images/world.png'
 import Settings from "@material-ui/icons/Settings";
 import { UsersBox } from "../../modules/usersbox/usersbox";
+import Jumper from "../../components/SearchEngineFam";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -102,12 +103,14 @@ export default function RoomPage(props) {
   const classes = useStyles();
   const classesAction = useStylesAction();
 
+  const [jumperOpen, setJumperOpen] = React.useState(true);
   [membership, setMembership] = React.useState({})
   const [loaded, setLoaded] = React.useState(false)
   const [menuOpen, setMenuOpen] = React.useState(false)
   const [currentRoomNav, setCurrentRoomNav] = React.useState(currentRoomNavBackup)
   const [fileMode, setFileMode] = React.useState(0)
   const [menuMode, setMenuMode] = React.useState(0)
+  const [opacity, setOpacity] = React.useState(1)
 
   let roomId = props.room_id
   setRoomId(roomId)
@@ -261,7 +264,7 @@ export default function RoomPage(props) {
   });
   return (
       <div style={{width: '100%', height: '100%', position: 'fixed', right: 0, top: 0, backgroundColor: colors.primaryDark}}>
-        <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0}}> 
+        <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, opacity: opacity, transition: 'opacity .250s'}}> 
           <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId} style={{display: currentRoomNav === 0 ? 'block' : 'none'}}/>
           <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 2 ? 'block' : 'none'}}/>
           <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId}  style={{display: currentRoomNav === 1 ? 'block' : 'none'}}/>
@@ -338,7 +341,18 @@ export default function RoomPage(props) {
                           </div>
               </div>
         </div>
-        <RoomBottombar setCurrentRoomNavBackup={(v) => {currentRoomNavBackup = v}} setCurrentRoomNav={setCurrentRoomNav} currentRoomNav={currentRoomNav}/>
+        <div style={{position: 'fixed', right: 16, bottom: 4, zIndex: 99999}}>
+          <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
+        </div>
+        <RoomBottombar setCurrentRoomNavBackup={(v) => {currentRoomNavBackup = v;}} setCurrentRoomNav={(i) => {
+          setOpacity(0)
+          setTimeout(() => {
+            setCurrentRoomNav(i);
+            setTimeout(() => {
+              setOpacity(1)
+            }, 250)
+          }, 250)
+        }} currentRoomNav={currentRoomNav}/>
         <Drawer onClose={() => setMenuOpen(false)} open={menuOpen} anchor={'right'}>
           <div style={{width: 360, height: '100%', backgroundColor: '#fff', display: 'flex'}}>
             <div style={{width: 80, height: '100%', backgroundColor: '#eee'}}>

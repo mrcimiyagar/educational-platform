@@ -14,28 +14,29 @@ import { Home } from '@material-ui/icons';
 import Chat from '@material-ui/icons/Chat';
 import NavigationIcon from '@material-ui/icons/Navigation';
 import { pink } from '@material-ui/core/colors';
-import { gotoPage } from '../../App';
+import { animatePageChange, gotoPage, gotoPageWithDelay } from '../../App';
 import { reloadBotsBox } from '../../modules/botsbox';
+import LocationCityIcon from '@material-ui/icons/LocationCity';
+import ExploreIcon from '@material-ui/icons/Explore';
+import StoreMallDirectoryIcon from '@material-ui/icons/StoreMallDirectory';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: 380,
     transform: 'translateZ(0px)',
     flexGrow: 1,
-  },
-  speedDial: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-  },
+  }
 }));
 
 const actions = [
-  { icon: <Chat />, name: 'پیامرسان' },
-  { icon: <Home />, name: 'فضای خانه' },
+  { icon: <Home />, name: 'خانه' },
+  { icon: <LocationCityIcon />, name: 'شهر' },
+  { icon: <ExploreIcon />, name: 'گردش' },
+  { icon: <StoreMallDirectoryIcon />, name: 'فروشگاه' },
+
 ];
 
-export default function SearchEngineFam(props) {
+export default function Jumper(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
@@ -62,7 +63,6 @@ export default function SearchEngineFam(props) {
       <ThemeProvider theme={theme}>
       <SpeedDial
         ariaLabel=""
-        className={classes.speedDial}
         color={'secondary'}
         hidden={hidden}
         icon={<NavigationIcon />}
@@ -78,11 +78,18 @@ export default function SearchEngineFam(props) {
             tooltipOpen
             onClick={() => {
               props.setOpen(false)
+              animatePageChange()
               if (index === 0) {
-                gotoPage('/app/messenger')
+                gotoPageWithDelay('/app/messenger')
               }
               else if (index === 1) {
-                gotoPage('/app/conf?room_id=1')
+                gotoPageWithDelay('/app/room', {room_id: 1})
+              }
+              else if (index === 2) {
+                gotoPageWithDelay('/app/searchengine')
+              }
+              else if (index === 3) {
+                gotoPageWithDelay('/app/store')
               }
             }}
           />

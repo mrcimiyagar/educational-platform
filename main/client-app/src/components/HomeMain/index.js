@@ -23,6 +23,7 @@ import HomeSettings from '../HomeSettings';
 import RoomWallpaper from '../../images/roomWallpaper.png'
 import store from '../../redux/main';
 import { useForceUpdate } from '../../util/Utils';
+import Jumper from '../SearchEngineFam';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,6 +65,8 @@ export let updateHome = undefined
 export default function HomeAppbar() {
   updateHome = useForceUpdate()
   const classes = useStyles()
+
+  const [jumperOpen, setJumperOpen] = React.useState(true);
   const [value, setValue] = React.useState(0)
 
   const handleChange = (event, newValue) => {
@@ -134,6 +137,9 @@ export default function HomeAppbar() {
         :
         null
       }
+      <div style={{position: 'fixed', right: 16, bottom: 4}}>
+        <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
+      </div>
       <HomeBottombar/>
       <HomeDrawer/>
     </div>

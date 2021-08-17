@@ -6,7 +6,6 @@ import Poll from 'react-polls';
 import CloseIcon from '@material-ui/icons/Close';
 import { Add } from '@material-ui/icons';
 import { Button, Drawer, Fab, IconButton, TextField, Typography } from '@material-ui/core';
-import { togglePoll } from '../../containers/Sidebar';
 
 export let togglePolling = undefined;
 
@@ -120,7 +119,7 @@ export function PollBox(props) {
   togglePolling = () => setOpen(!open);
 
   return (
-  <div style={{width: '100%', height: 'calc(100% - 64px)', marginTop: 64}}>
+  <div style={{width: '100%', height: 'calc(100% - 56px)', marginTop: 56, backgroundColor: 'rgba(255, 255, 255, 0.25)'}}>
       <div style={{backgroundColor: colors.primaryLight, width: '100%', height: '100%'}}>
       <div style={{height: '100%', overflowY: 'auto', paddingBottom: 64}}>
         {polls.map((poll, index) => {

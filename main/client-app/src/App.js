@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import {useTheme, useMediaQuery, ThemeProvider, colors, createTheme} from '@material-ui/core';
 import './App.css';
 import { theme } from "./util/settings";
-import { Provider } from 'react-redux';
-import store from './redux/main';
 import MessengerPage from "./routes/pages/messenger";
 import SearchEngine from "./routes/pages/searchEngine";
 import RoomWallpaper from './images/roomWallpaper.png'
@@ -14,6 +12,9 @@ import Store from "./routes/pages/store";
 import StoreBot from "./routes/pages/storeBot";
 import StoreAds from "./routes/pages/storeAds";
 import PhotoViewer from "./routes/pages/photoViewer";
+import PollPage from "./routes/pages/polls";
+import NotePage from "./routes/pages/notes";
+import DeckPage from "./routes/pages/deck";
 
 let histPage = null, setHp = null;
 export let drawerOpen = null, setDrawerOpen = null;
@@ -26,6 +27,24 @@ export let gotoPage = (p, params) => {
   series.push(p)
   paramsSeries.push(params)
   setHp(p)
+
+  let query = ''
+  for (let key in params) {
+    query += key + '=' + params[key] + '&'
+  }
+  if (query.length > 0) {
+    query = query.substr(0, query.length - 1)
+  }
+
+  window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query);
+}
+
+export let gotoPageWithDelay = (p, params) => {
+  series.push(p)
+  paramsSeries.push(params)
+  setTimeout(() => {
+    setHp(p)
+  }, 125);
 
   let query = ''
   for (let key in params) {
@@ -74,14 +93,17 @@ let dialogs = {
   '/app/chat': Chat,
   '/app/storebot': StoreBot,
   '/app/storeads': StoreAds,
-  '/app/photoviewer': PhotoViewer
+  '/app/photoviewer': PhotoViewer,
+  '/app/poll': PollPage,
+  '/app/notes': NotePage,
+  '/app/deck': DeckPage
   
 }
 let pages = {
   '/app/store': Store,
   '/app/messenger': MessengerPage,
   '/app/room': RoomPage,
-  '/app/searchEngine': SearchEngine
+  '/app/searchengine': SearchEngine
 }
 
 let setDialogOpen = null
@@ -89,7 +111,18 @@ export let registerDialogOpen = (setOpen) => {
   setDialogOpen = setOpen
 }
 
-function MainApp(props) {
+export let animatePageChange = undefined
+
+export default function MainApp(props) {
+
+  let [opacity, setOpacity] = React.useState(1)
+
+  animatePageChange = () => {
+    setOpacity(0)
+    setTimeout(() => {
+      setOpacity(1)
+    }, 250)
+  }
 
   useEffect(() => {
 
@@ -149,17 +182,13 @@ function MainApp(props) {
   return (
     <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
       <img src={RoomWallpaper} style={{marginRight: -16, position: 'fixed', width: 'calc(100% + 16px)', height: '100%', objectFit: 'cover'}}/>
-      <ThemeProvider theme={theme}>
-        {P !== undefined ? <P {...params}/> : null}
-        {D !== undefined ? <D open={true}/> : null}
-      </ThemeProvider>
+      <div style={{width: '100%', height: '100%', opacity: opacity, transition: 'opacity .125s'}}>
+        <ThemeProvider theme={theme}>
+          {P !== undefined ? <P {...params}/> : null}
+          {D !== undefined ? <D open={true}/> : null}
+        </ThemeProvider>
+      </div>
     </div>
   );
 }
 
-export default ReactDOM.render(
-  <Provider store={store}>
-    <MainApp />
-  </Provider>,
-  document.getElementById("root")
-);

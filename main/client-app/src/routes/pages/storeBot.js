@@ -110,6 +110,9 @@ const slides = [
 ];
 
 export default function StoreBot() {
+  
+  document.documentElement.style.overflow = 'auto';
+
   const classes = useStyles();
   const [value, setValue] = React.useState(0)
   const [open, setOpen] = React.useState(true);
