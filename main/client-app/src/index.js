@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from "react-redux";
 import store from "./redux/main";
 import { useLoading, TailSpin } from '@agney/react-loading';
-import CloudIcon from '@material-ui/icons/Cloud';
+import CloudIcon from './images/logo.png';
 import { Typography } from "@material-ui/core";
 import RoomWallpaper from './images/roomWallpaper.png'
 
@@ -20,28 +20,36 @@ const MainApp = React.lazy(() => {
 let Loading = (props) => {
 	const { containerProps, indicatorEl } = useLoading({
 	  loading: true,
-	  indicator: <TailSpin width="256" height="256"/>,
+	  indicator: <TailSpin width="276" height="276"/>,
 	})
-	let [opacity, setOpacity] = React.useState(0)
-	setTimeout(() => {
-		setOpacity(1)
-	}, 4000);
 	return (
 		<section {...props}>
 			<div style={{position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
-				<CloudIcon style={{width: 112, height: 112, fill: '#fff'}}/>
-				<Typography variant={'h5'} style={{width: '100%', textAlign: 'center', justifyContent: 'center', alignItems: 'center', color: '#fff'}}>ابر آسمان</Typography>
+				<img src={CloudIcon} style={{width: 176, height: 176, marginTop: -24}}/>
+				<Typography variant={'h5'} style={{width: '100%', marginTop: -24, textAlign: 'center', justifyContent: 'center', alignItems: 'center', color: '#fff'}}>ابر آسمان</Typography>
 				<div style={{position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
 					{indicatorEl}
 				</div>
 			</div>
-			<div style={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 1)', opacity: opacity, transition: 'opacity .5s', position: 'fixed', top: 0, left: 0}}/>
 		</section>
 	)
 }
 
-ReactDOM.render(
-	<Provider store={store}>
+let AppContainer = (props) => {
+	let [opacity, setOpacity] = React.useState(0)
+	let [display, setDisplay] = React.useState('block')
+	useEffect(() => {
+		setTimeout(() => {
+			setOpacity(1)
+			setTimeout(() => {
+				setOpacity(0)
+				setTimeout(() => {
+					setDisplay('none')
+				}, 750);
+			}, 1000);
+		}, 4000);
+	}, [])
+	return (
 		<div style={{width: '100%', height: '100%'}}>
 			<img src={RoomWallpaper} style={{position: 'fixed', left: 0, top: 0, width: '100%', height: '100%', objectFit: 'cover'}}/>
 	   	    <Suspense fallback={
@@ -52,7 +60,14 @@ ReactDOM.render(
 			}>
 	    		<MainApp />
 	  		</Suspense>
+			<div style={{display: display, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 1)', opacity: opacity, transition: 'opacity .5s', position: 'fixed', top: 0, left: 0}}/>
 		</div>
+	)
+}
+
+ReactDOM.render(
+	<Provider store={store}>
+		<AppContainer/>
 	</Provider>,
 	document.getElementById("root")
 );

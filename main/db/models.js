@@ -32,6 +32,7 @@ let Screenshot;
 let StoreAd;
 let StoreCategory;
 let StorePackage;
+let Notification;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
@@ -80,6 +81,7 @@ module.exports = {
         await prepareScreenshotModel();
         await prepareStoreAdModel();
         await prepareStorePackageModel();
+        await prepareNotificationModel();
 
         let adminAcc = await Account.findOne({where: {role: 'admin'}});
         if (adminAcc === null) {
@@ -117,6 +119,22 @@ function prepareSequelizeInstance() {
             idle: 10000
         }
     });
+}
+
+async function prepareNotificationModel() {
+    Notification = sequelizeClient.define('Notification', {
+        id: {
+            type: Sequelize.BIGINT,
+            allowNull: false,
+            primaryKey: true,
+        },
+        data: Sequelize.STRING,
+        ownerId: Sequelize.STRING
+    }, {
+        freezeTableName: true
+    });
+    await Notification.sync();
+    module.exports['Notification'] = Notification;
 }
 
 async function prepareStorePackageModel() {

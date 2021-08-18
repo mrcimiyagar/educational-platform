@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
-import { popPage, setDrawerOpen } from '../../App';
+import { popPage, setDrawerOpen, setQuery } from '../../App';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import Menu from '@material-ui/icons/Menu';
 import { propTypes } from 'react-polls';
@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchEngineSearchbar(props) {
   const classes = useStyles();
+  let [value, setValue] = React.useState('')
 
   return (
     <Paper component="form" className={classes.root}>
@@ -51,6 +52,8 @@ export default function SearchEngineSearchbar(props) {
         <Menu style={{fill: '#666'}}/>
       </IconButton>
       <InputBase
+        value={value}
+        onChange={(e) => {setQuery(e.target.value); setValue(e.target.value);}}
         className={classes.input}
         placeholder="جستجو"
       />

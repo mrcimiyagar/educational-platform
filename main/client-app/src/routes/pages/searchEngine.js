@@ -12,8 +12,9 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import CloudIcon from '@material-ui/icons/Cloud';
 import { pink } from '@material-ui/core/colors';
 import LanguageIcon from '@material-ui/icons/Language';
-import SearchEngineFam from '../../components/SearchEngineFam'
 import Jumper from '../../components/SearchEngineFam';
+import Logo from '../../images/logo.png'
+import { setToken } from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -28,8 +29,7 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         position: 'fixed',
         bottom: 0,
-        zIndex: 1000,
-        backgroundColor: '#ddd'
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
     },
     input: {
         marginLeft: theme.spacing(1),
@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SearchEngine(props) {
+
+    setToken(localStorage.getItem('token'))
+    
     const [open, setOpen] = React.useState(true);
     const handleClose = () => {
         setOpen(false);
@@ -63,9 +66,15 @@ export default function SearchEngine(props) {
     });
     return (
         <div className={classes.root}>
-            <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0, backgroundColor: '#eee'}}>
-                <SearchEngineSearchbar openMenu={() => setMenuOpen(true)}/>
-                <div style={{width: '100%', position: 'absolute', top: 'calc(35% + 56px)', textAlign: 'center', justifyContent: 'center'}}>
+            <div style={{width: "100%", height: "100%", position: "relative"}}>
+                <img src={Logo} style={{width: '50%', height: window.innerWidth / 2 + 'px', position: 'absolute', left: '50%', top: 100 - 76, transform: 'translateX(-50%)'}}/>
+                <div style={{width: 112, height: 112, padding: 8, borderRadius: 56, position: 'absolute', left: '50%', top: 276 - 76, transform: 'translateX(-50%)'}}>
+                    <Avatar src={SearchEngineIcon} style={{width: 112, height: 112}}/>
+                </div>
+                <div style={{width: '100%', height: 56, position: 'absolute', left: '50%', top: 416 - 76, transform: 'translateX(-50%)'}}>
+                    <SearchEngineSearchbar openMenu={() => setMenuOpen(true)}/>
+                </div>
+                <div style={{width: '100%', position: 'absolute', top: 496 - 76, textAlign: 'center', justifyContent: 'center'}}>
                     <ThemeProvider theme={theme}>
                         <Fab color={'primary'} variant={'extended'} onClick={() => gotoPage('/app/searchengineresults')}>
                             <CloudIcon/>
@@ -87,14 +96,6 @@ export default function SearchEngine(props) {
                             </div>
                         </Fab>
                     </ThemeProvider>
-                </div>
-                <div style={{position: 'relative', width: window.innerWidth + 'px', height: window.innerWidth + 'px', borderRadius: window.innerWidth / 2 + 'px', transform: 'translateY(-50%)', backgroundColor: '#2196f3'}}>
-                    <Typography variant={'h4'} style={{position: 'absolute', bottom: 112, left: '50%', transform: 'translateX(-50%)', color: '#fff'}}>
-                        ابر آسمان
-                    </Typography>
-                </div>
-                <div style={{width: 112, height: 112, padding: 8, backgroundColor: '#eee', borderRadius: 56, position: 'absolute', top: 'calc(50% - 280px)', left: '50%', transform: 'translateX(-50%)'}}>
-                    <Avatar src={SearchEngineIcon} style={{width: '100%', height: '100%'}}/>
                 </div>
             </div>
             <div style={{position: 'fixed', right: 16, bottom: -64}}>

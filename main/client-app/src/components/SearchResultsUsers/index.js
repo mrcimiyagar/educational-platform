@@ -8,6 +8,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { Paper } from '@material-ui/core';
+import { gotoPage } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,24 +19,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SearchResultsUsers() {
+export default function SearchResultsUsers(props) {
   const classes = useStyles();
 
   return (
     <Paper style={{
       width: 'calc(100% + 32px)',
       marginLeft: -16,
-      marginRight: -16
+      marginRight: -16,
+      backgroundColor: 'rgba(255, 255, 255, 0.5)'
     }}>
       <List className={classes.root}>
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map(index => (
+        {props.data.map(user => (
             <div>
-            <ListItem alignItems="flex-start">
+            <ListItem alignItems="flex-start" button={true} onClick={() => gotoPage('/app/userprofile')}>
               <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/3.jpg" />
+                <Avatar />
               </ListItemAvatar>
               <ListItemText
-                primary="Brunch this weekend?"
+                primary={user.firstName + ' ' + user.lastName}
                 secondary={
                   <React.Fragment>
                     <Typography

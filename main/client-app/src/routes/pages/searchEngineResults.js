@@ -6,7 +6,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 import HomeToolbar from '../../components/HomeToolbar';
-import { Container, Fab, Toolbar, AppBar, Typography, Card, ImageListItem, ImageList } from '@material-ui/core';
+import { Container, Fab, Toolbar, AppBar, Typography, Card, ImageListItem, ImageList, Dialog, Slide } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import EmailIcon from '@material-ui/icons/Email';
 import PeopleIcon from '@material-ui/icons/People';
@@ -15,11 +15,14 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import { Audiotrack, Chat, Photo, Videocam } from "@material-ui/icons";
 import Post from '../../components/Post'
 import SearchResultsUsers from '../../components/SearchResultsUsers'
-import { gotoPage } from "../../App";
+import { gotoPage, popPage, query, registerDialogOpen } from "../../App";
 import PhotoGrid from "../../components/PhotoGrid";
 import AudioWallpaper from '../../images/audio-wallpaper.jpg'
 import SearchResultsVideos from "../../components/SearchResultsVideos";
 import SearchResultsMessages from "../../components/SearchResultsMessages";
+import BotIcon from '../../images/robot.png'
+import { serverRoot } from "../../util/Utils";
+import { setToken, token } from "../../util/settings";
 
 const itemData = [
   {
@@ -295,32 +298,81 @@ TabPanel.propTypes = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    direction: 'rtl'
   },
   indicator: {
     backgroundColor: 'white',
   },
 }));
 
-function MessengerPage(props) {
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+function SearchEngineResults(props) {
+
+  setToken(localStorage.getItem('token'))
+
   const classes = useStyles()
   const [value, setValue] = React.useState(0)
+  const [open, setOpen] = React.useState(true)
+  registerDialogOpen(setOpen)
+
+  let [users, setUsers] = React.useState([])
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
-  };
+  }
 
   const handleChangeIndex = (index) => {
     setValue(index)
-  };
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+    setTimeout(popPage, 250)
+  }
+
+  useEffect(() => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'token': token
+      },
+      body: JSON.stringify({
+        query: query
+      }),
+      redirect: 'follow'
+    };
+    fetch(serverRoot + "/search/search_users", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.users !== undefined) {
+          setUsers(result.users)
+        }
+      })
+      .catch(error => console.log('error', error));
+  }, [])
 
   return (
-  <div className={classes.root} style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, backgroundColor: '#eee'}}>   
+    <Dialog
+        onTouchStart={(e) => {e.stopPropagation();}}
+        PaperProps={{
+            style: {
+                backgroundColor: 'transparent',
+                boxShadow: 'none',
+            },
+        }}
+        fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
+  <div className={classes.root} style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0}}>   
     <div>
       <HomeToolbar>
-        <AppBar style={{backgroundColor: '#2196f3'}}>
+        <AppBar style={{backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
           <Toolbar style={{marginTop: 16}}>
-            <SearchEngineResultsSearchbar/>
+            <SearchEngineResultsSearchbar handleClose={handleClose}/>
           </Toolbar>
           <Tabs
             value={value}
@@ -347,7 +399,6 @@ function MessengerPage(props) {
         axis={'x-reverse'}
         index={value}
         onChangeIndex={handleChangeIndex}
-        style={{backgroundColor: '#eee'}}
       >
         <TabPanel value={value} index={0}>
           <div style={{height: 72}}/>
@@ -359,7 +410,7 @@ function MessengerPage(props) {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <div style={{height: 88}}/>
-          <SearchResultsUsers/>
+          <SearchResultsUsers data={users}/>
         </TabPanel>
         <TabPanel value={value} index={2}>
           <div style={{height: 88}}/>
@@ -367,8 +418,8 @@ function MessengerPage(props) {
             {itemData.map((item) => (
               <ImageListItem key={item.img} cols={1} onClick={() => gotoPage('/app/storebot')}>
                 <div style={{position: 'relative'}}>
-                  <img src={item.img} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '5%', width: '95%', height: 128}} />
-                  <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
+                  <img src={BotIcon} alt={item.title} style={{paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, backgroundColor: '#fff', borderRadius: 16, marginTop: 16, marginRight: '5%', width: '95%', height: 128}} />
+                  <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
                     <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
                   </Card>
                 </div>
@@ -383,7 +434,7 @@ function MessengerPage(props) {
               <ImageListItem key={item.img} cols={1} rows={1} onClick={() => {gotoPage('/app/conf?room_id=1')}}>
                 <div style={{position: 'relative'}}>
                   <img src={item.img} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: '2.5%', width: '95%', height: 128}} />
-                  <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
+                  <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
                     <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
                   </Card>
                 </div>
@@ -403,7 +454,7 @@ function MessengerPage(props) {
                 <div style={{position: 'relative', display: 'flex', flexWrap: 'nowrap'}}>
                   <div style={{borderRadius: 176 / 2, backgroundColor: '#000', width: 176 - 32, height: 176 - 32, marginTop: 16 + 16, marginRight: -112}}/>
                   <img src={AudioWallpaper} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: -72, width: 'calc(95% - 32px)', height: 176}} />
-                  <Typography style={{background: 'rgba(255, 255, 255, 0.5)', borderRadius: '12px 0px 0px 12px', marginLeft: -56, marginTop: 136, width: 144, height: 24, textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>آواز های هایده</Typography>
+                  <Typography style={{background: 'rgba(255, 255, 255, 0.5)', borderRadius: '12px 0px 0px 12px', marginLeft: -72, marginTop: 136, width: 144, height: 24, textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>آواز های هایده</Typography>
                 </div>
               </ImageListItem>
             ))}
@@ -420,6 +471,7 @@ function MessengerPage(props) {
       </SwipeableViews>
     </div>
   </div>
+  </Dialog>
   );
 }
-export default MessengerPage;
+export default SearchEngineResults;

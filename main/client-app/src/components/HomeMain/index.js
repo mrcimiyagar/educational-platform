@@ -10,7 +10,7 @@ import HomeToolbar from '../HomeToolbar';
 import { Container, Fab, Toolbar } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import EditIcon from '@material-ui/icons/Edit';
-import ChatsList from '../ChatsList';
+import ChatsList from '../AllChats';
 import HomeDrawer from '../HomeDrawer';
 import HomeBottombar from '../HomeBottombar';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -24,6 +24,10 @@ import RoomWallpaper from '../../images/roomWallpaper.png'
 import store from '../../redux/main';
 import { useForceUpdate } from '../../util/Utils';
 import Jumper from '../SearchEngineFam';
+import AllChats from '../AllChats';
+import GroupChats from '../GroupChats';
+import ChannelChats from '../ChannelChats';
+import BotChats from '../BotChats';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -105,17 +109,17 @@ export default function HomeAppbar() {
           </Tabs>
         </AppBar>
       </HomeToolbar>
-        <TabPanel value={value} index={0} style={{marginLeft: 16, marginRight: 16, marginTop: 112, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.35)', backdropFilter: 'blur(20px)'}}>
-            <ChatsList/>          
+        <TabPanel value={value} index={0} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
+            <AllChats/>
         </TabPanel>
-        <TabPanel value={value} index={1} style={{marginLeft: 16, marginRight: 16, marginTop: 112, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.35)', backdropFilter: 'blur(20px)'}}>
-            <ChatsList/>          
+        <TabPanel value={value} index={1} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
+            <GroupChats/>
         </TabPanel>
-        <TabPanel value={value} index={2} style={{marginLeft: 16, marginRight: 16, marginTop: 112, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.35)', backdropFilter: 'blur(20px)'}}>
-            <ChatsList/>          
+        <TabPanel value={value} index={2} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
+            <ChannelChats/>
         </TabPanel>
-        <TabPanel value={value} index={3} style={{marginLeft: 16, marginRight: 16, marginTop: 112, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.35)', backdropFilter: 'blur(20px)'}}>
-            <ChatsList/>          
+        <TabPanel value={value} index={3} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
+            <BotChats/>
         </TabPanel>
       <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}}>
         <EditIcon />

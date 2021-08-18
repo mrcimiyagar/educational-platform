@@ -24,6 +24,7 @@ export default function SearchResultsMessages() {
   return (
     <Paper style={{
       width: 'calc(100% + 32px)',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)', 
       marginLeft: -16,
       marginRight: -16
     }}>

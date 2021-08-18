@@ -60,7 +60,7 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="fixed" style={{backgroundColor: 'rgba(21, 96, 233, 0.5)', backdropFilter: 'blur(10px)'}}>
+            <AppBar position="fixed" style={{paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.5)', backdropFilter: 'blur(10px)'}}>
                 <Toolbar>
                     <IconButton
                         edge="start"

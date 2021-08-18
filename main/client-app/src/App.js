@@ -15,9 +15,10 @@ import PhotoViewer from "./routes/pages/photoViewer";
 import PollPage from "./routes/pages/polls";
 import NotePage from "./routes/pages/notes";
 import DeckPage from "./routes/pages/deck";
-import useSound from 'use-sound';
 import StartupSound from './sounds/startup.mp3';
 import Auth4 from "./routes/pages/auth4";
+import SearchEngineResults from './routes/pages/searchEngineResults'
+import Profile from './routes/pages/profile'
 
 let histPage = null, setHp = null;
 export let drawerOpen = null, setDrawerOpen = null;
@@ -92,6 +93,11 @@ export let setRoomId = (ri) => {
   roomId = ri;
 }
 
+export let query = '';
+export let setQuery = (ri) => {
+  query = ri;
+}
+
 let dialogs = {
   '/app/chat': Chat,
   '/app/storebot': StoreBot,
@@ -99,7 +105,9 @@ let dialogs = {
   '/app/photoviewer': PhotoViewer,
   '/app/poll': PollPage,
   '/app/notes': NotePage,
-  '/app/deck': DeckPage
+  '/app/deck': DeckPage,
+  '/app/searchengineresults': SearchEngineResults,
+  '/app/userprofile': Profile
   
 }
 let pages = {
@@ -122,8 +130,6 @@ let played = false
 export default function MainApp(props) {
 
   let [opacity, setOpacity] = React.useState(0)
-  let [opacity2, setOpacity2] = React.useState(1)
-  let [display, setDisplay] = React.useState('block')
 
   animatePageChange = () => {
     setOpacity(0)
@@ -151,11 +157,6 @@ export default function MainApp(props) {
     paramsSeries = [params]
 
     animatePageChange()
-
-    setOpacity2(0)
-    setTimeout(() => {
-      setDisplay('none')
-    }, 1000);
 
   }, [])
 
@@ -206,7 +207,6 @@ export default function MainApp(props) {
           {P !== undefined ? <P {...params}/> : null}
           {D !== undefined ? <D open={true}/> : null}
         </ThemeProvider>
-			  <div style={{display: display, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 1)', opacity: opacity2, transition: 'opacity .5s', position: 'fixed', top: 0, left: 0}}/>
       </div>
     </div>
   );

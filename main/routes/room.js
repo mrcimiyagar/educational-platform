@@ -287,6 +287,20 @@ router.post('/get_room', jsonParser, async function (req, res) {
     })
 })
 
+router.post('/get_rooms', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.Membership.findAll({where: {userId: session.userId}}).then(async function (memberships) {
+            sw.Room.findAll({where: {id: memberships.map(m => m.roomId)}}).then(async function (rooms) {
+                res.send({status: 'success', rooms: rooms});
+            });
+        });
+    });
+});
+
 router.post('/get_spaces', jsonParser, async function (req, res) {
     sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
         if (session === null) {
