@@ -197,30 +197,43 @@ router.post('/is_permissions_accessible', jsonParser, async function (req, res) 
     });
 });
 
-router.post('/add_room', jsonParser, async function (req, res) {
+router.post('/create_room', jsonParser, async function (req, res) {
     sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
         if (session === null) {
             res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
             return;
         }
+        if (req.body.participentId !== null) {
+            let p2pExistance = await sw.P2pExistance.findOne({where: {code: (session.userId + ' ' + req.body.participentId) || (req.body.participentId + ' ' + session.userId)}})
+            if (p2pExistance !== null) {
+                let room = await sw.Room.findOne({where: {id: p2pExistance.roomId}})
+                res.send({status: 'success', room: room, message: 'room already exist.'});
+                return
+            }
+        }
         let room;
         let roomId = 0;
         if (req.body.spaceId !== undefined) {
             let space = await sw.Space.findOne({where: {id: req.body.spaceId}});
-            if (space === null) {
-                res.send({status: 'error', errorCode: 'e0007', message: 'parent room does not exist.'});
-                return;
+            if (space !== null) {
+                let rs = await sw.SpaceSecret.findOne({where: {spaceId: req.body.spaceId}})
+                if (rs.ownerId !== session.userId) {
+                    res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+                    return;
+                }
+                room = await sw.Room.create({
+                    name: req.body.name,
+                    spaceId: req.body.spaceId
+                })
+                roomId = room.id
             }
-            let rs = await sw.SpaceSecret.findOne({where: {spaceId: req.body.spaceId}})
-            if (rs.ownerId !== session.userId) {
-                res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
-                return;
+            else {
+                room = await sw.Room.create({
+                    name: req.body.name,
+                    spaceId: req.body.spaceId
+                })
+                roomId = room.id
             }
-            room = await sw.Room.create({
-                name: req.body.name,
-                spaceId: req.body.spaceId
-            })
-            roomId = room.id
         }
         else {
             let space = await sw.Space.create({
@@ -248,16 +261,28 @@ router.post('/add_room', jsonParser, async function (req, res) {
             roomId: roomId,
             ...tools.adminPermissions
         });
-        let memAdmin = await sw.Membership.create({
-            userId: 'admin',
-            roomId: roomId,
-            ...tools.adminPermissions
-        });
+        if (req.body.participentId !== null) {
+            room.chatType = 'p2p'
+            room.save()
+            let participent = await sw.User.findOne({where: {id: req.body.participentId}})
+            let participentMem = await sw.Membership.create({
+                userId: participent.id,
+                roomId: roomId,
+                ...tools.adminPermissions
+            });
+            let p2pExistance = await sw.P2pExistance.create({code: (session.userId + ' ' + req.body.participentId), roomId: room.id})
+        }
+        else {
+            if (req.body.chatType === 'group' || req.body.chatType === 'channel' || req.body.chatType === 'bot') {
+                room.chatType = req.body.chatType
+                room.save()
+            }
+        }
         res.send({status: 'success', room: room});
     });
 });
 
-router.post('/remove_room', jsonParser, async function (req, res) {
+router.post('/delete_room', jsonParser, async function (req, res) {
     sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
         if (session === null) {
             res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
@@ -301,22 +326,6 @@ router.post('/get_rooms', jsonParser, async function (req, res) {
     });
 });
 
-router.post('/get_spaces', jsonParser, async function (req, res) {
-    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
-        if (session === null) {
-            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
-            return;
-        }
-        sw.Membership.findAll({where: {userId: session.userId}}).then(async function (memberships) {
-            sw.Room.findAll({where: {id: memberships.map(m => m.roomId)}}).then(async function (rooms) {
-                sw.Space.findAll({where: {id: rooms.map(r => r.spaceId)}}).then(async function (spaces) {
-                    res.send({status: 'success', spaces: spaces});
-                });
-            });
-        });
-    });
-});
-
 router.post('/update_room', jsonParser, async function (req, res) {
     sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
         if (session === null) {
@@ -333,6 +342,23 @@ router.post('/update_room', jsonParser, async function (req, res) {
                 await room.save();
                 require("../server").pushTo('room_' + membership.roomId, 'room-updated', room);
                 res.send({status: 'success'});
+            });
+        });
+    });
+});
+
+router.post('/get_spaces', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.Membership.findAll({where: {userId: session.userId}}).then(async function (memberships) {
+            sw.Room.findAll({where: {id: memberships.map(m => m.roomId)}}).then(async function (rooms) {
+                sw.Space.findAll({where: {id: rooms.map(r => r.spaceId).filter((value, index, arr) => {return value !== null;})}})
+                .then(async function (spaces) {
+                    res.send({status: 'success', spaces: spaces});
+                });
             });
         });
     });

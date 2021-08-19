@@ -93,6 +93,11 @@ export let setRoomId = (ri) => {
   roomId = ri;
 }
 
+export let user = undefined;
+export let setUser = (ri) => {
+  user = ri;
+}
+
 export let query = '';
 export let setQuery = (ri) => {
   query = ri;
@@ -200,12 +205,16 @@ export default function MainApp(props) {
     audio.play()
   }, [])
 
+  if (paramsSeries.length > 1) {
+    params = paramsSeries[paramsSeries.length - 1]
+  }
+
   return (
     <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
       <div style={{width: '100%', height: '100%', opacity: opacity, transition: 'opacity .125s', direction: 'rtl'}}>
         <ThemeProvider theme={theme}>
           {P !== undefined ? <P {...params}/> : null}
-          {D !== undefined ? <D open={true}/> : null}
+          {D !== undefined ? <D {...params} open={true}/> : null}
         </ThemeProvider>
       </div>
     </div>

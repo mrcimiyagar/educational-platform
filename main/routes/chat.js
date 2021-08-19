@@ -7,28 +7,65 @@ const { authenticateMember } = require('../users');
 const router = express.Router();
 let jsonParser = bodyParser.json();
 
+router.post('/get_chats', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user) => {
+        sw.Membership.findAll({where: {userId: session.userId}}).then(async function (memberships) {
+            sw.Room.findAll({raw: true, where: {id: memberships.map(m => m.roomId)}}).then(async function (rooms) {
+                for (let i = 0; i < rooms.length; i++) {
+                    let room = rooms[i]
+                    if (room.chatType === 'p2p') {
+                        let members = await sw.Membership.findAll({raw: true, where: {roomId: room.id}})
+                        room.participent = members[0].userId === session.userId ? 
+                            await sw.User.findOne({where: {id: members[1].userId}}) :
+                            await sw.User.findOne({where: {id: members[0].userId}})
+                    }
+                    let entries = await sw.Message.findAll({
+                        raw: true,
+                        where: {roomId: room.id},
+                        limit: 1,
+                        order: [ [ 'createdAt', 'DESC' ]]
+                    })
+                    if (entries.length === 1) {
+                        room.lastMessage = entries[0]
+                    }
+                }
+                res.send({status: 'success', rooms: rooms});
+            });
+        });
+    });
+});
+
 router.post('/create_message', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
             
             if (!membership.canAddMessage) {
                 res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'});
-                return;
+                return
             }
-            console.log(JSON.stringify(membership));
-            console.log(JSON.stringify(session));
-            console.log(JSON.stringify(user));
+
+            if (req.body.text === undefined || req.body.text === '' || req.body.text === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'text can not be empty.'});
+                return
+            }
 
             let msg = await sw.Message.create({
                 authorId: user.id,
                 time: Date.now(),
                 roomId: membership.roomId,
                 text: req.body.text,
-                fileId: req.body.fileId
+                fileId: req.body.fileId === undefined ? null : req.body.fileId
             });
-            sw.User.findOne({where: {id: session.userId}}).then(async function (user) {
-                require('../server').pushTo('room_' + membership.roomId, 'message-added', {msg, user});
-            });
-            res.send({status: 'success', message: msg});
+            let msgCopy = {
+                id: msg.id,
+                authorId: user.id,
+                time: Date.now(),
+                roomId: membership.roomId,
+                text: req.body.text,
+                fileId: req.body.fileId === undefined ? null : req.body.fileId,
+                User: user
+            }
+            require('../server').pushTo('room_' + membership.roomId, 'message-added', {msgCopy});
+            res.send({status: 'success', message: msgCopy});
     });
 });
 

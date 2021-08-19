@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,12 +22,13 @@ import HomeNotifs from '../HomeNotifs';
 import HomeSettings from '../HomeSettings';
 import RoomWallpaper from '../../images/roomWallpaper.png'
 import store from '../../redux/main';
-import { useForceUpdate } from '../../util/Utils';
+import { serverRoot, useForceUpdate } from '../../util/Utils';
 import Jumper from '../SearchEngineFam';
 import AllChats from '../AllChats';
 import GroupChats from '../GroupChats';
 import ChannelChats from '../ChannelChats';
 import BotChats from '../BotChats';
+import { token } from '../../util/settings';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -66,12 +67,14 @@ const useStyles = makeStyles((theme) => ({
 
 export let updateHome = undefined
 
-export default function HomeAppbar() {
+export default function HomeAppbar(props) {
   updateHome = useForceUpdate()
   const classes = useStyles()
 
   const [jumperOpen, setJumperOpen] = React.useState(true);
   const [value, setValue] = React.useState(0)
+  let currNav = store.getState().global.main.currentMessengerNav
+  let [chats, setChats] = React.useState([])
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -81,7 +84,23 @@ export default function HomeAppbar() {
     setValue(index)
   };
 
-  let currNav = store.getState().global.main.currentMessengerNav
+  useEffect(() => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'token': token
+      },
+      redirect: 'follow'
+    };
+    fetch(serverRoot + "/chat/get_chats", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+              console.log(JSON.stringify(result));
+              setChats(result.rooms);
+          })
+          .catch(error => console.log('error', error));
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -110,16 +129,16 @@ export default function HomeAppbar() {
         </AppBar>
       </HomeToolbar>
         <TabPanel value={value} index={0} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
-            <AllChats/>
+            <AllChats chats={chats.filter(c => c.chatType === 'p2p')}/>
         </TabPanel>
         <TabPanel value={value} index={1} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
-            <GroupChats/>
+            <GroupChats chats={chats.filter(c => c.chatType === 'group')}/>
         </TabPanel>
         <TabPanel value={value} index={2} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
-            <ChannelChats/>
+            <ChannelChats chats={chats.filter(c => c.chatType === 'channel')}/>
         </TabPanel>
         <TabPanel value={value} index={3} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
-            <BotChats/>
+            <BotChats chats={chats.filter(c => c.chatType === 'bot')}/>
         </TabPanel>
       <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}}>
         <EditIcon />

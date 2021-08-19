@@ -64,4 +64,9 @@ router.post('/login', jsonParser, async function (req, res) {
     res.send({status: 'success', user: user, account: account, session: session})
 });
 
+router.post('/get_user', jsonParser, async function (req, res) {
+    let user = await sw.User.findOne({where: {id: req.body.userId}})
+    res.send({status: 'success', user: user})
+});
+
 module.exports = router;

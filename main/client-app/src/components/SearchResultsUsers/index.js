@@ -8,7 +8,9 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { Paper } from '@material-ui/core';
-import { gotoPage } from '../../App';
+import { gotoPage, setUser } from '../../App';
+import { serverRoot } from '../../util/Utils';
+import { token } from '../../util/settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,21 +34,30 @@ export default function SearchResultsUsers(props) {
       <List className={classes.root}>
         {props.data.map(user => (
             <div>
-            <ListItem alignItems="flex-start" button={true} onClick={() => gotoPage('/app/userprofile')}>
+            <ListItem alignItems="flex-start" button={true} style={{direction: 'rtl'}} onClick={() => {gotoPage('/app/userprofile', {user_id: user.id});}}>
               <ListItemAvatar>
-                <Avatar />
+                <Avatar src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${user.id}`} />
               </ListItemAvatar>
               <ListItemText
-                primary={user.firstName + ' ' + user.lastName}
+                primary={
+                  <React.Fragment>
+                    <Typography
+                      className={classes.inline}
+                      color="textPrimary"
+                      style={{position: 'absolute', right: 64}}
+                    >
+                      {user.firstName + ' ' + user.lastName}
+                    </Typography>
+                  </React.Fragment>
+                }
                 secondary={
                   <React.Fragment>
                     <Typography
-                      component="span"
-                      variant="body2"
                       className={classes.inline}
                       color="textPrimary"
+                      style={{position: 'absolute', right: 64, top: 36}}
                     >
-                    Software Engineer
+                      مهندس نرم افزار
                     </Typography>
                   </React.Fragment>
                 }

@@ -6,14 +6,20 @@ import EditIcon from '@material-ui/icons/Edit';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import SearchIcon from '@material-ui/icons/Search';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import {gotoPage, popPage, registerDialogOpen} from "../../App";
+import {gotoPage, popPage, registerDialogOpen, setRoomId, user} from "../../App";
 import './profile.css';
+import { setToken, token } from "../../util/settings";
+import { serverRoot } from "../../util/Utils";
+import ProfileAvatar from '../../images/avatar.jpg'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function Profile(props) {
+
+  setToken(localStorage.getItem('token'))
+
   const [open, setOpen] = React.useState(true)
   registerDialogOpen(setOpen)
 
@@ -45,7 +51,7 @@ return (
     </div>
 
     <Card style={{borderRadius: 56, backgroundColor: '#666', padding: 4, width: 112, height: 112, position: 'absolute', marginTop: -228, right: 32}}>
-      <Avatar style={{width: '100%', height: '100%'}} src={'https://www.nj.com/resizer/h8MrN0-Nw5dB5FOmMVGMmfVKFJo=/450x0/smart/cloudfront-us-east-1.images.arcpublishing.com/advancelocal/SJGKVE5UNVESVCW7BBOHKQCZVE.jpg'}/>
+      <Avatar style={{width: '100%', height: '100%'}} src={ProfileAvatar}/>
     </Card>
     
     <div style={{position: 'absolute', width: '100%', right: 32, marginTop: -544}}>
@@ -84,7 +90,30 @@ return (
       </div>
     </div>
   </div>
-  <Fab color={'secondary'} style={{position: 'absolute', left: 32, marginTop: -276}}>
+  <Fab color={'secondary'} style={{position: 'absolute', left: 32, marginTop: -276}} onClick={() => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'token': token
+      },
+      body: JSON.stringify({
+        spaceId: null,
+        name: '',
+        participentId: props.user_id
+      }),
+      redirect: 'follow'
+    };
+    fetch(serverRoot + "/room/create_room", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.room !== undefined) {
+          gotoPage('/app/chat', {user_id: props.user_id, room_id: result.room.id})
+        }
+      })
+      .catch(error => console.log('error', error));
+  }}>
     <EditIcon/>
   </Fab>
   <div style={{position: 'absolute', width: '100%', right: 200, marginTop: -200, display: 'flex', direction: 'rtl'}}>

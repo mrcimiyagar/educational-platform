@@ -33,6 +33,7 @@ let StoreAd;
 let StoreCategory;
 let StorePackage;
 let Notification;
+let P2pExistance;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
@@ -46,12 +47,12 @@ module.exports = {
             port: 5432,
             host: 'localhost'
         };
-        try {
+        /*try {
             await pgTools.dropdb(config, dbName);
         } catch (e) {console.log(e);}
         try {
             await pgTools.createdb(config, dbName);
-        } catch (e) {console.log(e);}
+        } catch (e) {console.log(e);}*/
         prepareSequelizeInstance();
         await prepareUserModel();
         await prepareAccountModel();
@@ -82,14 +83,34 @@ module.exports = {
         await prepareStoreAdModel();
         await prepareStorePackageModel();
         await prepareNotificationModel();
+        await prepareP2pExistanceModel();
 
         let adminAcc = await Account.findOne({where: {role: 'admin'}});
         if (adminAcc === null) {
+            let postPhotoPreview = await File.create({
+                uploaderId: null,
+                roomId: null,
+                name: 'postPhoto1',
+                extension: 'png',
+                size: 100,
+                previewFileId: null,
+                isPreview: true
+            })
+            let postPhoto = await File.create({
+                uploaderId: null,
+                roomId: null,
+                name: 'postPhoto1',
+                extension: 'png',
+                size: 100,
+                previewFileId: postPhotoPreview.id,
+                isPreview: false
+            })
             let user = await User.create({
                 id: 'admin',
                 username: 'admin',
                 firstName: 'admin',
-                lastName: 'admin'
+                lastName: 'admin',
+                avatarId: postPhoto.id
             });
             let userAcc = await Account.create({
                 userId: user.id,
@@ -121,11 +142,27 @@ function prepareSequelizeInstance() {
     });
 }
 
+async function prepareP2pExistanceModel() {
+    P2pExistance = sequelizeClient.define('P2pExistance', {
+        id: {
+            type: Sequelize.BIGINT,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        code: Sequelize.STRING,
+        roomId: Sequelize.BIGINT
+    }, {
+        freezeTableName: true
+    });
+    await P2pExistance.sync();
+    module.exports['P2pExistance'] = P2pExistance;
+}
+
 async function prepareNotificationModel() {
     Notification = sequelizeClient.define('Notification', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         data: Sequelize.STRING,
@@ -141,7 +178,7 @@ async function prepareStorePackageModel() {
     StorePackage = sequelizeClient.define('StorePackage', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         title: Sequelize.STRING,
@@ -158,7 +195,7 @@ async function prepareStoreCategoryModel() {
     StoreCategory = sequelizeClient.define('StoreCategory', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         title: Sequelize.STRING
@@ -173,7 +210,7 @@ async function prepareStoreAdModel() {
     StoreAd = sequelizeClient.define('StoreAd', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         fileId: Sequelize.BIGINT
@@ -189,7 +226,7 @@ async function prepareScreenshotModel() {
     Screenshot = sequelizeClient.define('Screenshot', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         botId: Sequelize.BIGINT,
@@ -207,7 +244,7 @@ async function prepareSubscriptionModel() {
     Subscription = sequelizeClient.define('Subscription', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         botId: {
@@ -231,7 +268,7 @@ async function prepareBotModel() {
     Bot = sequelizeClient.define('Bot', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         username: Sequelize.STRING,
@@ -251,7 +288,7 @@ async function prepareBotSecretModel() {
     BotSecret = sequelizeClient.define('BotSecret', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         botId: Sequelize.BIGINT,
@@ -270,7 +307,7 @@ async function prepareCommentModel() {
     Comment = sequelizeClient.define('Comment', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         botId: {
@@ -296,7 +333,7 @@ async function prepareWidgetModel() {
     Widget = sequelizeClient.define('Widget', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         title: Sequelize.BIGINT,
@@ -313,7 +350,7 @@ async function prepareWorkershipModel() {
     Workership = sequelizeClient.define('Workership', {
         id: {
             type: Sequelize.BIGINT,
-            allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
         },
         widgetId: Sequelize.BIGINT,
@@ -341,6 +378,7 @@ async function prepareUserModel() {
         username: Sequelize.STRING,
         firstName: Sequelize.STRING,
         lastName: Sequelize.STRING,
+        avatarId: Sequelize.BIGINT,
         isGuest: Sequelize.BOOLEAN,
     }, {
         freezeTableName: true
@@ -421,11 +459,12 @@ async function prepareRoomModel() {
             autoIncrement: true
         },
         name: Sequelize.STRING,
-        spaceId: Sequelize.BIGINT
+        spaceId: Sequelize.BIGINT,
+        chatType: Sequelize.STRING
     }, {
         freezeTableName: true
     });
-    Room.belongsTo(Space, { foreignKey: 'spaceId' });
+    Room.belongsTo(Space, { foreignKey: 'spaceId', allowNull: true });
     await Room.sync();
     module.exports['Room'] = Room;
 }
@@ -448,8 +487,8 @@ async function prepareFileModel() {
     }, {
         freezeTableName: true
     });
-    File.belongsTo(User, { foreignKey: 'uploaderId' });
-    File.belongsTo(Room, { foreignKey: 'roomId' });
+    File.belongsTo(User, { foreignKey: {name: 'uploaderId', allowNull: true}});
+    File.belongsTo(Room, { foreignKey: {name: 'roomId', allowNull: true}});
     await File.sync();
     module.exports['File'] = File;
 }

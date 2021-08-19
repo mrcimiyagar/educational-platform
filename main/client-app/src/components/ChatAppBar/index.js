@@ -12,6 +12,7 @@ import VideocamIcon from '@material-ui/icons/Videocam';
 import CallIcon from '@material-ui/icons/Call';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Avatar from "@material-ui/core/Avatar";
+import { gotoPage } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -70,9 +71,9 @@ export default function ChatAppBar(props) {
                     >
                         <ArrowBackIcon style={{transform: 'rotate(180deg)'}}/>
                     </IconButton>
-                    <Avatar style={{width: 28, height: 28, marginRight: 8}} alt="Profile Picture" src={''}/>
+                    <Avatar style={{width: 28, height: 28, marginRight: 8}} alt="Profile Picture" src={''}  onClick={() => {gotoPage('/app/userprofile', {user_id: props.user.id});}}/>
                     <Typography variant="h6" style={{fontFamily: 'mainFont', marginRight: 8}}>
-                        پویان
+                        {props.user.firstName + ' ' + props.user.lastName}
                     </Typography>
                     <div className={classes.search}>
                         <IconButton>

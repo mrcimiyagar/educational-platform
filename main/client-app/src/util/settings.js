@@ -5,7 +5,7 @@ import {ConnectToIo, FetchMe, roothPath, serverRoot, setConfig, validateToken} f
 export const theme = createTheme({
     palette: {
       primary: {
-        main: '#9c27b0',
+        main: 'rgba(105, 27, 200, 0.75)',
       },
       secondary: {
         main: 'rgba(240, 0, 120, 0.75)',

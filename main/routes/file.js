@@ -100,10 +100,49 @@ router.get('/download_file', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
             
             sw.File.findOne({where: {roomId: membership.roomId, id: req.query.fileId}}).then(async file => {
+                res.sendFile(rootPath + '/files/' + file.id)
+            })
+    })
+})
+
+router.get('/download_user_avatar', jsonParser, async function (req, res) {
+    sw.User.findOne({where: {id: req.query.userId}}).then(async user => {
+        sw.File.findOne({where: {id: user.avatarId}}).then(async file => {
+            res.sendFile(rootPath + '/files/' + file.id);
+        })
+    })
+})
+
+router.get('/download_bot_avatar', jsonParser, async function (req, res) {
+    sw.Bot.findOne({where: {id: req.query.botId}}).then(async bot => {
+        sw.File.findOne({where: {id: bot.avatarId}}).then(async file => {
+            res.sendFile(rootPath + '/files/' + file.id);
+        })
+    })
+})
+
+router.get('/download_space_avatar', jsonParser, async function (req, res) {
+    sw.Space.findOne({where: {id: req.query.spaceId}}).then(async space => {
+        sw.File.findOne({where: {id: space.avatarId}}).then(async file => {
+            res.sendFile(rootPath + '/files/' + file.id);
+        })
+    })
+})
+
+router.get('/download_room_avatar', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user) => {
+        let membership = await sw.Membership.findOne({where: {userId: session.userId, roomId: req.query.roomId}})
+        if (membership === null) {
+            res.sendStatus(404);
+            return
+        }
+        sw.Room.findOne({where: {id: req.query.roomId}}).then(async room => {
+            sw.File.findOne({where: {id: room.avatarId}}).then(async file => {
                 res.sendFile(rootPath + '/files/' + file.id);
-            });
-    });
-});
+            })
+        })
+    })
+})
 
 router.post('/remove_file', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {

@@ -15,7 +15,7 @@ const auth = require('./routes/auth');
 const room = require('./routes/room');
 const file = require('./routes/file');
 const poll = require('./routes/poll');
-const message = require('./routes/message');
+const chat = require('./routes/chat');
 const video = require('./routes/video');
 const survey = require('./routes/survey');
 const shots = require('./routes/shots');
@@ -56,7 +56,7 @@ models.setup().then(() => {
         app.use('/room', room);
         app.use('/file', file);
         app.use('/poll', poll);
-        app.use('/message', message);
+        app.use('/chat', chat);
         app.use('/video', video);
         app.use('/survey', survey);
         app.use('/shots', shots);
