@@ -539,7 +539,8 @@ async function prepareMessageModel() {
         roomId: Sequelize.BIGINT,
         time: Sequelize.BIGINT,
         text: Sequelize.STRING,
-        fileId: Sequelize.BIGINT
+        fileId: Sequelize.BIGINT,
+        messageType: Sequelize.STRING
     }, {
         freezeTableName: true
     });

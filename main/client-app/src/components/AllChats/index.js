@@ -36,7 +36,7 @@ export default function AllChats(props) {
       <div>
       <ListItem alignItems="flex-start" button onClick={() => {gotoPage('/app/chat', {room_id: chat.id, user_id: chat.participent.id});}}>
         <ListItemAvatar>
-          <Avatar src="https://material-ui.com/static/images/avatar/3.jpg" />
+          <Avatar src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${chat.participent.id}`} />
         </ListItemAvatar>
         <ListItemText
           primary={

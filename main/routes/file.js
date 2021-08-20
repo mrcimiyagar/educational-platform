@@ -131,7 +131,6 @@ router.get('/download_space_avatar', jsonParser, async function (req, res) {
 
 router.get('/download_room_avatar', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
-        let membership = await sw.Membership.findOne({where: {userId: session.userId, roomId: req.query.roomId}})
         if (membership === null) {
             res.sendStatus(404);
             return

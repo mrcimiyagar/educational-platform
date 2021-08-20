@@ -13,6 +13,8 @@ import CallIcon from '@material-ui/icons/Call';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Avatar from "@material-ui/core/Avatar";
 import { gotoPage } from '../../App';
+import { token } from '../../util/settings';
+import { serverRoot } from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -71,7 +73,7 @@ export default function ChatAppBar(props) {
                     >
                         <ArrowBackIcon style={{transform: 'rotate(180deg)'}}/>
                     </IconButton>
-                    <Avatar style={{width: 28, height: 28, marginRight: 8}} alt="Profile Picture" src={''}  onClick={() => {gotoPage('/app/userprofile', {user_id: props.user.id});}}/>
+                    <Avatar style={{width: 28, height: 28, marginRight: 8}} alt="Profile Picture" src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${props.user.id}`}  onClick={() => {gotoPage('/app/userprofile', {user_id: props.user.id});}}/>
                     <Typography variant="h6" style={{fontFamily: 'mainFont', marginRight: 8}}>
                         {props.user.firstName + ' ' + props.user.lastName}
                     </Typography>

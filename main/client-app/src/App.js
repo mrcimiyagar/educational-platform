@@ -2,7 +2,7 @@ import React, {Component, Fragment, useEffect} from "react";
 import ReactDOM from 'react-dom';
 import {useTheme, useMediaQuery, ThemeProvider, colors, createTheme} from '@material-ui/core';
 import './App.css';
-import { theme } from "./util/settings";
+import { setMe, theme, token } from "./util/settings";
 import MessengerPage from "./routes/pages/messenger";
 import SearchEngine from "./routes/pages/searchEngine";
 import RoomWallpaper from './images/roomWallpaper.png'
@@ -19,6 +19,7 @@ import StartupSound from './sounds/startup.mp3';
 import Auth4 from "./routes/pages/auth4";
 import SearchEngineResults from './routes/pages/searchEngineResults'
 import Profile from './routes/pages/profile'
+import { serverRoot } from "./util/Utils";
 
 let histPage = null, setHp = null;
 export let drawerOpen = null, setDrawerOpen = null;
@@ -144,6 +145,24 @@ export default function MainApp(props) {
   }
 
   useEffect(() => {
+
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'token': token
+      },
+      redirect: 'follow'
+    };
+    fetch(serverRoot + "/auth/get_me", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+          console.log(JSON.stringify(result));
+          if (result.user !== undefined) {
+            setMe(result.user)
+          }
+      })
+      .catch(error => console.log('error', error));
 
     let query = window.location.search
     let params = {}

@@ -69,4 +69,14 @@ router.post('/get_user', jsonParser, async function (req, res) {
     res.send({status: 'success', user: user})
 });
 
+router.post('/get_me', jsonParser, async function (req, res) {
+    let session = await sw.Session.findOne({where: {token: req.headers.token}})
+    if (session === null) {
+        res.send({status: 'error', errorCode: 'e005', message: 'session not found'})
+        return
+    }
+    let user = await sw.User.findOne({where: {id: session.userId}})
+    res.send({status: 'success', user: user})
+});
+
 module.exports = router;

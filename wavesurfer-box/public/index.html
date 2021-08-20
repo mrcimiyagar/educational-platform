@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>wavesurfer-box</title>
+
+  <script src="https://unpkg.com/wavesurfer.js"></script>
+
+</head>
+<body>
+    
+    <div id='waveform'>
+
+    </div>
+
+    <script>
+        let wavesurfer = WaveSurfer.create({
+            container: document.querySelector('#waveform'),
+            barWidth: 2,
+            barHeight: 1, // the height of the wave
+            barGap: null // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
+        });
+        window.addEventListener('message', e => {
+            console.log(e.data)
+            if (e.data.sender === 'main') {
+                wavesurfer.load(e.data.src);
+                wavesurfer.on('ready', function () {
+                    wavesurfer.play();
+                });
+            }
+        })
+    </script>
+
+</body>
+</html>

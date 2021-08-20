@@ -43,7 +43,8 @@ router.post('/create_message', jsonParser, async function (req, res) {
                 return
             }
 
-            if (req.body.text === undefined || req.body.text === '' || req.body.text === null) {
+            if ((req.body.text === undefined || req.body.text === '' || req.body.text === null) &&
+                (req.body.fileId === undefined || req.body.fileId === '' || req.body.fileId === null || req.body.fileId === 0)) {
                 res.send({status: 'error', errorCode: 'e0005', message: 'text can not be empty.'});
                 return
             }
@@ -53,7 +54,8 @@ router.post('/create_message', jsonParser, async function (req, res) {
                 time: Date.now(),
                 roomId: membership.roomId,
                 text: req.body.text,
-                fileId: req.body.fileId === undefined ? null : req.body.fileId
+                fileId: req.body.fileId === undefined ? null : req.body.fileId,
+                messageType: req.body.messageType
             });
             let msgCopy = {
                 id: msg.id,
@@ -62,6 +64,7 @@ router.post('/create_message', jsonParser, async function (req, res) {
                 roomId: membership.roomId,
                 text: req.body.text,
                 fileId: req.body.fileId === undefined ? null : req.body.fileId,
+                messageType: req.body.messageType,
                 User: user
             }
             require('../server').pushTo('room_' + membership.roomId, 'message-added', {msgCopy});
