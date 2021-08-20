@@ -326,6 +326,7 @@ function SearchEngineResults(props) {
   let [photos, setPhotos] = React.useState([])
   let [audios, setAudios] = React.useState([])
   let [videos, setVideos] = React.useState([])
+  let [messages, setMessages] = React.useState([])
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -441,6 +442,29 @@ function SearchEngineResults(props) {
       .catch(error => console.log('error', error));
   }
 
+  let fetchMessages = () => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'token': token
+      },
+      body: JSON.stringify({
+        query: query
+      }),
+      redirect: 'follow'
+    };
+    fetch(serverRoot + "/search/search_messages", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.messages !== undefined) {
+          setMessages(result.messages)
+        }
+      })
+      .catch(error => console.log('error', error));
+  }
+
   let fetchTotal = () => {
     fetchUsers()
     fetchBots()
@@ -448,6 +472,7 @@ function SearchEngineResults(props) {
     fetchFiles('photo')
     fetchFiles('audio')
     fetchFiles('video')
+    fetchMessages()
   }
 
   useEffect(() => {
@@ -539,7 +564,7 @@ function SearchEngineResults(props) {
               rooms.map((room) => (
                 <ImageListItem key={'search-room-' + room.id} cols={1} rows={1} onClick={() => {gotoPage('/app/conf?room_id=1')}}>
                   <div style={{position: 'relative'}}>
-                    <img src={serverRoot + `/file/download_room_avatar?token=${token}&botId=${room.id}`} alt={room.title} style={{borderRadius: 16, marginTop: 16, marginRight: '2.5%', width: '95%', height: 128}} />
+                    <img src={serverRoot + `/file/download_room_avatar?token=${token}&roomId=${room.id}`} alt={room.title} style={{borderRadius: 16, marginTop: 16, marginRight: '2.5%', width: '95%', height: 128}} />
                     <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
                       <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{room.title}</Typography>
                     </Card>
@@ -577,11 +602,11 @@ function SearchEngineResults(props) {
         </TabPanel>
         <TabPanel value={value} index={6}>
           <div style={{height: 80}}/>
-          <SearchResultsVideos/>
+          <SearchResultsVideos data={videos}/>
         </TabPanel>
         <TabPanel value={value} index={7}>
           <div style={{height: 88}}/>
-          <SearchResultsMessages/>
+          <SearchResultsMessages data={messages}/>
         </TabPanel>
       </SwipeableViews>
     </div>

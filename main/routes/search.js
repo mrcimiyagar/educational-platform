@@ -77,7 +77,7 @@ router.post('/search_files', jsonParser, async function (req, res) {
         //let results = []
         let mems = await sw.Membership.findAll({raw: true, where: {userId: session.userId}})
         let rooms = await sw.Room.findAll({raw: true, where: {id: mems.map(mem => mem.roomId)}})
-        let files = await sw.File.findAll({raw: true, where: {roomId: rooms.map(room => room.id), fileType: req.body.fileType}})
+        let files = await sw.File.findAll({raw: true, include: [{ all: true }], where: {roomId: rooms.map(room => room.id), fileType: req.body.fileType}})
         res.send({status: 'success', files: files});
         
         /*let searchTokens = req.body.query.split(' ')
@@ -91,6 +91,15 @@ router.post('/search_files', jsonParser, async function (req, res) {
                 res.send({status: 'success', rooms: results});
             });
         }*/
+    });
+});
+
+router.post('/search_messages', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        let mems = await sw.Membership.findAll({raw: true, where: {userId: session.userId}})
+        let rooms = await sw.Room.findAll({raw: true, where: {id: mems.map(mem => mem.roomId)}})
+        let messages = await sw.Message.findAll({raw: true, include: [{ all: true }], where: {roomId: rooms.map(room => room.id), text: {[Op.like]: '%' + req.body.query + '%'}}})
+        res.send({status: 'success', messages: messages});
     });
 });
 

@@ -8,20 +8,25 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { Paper } from '@material-ui/core';
+import EmptyIcon from '../../images/empty.png'
+import { serverRoot } from '../../util/Utils';
+import { token } from '../../util/settings';
+import { gotoPage } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%'
+    width: '100%',
+    direction: 'rtl'
   },
   inline: {
     display: 'inline',
   },
 }));
 
-export default function SearchResultsMessages() {
+export default function SearchResultsMessages(props) {
   const classes = useStyles();
 
-  return (
+  return props.data.length > 0 ?
     <Paper style={{
       width: 'calc(100% + 32px)',
       backgroundColor: 'rgba(255, 255, 255, 0.5)', 
@@ -29,32 +34,43 @@ export default function SearchResultsMessages() {
       marginRight: -16
     }}>
       <List className={classes.root}>
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map(index => (
+        {props.data.map(message => (
             <div>
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/3.jpg" />
-              </ListItemAvatar>
-              <ListItemText
-                primary="کیهان محمدی"
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={classes.inline}
-                      color="textPrimary"
-                    >
-                    این یک پیام آزمایشی است.
-                    </Typography>
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            <Divider variant="inset" component="li" />
+              <ListItem key={'search-user-' + message['User.id']} alignItems="flex-start" button={true} style={{direction: 'rtl'}} onClick={() => {}}>
+                  <ListItemAvatar>
+                    <Avatar rc={serverRoot + `/file/download_user_avatar?token=${token}&userId=${message['User.id']}`} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <React.Fragment>
+                        <Typography
+                          className={classes.inline}
+                          color="textPrimary"
+                          style={{position: 'absolute', right: 64}}
+                        >
+                          {message['User.firstName'] + ' ' + message['User.lastName']}
+                        </Typography>
+                      </React.Fragment>
+                    }
+                    secondary={
+                      <React.Fragment>
+                        <Typography
+                          className={classes.inline}
+                          color="textPrimary"
+                          style={{position: 'absolute', right: 64, top: 36}}
+                        >
+                          {message.text}
+                        </Typography>
+                      </React.Fragment>
+                    }
+                  />
+                </ListItem>
+                <Divider variant="inset" component="li" />
             </div>
         ))}
       </List>
-    </Paper>
-  );
+    </Paper> :
+    <div style={{width: 'calc(100% - 96px)', height: '100%', marginLeft: 48, marginRight: 48, marginTop: 80, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
+      <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
+    </div>
 }
