@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ChatAppBar from "../../components/ChatAppBar";
 import Slide from "@material-ui/core/Slide";
-import {popPage, registerDialogOpen, roomId} from "../../App";
+import {gotoPage, popPage, registerDialogOpen, roomId} from "../../App";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
@@ -16,6 +16,7 @@ import { css } from '@emotion/css';
 import {WaveSurferBox} from '../../components/WaveSurfer'
 import Picker from 'emoji-picker-react';
 import { useFilePicker } from 'use-file-picker';
+import { PlayArrowTwoTone } from '@material-ui/icons';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -266,11 +267,18 @@ export default function Chat(props) {
                                                     message.messageType === 'photo' ?
                                                         <img style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
-                                                            <video showControls={true} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
+                                                            <div>
+                                                                <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/>
+                                                            </div> :
                                                             message.text
                                             }
-
-     
+                                            {
+                                                message.messageType === 'video' ?
+                                                    <IconButton onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} style={{width: 64, height: 64, position: 'absolute', left: '50%', top: 'calc(50% - 24px)', transform: 'translate(-50%, -50%)'}}>
+                                                        <PlayArrowTwoTone style={{width: 64, height: 64}}/>
+                                                    </IconButton> :
+                                                    null    
+                                            }
                                         <br/>
                                         <br/>
                                         <div style={{position: 'absolute', right: 12, bottom: 8, fontSize: 12, color: '#fff'}}>{dateTime.toLocaleDateString('fa-IR').toString() + ' ' + dateTime.getHours() + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds()}</div>
@@ -286,7 +294,10 @@ export default function Chat(props) {
                                                     message.messageType === 'photo' ?
                                                         <img style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
-                                                            <video showControls={true} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
+                                                            <div>
+                                                                <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/>
+                                                                <PlayArrowTwoTone style={{zindex: 2000, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
+                                                            </div> :
                                                             message.text
                                             }
                                         <br/>
@@ -307,7 +318,10 @@ export default function Chat(props) {
                                                     message.messageType === 'photo' ?
                                                         <img style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
-                                                            <video showControls={true} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
+                                                            <div>
+                                                                <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/>
+                                                                <PlayArrowTwoTone style={{zindex: 2000, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
+                                                            </div> :
                                                             message.text
                                             }
                                         <br/>
@@ -324,7 +338,10 @@ export default function Chat(props) {
                                                     message.messageType === 'photo' ?
                                                         <img style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
-                                                            <video showControls={true} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
+                                                            <div>
+                                                                <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/>
+                                                                <PlayArrowTwoTone style={{zindex: 2000, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
+                                                            </div> :
                                                             message.text
                                             }
                                         <br/>

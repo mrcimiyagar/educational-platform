@@ -47,12 +47,12 @@ module.exports = {
             port: 5432,
             host: 'localhost'
         };
-        /*try {
+        try {
             await pgTools.dropdb(config, dbName);
         } catch (e) {console.log(e);}
         try {
             await pgTools.createdb(config, dbName);
-        } catch (e) {console.log(e);}*/
+        } catch (e) {console.log(e);}
         prepareSequelizeInstance();
         await prepareUserModel();
         await prepareAccountModel();
@@ -442,7 +442,7 @@ async function prepareSpaceModel() {
             primaryKey: true,
             autoIncrement: true
         },
-        name: Sequelize.STRING,
+        title: Sequelize.STRING,
         mainRoomId: Sequelize.BIGINT
     }, {
         freezeTableName: true
@@ -458,7 +458,7 @@ async function prepareRoomModel() {
             primaryKey: true,
             autoIncrement: true
         },
-        name: Sequelize.STRING,
+        title: Sequelize.STRING,
         spaceId: Sequelize.BIGINT,
         chatType: Sequelize.STRING
     }, {
@@ -483,7 +483,8 @@ async function prepareFileModel() {
         size: Sequelize.BIGINT,
         previewFileId: Sequelize.BIGINT,
         isPreview: Sequelize.BOOLEAN,
-        isPresent: Sequelize.BOOLEAN
+        isPresent: Sequelize.BOOLEAN,
+        fileType: Sequelize.STRING
     }, {
         freezeTableName: true
     });

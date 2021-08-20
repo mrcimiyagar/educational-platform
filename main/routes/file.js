@@ -41,7 +41,8 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                         uploaderId: session.userId,
                         roomId: roomId,
                         isPreview: true,
-                        isPresent: false
+                        isPresent: false,
+                        fileType: 'photo'
                     });
                     let file = await sw.File.create({
                         name: files.file.name,
@@ -51,7 +52,8 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                         roomId: roomId,
                         previewFileId: preview.id,
                         isPreview: false,
-                        isPresent: false
+                        isPresent: false,
+                        fileType: req.body.fileType
                     });
                     let oldPath = files.file.path;
                     let newPath = rootPath + '/files/' + file.id;

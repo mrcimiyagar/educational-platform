@@ -19,6 +19,7 @@ import StartupSound from './sounds/startup.mp3';
 import Auth4 from "./routes/pages/auth4";
 import SearchEngineResults from './routes/pages/searchEngineResults'
 import Profile from './routes/pages/profile'
+import VideoPlayer from './routes/pages/videoPlayer'
 import { serverRoot } from "./util/Utils";
 
 let histPage = null, setHp = null;
@@ -121,7 +122,8 @@ let pages = {
   '/app/messenger': MessengerPage,
   '/app/room': RoomPage,
   '/app/searchengine': SearchEngine,
-  '/app/auth': Auth4
+  '/app/auth': Auth4,
+  '/app/videoplayer': VideoPlayer
 }
 
 let setDialogOpen = null

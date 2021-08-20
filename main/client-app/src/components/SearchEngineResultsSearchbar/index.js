@@ -47,6 +47,9 @@ export default function SearchEngineResultsSearchbar(props) {
         id={'globalSearchInput'}
         className={classes.input}
         placeholder="جستجو در آسمان"
+        onChange={(e) => {
+          props.onQueryChange(e.target.value)
+        }}
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
         <SearchIcon />

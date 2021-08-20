@@ -15,6 +15,6 @@ export function WaveSurferBox(props) {
         frameBorder='0'
         allowTransparency={true}
         src={'http://localhost:1012'}
-        style={{width: '100%', height: '100%'}}/>
+        style={{width: '100%', height: 64}}/>
   )
 }

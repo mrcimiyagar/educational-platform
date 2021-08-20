@@ -222,14 +222,14 @@ router.post('/create_room', jsonParser, async function (req, res) {
                     return;
                 }
                 room = await sw.Room.create({
-                    name: req.body.name,
+                    title: req.body.title,
                     spaceId: req.body.spaceId
                 })
                 roomId = room.id
             }
             else {
                 room = await sw.Room.create({
-                    name: req.body.name,
+                    title: req.body.title,
                     spaceId: req.body.spaceId
                 })
                 roomId = room.id
@@ -237,7 +237,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
         }
         else {
             let space = await sw.Space.create({
-                name: req.body.name,
+                title: req.body.title,
                 mainRoomId: null
             })
             let spaceSecret = await sw.SpaceSecret.create({
@@ -245,7 +245,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
                 spaceId: space.id
             });
             room = await sw.Room.create({
-                name: req.body.name,
+                title: req.body.title,
                 spaceId: space.id
             });
             space.mainRoomId = room.id
@@ -338,7 +338,7 @@ router.post('/update_room', jsonParser, async function (req, res) {
                 return;
             }
             sw.Room.findOne({where: {id: membership.roomId}}).then(async function (room) {
-                room.name = req.body.name;
+                room.title = req.body.title;
                 await room.save();
                 require("../server").pushTo('room_' + membership.roomId, 'room-updated', room);
                 res.send({status: 'success'});
