@@ -16,36 +16,41 @@ import {token, colors} from "../../util/settings";
 import FilesGrid from "../../components/FilesGrid/FilesGrid";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from '@material-ui/icons/Close';
+import { useForceUpdate } from "../../util/Utils";
 
 export let toggleFileBox = undefined;
 
 export let FileBox = (props) => {
+  let forceUpdate = useForceUpdate()
   const [files, setFiles] = React.useState([]);
   let uploadBtn = React.useRef();
   let [filesBoxOpen, setFilesBoxOpen] = React.useState(false);
+  let fetchFiles = () => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'token': token
+      },
+      body: JSON.stringify({
+          roomId: props.roomId
+      }),
+      redirect: 'follow'
+    };
+    fetch("../file/get_files", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+              console.log(JSON.stringify(result));
+              result.files.forEach(fi => {
+                  fi.progress = 100;
+              });
+              setFiles(result.files);
+          })
+          .catch(error => console.log('error', error));
+  }
   toggleFileBox = () => {
     if (!filesBoxOpen) {
-      let requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'token': token
-        },
-        body: JSON.stringify({
-            roomId: props.roomId
-        }),
-        redirect: 'follow'
-      };
-      fetch("../file/get_files", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                console.log(JSON.stringify(result));
-                result.files.forEach(fi => {
-                    fi.progress = 100;
-                });
-                setFiles(result.files);
-            })
-            .catch(error => console.log('error', error));
+      fetchFiles()
     }
     setFilesBoxOpen(!filesBoxOpen);
   }
@@ -61,6 +66,9 @@ export let FileBox = (props) => {
         let percent_completed = (e.loaded * 100 / e.total);
     });
     let f = {progress: 0, name: file.name, size: file.size, local: true};
+    files.push(f)
+    setFiles(files)
+    forceUpdate()
     if (FileReader && files && files.length) {
         let fr = new FileReader();
         fr.onload = function () {

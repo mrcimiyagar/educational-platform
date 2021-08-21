@@ -261,7 +261,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
             roomId: roomId,
             ...tools.adminPermissions
         });
-        if (req.body.participentId !== null) {
+        if (req.body.participentId !== undefined) {
             room.chatType = 'p2p'
             room.save()
             let participent = await sw.User.findOne({where: {id: req.body.participentId}})

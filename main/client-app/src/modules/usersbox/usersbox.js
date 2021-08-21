@@ -198,8 +198,7 @@ export let UsersBox = (props) => {
                 return (
                   <div
                       key={index}
-                      className="d-flex flex-row mb-3 pb-3"
-                      style={{direction: 'rtl', position: 'relative', width: 'calc(100% - 16px)', marginRight: 16}}
+                      style={{direction: 'rtl', position: 'relative', width: 'calc(100% - 16px)', marginRight: 16, display: 'flex'}}
                       onMouseEnter={() => setCurrentHover(index)}
                       onMouseLeave={() => setCurrentHover(-1)}
                   >
@@ -207,35 +206,35 @@ export let UsersBox = (props) => {
                           style={{width: 24, height: 24}}
                           alt={user.firstName + ' ' + user.lastName}
                     />
-                    <div className="pl-3 pr-2" onClick={() => {
-let requestOptions = {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'token': token
-  },
-  body: JSON.stringify({
-    roomId: props.roomId,
-    targetUserId: user.id
-  }),
-  redirect: 'follow'
-};
-fetch(serverRoot + "/room/is_permissions_accessible", requestOptions)
-  .then(response => response.json())
-  .then(result => {
-    console.log(JSON.stringify(result));
-    if (result.status === 'success') {
-      if (result.isAccessible) {
-        // TODO: connect permission panel
-      }
-      else {
-        createNotification("error", "عدم دسترسی", "دسترسی به منبع مورد نظر مجاز نمی باشد")();
-      }
-    }
-  })
-  .catch(error => console.log('error', error));
+                    <div style={{marginRight: 16, marginTop: -2}} onClick={() => {
+                      let requestOptions = {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'token': token
+                        },
+                        body: JSON.stringify({
+                          roomId: props.roomId,
+                          targetUserId: user.id
+                        }),
+                        redirect: 'follow'
+                      };
+                      fetch(serverRoot + "/room/is_permissions_accessible", requestOptions)
+                        .then(response => response.json())
+                        .then(result => {
+                          console.log(JSON.stringify(result));
+                          if (result.status === 'success') {
+                            if (result.isAccessible) {
+                              // TODO: connect permission panel
+                            }
+                            else {
+                              createNotification("error", "عدم دسترسی", "دسترسی به منبع مورد نظر مجاز نمی باشد")();
+                            }
+                          }
+                        })
+                        .catch(error => console.log('error', error));
                     }}>
-                        <p className="font-weight-medium mb-0 " style={{color: colors.textIcons, fontSize: 13, marginTop: 4}}>
+                        <p style={{color: colors.textIcons, fontSize: 13, marginTop: 4}}>
                           {currentHover === index ? user.firstName : (user.firstName + ' ' + user.lastName)}
                         </p>
                     </div>

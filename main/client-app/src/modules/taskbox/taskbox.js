@@ -1,37 +1,84 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
 import './style.css';
-import { taskManagerPath } from "../../util/Utils";
+import { serverRoot, taskManagerPath, useForceUpdate } from "../../util/Utils";
 import Board from 'react-trello'
-import { AppBar, Fab, IconButton, Toolbar, Typography } from "@material-ui/core";
+import { AppBar, Fab, IconButton, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
 import { ArrowForward, Notes, Search, ViewCarousel } from "@material-ui/icons";
 import { gotoPage, popPage } from "../../App";
 import Chat from "@material-ui/icons/Chat";
 import PollIcon from '@material-ui/icons/Poll';
 import Menu from "@material-ui/icons/Menu";
-
-const data = {
-  lanes: [
-    {
-      id: 'lane1',
-      title: 'Planned Tasks',
-      label: '2/2',
-      cards: [
-        {id: 'Card1', title: 'Write Blog', description: 'Can AI make memes', label: '30 mins', draggable: false},
-        {id: 'Card2', title: 'Pay Rent', description: 'Transfer via NEFT', label: '5 mins', metadata: {sha: 'be312a1'}}
-      ]
-    },
-    {
-      id: 'lane2',
-      title: 'Completed',
-      label: '0/0',
-      cards: []
-    }
-  ]
-}
+import { theme, token } from "../../util/settings";
+import Add from "@material-ui/icons/Add";
 
 export let TaskBox = (props) => {
+  let forceUpdate = useForceUpdate()
+  let [data, setData] = React.useState({
+    lanes: [
+      {
+        id: 'lane1',
+        title: 'Planned Tasks',
+        label: '2/2',
+        editLaneTitle: true,
+        canAddLanes: true,
+        editable: true,
+        cards: [
+          {id: '1', title: 'Write Blog', description: 'Can AI make memes', label: '30 mins', draggable: false},
+          {id: '2', title: 'Pay Rent', description: 'Transfer via NEFT', label: '5 mins', metadata: {sha: 'be312a1'}},
+          {id: '3', title: 'Write Blog', description: 'Can AI make memes', label: '30 mins', draggable: false},
+          {id: '4', title: 'Pay Rent', description: 'Transfer via NEFT', label: '5 mins', metadata: {sha: 'be312a1'}},
+        ]
+      }
+    ]
+  })
+  let fetchBoard = () => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      redirect: 'follow'
+    };
+    fetch(serverRoot + "/task/get_board", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.board !== undefined) {
+          result.board.lanes.forEach(lane => {
+            lane.onCardAdd = (card, laneId) => {
+              let requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'token': token
+                },
+                body: JSON.stringify({
+                  title: card.title,
+                  laneId: laneId
+                }),
+                redirect: 'follow'
+              };
+              fetch(serverRoot + "/task/add_card", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                  console.log(JSON.stringify(result));
+                  fetchBoard()
+                })
+                .catch(error => console.log('error', error));
+            }
+          })
+          setData(result.board)
+          forceUpdate()
+        }
+      })
+      .catch(error => console.log('error', error));
+  }
+  useEffect(() => {
+    fetchBoard()
+  }, [])
   return (
-    <div style={{display: props.style.display}}>
+    <div style={{height: 'calc(100% - 64px - 72px)', display: props.style.display}}>
       <AppBar style={{width: '100%', height: 64,
           backgroundColor: 'rgba(21, 96, 233, 0.65)',
           backdropFilter: 'blur(10px)'}}>
@@ -50,10 +97,31 @@ export let TaskBox = (props) => {
           <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
         </Toolbar>
       </AppBar>
-      <Board data={data} style={{marginTop: 64}}/>
+      <Board data={data} style={{backgroundColor: 'transparent', background: 'transparent', marginTop: 64}}/>
       <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16, bottom: 72 + 16}} onClick={() => {
           gotoPage('/app/chat')
       }}><Chat/></Fab>
+      <Fab id="addLaneButton" color={'primary'} size={'medium'} style={{position: 'fixed', left: 20, bottom: 72 + 16 + 56 + 16}} onClick={() => {
+        let laneTitle = prompt('نامی برای لیست انتخاب کنید')
+        let requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'token': token
+          },
+          body: JSON.stringify({
+            title: laneTitle
+          }),
+          redirect: 'follow'
+        };
+        fetch(serverRoot + "/task/add_lane", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            console.log(JSON.stringify(result));
+            fetchBoard()
+          })
+          .catch(error => console.log('error', error));
+      }}><Add/></Fab>
     </div>
   )
 };

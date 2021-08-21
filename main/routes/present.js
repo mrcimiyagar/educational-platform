@@ -17,6 +17,7 @@ let jsonParser = bodyParser.json();
 router.post('/upload_present', jsonParser, async function (req, res) {
     let token = req.query.token;
     let roomId = Number(req.query.roomId);
+    let isPresent = req.query.isPresent
     authenticateMember(req, res, async (membership, session, user) => {
             
             if (!membership.canPresent) {

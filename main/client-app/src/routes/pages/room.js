@@ -34,6 +34,7 @@ import WorldIcon from '../../images/world.png'
 import Settings from "@material-ui/icons/Settings";
 import { UsersBox } from "../../modules/usersbox/usersbox";
 import Jumper from "../../components/SearchEngineFam";
+import { useFilePicker } from "use-file-picker";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -93,8 +94,11 @@ const useStylesAction = makeStyles({
 
 export let membership = undefined
 let setMembership = undefined;
+let pickingFile = false
 
 export default function RoomPage(props) {
+
+  setToken(localStorage.getItem('token'))
 
   document.documentElement.style.overflow = 'auto';
 
@@ -211,32 +215,48 @@ export default function RoomPage(props) {
   }, [])
 
   const [files, setFiles] = React.useState([]);
-  let uploadBtn = React.useRef();
 
-  function onChangeFile(event) {
-    event.stopPropagation();
-    event.preventDefault();
-    let file = event.target.files[0];
-    if (file === undefined) return
+  const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
+      readAs: 'DataURL'
+  });
+
+  useEffect(() => {
+    if (!loading && pickingFile) {
+      pickingFile = false
+    let dataUrl = filesContent[0].content;
+    if (dataUrl === undefined) return
+    fetch(dataUrl)
+      .then(d => d.blob())
+      .then(file => {
     let data = new FormData();
     data.append('file', file);
     let request = new XMLHttpRequest();
-    request.open('POST', serverRoot + `/file/upload_file?token=${token}&roomId=${roomId}`);
+
+    request.open('POST', serverRoot + `/file/upload_file?token=${token}&roomId=${roomId}&extension=${filesContent[0].name.includes('.') ? filesContent[0].name.substr(filesContent[0].name.indexOf('.') + 1) : ''}`);
+    
+    let f = {progress: 0, name: file.name, size: file.size, local: true, src: dataUrl};
+    files.push(f)
+    setFiles(files)
+    forceUpdate()
     request.upload.addEventListener('progress', function(e) {
-        let percent_completed = (e.loaded * 100 / e.total);
+      let percent_completed = (e.loaded * 100 / e.total);
+      f.progress = percent_completed
+      if (percent_completed === 100) {
+        f.local = false;
+      }
+      forceUpdate()
     });
-    let f = {progress: 0, name: file.name, size: file.size, local: true};
     if (FileReader && files && files.length) {
-        let fr = new FileReader();
-        fr.onload = function () {
-            f.src = fr.result;
-        }
-        fr.readAsDataURL(file);
+      let fr = new FileReader();
+      fr.readAsDataURL(file);
     }
     request.send(data);
-  }
+      })
+    }
+  }, [loading])
+
   let openDeck = () => {
-    gotoPage('/app/deck')
+    gotoPage('/app/deck', {room_id: props.room_id})
   }
   let openNotes = () => {
     gotoPage('/app/notes')
@@ -265,10 +285,10 @@ export default function RoomPage(props) {
   return (
       <div style={{width: '100%', height: '100%', position: 'fixed', right: 0, top: 0, backgroundColor: colors.primaryDark}}>
         <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, opacity: opacity, transition: 'opacity .250s'}}> 
-          <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId} style={{display: currentRoomNav === 0 ? 'block' : 'none'}}/>
-          <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 2 ? 'block' : 'none'}}/>
-          <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={roomId}  style={{display: currentRoomNav === 1 ? 'block' : 'none'}}/>
-          <TaskBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 3 ? 'block' : 'none'}}/>
+          <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id} style={{display: currentRoomNav === 0 ? 'block' : 'none'}}/>
+          <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 2 ? 'block' : 'none'}} roomId={props.room_id}/>
+          <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id}  style={{display: currentRoomNav === 1 ? 'block' : 'none'}}/>
+          <TaskBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 3 ? 'block' : 'none'}} roomId={props.room_id}/>
           <div
                         style={{display: currentRoomNav === 4 ? 'block' : 'none', width: '100%', height: '100%', minHeight: '100vh'}}>
                           <AppBar style={{width: '100%', height: 64 + 72, 
@@ -305,31 +325,26 @@ export default function RoomPage(props) {
                             </Tabs>
                           </AppBar>
                           <div style={{height: 'calc(100% - 64px - 72px - 48px)', marginTop: 64 + 48}}>
-                            <input id="myInput"
-                              type="file"
-                              ref={(ref) => uploadBtn = ref}
-                              style={{display: 'none'}}
-                              onChange={onChangeFile}/>
                             <SwipeableViews
                               axis={'x-reverse'}
                               index={fileMode}
                               onChangeIndex={handleChangeIndex}
                             >
                               <div>
-                                <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
+                                <FilesGrid files={files.filter(f => f.fileType === 'photo')} setFiles={setFiles} roomId={props.room_id}/>
                               </div>
                               <div>
-                                <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
+                                <FilesGrid files={files.filter(f => f.fileType === 'audio')} setFiles={setFiles} roomId={props.room_id}/>
                               </div>
                               <div>
-                                <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
+                                <FilesGrid files={files.filter(f => f.fileType === 'video')} setFiles={setFiles} roomId={props.room_id}/>
                               </div>
                               <div>
-                                <FilesGrid files={files} setFiles={setFiles} roomId={roomId}/>
+                                <FilesGrid files={files.filter(f => f.fileType === 'document')} setFiles={setFiles} roomId={props.room_id}/>
                               </div>
                             </SwipeableViews>
                             <ThemeProvider theme={theme}>
-                              <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}} onClick={() => uploadBtn.click()}>
+                              <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}} onClick={() => {pickingFile = true; openFileSelector()}}>
                                 <AddIcon/>
                               </Fab>
                               <Fab color="primary" style={{position: 'fixed', bottom: 72 + 16, left: 16 + 56 + 16}} onClick={() => {
@@ -354,7 +369,7 @@ export default function RoomPage(props) {
           }, 250)
         }} currentRoomNav={currentRoomNav}/>
         <Drawer onClose={() => setMenuOpen(false)} open={menuOpen} anchor={'right'}>
-          <div style={{width: 360, height: '100%', backgroundColor: '#fff', display: 'flex'}}>
+          <div style={{width: 360, height: '100%', backgroundColor: '#fff', display: 'flex', direction: 'rtl'}}>
             <div style={{width: 80, height: '100%', backgroundColor: '#eee'}}>
               <Avatar onClick={() => setMenuMode(0)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16, padding: 8}} src={PeopleIcon}/>
               <Avatar onClick={() => setMenuMode(1)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16 + 64 + 16,  padding: 8}} src={BotIcon}/>

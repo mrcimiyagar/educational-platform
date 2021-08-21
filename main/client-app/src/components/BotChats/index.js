@@ -31,7 +31,7 @@ export default function BotChats(props) {
   return props.chats.length > 0 ?
   <List className={classes.root}>
   {props.chats.map(chat => {
-  let dateTime = new Date(Number(chat.lastMessage.time))
+  let dateTime = chat.lastMessage === undefined ? undefined : new Date(Number(chat.lastMessage.time))
   return (
   <div>
   <ListItem alignItems="flex-start" button onClick={() => {gotoPage('/app/chat', {room_id: chat.id, user_id: chat.participent.id});}}>
@@ -46,7 +46,7 @@ export default function BotChats(props) {
         </Typography>
         {chat.lastMessage === undefined ? null :
         <Typography style={{width: '100%', textAlign: 'left', position: 'absolute', top: 16, fontSize: 12, left: 16, color: '#000'}}>
-            {dateTime.toLocaleDateString('fa-IR').toString() + ' ' + dateTime.getHours() + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds()}
+            {dateTime && (dateTime.toLocaleDateString('fa-IR').toString() + ' ' + dateTime.getHours() + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds())}
         </Typography>}
         </React.Fragment>
       }

@@ -19,11 +19,16 @@ import { reloadBotsBox } from '../../modules/botsbox';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import ExploreIcon from '@material-ui/icons/Explore';
 import StoreMallDirectoryIcon from '@material-ui/icons/StoreMallDirectory';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import { useForceUpdate } from '../../util/Utils';
+
+export let notifyUrlChanged = undefined
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: 380,
     transform: 'translateZ(0px)',
+    position: 'fixed',
     flexGrow: 1,
   }
 }));
@@ -33,13 +38,18 @@ const actions = [
   { icon: <LocationCityIcon />, name: 'شهر' },
   { icon: <ExploreIcon />, name: 'گردش' },
   { icon: <StoreMallDirectoryIcon />, name: 'فروشگاه' },
+  { icon: <AccountBalanceIcon />, name: '+روم' },
 
 ];
 
 export default function Jumper(props) {
   const classes = useStyles();
+  let forceUpdate = useForceUpdate()
   const [open, setOpen] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
+  notifyUrlChanged = () => {
+    forceUpdate()
+  }
 
   const handleOpen = () => {
     setOpen(true);
@@ -59,7 +69,10 @@ export default function Jumper(props) {
   });
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root}
+      style={{
+        bottom: window.location.pathname === '/app/searchengine' ? 0 : 60
+      }}>
       <ThemeProvider theme={theme}>
       <SpeedDial
         ariaLabel=""
@@ -90,6 +103,9 @@ export default function Jumper(props) {
               }
               else if (index === 3) {
                 gotoPageWithDelay('/app/store')
+              }
+              else if (index === 4) {
+                gotoPageWithDelay('/app/createroom')
               }
             }}
           />

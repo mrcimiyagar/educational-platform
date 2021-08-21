@@ -19,6 +19,15 @@ router.post('/get_chats', jsonParser, async function (req, res) {
                             await sw.User.findOne({where: {id: members[1].userId}}) :
                             await sw.User.findOne({where: {id: members[0].userId}})
                     }
+                    else if (room.chatType === 'group') {
+                        room.group = {title: room.title, avatarId: room.avatarId}
+                    }
+                    else if (room.chatType === 'channel') {
+                        room.channel = {title: room.title, avatarId: room.avatarId}
+                    }
+                    else if (room.chatType === 'bot') {
+                        
+                    }
                     let entries = await sw.Message.findAll({
                         raw: true,
                         where: {roomId: room.id},

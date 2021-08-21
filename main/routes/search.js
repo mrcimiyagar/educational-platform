@@ -98,7 +98,14 @@ router.post('/search_messages', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
         let mems = await sw.Membership.findAll({raw: true, where: {userId: session.userId}})
         let rooms = await sw.Room.findAll({raw: true, where: {id: mems.map(mem => mem.roomId)}})
-        let messages = await sw.Message.findAll({raw: true, include: [{ all: true }], where: {roomId: rooms.map(room => room.id), text: {[Op.like]: '%' + req.body.query + '%'}}})
+        let messages = await sw.Message.findAll({
+            raw: true,
+            include: [{ all: true }],
+            where: {
+                roomId: rooms.map(room => room.id), 
+                text: {[Op.like]: '%' + req.body.query + '%'}
+            }
+        })
         res.send({status: 'success', messages: messages});
     });
 });

@@ -37,7 +37,7 @@ let P2pExistance;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
-const dbName = 'MarlikAmoozesh';
+const dbName = 'MarlikAmoozesh'
 
 module.exports = {
     setup: async function() {
@@ -47,12 +47,12 @@ module.exports = {
             port: 5432,
             host: 'localhost'
         };
-        try {
+        /*try {
             await pgTools.dropdb(config, dbName);
         } catch (e) {console.log(e);}
         try {
             await pgTools.createdb(config, dbName);
-        } catch (e) {console.log(e);}
+        } catch (e) {console.log(e);}*/
         prepareSequelizeInstance();
         await prepareUserModel();
         await prepareAccountModel();

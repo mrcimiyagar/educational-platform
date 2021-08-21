@@ -21,6 +21,8 @@ import SearchEngineResults from './routes/pages/searchEngineResults'
 import Profile from './routes/pages/profile'
 import VideoPlayer from './routes/pages/videoPlayer'
 import { serverRoot } from "./util/Utils";
+import CreateRoom from "./routes/pages/createRoom";
+import { notifyUrlChanged } from "./components/SearchEngineFam";
 
 let histPage = null, setHp = null;
 export let drawerOpen = null, setDrawerOpen = null;
@@ -43,6 +45,7 @@ export let gotoPage = (p, params) => {
   }
 
   window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query);
+  if (notifyUrlChanged !== undefined) notifyUrlChanged()
 }
 
 export let gotoPageWithDelay = (p, params) => {
@@ -61,6 +64,7 @@ export let gotoPageWithDelay = (p, params) => {
   }
 
   window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query);
+  if (notifyUrlChanged !== undefined) notifyUrlChanged()
 }
 
 export let popPage = () => {
@@ -80,6 +84,7 @@ export let popPage = () => {
     }
 
     window.history.pushState('', '', series[series.length - 1] + (query.length > 0 ? '?' : '') + query);
+    if (notifyUrlChanged !== undefined) notifyUrlChanged()
   }
 }
 
@@ -114,7 +119,8 @@ let dialogs = {
   '/app/notes': NotePage,
   '/app/deck': DeckPage,
   '/app/searchengineresults': SearchEngineResults,
-  '/app/userprofile': Profile
+  '/app/userprofile': Profile,
+  '/app/createroom': CreateRoom
   
 }
 let pages = {

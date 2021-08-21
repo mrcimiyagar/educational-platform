@@ -53,7 +53,6 @@ export default function Deck(props) {
     };
     let classes = useStyles();
     return (
-        
         <Dialog
             onTouchStart={(e) => {e.stopPropagation();}}
             PaperProps={{
@@ -72,7 +71,7 @@ export default function Deck(props) {
                     </Toolbar>
                 </AppBar>
                 <div style={{width: '100%', height: 'calc(100% - 64px)', marginTop: 64}}>
-                    <PresentBox style={{display: 'block'}} setOpen={setPresentMenuOpen} presentOpen={presentOpen}/>
+                    <PresentBox style={{display: 'block'}} setOpen={setPresentMenuOpen} presentOpen={presentOpen} roomId={props.room_id}/>
                 </div>
             </div>
         </Dialog>

@@ -133,9 +133,11 @@ export default function Chat(props) {
                 let f = {progress: 0, name: file.name, size: file.size, local: true};
                 request.upload.addEventListener('progress', function(e) {
                     let percent_completed = (e.loaded * 100 / e.total);
+                    f.progress = percent_completed
                     if (percent_completed === 100) {
                       f.local = false;
                     }
+                    forceUpdate()
                 });
                 request.onreadystatechange = function() {
                     if (request.readyState == XMLHttpRequest.DONE) {
@@ -147,7 +149,7 @@ export default function Chat(props) {
                             },
                             body: JSON.stringify({
                                 roomId: props.room_id,
-                                messageType: (dataUrl.name.endsWith('.png') || dataUrl.name.endsWith('.jpg') || dataUrl.name.endsWith('.jpeg') || dataUrl.name.endsWith('.gif')) ? 'photo' :
+                                messageType: (dataUrl.name.endsWith('.svg') || dataUrl.name.endsWith('.png') || dataUrl.name.endsWith('.jpg') || dataUrl.name.endsWith('.jpeg') || dataUrl.name.endsWith('.gif')) ? 'photo' :
                                              (dataUrl.name.endsWith('.wav') || dataUrl.name.endsWith('.mp3') || dataUrl.name.endsWith('.mpeg') || dataUrl.name.endsWith('.mp4')) ? 'audio' :
                                              (dataUrl.name.endsWith('.webm') || dataUrl.name.endsWith('.mkv') || dataUrl.name.endsWith('.flv') || dataUrl.name.endsWith('.3gp')) ? 'video' :
                                              undefined,

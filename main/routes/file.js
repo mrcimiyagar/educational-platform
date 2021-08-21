@@ -17,6 +17,8 @@ let jsonParser = bodyParser.json();
 router.post('/upload_file', jsonParser, async function (req, res) {
     let token = req.query.token;
     let roomId = Number(req.query.roomId);
+    let ext = req.query.extension;
+    let isPresent = req.query.isPresent
     authenticateMember(req, res, async (membership, session, user) => {
             
             if (!membership.canUploadFile) {
@@ -28,20 +30,12 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                     if (!fs.existsSync('files')) {
                         fs.mkdirSync('files');
                     }
-                    let ext = '';
-                    let extIndex = files.file.name.lastIndexOf('.');
-                    if (extIndex > 0) {
-                        extIndex++;
-                        if (extIndex < files.file.name.length) {
-                            ext = files.file.name.substring(extIndex);
-                        }
-                    }
                     let preview = await sw.File.create({
                         extension: 'png',
                         uploaderId: session.userId,
                         roomId: roomId,
                         isPreview: true,
-                        isPresent: false,
+                        isPresent: isPresent === true ? true : false,
                         fileType: 'photo'
                     });
                     let file = await sw.File.create({
@@ -52,8 +46,11 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                         roomId: roomId,
                         previewFileId: preview.id,
                         isPreview: false,
-                        isPresent: false,
-                        fileType: req.body.fileType
+                        isPresent: isPresent === true ? true : false,
+                        fileType: (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg') ? 'photo' :
+                                  (ext === 'wav' || ext === 'mpeg' || ext === 'mp4' || ext === 'mp3') ? 'audio' :
+                                  (ext === 'webm' || ext === 'mkv' || ext === 'flv' || ext === '3gp') ? 'video' :
+                                  'document'
                     });
                     let oldPath = files.file.path;
                     let newPath = rootPath + '/files/' + file.id;
@@ -98,12 +95,19 @@ router.post('/upload_file', jsonParser, async function (req, res) {
     });
 });
 
+router.get('/download_file_thumbnail', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user) => {
+        sw.File.findOne({where: {roomId: membership.roomId, id: req.query.fileId}}).then(async file => {
+            res.sendFile(rootPath + '/files/' + file.previewFileId)
+        })
+    })
+})
+
 router.get('/download_file', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
-            
-            sw.File.findOne({where: {roomId: membership.roomId, id: req.query.fileId}}).then(async file => {
-                res.sendFile(rootPath + '/files/' + file.id)
-            })
+        sw.File.findOne({where: {roomId: membership.roomId, id: req.query.fileId}}).then(async file => {
+            res.sendFile(rootPath + '/files/' + file.id)
+        })
     })
 })
 
@@ -166,7 +170,7 @@ router.post('/remove_file', jsonParser, async function (req, res) {
 router.post('/get_files', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
             
-            sw.File.findAll({where: {roomId: membership.roomId, isPreview: false, isPresent: false}}).then(async function (files) {
+            sw.File.findAll({where: {roomId: membership.roomId, isPreview: false, isPresent: req.body.isPresent === true ? true : false}}).then(async function (files) {
                 res.send({status: 'success', files: files});
             });
     });
