@@ -18,20 +18,17 @@ let generateId = () => {
 
 let data = {
     lanes: [
-      {
-        id: 'lane1',
-        title: 'Planned Tasks',
-        label: '2/2',
-        editLaneTitle: true,
-        canAddLanes: true,
-        editable: true,
-        cards: [
-          {id: '1', title: 'Write Blog', description: 'Can AI make memes', label: '30 mins', draggable: false},
-          {id: '2', title: 'Pay Rent', description: 'Transfer via NEFT', label: '5 mins', metadata: {sha: 'be312a1'}},
-          {id: '3', title: 'Write Blog', description: 'Can AI make memes', label: '30 mins', draggable: false},
-          {id: '4', title: 'Pay Rent', description: 'Transfer via NEFT', label: '5 mins', metadata: {sha: 'be312a1'}},
-        ]
-      }
+        {
+          id: 1,
+          title: 'لیست کار ها',
+          label: '0/1',
+          editLaneTitle: true,
+          canAddLanes: true,
+          editable: true,
+          cards: [
+            {id: 1, title: 'نمونه ی کارت', description: 'این یک کارت نمونه است.', label: 'نمونه', draggable: true},
+          ]
+        }
     ]
   }
 

@@ -1,7 +1,7 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
 import './style.css';
 import { serverRoot, taskManagerPath, useForceUpdate } from "../../util/Utils";
-import Board from 'react-trello'
+import Board, { createTranslate } from 'react-trello'
 import { AppBar, Fab, IconButton, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
 import { ArrowForward, Notes, Search, ViewCarousel } from "@material-ui/icons";
 import { gotoPage, popPage } from "../../App";
@@ -11,22 +11,38 @@ import Menu from "@material-ui/icons/Menu";
 import { theme, token } from "../../util/settings";
 import Add from "@material-ui/icons/Add";
 
+let TRANSLATION_TABLE = {
+  "Add another lane": "افزودن لیست",
+  "Click to add card": "افزودن کارت",
+  "Delete lane": "پاک نمودن لیست",
+  "Lane actions": "عملیات لیست",
+  "button": {
+    "Add lane": "افزودن",
+    "Add card": "افزودن",
+    "Cancel": "لغو"
+  },
+  "placeholder": {
+    "title": "عنوان",
+    "description": "توضیحات",
+    "label": "برچسب"
+  }
+}
+
+const customTranslation = createTranslate(TRANSLATION_TABLE)
+
 export let TaskBox = (props) => {
   let forceUpdate = useForceUpdate()
   let [data, setData] = React.useState({
     lanes: [
       {
-        id: 'lane1',
-        title: 'Planned Tasks',
-        label: '2/2',
+        id: 1,
+        title: 'لیست کار ها',
+        label: '0/1',
         editLaneTitle: true,
         canAddLanes: true,
         editable: true,
         cards: [
-          {id: '1', title: 'Write Blog', description: 'Can AI make memes', label: '30 mins', draggable: false},
-          {id: '2', title: 'Pay Rent', description: 'Transfer via NEFT', label: '5 mins', metadata: {sha: 'be312a1'}},
-          {id: '3', title: 'Write Blog', description: 'Can AI make memes', label: '30 mins', draggable: false},
-          {id: '4', title: 'Pay Rent', description: 'Transfer via NEFT', label: '5 mins', metadata: {sha: 'be312a1'}},
+          {id: 1, title: 'نمونه ی کارت', description: 'این یک کارت نمونه است.', label: 'نمونه', draggable: true},
         ]
       }
     ]
@@ -97,12 +113,13 @@ export let TaskBox = (props) => {
           <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
         </Toolbar>
       </AppBar>
-      <Board data={data} style={{backgroundColor: 'transparent', background: 'transparent', marginTop: 64}}/>
+      <Board t={customTranslation} data={data} style={{paddingLeft: 64, paddingRight: 64, backgroundColor: 'transparent', background: 'transparent', marginTop: 64}}/>
       <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16, bottom: 72 + 16}} onClick={() => {
           gotoPage('/app/chat')
       }}><Chat/></Fab>
       <Fab id="addLaneButton" color={'primary'} size={'medium'} style={{position: 'fixed', left: 20, bottom: 72 + 16 + 56 + 16}} onClick={() => {
         let laneTitle = prompt('نامی برای لیست انتخاب کنید')
+        if (laneTitle === null || laneTitle === '') return
         let requestOptions = {
           method: 'POST',
           headers: {
