@@ -1,7 +1,7 @@
 {
-  "name": "marlik-teams",
+  "name": "sky-cloud",
   "version": "1.0.0",
-  "description": "به مارلیک تیمز خوش آمدید",
+  "description": "به ابر آسمان خوش آمدید",
   "private": true,
   "dependencies": {
     "3d-react-carousal": "^4.0.2",
@@ -95,6 +95,7 @@
     "react-treebeard": "^3.2.4",
     "react-trello": "^2.2.11",
     "react-view-pager": "^0.6.0",
+    "react-viewer": "^3.2.2",
     "react-wavesurfer": "^0.8.6",
     "react-wavesurfer.js": "0.0.2",
     "react-yandex-maps": "^3.0.2",

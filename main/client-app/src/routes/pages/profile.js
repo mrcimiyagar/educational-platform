@@ -54,7 +54,7 @@ return (
       <Avatar style={{width: '100%', height: '100%'}} src={ProfileAvatar}/>
     </Card>
     
-    <div style={{position: 'absolute', width: '100%', right: 32, marginTop: -544}}>
+    <div style={{position: 'absolute', width: '100%', right: 32, marginTop: -518}}>
       <div style={{width: '100%'}}>
         <IconButton style={{width: 32, height: 32, position: 'absolute', right: -16}} onClick={handleClose}>
           <ArrowForwardIcon style={{fill: '#fff'}}/>
@@ -71,7 +71,7 @@ return (
           کیهان محمدی
       </div>
     </div>
-    <div style={{position: 'absolute', width: 'auto', height: 40, right: 32, marginTop: 32, marginTop: -456, display: 'flex', flexWrap: 'wrap', direction: 'rtl'}}>
+    <div style={{position: 'absolute', width: 'auto', height: 40, right: 32, marginTop: 32, marginTop: -432, display: 'flex', flexWrap: 'wrap', direction: 'rtl'}}>
       <div style={{color: '#fff', marginLeft: 12, justifyContent: 'center', textAlign: 'center', marginTop: 12, fontSize: 18,
                     background: 'rgba(255, 255, 255, 0.35)', borderRadius: 20, paddingLeft: 8, paddingRight: 8, paddingTop: 4, paddingBottom: 4}}>
          تگ تگ
@@ -138,7 +138,7 @@ return (
         </div>
       </div>
   </div>
-  <div style={{width: 'calc(100% - 64px)', height: 'auto', zIndex: 2, position: 'relative', paddingLeft: 24, paddingRight: 100, direction: 'rtl', marginTop: -88, color: '#fff', alignText: 'right'}}>
+  <div style={{width: 'calc(100% - 32px)', height: 'auto', zIndex: 2, position: 'relative', paddingLeft: 24, direction: 'rtl', marginTop: -88, color: '#fff', alignText: 'right'}}>
   لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.
   لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد. معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.
   </div>

@@ -70,7 +70,7 @@ export default function PollPage(props) {
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
-                <PollBox style={{display: 'block'}} setOpen={setCreatePollOpen} open={createPollOpen}/>
+                <PollBox style={{display: 'block'}} roomId={props.room_id} setOpen={setCreatePollOpen} open={createPollOpen}/>
             </div>
         </Dialog>
     );

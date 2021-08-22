@@ -19,7 +19,6 @@ import MicIcon from '@material-ui/icons/Mic';
 import MicOffIcon from '@material-ui/icons/MicOff';
 
 import 'react-sortable-tree/style.css';
-import { setRoomId, roomId } from '../../App'
 import { VideocamOff } from "@material-ui/icons";
 
 export let reloadUsersList = undefined;
@@ -90,9 +89,10 @@ let createNotification = (type, message, title) => {
 
 let lock = false
 
+let processMessage = undefined
+
 export let UsersBox = (props) => {
     let forceUpdate = useForceUpdate()
-    let [treeData, setTreeData] = React.useState([])
     let [currentHover, setCurrentHover] = React.useState(-1)
     let [video, setVideo] = React.useState({})
     let [audio, setAudio] = React.useState({})
@@ -105,7 +105,7 @@ export let UsersBox = (props) => {
         },
         body: JSON.stringify({
           spaceId: room.spaceId,
-          roomId: roomId
+          roomId: props.roomId
         }),
         redirect: 'follow'
       };
@@ -160,8 +160,8 @@ export let UsersBox = (props) => {
             })
             setUsers(users)
             try {
-              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confvideo.kaspersoft.cloud')
-              window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confaudio.kaspersoft.cloud')
+              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
+              window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
             }
             catch(ex){}
           });
@@ -175,16 +175,21 @@ export let UsersBox = (props) => {
             })
             setUsers(users)
             try {
-              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confvideo.kaspersoft.cloud')
-              window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'https://confaudio.kaspersoft.cloud')
+              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
+              window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
             }
-            catch(ex){}
+            catch(ex){console.log(ex)}
           });
           socket.off('profile_updated');
           socket.on('profile_updated', user => {
             
           });
+          
+          window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
+          window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
+
     }, []);
+
     return (
     <div style={{width: '100%', height: 'calc(100% - 32px)', marginTop: 32}}>
       <div>
@@ -241,13 +246,13 @@ export let UsersBox = (props) => {
                     {props.membership.canEditVideoSound && currentHover === index ?
                       <div style={{marginTop: -12, position: 'absolute', left: 0, display: 'flex', backgroundColor: colors.primary}}>
                         <IconButton onClick={(e) => {
-                          window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchPermission', targetId: user.id, status: !video[user.id]}, 'https://confvideo.kaspersoft.cloud')
+                          window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchPermission', targetId: user.id, status: !video[user.id]}, 'http://localhost:1010')
                           video[user.id] = !video[user.id]
                           setVideo(video)
                           forceUpdate()
                         }}>{video[user.id] ? <VideocamIcon style={{fill: colors.textIcons}}/> : <VideocamOff style={{fill: colors.textIcons}}/>}</IconButton>
                         <IconButton  onClick={(e) => {
-                          window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchPermission', targetId: user.id, status: !audio[user.id]}, 'https://confaudio.kaspersoft.cloud')
+                          window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchPermission', targetId: user.id, status: !audio[user.id]}, 'http://localhost:1011')
                           audio[user.id] = !audio[user.id]
                           setAudio(audio)
                           forceUpdate()

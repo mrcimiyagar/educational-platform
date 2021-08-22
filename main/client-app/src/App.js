@@ -2,7 +2,7 @@ import React, {Component, Fragment, useEffect} from "react";
 import ReactDOM from 'react-dom';
 import {useTheme, useMediaQuery, ThemeProvider, colors, createTheme} from '@material-ui/core';
 import './App.css';
-import { setMe, theme, token } from "./util/settings";
+import { setMe, setToken, theme, token } from "./util/settings";
 import MessengerPage from "./routes/pages/messenger";
 import SearchEngine from "./routes/pages/searchEngine";
 import RoomWallpaper from './images/roomWallpaper.png'
@@ -20,16 +20,17 @@ import Auth4 from "./routes/pages/auth4";
 import SearchEngineResults from './routes/pages/searchEngineResults'
 import Profile from './routes/pages/profile'
 import VideoPlayer from './routes/pages/videoPlayer'
-import { serverRoot } from "./util/Utils";
+import { ConnectToIo, serverRoot, useForceUpdate } from "./util/Utils";
 import CreateRoom from "./routes/pages/createRoom";
 import { notifyUrlChanged } from "./components/SearchEngineFam";
+import RoomsTree from "./routes/pages/roomsTree";
 
 let histPage = null, setHp = null;
-export let drawerOpen = null, setDrawerOpen = null;
 
 export let isDesktop;
 let series = ['/app/messenger'];
 let paramsSeries = [{}];
+let forceUpdate = undefined
 
 export let gotoPage = (p, params) => {
   series.push(p)
@@ -46,6 +47,7 @@ export let gotoPage = (p, params) => {
 
   window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query);
   if (notifyUrlChanged !== undefined) notifyUrlChanged()
+  forceUpdate()
 }
 
 export let gotoPageWithDelay = (p, params) => {
@@ -120,7 +122,8 @@ let dialogs = {
   '/app/deck': DeckPage,
   '/app/searchengineresults': SearchEngineResults,
   '/app/userprofile': Profile,
-  '/app/createroom': CreateRoom
+  '/app/createroom': CreateRoom,
+  '/app/roomstree': RoomsTree
   
 }
 let pages = {
@@ -142,6 +145,11 @@ export let animatePageChange = undefined
 let played = false
 
 export default function MainApp(props) {
+
+  setToken(localStorage.getItem('token'))
+  ConnectToIo(localStorage.getItem('token'))
+
+  forceUpdate = useForceUpdate()
 
   let [opacity, setOpacity] = React.useState(0)
 

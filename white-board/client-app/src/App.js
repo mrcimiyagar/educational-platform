@@ -43,31 +43,36 @@ export default function App() {
     document.body.onmouseup = function() {
       --mouseDown;
     }
-    setup();
-    socket.on('init-board', ({data, state}) => {
-      data.forEach(d => {
-        elems[d.id] = d
+    window.onmessage = (e) => {
+      let userId = e.data.userId
+      let roomId = e.data.roomId
+      setup(userId, roomId);
+      socket.on('init-board', ({data, state}) => {
+        data.forEach(d => {
+          elems[d.id] = d
+        })
+        updateScene(data, state)
       })
-      updateScene(data, state)
-    })
-    socket.on('update-board', ({added, updated, state}) => {
-      let newDataArr = []
-      for (let id in elems) {
-        newDataArr.push(elems[id])
-      }
-      added.forEach(el => {
-        newDataArr.push(el)
-      })
-      updated.forEach(el => {
-        for (let i = 0; i < newDataArr.length; i++) {
-          if (el.id === newDataArr[i].id) {
-            newDataArr[i] = el
-          }
+      socket.on('update-board', ({added, updated, state}) => {
+        let newDataArr = []
+        for (let id in elems) {
+          newDataArr.push(elems[id])
         }
-      });
-      elems = newDataArr
-      updateScene(newDataArr, state)
-    })
+        added.forEach(el => {
+          newDataArr.push(el)
+        })
+        updated.forEach(el => {
+          for (let i = 0; i < newDataArr.length; i++) {
+            if (el.id === newDataArr[i].id) {
+              newDataArr[i] = el
+            }
+          }
+        });
+        elems = newDataArr
+        updateScene(newDataArr, state)
+      })
+      socket.emit('user-entered');
+    }
     const onHashChange = () => {
       const hash = new URLSearchParams(window.location.hash.slice(1));
       const libraryUrl = hash.get("addLibrary");
@@ -76,7 +81,6 @@ export default function App() {
       }
     };
     window.addEventListener("hashchange", onHashChange, false);
-    socket.emit('user-entered');
     return () => {
       window.removeEventListener("hashchange", onHashChange);
     };

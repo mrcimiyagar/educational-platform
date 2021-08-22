@@ -98,8 +98,6 @@ let pickingFile = false
 
 export default function RoomPage(props) {
 
-  setToken(localStorage.getItem('token'))
-
   document.documentElement.style.overflow = 'auto';
 
   let forceUpdate = useForceUpdate()
@@ -259,10 +257,10 @@ export default function RoomPage(props) {
     gotoPage('/app/deck', {room_id: props.room_id})
   }
   let openNotes = () => {
-    gotoPage('/app/notes')
+    gotoPage('/app/notes', {room_id: props.room_id})
   }
   let openPolls = () => {
-    gotoPage('/app/poll')
+    gotoPage('/app/poll', {room_id: props.room_id})
   }
   const handleChange = (event, newValue) => {
     setFileMode(newValue)
@@ -373,9 +371,8 @@ export default function RoomPage(props) {
             <div style={{width: 80, height: '100%', backgroundColor: '#eee'}}>
               <Avatar onClick={() => setMenuMode(0)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16, padding: 8}} src={PeopleIcon}/>
               <Avatar onClick={() => setMenuMode(1)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16 + 64 + 16,  padding: 8}} src={BotIcon}/>
-              <Avatar onClick={() => gotoPage('/app/conf?room_id=1')} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16 + 64 + 16, padding: 8}} src={HomeIcon}/>
-              <Avatar onClick={() => gotoPage('/app/searchengine')} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16, padding: 8}} src={WorldIcon}/>
-              <Avatar onClick={() => gotoPage('/app/roomstree')} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16, padding: 8}} src={RoomIcon}/>
+              <Avatar onClick={() => {window.location.href = '/app/room?room_id=1';}} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16, padding: 8}} src={HomeIcon}/>
+              <Avatar onClick={() => gotoPage('/app/roomstree', {room_id: props.room_id})} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16, padding: 8}} src={RoomIcon}/>
               <div onClick={() => gotoPage('/app/settings')} style={{borderRadius: 32, width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16, padding: 8}}>
                 <Settings style={{fill: '#666', width: 48, height: 48}}/>
               </div>
@@ -383,7 +380,7 @@ export default function RoomPage(props) {
             <div style={{width: 280, height: '100%'}}>
               {
                   menuMode === 0 ?
-                    <UsersBox membership={membership}/> :
+                    <UsersBox membership={membership} roomId={props.room_id}/> :
                     null
               }
             </div>

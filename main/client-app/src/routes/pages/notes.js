@@ -69,7 +69,7 @@ export default function NotePage(props) {
                     </Toolbar>
                 </AppBar>
                 <div style={{width: '100%', height: 'calc(100% - 56px)', position: 'absolute', top: 56}}>
-                    <NoteBox/>
+                    <NoteBox roomId={props.room_id}/>
                 </div>
             </div>
         </Dialog>

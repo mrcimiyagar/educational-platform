@@ -12,12 +12,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HomeSettings() {
+export default function HomeSettings(props) {
   const classes = useStyles()
 
   return (
     <div className={classes.root}>
-        <SettingsList/>
+        <SettingsList setDrawerOpen={props.setDrawerOpen}/>
     </div>
   )
 }

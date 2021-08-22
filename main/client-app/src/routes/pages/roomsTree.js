@@ -1,22 +1,15 @@
 import React, {useEffect} from 'react';
-import ChatAppBar from "../../components/ChatAppBar";
 import Slide from "@material-ui/core/Slide";
-import {gotoPage, popPage, selectedIndex, token} from "../../App";
+import {gotoPage, popPage} from "../../App";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
 import {makeStyles} from "@material-ui/core/styles";
-import ChatWallpaper from '../../images/chat-wallpaper.jpg';
-import DescriptionIcon from '@material-ui/icons/Description';
-import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
-import SendIcon from '@material-ui/icons/Send';
-import { PresentBox } from '../../modules/presentbox/presentbox';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { ArrowForward, Search } from '@material-ui/icons';
-import ViewListIcon from '@material-ui/icons/ViewList';
 import { membership } from './room';
-import { room, roomId } from '../../util/Utils';
 import { RoomTreeBox } from '../../components/RoomTreeBox';
+import { serverRoot } from '../../util/Utils';
+import { setToken, token } from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -48,24 +41,54 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function RoomsTree(props) {
+    setToken(localStorage.getItem('token'))
     const [open, setOpen] = React.useState(true);
+    const [room, setRoom] = React.useState({});
     const handleClose = () => {
         setOpen(false);
-        popPage()
+        setTimeout(popPage, 250)
     };
     let classes = useStyles();
+    useEffect(() => {
+        let requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'token': token
+            },
+            body: JSON.stringify({
+              roomId: props.room_id
+            }),
+            redirect: 'follow'
+        };
+        fetch(serverRoot + "/room/get_room", requestOptions)
+              .then(response => response.json())
+              .then(result => {
+                console.log(JSON.stringify(result))
+                setRoom(result.room)
+              })
+    }, [])
     return (
-        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-            <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
-                <AppBar style={{width: '100%', height: 64, backgroundColor: '#2196f3'}}>
+        <Dialog
+            onTouchStart={(e) => {e.stopPropagation();}}
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                },
+            }}
+            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}
+        >
+            <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0, backdropFilter: 'blur(10px)'}}>
+                <AppBar style={{width: '100%', height: 64, backgroundColor: 'rgba(21, 96, 233, 0.65)'}}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
                         <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>نقشه</Typography>
-                        <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => popPage()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
+                        <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
-                <div style={{width: '100%', height: 'calc(100% - 64px)', marginTop: 64, padding: 16}}>
-                    <RoomTreeBox membership={membership} roomId={roomId} room={room}/>
+                <div style={{width: '100%', height: 'calc(100% - 64px)', paddingTop: 48}}>
+                    <RoomTreeBox membership={membership} room={room}/>
                 </div>
             </div>
         </Dialog>

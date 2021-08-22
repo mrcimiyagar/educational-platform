@@ -183,7 +183,7 @@ const itemData = [
     },
 ];
 
-export default function SpacesGrid() {
+export default function SpacesGrid(props) {
   const classes = useStyles();
 
   let [spaces, setSpaces] = React.useState([])
@@ -211,7 +211,7 @@ export default function SpacesGrid() {
       <div style={{width: '100%', position: 'fixed', height: '100%'}}/>
       <HomeToolbar>
         <div style={{width: '75%', position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}>
-          <SpacesSearchbar/>
+          <SpacesSearchbar setDrawerOpen={props.setDrawerOpen}/>
         </div>
       </HomeToolbar>
       <ImageList style={{zIndex: 2}} rowHeight={188} cols={3} gap={1} className={classes.imageList}>

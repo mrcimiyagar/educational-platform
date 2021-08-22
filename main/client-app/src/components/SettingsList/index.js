@@ -71,7 +71,7 @@ const itemData = [
   },
 ]
 
-export default function SettingsList() {
+export default function SettingsList(props) {
   const classes = useStyles();
   const [state, setState] = React.useState({
     gilad: true,
@@ -87,7 +87,7 @@ export default function SettingsList() {
     <div className={classes.root}>
       <HomeToolbar>
         <div style={{width: '75%', position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}>
-          <SettingsSearchbar/>
+          <SettingsSearchbar setDrawerOpen={props.setDrawerOpen}/>
         </div>
       </HomeToolbar>
       <ImageList style={{zIndex: 2}} rowHeight={224} cols={2} gap={1} className={classes.imageList}>

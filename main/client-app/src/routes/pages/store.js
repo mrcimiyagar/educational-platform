@@ -270,7 +270,9 @@ export default function Store() {
           backgroundColor: 'rgba(21, 96, 233, 0.65)',
           backdropFilter: 'blur(10px)'}}>
           <Toolbar style={{marginTop: 16}}>
-            <StoreSearchbar/>
+            <StoreSearchbar setDrawerOpen={(v) => {
+              
+            }}/>
           </Toolbar>
           <Tabs
             value={value}

@@ -9,7 +9,7 @@ import { setRoomId, roomId } from '../../App'
 import { notesPath, whiteboardPath } from "../../util/Utils";
 
 export let NoteBox = (props) => {
-    let rId = roomId
+    let rId = props.roomId
     while (rId.length < 22) {
       rId = '0' + rId;
     }

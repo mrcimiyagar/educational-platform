@@ -32,21 +32,7 @@ const customTranslation = createTranslate(TRANSLATION_TABLE)
 
 export let TaskBox = (props) => {
   let forceUpdate = useForceUpdate()
-  let [data, setData] = React.useState({
-    lanes: [
-      {
-        id: 1,
-        title: 'لیست کار ها',
-        label: '0/1',
-        editLaneTitle: true,
-        canAddLanes: true,
-        editable: true,
-        cards: [
-          {id: 1, title: 'نمونه ی کارت', description: 'این یک کارت نمونه است.', label: 'نمونه', draggable: true},
-        ]
-      }
-    ]
-  })
+  let [data, setData] = React.useState({lanes: []})
   let fetchBoard = () => {
     let requestOptions = {
       method: 'POST',
@@ -54,6 +40,9 @@ export let TaskBox = (props) => {
         'Content-Type': 'application/json',
         'token': token
       },
+      body: JSON.stringify({
+        roomId: props.roomId
+      }),
       redirect: 'follow'
     };
     fetch(serverRoot + "/task/get_board", requestOptions)
@@ -71,7 +60,8 @@ export let TaskBox = (props) => {
                 },
                 body: JSON.stringify({
                   title: card.title,
-                  laneId: laneId
+                  laneId: laneId,
+                  roomId: props.roomId
                 }),
                 redirect: 'follow'
               };
@@ -127,7 +117,8 @@ export let TaskBox = (props) => {
             'token': token
           },
           body: JSON.stringify({
-            title: laneTitle
+            title: laneTitle,
+            roomId: props.roomId
           }),
           redirect: 'follow'
         };

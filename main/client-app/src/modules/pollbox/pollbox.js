@@ -26,7 +26,7 @@ export function PollBox(props) {
         'token': token
       },
       body: JSON.stringify({
-        roomId: Number(roomId),
+        roomId: Number(props.roomId),
         offset: 0,
         limit: 100
       }),
@@ -97,7 +97,7 @@ export function PollBox(props) {
         'token': token
       },
       body: JSON.stringify({
-        roomId: roomId,
+        roomId: props.roomId,
         pollId: Number(polls[pollIndex].id),
         optionId: Number(polls[pollIndex].options[optionIndex].id)
       }),
@@ -202,7 +202,7 @@ export function PollBox(props) {
                       'token': token
                     },
                     body: JSON.stringify({
-                      roomId: roomId,
+                      roomId: props.roomId,
                       question: pollQuestion,
                       options: pollOptions.map(o => o.caption)
                     }),

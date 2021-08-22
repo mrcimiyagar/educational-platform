@@ -10,15 +10,16 @@ import MessageIcon from '@material-ui/icons/Message';
 import DrawerImage from '../../images/drawer-image.png';
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import {colors} from "../../util/settings";
 import HomeIcon from '@material-ui/icons/Home';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import AccessibilityIcon from '@material-ui/icons/Accessibility';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
-import {drawerOpen, gotoPage, setDrawerOpen} from "../../App";
+import {gotoPage} from "../../App";
 import Language from '@material-ui/icons/Language';
+import { me, token } from '../../util/settings';
+import { serverRoot } from '../../util/Utils';
 
 const useStyles = makeStyles({
     menuList: {
@@ -37,8 +38,8 @@ export default function HomeDrawer(props) {
                 [classes.fullList]: anchor === 'top' || anchor === 'bottom',
             })}
             role="presentation"
-            onClick={() => setDrawerOpen(false)}
-            onKeyDown={() => setDrawerOpen(false)}
+            onClick={() => props.setOpen(false)}
+            onKeyDown={() => props.setOpen(false)}
         >
             <List>
                 {['خانه', 'مخاطبان', 'دوستان', 'فروشگاه', 'گشت و گذار'].map((text, index) => (
@@ -78,16 +79,16 @@ export default function HomeDrawer(props) {
             style={{
                 direction: 'rtl'}}
             anchor={'right'}
-            open={drawerOpen}
-            onClose={() => setDrawerOpen(false)}
-            onOpen={() => setDrawerOpen(true)}
+            open={props.open}
+            onClose={() => props.setOpen(false)}
+            onOpen={() => props.setOpen(true)}
         >
-            <div onClick={() => {setDrawerOpen(false); gotoPage('/app/profile')}}>
+            <div onClick={() => {props.setOpen(false); gotoPage('/app/userprofile', {user_id: me.id});}}>
                 <img alt={'drawer-image'} src={DrawerImage} style={{width: 300, height: 200}}/>
-                <Avatar style={{width: 56, height: 56, marginTop: -72, marginRight: 16}}/>
+                <Avatar style={{width: 56, height: 56, marginTop: -72, marginRight: 16}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${me.id}`}/>
                 <div style={{position: 'relative'}}>
-                    <Typography style={{marginTop: -48, position: 'absolute', right: 84, bottom: 24, color: '#fff'}}>کیهان محمدی</Typography>
-                    <Typography variant={'subtitle2'} style={{position: 'absolute', right: 84, bottom: 0, color: '#fff'}}>TheProgrammerMachine</Typography>
+                    <Typography style={{marginTop: -48, position: 'absolute', right: 84, bottom: 24, color: '#fff'}}>{me.firstName + ' ' + me.lastName}</Typography>
+                    <Typography variant={'subtitle2'} style={{position: 'absolute', right: 84, bottom: 0, color: '#fff'}}>{me.username}</Typography>
                 </div>
             </div>
             <div style={{height: 24}}/>

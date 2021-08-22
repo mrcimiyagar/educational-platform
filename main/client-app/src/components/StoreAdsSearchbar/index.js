@@ -2,12 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import DirectionsIcon from '@material-ui/icons/Directions';
-import { gotoPage, setDrawerOpen } from '../../App';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +33,7 @@ export default function StoreAdsSearchbar(props) {
 
   return (
     <Paper component="form" className={classes.root}>
-      <IconButton onClick={() => setDrawerOpen(true)} className={classes.iconButton} onClick={() => props.handleClose()}>
+      <IconButton onClick={() => props.setDrawerOpen(true)} className={classes.iconButton} onClick={() => props.handleClose()}>
         <ArrowForwardIcon style={{fill: '#fff'}}/>
       </IconButton>
       <InputBase

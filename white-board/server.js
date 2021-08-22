@@ -56,6 +56,6 @@ io.on('connect', (socket) => {
         }
         peers[room_id].data = newDataArr
         peers[room_id].state = state
-        socket.broadcast.emit('update-board', {added: added, updated: updated, state: peers[room_id].state})
+        socket.broadcast.to(room_id).emit('update-board', {added: added, updated: updated, state: peers[room_id].state})
     })
 })

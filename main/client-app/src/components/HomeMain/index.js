@@ -75,6 +75,7 @@ export default function HomeAppbar(props) {
   const [value, setValue] = React.useState(0)
   let currNav = store.getState().global.main.currentMessengerNav
   let [chats, setChats] = React.useState([])
+  let [drawerOpen, setDrawerOpen] = React.useState(false)
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -110,7 +111,7 @@ export default function HomeAppbar(props) {
             <HomeToolbar>
         <AppBar style={{backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
           <Toolbar style={{marginTop: 16}}>
-            <HomeSearchbar/>
+            <HomeSearchbar setDrawerOpen={setDrawerOpen}/>
           </Toolbar>
           <Tabs
             variant="fullWidth"
@@ -147,15 +148,15 @@ export default function HomeAppbar(props) {
         ) :
         currNav === 1 ?
           (
-            <SpacesGrid/>
+            <SpacesGrid setDrawerOpen={setDrawerOpen}/>
           ) :
           currNav === 2 ?
             (
-              <HomeNotifs/>
+              <HomeNotifs setDrawerOpen={setDrawerOpen}/>
             ) :
             currNav === 3 ?
               (
-                <HomeSettings/>
+                <HomeSettings setDrawerOpen={setDrawerOpen}/>
               )
         :
         null
@@ -164,7 +165,7 @@ export default function HomeAppbar(props) {
         <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
       </div>
       <HomeBottombar/>
-      <HomeDrawer/>
+      <HomeDrawer open={drawerOpen} setOpen={setDrawerOpen}/>
     </div>
   )
 }

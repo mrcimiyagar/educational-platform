@@ -17,6 +17,7 @@ import {WaveSurferBox} from '../../components/WaveSurfer'
 import Picker from 'emoji-picker-react';
 import { useFilePicker } from 'use-file-picker';
 import { PlayArrowTwoTone } from '@material-ui/icons';
+import Viewer from 'react-viewer';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -56,7 +57,8 @@ export default function Chat(props) {
 
     let forceUpdate = useForceUpdate()
     let [messages, setMessages] = React.useState([])
-    let [title, setTitle] = React.useState('')
+    let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false)
+    let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('')
     let [user, setUser] = React.useState({})
     const [open, setOpen] = React.useState(true)
     const [showEmojiPad, setShowEmojiPad] = React.useState(false)
@@ -195,6 +197,13 @@ export default function Chat(props) {
             }}
             fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
             <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
+                <Viewer
+                    zIndex={99999}
+                    style={{position: 'fixed', left: 0, top: 0}}
+                    visible={photoViewerVisible}
+                    onClose={() => {setPhotoViewerVisible(false);}}
+                    images={[{src: currentPhotoSrc, alt: ''}]}
+                />
                 <ChatAppBar closeCallback={handleClose} user={user}/>
                 <div style={{position: 'fixed', bottom: 0, height: 'auto', zIndex: 1000}}>
                     <div className={classes.root} style={{height: 40, bottom: showEmojiPad ? 300 : 0}}>
@@ -267,7 +276,7 @@ export default function Chat(props) {
                                                 message.messageType === 'audio' ?
                                                     <WaveSurferBox fileId={message.fileId} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                     message.messageType === 'photo' ?
-                                                        <img style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
+                                                        <img onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
                                                             <div>
                                                                 <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/>
@@ -294,13 +303,19 @@ export default function Chat(props) {
                                                 message.messageType === 'audio' ?
                                                     <WaveSurferBox fileId={message.fileId} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                     message.messageType === 'photo' ?
-                                                        <img style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
+                                                        <img onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
                                                             <div>
                                                                 <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/>
-                                                                <PlayArrowTwoTone style={{zindex: 2000, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
                                                             </div> :
                                                             message.text
+                                            }
+                                            {
+                                                message.messageType === 'video' ?
+                                                    <IconButton onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} style={{width: 64, height: 64, position: 'absolute', left: '50%', top: 'calc(50% - 24px)', transform: 'translate(-50%, -50%)'}}>
+                                                        <PlayArrowTwoTone style={{width: 64, height: 64}}/>
+                                                    </IconButton> :
+                                                    null    
                                             }
                                         <br/>
                                         <br/>
@@ -318,13 +333,19 @@ export default function Chat(props) {
                                                 message.messageType === 'audio' ?
                                                     <WaveSurferBox fileId={message.fileId} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                     message.messageType === 'photo' ?
-                                                        <img style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
+                                                        <img onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
                                                             <div>
                                                                 <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/>
-                                                                <PlayArrowTwoTone style={{zindex: 2000, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
                                                             </div> :
                                                             message.text
+                                            }
+                                            {
+                                                message.messageType === 'video' ?
+                                                    <IconButton onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} style={{width: 64, height: 64, position: 'absolute', left: '50%', top: 'calc(50% - 24px)', transform: 'translate(-50%, -50%)'}}>
+                                                        <PlayArrowTwoTone style={{width: 64, height: 64}}/>
+                                                    </IconButton> :
+                                                    null    
                                             }
                                         <br/>
                                         <br/>
@@ -338,13 +359,19 @@ export default function Chat(props) {
                                                 message.messageType === 'audio' ?
                                                     <WaveSurferBox fileId={message.fileId} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                     message.messageType === 'photo' ?
-                                                        <img style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
+                                                        <img onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
                                                             <div>
                                                                 <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/>
-                                                                <PlayArrowTwoTone style={{zindex: 2000, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
                                                             </div> :
                                                             message.text
+                                            }
+                                            {
+                                                message.messageType === 'video' ?
+                                                    <IconButton onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`})}} style={{width: 64, height: 64, position: 'absolute', left: '50%', top: 'calc(50% - 24px)', transform: 'translate(-50%, -50%)'}}>
+                                                        <PlayArrowTwoTone style={{width: 64, height: 64}}/>
+                                                    </IconButton> :
+                                                    null    
                                             }
                                         <br/>
                                         <br/>

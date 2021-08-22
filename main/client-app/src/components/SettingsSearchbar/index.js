@@ -7,7 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
-import { setDrawerOpen } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,12 +31,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SettingsSearchbar() {
+export default function SettingsSearchbar(props) {
   const classes = useStyles();
 
   return (
     <Paper component="form" className={classes.root}>
-      <IconButton onClick={() => setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
+      <IconButton onClick={() => props.setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
         <MenuIcon style={{fill: '#fff'}}/>
       </IconButton>
       <InputBase

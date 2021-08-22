@@ -8,7 +8,7 @@ import { AppBar, Button, createTheme, Fab, IconButton, ThemeProvider, Toolbar, T
 import { ArrowForward, Mic, MicOff, Notes, Speaker, VideocamOff, VolumeOff, VolumeUp } from "@material-ui/icons";
 import PauseIcon from '@material-ui/icons/Pause';
 import CallEndIcon from '@material-ui/icons/CallEnd';
-import { pink } from "@material-ui/core/colors";
+import { green, pink } from "@material-ui/core/colors";
 import Search from "@material-ui/icons/Search";
 import SettingsIcon from '@material-ui/icons/Settings';
 import {gotoPage, popPage} from '../../App';
@@ -16,24 +16,30 @@ import Chat from "@material-ui/icons/Chat";
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
 import PollIcon from '@material-ui/icons/Poll';
 import Menu from "@material-ui/icons/Menu";
+import CallIcon from '@material-ui/icons/Call';
 
 export let updateConfBox = undefined
 
 export let ConfBox = (props) => {
     let forceUpdate = useForceUpdate()
     updateConfBox = forceUpdate
+    let [video, setVideo] = React.useState(false)
+    let [audio, setAudio] = React.useState(false)
+    let [connected, setConnected] = React.useState(false)
     useEffect(() => {
       window.addEventListener('message', e => {
         if (e.data.action === 'switchVideoControlVisibility') {
           if (!e.data.visibility)
             store.dispatch(switchConf('video', false))
           store.dispatch(switchConf('isVideoEnable', e.data.visibility))
+          setVideo(e.data.visibility)
           forceUpdate()
         }
         else if (e.data.action === 'switchAudioControlVisibility') {
           if (!e.data.visibility)
             store.dispatch(switchConf('audio', false))
           store.dispatch(switchConf('isAudioEnable', e.data.visibility))
+          setAudio(e.data.visibility)
           forceUpdate()
         }
       })
@@ -46,8 +52,17 @@ export let ConfBox = (props) => {
         secondary: pink
       },
     });
+    let [uniqueKey, setUniqueKey] = React.useState(Math.random())
+    const theme2 = createTheme({
+      palette: {
+        primary: {
+          main: '#2196f3',
+        },
+        secondary: green
+      },
+    });
     return (
-      <div style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr', display: props.style.display}}>
+      <div key={uniqueKey} style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr', display: props.style.display}}>
         
         <AppBar style={{width: '100%', height: 64,
           backgroundColor: 'rgba(21, 96, 233, 0.65)',
@@ -68,39 +83,56 @@ export let ConfBox = (props) => {
           </Toolbar>
         </AppBar>
         
-        <iframe allowTransparency={true} onLoad={() => window.frames['conf-video-frame'].postMessage({sender: 'main', userId: me.id}, 'http://localhost:1010')} 
+        {connected ?
+          <div style={{width: '100%', height: '100%'}}>
+           <iframe allowTransparency={true} onLoad={() => window.frames['conf-video-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId}, 'http://localhost:1010')} 
             id ={'conf-video-frame'} name="conf-video-frame" src={'http://localhost:1010/video.html'} allow={'microphone; camera'}
             style={{width: '100%', height: '100%', marginTop: 64}} frameBorder="0"></iframe>
         
-        <iframe allowTransparency={true} onLoad={() => window.frames['conf-audio-frame'].postMessage({sender: 'main', userId: me.id}, 'http://localhost:1011')} 
+          <iframe allowTransparency={true} onLoad={() => window.frames['conf-audio-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId}, 'http://localhost:1011')} 
             id ={'conf-audio-frame'} name="conf-audio-frame" src={'http://localhost:1011/audio.html'} allow={'microphone; camera'}
             style={{width: 400, height: 128, position: 'absolute', bottom: 32, display: 'none'}} frameBorder="0"></iframe>
 
-        <div style={{position: 'fixed', bottom: 72, left: 0, width: 'auto', height: 'auto'}}>
-          <ThemeProvider theme={theme}>
-            <Fab id="messagesButton" color={'primary'} style={{position: 'absolute', left: 16, bottom: 16 + 56 + 16 + 56 + 16}} onClick={() => {
-              gotoPage('/app/chat')
-            }}><Chat/></Fab>
-            <Fab id="audioButton" color={'primary'} style={{position: 'absolute', left: 16, bottom: 16 + 56 + 16}} onClick={() => {
-              window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.audio}, 'http://localhost:1011')
-              store.dispatch(switchConf('audio', !store.getState().global.conf.audio))
-              forceUpdate()
-            }}>{store.getState().global.conf.audio ? <Mic/> : <MicOff/>}</Fab>
-            <Fab id="camButton" color={'secondary'} style={{position: 'absolute', left: 16, bottom: 16}} onClick={() => {
-              
-            }}><CallEndIcon/></Fab>
-            <Fab id="camButton" color={'primary'} style={{position: 'absolute', left: 16 + 56 + 16, bottom: 16}} onClick={() => {
-              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.video}, 'http://localhost:1010')
-              store.dispatch(switchConf('video', !store.getState().global.conf.video))
-              forceUpdate()
-            }}>{store.getState().global.conf.video ? <VideocamIcon/> : <VideocamOff/>}</Fab>
-            <Fab id="settingsButton" color={'primary'} style={{position: 'absolute', left: 16 + 56 + 16 + 56 + 16, bottom: 16}} onClick={() => {
-              gotoPage('/app/chat')
-            }}><SettingsIcon/></Fab>
-          </ThemeProvider>
-        </div>
-        
-
+          <div style={{position: 'fixed', bottom: 72, left: 0, width: 'auto', height: 'auto'}}>
+            <ThemeProvider theme={theme}>
+              <Fab id="messagesButton" color={'primary'} style={{position: 'absolute', left: 16, bottom: audio ? (16 + 56 + 16 + 56 + 16) : (16 + 56 + 16)}} onClick={() => {
+                gotoPage('/app/chat')
+              }}><Chat/></Fab>
+              {audio ? 
+                <Fab id="audioButton" color={'primary'} style={{position: 'absolute', left: 16, bottom: 16 + 56 + 16}} onClick={() => {
+                  window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.audio}, 'http://localhost:1011')
+                  store.dispatch(switchConf('audio', !store.getState().global.conf.audio))
+                  forceUpdate()
+                }}>{store.getState().global.conf.audio ? <Mic/> : <MicOff/>}</Fab> :
+                null
+              }
+              <Fab id="endCallButton" color={'secondary'} style={{position: 'absolute', left: 16, bottom: 16}} onClick={() => {
+                store.dispatch(switchConf('video', false))
+                store.dispatch(switchConf('audio', false))
+                setConnected(false)
+                setUniqueKey(Math.random())
+                forceUpdate()
+              }}><CallEndIcon/></Fab>
+              {video ?
+                <Fab id="camButton" color={'primary'} style={{position: 'absolute', left: 16 + 56 + 16, bottom: 16}} onClick={() => {
+                  window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.video}, 'http://localhost:1010')
+                  store.dispatch(switchConf('video', !store.getState().global.conf.video))
+                  forceUpdate()
+                }}>{store.getState().global.conf.video ? <VideocamIcon/> : <VideocamOff/>}</Fab> :
+                null
+              }
+              <Fab id="settingsButton" color={'primary'} style={{position: 'absolute', left: video ? (16 + 56 + 16 + 56 + 16) : (16 + 56 + 16), bottom: 16}} onClick={() => {
+                
+              }}><SettingsIcon/></Fab>
+            </ThemeProvider>
+          </div> 
+        </div>:
+        <ThemeProvider theme={theme2}>
+          <Fab id="callButton" color={'secondary'} style={{position: 'absolute', left: 16, bottom: 16 + 72}} onClick={() => {
+            setConnected(true)
+          }}><CallIcon style={{fill: '#fff'}}/></Fab>
+        </ThemeProvider>
+          }
       </div>
     );
 };

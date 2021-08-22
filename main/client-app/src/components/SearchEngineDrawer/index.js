@@ -6,21 +6,11 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MessageIcon from '@material-ui/icons/Message';
-import DrawerImage from '../../images/drawer-image.png';
 import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
-import {colors} from "../../util/settings";
 import HomeIcon from '@material-ui/icons/Home';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import AccessibilityIcon from '@material-ui/icons/Accessibility';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import SettingsIcon from '@material-ui/icons/Settings';
-import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
-import {drawerOpen, gotoPage, setDrawerOpen} from "../../App";
+import {gotoPage} from "../../App";
 import SearchEngineIcon from '../../images/world.png'
 import { Audiotrack, Photo, Settings } from '@material-ui/icons';
-import Videocam from '@material-ui/icons/Videocam';
 
 const useStyles = makeStyles({
     menuList: {
@@ -39,8 +29,8 @@ export default function SearchEngineDrawer(props) {
                 [classes.fullList]: anchor === 'top' || anchor === 'bottom',
             })}
             role="presentation"
-            onClick={() => setDrawerOpen(false)}
-            onKeyDown={() => setDrawerOpen(false)}
+            onClick={() => props.setOpen(false)}
+            onKeyDown={() => props.setOpen(false)}
         >
             <List>
                 {['جستجو با متن', 'جستجو با عکس', 'تنظیمات جستجو'].map((text, index) => (

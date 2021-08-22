@@ -64,7 +64,7 @@
                   },
                   body: JSON.stringify({
                     roomId: props.roomId,
-                    presentId: presents[i].id,
+                    presentId: presents.id,
                     pageNumber: pageNumber
                   }),
                   redirect: 'follow'
@@ -168,8 +168,8 @@
                           });
                           result.files.reverse();
                           result.presents.reverse();
-                          setFiles(result.files);
-                          setPresents(result.presents);
+                          setFiles(result.files.reverse());
+                          setPresents(result.presents.reverse());
                     })
                     .catch(error => console.log('error', error));
               }, []);

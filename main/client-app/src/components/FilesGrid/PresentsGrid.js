@@ -17,9 +17,9 @@ export default function PresentsGrid(props) {
         console.log(f);
         console.log(p);
         f.progress = 100;
-        props.files.push(f);
+        props.files.unshift(f);
         props.setFiles(props.files);
-        props.presents.push(p);
+        props.presents.unshift(p);
         props.setPresents(props.presents);
         forceUpdate();
     });

@@ -16,37 +16,27 @@ let generateId = () => {
     return idCounter
 }
 
-let data = {
-    lanes: [
-        {
-          id: 1,
-          title: 'لیست کار ها',
-          label: '0/1',
-          editLaneTitle: true,
-          canAddLanes: true,
-          editable: true,
-          cards: [
-            {id: 1, title: 'نمونه ی کارت', description: 'این یک کارت نمونه است.', label: 'نمونه', draggable: true},
-          ]
-        }
-    ]
-  }
+let data = {}
 
 router.post('/add_lane', jsonParser, async function (req, res) {
-    let result = {id: generateId(), title: req.body.title, label: '0/0', cards: [],
+    let result = {
+        id: generateId(), 
+        title: req.body.title, 
+        label: '0/0', 
+        cards: [],
         editLaneTitle: true,
         canAddLanes: true,
         editable: true
     }
-    data.lanes.push(result)
+    data[req.body.roomId].content.lanes.push(result)
     res.send({status: 'success', lane: result})
 });
 
 router.post('/add_card', jsonParser, async function (req, res) {
     let result = {id: generateId(), title: req.body.title, description: '0/0', label: '5 mins', draggable: true}
-    for (let i = 0; i < data.lanes.length; i++) {
-        if (data.lanes[i].id === req.body.laneId) {
-            data.lanes[i].cards.push(result)
+    for (let i = 0; i < data[req.body.roomId].content.lanes.length; i++) {
+        if (data[req.body.roomId].content.lanes[i].id === req.body.laneId) {
+            data[req.body.roomId].content.lanes[i].cards.push(result)
             break
         }
     }
@@ -54,7 +44,27 @@ router.post('/add_card', jsonParser, async function (req, res) {
 });
 
 router.post('/get_board', jsonParser, async function (req, res) {
-    res.send({status: 'success', board: data})
+    if (data[req.body.roomId] === undefined) {
+        data[req.body.roomId] = {
+            roomId: req.body.roomId,
+            content: {
+                lanes: [
+                    {
+                        id: 1,
+                        title: 'لیست کار ها',
+                        label: '0/1',
+                        editLaneTitle: true,
+                        canAddLanes: true,
+                        editable: true,
+                        cards: [
+                            {id: 1, title: 'نمونه ی کارت', description: 'این یک کارت نمونه است.', label: 'نمونه', draggable: true},
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+    res.send({status: 'success', board: data[req.body.roomId].content})
 });
 
 module.exports = router;

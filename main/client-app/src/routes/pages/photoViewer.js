@@ -1,7 +1,6 @@
 import { AppBar, Dialog, IconButton, Slide, Toolbar, Typography } from '@material-ui/core';
 import ArrowForwardTwoTone from '@material-ui/icons/ArrowForwardTwoTone';
 import React from 'react'
-import ImageGallery from 'react-image-gallery'
 import "react-image-gallery/styles/css/image-gallery.css"
 import { token, myDocs, popPage, selectedDoc } from '../../App';
 import { PhotoProvider, PhotoConsumer } from 'react-photo-view';

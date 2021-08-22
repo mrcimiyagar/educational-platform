@@ -13,6 +13,7 @@ import Chat from "@material-ui/icons/Chat";
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
 import PollIcon from '@material-ui/icons/Poll';
 import Menu from "@material-ui/icons/Menu";
+import { me } from "../../util/settings";
 
 export let BoardBox = (props) => {
     let roomId = props.roomId + '';
@@ -41,9 +42,10 @@ export let BoardBox = (props) => {
               </Toolbar>
             </AppBar>
             
-            <iframe allowTransparency={true} name="board-frame" src={whiteboardPath + '/#room=91bd46ae3aa84dff9d20,' + roomId}
-            style={{width: '100%', height: 'calc(100% - 64px)', position: 'absolute', left: 0, top: 64, bottom: 0, right: 0}} frameBorder="0"></iframe>
-            {(props.membership !== undefined && props.membership !== null && props.membership.canUseWhiteboard) ?  
+            <iframe allowTransparency={true} name="board-frame" src={'http://localhost:1000'}
+              onLoad={() => window.frames['board-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId}, 'http://localhost:1000')}
+              style={{width: '100%', height: 'calc(100% - 64px)', position: 'absolute', left: 0, top: 64, bottom: 0, right: 0}} frameBorder="0"></iframe>
+              {(props.membership !== undefined && props.membership !== null && props.membership.canUseWhiteboard) ?  
                 null : 
                 <div style={{zIndex: 3000, width: '100%', height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>
             }
