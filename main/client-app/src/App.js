@@ -152,6 +152,11 @@ export default function MainApp(props) {
   forceUpdate = useForceUpdate()
 
   let [opacity, setOpacity] = React.useState(0)
+  let [resizeTrigger, setResizeTrigger] = React.useState(Math.random())
+
+  window.onresize = () => {
+    setResizeTrigger(Math.random())
+  }
 
   animatePageChange = () => {
     setOpacity(0)
@@ -246,6 +251,7 @@ export default function MainApp(props) {
 
   return (
     <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
+      <DesktopDetector key={resizeTrigger}/>
       <div style={{width: '100%', height: '100%', opacity: opacity, transition: 'opacity .125s', direction: 'rtl'}}>
         <ThemeProvider theme={theme}>
           {P !== undefined ? <P {...params}/> : null}

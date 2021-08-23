@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import Slide from "@material-ui/core/Slide";
-import {gotoPage, popPage} from "../../App";
+import {gotoPage, popPage, registerDialogOpen} from "../../App";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import {makeStyles} from "@material-ui/core/styles";
@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 export default function RoomsTree(props) {
     setToken(localStorage.getItem('token'))
     const [open, setOpen] = React.useState(true);
+    registerDialogOpen(setOpen)
     const [room, setRoom] = React.useState({});
     const handleClose = () => {
         setOpen(false);
@@ -68,6 +69,7 @@ export default function RoomsTree(props) {
                 setRoom(result.room)
               })
     }, [])
+    document.documentElement.style.overflow = 'hidden'
     return (
         <Dialog
             onTouchStart={(e) => {e.stopPropagation();}}
@@ -87,8 +89,13 @@ export default function RoomsTree(props) {
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
-                <div style={{width: '100%', height: 'calc(100% - 64px)', paddingTop: 48}}>
-                    <RoomTreeBox membership={membership} room={room}/>
+                <div style={{width: '100%', height: 'calc(100% - 64px)', display: 'flex', position: 'relative', marginTop: 64}}>
+                    <div style={{width: 450, position: 'absolute', left: 0, top: 0, height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)'}}>
+                        <RoomTreeBox membership={membership} room={room}/>
+                    </div>
+                    <div style={{width: 'calc(100% - 450px)', position: 'absolute', left: 450, top: 0, height: 'calc(100% - 48px)'}}>
+
+                    </div>
                 </div>
             </div>
         </Dialog>

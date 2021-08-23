@@ -280,7 +280,118 @@ export default function RoomPage(props) {
       secondary: pink
     },
   });
-  return (
+  if (isDesktop) {
+    return (
+      <div style={{width: '100%', height: '100%', position: 'fixed', right: 0, top: 0, backgroundColor: colors.primaryDark}}>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, opacity: opacity, transition: 'opacity .250s'}}> 
+          <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id} style={{display: currentRoomNav === 0 ? 'block' : 'none'}}/>
+          <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 2 ? 'block' : 'none'}} roomId={props.room_id}/>
+          <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id}  style={{display: currentRoomNav === 1 ? 'block' : 'none'}}/>
+          <TaskBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 3 ? 'block' : 'none'}} roomId={props.room_id}/>
+          <div
+                        style={{display: currentRoomNav === 4 ? 'block' : 'none', width: '100%', height: '100%', minHeight: '100vh'}}>
+                          <AppBar style={{width: '100%', height: 64 + 72, 
+                            backgroundColor: 'rgba(21, 96, 233, 0.65)',
+                            backdropFilter: 'blur(10px)'
+                          }}>
+                            <Toolbar style={{width: '100%', justifyContent: 'center', textAlign: 'center'}}>
+                              <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
+                              <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
+                                openDeck()
+                              }}><ViewCarouselIcon style={{fill: '#fff'}}/></IconButton>
+                              <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16}} onClick={() => {
+                                openNotes()
+                              }}><NotesIcon style={{fill: '#fff'}}/></IconButton>
+                              <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16 + 32 + 16}} onClick={() => {
+                                openPolls()
+                              }}><PollIcon style={{fill: '#fff'}}/></IconButton>
+                              <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>فایل ها</Typography>
+                              <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
+                            </Toolbar>
+                            <Tabs
+                              variant="fullWidth"
+                              value={fileMode}
+                              onChange={handleChange}
+                              classes={{
+                                indicator: classes.indicator
+                              }}
+                              style={{marginTop: 8}}
+                            >
+                              <Tab icon={<PhotoIcon />} label="عکس ها" />
+                              <Tab icon={<AudiotrackIcon />} label="صدا ها" />
+                              <Tab icon={<PlayCircleFilledIcon />} label="ویدئو ها" />
+                              <Tab icon={<InsertDriveFileIcon />} label="سند ها" />
+                            </Tabs>
+                          </AppBar>
+                          <div style={{height: 'calc(100% - 64px - 72px - 48px)', marginTop: 64 + 48}}>
+                            <SwipeableViews
+                              axis={'x-reverse'}
+                              index={fileMode}
+                              onChangeIndex={handleChangeIndex}
+                            >
+                              <div>
+                                <FilesGrid files={files.filter(f => f.fileType === 'photo')} setFiles={setFiles} roomId={props.room_id}/>
+                              </div>
+                              <div>
+                                <FilesGrid files={files.filter(f => f.fileType === 'audio')} setFiles={setFiles} roomId={props.room_id}/>
+                              </div>
+                              <div>
+                                <FilesGrid files={files.filter(f => f.fileType === 'video')} setFiles={setFiles} roomId={props.room_id}/>
+                              </div>
+                              <div>
+                                <FilesGrid files={files.filter(f => f.fileType === 'document')} setFiles={setFiles} roomId={props.room_id}/>
+                              </div>
+                            </SwipeableViews>
+                            <ThemeProvider theme={theme}>
+                              <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}} onClick={() => {pickingFile = true; openFileSelector()}}>
+                                <AddIcon/>
+                              </Fab>
+                              <Fab color="primary" style={{position: 'fixed', bottom: 72 + 16, left: 16 + 56 + 16}} onClick={() => {
+                                  gotoPage('/app/chat')
+                                }}>
+                                <Chat/>
+                              </Fab>
+                            </ThemeProvider>
+                          </div>
+              </div>
+        </div>
+        <div style={{position: 'fixed', right: 16, bottom: 4, zIndex: 99999}}>
+          <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
+        </div>
+        <RoomBottombar setCurrentRoomNavBackup={(v) => {currentRoomNavBackup = v;}} setCurrentRoomNav={(i) => {
+          setOpacity(0)
+          setTimeout(() => {
+            setCurrentRoomNav(i);
+            setTimeout(() => {
+              setOpacity(1)
+            }, 250)
+          }, 250)
+        }} currentRoomNav={currentRoomNav}/>
+        <Drawer onClose={() => setMenuOpen(false)} open={menuOpen} anchor={'right'}>
+          <div style={{width: 360, height: '100%', backgroundColor: '#fff', display: 'flex', direction: 'rtl'}}>
+            <div style={{width: 80, height: '100%', backgroundColor: '#eee'}}>
+              <Avatar onClick={() => setMenuMode(0)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16, padding: 8}} src={PeopleIcon}/>
+              <Avatar onClick={() => setMenuMode(1)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16 + 64 + 16,  padding: 8}} src={BotIcon}/>
+              <Avatar onClick={() => {setMenuOpen(false); window.location.href = '/app/room?room_id=1';}} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16, padding: 8}} src={HomeIcon}/>
+              <Avatar onClick={() => {setMenuOpen(false); gotoPage('/app/roomstree', {room_id: props.room_id})}} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16, padding: 8}} src={RoomIcon}/>
+              <div onClick={() => {setMenuOpen(false); gotoPage('/app/settings')}} style={{borderRadius: 32, width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16, padding: 8}}>
+                <Settings style={{fill: '#666', width: 48, height: 48}}/>
+              </div>
+            </div>
+            <div style={{width: 280, height: '100%'}}>
+              {
+                  menuMode === 0 ?
+                    <UsersBox membership={membership} roomId={props.room_id}/> :
+                    null
+              }
+            </div>
+          </div>
+        </Drawer>
+      </div>
+    )
+  }
+  else {
+    return (
       <div style={{width: '100%', height: '100%', position: 'fixed', right: 0, top: 0, backgroundColor: colors.primaryDark}}>
         <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, opacity: opacity, transition: 'opacity .250s'}}> 
           <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id} style={{display: currentRoomNav === 0 ? 'block' : 'none'}}/>
@@ -388,4 +499,5 @@ export default function RoomPage(props) {
         </Drawer>
       </div>
     )
+  }
 }

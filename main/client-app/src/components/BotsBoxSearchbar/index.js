@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
-import { popPage, setDrawerOpen } from '../../App';
+import { isDesktop, popPage, setDrawerOpen } from '../../App';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import Menu from '@material-ui/icons/Menu';
 import { propTypes } from 'react-polls';
@@ -20,8 +20,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
+    ...(isDesktop && {maxWidth: 450}),
     backgroundColor: 'rgba(255, 255, 255, 0.65)',
-    backdropFilter: 'blur(10px)'
+    backdropFilter: 'blur(10px)',
+    ...(isDesktop && {marginRight: 'calc(50% - 225px)'}),
   },
   input: {
     marginLeft: theme.spacing(1),

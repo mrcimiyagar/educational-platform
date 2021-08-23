@@ -163,7 +163,7 @@ export let UsersBox = (props) => {
               window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
               window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
             }
-            catch(ex){}
+            catch(ex){console.log(ex)}
           });
           socket.off('user-exited');
           socket.on('user-exited', ({rooms, users}) => {
@@ -185,9 +185,11 @@ export let UsersBox = (props) => {
             
           });
           
-          window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
-          window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
-
+          try {
+            window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
+            window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
+          }
+          catch(ex){console.log(ex)}
     }, []);
 
     return (
