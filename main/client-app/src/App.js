@@ -24,6 +24,7 @@ import { ConnectToIo, serverRoot, useForceUpdate } from "./util/Utils";
 import CreateRoom from "./routes/pages/createRoom";
 import { notifyUrlChanged } from "./components/SearchEngineFam";
 import RoomsTree from "./routes/pages/roomsTree";
+import AudioPlayer from "./routes/pages/audioPlayer";
 
 let histPage = null, setHp = null;
 
@@ -123,7 +124,8 @@ let dialogs = {
   '/app/searchengineresults': SearchEngineResults,
   '/app/userprofile': Profile,
   '/app/createroom': CreateRoom,
-  '/app/roomstree': RoomsTree
+  '/app/roomstree': RoomsTree,
+  '/app/audioplayer': AudioPlayer
   
 }
 let pages = {

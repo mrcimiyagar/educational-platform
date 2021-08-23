@@ -344,16 +344,16 @@ export default function RoomPage(props) {
                               onChangeIndex={handleChangeIndex}
                             >
                               <div>
-                                <FilesGrid files={files.filter(f => f.fileType === 'photo')} setFiles={setFiles} roomId={props.room_id}/>
+                                <FilesGrid fileType={'photo'} files={files.filter(f => f.fileType === 'photo')} setFiles={setFiles} roomId={props.room_id}/>
                               </div>
                               <div>
-                                <FilesGrid files={files.filter(f => f.fileType === 'audio')} setFiles={setFiles} roomId={props.room_id}/>
+                                <FilesGrid fileType={'audio'} files={files.filter(f => f.fileType === 'audio')} setFiles={setFiles} roomId={props.room_id}/>
                               </div>
                               <div>
-                                <FilesGrid files={files.filter(f => f.fileType === 'video')} setFiles={setFiles} roomId={props.room_id}/>
+                                <FilesGrid fileType={'video'} files={files.filter(f => f.fileType === 'video')} setFiles={setFiles} roomId={props.room_id}/>
                               </div>
                               <div>
-                                <FilesGrid files={files.filter(f => f.fileType === 'document')} setFiles={setFiles} roomId={props.room_id}/>
+                                <FilesGrid fileType={'document'} files={files.filter(f => f.fileType === 'document')} setFiles={setFiles} roomId={props.room_id}/>
                               </div>
                             </SwipeableViews>
                             <ThemeProvider theme={theme}>
@@ -453,18 +453,18 @@ export default function RoomPage(props) {
                               index={fileMode}
                               onChangeIndex={handleChangeIndex}
                             >
-                              <div>
-                                <FilesGrid files={files.filter(f => f.fileType === 'photo')} setFiles={setFiles} roomId={props.room_id}/>
-                              </div>
-                              <div>
-                                <FilesGrid files={files.filter(f => f.fileType === 'audio')} setFiles={setFiles} roomId={props.room_id}/>
-                              </div>
-                              <div>
-                                <FilesGrid files={files.filter(f => f.fileType === 'video')} setFiles={setFiles} roomId={props.room_id}/>
-                              </div>
-                              <div>
-                                <FilesGrid files={files.filter(f => f.fileType === 'document')} setFiles={setFiles} roomId={props.room_id}/>
-                              </div>
+                            <div>
+                              <FilesGrid fileType={'photo'} files={files.filter(f => f.fileType === 'photo')} setFiles={setFiles} roomId={props.room_id}/>
+                            </div>
+                            <div>
+                              <FilesGrid fileType={'audio'} files={files.filter(f => f.fileType === 'audio')} setFiles={setFiles} roomId={props.room_id}/>
+                            </div>
+                            <div>
+                              <FilesGrid fileType={'video'} files={files.filter(f => f.fileType === 'video')} setFiles={setFiles} roomId={props.room_id}/>
+                            </div>
+                            <div>
+                              <FilesGrid fileType={'document'} files={files.filter(f => f.fileType === 'document')} setFiles={setFiles} roomId={props.room_id}/>
+                            </div>
                             </SwipeableViews>
                             <ThemeProvider theme={theme}>
                               <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}} onClick={() => {pickingFile = true; openFileSelector()}}>
