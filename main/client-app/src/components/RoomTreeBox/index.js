@@ -7,15 +7,15 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-table/react-table.css";
 
-import {colors, token} from "../../util/settings";
+import {colors, me, token} from "../../util/settings";
 import {ConnectToIo, serverRoot, socket, useForceUpdate} from "../../util/Utils";
 import { NotificationManager } from "../../components/ReactNotifications";
 
 import SortableTree from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
-import { Fab, Menu, MenuItem } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, FormControlLabel, Menu, MenuItem, Radio, RadioGroup } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add'
-import { gotoPage, gotoPageWithDelay } from "../../App";
+import { gotoPage, gotoPageWithDelay, isDesktop } from "../../App";
 
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -195,6 +195,92 @@ StyledTreeItem.propTypes = {
   labelText: PropTypes.string.isRequired,
 };
 
+let selectedRoomId = 0
+
+function ConfirmationDialogRaw(props) {
+  const { onClose, open, ...other } = props
+  const radioGroupRef = React.useRef(null)
+
+  const handleEntering = () => {
+    if (radioGroupRef.current != null) {
+      radioGroupRef.current.focus();
+    }
+  };
+
+  const handleCancel = () => {
+    onClose();
+  };
+
+  const handleOk = () => {
+    onClose(props.value);
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify({
+        spaceId: props.spaceId,
+        userId: selectedUserId,
+        toRoomId: selectedRoomId
+      }),
+      redirect: 'follow'
+    };
+    fetch(serverRoot + "/room/move_user", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          console.log(JSON.stringify(result));
+          if (selectedUserId === me.id) {
+            window.location.href = '/app/room?room_id=' + selectedRoomId
+          }
+        })
+        .catch(error => console.log('error', error));
+  };
+
+  const handleChange = (event) => {
+    props.setValue(event.target.value);
+  };
+
+  return (
+    <Dialog
+      maxWidth="xs"
+      onEntering={handleEntering}
+      fullScreen={props.fullscreen}
+      open={open}
+      {...other}
+    >
+      <DialogTitle id="confirmation-dialog-title">انتقال کاربر</DialogTitle>
+      <DialogContent dividers>
+        <RadioGroup
+          ref={radioGroupRef}
+          aria-label="ringtone"
+          name="ringtone"
+          value={props.value}
+          onChange={handleChange}
+        >
+          {props.rooms.map((room) => (
+            <FormControlLabel value={room.id} key={'room-' + room.id} control={<Radio />} label={room.title} onClick={() => {selectedRoomId = room.id}}/>
+          ))}
+        </RadioGroup>
+      </DialogContent>
+      <DialogActions>
+        <Button autoFocus onClick={handleCancel} color="primary">
+          لغو
+        </Button>
+        <Button onClick={handleOk} color="primary">
+          انتقال
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+ConfirmationDialogRaw.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  value: PropTypes.string.isRequired,
+};
+
 const useStyles = makeStyles({
   root: {
     height: 264,
@@ -202,6 +288,8 @@ const useStyles = makeStyles({
     maxWidth: 400,
   },
 });
+
+let selectedUserId = 0
 
 export let RoomTreeBox = (props) => {
   
@@ -273,8 +361,55 @@ export let RoomTreeBox = (props) => {
     const handleClose = () => {
       setAnchorEl(null);
     }
-    
-    return (<div style={{width: '100%', height: '100%', marginTop: 16}}>
+
+    const [open, setOpen] = React.useState(false);
+    const [value, setValue] = React.useState(0);
+    const handleClickListItem = () => {
+      setOpen(true);
+    };
+  
+    const handleCloseOfDialog = (newValue) => {
+      setOpen(false);
+  
+      if (newValue) {
+        setValue(newValue);
+      }
+    };
+
+    const sendUserToRoom = () => {
+      for (let i = 0; i < treeData.length; i++) {
+        let children = treeData[i].children
+        let found = false
+        for (let j = 0; j < children.length; j++) {
+          if (children[j].id === selectedUserId) {
+            setValue(treeData[i].id)
+            alert(treeData[i].title)
+            handleClickListItem()
+            found = true
+            break
+          }
+        }
+        if (found) break
+      }
+    }
+
+    return (
+    <div style={{width: '100%', height: '100%', marginTop: 16}}>
+      
+      <ConfirmationDialogRaw
+          classes={{
+            paper: classes.paper,
+          }}
+          spaceId={props.room.spaceId}
+          rooms={treeData}
+          keepMounted
+          open={open}
+          onClose={handleCloseOfDialog}
+          value={value}
+          setValue={setValue}
+          fullscreen={!isDesktop}
+      />
+
       <div>
         <div style={{height: '100%'}}>
         <Menu
@@ -284,9 +419,7 @@ export let RoomTreeBox = (props) => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+          <MenuItem onClick={() => {sendUserToRoom(); handleClose()}}>ارسال به روم دیگر</MenuItem>
         </Menu>
               <TreeView
       className={classes.root}
@@ -305,7 +438,7 @@ export let RoomTreeBox = (props) => {
                 room.children.map(user => {
                   return (
                     <StyledTreeItem
-                      onContextMenu={handleClick}
+                      onContextMenu={(e) => {selectedUserId = user.id; handleClick(e)}}
                       nodeId={'user-' + user.id}
                       labelText={user.title}
                       labelIcon={PersonIcon}
@@ -319,6 +452,7 @@ export let RoomTreeBox = (props) => {
           )
         })
       }
+      <div style={{width: '100%', height: 56}}/>
     </TreeView>
 
 
@@ -387,26 +521,7 @@ export let RoomTreeBox = (props) => {
                   })}
                   onMoveNode={({td, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex}) => {
                     if (node.head !== true && nextParentNode.head === true) {
-                      let requestOptions = {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'token': token
-                        },
-                        body: JSON.stringify({
-                          spaceId: props.room.spaceId,
-                          userId: node.id,
-                          toRoomId: nextParentNode.id
-                        }),
-                        redirect: 'follow'
-                      };
-                      fetch(serverRoot + "/room/move_user", requestOptions)
-                          .then(response => response.json())
-                          .then(result => {
-                            console.log(JSON.stringify(result));
-                            reloadUsersList()
-                          })
-                          .catch(error => console.log('error', error));
+                      
                       }
                       else {
                         reloadUsersList()
@@ -417,36 +532,5 @@ export let RoomTreeBox = (props) => {
                   }} treeData={treeData}/>
               </div>
       </div>
-          <Fab color={'secondary'} style={{position: 'fixed', left: 450 - 56 - 16, bottom: 24}}
-            onClick={() => {
-              let roomTitle = prompt('نام روم را وارد نمایید')
-              if (roomTitle === null || roomTitle === '') {
-                return;
-              }
-              let requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'token': token
-                },
-                body: JSON.stringify({
-                  title: roomTitle,
-                  details: '',
-                  spaceId: props.room.spaceId
-                }),
-                redirect: 'follow'
-              };
-              fetch(serverRoot + "/room/create_room", requestOptions)
-                  .then(response => response.json())
-                  .then(result => {
-                    console.log(JSON.stringify(result));
-                    if (result.status === 'success') {
-                      reloadUsersList()
-                    }
-                  })
-                  .catch(error => console.log('error', error));
-            }}>
-              <AddIcon/>
-          </Fab>
     </div>);
 }

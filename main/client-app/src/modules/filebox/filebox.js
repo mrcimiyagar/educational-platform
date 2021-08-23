@@ -25,6 +25,9 @@ export let FileBox = (props) => {
   const [files, setFiles] = React.useState([]);
   let uploadBtn = React.useRef();
   let [filesBoxOpen, setFilesBoxOpen] = React.useState(false);
+  const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
+    readAs: 'DataURL'
+  });
   let fetchFiles = () => {
     let requestOptions = {
       method: 'POST',
@@ -90,7 +93,7 @@ export let FileBox = (props) => {
           <ModalHeader toggle={toggleFileBox} close={<Button style={{border: 'none', background: 'transparent'}} onClick={toggleFileBox}><CloseIcon style={{fill: colors.textIcons}}/></Button>}>
             <span><p style={{color: colors.textIcons}}>فایل ها</p></span>
             <Button outline color="primary" className="mb-2" style={{color: colors.textIcons, border: '1px solid ' + colors.textIcons, paddingTop: 0, paddingBottom: 0, paddingLeft: 4, paddingRight: 4, 
-              textAlign: 'center', width: 40, fontSize: 12, height: 32, marginRight: 16}} onClick={() => uploadBtn.click()}>
+              textAlign: 'center', width: 40, fontSize: 12, height: 32, marginRight: 16}} onClick={() => openFileSelector()}>
               <AddIcon/>
             </Button>
           </ModalHeader>

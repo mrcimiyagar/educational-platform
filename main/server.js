@@ -52,6 +52,13 @@ models.setup().then(() => {
             }
         ];
 
+        app.use(function (req, res, next) {
+            console.log('\u001b[' + 32 + 'm' + '..............................................................' + '\u001b[0m')
+            console.log('\u001b[' + 32 + 'm' + req.method + ' ' + req.path + '\u001b[0m')
+            console.log('\u001b[' + 32 + 'm' + '..............................................................' + '\u001b[0m')
+            next()
+        })
+
         app.use('/present', present);
         app.use('/auth', auth);
         app.use('/room', room);

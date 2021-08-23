@@ -230,9 +230,23 @@ export default function RoomPage(props) {
     data.append('file', file);
     let request = new XMLHttpRequest();
 
-    request.open('POST', serverRoot + `/file/upload_file?token=${token}&roomId=${roomId}&extension=${filesContent[0].name.includes('.') ? filesContent[0].name.substr(filesContent[0].name.indexOf('.') + 1) : ''}`);
+    let ext = filesContent[0].name.includes('.') ? filesContent[0].name.substr(filesContent[0].name.indexOf('.') + 1) : ''
+    let fileType = (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg') ? 'photo' :
+      (ext === 'wav' || ext === 'mpeg' || ext === 'mp4' || ext === 'mp3') ? 'audio' :
+      (ext === 'webm' || ext === 'mkv' || ext === 'flv' || ext === '3gp') ? 'video' :
+      'document'
     
-    let f = {progress: 0, name: file.name, size: file.size, local: true, src: dataUrl};
+    let f = {progress: 0, name: file.name, size: file.size, local: true, src: dataUrl, fileType: fileType};
+
+    request.onreadystatechange = function() {
+      if (request.readyState == XMLHttpRequest.DONE) {
+        loadFiles()
+      }
+    }
+
+    request.open('POST', serverRoot + `/file/upload_file?token=${token}&roomId=${roomId}&extension=${ext}`);
+    
+
     files.push(f)
     setFiles(files)
     forceUpdate()
@@ -482,9 +496,9 @@ export default function RoomPage(props) {
             <div style={{width: 80, height: '100%', backgroundColor: '#eee'}}>
               <Avatar onClick={() => setMenuMode(0)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16, padding: 8}} src={PeopleIcon}/>
               <Avatar onClick={() => setMenuMode(1)} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, top: 16 + 64 + 16,  padding: 8}} src={BotIcon}/>
-              <Avatar onClick={() => {window.location.href = '/app/room?room_id=1';}} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16, padding: 8}} src={HomeIcon}/>
-              <Avatar onClick={() => gotoPage('/app/roomstree', {room_id: props.room_id})} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16, padding: 8}} src={RoomIcon}/>
-              <div onClick={() => gotoPage('/app/settings')} style={{borderRadius: 32, width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16, padding: 8}}>
+              <Avatar onClick={() => {setMenuOpen(false); window.location.href = '/app/room?room_id=1';}} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16 + 64 + 16, padding: 8}} src={HomeIcon}/>
+              <Avatar onClick={() => {setMenuOpen(false); gotoPage('/app/roomstree', {room_id: props.room_id})}} style={{width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16 + 64 + 16, padding: 8}} src={RoomIcon}/>
+              <div onClick={() => {setMenuOpen(false); gotoPage('/app/settings')}} style={{borderRadius: 32, width: 64, height: 64, backgroundColor: '#fff', position: 'absolute', right: 8, bottom: 16, padding: 8}}>
                 <Settings style={{fill: '#666', width: 48, height: 48}}/>
               </div>
             </div>
