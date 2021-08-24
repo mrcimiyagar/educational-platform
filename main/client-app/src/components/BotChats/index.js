@@ -7,7 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import { gotoPage, roomId } from '../../App';
+import { gotoPage, isDesktop, roomId } from '../../App';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 import EmptyIcon from '../../images/empty.png'
@@ -64,7 +64,7 @@ export default function BotChats(props) {
   </div>)
   })}
 </List> :
-<div style={{width: 'calc(100% - 96px)', height: '100%', marginLeft: 48, marginRight: 48, marginTop: 80, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-  <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
-</div>
+    <div style={{width: 250, height: 250, position: isDesktop ? undefined : 'absolute', top: isDesktop ? undefined : 80, right: isDesktop ? undefined : 'calc(50% - 225px)', marginRight: isDesktop ? 'calc(50% - 125px)' : undefined, marginTop: isDesktop ? 80 : undefined, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
+      <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
+    </div>
 }

@@ -12,9 +12,10 @@ import VideocamIcon from '@material-ui/icons/Videocam';
 import CallIcon from '@material-ui/icons/Call';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Avatar from "@material-ui/core/Avatar";
-import { gotoPage } from '../../App';
+import { gotoPage, isDesktop } from '../../App';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
+import { ArrowForward } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -63,17 +64,15 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="fixed" style={{paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.5)', backdropFilter: 'blur(10px)'}}>
-                <Toolbar>
-                    <IconButton
-                        edge="start"
-                        className={classes.menuButton}
-                        color="inherit"
-                        onClick={() => props.closeCallback()}
-                    >
-                        <ArrowBackIcon style={{transform: 'rotate(180deg)'}}/>
-                    </IconButton>
-                    <Avatar style={{width: 28, height: 28, marginRight: 8}} alt="Profile Picture" src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${props.user.id}`}  onClick={() => {gotoPage('/app/userprofile', {user_id: props.user.id});}}/>
+            <AppBar position="fixed" style={{width: isDesktop ? 'calc(100% - 658px - 96px)' : '100%', borderRadius: isDesktop ? 32 : 0, position: isDesktop ? 'fixed' : undefined, top: isDesktop ? 48 : 0, left: isDesktop ? 96 : 0, paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
+                <Toolbar style={{height: '100%', marginTop: isDesktop ? -8 : 0}}>
+                    {!isDesktop ? 
+                        <IconButton style={{marginRight: -16}} onClick={() => props.handleClose() }>
+                            <ArrowForward style={{fill: '#fff'}}/>
+                        </IconButton> :
+                        null
+                    }
+                    <Avatar style={{width: 28, height: 28, marginRight: isDesktop ? 8 : -8}} alt="Profile Picture" src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${props.user.id}`}  onClick={() => {gotoPage('/app/userprofile', {user_id: props.user.id});}}/>
                     <Typography variant="h6" style={{fontFamily: 'mainFont', marginRight: 8}}>
                         {props.user.firstName + ' ' + props.user.lastName}
                     </Typography>

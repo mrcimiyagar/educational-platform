@@ -29,6 +29,8 @@ import GroupChats from '../GroupChats';
 import ChannelChats from '../ChannelChats';
 import BotChats from '../BotChats';
 import { token } from '../../util/settings';
+import { isDesktop } from '../../App';
+import ChatEmbedded from '../../components/ChatEmbedded'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -59,6 +61,8 @@ TabPanel.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    width: isDesktop ? 600 : '100%',
+    maxWidth: isDesktop ? 600 : '100%',
   },
   indicator: {
     backgroundColor: 'white',
@@ -109,7 +113,7 @@ export default function HomeAppbar(props) {
         (
           <div style={{background: 'transparent'}}>
             <HomeToolbar>
-        <AppBar style={{backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
+        <AppBar style={{width: isDesktop ? 625 : '100%', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
           <Toolbar style={{marginTop: 16}}>
             <HomeSearchbar setDrawerOpen={setDrawerOpen}/>
           </Toolbar>
@@ -129,22 +133,31 @@ export default function HomeAppbar(props) {
           </Tabs>
         </AppBar>
       </HomeToolbar>
-        <TabPanel value={value} index={0} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
+      <div style={{position: 'absolute', width: 630, height: isDesktop ? 'calc(100vh - 128px)' : 'calc(100vh - 128px - 56px)', backgroundColor: isDesktop ? 'rgba(255, 255, 255, 0.45)' : undefined, backdropFilter:  isDesktop ? 'blur(10px)' : undefined, marginLeft: -8, marginRight: -8, marginTop: 88}}>
+        <TabPanel value={value} index={0} style={{width: '100%', height: 'auto', borderRadius: 16}}>
             <AllChats chats={chats.filter(c => c.chatType === 'p2p')}/>
         </TabPanel>
-        <TabPanel value={value} index={1} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
+        <TabPanel value={value} index={1} style={{width: '100%', height: 'auto', borderRadius: 16}}>
             <GroupChats chats={chats.filter(c => c.chatType === 'group')}/>
         </TabPanel>
-        <TabPanel value={value} index={2} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
+        <TabPanel value={value} index={2} style={{width: '100%', height: 'auto', borderRadius: 16}}>
             <ChannelChats chats={chats.filter(c => c.chatType === 'channel')}/>
         </TabPanel>
-        <TabPanel value={value} index={3} style={{height: 'auto', marginLeft: -8, marginRight: -8, marginTop: 88, borderRadius: 16}}>
+        <TabPanel value={value} index={3} style={{width: '100%', height: 'auto', borderRadius: 16}}>
             <BotChats chats={chats.filter(c => c.chatType === 'bot')}/>
         </TabPanel>
-      <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}}>
+      </div>
+      {
+        isDesktop ?
+          <div style={{width: 'calc(100% - 625px)', height: '100%', position: 'fixed', left: 0, top: 0}}>
+            <ChatEmbedded/>  
+          </div>:
+          null
+      }
+      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop ? 16 : 72 + 16, left: isDesktop ? undefined : 16, right: isDesktop ? (568 - 16) : undefined}}>
         <EditIcon />
       </Fab>
-          </div>
+    </div>
         ) :
         currNav === 1 ?
           (

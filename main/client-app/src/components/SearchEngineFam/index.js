@@ -14,7 +14,7 @@ import { Home } from '@material-ui/icons';
 import Chat from '@material-ui/icons/Chat';
 import NavigationIcon from '@material-ui/icons/Navigation';
 import { pink } from '@material-ui/core/colors';
-import { animatePageChange, gotoPage, gotoPageWithDelay } from '../../App';
+import { animatePageChange, gotoPage, gotoPageWithDelay, isDesktop } from '../../App';
 import { reloadBotsBox } from '../../modules/botsbox';
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import ExploreIcon from '@material-ui/icons/Explore';
@@ -71,7 +71,9 @@ export default function Jumper(props) {
   return (
     <div className={classes.root}
       style={{
-        bottom: window.location.pathname === '/app/searchengine' ? 0 : 60
+        bottom: window.location.pathname === '/app/searchengine' ? 0 :
+                (window.location.pathname === '/app/messenger' && isDesktop) ? -12 :
+                60
       }}>
       <ThemeProvider theme={theme}>
       <SpeedDial

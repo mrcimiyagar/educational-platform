@@ -79,29 +79,63 @@ export default function RoomsTree(props) {
                 onTouchStart={(e) => {e.stopPropagation();}}
                 PaperProps={{
                     style: {
-                        backgroundColor: 'transparent',
-                        boxShadow: 'none',
+                        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                        boxShadow: 'none'
+                    },
+                }}
+                BackdropProps={{
+                    classes: {
+                        root: classes.backDrop
                     },
                 }}
                 fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}
             >
-                <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
-                    <AppBar style={{width: '100%', height: 64, backgroundColor: 'rgba(21, 96, 233, 0.65)'}}>
-                        <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
-                            <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                            <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>نقشه</Typography>
-                            <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
-                        </Toolbar>
-                    </AppBar>
-                    <div style={{width: '100%', height: 'calc(100% - 64px)', display: 'flex', position: 'relative', marginTop: 64}}>
-                        <div style={{width: 450, position: 'absolute', left: 0, top: 0, height: '100%', backgroundColor: 'rgba(255, 255, 255, 0.5)'}}>
-                            <RoomTreeBox membership={membership} room={room}/>
-                        </div>
-                        <div style={{width: 'calc(100% - 450px)', position: 'absolute', left: 450, top: 0, height: 'calc(100% - 48px)'}}>
-    
-                        </div>
+                <AppBar position={'fixed'} style={{position: 'fixed', width: '100%', height: 64, backgroundColor: 'rgba(21, 96, 233, 0.65)'}}>
+                    <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
+                        <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
+                        <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>نقشه</Typography>
+                        <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
+                    </Toolbar>
+                </AppBar>
+                <div style={{width: "100%", height: "100%"}}>
+                    <div style={{width: 450, position: 'absolute', left: 0, top: 64, height: '100%'}}>
+                        <RoomTreeBox membership={membership} room={room}/>
                     </div>
-                </div>
+                    <div style={{width: 'calc(100% - 450px)', position: 'absolute', left: 450, top: 0, height: 'calc(100% - 48px)'}}>
+                        
+                    </div>
+                </div> 
+                <Fab color={'secondary'} style={{position: 'fixed', left: isDesktop ? (450 - 56 - 16) : undefined, right: isDesktop ? undefined : 16, bottom: 24}}
+            onClick={() => {
+              let roomTitle = prompt('نام روم را وارد نمایید')
+              if (roomTitle === null || roomTitle === '') {
+                return;
+              }
+              let requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'token': token
+                },
+                body: JSON.stringify({
+                  title: roomTitle,
+                  details: '',
+                  spaceId: room.spaceId
+                }),
+                redirect: 'follow'
+              };
+              fetch(serverRoot + "/room/create_room", requestOptions)
+                  .then(response => response.json())
+                  .then(result => {
+                    console.log(JSON.stringify(result));
+                    if (result.status === 'success') {
+                      reloadUsersList()
+                    }
+                  })
+                  .catch(error => console.log('error', error));
+            }}>
+              <Add/>
+          </Fab>
             </Dialog>
         );
     }

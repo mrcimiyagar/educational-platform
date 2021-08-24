@@ -6,6 +6,7 @@
 
   <script src="https://unpkg.com/wavesurfer.js"></script>
   <script src="/jsmediatags.min.js"></script>
+  <script src="https://kit.fontawesome.com/5774b788f3.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
@@ -37,13 +38,18 @@
     <div style="position: absolute; top: calc(64px + 256px + 48px); left: 32px; right: 32px;">
         <div id='waveform' />
     </div>
-    <div style='display: flex; flex-wrap: nowrap; position: absolute; top: 112px; left: calc(50% - 108px);'>
+    <div style='display: flex; flex-wrap: nowrap; position: absolute; top: 112px; left: calc(50% - 180px);'>
+        <button id='shuffleButton' onclick="toggleShuffle()" class="btn"><i class="fas fa-random" id="shuffleSign"></i></button>
         <button id='backwardButton' onclick="backward()" class="btn"><i class="fa fa-backward"></i></button>
         <button id='playPauseButton' onclick="wavesurferToggle()" class="btn"><i id='playPauseContent' class="fa fa-play"></i></button>
         <button id='forwardButton' onclick="forward()" class="btn"><i class="fa fa-forward"></i></button>
+        <button id='loopButton' onclick="toggleLoop()" class="btn"><i class="fas fa-undo-alt" id="loopSign"></i></button>
     </div>
 
     <script>
+
+        window.loop = false
+        window.shuffle = false
 
         let wavesurfer = WaveSurfer.create({
             container: document.querySelector('#waveform'),
@@ -76,8 +82,13 @@
         }); 
                     wavesurfer.load(e.data.src);
                     wavesurfer.on('finish', function () {
-                        playPauseContent.className = 'fa fa-play'
-                        wavesurfer.seekTo(0)
+                        if (window.loop) {
+                            wavesurfer.play(0)
+                        }
+                        else {
+                            playPauseContent.className = 'fa fa-play'
+                            wavesurfer.seekTo(0)
+                        }
                     });
                     wavesurfer.on('ready', function () {
                         window.wavesurferToggle = () => {
@@ -103,6 +114,26 @@
                                 wavesurfer.play(wavesurfer.getCurrentTime() - 10)
                                 let playPauseContent = document.getElementById('playPauseContent')
                                 playPauseContent.className = 'fa fa-pause'
+                            }
+                        }
+                        window.toggleLoop = () => {
+                            window.loop = !window.loop
+                            let loopSign = document.getElementById('loopSign')
+                            if (window.loop) {
+                                loopSign.style.color = 'yellow'
+                            }
+                            else {
+                                loopSign.style.color = 'white'
+                            }
+                        }
+                        window.toggleShuffle = () => {
+                            window.shuffle = !window.shuffle
+                            let shuffleSign = document.getElementById('shuffleSign')
+                            if (window.shuffle) {
+                                shuffleSign.style.color = 'yellow'
+                            }
+                            else {
+                                shuffleSign.style.color = 'white'
                             }
                         }
                     });

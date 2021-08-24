@@ -12,10 +12,10 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import store, { setCurrentMessengerNav } from '../../redux/main';
 import { useForceUpdate } from '../../util/Utils';
 import { updateHome } from '../HomeMain';
+import { isDesktop } from '../../App';
 
 const useStyles = makeStyles({
   root: {
-    width: '100%',
     height: 72,
     position: 'fixed',
     bottom: 0,
@@ -52,11 +52,27 @@ export default function HomeBottombar(props) {
       }}
       showLabels
       className={classes.root}
+      style={{
+        width: isDesktop ? 400 : '100%',
+        transform: isDesktop ? 'rotate(90deg)' : undefined,
+        position: isDesktop ? 'fixed' : undefined,
+        left: isDesktop ? (-274 + 16 + 100) : undefined,
+        top: isDesktop ? 'calc(50% - 56px)' : undefined,
+        borderRadius: isDesktop ? 32 : undefined
+      }}
     >
-      <BottomNavigationAction value={0} classes={classesAction} label="گفتگو ها" icon={<HomeIcon />}/>
-      <BottomNavigationAction value={1} classes={classesAction} label="فضا ها" icon={<AccountBalanceIcon />} />
-      <BottomNavigationAction value={2} classes={classesAction} label="اعلانات" icon={<NotificationsIcon />} />
-      <BottomNavigationAction value={3} classes={classesAction} label="تنظیمات" icon={<SettingsIcon />} />
+      <BottomNavigationAction value={0} classes={classesAction} style={{
+        transform: isDesktop ? 'rotate(-90deg)' : undefined
+      }} label="گفتگو ها" icon={<HomeIcon />}/>
+      <BottomNavigationAction value={1} classes={classesAction} style={{
+        transform: isDesktop ? 'rotate(-90deg)' : undefined
+      }} label="فضا ها" icon={<AccountBalanceIcon />} />
+      <BottomNavigationAction value={2} classes={classesAction} style={{
+        transform: isDesktop ? 'rotate(-90deg)' : undefined
+      }} label="اعلانات" icon={<NotificationsIcon />} />
+      <BottomNavigationAction value={3} classes={classesAction} style={{
+        transform: isDesktop ? 'rotate(-90deg)' : undefined
+      }} label="تنظیمات" icon={<SettingsIcon />} />
     </BottomNavigation>
   );
 }

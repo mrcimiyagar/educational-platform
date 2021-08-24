@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import { setCurrentNav } from '../../App';
+import { isDesktop, setCurrentNav } from '../../App';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import DesktopMacIcon from '@material-ui/icons/DesktopMac';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
@@ -34,7 +34,11 @@ export default function RoomBottombar(props) {
   const classes = useStyles();
   const classesAction = useStylesAction();
 
-  let [bottom, setBottom] = React.useState(0)
+  let [bottom, setBottom] = React.useState(isDesktop ? 16 : 0)
+
+  useEffect(() => {
+    setBottom(isDesktop ? 16 : 0)
+  }, [isDesktop])
 
   return (
     <BottomNavigation
@@ -43,11 +47,11 @@ export default function RoomBottombar(props) {
         props.setCurrentRoomNav(newValue);
         props.setCurrentRoomNavBackup(newValue)
         setBottom(-80)
-        setTimeout(() => setBottom(0), 500)
+        setTimeout(() => setBottom(isDesktop ? 16 : 0), 500)
       }}
       showLabels
       className={classes.root}
-      style={{height: 72, zIndex: 99999, position: 'absolute', bottom: bottom, transition: 'bottom .5s', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}
+      style={{width: isDesktop ? 450 : '100%', height: 72, zIndex: 99999, position: 'absolute', bottom: bottom, left: isDesktop ? 'calc(50% - 225px)' : undefined, borderRadius: isDesktop ? 32 : 0, transition: 'bottom .5s', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}
     >
       <BottomNavigationAction value={0} classes={classesAction} label="میز کار" icon={<DesktopMacIcon />} />
       <BottomNavigationAction value={1} classes={classesAction} label="وایت بورد" icon={<BorderColorIcon />} />

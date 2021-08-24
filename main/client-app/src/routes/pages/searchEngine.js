@@ -67,7 +67,7 @@ export default function SearchEngine(props) {
     return (
         <div className={classes.root}>
             <div style={{width: "100%", height: "100%", position: "relative"}}>
-                <img src={Logo} style={{width: '50%', height: window.innerWidth / 2 + 'px', position: 'absolute', left: '50%', top: 100 - 76, transform: 'translateX(-50%)'}}/>
+                <img src={Logo} style={{width:  200, height: 200, position: 'absolute', left: '50%', top: 32, transform: 'translateX(-50%)'}}/>
                 <div style={{width: 112, height: 112, padding: 8, borderRadius: 56, position: 'absolute', left: '50%', top: 276 - 76, transform: 'translateX(-50%)'}}>
                     <Avatar src={SearchEngineIcon} style={{width: 112, height: 112}}/>
                 </div>

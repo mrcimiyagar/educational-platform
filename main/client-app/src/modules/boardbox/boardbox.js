@@ -8,7 +8,7 @@ import {
 import { whiteboardPath } from "../../util/Utils";
 import { AppBar, Fab, IconButton, Toolbar, Typography } from "@material-ui/core";
 import { ArrowForward, Notes, Search } from "@material-ui/icons";
-import { gotoPage, popPage } from "../../App";
+import { gotoPage, isDesktop, popPage } from "../../App";
 import Chat from "@material-ui/icons/Chat";
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
 import PollIcon from '@material-ui/icons/Poll';
@@ -21,7 +21,7 @@ export let BoardBox = (props) => {
       roomId = '0' + roomId;
     }
     return (
-      <Card style={{height: 'calc(100% - 72px)', display: props.style.display, width: 'calc(100% + 32px)', marginLeft: -16, marginRight: -16, display: props.style.display}}>
+      <Card style={{height: isDesktop ? '100%' : 'calc(100% - 72px)', display: props.style.display, width: 'calc(100% + 32px)', marginLeft: -16, marginRight: -16, display: props.style.display}}>
           <CardBody style={{position: 'relative', height: '100%'}}>
             <AppBar style={{width: '100%', height: 64,
               backgroundColor: 'rgba(21, 96, 233, 0.65)',

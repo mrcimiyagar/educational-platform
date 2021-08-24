@@ -383,7 +383,6 @@ export let RoomTreeBox = (props) => {
         for (let j = 0; j < children.length; j++) {
           if (children[j].id === selectedUserId) {
             setValue(treeData[i].id)
-            alert(treeData[i].title)
             handleClickListItem()
             found = true
             break

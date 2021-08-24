@@ -252,7 +252,7 @@ export default function MainApp(props) {
   }
 
   return (
-    <div style={{width: window.innerWidth + 'px', height: '100vh', direction: 'rtl'}}>
+    <div style={{width: window.innerWidth + 'px', minHeight: '100vh', height: '100vh', maxHeight: '100vh', direction: 'rtl'}}>
       <DesktopDetector key={resizeTrigger}/>
       <div style={{width: '100%', height: '100%', opacity: opacity, transition: 'opacity .125s', direction: 'rtl'}}>
         <ThemeProvider theme={theme}>
