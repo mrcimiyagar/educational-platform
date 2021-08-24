@@ -18,6 +18,7 @@ import Picker from 'emoji-picker-react';
 import { useFilePicker } from 'use-file-picker';
 import { PlayArrowTwoTone } from '@material-ui/icons';
 import Viewer from 'react-viewer';
+import EmptyIcon from '../../images/empty.png'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -184,7 +185,7 @@ export default function ChatEmbedded(props) {
       }, [loading])
 
     return (
-            <div style={{width: "calc(100% - 32px - 64px)", height: "calc(100% - 32px)", position: "absolute", top: 32, left: 96, right: 16, bottom: 16, borderRadius: 32}}>
+            <div style={{width: "calc(100% - 32px - 64px)", height: "calc(100% - 64px)", position: "absolute", top: 32, left: 96, right: 16, bottom: 16, borderRadius: 32}}>
                 <div style={{width: "calc(100% - 32px)", height: "calc(100% - 32px)", position: "absolute", backgroundColor: 'rgba(255, 255, 255, 0.45)', borderRadius: 32, top: 16, left: 96, right: 16, bottom: 16, backdropFilter: 'blur(10px)'}}/>
                 <Viewer
                     zIndex={99999}
@@ -195,7 +196,7 @@ export default function ChatEmbedded(props) {
                 />
                 <ChatAppBar closeCallback={handleClose} user={user}/>
                 <div style={{width: '100%', height: 'auto', zIndex: 1000}}>
-                    <div className={classes.root} style={{height: 40, bottom: showEmojiPad ? 300 : 32}}>
+                    <div className={classes.root} style={{height: 40, bottom: showEmojiPad ? 332 : 32}}>
                     <IconButton className={classes.iconButton} onClick={() => {
                         setPickingFile(true)
                         openFileSelector()
@@ -251,9 +252,10 @@ export default function ChatEmbedded(props) {
                 <div style={{width: "100%", height: showEmojiPad ? "calc(100% - 300px)" : '100%'}}>
                     <ScrollToBottom className={ROOT_CSS}>
                       <div style={{height: 64}}/>
-                      {messages.map(message => {
-                        let dateTime = new Date(Number(message.time))
-                        return (
+                      {messages.length > 0 ?
+                        messages.map(message => {
+                            let dateTime = new Date(Number(message.time))
+                            return (
                             <div key={message.id}>
                                 {message.User.id === me.id ?
                                     <div style={{position: 'relative'}}>
@@ -371,7 +373,11 @@ export default function ChatEmbedded(props) {
                                 }
                             </div>
                         );
-                    })}
+                    }) :
+                    <div style={{width: 250, height: 250, position: isDesktop ? undefined : 'absolute', top: isDesktop ? undefined : 80, right: isDesktop ? undefined : 'calc(50% - 225px)', marginRight: isDesktop ? 'calc(50% - 125px)' : undefined, marginTop: isDesktop ? 160 : undefined, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
+                      <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
+                    </div>
+                    }
                     <div style={{width: '100%', height: 64}}/>
                     </ScrollToBottom>
                 </div>
