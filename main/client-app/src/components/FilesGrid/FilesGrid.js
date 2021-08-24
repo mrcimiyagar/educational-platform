@@ -45,13 +45,39 @@ export default function FilesGrid(props) {
 
     let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false)
     let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('')
+    let [covers, setCovers] = React.useState(props.files.map(file => ''))
+
+    useEffect(() => {
+        if (props.fileType === 'audio') {
+        props.files.forEach((file, index) => {
+            var tags = {};
+            window.jsmediatags.read(serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`, {
+               onSuccess: function(tag) {
+                  tags = tag;
+                  var picture = tags.tags.picture; // create reference to track art
+                  var base64String = "";
+                  for (var i = 0; i < picture.data.length; i++) {
+                      base64String += String.fromCharCode(picture.data[i]);
+                  }
+                  var imageUri = "data:" + picture.format + ";base64," + window.btoa(base64String);
+                  covers[index] = imageUri
+                  setCovers(covers)
+                  forceUpdate()
+                }, 
+               onError: function(error) {
+                  console.log(error);
+               }
+            }); 
+        });
+        }
+    }, [props.files])
 
     return (
         <div style={{width: '100%', position: 'relative', overflow: 'hidden', height: '100%'}}>
             <div className={classes.root}>
                 <ImageList rowHeight={180} className={classes.imageList} cols={2}>
-                    {props.files.reverse().map((file, index) => (
-                        <ImageListItem key={file.id} cols={1}>
+                    {props.files.reverse().map((file, index) => {
+                        return <ImageListItem key={file.id} cols={1}>
                             <Card style={{backgroundColor: colors.primaryLight, width: 'calc(100% - 32px)', marginTop: 8, marginLeft: 16, marginRight: 16, height: 'auto', direction: 'rtl'}}>
                                 <div>
                                     <div style={{display: 'flex', position: 'relative'}}>
@@ -68,10 +94,10 @@ export default function FilesGrid(props) {
                                                 setCurrentPhotoSrc(file.local ? file.src : serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`);
                                                 setPhotoViewerVisible(true)
                                             }
-                                            else if (props.fileType === 'audio') {
-                                                gotoPage('/app/audioplayer', {room_id: props.roomId, src: file.local ? file.src : serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`})
-                                            }
-                                        }} style={{width: '100%', height: '100%'}} key={index} alt="Thumbnail" src={file.local ? file.src : serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.previewFileId}`} />
+                                        }} style={{width: '100%', height: '100%'}} key={index} alt="Thumbnail" src={(props.fileType === 'photo' || props.fileType === 'video') ?
+                                            (file.local ? file.src : serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.previewFileId}`) :
+                                            (covers[index])    
+                                        } />
                                       }
                                       {
                                           props.fileType === 'video' ?
@@ -82,7 +108,15 @@ export default function FilesGrid(props) {
                                                 style={{width: 40, height: 40, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
                                                 <PlayArrowTwoTone style={{width: 40, height: 40}}/>
                                             </IconButton> :
-                                            null
+                                            props.fileType === 'audio' ?
+                                                <IconButton
+                                                    onClick={() => {
+                                                        gotoPage('/app/audioplayer', {room_id: props.roomId, src: file.local ? file.src : serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`})
+                                                    }}
+                                                    style={{backgroundColor: '#fff', borderRadius: '50%', width: 40, height: 40, position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+                                                    <PlayArrowTwoTone style={{width: 40, height: 40}}/>
+                                                </IconButton> :
+                                                null
                                       }
                                     </div>
                                 </div>
@@ -91,7 +125,7 @@ export default function FilesGrid(props) {
                                 </div>
                             </Card>
                         </ImageListItem>
-                    ))}
+                    })}
                 </ImageList>
             </div>
         </div>

@@ -25,7 +25,7 @@ export default function AudioPlayer(props) {
                 },
             }}
             fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
-        <AudioBox roomId={props.room_id} src={props.src}/>
+        <AudioBox roomId={props.room_id} src={props.src} handleClose={handleClose}/>
       </Dialog>
     )
 }
