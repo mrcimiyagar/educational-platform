@@ -1,8 +1,19 @@
 
 .switch-wrapper {
-    position: relative;
-  }
+  position: relative;
+}
   
-  .switch-wrapper > div {
-    position: absolute;
-  }
+.switch-wrapper > div {
+  position: absolute;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hiddenScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hiddenScrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

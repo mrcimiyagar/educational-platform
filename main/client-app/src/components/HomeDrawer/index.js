@@ -27,7 +27,7 @@ import AccessibilityIcon from '@material-ui/icons/Accessibility';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ContactPhoneIcon from '@material-ui/icons/ContactPhone';
-import {gotoPage} from "../../App";
+import {gotoPage, isDesktop} from "../../App";
 import Language from '@material-ui/icons/Language';
 import { me, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
@@ -61,8 +61,11 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    backdropFilter: 'blur(10px)'
+    background: 'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)',
+    backdropFilter: 'blur(10px)',
+    margin: isDesktop ? 32 : 0,
+    height: isDesktop ? 'calc(100% - 64px)' : '100%',
+    borderRadius: isDesktop ? 24 : 0
   },
   content: {
     flexGrow: 1,
@@ -111,12 +114,12 @@ function HomeDrawer(props) {
                     }
                 }}>
                     <ListItemIcon style={{marginRight: 16}}>{
-                        index === 0 ? <HomeIcon /> : index === 1 ? <ContactPhoneIcon/> :
-                            index === 2 ? <AccessibilityIcon/> : index === 3 ? <AttachMoneyIcon /> : 
-                                index === 4 ? <Language/> : index === 5 ? <SettingsIcon/> : 
+                        index === 0 ? <HomeIcon style={{fill: '#fff'}} /> : index === 1 ? <ContactPhoneIcon style={{fill: '#fff'}} /> :
+                            index === 2 ? <AccessibilityIcon style={{fill: '#fff'}} /> : index === 3 ? <AttachMoneyIcon style={{fill: '#fff'}} /> : 
+                                index === 4 ? <Language style={{fill: '#fff'}} /> : index === 5 ? <SettingsIcon style={{fill: '#fff'}} /> : 
                                     null}
                     </ListItemIcon>
-                    <ListItemText style={{fontFamily: 'mainFont', textAlign: 'right'}} primary={text} />
+                    <ListItemText style={{fontFamily: 'mainFont', color: '#fff', textAlign: 'right'}} primary={text} />
                 </ListItem>
             ))}
         </List>
@@ -129,7 +132,6 @@ function HomeDrawer(props) {
     <div className={classes.root}>
       <CssBaseline />
       <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <SwipeableDrawer
             container={container}
@@ -146,8 +148,7 @@ function HomeDrawer(props) {
             }}
           >
           <div onClick={() => {props.setOpen(false); gotoPage('/app/userprofile', {user_id: me.id});}}>
-            <img alt={'drawer-image'} src={DrawerImage} style={{width: 316, height: 216}}/>
-            <Avatar style={{width: 56, height: 56, marginTop: -72, marginRight: 16}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${me.id}`}/>
+            <Avatar style={{width: 56, height: 56, marginTop: 64, marginRight: 16}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${me.id}`}/>
             <div style={{position: 'relative'}}>
                 <Typography style={{marginTop: -48, position: 'absolute', right: 84, bottom: 24, color: '#fff'}}>{me.firstName + ' ' + me.lastName}</Typography>
                 <Typography variant={'subtitle2'} style={{position: 'absolute', right: 84, bottom: 0, color: '#fff'}}>{me.username}</Typography>
@@ -167,8 +168,7 @@ function HomeDrawer(props) {
             open
           >
           <div onClick={() => {props.setOpen(false); gotoPage('/app/userprofile', {user_id: me.id});}}>
-            <img alt={'drawer-image'} src={DrawerImage} style={{width: 316, height: 216}}/>
-            <Avatar style={{width: 56, height: 56, marginTop: -72, marginRight: 16}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${me.id}`}/>
+            <Avatar style={{width: 56, height: 56, marginTop: 64, marginRight: 16}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${me.id}`}/>
             <div style={{position: 'relative'}}>
                 <Typography style={{marginTop: -48, position: 'absolute', right: 84, bottom: 24, color: '#fff'}}>{me.firstName + ' ' + me.lastName}</Typography>
                 <Typography variant={'subtitle2'} style={{position: 'absolute', right: 84, bottom: 0, color: '#fff'}}>{me.username}</Typography>

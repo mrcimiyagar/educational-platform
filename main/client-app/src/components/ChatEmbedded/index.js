@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
         width: isDesktop ? '450px' : '100%',
         position: 'fixed',
         bottom: 48,
-        left: 'calc(50% - 329px - 225px)',
+        left: 'calc(50% - 329px - 112px)',
         borderRadius: 16,
         zIndex: 1000,
         backgroundColor: 'rgba(255, 255, 255, 0.75)',
@@ -213,8 +213,8 @@ export default function ChatEmbedded(props) {
       }, [loading])
 
     return (
-            <div style={{display: (props.roomId === undefined || props.roomId === 0) ? 'none' : 'block', width: "calc(100% - 64px - 256px - 32px - 32px - 16px)", height: "100%", position: "absolute", top: 32 + 32, left: 80, bottom: 16}}>
-                <div style={{width: "calc(100% - 32px)", height: "calc(100% - 32px)", position: "absolute", backgroundColor: 'rgba(255, 255, 255, 0.45)', top: 16, left: 96, right: 16, bottom: 16, backdropFilter: 'blur(10px)', borderRadius: 32}}/>
+            <div style={{display: (props.roomId === undefined || props.roomId === 0) ? 'none' : 'block', width: "calc(100% - 64px - 256px - 64px - 72px + 180px)", height: "100%", position: "absolute", top: 32 + 16, left: 80, bottom: 16}}>
+                <div style={{width: "calc(100% - 32px)", height: "100%", position: "absolute", backgroundColor: 'rgba(255, 255, 255, 0.45)', top: 16, left: 96, right: 16, bottom: -16, backdropFilter: 'blur(10px)', borderRadius: '0 0 0 24px'}}/>
                 <Viewer
                     zIndex={99999}
                     style={{position: 'fixed', left: 0, top: 0}}
@@ -224,7 +224,7 @@ export default function ChatEmbedded(props) {
                 />
                 <ChatAppBar closeCallback={handleClose} user={user} room={room}/>
                 <div style={{width: '100%', height: 'auto', zIndex: 1000}}>
-                    <div className={classes.root} style={{height: 56, bottom: showEmojiPad ? 332 : 32, transform: 'translateX(-128px)'}}>
+                    <div className={classes.root} style={{height: 56, bottom: showEmojiPad ? 352 : 60, transform: 'translateX(-128px)'}}>
                     <IconButton className={classes.iconButton} onClick={() => {
                         setPickingFile(true)
                         openFileSelector()

@@ -64,7 +64,7 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="fixed" style={{width: isDesktop ? 'calc(100% - 658px - 96px - 208px - 96px)' : '100%', borderRadius: '32px 32px 0 0', position: isDesktop ? 'fixed' : undefined, top: isDesktop ? 48 : 0, left: isDesktop ? 96 : 0, paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
+            <AppBar position="fixed" style={{width: isDesktop ? 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px)' : '100%', borderRadius: '24px 0 0 0', position: isDesktop ? 'fixed' : undefined, top: isDesktop ? 32 : 0, left: isDesktop ? 96 : 0, paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
                 <Toolbar style={{height: '100%', marginTop: isDesktop ? -8 : 0}}>
                     {!isDesktop ? 
                         <IconButton style={{marginRight: -16}} onClick={() => props.handleClose() }>
