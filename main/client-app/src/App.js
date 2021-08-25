@@ -29,6 +29,7 @@ import AudioPlayer from "./routes/pages/audioPlayer";
 let histPage = null, setHp = null;
 
 export let isDesktop;
+let setIsDesktop;
 let series = ['/app/messenger'];
 let paramsSeries = [{}];
 let forceUpdate = undefined
@@ -93,7 +94,10 @@ export let popPage = () => {
 
 let DesktopDetector = (props) => {
   const theme = useTheme();
-  isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+  [isDesktop, setIsDesktop] = React.useState(window.innerWidth > 500)
+  window.onresize = () => {
+    setIsDesktop(window.innerWidth > 500)
+  }
   return <div/>;
 }
 
@@ -154,11 +158,6 @@ export default function MainApp(props) {
   forceUpdate = useForceUpdate()
 
   let [opacity, setOpacity] = React.useState(0)
-  let [resizeTrigger, setResizeTrigger] = React.useState(Math.random())
-
-  window.onresize = () => {
-    setResizeTrigger(Math.random())
-  }
 
   animatePageChange = () => {
     setOpacity(0)
@@ -253,7 +252,7 @@ export default function MainApp(props) {
 
   return (
     <div style={{width: window.innerWidth + 'px', minHeight: '100vh', height: '100vh', maxHeight: '100vh', direction: 'rtl'}}>
-      <DesktopDetector key={resizeTrigger}/>
+      <DesktopDetector/>
       <div style={{width: '100%', height: '100%', opacity: opacity, transition: 'opacity .125s', direction: 'rtl'}}>
         <ThemeProvider theme={theme}>
           {P !== undefined ? <P {...params}/> : null}

@@ -5,6 +5,7 @@ import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import { isDesktop } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,9 +32,12 @@ export default function HomeSearchbar(props) {
 
   return (
     <Paper component="form" className={classes.root}>
-      <IconButton onClick={() => props.setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
-        <MenuIcon />
-      </IconButton>
+      {isDesktop ?
+        null :
+        <IconButton onClick={() => props.setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
+          <MenuIcon />
+        </IconButton>
+      }
       <InputBase
         className={classes.input}
         placeholder="جستجو در آسمان"

@@ -42,9 +42,10 @@ function TabPanel(props) {
       id={`nav-tabpanel-${index}`}
       aria-labelledby={`nav-tab-${index}`}
       {...other}
+      style={{width: '100%', height: '100%'}}
     >
       {value === index && (
-        <Box p={3}>
+        <Box p={3} style={{width: '100%', height: '100%'}}>
           {children}
         </Box>
       )}
@@ -61,6 +62,7 @@ TabPanel.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    marginRight: isDesktop ? (256 + 32 + 32 + 8) : undefined,
     width: isDesktop ? 600 : '100%',
     maxWidth: isDesktop ? 600 : '100%',
   },
@@ -75,6 +77,8 @@ export default function HomeAppbar(props) {
   updateHome = useForceUpdate()
   const classes = useStyles()
 
+  let [selectedRoomId, setSelectedRoomId] = React.useState(undefined)
+  let [selectedUserId, setSelectedUserId] = React.useState(undefined)
   const [jumperOpen, setJumperOpen] = React.useState(true);
   const [value, setValue] = React.useState(0)
   let currNav = store.getState().global.main.currentMessengerNav
@@ -113,7 +117,7 @@ export default function HomeAppbar(props) {
         (
           <div style={{background: 'transparent'}}>
             <HomeToolbar>
-        <AppBar style={{width: isDesktop ? 625 : '100%', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
+        <AppBar style={{marginRight: isDesktop ? 256 + 32 + 32 : undefined, width: isDesktop ? 630 : '100%', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
           <Toolbar style={{marginTop: 16}}>
             <HomeSearchbar setDrawerOpen={setDrawerOpen}/>
           </Toolbar>
@@ -133,28 +137,44 @@ export default function HomeAppbar(props) {
           </Tabs>
         </AppBar>
       </HomeToolbar>
-      <div style={{position: 'absolute', width: 630, height: isDesktop ? 'calc(100vh - 128px)' : 'calc(100vh - 128px - 56px)', backgroundColor: isDesktop ? 'rgba(255, 255, 255, 0.45)' : undefined, backdropFilter:  isDesktop ? 'blur(10px)' : undefined, marginLeft: -8, marginRight: -8, marginTop: 88}}>
-        <TabPanel value={value} index={0} style={{width: '100%', height: 'auto', borderRadius: 16}}>
-            <AllChats chats={chats.filter(c => c.chatType === 'p2p')}/>
+      <div style={{position: 'absolute', width: isDesktop ? 630 : 'calc(100% + 16px)', height: isDesktop ? 'calc(100vh - 128px)' : 'calc(100vh - 128px - 56px)', backgroundColor: isDesktop ? 'rgba(255, 255, 255, 0.45)' : undefined, backdropFilter:  isDesktop ? 'blur(10px)' : undefined, marginLeft: -8, marginRight: -8, marginTop: isDesktop ? 88 : 72}}>
+        <TabPanel value={value} index={0} style={{width: '100%', height: '100%', borderRadius: 16}}>
+            <div style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
+              <div style={{width: '100%', height: 16}}/>
+              <AllChats setSelectedRoomId={setSelectedRoomId} setSelectedUserId={setSelectedUserId} chats={chats.filter(c => c.chatType === 'p2p')}/>
+              <div style={{width: '100%', height: 100}}/>
+            </div>
         </TabPanel>
-        <TabPanel value={value} index={1} style={{width: '100%', height: 'auto', borderRadius: 16}}>
-            <GroupChats chats={chats.filter(c => c.chatType === 'group')}/>
+        <TabPanel value={value} index={1} style={{width: '100%', height: '100%', borderRadius: 16}}>
+            <div style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
+              <div style={{width: '100%', height: 16}}/>
+              <GroupChats setSelectedRoomId={setSelectedRoomId} chats={chats.filter(c => c.chatType === 'group')}/>
+              <div style={{width: '100%', height: 100}}/>
+            </div>
         </TabPanel>
-        <TabPanel value={value} index={2} style={{width: '100%', height: 'auto', borderRadius: 16}}>
-            <ChannelChats chats={chats.filter(c => c.chatType === 'channel')}/>
+        <TabPanel value={value} index={2} style={{width: '100%', height: '100%', borderRadius: 16}}>
+            <div style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
+              <div style={{width: '100%', height: 16}}/>
+              <ChannelChats setSelectedRoomId={setSelectedRoomId} chats={chats.filter(c => c.chatType === 'channel')}/>
+              <div style={{width: '100%', height: 100}}/>
+            </div>
         </TabPanel>
-        <TabPanel value={value} index={3} style={{width: '100%', height: 'auto', borderRadius: 16}}>
-            <BotChats chats={chats.filter(c => c.chatType === 'bot')}/>
+        <TabPanel value={value} index={3} style={{width: '100%', height: '100%', borderRadius: 16}}>
+            <div style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
+              <div style={{width: '100%', height: 16}}/>
+              <BotChats setSelectedRoomId={setSelectedRoomId} chats={chats.filter(c => c.chatType === 'bot')}/>
+              <div style={{width: '100%', height: 100}}/>
+            </div>
         </TabPanel>
       </div>
       {
         isDesktop ?
-          <div style={{width: 'calc(100% - 625px)', height: '100%', position: 'fixed', left: 0, top: 0}}>
-            <ChatEmbedded/>  
+          <div style={{width: 'calc(100% - 625px)', height: 'calc(100% - 96px)', position: 'fixed', left: 0, top: 0}}>
+            <ChatEmbedded roomId={selectedRoomId} userId={selectedUserId}/>  
           </div>:
           null
       }
-      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop ? 16 : 72 + 16, left: isDesktop ? undefined : 16, right: isDesktop ? (568 - 16) : undefined}}>
+      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop ? 16 : 72 + 16, left: isDesktop ? undefined : 16, right: isDesktop ? (568 + 256 + 32 + 32 - 16) : undefined}}>
         <EditIcon />
       </Fab>
     </div>

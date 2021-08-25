@@ -11,11 +11,15 @@ import { gotoPage, isDesktop, roomId } from '../../App';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 import EmptyIcon from '../../images/empty.png'
+import Photo from '@material-ui/icons/Photo';
+import { Chip } from '@material-ui/core';
+import { Audiotrack, Videocam } from '@material-ui/icons';
+import EmptySign from '../EmptySign';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    direction: 'rtl', 
+    direction: 'ltr', 
     backgroundColor: 'rgba(255, 255, 255, 0.35)', 
     backdropFilter: 'blur(10px)',
     borderRadius: 16,
@@ -34,9 +38,16 @@ export default function GroupChats(props) {
   let dateTime = chat.lastMessage === undefined ? undefined : new Date(Number(chat.lastMessage.time))
   return (
   <div>
-  <ListItem alignItems="flex-start" button onClick={() => {gotoPage('/app/chat', {room_id: chat.id});}}>
+   <ListItem alignItems="flex-start" button style={{height: 80, direction: 'rtl'}} onClick={() => {
+      if (isDesktop) {
+        props.setSelectedRoomId(chat.id)
+      }
+      else {
+        gotoPage('/app/chat', {room_id: chat.id});
+      }
+    }}>
     <ListItemAvatar>
-      <Avatar src="https://material-ui.com/static/images/avatar/3.jpg" />
+      <Avatar src={serverRoot + `/file/download_room_avatar?token=${token}&roomId=${chat.id}`} />
     </ListItemAvatar>
     <ListItemText
       primary={
@@ -51,12 +62,35 @@ export default function GroupChats(props) {
         </React.Fragment>
       }
       secondary={
-        chat.lastMessage === undefined ? null :
-        <React.Fragment>
-        <Typography style={{width: '100%', textAlign: 'right', color: '#000', fontSize: 14}}>
-            {chat.lastMessage.text}
-        </Typography>
-        </React.Fragment>
+        chat.lastMessage === undefined ?
+          null :
+          chat.lastMessage.messageType === 'photo' ?
+           <Chip
+              style={{position: 'absolute', right: 16 + 56, direction: 'ltr', transform: 'translateY(8px)'}}
+              icon={<Photo style={{borderRadius: 4}} />}
+              label="عکس"
+              color="primary"
+              size={'small'}
+            /> :
+            chat.lastMessage.messageType === 'audio' ?
+              <Chip
+                style={{position: 'absolute', right: 16 + 56, direction: 'ltr', transform: 'translateY(8px)'}}
+                icon={<Audiotrack style={{borderRadius: 4}} />}
+                label="صدا"
+                color="primary"
+                size={'small'}
+              /> :
+              chat.lastMessage.messageType === 'video' ?
+                <Chip
+                  style={{position: 'absolute', right: 16 + 56, direction: 'ltr', transform: 'translateY(8px)'}}
+                  icon={<Videocam style={{borderRadius: 4}} />}
+                  label="ویدئو"
+                  color="primary"
+                  size={'small'}
+                /> :
+                <Typography style={{width: '100%', textAlign: 'right', color: '#000', fontSize: 14}}>
+                  {chat.lastMessage.text}
+                </Typography>
       }
     />
   </ListItem>
@@ -64,7 +98,5 @@ export default function GroupChats(props) {
   </div>)
   })}
 </List> :
-    <div style={{width: 250, height: 250, position: isDesktop ? undefined : 'absolute', top: isDesktop ? undefined : 80, right: isDesktop ? undefined : 'calc(50% - 225px)', marginRight: isDesktop ? 'calc(50% - 125px)' : undefined, marginTop: isDesktop ? 80 : undefined, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-      <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
-    </div>
+    <EmptySign/>
 }

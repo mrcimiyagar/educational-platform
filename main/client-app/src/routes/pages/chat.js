@@ -18,6 +18,7 @@ import Picker from 'emoji-picker-react';
 import { useFilePicker } from 'use-file-picker';
 import { PlayArrowTwoTone } from '@material-ui/icons';
 import Viewer from 'react-viewer';
+import { Avatar, Typography } from '@material-ui/core';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -266,11 +267,15 @@ export default function Chat(props) {
                         return (
                             <div key={message.id}>
                                 {message.User.id === me.id ?
-                                    <div style={{position: 'relative'}}>
+                                    <div style={{position: 'relative', display: 'flex'}}>
+                                    <Avatar src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${message.authorId}`} style={{width: 40, height: 40, position: 'absolute', bottom: 16, right: 0}}/>
                                     <div style={{fontFamily: 'mainFont', fontSize: 15, display: 'inline-block', width: 'auto', minWidth: 125, maxWidth: 300, padding: 16,
                                         backgroundColor: '#1a8a98', color: '#fff',
-                                        borderRadius: '16px 16px 0px 16px', position: 'absolute', right: 12, marginTop: 16,
+                                        borderRadius: '16px 16px 0px 16px', position: 'absolute', right: 48, marginTop: 16,
                                         background: 'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)'}}>
+                                            <Typography style={{position: 'absolute', right: 16, fontWeight: 'bold', fontSize: 20}}>{message.User.firstName}</Typography>
+                                            <br/>
+                                            <div style={{marginTop: 8}}>
                                             {message.messageType === 'text' ?
                                                 message.text :
                                                 message.messageType === 'audio' ?
@@ -290,6 +295,7 @@ export default function Chat(props) {
                                                     </IconButton> :
                                                     null    
                                             }
+                                            </div>
                                         <br/>
                                         <br/>
                                         <div style={{position: 'absolute', right: 12, bottom: 8, fontSize: 12, color: '#fff'}}>{dateTime.toLocaleDateString('fa-IR').toString() + ' ' + dateTime.getHours() + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds()}</div>
@@ -298,6 +304,9 @@ export default function Chat(props) {
                                         backgroundColor: '#1a8a98', color: '#fff',
                                         borderRadius: '16px 16px 0px 16px', marginTop: 16,
                                         background: 'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)'}}>
+                                            <Typography style={{position: 'absolute', right: 16, fontWeight: 'bold', fontSize: 20}}>{message.User.firstName}</Typography>
+                                            <br/>
+                                            <div style={{marginTop: 8}}>
                                             {message.messageType === 'text' ?
                                                 message.text :
                                                 message.messageType === 'audio' ?
@@ -317,17 +326,21 @@ export default function Chat(props) {
                                                     </IconButton> :
                                                     null    
                                             }
+                                            </div>
                                         <br/>
                                         <br/>
                                         <div style={{position: 'absolute', right: 12, bottom: 8, fontSize: 12, color: '#fff'}}>{dateTime.toLocaleDateString('fa-IR').toString() + ' ' + dateTime.getHours() + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds()}</div>
                                     </div>
                                 </div> :
-                                <div style={{position: 'relative'}}>
+                                <div style={{position: 'relative', display: 'flex'}}>
+                                    <Avatar src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${message.authorId}`} style={{width: 40, height: 40, position: 'absolute', bottom: 16, left: 0}}/>
                                     <div style={{fontFamily: 'mainFont', fontSize: 15, display: 'inline-block', width: 'auto', minWidth: 125, maxWidth: 300, padding: 16,
-                                        backgroundColor: '#4dabf5', color: '#fff',
-                                        borderRadius: '16px 16px 16px 0px', marginLeft: 16, marginTop: 16,
-                                        position: 'absolute', left: 0,
+                                        backgroundColor: '#1a8a98', color: '#fff',
+                                        borderRadius: '16px 16px 0px 16px', position: 'absolute', left: 48, marginTop: 16,
                                         background: 'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)'}}>
+                                            <Typography style={{position: 'absolute', left: 16, fontWeight: 'bold', fontSize: 20}}>{message.User.firstName}</Typography>
+                                            <br/>
+                                            <div style={{marginTop: 8}}>
                                             {message.messageType === 'text' ?
                                                 message.text :
                                                 message.messageType === 'audio' ?
@@ -347,6 +360,7 @@ export default function Chat(props) {
                                                     </IconButton> :
                                                     null    
                                             }
+                                            </div>
                                         <br/>
                                         <br/>
                                         <div style={{position: 'absolute', right: 12, bottom: 8, fontSize: 12, color: '#fff'}}>{dateTime.toLocaleDateString('fa-IR').toString() + ' ' + dateTime.getHours() + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds()}</div>
@@ -354,7 +368,10 @@ export default function Chat(props) {
                                     <div style={{visibility: 'hidden', fontFamily: 'mainFont', fontSize: 15, display: 'inline-block', width: 'auto', minWidth: 125, maxWidth: 300, padding: 16,
                                         color: 'transparent', marginLeft: 16, marginTop: 16, color: '#fff', left: 0,
                                         background: 'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)'}}>
-                                            {message.messageType === 'text' ?
+                                            <Typography style={{position: 'absolute', left: 16, fontWeight: 'bold', fontSize: 20}}>{message.User.firstName}</Typography>
+                                            <br/>
+                                            <div style={{marginTop: 8}}>
+                                                {message.messageType === 'text' ?
                                                 message.text :
                                                 message.messageType === 'audio' ?
                                                     <WaveSurferBox fileId={message.fileId} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${message.fileId}`}/> :
@@ -373,6 +390,7 @@ export default function Chat(props) {
                                                     </IconButton> :
                                                     null    
                                             }
+                                            </div>
                                         <br/>
                                         <br/>
                                         <div style={{position: 'absolute', right: 12, bottom: 8, fontSize: 12, color: '#fff'}}>{dateTime.toLocaleDateString('fa-IR').toString() + ' ' + dateTime.getHours() + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds()}</div>

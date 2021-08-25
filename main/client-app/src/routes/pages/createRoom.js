@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ChatAppBar from "../../components/ChatAppBar";
 import Slide from "@material-ui/core/Slide";
-import {gotoPage, gotoPageWithDelay, popPage, registerDialogOpen, roomId} from "../../App";
+import {gotoPage, gotoPageWithDelay, isDesktop, popPage, registerDialogOpen, roomId} from "../../App";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
@@ -18,7 +18,7 @@ import Picker from 'emoji-picker-react';
 import { useFilePicker } from 'use-file-picker';
 import { PlayArrowTwoTone } from '@material-ui/icons';
 import ArrowForwardTwoTone from '@material-ui/icons/ArrowForwardTwoTone';
-import { AppBar, Fab, TextField, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Fab, Paper, TextField, Toolbar, Typography } from '@material-ui/core';
 import Add from '@material-ui/icons/Add';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -72,16 +72,25 @@ export default function CreateRoom(props) {
     return (
         <Dialog
             onTouchStart={(e) => {e.stopPropagation();}}
-            PaperProps={{
-                style: {
-                    backgroundColor: 'transparent',
-                    boxShadow: 'none',
-                },
-            }}
-            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
-            <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}} className={classes.root}>
-                <AppBar position="fixed" style={{paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.5)', backdropFilter: 'blur(10px)'}}>
-                    <Toolbar>
+            PaperProps={isDesktop ? 
+                {
+                    style: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.65)',
+                        boxShadow: 'none',
+                        borderRadius: 16
+                    },
+                } :
+                {
+                    style: {
+                        backgroundColor: 'transparent',
+                        boxShadow: 'none',
+                    },
+                }
+            }
+            fullScreen={!isDesktop} open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: isDesktop ? undefined : 'blur(10px)'}}>
+            <div style={{width: isDesktop ? 450 : '100%', height: isDesktop ? 300 : "100%", position: isDesktop ? undefined : "fixed", top: isDesktop ? undefined : 0, left:  isDesktop ? undefined : 0, direction: 'rtl'}}>
+                <Paper style={{width: isDesktop ? 450 : undefined, paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.85)', backdropFilter: 'blur(10px)'}}>
+                    <Toolbar style={{marginTop: isDesktop ? -8 : undefined}}>
                         <IconButton
                             edge="start"
                             color="inherit"
@@ -94,8 +103,8 @@ export default function CreateRoom(props) {
                             ساخت روم
                         </Typography>
                     </Toolbar>
-                </AppBar>
-                <TextField className={classes.textField} id="roomCreationTitle" label="عنوان روم" variant="filled" style={{marginTop: 96, marginLeft: 32, marginRight: 32, width: 'calc(100% - 64px)', color: '#fff'}} />
+                </Paper>
+                <TextField className={classes.textField} id="roomCreationTitle" label="عنوان روم" variant="filled" style={{marginTop: isDesktop ? 32 : 96, marginLeft: 32, marginRight: 32, width: 'calc(100% - 64px)', color: '#fff'}} />
                 <Fab style={{marginRight: 32, marginTop: 24}} variant="extended" onClick={() => {
                     let requestOptions = {
                         method: 'POST',

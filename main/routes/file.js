@@ -203,11 +203,11 @@ router.get('/download_room_avatar', jsonParser, async function (req, res) {
             res.sendStatus(404);
             return
         }
-        if (room.avatarId === undefined) {
-            res.sendStatus(404);
-            return
-        }
         sw.Room.findOne({where: {id: req.query.roomId}}).then(async room => {
+            if (room.avatarId === undefined) {
+                res.sendStatus(404);
+                return
+            }
             sw.File.findOne({where: {id: room.avatarId}}).then(async file => {
                 if (fs.existsSync(rootPath + '/files/' + file.id)) {
                     res.sendFile(rootPath + '/files/' + file.id)

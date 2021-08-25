@@ -64,7 +64,7 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="fixed" style={{width: isDesktop ? 'calc(100% - 658px - 96px)' : '100%', borderRadius: isDesktop ? 32 : 0, position: isDesktop ? 'fixed' : undefined, top: isDesktop ? 48 : 0, left: isDesktop ? 96 : 0, paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
+            <AppBar position="fixed" style={{width: isDesktop ? 'calc(100% - 658px - 96px - 208px - 96px)' : '100%', borderRadius: '32px 32px 0 0', position: isDesktop ? 'fixed' : undefined, top: isDesktop ? 48 : 0, left: isDesktop ? 96 : 0, paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
                 <Toolbar style={{height: '100%', marginTop: isDesktop ? -8 : 0}}>
                     {!isDesktop ? 
                         <IconButton style={{marginRight: -16}} onClick={() => props.handleClose() }>
@@ -72,9 +72,15 @@ export default function ChatAppBar(props) {
                         </IconButton> :
                         null
                     }
-                    <Avatar style={{width: 28, height: 28, marginRight: isDesktop ? 8 : -8}} alt="Profile Picture" src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${props.user.id}`}  onClick={() => {gotoPage('/app/userprofile', {user_id: props.user.id});}}/>
+                    <Avatar style={{width: 28, height: 28, marginRight: isDesktop ? 8 : -8}} alt="Profile Picture" src={
+                        props.room !== undefined ?
+                            (serverRoot + `/file/download_room_avatar?token=${token}&roomId=${props.room.id}`) :
+                            props.user !== undefined ?
+                                (serverRoot + `/file/download_user_avatar?token=${token}&userId=${props.user.id}`) :
+                                ''
+                            }  onClick={() => {gotoPage('/app/userprofile', {user_id: props.user});}}/>
                     <Typography variant="h6" style={{fontFamily: 'mainFont', marginRight: 8}}>
-                        {props.user.firstName + ' ' + props.user.lastName}
+                        {props.user !== undefined ? (props.user.firstName + ' ' + props.user.lastName) : props.room !== undefined ? props.room.title : ''}
                     </Typography>
                     <div className={classes.search}>
                         <IconButton>

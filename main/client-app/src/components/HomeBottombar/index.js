@@ -36,19 +36,25 @@ const useStylesAction = makeStyles({
   selected: {},
 });
 
+let valueBackup = 0
+
 export default function HomeBottombar(props) {
   let forceUpdate = useForceUpdate()
   const classes = useStyles();
   const classesAction = useStylesAction();
 
   let currNav = store.getState().global.main.currentRoomNav
+  let [value, setValue] = React.useState(valueBackup)
 
   return (
     <BottomNavigation
-      value={currNav}
+      value={value}
       onChange={(event, newValue) => {
         store.dispatch(setCurrentMessengerNav(newValue))
+        setValue(newValue)
+        valueBackup = newValue
         updateHome()
+        forceUpdate()
       }}
       showLabels
       className={classes.root}

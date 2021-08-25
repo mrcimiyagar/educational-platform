@@ -6,6 +6,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import { isDesktop } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,6 +14,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
+    ...(isDesktop && {maxWidth: 450}),
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
     backgroundColor: 'rgba(21, 96, 233, 0.65)',
     backdropFilter: 'blur(10px)'
   },

@@ -6,7 +6,7 @@ import { Avatar, Card, Fab, Typography } from '@material-ui/core';
 import SpacesSearchbar from '../SpacesSearchbar';
 import HomeToolbar from '../HomeToolbar';
 import HomeIcon from '@material-ui/icons/Home';
-import { gotoPage } from '../../App';
+import { gotoPage, isDesktop } from '../../App';
 import { token } from '../../util/settings';
 import EmptyIcon from '../../images/empty.png'
 import { serverRoot } from '../../util/Utils';
@@ -19,11 +19,12 @@ const useStyles = makeStyles((theme) => ({
   imageList: {
     paddingTop: 48,
     width: '100%',
-    height: 'auto',
-    paddingBottom: 56,
+    height: '100%',
+    overflow: 'auto',
+    direction: 'ltr',
+    paddingBottom: 112,
     paddingLeft: 16,
     paddingRight: 16,
-    // Promote the list into its own layer in Chrome. This cost memory, but helps keep FPS high.
     transform: 'translateZ(0)',
   },
   titleBar: {
@@ -186,6 +187,8 @@ const itemData = [
 export default function SpacesGrid(props) {
   const classes = useStyles();
 
+  document.documentElement.style.overflowY = 'hidden'
+
   let [spaces, setSpaces] = React.useState([])
 
   useEffect(() => {
@@ -229,7 +232,7 @@ export default function SpacesGrid(props) {
         </div>
         }
       </ImageList>
-      <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}}>
+      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop ? 16 : 72 + 16, left: 16}}>
         <HomeIcon />
       </Fab>
     </div>
