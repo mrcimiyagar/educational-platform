@@ -39,7 +39,7 @@ export default function GroupChats(props) {
   return (
   <div>
    <ListItem alignItems="flex-start" button style={{height: 80, direction: 'rtl'}} onClick={() => {
-      if (isDesktop) {
+      if (isDesktop === 'desktop' || isDesktop === 'tablet') {
         props.setSelectedRoomId(chat.id)
       }
       else {
@@ -52,7 +52,7 @@ export default function GroupChats(props) {
     <ListItemText
       primary={
         <React.Fragment style={{position: 'relative'}}>
-        <Typography style={{width: '100%', textAlign: 'right', color: '#000', fontSize: 17, fontWeight: 'bold'}}>
+        <Typography noWrap style={{width: '100%', textAlign: 'right', color: '#000', fontSize: 17, fontWeight: 'bold'}}>
             {chat.group.title}
         </Typography>
         {chat.lastMessage === undefined ? null :
@@ -88,7 +88,7 @@ export default function GroupChats(props) {
                   color="primary"
                   size={'small'}
                 /> :
-                <Typography style={{width: '100%', textAlign: 'right', color: '#000', fontSize: 14}}>
+                <Typography noWrap style={{width: '100%', textAlign: 'right', color: '#000', fontSize: 14}}>
                   {chat.lastMessage.text}
                 </Typography>
       }

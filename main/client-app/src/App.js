@@ -1,30 +1,29 @@
-import React, {Component, Fragment, useEffect} from "react";
-import ReactDOM from 'react-dom';
-import {useTheme, useMediaQuery, ThemeProvider, colors, createTheme} from '@material-ui/core';
-import './App.css';
-import { setMe, setToken, theme, token } from "./util/settings";
-import MessengerPage from "./routes/pages/messenger";
-import SearchEngine from "./routes/pages/searchEngine";
-import RoomWallpaper from './images/roomWallpaper.png'
-import RoomPage from "./routes/pages/room";
-import Chat from "./routes/pages/chat";
-import Store from "./routes/pages/store";
-import StoreBot from "./routes/pages/storeBot";
-import StoreAds from "./routes/pages/storeAds";
-import PhotoViewer from "./routes/pages/photoViewer";
-import PollPage from "./routes/pages/polls";
-import NotePage from "./routes/pages/notes";
-import DeckPage from "./routes/pages/deck";
-import StartupSound from './sounds/startup.mp3';
-import Auth4 from "./routes/pages/auth4";
+import React, {Component, Fragment, useEffect} from "react"
+import {useTheme, useMediaQuery, ThemeProvider, colors, createTheme} from '@material-ui/core'
+import './App.css'
+import { setMe, setToken, theme, token } from "./util/settings"
+import MessengerPage from "./routes/pages/messenger"
+import SearchEngine from "./routes/pages/searchEngine"
+import RoomPage from "./routes/pages/room"
+import Chat from "./routes/pages/chat"
+import Store from "./routes/pages/store"
+import StoreBot from "./routes/pages/storeBot"
+import StoreAds from "./routes/pages/storeAds"
+import PhotoViewer from "./routes/pages/photoViewer"
+import PollPage from "./routes/pages/polls"
+import NotePage from "./routes/pages/notes"
+import DeckPage from "./routes/pages/deck"
+import StartupSound from './sounds/startup.mp3'
+import Auth4 from "./routes/pages/auth4"
 import SearchEngineResults from './routes/pages/searchEngineResults'
 import Profile from './routes/pages/profile'
 import VideoPlayer from './routes/pages/videoPlayer'
-import { ConnectToIo, serverRoot, useForceUpdate } from "./util/Utils";
-import CreateRoom from "./routes/pages/createRoom";
-import { notifyUrlChanged } from "./components/SearchEngineFam";
-import RoomsTree from "./routes/pages/roomsTree";
-import AudioPlayer from "./routes/pages/audioPlayer";
+import { ConnectToIo, serverRoot, useForceUpdate } from "./util/Utils"
+import CreateRoom from "./routes/pages/createRoom"
+import { notifyUrlChanged } from "./components/SearchEngineFam"
+import RoomsTree from "./routes/pages/roomsTree"
+import AudioPlayer from "./routes/pages/audioPlayer"
+import P2pCall from './routes/pages/p2pCall'
 
 let histPage = null, setHp = null;
 
@@ -94,9 +93,9 @@ export let popPage = () => {
 
 let DesktopDetector = (props) => {
   const theme = useTheme();
-  [isDesktop, setIsDesktop] = React.useState(window.innerWidth > 500)
+  [isDesktop, setIsDesktop] = React.useState(window.innerWidth > 1400 ? 'desktop' : window.innerWidth > 900 ? 'tablet' : 'mobile')
   window.onresize = () => {
-    setIsDesktop(window.innerWidth > 500)
+    setIsDesktop(window.innerWidth > 1400 ? 'desktop' : window.innerWidth > 900 ? 'tablet' : 'mobile')
   }
   return <div/>;
 }
@@ -129,7 +128,8 @@ let dialogs = {
   '/app/userprofile': Profile,
   '/app/createroom': CreateRoom,
   '/app/roomstree': RoomsTree,
-  '/app/audioplayer': AudioPlayer
+  '/app/audioplayer': AudioPlayer,
+  '/app/p2pCall': P2pCall
   
 }
 let pages = {

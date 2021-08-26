@@ -16,6 +16,7 @@ import { gotoPage, isDesktop } from '../../App';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 import { ArrowForward } from '@material-ui/icons';
+import { setCurrentRoomNavBackup } from '../../routes/pages/room';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,15 +65,16 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="fixed" style={{width: isDesktop ? 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px)' : '100%', borderRadius: '24px 0 0 0', position: isDesktop ? 'fixed' : undefined, top: isDesktop ? 32 : 0, left: isDesktop ? 96 : 0, paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
-                <Toolbar style={{height: '100%', marginTop: isDesktop ? -8 : 0}}>
-                    {!isDesktop ? 
+            <AppBar position="fixed" style={{width: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px)') : isDesktop === 'tablet' ? 'calc(100% - 450px)' : '100%', borderRadius: isDesktop === 'tablet' || isDesktop === 'mobile' ? 0 : (window.location.pathname === '/app/room' ? 0 : '24px 0 0 0'), position: isDesktop === 'desktop' || isDesktop === 'tablet' ? 'fixed' : undefined, top: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 0 : 32) : 0, left: window.location.pathname === '/app/room' ? (isDesktop === 'desktop' ? 'calc(100% - 450px)' : 96) : (isDesktop === 'desktop' ? 96 : 0), paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
+                <Toolbar style={{height: '100%', marginTop: isDesktop === 'desktop' ? -8 : 0}}>
+                    {isDesktop === 'mobile' ? 
                         <IconButton style={{marginRight: -16}} onClick={() => props.handleClose() }>
                             <ArrowForward style={{fill: '#fff'}}/>
                         </IconButton> :
                         null
                     }
-                    <Avatar style={{width: 28, height: 28, marginRight: isDesktop ? 8 : -8}} alt="Profile Picture" src={
+                    <Avatar style={{width: 28, height: 28, marginRight: isDesktop === 'desktop' || isDesktop === 'tablet' ? 8 : -8}}
+                            alt={props.user !== undefined ? (props.user.firstName + ' ' + props.user.lastName) : props.room !== undefined ? props.room.title : ''} src={
                         props.room !== undefined ?
                             (serverRoot + `/file/download_room_avatar?token=${token}&roomId=${props.room.id}`) :
                             props.user !== undefined ?
@@ -83,10 +85,16 @@ export default function ChatAppBar(props) {
                         {props.user !== undefined ? (props.user.firstName + ' ' + props.user.lastName) : props.room !== undefined ? props.room.title : ''}
                     </Typography>
                     <div className={classes.search}>
-                        <IconButton>
+                        <IconButton onClick={() => {
+                            setCurrentRoomNavBackup(2)
+                            gotoPage('/app/p2pCall', {room_id: props.room.id});
+                        }}>
                             <VideocamIcon style={{fill: '#fff'}}/>
                         </IconButton>
-                        <IconButton>
+                        <IconButton onClick={() => {
+                            setCurrentRoomNavBackup(2)
+                            gotoPage('/app/p2pCall', {room_id: props.room.id});
+                        }}>
                             <CallIcon style={{fill: '#fff'}}/>
                         </IconButton>
                         <IconButton>

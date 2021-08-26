@@ -6,7 +6,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import SearchIcon from '@material-ui/icons/Search';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import {gotoPage, popPage, registerDialogOpen, setRoomId, user} from "../../App";
+import {gotoPage, isDesktop, popPage, registerDialogOpen, setRoomId, user} from "../../App";
 import './profile.css';
 import { setToken, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
@@ -18,7 +18,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function Profile(props) {
 
-  setToken(localStorage.getItem('token'))
+  document.documentElement.style.overflowY = 'hidden'
 
   const [open, setOpen] = React.useState(true)
   registerDialogOpen(setOpen)
@@ -31,14 +31,14 @@ export default function Profile(props) {
 return (
   <Dialog
         onTouchStart={(e) => {e.stopPropagation();}}
-        PaperProps={{
+        PaperProps={isDesktop === 'mobile' ? {
             style: {
                 backgroundColor: 'transparent',
                 boxShadow: 'none',
             },
-        }}
-        fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
-<div style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, direction: 'ltr', overflowX: 'hidden'}}>
+        } : undefined}
+        fullScreen={isDesktop === 'mobile'} open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
+<div style={{position: isDesktop === 'mobile' ? 'absolute' : undefined, left: isDesktop === 'mobile' ? 0 : undefined, top: isDesktop === 'mobile' ? 0 : undefined, right: isDesktop === 'mobile' ? 0 : undefined, bottom: isDesktop === 'mobile' ? 0 : undefined, direction: 'ltr', overflowX: 'hidden'}}>
   <div style={{position: 'relative', overflowX: 'hidden'}}>
     
     

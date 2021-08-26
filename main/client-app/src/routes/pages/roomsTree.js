@@ -73,7 +73,7 @@ export default function RoomsTree(props) {
               })
     }, [])
     document.documentElement.style.overflow = 'hidden'
-    if (isDesktop) {
+    if (isDesktop === 'desktop') {
         return (
             <Dialog
                 onTouchStart={(e) => {e.stopPropagation();}}
@@ -105,7 +105,7 @@ export default function RoomsTree(props) {
                         
                     </div>
                 </div> 
-                <Fab color={'secondary'} style={{position: 'fixed', left: isDesktop ? (450 - 56 - 16) : undefined, right: isDesktop ? undefined : 16, bottom: 24}}
+                <Fab color={'secondary'} style={{position: 'fixed', left: isDesktop === 'desktop' ? (450 - 56 - 16) : undefined, right: isDesktop === 'desktop' ? undefined : 16, bottom: 24}}
             onClick={() => {
               let roomTitle = prompt('نام روم را وارد نمایید')
               if (roomTitle === null || roomTitle === '') {
@@ -169,7 +169,7 @@ export default function RoomsTree(props) {
                         <RoomTreeBox membership={membership} room={room}/>
                     </div>
                 </div> 
-                <Fab color={'secondary'} style={{position: 'fixed', left: isDesktop ? (450 - 56 - 16) : undefined, right: isDesktop ? undefined : 16, bottom: 24}}
+                <Fab color={'secondary'} style={{position: 'fixed', left: isDesktop === 'desktop' ? (450 - 56 - 16) : undefined, right: isDesktop === 'desktop' ? undefined : 16, bottom: 24}}
             onClick={() => {
               let roomTitle = prompt('نام روم را وارد نمایید')
               if (roomTitle === null || roomTitle === '') {

@@ -31,9 +31,10 @@ import {gotoPage, isDesktop} from "../../App";
 import Language from '@material-ui/icons/Language';
 import { me, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
+import { currentRoomNavBackup, setCurrentRoomNavBackup } from '../../routes/pages/room';
 
 
-const drawerWidth = 256 + 32 + 32;
+const drawerWidth = 256 + 32 + 32 + 16;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,9 +64,10 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     background: 'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)',
     backdropFilter: 'blur(10px)',
-    margin: isDesktop ? 32 : 0,
-    height: isDesktop ? 'calc(100% - 64px)' : '100%',
-    borderRadius: isDesktop ? 24 : 0
+    margin: isDesktop === 'desktop' ? 32 : 0,
+    height: isDesktop === 'desktop' ? 'calc(100% - 64px)' : '100%',
+    borderRadius: isDesktop === 'desktop' ? 24 : 0,
+    direction: 'rtl'
   },
   content: {
     flexGrow: 1,
@@ -76,7 +78,6 @@ const useStyles = makeStyles((theme) => ({
 function HomeDrawer(props) {
   const { window } = props;
   const classes = useStyles();
-  const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
@@ -96,7 +97,7 @@ function HomeDrawer(props) {
             {['خانه', 'مخاطبان', 'دوستان', 'فروشگاه', 'گشت و گذار'].map((text, index) => (
                 <ListItem button key={text} onClick={() => {
                     if (index === 0) {
-                        gotoPage('/app/home');
+                        gotoPage('/app/messenger');
                     }
                     else if (index === 1) {
                     }
@@ -131,8 +132,8 @@ function HomeDrawer(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        <Hidden smUp implementation="css">
+      <nav className={classes.drawer}>
+        {isDesktop !== 'desktop' ?
           <SwipeableDrawer
             container={container}
             variant="temporary"
@@ -143,6 +144,7 @@ function HomeDrawer(props) {
             classes={{
               paper: classes.drawerPaper,
             }}
+            style={{zIndex: 2501}}
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
             }}
@@ -156,14 +158,16 @@ function HomeDrawer(props) {
         </div>
         <div style={{height: 24}}/>
         {list('right')}
-          </SwipeableDrawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
+          </SwipeableDrawer> :
+          null
+        }
+        {isDesktop === 'desktop' ?
           <Drawer
             anchor={'right'}
             classes={{
               paper: classes.drawerPaper,
             }}
+            style={{zIndex: 2499}}
             variant="permanent"
             open
           >
@@ -176,8 +180,9 @@ function HomeDrawer(props) {
         </div>
         <div style={{height: 24}}/>
           {list('right')}
-          </Drawer>
-        </Hidden>
+          </Drawer> :
+          null
+        }
       </nav>
     </div>
   );

@@ -87,10 +87,10 @@ export default function CreateRoom(props) {
                     },
                 }
             }
-            fullScreen={!isDesktop} open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: isDesktop ? undefined : 'blur(10px)'}}>
-            <div style={{width: isDesktop ? 450 : '100%', height: isDesktop ? 300 : "100%", position: isDesktop ? undefined : "fixed", top: isDesktop ? undefined : 0, left:  isDesktop ? undefined : 0, direction: 'rtl'}}>
-                <Paper style={{width: isDesktop ? 450 : undefined, paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.85)', backdropFilter: 'blur(10px)'}}>
-                    <Toolbar style={{marginTop: isDesktop ? -8 : undefined}}>
+            fullScreen={isDesktop !== 'desktop'} open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: isDesktop === 'desktop' ? undefined : 'blur(10px)'}}>
+            <div style={{width: isDesktop === 'desktop' ? 450 : '100%', height: isDesktop === 'desktop' ? 300 : "100%", position: isDesktop === 'desktop' ? undefined : "fixed", top: isDesktop === 'desktop' ? undefined : 0, left:  isDesktop === 'desktop' ? undefined : 0, direction: 'rtl'}}>
+                <Paper style={{width: isDesktop === 'desktop' ? 450 : undefined, paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.85)', backdropFilter: 'blur(10px)'}}>
+                    <Toolbar style={{marginTop: isDesktop === 'desktop' ? -8 : undefined}}>
                         <IconButton
                             edge="start"
                             color="inherit"
@@ -104,7 +104,7 @@ export default function CreateRoom(props) {
                         </Typography>
                     </Toolbar>
                 </Paper>
-                <TextField className={classes.textField} id="roomCreationTitle" label="عنوان روم" variant="filled" style={{marginTop: isDesktop ? 32 : 96, marginLeft: 32, marginRight: 32, width: 'calc(100% - 64px)', color: '#fff'}} />
+                <TextField className={classes.textField} id="roomCreationTitle" label="عنوان روم" variant="filled" style={{marginTop: isDesktop === 'desktop' ? 32 : 96, marginLeft: 32, marginRight: 32, width: 'calc(100% - 64px)', color: '#fff'}} />
                 <Fab style={{marginRight: 32, marginTop: 24}} variant="extended" onClick={() => {
                     let requestOptions = {
                         method: 'POST',

@@ -35,6 +35,7 @@ import Settings from "@material-ui/icons/Settings";
 import { UsersBox } from "../../modules/usersbox/usersbox";
 import Jumper from "../../components/SearchEngineFam";
 import { useFilePicker } from "use-file-picker";
+import ChatEmbedded from "../../components/ChatEmbedded";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -67,6 +68,9 @@ const data = {
 }
 
 let currentRoomNavBackup = 0
+export let setCurrentRoomNavBackup = p => {
+  currentRoomNavBackup = p
+}
 
 const useStyles = makeStyles({
   root: {
@@ -294,10 +298,13 @@ export default function RoomPage(props) {
       secondary: pink
     },
   });
-  if (isDesktop) {
+  if (isDesktop === 'desktop') {
     return (
       <div style={{width: '100%', height: '100%', position: 'fixed', right: 0, top: 0, backgroundColor: colors.primaryDark}}>
-        <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, opacity: opacity, transition: 'opacity .250s'}}> 
+        <div style={{width: 450, height: '100%', position: 'fixed', right: 0, top: 0}}>
+          <ChatEmbedded roomId={props.room_id}/>
+        </div>
+        <div style={{position: 'absolute', left: 0, right: isDesktop === 'desktop' ? 450 : 0, top: 0, bottom: 0, opacity: opacity, transition: 'opacity .250s'}}> 
           <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id} style={{display: currentRoomNav === 0 ? 'block' : 'none'}}/>
           <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 2 ? 'block' : 'none'}} roomId={props.room_id}/>
           <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id}  style={{display: currentRoomNav === 1 ? 'block' : 'none'}}/>
@@ -369,7 +376,7 @@ export default function RoomPage(props) {
                           </div>
               </div>
         </div>
-        <div style={{position: 'fixed', right: 16, bottom: 4, zIndex: 99999}}>
+        <div style={{position: 'fixed', left: window.location.pathname === '/app/room' ? (currentRoomNav === 1) ? (32 + 56) : undefined : undefined, right: window.location.pathname === '/app/room' ? currentRoomNav === 0 ? (450 + 16) : undefined : 16, bottom: 4, zIndex: 99999}}>
           <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
         </div>
         <RoomBottombar setCurrentRoomNavBackup={(v) => {currentRoomNavBackup = v;}} setCurrentRoomNav={(i) => {
@@ -479,7 +486,7 @@ export default function RoomPage(props) {
                           </div>
               </div>
         </div>
-        <div style={{position: 'fixed', right: 16, bottom: 4, zIndex: 99999}}>
+        <div style={{position: 'fixed', right: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? (450 + 16) : 16) : 16, bottom: 4, zIndex: 2500}}>
           <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
         </div>
         <RoomBottombar setCurrentRoomNavBackup={(v) => {currentRoomNavBackup = v;}} setCurrentRoomNav={(i) => {

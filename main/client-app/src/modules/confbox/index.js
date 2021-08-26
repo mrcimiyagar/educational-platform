@@ -11,7 +11,7 @@ import CallEndIcon from '@material-ui/icons/CallEnd';
 import { green, pink } from "@material-ui/core/colors";
 import Search from "@material-ui/icons/Search";
 import SettingsIcon from '@material-ui/icons/Settings';
-import {gotoPage, popPage} from '../../App';
+import {gotoPage, isDesktop, popPage} from '../../App';
 import Chat from "@material-ui/icons/Chat";
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
 import PollIcon from '@material-ui/icons/Poll';
@@ -64,9 +64,11 @@ export let ConfBox = (props) => {
     return (
       <div key={uniqueKey} style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr', display: props.style.display}}>
         
-        <AppBar style={{width: '100%', height: 64,
+        <AppBar style={{width: isDesktop === 'desktop' ? 550 : '100%', height: 64,
+          borderRadius: isDesktop === 'desktop' ? '0 0 24px 24px' : 0,
           backgroundColor: 'rgba(21, 96, 233, 0.65)',
-          backdropFilter: 'blur(10px)'}}>
+          backdropFilter: 'blur(10px)',
+          position: 'fixed', left: '50%', transform: 'translateX(-50%)'}}>
           <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
             <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
             <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
@@ -79,7 +81,16 @@ export let ConfBox = (props) => {
               props.openPolls()
             }}><PollIcon style={{fill: '#fff'}}/></IconButton>
             <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>سالن کنفرانس</Typography>
-            <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
+            <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => {
+              if (window.location.pathname === '/app/p2pCall') {
+                props.handleClose()
+              }
+              else {
+                props.setMenuOpen(true)
+              }
+            }}>
+              {window.location.pathname === '/app/p2pCall' ? <ArrowForward style={{fill: '#fff'}}/> : <Menu style={{fill: '#fff'}}/>}
+            </IconButton>
           </Toolbar>
         </AppBar>
         

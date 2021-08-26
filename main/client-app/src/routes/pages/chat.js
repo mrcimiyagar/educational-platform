@@ -54,13 +54,14 @@ let uplaodedFileId = 0
 
 export default function Chat(props) {
 
-    setToken(localStorage.getItem('token'))
+    document.documentElement.style.overflowY = 'hidden'
 
     let forceUpdate = useForceUpdate()
     let [messages, setMessages] = React.useState([])
     let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false)
     let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('')
-    let [user, setUser] = React.useState({})
+    let [user, setUser] = React.useState(undefined)
+    let [room, setRoom] = React.useState(undefined)
     const [open, setOpen] = React.useState(true)
     const [showEmojiPad, setShowEmojiPad] = React.useState(false)
     let [pickingFile, setPickingFile] = React.useState(false)
@@ -74,27 +75,50 @@ export default function Chat(props) {
         readAs: 'DataURL'
     });
     useEffect(() => {
-        let requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'token': token
-            },
-            body: JSON.stringify({
-                userId: props.user_id
-            }),
-            redirect: 'follow'
-        };
-        fetch(serverRoot + "/auth/get_user", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                console.log(JSON.stringify(result));
-                if (result.user !== undefined) {
-                    setUser(result.user)
-                }
-            })
-            .catch(error => console.log('error', error));
-
+        if (props.user_id !== undefined) {
+            let requestOptions = {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'token': token
+              },
+              body: JSON.stringify({
+                  userId: props.user_id
+              }),
+              redirect: 'follow'
+            };
+            fetch(serverRoot + "/auth/get_user", requestOptions)
+              .then(response => response.json())
+              .then(result => {
+                  console.log(JSON.stringify(result));
+                  if (result.user !== undefined) {
+                      setUser(result.user)
+                  }
+              })
+              .catch(error => console.log('error', error));
+        }
+        else {
+              let requestOptions = {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'token': token
+                  },
+                  body: JSON.stringify({
+                      roomId: props.room_id
+                  }),
+                  redirect: 'follow'
+                };
+                fetch(serverRoot + "/room/get_room", requestOptions)
+                  .then(response => response.json())
+                  .then(result => {
+                      console.log(JSON.stringify(result));
+                      if (result.room !== undefined) {
+                          setRoom(result.room)
+                      }
+                  })
+                  .catch(error => console.log('error', error));
+        }
         let requestOptions2 = {
           method: 'POST',
           headers: {
@@ -193,10 +217,10 @@ export default function Chat(props) {
             PaperProps={{
                 style: {
                     backgroundColor: 'transparent',
-                    boxShadow: 'none',
+                    boxShadow: 'none'
                 },
             }}
-            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
+            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)', zIndex: 2501}}>
             <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
                 <Viewer
                     zIndex={99999}
@@ -205,9 +229,9 @@ export default function Chat(props) {
                     onClose={() => {setPhotoViewerVisible(false);}}
                     images={[{src: currentPhotoSrc, alt: ''}]}
                 />
-                <ChatAppBar closeCallback={handleClose} user={user}/>
+                <ChatAppBar handleClose={handleClose} user={user} room={room}/>
                 <div style={{position: 'fixed', bottom: 0, height: 'auto', zIndex: 1000}}>
-                    <div className={classes.root} style={{height: 40, bottom: showEmojiPad ? 300 : 0}}>
+                    <div className={classes.root} style={{height: 56, bottom: showEmojiPad ? 300 : 0}}>
                     <IconButton className={classes.iconButton} onClick={() => {
                         setPickingFile(true)
                         openFileSelector()
@@ -400,7 +424,7 @@ export default function Chat(props) {
                             </div>
                         );
                     })}
-                    <div style={{width: '100%', height: 64}}/>
+                    <div style={{width: '100%', height: 80}}/>
                     </ScrollToBottom>
                 </div>
             </div>

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    ...(isDesktop && {maxWidth: 450}),
+    ...((isDesktop === 'desktop') && {maxWidth: 450}),
     position: 'absolute',
     left: '50%',
     transform: 'translateX(-50%)',

@@ -20,7 +20,6 @@ import RedditIcon from '@material-ui/icons/Reddit';
 import SpacesGrid from '../SpacesGrid';
 import HomeNotifs from '../HomeNotifs';
 import HomeSettings from '../HomeSettings';
-import RoomWallpaper from '../../images/roomWallpaper.png'
 import store from '../../redux/main';
 import { serverRoot, useForceUpdate } from '../../util/Utils';
 import Jumper from '../SearchEngineFam';
@@ -62,13 +61,18 @@ TabPanel.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    marginRight: isDesktop ? (256 + 32 + 32 + 8 + 64) : undefined,
-    width: isDesktop ? 450 : '100%',
-    maxWidth: isDesktop ? 450 : '100%',
+    marginRight: isDesktop === 'desktop' ? (256 + 32 + 32 + 8 + 64) : undefined,
+    width: isDesktop === 'desktop' ? 450 : '100%',
+    maxWidth: isDesktop === 'desktop' ? 450 : '100%',
   },
   indicator: {
     backgroundColor: 'white',
   },
+  tab: {
+    minWidth: isDesktop === 'desktop' || isDesktop === 'tablet' ? 100 : undefined,
+    maxWidth: isDesktop === 'desktop' || isDesktop === 'tablet' ? 100 : undefined,
+    width: isDesktop === 'desktop' || isDesktop === 'tablet' ? 100 : undefined
+  }
 }));
 
 export let updateHome = undefined
@@ -76,6 +80,8 @@ export let updateHome = undefined
 export default function HomeAppbar(props) {
   updateHome = useForceUpdate()
   const classes = useStyles()
+
+  document.documentElement.style.overflowY = 'hidden'
 
   let [selectedRoomId, setSelectedRoomId] = React.useState(undefined)
   let [selectedUserId, setSelectedUserId] = React.useState(undefined)
@@ -115,9 +121,9 @@ export default function HomeAppbar(props) {
     <div className={classes.root}>
       {currNav === 0 ?
         (
-          <div style={{background: 'transparent'}}>
-            <HomeToolbar>
-        <AppBar style={{borderRadius: selectedRoomId === undefined ? '24px 24px 0 0' : '0 24px 0 0', marginRight: isDesktop ? 256 + 32 + 32 + 64 : undefined, marginTop: isDesktop ? 32 : undefined, width: isDesktop ? 450 : '100%', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
+    <div style={{background: 'transparent'}}>
+      <HomeToolbar>
+        <AppBar style={{borderRadius: isDesktop !== 'desktop' ? undefined : selectedRoomId === undefined ? '24px 24px 0 0' : '0 24px 0 0', marginRight: isDesktop === 'desktop' ? (256 + 32 + 32 + 64) : undefined, marginTop: isDesktop === 'desktop' ? 32 : undefined, width: isDesktop === 'desktop' || isDesktop === 'tablet' ? 450 : '100%', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
           <Toolbar style={{marginTop: 16}}>
             <HomeSearchbar setDrawerOpen={setDrawerOpen}/>
           </Toolbar>
@@ -129,54 +135,57 @@ export default function HomeAppbar(props) {
               indicator: classes.indicator
             }}
             style={{marginTop: 8, direction: 'ltr'}}
-            variant="scrollable"
-            scrollButtons="auto"
+            centered
           >
-          <Tab icon={<RedditIcon />} label="ربات ها" />
-            <Tab icon={<RadioIcon />} label="کانال ها" />
-            <Tab icon={<GroupIcon />} label="گروه ها" />
-            <Tab icon={<ChatIcon />} label="چت ها" />
+            <Tab classes={{ root: classes.tab }} icon={<RedditIcon />} label="ربات ها" />
+            <Tab classes={{ root: classes.tab }} icon={<RadioIcon />} label="کانال ها" />
+            <Tab classes={{ root: classes.tab }} icon={<GroupIcon />} label="گروه ها" />
+            <Tab classes={{ root: classes.tab }} icon={<ChatIcon />} label="چت ها" />
           </Tabs>
         </AppBar>
       </HomeToolbar>
-      <div style={{position: 'absolute', width: isDesktop ? 450 : 'calc(100% + 16px)', height: isDesktop ? 'calc(100% - 184px)' : 'calc(100vh - 128px - 56px)', backgroundColor: isDesktop ? 'rgba(255, 255, 255, 0.45)' : undefined, backdropFilter:  isDesktop ? 'blur(10px)' : undefined, marginLeft: -8, marginRight: -8, marginTop: isDesktop ? 88 : 72, borderRadius: selectedRoomId === undefined ? '0 0 24px 24px' : '0 0 24px 0'}}>
-        <TabPanel value={value} index={3} style={{width: '100%', height: '100%', borderRadius: 16}}>
+      <div style={{position: 'absolute', width: isDesktop === 'desktop' || isDesktop === 'tablet' ? 450 : 'calc(100% + 16px)', height: isDesktop === 'desktop' ? 'calc(100% - 184px)' : isDesktop === 'tablet' ? 'calc(100% - 168px)' : 'calc(100% - 128px - 32px)', backgroundColor: isDesktop === 'desktop' || isDesktop === 'tablet' ? 'rgba(255, 255, 255, 0.45)' : undefined, backdropFilter:  isDesktop === 'desktop' || isDesktop === 'tablet' ? 'blur(10px)' : undefined, marginLeft: isDesktop === 'mobile' ? -8 : undefined, marginRight: isDesktop === 'mobile' || isDesktop === 'desktop' ? -8 : undefined, marginTop: isDesktop === 'desktop' ? 88 : 56, borderRadius: isDesktop === 'tablet' || isDesktop === 'mobile' ? 0 : selectedRoomId === undefined ? '0 0 24px 24px' : '0 0 24px 0'}}>
+        <TabPanel value={value} index={3} style={{width: '100%', height: '100%'}}>
             <div className="hiddenScrollbar" style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
-              <div style={{width: '100%', height: 48}}/>
+              <div style={{width: '100%', height: isDesktop === 'desktop' ? 48 : 32}}/>
               <AllChats setSelectedRoomId={setSelectedRoomId} setSelectedUserId={setSelectedUserId} chats={chats.filter(c => c.chatType === 'p2p')}/>
               <div style={{width: '100%', height: 100}}/>
             </div>
         </TabPanel>
-        <TabPanel value={value} index={2} style={{width: '100%', height: '100%', borderRadius: 16}}>
+        <TabPanel value={value} index={2} style={{width: '100%', height: '100%'}}>
             <div className="hiddenScrollbar" style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
-              <div style={{width: '100%', height: 48}}/>
+              <div style={{width: '100%', height: isDesktop === 'desktop' ? 48 : 32}}/>
               <GroupChats setSelectedRoomId={setSelectedRoomId} chats={chats.filter(c => c.chatType === 'group')}/>
               <div style={{width: '100%', height: 100}}/>
             </div>
         </TabPanel>
-        <TabPanel value={value} index={1} style={{width: '100%', height: '100%', borderRadius: 16}}>
+        <TabPanel value={value} index={1} style={{width: '100%', height: '100%'}}>
             <div className="hiddenScrollbar" style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
-              <div style={{width: '100%', height: 48}}/>
+              <div style={{width: '100%', height: isDesktop === 'desktop' ? 48 : 32}}/>
               <ChannelChats setSelectedRoomId={setSelectedRoomId} chats={chats.filter(c => c.chatType === 'channel')}/>
               <div style={{width: '100%', height: 100}}/>
             </div>
         </TabPanel>
-        <TabPanel value={value} index={0} style={{width: '100%', height: '100%', borderRadius: 16}}>
+        <TabPanel value={value} index={0} style={{width: '100%', height: '100%'}}>
             <div className="hiddenScrollbar" style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
-              <div style={{width: '100%', height: 48}}/>
+              <div style={{width: '100%', height: isDesktop === 'desktop' ? 48 : 32}}/>
               <BotChats setSelectedRoomId={setSelectedRoomId} chats={chats.filter(c => c.chatType === 'bot')}/>
               <div style={{width: '100%', height: 100}}/>
             </div>
         </TabPanel>
       </div>
       {
-        isDesktop ?
+        isDesktop === 'desktop' ?
           <div style={{width: 'calc(100% - 625px)', height: 'calc(100% - 96px)', position: 'fixed', left: 0, top: 0}}>
             <ChatEmbedded roomId={selectedRoomId} userId={selectedUserId}/>  
           </div>:
-          null
+          isDesktop === 'tablet' ?
+            <div style={{width: 'calc(100% - 450px)', height: '100%', position: 'fixed', left: 0, top: 0}}>
+              <ChatEmbedded roomId={selectedRoomId} userId={selectedUserId}/>  
+            </div>:
+            null
       }
-      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop ? 72 : 88, left: isDesktop ? undefined : 16, right: isDesktop ? (568 + 64 + 256 + 32 + 32 - 16 - 180) : undefined}}>
+      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop === 'desktop' ? 48 : isDesktop === 'tablet' ? 104 : 88, left: isDesktop === 'desktop' || isDesktop === 'tablet' ? undefined : 16, right: isDesktop === 'desktop' ? (568 + 64 + 256 + 32 + 32 - 16 - 180) : isDesktop === 'tablet' ? (450 - 56 - 16 - 16) : undefined}}>
         <EditIcon />
       </Fab>
     </div>
@@ -196,11 +205,11 @@ export default function HomeAppbar(props) {
         :
         null
       }
-      <div style={{position: 'fixed', right: 48, transform: 'translateY(-16px)', bottom: 16, zIndex: 5000}}>
+      <div style={{position: 'fixed', right: isDesktop === 'desktop' ? 48 : 32, transform: isDesktop === 'desktop' ? 'translateY(-16px)' : isDesktop === 'tablet' ? 'translateY(0px)' : 'translateY(16px)', bottom: 16, zIndex: 2500}}>
         <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
       </div>
       <HomeBottombar/>
-      <HomeDrawer open={drawerOpen} setOpen={setDrawerOpen}/>
+      <HomeDrawer open={drawerOpen} setOpen={setDrawerOpen} roomId={selectedRoomId}/>
     </div>
   )
 }
