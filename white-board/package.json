@@ -1,20 +1,41 @@
 {
-  "name": "client-app",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
+  "name": "login-register-react",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "async-lock": "^1.3.0",
-    "bee-queue": "^1.4.0",
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "socket.io": "^4.0.1",
-    "yjs": "^13.5.10"
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "delay": "^4.2.0",
+    "material-ui-color-picker": "^3.5.1",
+    "react": "^16.8.6",
+    "react-color": "^2.19.3",
+    "react-dom": "^16.8.6",
+    "react-pose": "^4.0.8",
+    "react-scripts": "3.0.1",
+    "react-spring": "^8.0.20"
   },
-  "author": "",
-  "license": "ISC"
+  "scripts": {
+    "start": "PORT=1005 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "node-sass": "^4.12.0"
+  }
 }

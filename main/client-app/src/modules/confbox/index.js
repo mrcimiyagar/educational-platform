@@ -68,7 +68,7 @@ export let ConfBox = (props) => {
           borderRadius: isDesktop === 'desktop' ? '0 0 24px 24px' : 0,
           backgroundColor: 'rgba(21, 96, 233, 0.65)',
           backdropFilter: 'blur(10px)',
-          position: 'fixed', left: '50%', transform: 'translateX(-50%)'}}>
+          position: 'fixed', left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 'calc(50% - 225px)' : '50%', transform: 'translateX(-50%)'}}>
           <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
             <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
             <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {

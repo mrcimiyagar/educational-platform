@@ -7,6 +7,25 @@ const { authenticateMember } = require('../users');
 const router = express.Router();
 let jsonParser = bodyParser.json();
 
+router.post('/get_participent', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user) => {
+        if (membership === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'});
+            return
+        }
+        let roomMembers = await sw.Membership.findAll({raw: true, where: {roomId: membership.roomId}})
+        if (roomMembers.length !== 2) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'not a p2p chat.'});
+            return
+        }
+        let participent = roomMembers[0].userId === membership.userId ?
+                            (await sw.User.findOne({where: {userId: roomMembers[1].userId}})) :
+                            (await sw.User.findOne({where: {userId: roomMembers[0].userId}}))
+        
+        res.send({status: 'success', participent: participent})
+    })
+})
+
 router.post('/get_chats', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
         sw.Membership.findAll({where: {userId: session.userId}}).then(async function (memberships) {

@@ -20,10 +20,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    ...((isDesktop === 'desktop') && {maxWidth: 450}),
+    ...((isDesktop === 'desktop' || isDesktop === 'tablet') && {maxWidth: 450}),
     backgroundColor: 'rgba(255, 255, 255, 0.65)',
     backdropFilter: 'blur(10px)',
-    ...((isDesktop === 'desktop') && {marginRight: 'calc(50% - 225px)'}),
+    ...((isDesktop === 'desktop'|| isDesktop === 'tablet') && {marginRight: 'calc(50% - 225px)'}),
   },
   input: {
     marginLeft: theme.spacing(1),

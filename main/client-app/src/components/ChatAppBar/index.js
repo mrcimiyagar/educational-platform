@@ -65,9 +65,9 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="fixed" style={{width: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px)') : isDesktop === 'tablet' ? 'calc(100% - 450px)' : '100%', borderRadius: isDesktop === 'tablet' || isDesktop === 'mobile' ? 0 : (window.location.pathname === '/app/room' ? 0 : '24px 0 0 0'), position: isDesktop === 'desktop' || isDesktop === 'tablet' ? 'fixed' : undefined, top: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 0 : 32) : 0, left: window.location.pathname === '/app/room' ? (isDesktop === 'desktop' ? 'calc(100% - 450px)' : 96) : (isDesktop === 'desktop' ? 96 : 0), paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
-                <Toolbar style={{height: '100%', marginTop: isDesktop === 'desktop' ? -8 : 0}}>
-                    {isDesktop === 'mobile' ? 
+            <AppBar position="fixed" style={{width: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px)') : isDesktop === 'tablet' ? (window.location.pathname === '/room' ? '100%' : '100% - 450px)') : '100%', borderRadius: isDesktop === 'tablet' || isDesktop === 'mobile' ? 0 : (window.location.pathname === '/app/room' ? 0 : '24px 0 0 0'), position: isDesktop === 'desktop' || isDesktop === 'tablet' ? 'fixed' : undefined, top: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 0 : 32) : 0, left: window.location.pathname === '/app/room' ? (isDesktop === 'desktop' ? 'calc(100% - 450px)' : 96) : (isDesktop === 'desktop' ? 96 : 0), paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
+                <Toolbar style={{height: '100%', marginTop: (isDesktop === 'desktop' || isDesktop === 'tablet') ? -8 : 0}}>
+                    {isDesktop === 'mobile' || isDesktop === 'tablet' ? 
                         <IconButton style={{marginRight: -16}} onClick={() => props.handleClose() }>
                             <ArrowForward style={{fill: '#fff'}}/>
                         </IconButton> :

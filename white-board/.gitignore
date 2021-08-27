@@ -20,4 +20,3 @@ package-lock.json
 static
 yarn-debug.log*
 yarn-error.log*
-src/packages/excalidraw/types

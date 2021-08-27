@@ -417,7 +417,7 @@ export default function RoomPage(props) {
         <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, opacity: opacity, transition: 'opacity .250s'}}> 
           <BotsBox openMenu={() => setMenuOpen(true)} openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id} style={{display: currentRoomNav === 0 ? 'block' : 'none'}}/>
           <ConfBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 2 ? 'block' : 'none'}} roomId={props.room_id}/>
-          <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id}  style={{display: currentRoomNav === 1 ? 'block' : 'none'}}/>
+          <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id} userId={props.user_id} style={{display: currentRoomNav === 1 ? 'block' : 'none'}}/>
           <TaskBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 3 ? 'block' : 'none'}} roomId={props.room_id}/>
           <div
                         style={{display: currentRoomNav === 4 ? 'block' : 'none', width: '100%', height: '100%', minHeight: '100vh'}}>

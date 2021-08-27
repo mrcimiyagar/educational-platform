@@ -51,7 +51,7 @@ export default function RoomBottombar(props) {
       }}
       showLabels
       className={classes.root}
-      style={{width: isDesktop === 'desktop' ? 450 : '100%', height: 72, transform: 'rotate(90deg)', zIndex: 99999, position: 'absolute', bottom: isDesktop === 'desktop' ? '50%' : bottom, left: isDesktop === 'desktop' ? -160 : undefined, borderRadius: isDesktop === 'desktop' ? 32 : 0, transition: 'bottom .5s', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}
+      style={{width: isDesktop === 'desktop' ? 450 : '100%', height: 72, transform: isDesktop === 'desktop' ? 'rotate(90deg)' : undefined, zIndex: 2499, position: 'absolute', bottom: isDesktop === 'desktop' ? '50%' : bottom, left: isDesktop === 'desktop' ? -160 : undefined, borderRadius: isDesktop === 'desktop' ? 32 : 0, transition: 'bottom .5s', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}
     >
       <BottomNavigationAction value={0} classes={classesAction} style={{transform: isDesktop === 'desktop' ? 'rotate(-90deg)' : undefined}} label="میز کار" icon={<DesktopMacIcon />} />
       <BottomNavigationAction value={1} classes={classesAction} style={{transform: isDesktop === 'desktop' ? 'rotate(-90deg)' : undefined}} label="وایت بورد" icon={<BorderColorIcon />} />

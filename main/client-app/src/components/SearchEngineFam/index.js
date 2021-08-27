@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     height: 380,
     transform: 'translateZ(0px)',
     position: 'fixed',
-    flexGrow: 1,
+    flexGrow: 1
   }
 }));
 
