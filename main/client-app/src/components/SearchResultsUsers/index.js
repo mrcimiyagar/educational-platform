@@ -1,17 +1,17 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Paper } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
+import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { Paper } from '@material-ui/core';
-import { gotoPage, setUser } from '../../App';
-import { serverRoot } from '../../util/Utils';
+import React from 'react';
+import { gotoPage } from '../../App';
+import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
-import EmptyIcon from '../../images/empty.png'
+import { serverRoot } from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {

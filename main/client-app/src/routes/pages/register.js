@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from "react";
-import { Row, Card, CardTitle, Form, Label, Input, Button } from "reactstrap";
-import {Link, NavLink} from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
+import { Button, Card, CardTitle, Form, Input, Label, Row } from "reactstrap";
+import { gotoPage } from '../../App';
 import { Colxx } from "../../components/CustomBootstrap";
-import {phone, setPhone, setToken} from "../../util/settings";
-import {gotoPage} from '../../App';
+import { setPhone } from "../../util/settings";
 import { leaveRoom } from "../../util/Utils";
+
 
 class Register extends Component {
   constructor(props) {

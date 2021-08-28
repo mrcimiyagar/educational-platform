@@ -1,5 +1,5 @@
-import Autosuggest from "react-autosuggest";
 import React from "react";
+import Autosuggest from "react-autosuggest";
 
 export default class ReactAutosuggest extends React.Component {
   constructor(props) {

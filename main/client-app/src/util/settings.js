@@ -1,7 +1,7 @@
 import { createTheme } from "@material-ui/core";
 import { pink } from "@material-ui/core/colors";
 import React, { useEffect } from "react";
-import {ConnectToIo, FetchMe, roothPath, serverRoot, setConfig, validateToken} from "./Utils";
+import { serverRoot, validateToken } from "./Utils";
 
 export const theme = createTheme({
     palette: {

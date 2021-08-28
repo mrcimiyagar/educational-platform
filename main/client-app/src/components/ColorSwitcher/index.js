@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {colors, token} from '../../util/settings';
+import { colors } from '../../util/settings';
 
 class ColorSwitcher extends Component {
 	constructor(props) {

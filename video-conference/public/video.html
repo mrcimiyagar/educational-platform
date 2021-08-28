@@ -166,6 +166,7 @@
                         peer_media_elements[peer_id] = remote_media
                         $('body').append(remote_media)
                         remote_media[0].style.width = 'calc(50% - 24px)';
+                        remote_media[0].style.maxWidth = '300px';
                         remote_media[0].style.height = 'auto';
                         remote_media[0].style.margin = '8px';
                         attachMediaStream(remote_media[0], event.stream)
@@ -350,7 +351,7 @@
                         local_media.attr("controls", "")
                         $('body').append(local_media)
                         local_media[0].style.width = 'calc(50% - 24px)';
-                        local_media[0].style.width = '300px';
+                        local_media[0].style.maxWidth = '300px';
                         local_media[0].style.height = 'auto';
                         local_media[0].style.margin = '8px';
                         local_media[0].muted = true 
@@ -377,7 +378,7 @@
                             local_media.attr("controls", "")
                             $('body').append(local_media)
                             local_media[0].style.width = 'calc(50% - 24px)';
-                            local_media[0].style.width = '300px';
+                            local_media[0].style.maxWidth = '300px';
                             local_media[0].style.height = 'auto';
                             local_media[0].style.margin = '8px';
                             local_media[0].muted = true 

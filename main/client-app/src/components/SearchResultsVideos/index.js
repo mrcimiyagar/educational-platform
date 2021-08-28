@@ -1,16 +1,16 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Avatar, IconButton, Typography } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import ImageListItemBar from '@material-ui/core/ImageListItemBar';
-import { Avatar, IconButton, Typography } from '@material-ui/core';
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-import { Info, More } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core/styles';
+import { Info } from '@material-ui/icons';
 import MoreVert from '@material-ui/icons/MoreVert';
-import EmptyIcon from '../../images/empty.png'
-import './index.css'
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import React from 'react';
+import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
+import './index.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {

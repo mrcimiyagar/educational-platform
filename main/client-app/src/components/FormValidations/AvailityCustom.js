@@ -1,16 +1,12 @@
+import { AvField, AvForm, AvGroup } from 'availity-reactstrap-validation';
 import React, { Component } from "react";
-
-import { AvForm, AvField, AvGroup, AvInput, AvFeedback, AvRadioGroup, AvRadio, AvCheckboxGroup, AvCheckbox } from 'availity-reactstrap-validation';
 import {
-    Button, Label, FormGroup, CustomInput, Row,
-    Card,
-    CardBody,
-    CardTitle,
+    Button, Card,
+    CardBody, Label
 } from 'reactstrap';
 
 
-import IntlMessages from "Util/IntlMessages";
-import { Colxx } from "Components/CustomBootstrap";
+
 
 class AvailityCustom extends Component {
     constructor(props) {

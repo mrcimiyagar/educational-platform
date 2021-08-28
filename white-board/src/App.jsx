@@ -8,12 +8,15 @@ import ShapesIcon from './images/shapes.png'
 import TextIcon from './images/text.png'
 import ResetIcon from './images/reset.png'
 import ColorPicker from './components/ColorPicker'
-import DrawApp, { doReset, enableEraser, enablePen, setColor } from "./components/Board";
+import DrawApp, { doReset, enableEraser, enablePen, enableText, setColor } from "./components/Board";
 
 function App(props) {
 
   return (
-    <div style={{width: '100%', height: '100vh', backgroundColor: 'rgba(255, 255, 255, 0.375)', backdropFilter: 'blur(15px'}}>
+    <div style={{width: '100%', height: '100vh', backgroundColor: 'rgba(255, 255, 255, 0.375)', backdropFilter: 'blur(15px',
+                 transform: 'translateZ(0)',
+                 willChange: 'transform'}}
+      >
       <DrawApp/>
       <Card style={{width: 72, height: 'auto', borderRadius: '0 24px 24px 0', position: 'fixed', left: 0, top: '50%', transform: 'translateY(-50%)'}}>
         <div style={{width: '100%', height: 24, alignItems: 'center', textAlign: 'center', justifyContent: 'center'}}>
@@ -55,7 +58,7 @@ function App(props) {
         <div style={{width: '100%', height: 24, alignItems: 'center', textAlign: 'center', justifyContent: 'center'}}>
           
         </div>
-        <div style={{width: '100%', height: 'auto', alignItems: 'center', textAlign: 'center', justifyContent: 'center'}}>
+        <div onClick={() => enableText()} style={{width: '100%', height: 'auto', alignItems: 'center', textAlign: 'center', justifyContent: 'center'}}>
           <img src={TextIcon} style={{width: 40, height: 40}}/>
           <Typography>
             متن

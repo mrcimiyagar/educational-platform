@@ -1,16 +1,16 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Avatar from "@material-ui/core/Avatar";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from "@material-ui/core/Avatar";
+import { makeStyles } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import { Photo, Settings } from '@material-ui/icons';
 import HomeIcon from '@material-ui/icons/Home';
-import {gotoPage} from "../../App";
-import SearchEngineIcon from '../../images/world.png'
-import { Audiotrack, Photo, Settings } from '@material-ui/icons';
+import clsx from 'clsx';
+import React from 'react';
+import { gotoPage } from "../../App";
+import SearchEngineIcon from '../../images/world.png';
 
 const useStyles = makeStyles({
     menuList: {

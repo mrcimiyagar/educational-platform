@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from "react";
-import { Row, Card, CardTitle,Button } from "reactstrap";
 import { NavLink } from "react-router-dom";
-
+import { Button, Card, CardTitle, Row } from "reactstrap";
 import { Colxx } from "../../components/CustomBootstrap";
-import { leaveRoom } from '../../util/Utils'; 
+import { leaveRoom } from '../../util/Utils';
+
 
 class Error404 extends Component {
   constructor(props) {

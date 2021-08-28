@@ -1,29 +1,29 @@
-import React, {Component, Fragment, useEffect} from "react"
-import {useTheme, useMediaQuery, ThemeProvider, colors, createTheme} from '@material-ui/core'
+import { ThemeProvider } from '@material-ui/core'
+import React, { useEffect } from "react"
 import './App.css'
-import { setMe, setToken, theme, token } from "./util/settings"
-import MessengerPage from "./routes/pages/messenger"
-import SearchEngine from "./routes/pages/searchEngine"
-import RoomPage from "./routes/pages/room"
+import { notifyUrlChanged } from "./components/SearchEngineFam"
+import AudioPlayer from "./routes/pages/audioPlayer"
+import Auth4 from "./routes/pages/auth4"
 import Chat from "./routes/pages/chat"
-import Store from "./routes/pages/store"
-import StoreBot from "./routes/pages/storeBot"
-import StoreAds from "./routes/pages/storeAds"
+import CreateRoom from "./routes/pages/createRoom"
+import DeckPage from "./routes/pages/deck"
+import MessengerPage from "./routes/pages/messenger"
+import NotePage from "./routes/pages/notes"
+import P2pCall from './routes/pages/p2pCall'
 import PhotoViewer from "./routes/pages/photoViewer"
 import PollPage from "./routes/pages/polls"
-import NotePage from "./routes/pages/notes"
-import DeckPage from "./routes/pages/deck"
-import StartupSound from './sounds/startup.mp3'
-import Auth4 from "./routes/pages/auth4"
-import SearchEngineResults from './routes/pages/searchEngineResults'
 import Profile from './routes/pages/profile'
-import VideoPlayer from './routes/pages/videoPlayer'
-import { ConnectToIo, serverRoot, useForceUpdate } from "./util/Utils"
-import CreateRoom from "./routes/pages/createRoom"
-import { notifyUrlChanged } from "./components/SearchEngineFam"
+import RoomPage from "./routes/pages/room"
 import RoomsTree from "./routes/pages/roomsTree"
-import AudioPlayer from "./routes/pages/audioPlayer"
-import P2pCall from './routes/pages/p2pCall'
+import SearchEngine from "./routes/pages/searchEngine"
+import SearchEngineResults from './routes/pages/searchEngineResults'
+import Store from "./routes/pages/store"
+import StoreAds from "./routes/pages/storeAds"
+import StoreBot from "./routes/pages/storeBot"
+import VideoPlayer from './routes/pages/videoPlayer'
+import StartupSound from './sounds/startup.mp3'
+import { setMe, setToken, theme, token } from "./util/settings"
+import { ConnectToIo, serverRoot, useForceUpdate } from "./util/Utils"
 
 let histPage = null, setHp = null;
 
@@ -91,8 +91,7 @@ export let popPage = () => {
   }
 }
 
-let DesktopDetector = (props) => {
-  const theme = useTheme();
+let DesktopDetector = () => {
   [isDesktop, setIsDesktop] = React.useState(window.innerWidth > 1400 ? 'desktop' : window.innerWidth > 900 ? 'tablet' : 'mobile')
   window.onresize = () => {
     setIsDesktop(window.innerWidth > 1400 ? 'desktop' : window.innerWidth > 900 ? 'tablet' : 'mobile')
@@ -147,8 +146,6 @@ export let registerDialogOpen = (setOpen) => {
 }
 
 export let animatePageChange = undefined
-
-let played = false
 
 export default function MainApp(props) {
 

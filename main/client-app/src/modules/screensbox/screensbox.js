@@ -1,24 +1,22 @@
-import React, {useEffect} from "react";
-import {
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardTitle,
-  Button
-} from "reactstrap";
-import {me} from '../../util/settings';
-
-import './style.css';
-
+import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
+import VideocamIcon from '@material-ui/icons/Videocam';
 import "chartjs-plugin-datalabels";
+import React, { useEffect } from "react";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-circular-progressbar/dist/styles.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-table/react-table.css";
+import {
+    Button, ButtonGroup,
+    Card,
+    CardBody,
+    CardTitle
+} from "reactstrap";
+import { me, token } from '../../util/settings';
+import './style.css';
 
-import {colors, setToken, token} from "../../util/settings";
-import VideocamIcon from '@material-ui/icons/Videocam';
-import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
+
+
 
 function addVideoStream(video, stream) {
   video.srcObject = stream;

@@ -1,24 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import ChatAppBar from "../../components/ChatAppBar";
-import Slide from "@material-ui/core/Slide";
-import {gotoPage, popPage, registerDialogOpen, roomId} from "../../App";
+import { css } from '@emotion/css';
+import { Avatar, Typography } from '@material-ui/core';
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
-import {makeStyles} from "@material-ui/core/styles";
+import Slide from "@material-ui/core/Slide";
+import { makeStyles } from "@material-ui/core/styles";
+import { PlayArrowTwoTone } from '@material-ui/icons';
 import DescriptionIcon from '@material-ui/icons/Description';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import SendIcon from '@material-ui/icons/Send';
-import { me, setToken, token } from '../../util/settings';
-import { serverRoot, useForceUpdate } from '../../util/Utils';
-import ScrollToBottom from 'react-scroll-to-bottom';
-import { css } from '@emotion/css';
-import {WaveSurferBox} from '../../components/WaveSurfer'
 import Picker from 'emoji-picker-react';
-import { useFilePicker } from 'use-file-picker';
-import { PlayArrowTwoTone } from '@material-ui/icons';
+import React, { useEffect } from 'react';
+import ScrollToBottom from 'react-scroll-to-bottom';
 import Viewer from 'react-viewer';
-import { Avatar, Typography } from '@material-ui/core';
+import { useFilePicker } from 'use-file-picker';
+import { gotoPage, popPage, registerDialogOpen } from "../../App";
+import ChatAppBar from "../../components/ChatAppBar";
+import { WaveSurferBox } from '../../components/WaveSurfer';
+import { me, token } from '../../util/settings';
+import { serverRoot, useForceUpdate } from '../../util/Utils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

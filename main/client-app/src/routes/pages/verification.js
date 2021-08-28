@@ -1,11 +1,11 @@
 import React, { Component, Fragment } from "react";
-import { Row, Card, CardTitle, Form, Label, Input, Button } from "reactstrap";
-import {Link, NavLink} from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
+import { Button, Card, CardTitle, Form, Input, Label, Row } from "reactstrap";
+import { gotoPage } from '../../App';
 import { Colxx } from "../../components/CustomBootstrap";
-import {phone, setPhone, setToken, token} from "../../util/settings";
-import {config, ConnectToIo, FetchMe, leaveRoom, roothPath, setConfig, socket} from "../../util/Utils";
-import {gotoPage} from '../../App';
+import { phone, setToken, token } from "../../util/settings";
+import { config, ConnectToIo, FetchMe, leaveRoom, setConfig, socket } from "../../util/Utils";
+
 
 class Verification extends Component {
   constructor(props) {

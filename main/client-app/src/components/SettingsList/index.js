@@ -1,19 +1,18 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Avatar, Card, Fab, Typography } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
-import { Avatar, Card, Chip, Fab, Typography } from '@material-ui/core';
-import SettingsSearchbar from '../SettingsSearchbar';
-import HomeToolbar from '../HomeToolbar';
-import HomeIcon from '@material-ui/icons/Home';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import { makeStyles } from '@material-ui/core/styles';
 import ColorLensIcon from '@material-ui/icons/ColorLens';
-import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
-import SecurityIcon from '@material-ui/icons/Security';
-import WebIcon from '@material-ui/icons/Web';
-import LanguageIcon from '@material-ui/icons/Language';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
+import LanguageIcon from '@material-ui/icons/Language';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import SecurityIcon from '@material-ui/icons/Security';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import WebIcon from '@material-ui/icons/Web';
+import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
+import React from 'react';
+import HomeToolbar from '../HomeToolbar';
+import SettingsSearchbar from '../SettingsSearchbar';
 
 const useStyles = makeStyles((theme) => ({
   root: {

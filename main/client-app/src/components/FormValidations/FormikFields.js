@@ -1,22 +1,16 @@
-import React from 'react';
-import Select from 'react-select';
-import {
-  Row,
-  Card,
-  CardBody,
-  FormGroup,
-  Label,
-  Button,
-  CustomInput, Input
-} from "reactstrap";
-
-import TagsInput from "react-tagsinput";
-import "react-tagsinput/react-tagsinput.css";
 import Switch from "rc-switch";
 import "rc-switch/assets/index.css";
-
+import React from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Select from 'react-select';
+import TagsInput from "react-tagsinput";
+import "react-tagsinput/react-tagsinput.css";
+import {
+    CustomInput
+} from "reactstrap";
+
+
 
 export class FormikReactSelect extends React.Component {
   handleChange = value => {

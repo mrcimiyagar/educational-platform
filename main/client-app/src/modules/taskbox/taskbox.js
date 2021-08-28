@@ -1,15 +1,15 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
-import './style.css';
-import { serverRoot, taskManagerPath, useForceUpdate } from "../../util/Utils";
-import Board, { createTranslate } from 'react-trello'
-import { AppBar, Fab, IconButton, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
-import { ArrowForward, Notes, Search, ViewCarousel } from "@material-ui/icons";
-import { gotoPage, popPage } from "../../App";
-import Chat from "@material-ui/icons/Chat";
-import PollIcon from '@material-ui/icons/Poll';
-import Menu from "@material-ui/icons/Menu";
-import { theme, token } from "../../util/settings";
+import { AppBar, Fab, IconButton, Toolbar, Typography } from "@material-ui/core";
+import { Notes, Search, ViewCarousel } from "@material-ui/icons";
 import Add from "@material-ui/icons/Add";
+import Chat from "@material-ui/icons/Chat";
+import Menu from "@material-ui/icons/Menu";
+import PollIcon from '@material-ui/icons/Poll';
+import React, { useEffect } from "react";
+import Board, { createTranslate } from 'react-trello';
+import { gotoPage, isDesktop } from "../../App";
+import { token } from "../../util/settings";
+import { serverRoot, useForceUpdate } from "../../util/Utils";
+import './style.css';
 
 let TRANSLATION_TABLE = {
   "Add another lane": "افزودن لیست",
@@ -85,9 +85,11 @@ export let TaskBox = (props) => {
   }, [])
   return (
     <div style={{height: 'calc(100% - 64px - 72px)', display: props.style.display}}>
-      <AppBar style={{width: '100%', height: 64,
+      <AppBar style={{width: isDesktop === 'desktop' ? 550 : '100%', height: 64,
+          borderRadius: isDesktop === 'desktop' ? '0 0 24px 24px' : 0,
           backgroundColor: 'rgba(21, 96, 233, 0.65)',
-          backdropFilter: 'blur(10px)'}}>
+          backdropFilter: 'blur(10px)',
+          position: 'fixed', left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 'calc(50% - 225px)' : '50%', transform: 'translateX(-50%)'}}>
         <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
           <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
           <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
@@ -103,11 +105,12 @@ export let TaskBox = (props) => {
           <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
         </Toolbar>
       </AppBar>
-      <Board t={customTranslation} data={data} style={{paddingLeft: 64, paddingRight: 64, backgroundColor: 'transparent', background: 'transparent', marginTop: 64}}/>
+      <Board t={customTranslation} data={data} style={{width: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 'calc(100% - 112px)' : '100%', paddingLeft: 128, height: 'calc(100% + 56px)', paddingRight: 64, backgroundColor: 'transparent', background: 'transparent', marginTop: 80, overflow: 'auto'}}/>
+      {(isDesktop === 'desktop' && window.location.pathname === '/app/room') ? null :
       <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16, bottom: 72 + 16}} onClick={() => {
           gotoPage('/app/chat')
-      }}><Chat/></Fab>
-      <Fab id="addLaneButton" color={'primary'} size={'medium'} style={{position: 'fixed', left: 20, bottom: 72 + 16 + 56 + 16}} onClick={() => {
+      }}><Chat/></Fab>}
+      <Fab id="addLaneButton" color={'primary'} size={(isDesktop === 'desktop' && window.location.pathname === '/app/room') ? undefined : 'medium'} style={{position: 'fixed', left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 32 : 20, bottom: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 48 : (72 + 16 + 56 + 16)}} onClick={() => {
         let laneTitle = prompt('نامی برای لیست انتخاب کنید')
         if (laneTitle === null || laneTitle === '') return
         let requestOptions = {

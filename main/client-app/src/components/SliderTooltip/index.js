@@ -1,5 +1,5 @@
-import React, {Fragment} from "react";
 import Slider, { Range } from "rc-slider";
+import React, { Fragment } from "react";
 
 
 const sliderHandle = props => {

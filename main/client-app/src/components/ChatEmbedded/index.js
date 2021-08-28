@@ -1,29 +1,23 @@
-import React, {useEffect, useState} from 'react';
-import ChatAppBar from "../ChatAppBar";
-import Slide from "@material-ui/core/Slide";
-import {gotoPage, isDesktop, popPage, registerDialogOpen, roomId} from "../../App";
-import Dialog from "@material-ui/core/Dialog";
+import { css } from '@emotion/css';
+import { Avatar, Typography } from '@material-ui/core';
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
+import { PlayArrowTwoTone } from '@material-ui/icons';
 import DescriptionIcon from '@material-ui/icons/Description';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 import SendIcon from '@material-ui/icons/Send';
+import Picker from 'emoji-picker-react';
+import React, { useEffect } from 'react';
+import ScrollToBottom from 'react-scroll-to-bottom';
+import Viewer from 'react-viewer';
+import { useFilePicker } from 'use-file-picker';
+import { gotoPage, isDesktop } from "../../App";
+import EmptyIcon from '../../images/empty.png';
 import { me, setToken, token } from '../../util/settings';
 import { serverRoot, useForceUpdate } from '../../util/Utils';
-import ScrollToBottom from 'react-scroll-to-bottom';
-import { css } from '@emotion/css';
-import {WaveSurferBox} from '../WaveSurfer'
-import Picker from 'emoji-picker-react';
-import { useFilePicker } from 'use-file-picker';
-import { PlayArrowTwoTone } from '@material-ui/icons';
-import Viewer from 'react-viewer';
-import EmptyIcon from '../../images/empty.png'
-import { Avatar, Typography } from '@material-ui/core';
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+import ChatAppBar from "../ChatAppBar";
+import { WaveSurferBox } from '../WaveSurfer';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -60,16 +54,10 @@ export default function ChatEmbedded(props) {
     let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('')
     let [user, setUser] = React.useState(undefined)
     let [room, setRoom] = React.useState(undefined)
-    const [open, setOpen] = React.useState(true)
     const [showEmojiPad, setShowEmojiPad] = React.useState(false)
     let [pickingFile, setPickingFile] = React.useState(false)
-    registerDialogOpen(setOpen)
-    const handleClose = () => {
-        setOpen(false);
-        setTimeout(popPage, 250);
-    };
     let classes = useStyles();
-    const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
+    const [openFileSelector, { filesContent, loading }] = useFilePicker({
         readAs: 'DataURL'
     });
 
@@ -166,7 +154,7 @@ export default function ChatEmbedded(props) {
                     forceUpdate()
                 });
                 request.onreadystatechange = function() {
-                    if (request.readyState == XMLHttpRequest.DONE) {
+                    if (request.readyState === XMLHttpRequest.DONE) {
                         let requestOptions = {
                             method: 'POST',
                             headers: {
@@ -208,7 +196,7 @@ export default function ChatEmbedded(props) {
                 request.send(data);
             }))
           }
-      }, [loading])
+      }, [loading, filesContent, forceUpdate, messages, pickingFile, props.roomId])
 
     return (
             <div style={{display: (props.roomId === undefined || props.roomId === 0) ? 'none' : 'block', width: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? '100%' : "calc(100% - 64px - 256px - 64px - 72px + 180px)") : '100%', height: "100%", position: "absolute", top: isDesktop === 'desktop' ? (32 + 16) : 32, left: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 0 : 80) : 0, bottom: isDesktop === 'desktop' ? 16 : 0}}>
@@ -220,7 +208,7 @@ export default function ChatEmbedded(props) {
                     onClose={() => {setPhotoViewerVisible(false);}}
                     images={[{src: currentPhotoSrc, alt: ''}]}
                 />
-                <ChatAppBar closeCallback={handleClose} user={user} room={room}/>
+                <ChatAppBar user={user} room={room}/>
                 <div style={{width: '100%', height: 'auto', zIndex: 1000}}>
                     <div className={classes.root} style={{height: 56, bottom: showEmojiPad ? (352 + 56) : isDesktop === 'desktop' ? 24 : 88, transform: 'translateX(-128px)'}}>
                     <IconButton className={classes.iconButton} onClick={() => {
@@ -298,7 +286,7 @@ export default function ChatEmbedded(props) {
                                                 message.messageType === 'audio' ?
                                                     <WaveSurferBox fileId={message.fileId} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
                                                     message.messageType === 'photo' ?
-                                                        <img onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
+                                                        <img alt={''} onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
                                                             <div>
                                                                 <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/>
@@ -329,7 +317,7 @@ export default function ChatEmbedded(props) {
                                                 message.messageType === 'audio' ?
                                                     <WaveSurferBox fileId={message.fileId} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
                                                     message.messageType === 'photo' ?
-                                                        <img onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
+                                                        <img alt={''} onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
                                                             <div>
                                                                 <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/>
@@ -363,7 +351,7 @@ export default function ChatEmbedded(props) {
                                                 message.messageType === 'audio' ?
                                                     <WaveSurferBox fileId={message.fileId} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
                                                     message.messageType === 'photo' ?
-                                                        <img onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
+                                                        <img alt={''} onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
                                                             <div>
                                                                 <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/>
@@ -383,7 +371,7 @@ export default function ChatEmbedded(props) {
                                         <div style={{position: 'absolute', right: 12, bottom: 8, fontSize: 12, color: '#fff'}}>{dateTime.toLocaleDateString('fa-IR').toString() + ' ' + dateTime.getHours() + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds()}</div>
                                     </div>
                                     <div style={{visibility: 'hidden', fontFamily: 'mainFont', fontSize: 15, display: 'inline-block', width: 'auto', minWidth: 125, maxWidth: 300, padding: 16,
-                                        color: 'transparent', marginLeft: 16, marginTop: 16, color: '#fff', left: 0,
+                                        marginLeft: 16, marginTop: 16, color: '#fff', left: 0,
                                         background: 'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)'}}>
                                             <Typography style={{position: 'absolute', left: 16, fontWeight: 'bold', fontSize: 20}}>{message.User.firstName}</Typography>
                                             <br/>
@@ -393,7 +381,7 @@ export default function ChatEmbedded(props) {
                                                 message.messageType === 'audio' ?
                                                     <WaveSurferBox fileId={message.fileId} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
                                                     message.messageType === 'photo' ?
-                                                        <img onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
+                                                        <img alt={''} onClick={() => {setCurrentPhotoSrc(serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`); setPhotoViewerVisible(true);}} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/> :
                                                         message.messageType === 'video' ?
                                                             <div>
                                                                 <video onClick={() => {gotoPage('/app/videoplayer', {src: serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`})}} controls={false} style={{width: 200}} src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`}/>
@@ -418,7 +406,7 @@ export default function ChatEmbedded(props) {
                         );
                     }) :
                     <div style={{width: 250, height: 250, position: isDesktop === 'desktop' ? undefined : 'absolute', top: isDesktop === 'desktop' ? undefined : 80, right: isDesktop === 'desktop' ? undefined : 'calc(50% - 225px)', marginRight: isDesktop === 'desktop' ? 'calc(50% - 125px)' : undefined, marginTop: isDesktop === 'desktop' ? 160 : undefined, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-                      <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
+                      <img alt={''} src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
                     </div>
                     }
                     <div style={{width: '100%', height: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 160 : 88}}/>

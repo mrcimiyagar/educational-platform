@@ -1,12 +1,11 @@
-import React, {Fragment, useEffect} from 'react';
-import {token} from "../../util/settings";
 import "dropzone/dist/min/dropzone.min.css";
-import {humanFileSize, serverRoot, socket, useForceUpdate} from "../../util/Utils";
-import Progressbar from "../Progress/Progressbar";
-import {colors} from '../../util/settings';
+import React from 'react';
 import {
     Card
 } from "reactstrap";
+import { colors, token } from "../../util/settings";
+import { humanFileSize, serverRoot, socket, useForceUpdate } from "../../util/Utils";
+import Progressbar from "../Progress/Progressbar";
 
 export default function PresentsGrid(props) {
 

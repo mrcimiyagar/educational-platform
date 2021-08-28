@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { CSSTransitionGroup } from 'react-transition-group';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { CSSTransitionGroup } from 'react-transition-group';
 import Notification from './Notification';
 
 class Notifications extends React.Component {

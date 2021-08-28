@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Card, Fab } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
-import { Avatar, Card, Fab, Typography } from '@material-ui/core';
-import SpacesSearchbar from '../SpacesSearchbar';
-import HomeToolbar from '../HomeToolbar';
+import { makeStyles } from '@material-ui/core/styles';
 import HomeIcon from '@material-ui/icons/Home';
+import React, { useEffect } from 'react';
 import { gotoPage, isDesktop } from '../../App';
+import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
-import EmptyIcon from '../../images/empty.png'
 import { serverRoot } from '../../util/Utils';
+import HomeToolbar from '../HomeToolbar';
+import SpacesSearchbar from '../SpacesSearchbar';
 
 const useStyles = makeStyles((theme) => ({
   root: {

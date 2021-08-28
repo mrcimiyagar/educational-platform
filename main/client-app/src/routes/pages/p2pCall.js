@@ -1,7 +1,7 @@
-import { Dialog, Slide } from '@material-ui/core'
-import React from 'react'
-import { gotoPage, popPage, registerDialogOpen } from '../../App'
-import { ConfBox } from '../../modules/confbox'
+import { Dialog, Slide } from '@material-ui/core';
+import React from 'react';
+import { gotoPage, popPage, registerDialogOpen } from '../../App';
+import { ConfBox } from '../../modules/confbox';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

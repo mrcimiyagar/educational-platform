@@ -1,8 +1,6 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
-import { AppBar, Fab, IconButton, Toolbar, Typography } from "@material-ui/core";
-import { ArrowForward, Notes, Pause, PlayArrow, Search } from "@material-ui/icons";
-import Replay10Icon from '@material-ui/icons/Replay10';
-import Forward10Icon from '@material-ui/icons/Forward10';
+import { AppBar, IconButton, Toolbar, Typography } from "@material-ui/core";
+import { ArrowForward } from "@material-ui/icons";
+import React from "react";
 
 export let AudioBox = (props) => {
     let [playing, setPlaying] = React.useState(false)

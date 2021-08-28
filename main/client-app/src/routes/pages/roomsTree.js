@@ -1,16 +1,16 @@
-import React, {useEffect} from 'react';
-import Slide from "@material-ui/core/Slide";
-import {gotoPage, isDesktop, popPage, registerDialogOpen} from "../../App";
+import { AppBar, Fab, Toolbar, Typography } from '@material-ui/core';
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
-import {makeStyles} from "@material-ui/core/styles";
-import { AppBar, Fab, Toolbar, Typography } from '@material-ui/core';
+import Slide from "@material-ui/core/Slide";
+import { makeStyles } from "@material-ui/core/styles";
 import { ArrowForward, Search } from '@material-ui/icons';
-import { membership } from './room';
-import { reloadUsersList, RoomTreeBox } from '../../components/RoomTreeBox';
-import { serverRoot } from '../../util/Utils';
-import { setToken, token } from '../../util/settings';
 import Add from '@material-ui/icons/Add';
+import React, { useEffect } from 'react';
+import { isDesktop, popPage, registerDialogOpen } from "../../App";
+import { reloadUsersList, RoomTreeBox } from '../../components/RoomTreeBox';
+import { token } from '../../util/settings';
+import { serverRoot } from '../../util/Utils';
+import { membership } from './room';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

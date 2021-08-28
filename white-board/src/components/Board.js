@@ -3,6 +3,7 @@ import React from 'react'
 
 export let enableEraser = undefined
 export let enablePen = undefined
+export let enableText = undefined
 export let doReset = undefined
 export let setColor = undefined
 
@@ -13,7 +14,7 @@ class DrawApp extends React.Component {
     }
 
     componentDidMount() {
-        this.reset()
+        this.reset(false)
         enableEraser = () => {
             this.setState({
                 mode:'erase'
@@ -25,32 +26,33 @@ class DrawApp extends React.Component {
             })
         }
         doReset = () => {
-            if (window.confirm ('آیا مایل به ریست کردن وایت بورد هستید ؟')) {
-                this.setState({
-                    mode: 'draw',
-                    pen : 'up',
-                    lineWidth : 10,
-                    penColor : 'black'
-                })
-    
-                this.ctx = this.refs.canvas.getContext('2d')
-                this.ctx.lineWidth = 10
-            }
+            this.reset(true)
+        }
+        enableText = () => {
+            this.setState({
+                mode:'text'
+            })
         }
         setColor = (code) => {
             this.setColor(code)
         }
     }
 
-    draw(e) { //response to Draw button click 
+    draw(e) {
         this.setState({
             mode:'draw'
         })
     }
 
-    erase() { //response to Erase button click
+    erase() {
         this.setState({
             mode:'erase'
+        })
+    }
+
+    text() {
+        this.setState({
+            mode: 'text'
         })
     }
 
@@ -63,12 +65,14 @@ class DrawApp extends React.Component {
             this.ctx.lineCap = 'round';
 
 
-            if(this.state.mode === 'draw') {
+            if (this.state.mode === 'draw') {
                 this.ctx.strokeStyle = this.state.penColor
+                this.ctx.globalCompositeOperation = 'source-over'; 
             }
 
-            if(this.state.mode === 'erase') {
-                this.ctx.strokeStyle = '#ffffff'
+            if (this.state.mode === 'erase') {
+                this.ctx.globalCompositeOperation = "destination-out"; 
+                this.ctx.strokeStyle = 'rgba(255, 255, 255, 1)'
             }
 
             this.ctx.moveTo(this.state.penCoords[0], this.state.penCoords[1]) //move to old position
@@ -92,6 +96,11 @@ class DrawApp extends React.Component {
         this.setState({
             pen:'up'
         })
+        if (this.state.mode === 'text') {
+            this.ctx.globalCompositeOperation = 'source-over'; 
+            this.ctx.font = "30px Arial";
+            this.ctx.fillText("Hello World",10,50);
+        }
     }
 
     penSizeUp(){ //increase pen size button clicked
@@ -112,18 +121,29 @@ class DrawApp extends React.Component {
         })
     }
 
-    reset() { //clears it to all white, resets state to original
-        this.setState({
-            mode: 'draw',
-            pen : 'up',
-            lineWidth : 10,
-            penColor : 'black'
-        })
+    reset(ask) { //clears it to all white, resets state to original
+        let resetOrig = () => {
+            this.setState({
+                mode: 'draw',
+                pen : 'up',
+                lineWidth : 10,
+                penColor : 'black'
+            })
 
-        this.ctx = this.refs.canvas.getContext('2d')
-        this.ctx.fillStyle="white"
-        this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
-        this.ctx.lineWidth = 10
+            this.ctx = this.refs.canvas.getContext('2d')
+            this.ctx.globalCompositeOperation = "destination-out"; 
+            this.ctx.fillStyle="white"
+            this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight)
+            this.ctx.lineWidth = 10
+        }
+        if (ask) {
+            if (window.confirm ('آیا مایل به ریست کردن وایت بورد هستید ؟')) {
+                resetOrig()
+            }
+        }
+        else {
+            resetOrig()
+        }
     }
 
     render() {

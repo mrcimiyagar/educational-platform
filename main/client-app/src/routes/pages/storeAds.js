@@ -1,13 +1,11 @@
-import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Dialog, Fab, Slide } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
-import { Avatar, Card, Dialog, Fab, Slide, Typography } from '@material-ui/core';
-import SpacesSearchbar from '../../components/StoreAdsSearchbar';
-import HomeToolbar from '../../components/HomeToolbar';
-import HomeIcon from '@material-ui/icons/Home';
+import { makeStyles } from '@material-ui/core/styles';
 import MessageIcon from '@material-ui/icons/Message';
+import React, { useEffect } from 'react';
 import { popPage, registerDialogOpen } from '../../App';
+import SpacesSearchbar from '../../components/StoreAdsSearchbar';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

@@ -1,6 +1,6 @@
 import React from "react";
-import { Colxx } from "../../components/CustomBootstrap";
 import { Nav, NavItem, NavLink } from "reactstrap";
+import { Colxx } from "../../components/CustomBootstrap";
 class Pagination extends React.Component {
   componentDidMount() {}
   onChangePage(e) {

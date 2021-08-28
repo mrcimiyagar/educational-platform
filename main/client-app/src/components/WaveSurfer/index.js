@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useMemo
-} from "react";
+import React from "react";
 
 export function WaveSurferBox(props) {
   return (

@@ -1,15 +1,10 @@
 import React, { useEffect } from "react";
-import './style.css';
-import {
-    Button
-  } from "reactstrap";
-import DetectRTC from 'detectrtc'
-import {me, token, colors} from '../../util/settings';
-import { useForceUpdate, videoConferencePath } from "../../util/Utils";
-import { notifyMeOnAccessChange, updateConf } from '../../routes/pages/conference';
-import store from "../../redux/main";
-import { switchWebinar } from "../../redux/main";
 import DivSize from "../../components/DivSize/DivSize2";
+import store, { switchWebinar } from "../../redux/main";
+import { notifyMeOnAccessChange, updateConf } from '../../routes/pages/conference';
+import { colors, me, token } from '../../util/settings';
+import { useForceUpdate } from "../../util/Utils";
+import './style.css';
 
 export let updateVideoBox = () => {}
 

@@ -1,8 +1,7 @@
 import React from "react";
+import { changeSendButtonState } from '../modules/chatbox/chatbox';
+import store, { changeConferenceMode } from "../redux/main";
 import { setMe, token } from "./settings";
-import {changeSendButtonState} from '../modules/chatbox/chatbox';
-import { changeConferenceMode } from "../redux/main";
-import store from "../redux/main";
 
 export const roothPath = 'https://kaspersoft.cloud';
 export const whiteboardPath = 'http://localhost:1000';

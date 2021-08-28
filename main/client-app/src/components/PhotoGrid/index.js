@@ -1,14 +1,13 @@
 
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { IconButton, ImageListItemBar } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
+import { makeStyles } from '@material-ui/core/styles';
 import { Info } from '@material-ui/icons';
-import { IconButton, ImageListItemBar } from '@material-ui/core';
-import { propTypes } from 'react-polls';
+import React from 'react';
+import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
-import EmptyIcon from '../../images/empty.png'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,135 +22,6 @@ const useStyles = makeStyles((theme) => ({
     height: 'auto',
   },
 }));
-
-const itemData = [
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 2,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 2,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 2,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 2,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 2,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 2,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/vegetables.jpg',
-        title: 'Image',
-        author: 'author',
-        cols: 1,
-    },
-]
 
 export default function PhotoGrid(props) {
   const classes = useStyles();
@@ -176,7 +46,7 @@ export default function PhotoGrid(props) {
               ))}
           </ImageList>  :
           <div style={{width: 'calc(100% - 96px)', height: '100%', marginLeft: 48, marginRight: 48, marginTop: 80, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-            <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
+            <img alt={''} src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
           </div>
       }
     </div>

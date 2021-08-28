@@ -1,29 +1,19 @@
-import React, { Component, Fragment } from "react";
-import {
-  Row,
-  Card,
-  CardBody,
-  Nav,
-  NavItem,
-  Button,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
-  TabContent,
-  TabPane,
-  Badge,
-  ButtonDropdown,
-  Progress,
-  CardTitle
-} from "reactstrap";
-import { Colxx } from "../../components/CustomBootstrap";
-import { BreadcrumbItems } from "../../components/BreadcrumbContainer";
-import { NavLink } from "react-router-dom";
 import classnames from "classnames";
+import React, { Component, Fragment } from "react";
+import { NavLink } from "react-router-dom";
+import {
+    Badge, Button, ButtonDropdown, Card,
+    CardBody, CardTitle, DropdownItem,
+    DropdownMenu, DropdownToggle, Nav,
+    NavItem, Progress, Row, TabContent,
+    TabPane
+} from "reactstrap";
+import { BreadcrumbItems } from "../../components/BreadcrumbContainer";
+import { Colxx } from "../../components/CustomBootstrap";
 import SurveyQuestionBuilder from "../../components/SurveyQuestionBuilder";
+import { currentSurvey, setCurrentSurvey } from "../../util/settings";
 import { leaveRoom, mapOrder } from "../../util/Utils";
 
-import { currentSurvey, setCurrentSurvey } from "../../util/settings";
 
 class SurveyDetailApplication extends Component {
   constructor(props) {

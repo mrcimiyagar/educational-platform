@@ -1,38 +1,30 @@
 
-import React, {useEffect, useState} from "react";
-
-import "chartjs-plugin-datalabels";
-import "react-circular-progressbar/dist/styles.css";
-import "react-perfect-scrollbar/dist/css/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-table/react-table.css";
-
-import {colors, me, token} from "../../util/settings";
-import {ConnectToIo, serverRoot, socket, useForceUpdate} from "../../util/Utils";
-import { NotificationManager } from "../../components/ReactNotifications";
-
-import SortableTree from 'react-sortable-tree';
-import 'react-sortable-tree/style.css';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Fab, FormControlLabel, Menu, MenuItem, Radio, RadioGroup } from "@material-ui/core";
-import AddIcon from '@material-ui/icons/Add'
-import { gotoPage, gotoPageWithDelay, isDesktop } from "../../App";
-
-import PropTypes from 'prop-types';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Menu, MenuItem, Radio, RadioGroup } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import TreeView from '@material-ui/lab/TreeView';
-import TreeItem from '@material-ui/lab/TreeItem';
 import Typography from '@material-ui/core/Typography';
-import MailIcon from '@material-ui/icons/Mail';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Label from '@material-ui/icons/Label';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import InfoIcon from '@material-ui/icons/Info';
-import ForumIcon from '@material-ui/icons/Forum';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import PersonIcon from '@material-ui/icons/Person';
+import TreeItem from '@material-ui/lab/TreeItem';
+import TreeView from '@material-ui/lab/TreeView';
+import "chartjs-plugin-datalabels";
+import PropTypes from 'prop-types';
+import React, { useEffect } from "react";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "react-circular-progressbar/dist/styles.css";
+import "react-perfect-scrollbar/dist/css/styles.css";
+import SortableTree from 'react-sortable-tree';
+import 'react-sortable-tree/style.css';
+import "react-table/react-table.css";
+import { isDesktop } from "../../App";
+import { NotificationManager } from "../../components/ReactNotifications";
+import { me, token } from "../../util/settings";
+import { serverRoot, socket, useForceUpdate } from "../../util/Utils";
+
+
+
+
 
 export let reloadUsersList = undefined;
 

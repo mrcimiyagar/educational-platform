@@ -1,11 +1,11 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import PhotoIcon from '@material-ui/icons/Photo';
+import { makeStyles } from '@material-ui/core/styles';
 import AudiotrackIcon from '@material-ui/icons/Audiotrack';
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import PhotoIcon from '@material-ui/icons/Photo';
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import React from 'react';
 
 const useStyles = makeStyles({
   root: {

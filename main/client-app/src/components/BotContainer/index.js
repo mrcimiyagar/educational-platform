@@ -1,7 +1,6 @@
 import { Card, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
-import { useForceUpdate } from "../../util/Utils";
-import './index.css'
+import './index.css';
 
 export let handleGuiUpdate = undefined
 
@@ -82,7 +81,7 @@ export default function BotContainer(props) {
     }
     
     function onTouchEnd(e) {
-      if (e.touches.length ==0) onUp(e.changedTouches[0]);
+      if (e.touches.length === 0) onUp(e.changedTouches[0]);
     }
     
     function onMouseDown(e) {
@@ -221,9 +220,9 @@ export default function BotContainer(props) {
       // This code executes when mouse moves without clicking
     
       // style cursor
-      if (onRightEdge && onBottomEdge || onLeftEdge && onTopEdge) {
+      if ((onRightEdge && onBottomEdge) || (onLeftEdge && onTopEdge)) {
         pane.style.cursor = 'nwse-resize';
-      } else if (onRightEdge && onTopEdge || onBottomEdge && onLeftEdge) {
+      } else if ((onRightEdge && onTopEdge) || (onBottomEdge && onLeftEdge)) {
         pane.style.cursor = 'nesw-resize';
       } else if (onRightEdge || onLeftEdge) {
         pane.style.cursor = 'ew-resize';
@@ -278,10 +277,9 @@ export default function BotContainer(props) {
     
       clicked = null;
     }
-    }, [props.editMode])
+    }, [props.editMode, props.isPreview, props.widgetId])
 
     let idDict = {}
-    let forceUpdate = useForceUpdate()
 
     let renderGui = el => {
       if (el === undefined) return <div/>
@@ -337,7 +335,7 @@ export default function BotContainer(props) {
         }
         else if (el.type === 'Image') {
           result = (
-            <img id={el.realId} style={style} src={el.src}/>
+            <img alt={''} id={el.realId} style={style} src={el.src}/>
           )
         }
 

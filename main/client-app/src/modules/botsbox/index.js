@@ -1,19 +1,16 @@
-import React, {useEffect} from 'react';
-import HomeToolbar from '../../components/HomeToolbar';
-import BotsBoxSearchbar from '../../components/BotsBoxSearchbar';
-import Draggable from 'react-draggable'
-import { ResizableBox } from 'react-resizable';
-import { serverRoot, socket, useForceUpdate } from '../../util/Utils';
-import BotContainer, { handleGuiUpdate } from '../../components/BotContainer';
 import { Avatar, createTheme, Drawer, Fab, ThemeProvider } from '@material-ui/core';
-import Edit from '@material-ui/icons/Edit';
-import ClockHand1 from '../../images/clock-hand-1.png'
-import ClockHand2 from '../../images/clock-hand-2.png'
-import {evaluate} from 'mathjs'
-import Add from '@material-ui/icons/Add';
 import { pink } from '@material-ui/core/colors';
-import { token } from '../../util/settings';
+import Add from '@material-ui/icons/Add';
+import Edit from '@material-ui/icons/Edit';
+import React, { useEffect } from 'react';
 import { isDesktop } from '../../App';
+import BotContainer from '../../components/BotContainer';
+import BotsBoxSearchbar from '../../components/BotsBoxSearchbar';
+import HomeToolbar from '../../components/HomeToolbar';
+import ClockHand1 from '../../images/clock-hand-1.png';
+import ClockHand2 from '../../images/clock-hand-2.png';
+import { token } from '../../util/settings';
+import { serverRoot, socket, useForceUpdate } from '../../util/Utils';
 
 var lastScrollTop = 0
 

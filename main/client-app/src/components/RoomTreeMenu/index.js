@@ -1,11 +1,7 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import {RoomTreeBox} from '../RoomTreeBox';
+import React from 'react';
 import store, { switchRoomTreeMenu } from '../../redux/main';
 import { useForceUpdate } from '../../util/Utils';
-import { propTypes } from 'react-polls';
 
 export let forceUpdateRoomTreeMenu = undefined
 

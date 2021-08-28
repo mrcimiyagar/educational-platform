@@ -1,19 +1,12 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import RestoreIcon from '@material-ui/icons/Restore';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import SettingsIcon from '@material-ui/icons/Settings';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import HomeIcon from '@material-ui/icons/Home';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import { makeStyles } from '@material-ui/core/styles';
 import ExtensionIcon from '@material-ui/icons/Extension';
+import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import React from 'react';
 import store, { setCurrentStoreNav } from '../../redux/main';
+import { updateStore } from '../../routes/pages/store';
 import { useForceUpdate } from '../../util/Utils';
-import {updateStore} from '../../routes/pages/store'
 
 const useStyles = makeStyles({
   root: {

@@ -1,16 +1,16 @@
 
-import { Avatar, Card, Dialog, Fab, IconButton, Slide, Typography } from "@material-ui/core";
-import React from "react";
-import header from '../../images/profile-header.jpeg'
-import EditIcon from '@material-ui/icons/Edit';
+import { Avatar, Card, Dialog, Fab, IconButton, Slide } from "@material-ui/core";
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import SearchIcon from '@material-ui/icons/Search';
+import EditIcon from '@material-ui/icons/Edit';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import {gotoPage, isDesktop, popPage, registerDialogOpen, setRoomId, user} from "../../App";
-import './profile.css';
-import { setToken, token } from "../../util/settings";
+import SearchIcon from '@material-ui/icons/Search';
+import React from "react";
+import { gotoPage, isDesktop, popPage, registerDialogOpen } from "../../App";
+import ProfileAvatar from '../../images/avatar.jpg';
+import header from '../../images/profile-header.jpeg';
+import { token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
-import ProfileAvatar from '../../images/avatar.jpg'
+import './profile.css';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

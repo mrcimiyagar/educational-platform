@@ -1,13 +1,12 @@
 
-import React, {Component, Fragment, useEffect} from "react";
-import { Suspense } from "react";
+import { TailSpin, useLoading } from '@agney/react-loading';
+import { Typography } from "@material-ui/core";
+import React, { Suspense, useEffect } from "react";
 import ReactDOM from 'react-dom';
 import { Provider } from "react-redux";
-import store from "./redux/main";
-import { useLoading, TailSpin } from '@agney/react-loading';
 import CloudIcon from './images/logo.png';
-import { Typography } from "@material-ui/core";
-import RoomWallpaper from './images/roomWallpaper.png'
+import RoomWallpaper from './images/roomWallpaper.png';
+import store from "./redux/main";
 
 const MainApp = React.lazy(() => {
 	return Promise.all([

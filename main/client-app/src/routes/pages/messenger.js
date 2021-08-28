@@ -1,15 +1,15 @@
-import React, {Fragment, useEffect} from "react";
-
 import "chartjs-plugin-datalabels";
+import React from "react";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-circular-progressbar/dist/styles.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-table/react-table.css";
+import HomeAppbar from "../../components/HomeMain";
+import { setToken } from "../../util/settings";
+import { ConnectToIo } from "../../util/Utils";
 import './messenger.css';
 
-import {ConnectToIo, roothPath, validateToken, leaveRoom} from "../../util/Utils";
-import {ColorBase, colors, setToken, token} from "../../util/settings";
-import HomeAppbar from "../../components/HomeMain";
+
 
 export let reloadRoomsList = undefined;
 

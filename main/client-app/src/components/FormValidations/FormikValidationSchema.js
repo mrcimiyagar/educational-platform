@@ -1,22 +1,17 @@
+import { Field, Form, Formik } from 'formik';
 import React, { Component } from "react";
-
-
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-
 import {
-    Row,
-    Card,
+    Button, Card,
     CardBody,
     FormGroup,
-    Label,
-    Button,
-    CustomInput, Input
+    Label, Row
 } from "reactstrap";
-import IntlMessages from "../../util/IntlMessages";
+import * as Yup from 'yup';
 import { Colxx } from "../../components/CustomBootstrap";
 
-import classNames from "classnames";
+
+
+
 
 const SignupSchema = Yup.object().shape({
     firstName: Yup.string()

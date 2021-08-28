@@ -1,16 +1,13 @@
+import { Field, Form, Formik } from 'formik';
 import React, { Component } from "react";
-import { Formik, Form, Field } from 'formik';
-
 import {
-    Row,
-    Card,
+    Button, Card,
     CardBody,
     FormGroup,
-    Label,
-    Button,
+    Label, Row
 } from "reactstrap";
-import IntlMessages from "../../util/IntlMessages";
 import { Colxx } from "../../components/CustomBootstrap";
+
 
 class FormikBasicFormLevel extends Component {
     constructor(props) {

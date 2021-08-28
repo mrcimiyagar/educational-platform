@@ -1,29 +1,28 @@
-import React, {Fragment, useEffect} from "react";
-import SearchEngineResultsSearchbar from '../../components/SearchEngineResultsSearchbar'; 
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import { AppBar, Card, Dialog, ImageList, ImageListItem, Slide, Toolbar, Typography } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
-import HomeToolbar from '../../components/HomeToolbar';
-import { Container, Fab, Toolbar, AppBar, Typography, Card, ImageListItem, ImageList, Dialog, Slide } from '@material-ui/core';
-import SwipeableViews from 'react-swipeable-views';
+import { makeStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import { Audiotrack, Chat, Photo, Videocam } from "@material-ui/icons";
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import EmailIcon from '@material-ui/icons/Email';
 import PeopleIcon from '@material-ui/icons/People';
 import RedditIcon from '@material-ui/icons/Reddit';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import { Audiotrack, Chat, Photo, Videocam } from "@material-ui/icons";
-import Post from '../../components/Post'
-import SearchResultsUsers from '../../components/SearchResultsUsers'
+import PropTypes from 'prop-types';
+import React, { useEffect } from "react";
+import SwipeableViews from 'react-swipeable-views';
 import { gotoPage, popPage, query, registerDialogOpen, setQuery } from "../../App";
+import HomeToolbar from '../../components/HomeToolbar';
 import PhotoGrid from "../../components/PhotoGrid";
-import AudioWallpaper from '../../images/audio-wallpaper.jpg'
-import SearchResultsVideos from "../../components/SearchResultsVideos";
+import Post from '../../components/Post';
+import SearchEngineResultsSearchbar from '../../components/SearchEngineResultsSearchbar';
 import SearchResultsMessages from "../../components/SearchResultsMessages";
-import BotIcon from '../../images/robot.png'
-import { serverRoot } from "../../util/Utils";
+import SearchResultsUsers from '../../components/SearchResultsUsers';
+import SearchResultsVideos from "../../components/SearchResultsVideos";
+import AudioWallpaper from '../../images/audio-wallpaper.jpg';
+import EmptyIcon from '../../images/empty.png';
 import { setToken, token } from "../../util/settings";
-import EmptyIcon from '../../images/empty.png'
+import { serverRoot } from "../../util/Utils";
 
 const itemData = [
   {

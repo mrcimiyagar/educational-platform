@@ -1,41 +1,39 @@
-import React, {Component, Fragment, useEffect, useState} from "react";
-
-import {colors, me, setMe, setToken, token} from "../../util/settings";
-
-import BotsBox from "../../modules/botsbox";
-import { BoardBox } from "../../modules/boardbox/boardbox";
-import { TaskBox } from "../../modules/taskbox/taskbox";
-import { ConfBox } from "../../modules/confbox";
-import { ConnectToIo, leaveRoom, roothPath, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot, setRoom, room } from "../../util/Utils";
-
-import {isDesktop, gotoPage, setCurrentNav, popPage, setRoomId} from '../../App';
-import store, { changeConferenceMode, PeopleChatModes, setCurrentRoom } from "../../redux/main";
-import RoomBottombar from '../../components/RoomBottombar'
-import { AppBar, Avatar, Button, createTheme, Drawer, Fab, IconButton, makeStyles, Tab, Tabs, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
-import FilesGrid from "../../components/FilesGrid/FilesGrid";
-import AddIcon from "@material-ui/icons/Add";
-import { ArrowForward, Chat, Search } from "@material-ui/icons";
+import { AppBar, Avatar, createTheme, Drawer, Fab, IconButton, makeStyles, Tab, Tabs, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
 import { pink } from "@material-ui/core/colors";
-import ViewCarouselIcon from '@material-ui/icons/ViewCarousel';
-import FilesBottombar from '../../components/FilesBottombar'
-import PhotoIcon from '@material-ui/icons/Photo';
+import { Chat, Search } from "@material-ui/icons";
+import AddIcon from "@material-ui/icons/Add";
 import AudiotrackIcon from '@material-ui/icons/Audiotrack';
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
-import NotesIcon from '@material-ui/icons/Notes';
-import SwipeableViews from "react-swipeable-views";
-import PollIcon from '@material-ui/icons/Poll';
 import Menu from "@material-ui/icons/Menu";
-import BotIcon from '../../images/robot.png';
-import PeopleIcon from '../../images/people.png';
-import RoomIcon from '../../images/room.png'
-import HomeIcon from '../../images/home.png'
-import WorldIcon from '../../images/world.png'
+import NotesIcon from '@material-ui/icons/Notes';
+import PhotoIcon from '@material-ui/icons/Photo';
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import PollIcon from '@material-ui/icons/Poll';
 import Settings from "@material-ui/icons/Settings";
-import { UsersBox } from "../../modules/usersbox/usersbox";
-import Jumper from "../../components/SearchEngineFam";
+import ViewCarouselIcon from '@material-ui/icons/ViewCarousel';
+import React, { useEffect } from "react";
+import SwipeableViews from "react-swipeable-views";
 import { useFilePicker } from "use-file-picker";
+import { gotoPage, isDesktop, setRoomId } from '../../App';
 import ChatEmbedded from "../../components/ChatEmbedded";
+import FilesGrid from "../../components/FilesGrid/FilesGrid";
+import RoomBottombar from '../../components/RoomBottombar';
+import Jumper from "../../components/SearchEngineFam";
+import HomeIcon from '../../images/home.png';
+import PeopleIcon from '../../images/people.png';
+import BotIcon from '../../images/robot.png';
+import RoomIcon from '../../images/room.png';
+import { BoardBox } from "../../modules/boardbox/boardbox";
+import BotsBox from "../../modules/botsbox";
+import { ConfBox } from "../../modules/confbox";
+import { TaskBox } from "../../modules/taskbox/taskbox";
+import { UsersBox } from "../../modules/usersbox/usersbox";
+import store, { changeConferenceMode } from "../../redux/main";
+import { colors, setToken, token } from "../../util/settings";
+import { ConnectToIo, leaveRoom, serverRoot, setRoom, socket, useForceUpdate } from "../../util/Utils";
+
+
+
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -67,22 +65,10 @@ const data = {
   ]
 }
 
-let currentRoomNavBackup = 0
+export let currentRoomNavBackup = 0
 export let setCurrentRoomNavBackup = p => {
   currentRoomNavBackup = p
 }
-
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    position: 'fixed',
-    bottom: 0,
-    backgroundColor: '#2196f3'
-  },
-  indicator: {
-    backgroundColor: 'white',
-  },
-});
 
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
@@ -101,6 +87,23 @@ let setMembership = undefined;
 let pickingFile = false
 
 export default function RoomPage(props) {
+
+  const useStyles = makeStyles({
+    root: {
+      width: '100%',
+      position: 'fixed',
+      bottom: 0,
+      backgroundColor: '#2196f3'
+    },
+    indicator: {
+      backgroundColor: 'white',
+    },
+    tab: {
+      minWidth: isDesktop === 'desktop' || isDesktop === 'tablet' ? 100 : undefined,
+      maxWidth: isDesktop === 'desktop' || isDesktop === 'tablet' ? 100 : undefined,
+      width: isDesktop === 'desktop' || isDesktop === 'tablet' ? 100 : undefined
+    }
+  });
 
   document.documentElement.style.overflow = 'auto';
 
@@ -310,10 +313,12 @@ export default function RoomPage(props) {
           <BoardBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} membership={membership} roomId={props.room_id}  style={{display: currentRoomNav === 1 ? 'block' : 'none'}}/>
           <TaskBox openDeck={openDeck} openNotes={openNotes} openPolls={openPolls} setMenuOpen={setMenuOpen} style={{display: currentRoomNav === 3 ? 'block' : 'none'}} roomId={props.room_id}/>
           <div
-                        style={{display: currentRoomNav === 4 ? 'block' : 'none', width: '100%', height: '100%', minHeight: '100vh'}}>
-                          <AppBar style={{width: '100%', height: 64 + 72, 
+              style={{display: currentRoomNav === 4 ? 'block' : 'none', width: '100%', height: '100%', minHeight: '100vh'}}>
+                          <AppBar style={{width: isDesktop === 'desktop' ? 550 : '100%', height: 144,
+                            borderRadius: isDesktop === 'desktop' ? '0 0 24px 24px' : 0,
                             backgroundColor: 'rgba(21, 96, 233, 0.65)',
-                            backdropFilter: 'blur(10px)'
+                            backdropFilter: 'blur(10px)',
+                            position: 'fixed', left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 'calc(50% - 225px)' : '50%', transform: 'translateX(-50%)'
                           }}>
                             <Toolbar style={{width: '100%', justifyContent: 'center', textAlign: 'center'}}>
                               <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
@@ -337,14 +342,15 @@ export default function RoomPage(props) {
                                 indicator: classes.indicator
                               }}
                               style={{marginTop: 8}}
+                              centered
                             >
-                              <Tab icon={<PhotoIcon />} label="عکس ها" />
-                              <Tab icon={<AudiotrackIcon />} label="صدا ها" />
-                              <Tab icon={<PlayCircleFilledIcon />} label="ویدئو ها" />
-                              <Tab icon={<InsertDriveFileIcon />} label="سند ها" />
+                              <Tab classes={{ root: classes.tab }} icon={<PhotoIcon />} label="عکس ها" />
+                              <Tab classes={{ root: classes.tab }} icon={<AudiotrackIcon />} label="صدا ها" />
+                              <Tab classes={{ root: classes.tab }} icon={<PlayCircleFilledIcon />} label="ویدئو ها" />
+                              <Tab classes={{ root: classes.tab }} icon={<InsertDriveFileIcon />} label="سند ها" />
                             </Tabs>
                           </AppBar>
-                          <div style={{height: 'calc(100% - 64px - 72px - 48px)', marginTop: 64 + 48}}>
+                          <div style={{height: 'calc(100% - 64px - 72px - 48px)', width: 'calc(100% - 112px)', marginTop: 64 + 48}}>
                             <SwipeableViews
                               axis={'x-reverse'}
                               index={fileMode}
@@ -364,19 +370,23 @@ export default function RoomPage(props) {
                               </div>
                             </SwipeableViews>
                             <ThemeProvider theme={theme}>
-                              <Fab color="secondary" style={{position: 'fixed', bottom: 72 + 16, left: 16}} onClick={() => {pickingFile = true; openFileSelector()}}>
+                              <Fab color="secondary" style={{position: 'fixed', bottom: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 48 : (72 + 16), left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? (16 + 16) : 16}} onClick={() => {pickingFile = true; openFileSelector()}}>
                                 <AddIcon/>
                               </Fab>
-                              <Fab color="primary" style={{position: 'fixed', bottom: 72 + 16, left: 16 + 56 + 16}} onClick={() => {
-                                  gotoPage('/app/chat')
-                                }}>
-                                <Chat/>
-                              </Fab>
+                              {
+                                (isDesktop === 'mobile' || isDesktop === 'tablet') ? 
+                                  <Fab color="primary" style={{position: 'fixed', bottom: 72 + 16, left: 16 + 56 + 16}} onClick={() => {
+                                    gotoPage('/app/chat')
+                                  }}>
+                                    <Chat/>
+                                  </Fab> :
+                                  null
+                              }
                             </ThemeProvider>
                           </div>
               </div>
         </div>
-        <div style={{position: 'fixed', left: window.location.pathname === '/app/room' ? (currentRoomNav === 1) ? (32 + 56) : undefined : undefined, right: window.location.pathname === '/app/room' ? currentRoomNav === 0 ? (450 + 16) : undefined : 16, bottom: 4, zIndex: 99999}}>
+        <div style={{position: 'fixed', right: window.location.pathname === '/app/room' ? 450 + 32 : 16, bottom: 0, transform: 'translateY(+48px)', zIndex: 99999}}>
           <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
         </div>
         <RoomBottombar setCurrentRoomNavBackup={(v) => {currentRoomNavBackup = v;}} setCurrentRoomNav={(i) => {

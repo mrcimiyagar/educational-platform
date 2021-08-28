@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import {Fab, makeStyles, TextField, Typography} from '@material-ui/core'
-import CloudIcon from '../../images/logo.png'
-import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import { Fab, makeStyles, TextField, Typography } from '@material-ui/core';
 import ListAltIcon from '@material-ui/icons/ListAlt';
-import { ConnectToIo, serverRoot, setConfig } from "../../util/Utils";
-import { setMe, setPhone, setToken } from "../../util/settings";
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import React, { useEffect } from "react";
 import { gotoPage } from "../../App";
+import CloudIcon from '../../images/logo.png';
+import { setMe, setToken } from "../../util/settings";
+import { ConnectToIo, serverRoot, setConfig } from "../../util/Utils";
 
 const useStyles = makeStyles((theme) => ({
   root: {

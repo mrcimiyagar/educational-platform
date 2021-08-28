@@ -1,20 +1,12 @@
 import React from "react";
-import {
-  Card,
-  Button,
-  Collapse,
-  FormGroup,
-  Label,
-  Form,
-  Input,
-  Badge,
-  CustomInput
-} from "reactstrap";
 import Select from "react-select";
-import CustomSelectInput from "../../components/CustomSelectInput";
-
 import Sortable from "react-sortablejs";
+import {
+    Badge, Button, Card, Collapse, CustomInput, Form, FormGroup, Input, Label
+} from "reactstrap";
+import CustomSelectInput from "../../components/CustomSelectInput";
 import { mapOrder } from "../../util/Utils";
+
 
 const answerTypes = [
   { label: "Text Area", value: "1", id: 1 },

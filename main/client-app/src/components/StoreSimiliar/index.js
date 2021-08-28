@@ -1,12 +1,9 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Card, Typography } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
-import { Avatar, Card, Fab, Typography } from '@material-ui/core';
-import SpacesSearchbar from '../SpacesSearchbar';
-import HomeToolbar from '../HomeToolbar';
-import HomeIcon from '@material-ui/icons/Home';
-import BotIcon from '../../images/robot.png'
+import { makeStyles } from '@material-ui/core/styles';
+import React from 'react';
+import BotIcon from '../../images/robot.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {

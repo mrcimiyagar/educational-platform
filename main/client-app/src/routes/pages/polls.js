@@ -1,12 +1,11 @@
-import React, {useEffect} from 'react';
-import ChatAppBar from "../../components/ChatAppBar";
-import Slide from "@material-ui/core/Slide";
-import {gotoPage, popPage, selectedIndex, token} from "../../App";
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
-import {makeStyles} from "@material-ui/core/styles";
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import Slide from "@material-ui/core/Slide";
+import { makeStyles } from "@material-ui/core/styles";
 import { ArrowForward, Search } from '@material-ui/icons';
+import React from 'react';
+import { popPage } from "../../App";
 import { PollBox } from '../../modules/pollbox/pollbox';
 import { setToken } from '../../util/settings';
 

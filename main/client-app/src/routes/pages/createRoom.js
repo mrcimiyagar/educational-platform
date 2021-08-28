@@ -1,25 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import ChatAppBar from "../../components/ChatAppBar";
-import Slide from "@material-ui/core/Slide";
-import {gotoPage, gotoPageWithDelay, isDesktop, popPage, registerDialogOpen, roomId} from "../../App";
+import { Fab, Paper, TextField, Toolbar, Typography } from '@material-ui/core';
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
-import {makeStyles} from "@material-ui/core/styles";
-import DescriptionIcon from '@material-ui/icons/Description';
-import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
-import SendIcon from '@material-ui/icons/Send';
-import { me, setToken, token } from '../../util/settings';
-import { serverRoot, useForceUpdate } from '../../util/Utils';
-import ScrollToBottom from 'react-scroll-to-bottom';
-import { css } from '@emotion/css';
-import {WaveSurferBox} from '../../components/WaveSurfer'
-import Picker from 'emoji-picker-react';
-import { useFilePicker } from 'use-file-picker';
-import { PlayArrowTwoTone } from '@material-ui/icons';
-import ArrowForwardTwoTone from '@material-ui/icons/ArrowForwardTwoTone';
-import { AppBar, Fab, Paper, TextField, Toolbar, Typography } from '@material-ui/core';
+import Slide from "@material-ui/core/Slide";
+import { makeStyles } from "@material-ui/core/styles";
 import Add from '@material-ui/icons/Add';
+import ArrowForwardTwoTone from '@material-ui/icons/ArrowForwardTwoTone';
+import React from 'react';
+import { gotoPageWithDelay, isDesktop, popPage, registerDialogOpen } from "../../App";
+import { setToken, token } from '../../util/settings';
+import { serverRoot, useForceUpdate } from '../../util/Utils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

@@ -1,18 +1,15 @@
+import { Field, Form, Formik } from 'formik';
 import React, { Component } from "react";
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import { FormikReactSelect,FormikCheckboxGroup,FormikCheckbox, FormikRadioButtonGroup,FormikCustomCheckbox,FormikCustomCheckboxGroup,FormikCustomRadioGroup,FormikTagsInput,FormikSwitch,FormikDatePicker } from './FormikFields'
 import {
-    Row,
-    Card,
+    Button, Card,
     CardBody,
     FormGroup,
-    Label,
-    Button,
-    CustomInput, Input
+    Label, Row
 } from "reactstrap";
-import IntlMessages from "../../util/IntlMessages";
+import * as Yup from 'yup';
 import { Colxx } from "../../components/CustomBootstrap";
+import IntlMessages from "../../util/IntlMessages";
+import { FormikCheckbox, FormikCheckboxGroup, FormikCustomCheckbox, FormikCustomCheckboxGroup, FormikCustomRadioGroup, FormikDatePicker, FormikRadioButtonGroup, FormikReactSelect, FormikSwitch, FormikTagsInput } from './FormikFields';
 
 
 

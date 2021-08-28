@@ -1,18 +1,11 @@
-import React, {useEffect} from 'react';
-import ChatAppBar from "../../components/ChatAppBar";
-import Slide from "@material-ui/core/Slide";
-import {gotoPage, popPage, selectedIndex, token} from "../../App";
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
-import {makeStyles} from "@material-ui/core/styles";
-import ChatWallpaper from '../../images/chat-wallpaper.jpg';
-import DescriptionIcon from '@material-ui/icons/Description';
-import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
-import SendIcon from '@material-ui/icons/Send';
-import { PresentBox } from '../../modules/presentbox/presentbox';
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import Slide from "@material-ui/core/Slide";
+import { makeStyles } from "@material-ui/core/styles";
 import { ArrowForward, Search } from '@material-ui/icons';
+import React from 'react';
+import { popPage } from "../../App";
 import { NoteBox } from '../../modules/notebox/notebox';
 
 const Transition = React.forwardRef(function Transition(props, ref) {

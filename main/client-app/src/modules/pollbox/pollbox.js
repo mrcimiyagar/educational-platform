@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
-import { colors, token } from '../../util/settings';
-import { setRoomId, roomId } from '../../App'
-import { serverRoot, socket, useForceUpdate } from '../../util/Utils';
-import Poll from 'react-polls';
-import CloseIcon from '@material-ui/icons/Close';
-import { Add } from '@material-ui/icons';
 import { Button, Drawer, Fab, IconButton, TextField, Typography } from '@material-ui/core';
+import { Add } from '@material-ui/icons';
+import CloseIcon from '@material-ui/icons/Close';
+import React, { useEffect } from 'react';
+import Poll from 'react-polls';
+import { colors, token } from '../../util/settings';
+import { serverRoot, socket, useForceUpdate } from '../../util/Utils';
 
 export let togglePolling = undefined;
 

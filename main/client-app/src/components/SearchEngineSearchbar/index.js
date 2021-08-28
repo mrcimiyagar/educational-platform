@@ -1,18 +1,11 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import DirectionsIcon from '@material-ui/icons/Directions';
-import { popPage, setDrawerOpen, setQuery } from '../../App';
-import ArrowForward from '@material-ui/icons/ArrowForward';
+import InputBase from '@material-ui/core/InputBase';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/icons/Menu';
-import { propTypes } from 'react-polls';
-import Settings from '@material-ui/icons/Settings';
-import { More, MoreVert } from '@material-ui/icons';
+import SearchIcon from '@material-ui/icons/Search';
+import React from 'react';
+import { setQuery } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -1,14 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { Container, Tab, Tabs } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { Container, Fab, Tab, Tabs, Toolbar } from '@material-ui/core';
-import NotifsList from '../NotifsList';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import { makeStyles } from '@material-ui/core/styles';
 import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
-import SwipeableViews from 'react-swipeable-views';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import PropTypes from 'prop-types';
+import React from 'react';
+import NotifsList from '../NotifsList';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -51,10 +49,6 @@ export default function HomeNotifs() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
-  };
-
-  const handleChangeIndex = (index) => {
-    setValue(index)
   };
 
   return (

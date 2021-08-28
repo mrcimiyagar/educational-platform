@@ -1,66 +1,50 @@
-import React, { Component, Fragment } from "react";
-import {
-  Row,
-  Card,
-  CardBody,
-  CardTitle,
-  Badge,
-  UncontrolledDropdown,
-  DropdownItem,
-  DropdownToggle,
-  DropdownMenu,
-  Progress,
-  Form,
-  FormGroup,
-  Button,
-  Label,
-  Input,
-  CustomInput,
-  CardHeader
-} from "reactstrap";
-import Select from "react-select";
-import CustomSelectInput from "../../components/CustomSelectInput";
-import { NavLink } from "react-router-dom";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import { Colxx, Separator } from "../../components/CustomBootstrap";
-import BreadcrumbContainer from "../../components/BreadcrumbContainer";
-import { CalendarToolbar } from "../../components/Calendar/CalendarToolbar";
-import { PolarShadow, LineShadow, SmallLineChart } from "../../components/Charts";
-import {
-  visitChartConfig,
-  conversionChartConfig,
-  lineChartConfig,
-  polarChartConfig,
-  smallChartData1,
-  smallChartData2,
-  smallChartData3,
-  smallChartData4
-} from "../../constants/chartConfig";
-
-import BigCalendar from "react-big-calendar";
-import moment from "moment";
-import ReactTable from "react-table";
-import CircularProgressbar from "react-circular-progressbar";
-import { Chart } from "react-chartjs-2";
-import ReactSiemaCarousel from "../../components/ReactSiema/ReactSiemaCarousel";
-import Rating from "../../components/Rating";
-import DataTablePagination from "../../components/DataTables/pagination";
-import Sortable from "react-sortablejs";
-
 import "chartjs-plugin-datalabels";
-import "react-circular-progressbar/dist/styles.css";
-import "react-perfect-scrollbar/dist/css/styles.css";
+import moment from "moment";
+import React, { Component, Fragment } from "react";
+import BigCalendar from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { Chart } from "react-chartjs-2";
+import CircularProgressbar from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
+import { NavLink } from "react-router-dom";
+import Select from "react-select";
+import Sortable from "react-sortablejs";
+import ReactTable from "react-table";
 import "react-table/react-table.css";
-
+import {
+    Badge, Button, Card,
+    CardBody, CardHeader, CardTitle, CustomInput, DropdownItem, DropdownMenu, DropdownToggle, Form,
+    FormGroup, Input, Label, Progress, Row, UncontrolledDropdown
+} from "reactstrap";
+import { CalendarToolbar } from "../../components/Calendar/CalendarToolbar";
+import { LineShadow, PolarShadow, SmallLineChart } from "../../components/Charts";
+import { Colxx } from "../../components/CustomBootstrap";
+import CustomSelectInput from "../../components/CustomSelectInput";
+import DataTablePagination from "../../components/DataTables/pagination";
+import Rating from "../../components/Rating";
+import ReactSiemaCarousel from "../../components/ReactSiema/ReactSiemaCarousel";
+import {
+    conversionChartConfig,
+    lineChartConfig,
+    polarChartConfig,
+    smallChartData1,
+    smallChartData2,
+    smallChartData3,
+    smallChartData4, visitChartConfig
+} from "../../constants/chartConfig";
+import cakeData from "../../data/dashboard.cakes.json";
+import profileStatusData from "../../data/dashboard.profile.status.json";
 import eventsData from "../../data/events.json";
-import ticketsData from "../../data/tickets.json";
 import logsData from "../../data/logs.json";
 import productsData from "../../data/products.json";
-import profileStatusData from "../../data/dashboard.profile.status.json";
-import cakeData from "../../data/dashboard.cakes.json";
-
+import ticketsData from "../../data/tickets.json";
 import lang from '../../lang/locales/fa_IR';
+
+
+
+
 
 Chart.defaults.global.plugins.datalabels.display = false;
 

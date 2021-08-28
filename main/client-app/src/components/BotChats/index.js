@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Chip } from '@material-ui/core';
+import Avatar from '@material-ui/core/Avatar';
+import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { gotoPage, isDesktop, roomId } from '../../App';
-import { token } from '../../util/settings';
-import { serverRoot } from '../../util/Utils';
-import EmptyIcon from '../../images/empty.png'
-import { Chip } from '@material-ui/core';
 import { Audiotrack, Photo, Videocam } from '@material-ui/icons';
+import React from 'react';
+import { gotoPage, isDesktop } from '../../App';
 import EmptySign from '../EmptySign';
 
 const useStyles = makeStyles((theme) => ({

@@ -1,23 +1,19 @@
-import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { AppBar, Box, Card, Fab, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
-import { AppBar, Avatar, Box, Card, Fab, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
-import StoreSearchbar from '../../components/StoreSearchbar';
-import HomeToolbar from '../../components/HomeToolbar';
-import HomeIcon from '@material-ui/icons/Home';
-import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import { makeStyles } from '@material-ui/core/styles';
 import ExtensionIcon from '@material-ui/icons/Extension';
-import PropTypes from 'prop-types';
-import SwipeableViews from 'react-swipeable-views';
-import StoreHead from '../../components/StoreHead';
-import StoreBottombar from '../../components/StoreBottombar';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ViewCompactIcon from '@material-ui/icons/ViewCompact';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import { gotoPage } from '../../App';
-import { serverRoot, useForceUpdate } from '../../util/Utils';
-import { token } from '../../util/settings';
+import HomeToolbar from '../../components/HomeToolbar';
 import Jumper from '../../components/SearchEngineFam';
+import StoreBottombar from '../../components/StoreBottombar';
+import StoreSearchbar from '../../components/StoreSearchbar';
+import { token } from '../../util/settings';
+import { serverRoot, useForceUpdate } from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {

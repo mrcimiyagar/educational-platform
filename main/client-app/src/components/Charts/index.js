@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import ChartComponent, { Chart } from "react-chartjs-2";
-import { addCommas } from "../../util/Utils";
 import { ThemeColors } from "../../util/ThemeColors";
+import { addCommas } from "../../util/Utils";
 
 export const chartTooltip = {
   backgroundColor: ThemeColors().foregroundColor,

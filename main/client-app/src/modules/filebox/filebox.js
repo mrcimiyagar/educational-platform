@@ -1,22 +1,21 @@
-import React from "react";
-import {
-  Modal,
-  ModalBody,
-  ModalHeader,
-  Button
-} from "reactstrap";
-import PerfectScrollbar from "react-perfect-scrollbar";
-
-import "chartjs-plugin-datalabels";
-import "react-circular-progressbar/dist/styles.css";
-import "react-perfect-scrollbar/dist/css/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-table/react-table.css";
-import {token, colors} from "../../util/settings";
-import FilesGrid from "../../components/FilesGrid/FilesGrid";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from '@material-ui/icons/Close';
+import "chartjs-plugin-datalabels";
+import React from "react";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "react-circular-progressbar/dist/styles.css";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import "react-perfect-scrollbar/dist/css/styles.css";
+import "react-table/react-table.css";
+import {
+    Button, Modal,
+    ModalBody,
+    ModalHeader
+} from "reactstrap";
+import FilesGrid from "../../components/FilesGrid/FilesGrid";
+import { colors, token } from "../../util/settings";
 import { useForceUpdate } from "../../util/Utils";
+
 
 export let toggleFileBox = undefined;
 

@@ -1,31 +1,17 @@
-import React, { useEffect } from 'react';
+import { Box, Dialog, Fab, IconButton, Slide, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import ImageList from '@material-ui/core/ImageList';
-import ImageListItem from '@material-ui/core/ImageListItem';
-import { AppBar, Avatar, Box, Card, Dialog, Fab, IconButton, Slide, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
-import Rating from '@material-ui/lab/Rating';
-import StoreSearchbar from '../../components/StoreSearchbar';
-import HomeToolbar from '../../components/HomeToolbar';
-import HomeIcon from '@material-ui/icons/Home';
-import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
-import ExtensionIcon from '@material-ui/icons/Extension';
-import PropTypes from 'prop-types';
-import SwipeableViews from 'react-swipeable-views';
-import StoreHead from '../../components/StoreHead';
-import StoreBottombar from '../../components/StoreBottombar';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import ViewCompactIcon from '@material-ui/icons/ViewCompact';
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import { default as ArrowForward, default as ArrowForwardIcon } from '@material-ui/icons/ArrowForward';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
+import Rating from '@material-ui/lab/Rating';
+import PropTypes from 'prop-types';
+import React from 'react';
+import 'react-photo-view/dist/index.css';
+import Carousel from 'react-spring-3d-carousel';
+import { gotoPage, popPage, registerDialogOpen } from '../../App';
 import StoreComments from '../../components/StoreComments';
 import StoreSimiliar from '../../components/StoreSimiliar';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import { gotoPage, popPage, registerDialogOpen } from '../../App';
-import Carousel from 'react-spring-3d-carousel';
-import ArrowForward from '@material-ui/icons/ArrowForward';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import { PhotoProvider, PhotoConsumer } from 'react-photo-view';
-import 'react-photo-view/dist/index.css';
-import BotIcon from '../../images/robot.png'
+import BotIcon from '../../images/robot.png';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

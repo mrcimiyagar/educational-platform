@@ -1,6 +1,6 @@
+import classnames from 'classnames';
 import React from "react";
 import { Button, Popover, PopoverBody } from "reactstrap";
-import classnames from 'classnames'
 
 class StateButton extends React.Component {
     constructor(props) {

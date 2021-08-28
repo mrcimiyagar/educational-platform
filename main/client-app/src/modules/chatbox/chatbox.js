@@ -1,28 +1,23 @@
 
-import React, {useEffect, useRef, useState} from "react";
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Button,
-  Input,
-  InputGroupAddon,
-  InputGroup
-} from "reactstrap";
-import PerfectScrollbar from "react-perfect-scrollbar";
-
-import './style.css';
-
+import { css } from '@emotion/css';
 import "chartjs-plugin-datalabels";
+import React, { useEffect, useState } from "react";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-circular-progressbar/dist/styles.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-table/react-table.css";
-
-import { css } from '@emotion/css'
 import ScrollToBottom from 'react-scroll-to-bottom';
-import {colors, me, setToken, token} from "../../util/settings";
+import "react-table/react-table.css";
+import {
+    Button, Card,
+    CardBody,
+    CardTitle, Input, InputGroup, InputGroupAddon
+} from "reactstrap";
+import { colors, me, token } from "../../util/settings";
 import { socket, useForceUpdate } from "../../util/Utils";
+import './style.css';
+
+
+
 
 export let reloadChat = undefined;
 

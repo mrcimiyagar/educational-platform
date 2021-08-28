@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from 'react-dom';
 import { NavLink } from "reactstrap";
-import PerfectScrollbar from "react-perfect-scrollbar";
 export default class ApplicationMenu extends React.Component {
   constructor(...params) {
     super(...params);

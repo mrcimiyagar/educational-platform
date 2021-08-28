@@ -1,31 +1,19 @@
 import React, { Component, Fragment } from "react";
-import {
-  Row,
-  Card,
-  CardBody,
-  NavItem,
-  Button,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
-  Badge,
-  Collapse,
-  ButtonDropdown,
-  CustomInput,
-  Label,
-  Input
-} from "reactstrap";
-
-import { Colxx, Separator } from "../../components/CustomBootstrap";
-import { BreadcrumbItems } from "../../components/BreadcrumbContainer";
-import { NavLink } from "react-router-dom";
-import ApplicationMenu from "../../components/ApplicationMenu";
-
 import PerfectScrollbar from "react-perfect-scrollbar";
-import {currentSurvey, setCurrentSurvey, setToken, token} from "../../util/settings";
-import {toggleAddSurvey} from '../../containers/Sidebar/index';
+import { NavLink } from "react-router-dom";
+import {
+    Button, ButtonDropdown, Card,
+    CardBody, Collapse, CustomInput, DropdownItem,
+    DropdownMenu, DropdownToggle, Input, Label, NavItem, Row, UncontrolledDropdown
+} from "reactstrap";
+import ApplicationMenu from "../../components/ApplicationMenu";
+import { BreadcrumbItems } from "../../components/BreadcrumbContainer";
+import { Colxx, Separator } from "../../components/CustomBootstrap";
+import { toggleAddSurvey } from '../../containers/Sidebar/index';
+import { setCurrentSurvey, setToken, token } from "../../util/settings";
 import { config, leaveRoom } from "../../util/Utils";
+
+
 
 export let reloadSurveysList = undefined;
 

@@ -1,14 +1,13 @@
-import React from "react";
-import './style.css';
-import { whiteboardPath } from "../../util/Utils";
-import { AppBar, Card, Fab, IconButton, Toolbar, Typography } from "@material-ui/core";
-import { ArrowForward, Notes, Search } from "@material-ui/icons";
-import { gotoPage, isDesktop, popPage } from "../../App";
+import { AppBar, Fab, IconButton, Toolbar, Typography } from "@material-ui/core";
+import { Notes, Search } from "@material-ui/icons";
 import Chat from "@material-ui/icons/Chat";
-import ViewCarousel from "@material-ui/icons/ViewCarousel";
-import PollIcon from '@material-ui/icons/Poll';
 import Menu from "@material-ui/icons/Menu";
+import PollIcon from '@material-ui/icons/Poll';
+import ViewCarousel from "@material-ui/icons/ViewCarousel";
+import React from "react";
+import { gotoPage, isDesktop } from "../../App";
 import { me } from "../../util/settings";
+import './style.css';
 
 export let BoardBox = (props) => {
     let roomId = props.roomId + '';

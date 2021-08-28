@@ -1,4 +1,4 @@
-import {withStyles} from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 
 let LoginButton = withStyles(theme => ({

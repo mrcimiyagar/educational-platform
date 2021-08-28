@@ -1,18 +1,15 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import RestoreIcon from '@material-ui/icons/Restore';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import SettingsIcon from '@material-ui/icons/Settings';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import HomeIcon from '@material-ui/icons/Home';
+import { makeStyles } from '@material-ui/core/styles';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import HomeIcon from '@material-ui/icons/Home';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import SettingsIcon from '@material-ui/icons/Settings';
+import React from 'react';
+import { isDesktop } from '../../App';
 import store, { setCurrentMessengerNav } from '../../redux/main';
 import { useForceUpdate } from '../../util/Utils';
 import { updateHome } from '../HomeMain';
-import { isDesktop } from '../../App';
 
 const useStyles = makeStyles({
   root: {
@@ -43,7 +40,6 @@ export default function HomeBottombar(props) {
   const classes = useStyles();
   const classesAction = useStylesAction();
 
-  let currNav = store.getState().global.main.currentRoomNav
   let [value, setValue] = React.useState(valueBackup)
 
   return (

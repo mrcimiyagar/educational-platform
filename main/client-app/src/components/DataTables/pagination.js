@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import {
-  Pagination, PaginationItem, PaginationLink,
-  UncontrolledDropdown, DropdownMenu, DropdownToggle, DropdownItem
+    DropdownItem, DropdownMenu, DropdownToggle, Pagination, PaginationItem, PaginationLink,
+    UncontrolledDropdown
 } from "reactstrap";
 
 const defaultButton = props => (

@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import React, { useEffect } from 'react';
+import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
-import EmptyIcon from '../../images/empty.png'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,7 +66,7 @@ export default function NotifsList() {
     <List className={classes.root}>
         {notifs.map(i => (
           <div style={{width: '100%'}}>
-        <ListItem alignItems="flex-start" style={{width: '100%', borderRadius: 16, backgroundColor: 'rgba(200, 10, 120, 0.5)', marginTop: 8, marginRight: -24, width: 'calc(100% + 48px)', backdropFilter: 'blur(10px)'}}>
+        <ListItem alignItems="flex-start" style={{borderRadius: 16, backgroundColor: 'rgba(200, 10, 120, 0.5)', marginTop: 8, marginRight: -24, width: 'calc(100% + 48px)', backdropFilter: 'blur(10px)'}}>
           <ListItemAvatar>
             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
           </ListItemAvatar>
@@ -141,6 +141,6 @@ export default function NotifsList() {
       }
     </List> :
     <div style={{width: 'calc(100% - 48px)', height: '100%', marginLeft: 24, marginRight: 24, marginTop: 160, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-      <img src={EmptyIcon} style={{width: 'calc(100% - 128px)', height: '100%', padding: 64}}/>
+      <img alt={''} src={EmptyIcon} style={{width: 'calc(100% - 128px)', height: '100%', padding: 64}}/>
     </div>
 }

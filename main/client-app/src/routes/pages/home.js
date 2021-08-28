@@ -1,24 +1,23 @@
-import React, {Fragment, useEffect} from "react";
-import {
-  Card,
-  CardBody
-} from "reactstrap";
-import PerfectScrollbar from "react-perfect-scrollbar";
-
-import CircularProgressbar from "react-circular-progressbar";
-
 import "chartjs-plugin-datalabels";
+import React, { useEffect } from "react";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import CircularProgressbar from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-table/react-table.css";
+import {
+    Card,
+    CardBody
+} from "reactstrap";
+import { gotoPage, isDesktop } from '../../App';
+import { toggleInvites, toggleRooms } from "../../containers/Sidebar";
+import { ColorBase, colors, setToken, token } from "../../util/settings";
+import { ConnectToIo, leaveRoom, validateToken } from "../../util/Utils";
 import './home.css';
 
-import {ConnectToIo, roothPath, validateToken, leaveRoom} from "../../util/Utils";
-import {ColorBase, colors, setToken, token} from "../../util/settings";
-import {toggleInvites, toggleRooms} from "../../containers/Sidebar";
 
-import {isDesktop, gotoPage} from '../../App';
+
+
 
 export let reloadRoomsList = undefined;
 

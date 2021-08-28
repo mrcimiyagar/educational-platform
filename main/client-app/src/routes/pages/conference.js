@@ -1,55 +1,53 @@
-import React, {Component, Fragment, useEffect, useState} from "react";
-import {
-  Button
-} from "reactstrap";
+import { IconButton } from "@material-ui/core";
 import BorderColorIcon from '@material-ui/icons/BorderColor';
-import DescriptionIcon from '@material-ui/icons/Description';
-import SlideshowIcon from '@material-ui/icons/Slideshow';
-import VideocamIcon from '@material-ui/icons/Videocam';
 import ChatIcon from '@material-ui/icons/Chat';
-import PeopleIcon from '@material-ui/icons/People';
-
-import "chartjs-plugin-datalabels";
-import "react-circular-progressbar/dist/styles.css";
-import "react-perfect-scrollbar/dist/css/styles.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-table/react-table.css";
-import {colors, me, setMe, setToken, token} from "../../util/settings";
-
-import { ChatBox } from "../../modules/chatbox/chatbox";
-import { reloadUsersList, UsersBox } from "../../modules/usersbox/usersbox";
-import { BoardBox } from "../../modules/boardbox/boardbox";
-import { NoteBox } from "../../modules/notebox/notebox";
-import { PresentBox } from "../../modules/presentbox/presentbox";
-import { FileBox, toggleFileBox } from "../../modules/filebox/filebox";
-import { TaskBox } from "../../modules/taskbox/taskbox";
-import { PollBox, togglePolling } from "../../modules/pollbox/pollbox";
-import { VideoBox } from "../../modules/videobox/videobox";
-import { ConfBox } from "../../modules/confbox";
-import { setRoomId, roomId } from '../../App'
-import { ConnectToIo, leaveRoom, roothPath, socket, useForceUpdate, validateToken, FetchMe, conferencePath, serverRoot } from "../../util/Utils";
-import { fetchAccessChangeCallbackNavbar, hideNavbar, reloadNavbar, reloadNavbarState, setTitle, updateActorsNavbar, updateNavbar, viewNavbar } from "../../containers/TopNav";
-
-import DivSize2 from "../../components/DivSize/DivSize2";
-import BottomSheet from '../../components/BottomSheet';
+import DescriptionIcon from '@material-ui/icons/Description';
 import EditIcon from '@material-ui/icons/Edit';
-import PollIcon from '@material-ui/icons/Poll';
 import EmailIcon from '@material-ui/icons/Email';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import NoteIcon from '@material-ui/icons/Note';
-import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
+import PeopleIcon from '@material-ui/icons/People';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-
-import { toggleInvites, toggleInviteUserModal, togglePoll } from "../../containers/Sidebar";
-import RoomTreeMenu from '../../components/RoomTreeMenu';
-
-import {isDesktop, gotoPage} from '../../App';
-import store, { changeConferenceMode, PeopleChatModes } from "../../redux/main";
+import PollIcon from '@material-ui/icons/Poll';
+import SlideshowIcon from '@material-ui/icons/Slideshow';
+import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
+import VideocamIcon from '@material-ui/icons/Videocam';
+import "chartjs-plugin-datalabels";
+import React, { Component } from "react";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "react-circular-progressbar/dist/styles.css";
+import "react-perfect-scrollbar/dist/css/styles.css";
 import { connect } from "react-redux";
-import { ThreeSixty } from "@material-ui/icons";
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import { IconButton } from "@material-ui/core";
+import "react-table/react-table.css";
+import {
+    Button
+} from "reactstrap";
+import { gotoPage, isDesktop, roomId, setRoomId } from '../../App';
+import BottomSheet from '../../components/BottomSheet';
+import DivSize2 from "../../components/DivSize/DivSize2";
+import RoomTreeMenu from '../../components/RoomTreeMenu';
+import { toggleInviteUserModal, togglePoll } from "../../containers/Sidebar";
+import { fetchAccessChangeCallbackNavbar, reloadNavbar, reloadNavbarState, setTitle } from "../../containers/TopNav";
+import { BoardBox } from "../../modules/boardbox/boardbox";
+import { ChatBox } from "../../modules/chatbox/chatbox";
+import { ConfBox } from "../../modules/confbox";
+import { FileBox, toggleFileBox } from "../../modules/filebox/filebox";
+import { NoteBox } from "../../modules/notebox/notebox";
+import { PollBox, togglePolling } from "../../modules/pollbox/pollbox";
+import { PresentBox } from "../../modules/presentbox/presentbox";
+import { TaskBox } from "../../modules/taskbox/taskbox";
+import { UsersBox } from "../../modules/usersbox/usersbox";
+import { VideoBox } from "../../modules/videobox/videobox";
+import store, { changeConferenceMode, PeopleChatModes } from "../../redux/main";
+import { colors, me, setToken, token } from "../../util/settings";
+import { ConnectToIo, FetchMe, leaveRoom, roothPath, serverRoot, socket, validateToken } from "../../util/Utils";
+
+
+
+
+
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {

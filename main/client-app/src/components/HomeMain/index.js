@@ -1,35 +1,33 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { Fab, Toolbar } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
-import HomeSearchbar from '../HomeSearchbar';
-import HomeToolbar from '../HomeToolbar';
-import { Container, Fab, Toolbar } from '@material-ui/core';
-import SwipeableViews from 'react-swipeable-views';
-import EditIcon from '@material-ui/icons/Edit';
-import ChatsList from '../AllChats';
-import HomeDrawer from '../HomeDrawer';
-import HomeBottombar from '../HomeBottombar';
+import { makeStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
 import ChatIcon from '@material-ui/icons/Chat';
+import EditIcon from '@material-ui/icons/Edit';
 import GroupIcon from '@material-ui/icons/Group';
 import RadioIcon from '@material-ui/icons/Radio';
 import RedditIcon from '@material-ui/icons/Reddit';
-import SpacesGrid from '../SpacesGrid';
-import HomeNotifs from '../HomeNotifs';
-import HomeSettings from '../HomeSettings';
-import store from '../../redux/main';
-import { serverRoot, useForceUpdate } from '../../util/Utils';
-import Jumper from '../SearchEngineFam';
-import AllChats from '../AllChats';
-import GroupChats from '../GroupChats';
-import ChannelChats from '../ChannelChats';
-import BotChats from '../BotChats';
-import { token } from '../../util/settings';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import { isDesktop } from '../../App';
-import ChatEmbedded from '../../components/ChatEmbedded'
+import ChatEmbedded from '../../components/ChatEmbedded';
+import store from '../../redux/main';
+import { token } from '../../util/settings';
+import { serverRoot, useForceUpdate } from '../../util/Utils';
+import AllChats from '../AllChats';
+import BotChats from '../BotChats';
+import ChannelChats from '../ChannelChats';
+import GroupChats from '../GroupChats';
+import HomeBottombar from '../HomeBottombar';
+import HomeDrawer from '../HomeDrawer';
+import HomeNotifs from '../HomeNotifs';
+import HomeSearchbar from '../HomeSearchbar';
+import HomeSettings from '../HomeSettings';
+import HomeToolbar from '../HomeToolbar';
+import Jumper from '../SearchEngineFam';
+import SpacesGrid from '../SpacesGrid';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -93,10 +91,6 @@ export default function HomeAppbar(props) {
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
-  };
-
-  const handleChangeIndex = (index) => {
-    setValue(index)
   };
 
   useEffect(() => {
