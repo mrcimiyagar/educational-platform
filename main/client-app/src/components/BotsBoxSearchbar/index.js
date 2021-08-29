@@ -6,7 +6,7 @@ import { MoreVert } from '@material-ui/icons';
 import Menu from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import React from 'react';
-import { isDesktop } from '../../App';
+import { isDesktop, isTablet } from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,10 +14,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    ...((isDesktop === 'desktop' || isDesktop === 'tablet') && {maxWidth: 450}),
+    ...((isDesktop() || isTablet()) && {maxWidth: 450}),
     backgroundColor: 'rgba(255, 255, 255, 0.65)',
     backdropFilter: 'blur(10px)',
-    ...((isDesktop === 'desktop'|| isDesktop === 'tablet') && {marginRight: 'calc(50% - 225px)'}),
+    ...((isDesktop()|| isTablet()) && {marginRight: 'calc(50% - 225px)'}),
   },
   input: {
     marginLeft: theme.spacing(1),

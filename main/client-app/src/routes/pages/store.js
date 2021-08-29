@@ -47,105 +47,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const itemData = [
-  {
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        cols: 1
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        cols: 2
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        cols: 2
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        cols: 1
-    },
-];
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -188,10 +89,6 @@ export default function Store() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
-  };
-
-  const handleChangeIndex = (index) => {
-    setValue(index)
   };
 
   useEffect(() => {

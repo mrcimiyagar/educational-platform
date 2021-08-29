@@ -11,7 +11,7 @@ import RadioIcon from '@material-ui/icons/Radio';
 import RedditIcon from '@material-ui/icons/Reddit';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
-import { isDesktop } from '../../App';
+import { isDesktop, isMobile, isTablet } from '../../App';
 import ChatEmbedded from '../../components/ChatEmbedded';
 import store from '../../redux/main';
 import { token } from '../../util/settings';
@@ -59,17 +59,17 @@ TabPanel.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    marginRight: isDesktop === 'desktop' ? (256 + 32 + 32 + 8 + 64) : undefined,
-    width: isDesktop === 'desktop' ? 450 : '100%',
-    maxWidth: isDesktop === 'desktop' ? 450 : '100%',
+    marginRight: isDesktop() ? (256 + 32 + 32 + 8 + 64) : undefined,
+    width: isDesktop() ? 450 : '100%',
+    maxWidth: isDesktop() ? 450 : '100%',
   },
   indicator: {
     backgroundColor: 'white',
   },
   tab: {
-    minWidth: isDesktop === 'desktop' || isDesktop === 'tablet' ? 100 : undefined,
-    maxWidth: isDesktop === 'desktop' || isDesktop === 'tablet' ? 100 : undefined,
-    width: isDesktop === 'desktop' || isDesktop === 'tablet' ? 100 : undefined
+    minWidth: isDesktop() || isTablet() ? 100 : undefined,
+    maxWidth: isDesktop() || isTablet() ? 100 : undefined,
+    width: isDesktop() || isTablet() ? 100 : undefined
   }
 }));
 
@@ -117,7 +117,7 @@ export default function HomeAppbar(props) {
         (
     <div style={{background: 'transparent'}}>
       <HomeToolbar>
-        <AppBar style={{borderRadius: isDesktop !== 'desktop' ? undefined : selectedRoomId === undefined ? '24px 24px 0 0' : '0 24px 0 0', marginRight: isDesktop === 'desktop' ? (256 + 32 + 32 + 64) : undefined, marginTop: isDesktop === 'desktop' ? 32 : undefined, width: isDesktop === 'desktop' || isDesktop === 'tablet' ? 450 : '100%', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
+        <AppBar style={{borderRadius: !isDesktop() ? undefined : selectedRoomId === undefined ? '24px 24px 0 0' : '0 24px 0 0', marginRight: isDesktop() ? (256 + 32 + 32 + 64) : undefined, marginTop: isDesktop() ? 32 : undefined, width: isDesktop() || isTablet() ? 450 : '100%', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
           <Toolbar style={{marginTop: 16}}>
             <HomeSearchbar setDrawerOpen={setDrawerOpen}/>
           </Toolbar>
@@ -138,48 +138,48 @@ export default function HomeAppbar(props) {
           </Tabs>
         </AppBar>
       </HomeToolbar>
-      <div style={{position: 'absolute', width: isDesktop === 'desktop' || isDesktop === 'tablet' ? 450 : 'calc(100% + 16px)', height: isDesktop === 'desktop' ? 'calc(100% - 184px)' : isDesktop === 'tablet' ? 'calc(100% - 168px)' : 'calc(100% - 128px - 32px)', backgroundColor: isDesktop === 'desktop' || isDesktop === 'tablet' ? 'rgba(255, 255, 255, 0.45)' : undefined, backdropFilter:  isDesktop === 'desktop' || isDesktop === 'tablet' ? 'blur(10px)' : undefined, marginLeft: isDesktop === 'mobile' ? -8 : undefined, marginRight: isDesktop === 'mobile' || isDesktop === 'desktop' ? -8 : undefined, marginTop: isDesktop === 'desktop' ? 88 : 56, borderRadius: isDesktop === 'tablet' || isDesktop === 'mobile' ? 0 : selectedRoomId === undefined ? '0 0 24px 24px' : '0 0 24px 0'}}>
+      <div style={{position: 'absolute', width: isDesktop() || isTablet() ? 450 : 'calc(100% + 16px)', height: isDesktop() ? 'calc(100% - 184px)' : isTablet() ? 'calc(100% - 168px)' : 'calc(100% - 128px - 32px)', backgroundColor: isDesktop() || isTablet() ? 'rgba(255, 255, 255, 0.45)' : undefined, backdropFilter:  isDesktop() || isTablet() ? 'blur(10px)' : undefined, marginLeft: isMobile() ? -8 : undefined, marginRight: isMobile() || isDesktop() ? -8 : undefined, marginTop: isDesktop() ? 88 : 56, borderRadius: isTablet() || isMobile() ? 0 : selectedRoomId === undefined ? '0 0 24px 24px' : '0 0 24px 0'}}>
         <TabPanel value={value} index={3} style={{width: '100%', height: '100%'}}>
             <div className="hiddenScrollbar" style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
-              <div style={{width: '100%', height: isDesktop === 'desktop' ? 48 : 32}}/>
+              <div style={{width: '100%', height: isDesktop() ? 48 : 32}}/>
               <AllChats setSelectedRoomId={setSelectedRoomId} setSelectedUserId={setSelectedUserId} chats={chats.filter(c => c.chatType === 'p2p')}/>
               <div style={{width: '100%', height: 100}}/>
             </div>
         </TabPanel>
         <TabPanel value={value} index={2} style={{width: '100%', height: '100%'}}>
             <div className="hiddenScrollbar" style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
-              <div style={{width: '100%', height: isDesktop === 'desktop' ? 48 : 32}}/>
+              <div style={{width: '100%', height: isDesktop() ? 48 : 32}}/>
               <GroupChats setSelectedRoomId={setSelectedRoomId} chats={chats.filter(c => c.chatType === 'group')}/>
               <div style={{width: '100%', height: 100}}/>
             </div>
         </TabPanel>
         <TabPanel value={value} index={1} style={{width: '100%', height: '100%'}}>
             <div className="hiddenScrollbar" style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
-              <div style={{width: '100%', height: isDesktop === 'desktop' ? 48 : 32}}/>
+              <div style={{width: '100%', height: isDesktop() ? 48 : 32}}/>
               <ChannelChats setSelectedRoomId={setSelectedRoomId} chats={chats.filter(c => c.chatType === 'channel')}/>
               <div style={{width: '100%', height: 100}}/>
             </div>
         </TabPanel>
         <TabPanel value={value} index={0} style={{width: '100%', height: '100%'}}>
             <div className="hiddenScrollbar" style={{width: '100%', height: '100%', overflow: 'auto', direction: 'ltr'}}>
-              <div style={{width: '100%', height: isDesktop === 'desktop' ? 48 : 32}}/>
+              <div style={{width: '100%', height: isDesktop() ? 48 : 32}}/>
               <BotChats setSelectedRoomId={setSelectedRoomId} chats={chats.filter(c => c.chatType === 'bot')}/>
               <div style={{width: '100%', height: 100}}/>
             </div>
         </TabPanel>
       </div>
       {
-        isDesktop === 'desktop' ?
+        isDesktop() ?
           <div style={{width: 'calc(100% - 625px)', height: 'calc(100% - 96px)', position: 'fixed', left: 0, top: 0}}>
             <ChatEmbedded roomId={selectedRoomId} userId={selectedUserId}/>  
           </div>:
-          isDesktop === 'tablet' ?
+          isTablet() ?
             <div style={{width: 'calc(100% - 450px)', height: '100%', position: 'fixed', left: 0, top: 0}}>
               <ChatEmbedded roomId={selectedRoomId} userId={selectedUserId}/>  
             </div>:
             null
       }
-      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop === 'desktop' ? 48 : isDesktop === 'tablet' ? 104 : 88, left: isDesktop === 'desktop' || isDesktop === 'tablet' ? undefined : 16, right: isDesktop === 'desktop' ? (568 + 64 + 256 + 32 + 32 - 16 - 180) : isDesktop === 'tablet' ? (450 - 56 - 16 - 16) : undefined}}>
+      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop() ? 48 : isTablet() ? 104 : 88, left: isDesktop() || isTablet() ? undefined : 16, right: isDesktop() ? (568 + 64 + 256 + 32 + 32 - 16 - 180) : isTablet() ? (450 - 56 - 16 - 16) : undefined}}>
         <EditIcon />
       </Fab>
     </div>
@@ -199,7 +199,7 @@ export default function HomeAppbar(props) {
         :
         null
       }
-      <div style={{position: 'fixed', right: isDesktop === 'desktop' ? 48 : 32, transform: isDesktop === 'desktop' ? 'translateY(-16px)' : isDesktop === 'tablet' ? 'translateY(0px)' : 'translateY(16px)', bottom: 16, zIndex: 2500}}>
+      <div style={{position: 'fixed', right: isDesktop() ? 48 : 32, transform: isDesktop() ? 'translateY(-16px)' : isTablet() ? 'translateY(0px)' : 'translateY(16px)', bottom: 16, zIndex: 2500}}>
         <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
       </div>
       <HomeBottombar/>

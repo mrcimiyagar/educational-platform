@@ -5,7 +5,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import SearchIcon from '@material-ui/icons/Search';
 import React from "react";
-import { gotoPage, isDesktop, popPage, registerDialogOpen } from "../../App";
+import { gotoPage, isDesktop, isMobile, popPage, registerDialogOpen } from "../../App";
 import ProfileAvatar from '../../images/avatar.jpg';
 import header from '../../images/profile-header.jpeg';
 import { token } from "../../util/settings";
@@ -31,14 +31,14 @@ export default function Profile(props) {
 return (
   <Dialog
         onTouchStart={(e) => {e.stopPropagation();}}
-        PaperProps={isDesktop === 'mobile' ? {
+        PaperProps={isMobile() ? {
             style: {
                 backgroundColor: 'transparent',
                 boxShadow: 'none',
             },
         } : undefined}
-        fullScreen={isDesktop === 'mobile'} open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
-<div style={{position: isDesktop === 'mobile' ? 'absolute' : undefined, left: isDesktop === 'mobile' ? 0 : undefined, top: isDesktop === 'mobile' ? 0 : undefined, right: isDesktop === 'mobile' ? 0 : undefined, bottom: isDesktop === 'mobile' ? 0 : undefined, direction: 'ltr', overflowX: 'hidden'}}>
+        fullScreen={isMobile()} open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
+<div style={{position: isMobile() ? 'absolute' : undefined, left: isMobile() ? 0 : undefined, top: isMobile() ? 0 : undefined, right: isMobile() ? 0 : undefined, bottom: isMobile() ? 0 : undefined, direction: 'ltr', overflowX: 'hidden'}}>
   <div style={{position: 'relative', overflowX: 'hidden'}}>
     
     

@@ -398,7 +398,7 @@ export let RoomTreeBox = (props) => {
           onClose={handleCloseOfDialog}
           value={value}
           setValue={setValue}
-          fullscreen={isDesktop !== 'desktop'}
+          fullscreen={!isDesktop()}
       />
 
       <div>

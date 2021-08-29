@@ -3,6 +3,7 @@ import { Add } from '@material-ui/icons';
 import CloseIcon from '@material-ui/icons/Close';
 import React, { useEffect } from 'react';
 import Poll from 'react-polls';
+import { isDesktop, isInRoom } from '../../App';
 import { colors, token } from '../../util/settings';
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils';
 
@@ -118,7 +119,7 @@ export function PollBox(props) {
   togglePolling = () => setOpen(!open);
 
   return (
-  <div style={{width: '100%', height: 'calc(100% - 56px)', marginTop: 56, backgroundColor: 'rgba(255, 255, 255, 0.25)'}}>
+  <div style={{width: '100%', height: 'calc(100% - 64px)', borderRadius: isDesktop() ? '0 0 24px 24px' : undefined, backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: (isDesktop() && isInRoom()) ? 'blur(15px)' : undefined}}>
       <div style={{backgroundColor: colors.primaryLight, width: '100%', height: '100%'}}>
       <div style={{height: '100%', overflowY: 'auto', paddingBottom: 64}}>
         {polls.map((poll, index) => {
@@ -139,8 +140,8 @@ export function PollBox(props) {
       </div>
       <Fab color={'secondary'} style={{position: 'fixed', bottom: 16, left: 16}} onClick={() => props.setOpen(true)}><Add/></Fab>
       </div>
-      <Drawer onClose={() => props.setOpen(false)} open={props.open} anchor={'right'}>
-        <div style={{backgroundColor: colors.primaryLight, minWidth: 300, width: '100%', height: '100vh'}}>
+      <Drawer onClose={() => props.setOpen(false)} open={props.open} anchor={'right'} style={{width: 280}}>
+        <div style={{backgroundColor: colors.primaryLight, minWidth: 300, width: '100%', height: '100vh', alignItems: 'center', justifyContent: 'center', textAlign: 'center'}}>
           <div>
             <Typography variant={'h6'} style={{marginTop: 24, marginRight: 16}}>افزودن رای گیری جدید</Typography>
           </div>
@@ -153,7 +154,7 @@ export function PollBox(props) {
               {pollOptions.map((option, index) => {
                   return (
                       <>
-                        <div style={{display: 'flex'}}>
+                        <div style={{display: 'flex', width: 'calc(100% - 48px)', marginLeft: 48}}>
                           <TextField label={"گزینه ی" + ' ' + (index + 1)} variant="outlined" style={{marginRight: 24, marginTop: 16}}
                             defaultValue={pollOptions[index].caption}
                             onChange={event => {
@@ -186,14 +187,15 @@ export function PollBox(props) {
                   افزودن گزینه
                 </Button>
               </div>
-              <div style={{position: 'fixed', bottom: 24, right: 0, position: 'absolute', left: '50%', transform: 'translateX(-50%)'}}>
+              <div style={{position: 'fixed', bottom: 24, right: 0, display: 'flex', position: 'absolute', left: '50%', transform: 'translateX(-50%)'}}>
                 <Button
                     color="secondary"
                     variant={'outlined'}
+                    style={{margin: 8}}
                     onClick={() => props.setOpen(false)}>
                   لغو
                 </Button>
-                <Button style={{marginRight: 16}} color="primary" variant={'outlined'} onClick={() => {
+                <Button style={{margin: 8}} color="primary" variant={'outlined'} onClick={() => {
                   let requestOptions = {
                     method: 'POST',
                     headers: {

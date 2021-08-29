@@ -5,7 +5,7 @@ import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import { ArrowForward, Search } from '@material-ui/icons';
 import React from 'react';
-import { popPage } from "../../App";
+import { isDesktop, isInRoom, isMobile, isTablet, popPage } from "../../App";
 import { PollBox } from '../../modules/pollbox/pollbox';
 import { setToken } from '../../util/settings';
 
@@ -56,12 +56,13 @@ export default function PollPage(props) {
                     backgroundColor: 'transparent',
                     boxShadow: 'none',
                 },
-            }}fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
-            <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
-                <AppBar style={{
+            }}fullScreen={!isDesktop()} open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: (!(isDesktop() && isInRoom())) ? 'blur(10px)' : undefined}}>
+            <div style={{...(!isDesktop() && {position: "absolute", top: 0, left: 0}), height: (isMobile() || isTablet()) ? "100%" : 650, width: (isMobile() || isTablet()) ? "100%" : 500}}>
+                <AppBar position={'static'} style={{
                     width: '100%',
-                    height: 56, 
-                    backgroundColor: 'transparent'
+                    height: 64,
+                    backgroundColor: 'rgba(21, 96, 233, 0.65)',
+                    borderRadius: isDesktop() ? '24px 24px 0 0' : undefined
                 }}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>

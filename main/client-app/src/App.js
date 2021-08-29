@@ -27,8 +27,21 @@ import { ConnectToIo, serverRoot, useForceUpdate } from "./util/Utils"
 
 let histPage = null, setHp = null;
 
-export let isDesktop;
-let setIsDesktop;
+export let sizeMode;
+let setSizeMode;
+let currentStaticPage = ''
+export let isDesktop = () => {
+  return sizeMode === 'desktop'
+}
+export let isTablet = () => {
+  return sizeMode === 'tablet'
+}
+export let isMobile = () => {
+  return sizeMode === 'mobile'
+}
+export let isInRoom = () => {
+  return currentStaticPage === '/app/room'
+}
 let series = ['/app/messenger'];
 let paramsSeries = [{}];
 let forceUpdate = undefined
@@ -92,9 +105,9 @@ export let popPage = () => {
 }
 
 let DesktopDetector = () => {
-  [isDesktop, setIsDesktop] = React.useState(window.innerWidth > 1400 ? 'desktop' : window.innerWidth > 900 ? 'tablet' : 'mobile')
+  [sizeMode, setSizeMode] = React.useState(window.innerWidth > 1400 ? 'desktop' : window.innerWidth > 900 ? 'tablet' : 'mobile')
   window.onresize = () => {
-    setIsDesktop(window.innerWidth > 1400 ? 'desktop' : window.innerWidth > 900 ? 'tablet' : 'mobile')
+    setSizeMode(window.innerWidth > 1400 ? 'desktop' : window.innerWidth > 900 ? 'tablet' : 'mobile')
   }
   return <div/>;
 }
@@ -230,12 +243,15 @@ export default function MainApp(props) {
   if (dialogs[histPage] !== undefined) {
     D = dialogs[histPage];
     P = pages[series[series.length - 2]];
+    currentStaticPage = series[series.length - 2]
     if (P === undefined) {
         P = pages[series[series.length - 3]]
+        currentStaticPage = series[series.length - 3]
     }
   }
   else {
     P = pages[histPage];
+    currentStaticPage = histPage
   }
 
   useEffect(() => {

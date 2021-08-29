@@ -1,13 +1,15 @@
 import { Dialog, IconButton, Slide } from '@material-ui/core'
 import React, { useEffect } from 'react'
-import { popPage, registerDialogOpen } from '../../App'
+import { isDesktop, popPage, registerDialogOpen } from '../../App'
 import {AudioBox} from '../../modules/audiobox'
+import { useForceUpdate } from '../../util/Utils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function AudioPlayer(props) {
+  let forceUpdate = useForceUpdate()
   const [open, setOpen] = React.useState(true);
   registerDialogOpen(setOpen)
   const handleClose = () => {
@@ -24,7 +26,7 @@ export default function AudioPlayer(props) {
                     boxShadow: 'none',
                 },
             }}
-            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
+            fullScreen={!isDesktop()} open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
         <AudioBox roomId={props.room_id} src={props.src} handleClose={handleClose}/>
       </Dialog>
     )

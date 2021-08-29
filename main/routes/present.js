@@ -15,9 +15,8 @@ const router = express.Router();
 let jsonParser = bodyParser.json();
 
 router.post('/upload_present', jsonParser, async function (req, res) {
-    let token = req.query.token;
     let roomId = Number(req.query.roomId);
-    let isPresent = req.query.isPresent
+    let ext = req.query.extension;
     authenticateMember(req, res, async (membership, session, user) => {
             
             if (!membership.canPresent) {
@@ -29,14 +28,6 @@ router.post('/upload_present', jsonParser, async function (req, res) {
                     if (!fs.existsSync('files')) {
                         fs.mkdirSync('files');
                     }
-                    let ext = '';
-                    let extIndex = files.file.name.lastIndexOf('.');
-                    if (extIndex > 0) {
-                        extIndex++;
-                        if (extIndex < files.file.name.length) {
-                            ext = files.file.name.substring(extIndex);
-                        }
-                    }
                     let preview = await sw.File.create({
                         extension: 'png',
                         uploaderId: session.userId,
@@ -45,8 +36,6 @@ router.post('/upload_present', jsonParser, async function (req, res) {
                         isPresent: false
                     });
                     let file = await sw.File.create({
-                        name: files.file.name,
-                        size: files.file.size,
                         extension: ext,
                         uploaderId: session.userId,
                         roomId: roomId,
@@ -104,8 +93,8 @@ router.post('/upload_present', jsonParser, async function (req, res) {
                                     console.log(err);
                                 });
                                 
-                                require("../server").pushTo('room_' + membership.roomId, 'present-picked', present);
                                 require("../server").pushTo('room_' + membership.roomId, 'present-added', {f: file, p: present});
+                                require("../server").pushTo('room_' + membership.roomId, 'present-picked', present);
     
                                 res.send({status: 'success', file: file, present: present});
                             });
@@ -114,13 +103,13 @@ router.post('/upload_present', jsonParser, async function (req, res) {
                     }
                     else if (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg') {
                         fs.copyFileSync(rootPath + '/files/' + file.id, rootPath + '/files/' + preview.id);
-                        require("../server").pushTo('room_' + membership.roomId, 'present-picked', present);
                         require("../server").pushTo('room_' + membership.roomId, 'present-added', {f: file, p: present});
+                        require("../server").pushTo('room_' + membership.roomId, 'present-picked', present);
                         res.send({status: 'success', file: file, present: present});
                     }
                     else {
-                        require("../server").pushTo('room_' + membership.roomId, 'present-picked', present);
                         require("../server").pushTo('room_' + membership.roomId, 'present-added', {f: file, p: present});
+                        require("../server").pushTo('room_' + membership.roomId, 'present-picked', present);
                         res.send({status: 'success', file: file, present: present});
                     }
                     })

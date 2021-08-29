@@ -232,7 +232,7 @@ export default function SpacesGrid(props) {
         </div>
         }
       </ImageList>
-      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop === 'desktop' ? 16 : 72 + 16, left: 16}}>
+      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop() ? 16 : 72 + 16, left: 16}}>
         <HomeIcon />
       </Fab>
     </div>

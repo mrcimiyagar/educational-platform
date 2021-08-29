@@ -11,7 +11,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
 import React, { useEffect } from "react";
-import { gotoPage, isDesktop } from '../../App';
+import { gotoPage, isDesktop, isInRoom } from '../../App';
 import { updateRoomBottomBar } from "../../components/RoomBottombar";
 import store, { switchConf } from "../../redux/main";
 import { me } from '../../util/settings';
@@ -69,11 +69,11 @@ export let ConfBox = (props) => {
     return (
       <div key={uniqueKey} style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr', display: props.style.display}}>
         
-        <AppBar style={{width: isDesktop === 'desktop' ? 550 : '100%', height: 64,
-          borderRadius: isDesktop === 'desktop' ? '0 0 24px 24px' : 0,
+        <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
+          borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
           backgroundColor: 'rgba(21, 96, 233, 0.65)',
           backdropFilter: 'blur(10px)',
-          position: 'fixed', left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 'calc(50% - 225px)' : '50%', transform: 'translateX(-50%)'}}>
+          position: 'fixed', left: (isDesktop() && isInRoom()) ? 'calc(50% - 225px)' : '50%', transform: 'translateX(-50%)'}}>
           <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
             <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
             <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
@@ -103,26 +103,26 @@ export let ConfBox = (props) => {
           <div style={{width: '100%', height: '100%'}}>
               <iframe allowTransparency={true} onLoad={() => window.frames['conf-video-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId}, 'http://localhost:1010')} 
                 id ={'conf-video-frame'} name="conf-video-frame" src={'http://localhost:1010/video.html'} allow={'microphone; camera'}
-                style={{width: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 80 : 64,
-                marginLeft: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
+                style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
+                marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
         
               <iframe allowTransparency={true} onLoad={() => window.frames['conf-audio-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId}, 'http://localhost:1011')} 
                 id ={'conf-audio-frame'} name="conf-audio-frame" src={'http://localhost:1011/audio.html'} allow={'microphone; camera'}
                 style={{width: 400, height: 128, position: 'absolute', bottom: 32, display: 'none'}} frameBorder="0"></iframe>
 
               <ThemeProvider theme={theme}>
-                <Fab id="messagesButton" color={'primary'} style={{position: 'absolute', left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 32 : 16, bottom: audio ? ((isDesktop === 'desktop' && window.location.pathname === '/app/room') ? (48 + 56 + 16 + 56 + 16) : (16 + 72 + 56 + 16 + 56 + 16)) : ((isDesktop === 'desktop' && window.location.pathname === '/app/room') ? (48 + 56 + 16) : (16 + 72 + 56 + 16))}} onClick={() => {
+                <Fab id="messagesButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: audio ? ((isDesktop() && isInRoom()) ? (48 + 56 + 16 + 56 + 16) : (16 + 72 + 56 + 16 + 56 + 16)) : ((isDesktop() && isInRoom()) ? (48 + 56 + 16) : (16 + 72 + 56 + 16))}} onClick={() => {
                   gotoPage('/app/chat')
                 }}><Chat/></Fab>
               {audio ? 
-                <Fab id="audioButton" color={'primary'} style={{position: 'absolute', left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 32 : 16, bottom: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? (48 + 56 + 16) : (16 + 72 + 56 + 16)}} onClick={() => {
+                <Fab id="audioButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: (isDesktop() && isInRoom()) ? (48 + 56 + 16) : (16 + 72 + 56 + 16)}} onClick={() => {
                   window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.audio}, 'http://localhost:1011')
                   store.dispatch(switchConf('audio', !store.getState().global.conf.audio))
                   forceUpdate()
                 }}>{store.getState().global.conf.audio ? <Mic/> : <MicOff/>}</Fab> :
                 null
               }  
-              <Fab id="endCallButton" color={'secondary'} style={{position: 'absolute', left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 32 : 16, bottom: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 48 : (16 + 72)}} onClick={() => {
+              <Fab id="endCallButton" color={'secondary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: (isDesktop() && isInRoom()) ? 48 : (16 + 72)}} onClick={() => {
                 store.dispatch(switchConf('video', false))
                 store.dispatch(switchConf('audio', false))
                 setConnected(false)
@@ -130,20 +130,20 @@ export let ConfBox = (props) => {
                 forceUpdate()
               }}><CallEndIcon/></Fab>
               {video ?
-                <Fab id="camButton" color={'primary'} style={{position: 'absolute', left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? (32 + 56 + 16) : (16 + 56 + 16), bottom: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 48 : 16 + 72}} onClick={() => {
+                <Fab id="camButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
                   window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.video}, 'http://localhost:1010')
                   store.dispatch(switchConf('video', !store.getState().global.conf.video))
                   forceUpdate()
                 }}>{store.getState().global.conf.video ? <VideocamIcon/> : <VideocamOff/>}</Fab> :
                 null
               }
-              <Fab id="settingsButton" color={'primary'} style={{position: 'absolute', left: video ? ((isDesktop === 'desktop' && window.location.pathname === '/app/room') ? (32 + 56 + 16 + 56 + 16) : (16 + 56 + 16 + 56 + 16)) : ((isDesktop === 'desktop' && window.location.pathname === '/app/room') ? (32 + 56 + 16) : (16 + 56 + 16)), bottom: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 48 : 16 + 72}} onClick={() => {
+              <Fab id="settingsButton" color={'primary'} style={{position: 'absolute', left: video ? ((isDesktop() && isInRoom()) ? (32 + 56 + 16 + 56 + 16) : (16 + 56 + 16 + 56 + 16)) : ((isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16)), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
                 
               }}><SettingsIcon/></Fab>
             </ThemeProvider>
         </div>:
         <ThemeProvider theme={theme2}>
-          <Fab id="callButton" color={'secondary'} style={{position: 'absolute', left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 32 : 16, bottom: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 48 : (16 + 72)}} onClick={() => {
+          <Fab id="callButton" color={'secondary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: (isDesktop() && isInRoom()) ? 48 : (16 + 72)}} onClick={() => {
             setConnected(true)
           }}><CallIcon style={{fill: '#fff'}}/></Fab>
         </ThemeProvider>

@@ -9,7 +9,7 @@ import CallIcon from '@material-ui/icons/Call';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import React from 'react';
-import { gotoPage, isDesktop } from '../../App';
+import { gotoPage, isDesktop, isInRoom, isMobile, isTablet } from '../../App';
 import { setCurrentRoomNavBackup } from '../../routes/pages/room';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
@@ -61,15 +61,15 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="fixed" style={{width: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px)') : isDesktop === 'tablet' ? (window.location.pathname === '/room' ? '100%' : '100% - 450px)') : '100%', borderRadius: isDesktop === 'tablet' || isDesktop === 'mobile' ? 0 : (window.location.pathname === '/app/room' ? 0 : '24px 0 0 0'), position: isDesktop === 'desktop' || isDesktop === 'tablet' ? 'fixed' : undefined, top: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 0 : 32) : 0, left: window.location.pathname === '/app/room' ? (isDesktop === 'desktop' ? 'calc(100% - 450px)' : 96) : (isDesktop === 'desktop' ? 96 : 0), paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
-                <Toolbar style={{height: '100%', marginTop: (isDesktop === 'desktop' || isDesktop === 'tablet') ? -8 : 0}}>
-                    {isDesktop === 'mobile' || isDesktop === 'tablet' ? 
+            <AppBar position="fixed" style={{width: isDesktop() ? (isInRoom() ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px - 16px)') : isTablet() ? (isInRoom() ? '100%' : 'calc(100% - 450px)') : '100%', borderRadius: isTablet() || isMobile() ? 0 : ((window.location.pathname === '/app/chat' || isInRoom()) ? 0 : '24px 0 0 0'), position: isDesktop() || isTablet() ? 'fixed' : undefined, top: isDesktop() ? (isInRoom() ? 0 : 32) : 0, left: isInRoom() ? (isDesktop() ? 'calc(100% - 450px)' : 96) : (isDesktop() ? (96 + 16) : 0), paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
+                <Toolbar style={{height: '100%', marginTop: (isDesktop() || isTablet()) ? -8 : 0}}>
+                    {isMobile() || isTablet() ?
                         <IconButton style={{marginRight: -16}} onClick={() => props.handleClose() }>
                             <ArrowForward style={{fill: '#fff'}}/>
                         </IconButton> :
                         null
                     }
-                    <Avatar style={{width: 28, height: 28, marginRight: isDesktop === 'desktop' || isDesktop === 'tablet' ? 8 : -8}}
+                    <Avatar style={{width: 28, height: 28, marginRight: isDesktop() || isTablet() ? 8 : -8}}
                             alt={props.user !== undefined ? (props.user.firstName + ' ' + props.user.lastName) : props.room !== undefined ? props.room.title : ''} src={
                         props.room !== undefined ?
                             (serverRoot + `/file/download_room_avatar?token=${token}&roomId=${props.room.id}`) :

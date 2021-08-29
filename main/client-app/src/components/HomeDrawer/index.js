@@ -51,9 +51,9 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     background: 'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)',
     backdropFilter: 'blur(10px)',
-    margin: isDesktop === 'desktop' ? 32 : 0,
-    height: isDesktop === 'desktop' ? 'calc(100% - 64px)' : '100%',
-    borderRadius: isDesktop === 'desktop' ? 24 : 0,
+    margin: isDesktop() ? 32 : 0,
+    height: isDesktop() ? 'calc(100% - 64px)' : '100%',
+    borderRadius: isDesktop() ? 24 : 0,
     direction: 'rtl'
   },
   content: {
@@ -115,7 +115,7 @@ function HomeDrawer(props) {
     <div className={classes.root}>
       <CssBaseline />
       <nav className={classes.drawer}>
-        {isDesktop !== 'desktop' ?
+        {!isDesktop() ?
           <SwipeableDrawer
             container={container}
             variant="temporary"
@@ -143,7 +143,7 @@ function HomeDrawer(props) {
           </SwipeableDrawer> :
           null
         }
-        {isDesktop === 'desktop' ?
+        {isDesktop() ?
           <Drawer
             anchor={'right'}
             classes={{

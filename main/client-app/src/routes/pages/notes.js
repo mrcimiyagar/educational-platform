@@ -5,7 +5,7 @@ import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import { ArrowForward, Search } from '@material-ui/icons';
 import React from 'react';
-import { popPage } from "../../App";
+import { isDesktop, isMobile, isTablet, popPage } from "../../App";
 import { NoteBox } from '../../modules/notebox/notebox';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -50,18 +50,33 @@ export default function NotePage(props) {
                 style: {
                     backgroundColor: 'transparent',
                     boxShadow: 'none',
+                    width: isDesktop() ? '85%' : "100%", height: isDesktop() ? '75%' : "100%"
                 },
-            }} fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
-            <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
-                <AppBar style={{width: '100%', height: 56, 
-                    backgroundColor: 'transparent'}}>
-                    <Toolbar style={{marginTop: 8, width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
+            }}
+            fullWidth
+            maxWidth="md"
+            fullScreen={!isDesktop()}
+            open={open}
+            onClose={handleClose} 
+            TransitionComponent={Transition}
+            style={{backdropFilter: (isMobile() || isTablet()) ? 'blur(10px)' : undefined}}>
+            <div style={{width: "100%", height: '100%', ...((isMobile() || isTablet()) && {position: "absolute", top: 0, left: 0})}}>
+                <AppBar position={'fixed'} style={{
+                    width: '50%',
+                    marginLeft: '25%',
+                    marginRight: '25%',
+                    marginTop: '3%',
+                    height: 64, 
+                    backgroundColor: 'rgba(21, 96, 233, 0.65)',
+                    backdropFilter: isDesktop() ? 'blur(15px)' : undefined,
+                    borderRadius: isDesktop() ? '24px 24px 0 0' : undefined}}>
+                    <Toolbar style={{marginTop: (isDesktop() || isTablet()) ? 0 : 8, width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
                         <Typography variant={'h6'}>یادداشت ها</Typography>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
-                <div style={{width: '100%', height: 'calc(100% - 56px)', position: 'absolute', top: 56}}>
+                <div style={{width: '100%', height: 'calc(100% - 56px)', position: 'absolute', top: 0}}>
                     <NoteBox roomId={props.room_id}/>
                 </div>
             </div>

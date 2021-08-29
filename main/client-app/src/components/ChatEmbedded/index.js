@@ -12,11 +12,12 @@ import React, { useEffect } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import Viewer from 'react-viewer';
 import { useFilePicker } from 'use-file-picker';
-import { gotoPage, isDesktop } from "../../App";
+import { gotoPage, isDesktop, isInRoom, isTablet } from "../../App";
 import EmptyIcon from '../../images/empty.png';
 import { me, setToken, token } from '../../util/settings';
 import { serverRoot, useForceUpdate } from '../../util/Utils';
 import ChatAppBar from "../ChatAppBar";
+import EmptySign from '../EmptySign';
 import { WaveSurferBox } from '../WaveSurfer';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,9 +25,9 @@ const useStyles = makeStyles((theme) => ({
         padding: '2px 4px',
         display: 'flex',
         alignItems: 'center',
-        width: isDesktop  === 'desktop' ?  'min(20%, 450px)' : isDesktop === 'tablet' ? 'min(60%, 350px)' : '100%',
+        width: isDesktop() ?  'min(20%, 450px)' : isTablet() ? 'min(60%, 350px)' : '100%',
         position: 'fixed',
-        left: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 'calc(100% - 288px)' : 'calc(50% - 256px - 32px - 32px - 16px - 112px)') : 'calc(50% - 256px - 16px)',
+        left: isDesktop() ? (isInRoom() ? 'calc(100% - 288px)' : 'calc(50% - 256px - 32px - 32px - 16px - 112px)') : 'calc(50% - 256px - 16px)',
         transform: 'translateX(-50%)',
         borderRadius: 16,
         zIndex: 1000,
@@ -199,8 +200,8 @@ export default function ChatEmbedded(props) {
       }, [loading, filesContent, forceUpdate, messages, pickingFile, props.roomId])
 
     return (
-            <div style={{display: (props.roomId === undefined || props.roomId === 0) ? 'none' : 'block', width: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? '100%' : "calc(100% - 64px - 256px - 64px - 72px + 180px)") : '100%', height: "100%", position: "absolute", top: isDesktop === 'desktop' ? (32 + 16) : 32, left: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 0 : 80) : 0, bottom: isDesktop === 'desktop' ? 16 : 0}}>
-                <div style={{width: '100%', height: "100%", position: "absolute", backgroundColor: 'rgba(255, 255, 255, 0.45)', top: isDesktop === 'desktop' ? 16 : 0, left: isDesktop === 'desktop' ? 96 : 0, right: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 0 : 16) : 0, bottom: isDesktop === 'desktop' ? -16 : 0, backdropFilter: 'blur(10px)', borderRadius: '0 0 0 24px'}}/>
+            <div style={{display: (props.roomId === undefined || props.roomId === 0) ? 'none' : 'block', width: isDesktop() ? (isInRoom() ? '100%' : "calc(100% - 64px - 256px - 64px - 72px + 180px - 48px)") : '100%', height: "100%", position: "absolute", top: isDesktop() ? (32 + 16) : 32, left: isDesktop() ? (isInRoom() ? 0 : 128) : 0, bottom: isDesktop() ? 16 : 0}}>
+                <div style={{width: '100%', height: "100%", position: "absolute", backgroundColor: 'rgba(255, 255, 255, 0.45)', top: isDesktop() ? 16 : 0, left: isDesktop() ? 96 : 0, right: isDesktop() ? (isInRoom() ? 0 : 16) : 0, bottom: isDesktop() ? -16 : 0, backdropFilter: 'blur(10px)', borderRadius: '0 0 0 24px'}}/>
                 <Viewer
                     zIndex={99999}
                     style={{position: 'fixed', left: 0, top: 0}}
@@ -210,7 +211,7 @@ export default function ChatEmbedded(props) {
                 />
                 <ChatAppBar user={user} room={room}/>
                 <div style={{width: '100%', height: 'auto', zIndex: 1000}}>
-                    <div className={classes.root} style={{height: 56, bottom: showEmojiPad ? (352 + 56) : isDesktop === 'desktop' ? 24 : 88, transform: 'translateX(-128px)'}}>
+                    <div className={classes.root} style={{height: 56, bottom: showEmojiPad ? (352 + 56) : isDesktop() ? 48 : 88, transform: 'translateX(-128px)'}}>
                     <IconButton className={classes.iconButton} onClick={() => {
                         setPickingFile(true)
                         openFileSelector()
@@ -259,11 +260,11 @@ export default function ChatEmbedded(props) {
                     </IconButton>
                     <br/>
                     </div>
-                    <Picker pickerStyle={{width: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 450 : 'calc(100% - 658px - 96px)') : 'calc(100% - 450px)', height: showEmojiPad ? 356 : 0, position: 'fixed', left: isDesktop === 'desktop' ? (window.location.pathname === '/app/room' ? 'calc(100% - 450px)' : 96) : 0, bottom: 0, zIndex: 5000}} onEmojiClick={(event, emojiObject) => {
+                    <Picker pickerStyle={{width: isDesktop() ? (isInRoom() ? 450 : 'calc(100% - 658px - 96px)') : 'calc(100% - 450px)', height: showEmojiPad ? 356 : 0, position: 'fixed', left: isDesktop() ? (isInRoom() ? 'calc(100% - 450px)' : 96) : 0, bottom: 0, zIndex: 5000}} onEmojiClick={(event, emojiObject) => {
                         document.getElementById('chatText').value += emojiObject.emoji
                     }} />
                 </div>
-                <div style={{direction: 'ltr', width: isDesktop === 'desktop' ? 'calc(100% - 48px)' : '100%', height: showEmojiPad ? "calc(100% - 300px - 56px)" : isDesktop === 'tablet' ? 'calc(100% - 64px - 72px)' : (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 'calc(100% - 96px)' : 'calc(100% - 64px)', marginTop: 32, marginLeft: isDesktop === 'desktop' ? 32 : 0, marginRight: 16}}>
+                <div style={{direction: 'ltr', width: isDesktop() ? 'calc(100% - 48px)' : '100%', height: showEmojiPad ? "calc(100% - 300px - 56px)" : isTablet() ? 'calc(100% - 64px - 72px)' : (isDesktop() && isInRoom()) ? 'calc(100% - 96px)' : 'calc(100% - 64px)', marginTop: 32, marginLeft: isDesktop() ? 32 : 0, marginRight: 16}}>
                     <ScrollToBottom className={ROOT_CSS}>
                       <div style={{height: 64}}/>
                       {messages.length > 0 ?
@@ -405,11 +406,9 @@ export default function ChatEmbedded(props) {
                             </div>
                         );
                     }) :
-                    <div style={{width: 250, height: 250, position: isDesktop === 'desktop' ? undefined : 'absolute', top: isDesktop === 'desktop' ? undefined : 80, right: isDesktop === 'desktop' ? undefined : 'calc(50% - 225px)', marginRight: isDesktop === 'desktop' ? 'calc(50% - 125px)' : undefined, marginTop: isDesktop === 'desktop' ? 160 : undefined, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-                      <img alt={''} src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
-                    </div>
+                    <EmptySign/>
                     }
-                    <div style={{width: '100%', height: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 160 : 88}}/>
+                    <div style={{width: '100%', height: (isDesktop() && isInRoom()) ? 160 : 88}}/>
                     </ScrollToBottom>
                 </div>
             </div>

@@ -3,7 +3,7 @@ import { pink } from '@material-ui/core/colors';
 import Add from '@material-ui/icons/Add';
 import Edit from '@material-ui/icons/Edit';
 import React, { useEffect } from 'react';
-import { isDesktop } from '../../App';
+import { isDesktop, isInRoom } from '../../App';
 import BotContainer from '../../components/BotContainer';
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar';
 import HomeToolbar from '../../components/HomeToolbar';
@@ -326,10 +326,10 @@ export default function BotsBox(props) {
                 </div>
             </div>
             <ThemeProvider theme={theme}>
-                <Fab color={'secondary'} style={{position: 'fixed', bottom: 16 + 72, left: (isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 32 : 16, zIndex: 4}} onClick={() => setEditMode(!editMode)}>
+                <Fab color={'secondary'} style={{position: 'fixed', bottom: 16 + 72, left: (isDesktop() && isInRoom()) ? 32 : 16, zIndex: 4}} onClick={() => setEditMode(!editMode)}>
                     <Edit/>
                 </Fab>
-                <Fab size={'medium'} color={'primary'} style={{position: 'fixed', bottom: 16 + 72 + 56 + 16, left: ((isDesktop === 'desktop' && window.location.pathname === '/app/room') ? 32 : 16) + 4, zIndex: 4}} 
+                <Fab size={'medium'} color={'primary'} style={{position: 'fixed', bottom: 16 + 72 + 56 + 16, left: ((isDesktop() && isInRoom()) ? 32 : 16) + 4, zIndex: 4}} 
                     onClick={() => setMenuOpen(true)}>
                     <Add/>
                 </Fab>

@@ -62,7 +62,7 @@ export default function Jumper(props) {
     <div className={classes.root}
       style={{
         bottom: window.location.pathname === '/app/searchengine' ? 0 :
-                (window.location.pathname === '/app/messenger' && isDesktop === 'desktop') ? -12 :
+                (window.location.pathname === '/app/messenger' && isDesktop()) ? -12 :
                 60
       }}>
       <ThemeProvider theme={theme}>

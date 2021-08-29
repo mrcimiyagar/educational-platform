@@ -55,25 +55,25 @@ export default function HomeBottombar(props) {
       showLabels
       className={classes.root}
       style={{
-        width: isDesktop === 'desktop' ? 400 : '100%',
-        transform: isDesktop === 'desktop' ? 'rotate(90deg)' : undefined,
-        position: isDesktop === 'desktop' ? 'fixed' : undefined,
-        left: isDesktop === 'desktop' ? (-274 + 16 + 100) : undefined,
-        top: isDesktop === 'desktop' ? 'calc(50% - 56px)' : undefined,
-        borderRadius: isDesktop === 'desktop' ? 32 : undefined
+        width: isDesktop() ? 400 : '100%',
+        transform: isDesktop() ? 'rotate(90deg)' : undefined,
+        position: isDesktop() ? 'fixed' : undefined,
+        left: isDesktop() ? (-274 + 32 + 100) : undefined,
+        top: isDesktop() ? 'calc(50% - 56px)' : undefined,
+        borderRadius: isDesktop() ? 32 : undefined
       }}
     >
       <BottomNavigationAction value={0} classes={classesAction} style={{
-        transform: isDesktop === 'desktop' ? 'rotate(-90deg)' : undefined
+        transform: isDesktop() ? 'rotate(-90deg)' : undefined
       }} label="گفتگو ها" icon={<HomeIcon />}/>
       <BottomNavigationAction value={1} classes={classesAction} style={{
-        transform: isDesktop === 'desktop' ? 'rotate(-90deg)' : undefined
+        transform: isDesktop() ? 'rotate(-90deg)' : undefined
       }} label="فضا ها" icon={<AccountBalanceIcon />} />
       <BottomNavigationAction value={2} classes={classesAction} style={{
-        transform: isDesktop === 'desktop' ? 'rotate(-90deg)' : undefined
+        transform: isDesktop() ? 'rotate(-90deg)' : undefined
       }} label="اعلانات" icon={<NotificationsIcon />} />
       <BottomNavigationAction value={3} classes={classesAction} style={{
-        transform: isDesktop === 'desktop' ? 'rotate(-90deg)' : undefined
+        transform: isDesktop() ? 'rotate(-90deg)' : undefined
       }} label="تنظیمات" icon={<SettingsIcon />} />
     </BottomNavigation>
   );

@@ -32,7 +32,7 @@ export default function HomeSearchbar(props) {
 
   return (
     <Paper component="form" className={classes.root}>
-      {isDesktop === 'desktop' ?
+      {isDesktop() ?
         null :
         <IconButton onClick={() => props.setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
           <MenuIcon />

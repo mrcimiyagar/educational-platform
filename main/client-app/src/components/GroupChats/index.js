@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { Audiotrack, Videocam } from '@material-ui/icons';
 import Photo from '@material-ui/icons/Photo';
 import React from 'react';
-import { gotoPage, isDesktop } from '../../App';
+import { gotoPage, isDesktop, isTablet } from '../../App';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 import EmptySign from '../EmptySign';
@@ -19,9 +19,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     direction: 'ltr', 
-    backgroundColor: 'rgba(255, 255, 255, 0.35)', 
+    backgroundColor: 'rgba(255, 255, 255, 0.35)',
     backdropFilter: 'blur(10px)',
-    borderRadius: 16,
+    borderRadius: 16
   },
   inline: {
     display: 'inline',
@@ -38,7 +38,7 @@ export default function GroupChats(props) {
   return (
   <div>
    <ListItem alignItems="flex-start" button style={{height: 80, direction: 'rtl'}} onClick={() => {
-      if (isDesktop === 'desktop' || isDesktop === 'tablet') {
+      if (isDesktop() || isTablet()) {
         props.setSelectedRoomId(chat.id)
       }
       else {
