@@ -1103,7 +1103,7 @@ export default function RoomPage(props) {
               <div
                 onClick={() => {
                   setMenuOpen(false)
-                  gotoPage('/app/settings')
+                  gotoPage('/app/settings', {room_id: props.room_id})
                 }}
                 style={{
                   borderRadius: 32,

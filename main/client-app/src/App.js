@@ -21,6 +21,7 @@ import Store from "./routes/pages/store"
 import StoreAds from "./routes/pages/storeAds"
 import StoreBot from "./routes/pages/storeBot"
 import VideoPlayer from './routes/pages/videoPlayer'
+import SettingsPage from './routes/pages/settings'
 import StartupSound from './sounds/startup.mp3'
 import { setMe, setToken, theme, token } from "./util/settings"
 import { ConnectToIo, serverRoot, useForceUpdate } from "./util/Utils"
@@ -141,8 +142,8 @@ let dialogs = {
   '/app/createroom': CreateRoom,
   '/app/roomstree': RoomsTree,
   '/app/audioplayer': AudioPlayer,
-  '/app/p2pCall': P2pCall
-  
+  '/app/p2pCall': P2pCall,
+  '/app/settings': SettingsPage
 }
 let pages = {
   '/app/store': Store,
@@ -261,6 +262,12 @@ export default function MainApp(props) {
 
   if (paramsSeries.length > 1) {
     params = paramsSeries[paramsSeries.length - 1]
+  }
+
+  if (P === undefined) {
+    series = ['/app/messenger', '/app/settings']
+    paramsSeries = [{}, {}]
+    P = MessengerPage
   }
 
   return (

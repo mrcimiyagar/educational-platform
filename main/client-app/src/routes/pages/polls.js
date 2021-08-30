@@ -5,9 +5,8 @@ import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import { ArrowForward, Search } from '@material-ui/icons';
 import React from 'react';
-import { isDesktop, isInRoom, isMobile, isTablet, popPage } from "../../App";
+import { isDesktop, isInRoom, isMobile, isTablet, popPage, registerDialogOpen } from "../../App";
 import { PollBox } from '../../modules/pollbox/pollbox';
-import { setToken } from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -40,8 +39,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PollPage(props) {
       
-    setToken(localStorage.getItem('token'));
     const [open, setOpen] = React.useState(true);
+    registerDialogOpen(setOpen)
     const [createPollOpen, setCreatePollOpen] = React.useState(false)
     const handleClose = () => {
         setOpen(false);
