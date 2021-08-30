@@ -12,6 +12,7 @@ import { useFilePicker } from 'use-file-picker'
 import AddIcon from '@material-ui/icons/Add'
 import FilesGrid from '../../components/FilesGrid/FilesGrid'
 import { isDesktop } from '../../App'
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
 let pickingFile = false
 
@@ -126,26 +127,30 @@ export function PresentBox(props) {
         })
     }
   }, [loading])
-  let setCurrentPresent = (i) => {
-    setCp(i)
-    let requestOptions4 = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: props.roomId,
-        presentId: presents[i].id,
-        pageNumber: pageNumber,
-      }),
-      redirect: 'follow',
+  let setCurrentPresent = (p) => {
+    for (let i = 0; i < presents.length; i++) {
+      if (presents[i].id === p.id) {
+        setCp(i)
+        let requestOptions4 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: props.roomId,
+            presentId: p.id,
+            pageNumber: pageNumber,
+          }),
+          redirect: 'follow',
+        }
+        fetch(serverRoot + '/present/pick_present', requestOptions4)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result))
+          })
+      }
     }
-    fetch(serverRoot + '/present/pick_present', requestOptions4)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result))
-      })
   }
   let setCurrentPage = (i) => {
     setPageNumber(i)
@@ -272,8 +277,8 @@ export function PresentBox(props) {
       <div
         id={'presentView'}
         style={{
-          height: isDesktop() ? 700 : '100%',
-          width: isDesktop() ? 700 : '100%',
+          height: '100%',
+          width: '100%',
           position: 'absolute',
           left: '50%',
           top: '50%',
@@ -287,24 +292,58 @@ export function PresentBox(props) {
           files[currentPresent].extension === 'jpeg' ||
           files[currentPresent].extension === 'svg' ||
           files[currentPresent].extension === 'gif' ? (
-            <img
-              id={'pimg'}
-              alt="Thumbnail"
+            <TransformWrapper
               style={{
+                width: '100%',
+                height: '100%',
                 position: 'absolute',
                 left: '50%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)',
               }}
-              src={
-                serverRoot +
-                `/file/download_file?token=${token}&roomId=${
-                  props.roomId
-                }&fileId=${files.length > 0 ? files[currentPresent].id : 0}`
-              }
-            />
+            >
+              <TransformComponent style={{ width: '100%', height: '100%' }}>
+                <img
+                  id={'pimg'}
+                  alt="Thumbnail"
+                  style={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                  src={
+                    serverRoot +
+                    `/file/download_file?token=${token}&roomId=${
+                      props.roomId
+                    }&fileId=${files.length > 0 ? files[currentPresent].id : 0}`
+                  }
+                />
+              </TransformComponent>
+            </TransformWrapper>
           ) : files[currentPresent].extension === 'pdf' ? (
-            <img style={{width: '100%', height: '100%', objectFit: 'contain'}} id={'pdfViewer'} src={`data:image/png;base64,${pageData}`} />
+            <TransformWrapper
+              style={{
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            >
+              <TransformComponent style={{ width: '100%', height: '100%' }}>
+                <img
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
+                  id={'pdfViewer'}
+                  src={`data:image/png;base64,${pageData}`}
+                />
+              </TransformComponent>
+            </TransformWrapper>
           ) : null
         ) : null}
         {files.length > 0 &&

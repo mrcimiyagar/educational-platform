@@ -185,7 +185,19 @@ router.post('/get_presents', jsonParser, async function (req, res) {
     }).then((files) => {
       sw.Present.findAll({ where: { fileId: files.map((f) => f.id) } }).then(
         async function (presents) {
-          res.send({ status: 'success', presents: presents, files: files })
+          let data = []
+          presents.forEach(p => {
+            for (let i = 0; i < files.length; i++) {
+              if (files[i].id === p.fileId) {
+                let f = JSON.stringify(files[i])
+                f = JSON.parse(f)
+                f.present = p
+                data.push(f)
+                break
+              }
+            }
+          });
+          res.send({ status: 'success', presents: presents, files: data })
         },
       )
     })
@@ -274,7 +286,6 @@ router.post('/pick_present', jsonParser, async function (req, res) {
               )
               res.send({ status: 'success' })
             })
-            pdfParser.loadPDF(previewFactoryPath) // ex: ./abc.pdf
           } catch (ex) {
             console.error(ex)
           }

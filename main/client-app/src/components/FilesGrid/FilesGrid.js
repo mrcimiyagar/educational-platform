@@ -164,7 +164,7 @@ export default function FilesGrid(props) {
                               setPhotoViewerVisible(true)
                             }
                             else if (props.fileType === 'document' && props.usedBy === 'presents') {
-                                props.setCurrentPresent(index);
+                                props.setCurrentPresent(file.present);
                             }
                           }}
                           style={{ width: '100%', height: '100%' }}
