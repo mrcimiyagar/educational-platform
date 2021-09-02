@@ -47,12 +47,12 @@ module.exports = {
             port: 5432,
             host: 'localhost'
         };
-        /*try {
+        try {
             await pgTools.dropdb(config, dbName);
         } catch (e) {console.log(e);}
         try {
             await pgTools.createdb(config, dbName);
-        } catch (e) {console.log(e);}*/
+        } catch (e) {console.log(e);}
         prepareSequelizeInstance();
         await prepareUserModel();
         await prepareAccountModel();
@@ -702,7 +702,7 @@ async function prepareRoomSecretModel() {
             primaryKey: true,
             autoIncrement: true
         },
-        wallpaper: Sequelize.BIGINT,
+        wallpaper: Sequelize.STRING,
         ownerId: Sequelize.STRING,
         presentId: Sequelize.BIGINT,
         roomId: Sequelize.BIGINT
@@ -711,7 +711,6 @@ async function prepareRoomSecretModel() {
     });
     RoomSecret.belongsTo(Room, { foreignKey: 'roomId'});
     RoomSecret.belongsTo(Present, { foreignKey: 'presentId'});
-    RoomSecret.belongsTo(File, { foreignKey: 'wallpaper'});
     await RoomSecret.sync();
     module.exports['RoomSecret'] = RoomSecret;
 }

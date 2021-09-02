@@ -55,8 +55,8 @@ export default function PollPage(props) {
                     backgroundColor: 'transparent',
                     boxShadow: 'none',
                 },
-            }}fullScreen={!isDesktop()} open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: (!(isDesktop() && isInRoom())) ? 'blur(10px)' : undefined}}>
-            <div style={{...(!isDesktop() && {position: "absolute", top: 0, left: 0}), height: (isMobile() || isTablet()) ? "100%" : 650, width: (isMobile() || isTablet()) ? "100%" : 500}}>
+            }}fullScreen={!isDesktop()} open={open} onClose={handleClose} TransitionComponent={Transition}>
+            <div style={{backdropFilter: (!(isDesktop() && isInRoom())) ? 'blur(10px)' : undefined, ...(!isDesktop() && {position: "absolute", top: 0, left: 0}), height: (isMobile() || isTablet()) ? "100%" : 650, width: (isMobile() || isTablet()) ? "100%" : 500}}>
                 <AppBar position={'static'} style={{
                     width: '100%',
                     height: 64,

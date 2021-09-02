@@ -46,8 +46,6 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                         fileType: 'photo'
                     });
                     let file = await sw.File.create({
-                        name: '',
-                        size: 0,
                         extension: ext,
                         uploaderId: session.userId,
                         roomId: roomId,

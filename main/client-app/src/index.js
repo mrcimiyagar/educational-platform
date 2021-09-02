@@ -34,7 +34,13 @@ let Loading = (props) => {
 	)
 }
 
+export let setWallpaper = undefined
+
 let AppContainer = (props) => {
+	let [wall, setWall] = React.useState('')
+	setWallpaper = (w) => {
+		setWall(w)
+	}
 	let [opacity, setOpacity] = React.useState(0)
 	let [display, setDisplay] = React.useState('block')
 	useEffect(() => {
@@ -50,7 +56,15 @@ let AppContainer = (props) => {
 	}, [])
 	return (
 		<div style={{width: '100%', height: '100%'}}>
-			<img src={RoomWallpaper} style={{position: 'fixed', left: 0, top: 0, width: '100%', height: '100%', objectFit: 'cover'}}/>
+			{
+				wall === undefined || wall === null ?
+				  null :  
+				  wall.startsWith('http') ?
+					  <img src={wall} style={{position: 'fixed', left: 0, top: 0, width: '100%', height: '100%', objectFit: 'cover'}}/> :
+					  wall.startsWith('#') ?
+						  <div style={{backgroundColor: wall, position: 'fixed', left: 0, top: 0, width: '100%', height: '100%'}}/> :
+						  null						
+			}
 	   	    <Suspense fallback={
 	  			<div style={{width: '100%', height: '100vh', position: 'fixed', left: 0, top: 0}}>
 			  		<div style={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.45)', position: 'fixed', top: 0, left: 0}}/>

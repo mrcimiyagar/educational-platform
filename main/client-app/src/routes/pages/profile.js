@@ -5,7 +5,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import SearchIcon from '@material-ui/icons/Search';
 import React from "react";
-import { gotoPage, isDesktop, isMobile, popPage, registerDialogOpen } from "../../App";
+import { gotoPage, isMobile, popPage, registerDialogOpen } from "../../App";
 import ProfileAvatar from '../../images/avatar.jpg';
 import header from '../../images/profile-header.jpeg';
 import { token } from "../../util/settings";

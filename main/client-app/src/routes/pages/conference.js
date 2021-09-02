@@ -22,7 +22,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import { connect } from "react-redux";
 import "react-table/react-table.css";
 import {
-    Button
+  Button
 } from "reactstrap";
 import { gotoPage, isDesktop, roomId, setRoomId } from '../../App';
 import BottomSheet from '../../components/BottomSheet';

@@ -339,9 +339,31 @@ router.post('/update_room', jsonParser, async function (req, res) {
             }
             sw.Room.findOne({where: {id: membership.roomId}}).then(async function (room) {
                 room.title = req.body.title;
-                await room.save();
+                room.avatarId = req.body.avatarId
+                await room.save()
+                let roomSecret = await sw.RoomSecret.findOne({where: {roomId: room.id}})
+                roomSecret.wallpaper = req.body.wallpaper
+                await roomSecret.save()
                 require("../server").pushTo('room_' + membership.roomId, 'room-updated', room);
                 res.send({status: 'success'});
+            });
+        });
+    });
+});
+
+router.post('/get_room_wallpaper', jsonParser, async function (req, res) {
+    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+        if (session === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+            return;
+        }
+        sw.Membership.findOne({where: {userId: session.userId, roomId: req.body.roomId}}).then(async function (membership) {
+            if (membership === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'});
+                return;
+            }
+            sw.RoomSecret.findOne({where: {roomId: membership.roomId}}).then(async function (roomSecret) {
+                res.send({status: 'success', wallpaper: roomSecret.wallpaper});
             });
         });
     });

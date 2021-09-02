@@ -1,4 +1,4 @@
-import { AppBar, Drawer, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Toolbar, Typography } from '@material-ui/core'
 import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import Slide from '@material-ui/core/Slide'
@@ -12,8 +12,6 @@ import {
   popPage,
   registerDialogOpen,
 } from '../../App'
-import { CirclePicker } from 'react-color'
-import RoomWallpaperPicker from '../../components/RoomWallpaperPicker'
 import RoomSettings from '../../components/RoomSettings'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -23,7 +21,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function SettingsPage(props) {
   const [open, setOpen] = React.useState(true)
   registerDialogOpen(setOpen)
-  let [backgroundOpen, setBackgroundOpen] = React.useState(false)
 
   const handleClose = () => {
     setOpen(false)
@@ -47,22 +44,27 @@ function SettingsPage(props) {
       TransitionComponent={Transition}
       style={{
         zIndex: 2501,
-        backdropFilter: !(isDesktop() && isInRoom()) ? 'blur(10px)' : undefined,
       }}
     >
       <div
         style={{
+          position: 'relative',
           ...(!isDesktop() && { position: 'absolute', top: 0, left: 0 }),
           height: isMobile() || isTablet() ? '100%' : 650,
           width: isMobile() || isTablet() ? '100%' : 500,
         }}
       >
         <AppBar
-          position={'static'}
+          position={'fixed'}
           style={{
-            width: '100%',
+            width: isMobile() || isTablet() ? '100%' : 516,
             height: 64,
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-258px, -390px)',
+            position: 'fixed',
             backgroundColor: 'rgba(21, 96, 233, 0.65)',
+            backdropFilter: 'blur(15px)',
             borderRadius: isDesktop() ? '24px 24px 0 0' : undefined,
           }}
         >
@@ -94,8 +96,17 @@ function SettingsPage(props) {
           </Toolbar>
         </AppBar>
 
-        <RoomSettings roomId={props.room_id}/>
-        
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            backdropFilter: !(isDesktop() && isInRoom())
+              ? 'blur(10px)'
+              : undefined,
+          }}
+        >
+          <RoomSettings roomId={props.room_id} />
+        </div>
       </div>
     </Dialog>
   )

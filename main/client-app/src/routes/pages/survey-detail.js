@@ -2,11 +2,11 @@ import classnames from "classnames";
 import React, { Component, Fragment } from "react";
 import { NavLink } from "react-router-dom";
 import {
-    Badge, Button, ButtonDropdown, Card,
-    CardBody, CardTitle, DropdownItem,
-    DropdownMenu, DropdownToggle, Nav,
-    NavItem, Progress, Row, TabContent,
-    TabPane
+  Badge, Button, ButtonDropdown, Card,
+  CardBody, CardTitle, DropdownItem,
+  DropdownMenu, DropdownToggle, Nav,
+  NavItem, Progress, Row, TabContent,
+  TabPane
 } from "reactstrap";
 import { BreadcrumbItems } from "../../components/BreadcrumbContainer";
 import { Colxx } from "../../components/CustomBootstrap";

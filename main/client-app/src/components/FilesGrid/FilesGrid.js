@@ -18,22 +18,21 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    overflow: 'hidden',
+    overflow: 'auto',
+    height: 'calc(100vh - 112px - 88px)',
+    paddingTop: 24,
     marginTop: isDesktop() && isInRoom() ? 64 : 16,
     width: isDesktop() && isInRoom() ? 'calc(100% - 64px)' : '100%',
     borderRadius: isDesktop() && isInRoom() ? 24 : undefined,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    backdropFilter: 'blur(15px)',
+    backgroundColor: isDesktop() ? 'rgba(255, 255, 255, 0.5)' : 'transparent',
+    backdropFilter: isDesktop() ? 'blur(15px)' : undefined,
     marginRight: isDesktop() && isInRoom() ? 32 : undefined,
     marginLeft: isDesktop() && isInRoom() ? 32 : undefined,
   },
   imageList: {
     paddingTop: 16,
     width: '100%',
-    height:
-      isDesktop() && isInRoom()
-        ? 'calc(100% - 112px)'
-        : 'calc(100% - 112px - 72px)',
+    height: 'auto',
   },
   icon: {
     color: 'rgba(255, 255, 255, 0.54)',
@@ -56,7 +55,7 @@ export default function FilesGrid(props) {
     }
   })
   socket.off('present-added')
-  socket.on('present-added', ({f, p}) => {
+  socket.on('present-added', ({ f, p }) => {
     console.log(f)
     console.log(p)
     if (f.uploaderId !== me.id) {
@@ -106,7 +105,8 @@ export default function FilesGrid(props) {
     }
   }, [props.files])
 
-  let cols = Math.floor(window.innerWidth / 300)
+  let cols = Math.floor(window.innerWidth / 400)
+  if (cols === 0) cols = 1
 
   return (
     <div
@@ -127,18 +127,18 @@ export default function FilesGrid(props) {
           }}
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
-        <ImageList rowHeight={180} className={classes.imageList} cols={cols}>
+        <ImageList rowHeight={(window.innerWidth / cols)} className={classes.imageList} cols={cols}>
           {props.files.map((file, index) => {
             return (
               <ImageListItem key={file.id} cols={1}>
-                <Card
+                <div
                   style={{
-                    backgroundColor: colors.primaryLight,
+                    backgroundColor: 'transparent',
                     width: 'calc(100% - 32px)',
                     marginTop: 8,
                     marginLeft: 16,
                     marginRight: 16,
-                    height: 128,
+                    height: '100%',
                     direction: 'rtl',
                   }}
                 >
@@ -162,18 +162,20 @@ export default function FilesGrid(props) {
                                       `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`,
                               )
                               setPhotoViewerVisible(true)
-                            }
-                            else if (props.fileType === 'document' && props.usedBy === 'presents') {
-                                props.setCurrentPresent(file.present);
+                            } else if (
+                              props.fileType === 'document' &&
+                              props.usedBy === 'presents'
+                            ) {
+                              props.setCurrentPresent(file.present)
                             }
                           }}
-                          style={{ width: '100%', height: '100%' }}
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                           key={index}
                           alt="Thumbnail"
                           src={
-                            (props.fileType === 'photo' ||
-                             props.fileType === 'video' ||
-                             props.fileType === 'document')
+                            props.fileType === 'photo' ||
+                            props.fileType === 'video' ||
+                            props.fileType === 'document'
                               ? file.local
                                 ? file.src
                                 : serverRoot +
@@ -240,7 +242,7 @@ export default function FilesGrid(props) {
                   >
                     <Progressbar progress={file.progress} />
                   </div>
-                </Card>
+                </div>
               </ImageListItem>
             )
           })}

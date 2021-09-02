@@ -2,9 +2,9 @@ import React, { Component, Fragment } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { NavLink } from "react-router-dom";
 import {
-    Button, ButtonDropdown, Card,
-    CardBody, Collapse, CustomInput, DropdownItem,
-    DropdownMenu, DropdownToggle, Input, Label, NavItem, Row, UncontrolledDropdown
+  Button, ButtonDropdown, Card,
+  CardBody, Collapse, CustomInput, DropdownItem,
+  DropdownMenu, DropdownToggle, Input, Label, NavItem, Row, UncontrolledDropdown
 } from "reactstrap";
 import ApplicationMenu from "../../components/ApplicationMenu";
 import { BreadcrumbItems } from "../../components/BreadcrumbContainer";

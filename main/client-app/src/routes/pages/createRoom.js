@@ -10,7 +10,7 @@ import {
   gotoPageWithDelay,
   isDesktop,
   popPage,
-  registerDialogOpen,
+  registerDialogOpen
 } from '../../App'
 import { setToken, token } from '../../util/settings'
 import { serverRoot, useForceUpdate } from '../../util/Utils'

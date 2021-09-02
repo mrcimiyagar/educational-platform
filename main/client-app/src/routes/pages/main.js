@@ -14,9 +14,9 @@ import Sortable from "react-sortablejs";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import {
-    Badge, Button, Card,
-    CardBody, CardHeader, CardTitle, CustomInput, DropdownItem, DropdownMenu, DropdownToggle, Form,
-    FormGroup, Input, Label, Progress, Row, UncontrolledDropdown
+  Badge, Button, Card,
+  CardBody, CardHeader, CardTitle, CustomInput, DropdownItem, DropdownMenu, DropdownToggle, Form,
+  FormGroup, Input, Label, Progress, Row, UncontrolledDropdown
 } from "reactstrap";
 import { CalendarToolbar } from "../../components/Calendar/CalendarToolbar";
 import { LineShadow, PolarShadow, SmallLineChart } from "../../components/Charts";
@@ -26,13 +26,13 @@ import DataTablePagination from "../../components/DataTables/pagination";
 import Rating from "../../components/Rating";
 import ReactSiemaCarousel from "../../components/ReactSiema/ReactSiemaCarousel";
 import {
-    conversionChartConfig,
-    lineChartConfig,
-    polarChartConfig,
-    smallChartData1,
-    smallChartData2,
-    smallChartData3,
-    smallChartData4, visitChartConfig
+  conversionChartConfig,
+  lineChartConfig,
+  polarChartConfig,
+  smallChartData1,
+  smallChartData2,
+  smallChartData3,
+  smallChartData4, visitChartConfig
 } from "../../constants/chartConfig";
 import cakeData from "../../data/dashboard.cakes.json";
 import profileStatusData from "../../data/dashboard.profile.status.json";

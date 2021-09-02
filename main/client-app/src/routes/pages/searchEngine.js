@@ -1,19 +1,17 @@
-import React, {useEffect} from 'react';
+import { Avatar, Fab } from '@material-ui/core';
+import { pink } from '@material-ui/core/colors';
 import Slide from "@material-ui/core/Slide";
-import {gotoPage, popPage, selectedIndex, token} from "../../App";
-import Dialog from "@material-ui/core/Dialog";
-import {createTheme, makeStyles, ThemeProvider} from "@material-ui/core/styles";
-import { AppBar, Avatar, Fab, Toolbar, Typography } from '@material-ui/core';
-import { ArrowForward, Done, Search } from '@material-ui/icons';
-import SearchEngineSearchbar from '../../components/SearchEngineSearchbar';
-import SearchEngineDrawer from '../../components/SearchEngineDrawer';
-import SearchEngineIcon from '../../images/world.png'
+import { createTheme, makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import CloudIcon from '@material-ui/icons/Cloud';
-import { pink } from '@material-ui/core/colors';
 import LanguageIcon from '@material-ui/icons/Language';
+import React from 'react';
+import { gotoPage, popPage } from "../../App";
+import SearchEngineDrawer from '../../components/SearchEngineDrawer';
 import Jumper from '../../components/SearchEngineFam';
-import Logo from '../../images/logo.png'
+import SearchEngineSearchbar from '../../components/SearchEngineSearchbar';
+import Logo from '../../images/logo.png';
+import SearchEngineIcon from '../../images/world.png';
 import { setToken } from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {

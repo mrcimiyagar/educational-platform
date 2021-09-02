@@ -6,8 +6,8 @@ import "react-circular-progressbar/dist/styles.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import "react-table/react-table.css";
 import {
-    Card,
-    CardBody
+  Card,
+  CardBody
 } from "reactstrap";
 import { gotoPage, isDesktop } from '../../App';
 import { toggleInvites, toggleRooms } from "../../containers/Sidebar";

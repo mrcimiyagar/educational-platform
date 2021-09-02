@@ -1,7 +1,7 @@
-import { Dialog, IconButton, Slide } from '@material-ui/core'
-import React, { useEffect } from 'react'
-import { isDesktop, popPage, registerDialogOpen } from '../../App'
-import {AudioBox} from '../../modules/audiobox'
+import { Dialog, Slide } from '@material-ui/core';
+import React from 'react';
+import { isDesktop, popPage, registerDialogOpen } from '../../App';
+import { AudioBox } from '../../modules/audiobox';
 import { useForceUpdate } from '../../util/Utils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {

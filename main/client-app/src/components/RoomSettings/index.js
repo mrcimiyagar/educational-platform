@@ -1,48 +1,33 @@
 import {
-  AppBar,
   Avatar,
-  Button,
-  FormControlLabel,
-  Grid,
+  Divider,
+  Drawer,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
-  ListItemSecondaryAction,
   ListItemText,
-  Radio,
-  RadioGroup,
-  Tab,
-  Tabs,
 } from '@material-ui/core'
-import Accordion from '@material-ui/core/Accordion'
-import AccordionDetails from '@material-ui/core/AccordionDetails'
-import AccordionSummary from '@material-ui/core/AccordionSummary'
 import Box from '@material-ui/core/Box'
-import {
-  createTheme,
-  makeStyles,
-  ThemeProvider,
-} from '@material-ui/core/styles'
+import { createTheme, makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import GradientIcon from '@material-ui/icons/Gradient'
 import InvertColorsIcon from '@material-ui/icons/InvertColors'
-import Photo from '@material-ui/icons/Photo'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
-import { CirclePicker } from 'react-color'
-import { isDesktop } from '../../App'
-import AllChats from '../AllChats'
-import ChannelChats from '../ChannelChats'
-import GroupChats from '../GroupChats'
-import RoomWallpaperPicker from '../RoomWallpaperPicker'
-import GradientPicker from '../../components/GradientPicker'
-import { useFilePicker } from 'use-file-picker'
 import { me, token } from '../../util/settings'
 import { serverRoot } from '../../util/Utils'
-import { Delete, Folder } from '@material-ui/icons'
 import ArrowBackIos from '@material-ui/icons/ArrowBackIos'
+import WallpaperIcon from '@material-ui/icons/Wallpaper'
+import VideocamIcon from '@material-ui/icons/Videocam'
+import BorderColorIcon from '@material-ui/icons/BorderColor'
+import DesktopMacIcon from '@material-ui/icons/DesktopMac'
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn'
+import DescriptionIcon from '@material-ui/icons/Description'
+import LiveHelpIcon from '@material-ui/icons/LiveHelp'
+import Gradient from '@material-ui/icons/Gradient'
+import RoomBackgroundPhoto from '../../components/RoomBackgroundPhoto'
+import RoomBackgroundColor from '../../components/RoomBackgroundColor'
+import RoomBackgroundGradient from '../../components/RoomBackgroundGradient'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -75,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     direction: 'rtl',
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -92,33 +78,17 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     margin: theme.spacing(4, 0, 2),
-  }
+  },
 }))
 
 export default function RoomSettings(props) {
   const classes = useStyles()
-  const [expanded, setExpanded] = React.useState(false)
-  let [
-    valueofRoomBackgroundOption,
-    setValueofRoomBackgroundOption,
-  ] = React.useState('0')
   let [room, setRoom] = React.useState({})
-
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false)
-  }
-  const handleChangeOfRadios = (event, newValue) => {
-    setValueofRoomBackgroundOption(newValue)
-  }
-
-  const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
-    readAs: 'DataURL',
-  })
 
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#fff',
+        main: '#666',
       },
     },
   })
@@ -146,16 +116,36 @@ export default function RoomSettings(props) {
       .catch((error) => console.log('error', error))
   }, [])
 
-  function generate(element) {
-    return [0, 1, 2].map((value) =>
-      React.cloneElement(element, {
-        key: value,
-      }),
-    );
-  }
+  let [subSettingsIndex, setSubSettingsIndex] = React.useState(0)
+  let [menuOpen, setMenuOpen] = React.useState(false)
 
   return (
     <div className={classes.root}>
+      <Drawer
+        style={{
+          zIndex: 5000,
+          position: 'relative',
+          width: '100%',
+        }}
+        anchor={'bottom'}
+        onClose={() => setMenuOpen(false)}
+        open={menuOpen}
+      >
+        {subSettingsIndex === 1 ? (
+          <div style={{ width: '100%', height: 600, backgroundColor: '#fff' }}>
+            <RoomBackgroundPhoto room={room} roomId={room.id} />
+          </div>
+        ) : subSettingsIndex === 2 ? (
+          <div style={{ width: '100%', height: 400, backgroundColor: '#fff' }}>
+            <RoomBackgroundColor room={room} roomId={room.id} />
+          </div>
+        ) : subSettingsIndex === 3 ? (
+          <div style={{ width: '100%', height: 400, backgroundColor: '#fff' }}>
+            <RoomBackgroundGradient room={room} roomId={room.id} />
+          </div>
+        ) : null}
+      </Drawer>
+      <div style={{ width: '100%', height: 64 }} />
       <Avatar
         src={room.avatarId}
         style={{
@@ -170,7 +160,7 @@ export default function RoomSettings(props) {
       <div style={{ width: '100%', height: 112 + 32 + 16 }} />
       <Typography
         style={{
-          color: '#fff',
+          color: '#666',
           position: 'absolute',
           left: '50%',
           transform: 'translateX(-50%)',
@@ -178,33 +168,488 @@ export default function RoomSettings(props) {
       >
         {room.title}
       </Typography>
-      <div style={{ width: '100%', height: 48 + 16 + 16, direction: 'ltr' }} />
-          <div>
-            <List>
-              {generate(
-                <ListItem style={{position: 'relative'}}>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <Folder />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={<Typography style={{color: '#fff', width: '100%', textAlign: 'right'}}>Single-line item</Typography>}
-                    secondary={<Typography style={{color: '#fff', width: '100%', textAlign: 'right'}}>Single-line item Single-line item</Typography>}
-                  />
-                  <IconButton style={{width: 40, height: 40, position: 'absolute', left: 0, top: 0}}>
-                    <ArrowBackIos style={{fill: '#fff'}}/>
-                  </IconButton>
-                </ListItem>,
-              )}
-            </List>
-          </div>
-      <Typography className={classes.heading}>ویدئو</Typography>
-      <Typography className={classes.heading}>بات ها</Typography>
-      <Typography className={classes.heading}>تسک بورد</Typography>
-      <Typography className={classes.heading}>وایت بورد</Typography>
-      <Typography className={classes.heading}>فایل ها</Typography>
-      <Typography className={classes.heading}>سوالات</Typography>
+
+      <div style={{ width: '100%', height: 32 }} />
+      <div>
+        <List>
+          <ListItem
+            style={{
+              position: 'relative',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            }}
+          >
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  پس زمینه
+                </Typography>
+              }
+            />
+          </ListItem>
+          <Divider />
+          <ListItem
+            button
+            onClick={() => {
+              setSubSettingsIndex(1)
+              setMenuOpen(true)
+            }}
+            style={{ position: 'relative' }}
+          >
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <WallpaperIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  عکس
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+          <Divider />
+          <ListItem
+            button
+            onClick={() => {
+              setSubSettingsIndex(2)
+              setMenuOpen(true)
+            }}
+            style={{ position: 'relative' }}
+          >
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <InvertColorsIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  رنگ
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+          <Divider />
+          <ListItem
+            button
+            onClick={() => {
+              setSubSettingsIndex(3)
+              setMenuOpen(true)
+            }}
+            style={{ position: 'relative' }}
+          >
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <Gradient style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  گرادیان
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+          <Divider />
+          <ListItem
+            button
+            style={{
+              position: 'relative',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            }}
+          >
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  مدیا
+                </Typography>
+              }
+            />
+          </ListItem>
+          <Divider />
+          <ListItem button style={{ position: 'relative' }}>
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <VideocamIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  ویدئو
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+          <Divider />
+
+          <ListItem button style={{ position: 'relative' }}>
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <DescriptionIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  فایل ها
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+          <Divider />
+          <ListItem
+            button
+            style={{
+              position: 'relative',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            }}
+          >
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  کار گروهی
+                </Typography>
+              }
+            />
+          </ListItem>
+          <Divider />
+          <ListItem button style={{ position: 'relative' }}>
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <DesktopMacIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  بات ها
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+          <Divider />
+          <ListItem button style={{ position: 'relative' }}>
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <AssignmentTurnedInIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  تسک بورد
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+          <Divider />
+          <ListItem button style={{ position: 'relative' }}>
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <BorderColorIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  وایت بورد
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+          <Divider />
+          <ListItem
+            button
+            style={{
+              position: 'relative',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            }}
+          >
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  پشتیبانی
+                </Typography>
+              }
+            />
+          </ListItem>
+          <Divider />
+          <ListItem button style={{ position: 'relative' }}>
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <LiveHelpIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  سوالات
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+        </List>
+      </div>
     </div>
   )
 }

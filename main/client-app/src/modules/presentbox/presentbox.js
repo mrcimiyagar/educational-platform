@@ -292,25 +292,15 @@ export function PresentBox(props) {
           files[currentPresent].extension === 'jpeg' ||
           files[currentPresent].extension === 'svg' ||
           files[currentPresent].extension === 'gif' ? (
-            <TransformWrapper
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-              }}
-            >
-              <TransformComponent style={{ width: '100%', height: '100%' }}>
+            <TransformWrapper>
+              <TransformComponent>
                 <img
                   id={'pimg'}
                   alt="Thumbnail"
                   style={{
-                    position: 'absolute',
-                    left: '50%',
-                    top: '50%',
-                    transform: 'translate(-50%, -50%)',
+                    width: window.innerWidth + 'px',
+                    height: window.innerHeight - 64 + 'px',
+                    objectFit: 'contain',
                   }}
                   src={
                     serverRoot +
@@ -322,21 +312,12 @@ export function PresentBox(props) {
               </TransformComponent>
             </TransformWrapper>
           ) : files[currentPresent].extension === 'pdf' ? (
-            <TransformWrapper
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-              }}
-            >
-              <TransformComponent style={{ width: '100%', height: '100%' }}>
+            <TransformWrapper>
+              <TransformComponent>
                 <img
                   style={{
-                    width: '100%',
-                    height: '100%',
+                    width: window.innerWidth + 'px',
+                    height: window.innerHeight - 64 + 'px',
                     objectFit: 'contain',
                   }}
                   id={'pdfViewer'}

@@ -43,3 +43,65 @@
 .maincontentdiv:focus > .slideup {
   min-height: 65%;
 }
+
+.speech-bubble1 {
+	position: relative;
+	background: #00aabb;
+	border-radius: 24px;
+}
+
+.speech-bubble1:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 42px solid transparent;
+	border-bottom-color: #00aabb;
+	border-top: 0;
+	border-left: 0;
+	margin-left: -64px;
+	margin-top: -42px;
+}
+
+.speech-bubble2 {
+	position: relative;
+	background: #00aabb;
+	border-radius: 24px;
+}
+
+.speech-bubble2:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 42px solid transparent;
+	border-bottom-color: #00aabb;
+	border-top: 0;
+	margin-left: -36px;
+	margin-top: -42px;
+}
+
+.speech-bubble3 {
+	position: relative;
+	background: #00aabb;
+	border-radius: 24px;
+}
+
+.speech-bubble3:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 42px solid transparent;
+	border-bottom-color: #00aabb;
+	border-top: 0;
+	border-right: 0;
+	margin-left: 32px;
+	margin-top: -42px;
+}

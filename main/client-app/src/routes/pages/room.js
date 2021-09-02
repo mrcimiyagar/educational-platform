@@ -27,13 +27,14 @@ import ViewCarouselIcon from '@material-ui/icons/ViewCarousel'
 import React, { useEffect } from 'react'
 import SwipeableViews from 'react-swipeable-views'
 import { useFilePicker } from 'use-file-picker'
+import { setWallpaper } from '../..'
 import {
   gotoPage,
   isDesktop,
-  setRoomId,
   isInRoom,
-  isTablet,
   isMobile,
+  isTablet,
+  setRoomId,
 } from '../../App'
 import ChatEmbedded from '../../components/ChatEmbedded'
 import FilesGrid from '../../components/FilesGrid/FilesGrid'
@@ -353,6 +354,35 @@ export default function RoomPage(props) {
     setFileMode(index)
   }
 
+  useEffect(() => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.room_id,
+      }),
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/room/get_room_wallpaper', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        let wall = JSON.parse(result.wallpaper)
+        if (wall.type === 'photo') {
+          setWallpaper(
+            serverRoot +
+              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
+          )
+        } else if (wall.type === 'color') {
+          setWallpaper(wall.color)
+        }
+      })
+      .catch((error) => console.log('error', error))
+  }, [])
+
   if (!loaded) {
     return <div />
   }
@@ -373,7 +403,6 @@ export default function RoomPage(props) {
           position: 'fixed',
           right: 0,
           top: 0,
-          backgroundColor: colors.primaryDark,
         }}
       >
         <div
@@ -628,7 +657,7 @@ export default function RoomPage(props) {
                       left: 16 + 56 + 16,
                     }}
                     onClick={() => {
-                      gotoPage('/app/chat')
+                      gotoPage('/app/chat', { room_id: props.room_id })
                     }}
                   >
                     <Chat />
@@ -774,7 +803,6 @@ export default function RoomPage(props) {
           position: 'fixed',
           right: 0,
           top: 0,
-          backgroundColor: colors.primaryDark,
         }}
       >
         <div
@@ -845,7 +873,7 @@ export default function RoomPage(props) {
                   width: '100%',
                   justifyContent: 'center',
                   textAlign: 'center',
-                  marginTop: (isDesktop() && isInRoom()) ? 0 : 8
+                  marginTop: isDesktop() && isInRoom() ? 0 : 8,
                 }}
               >
                 <IconButton
@@ -922,7 +950,7 @@ export default function RoomPage(props) {
                 classes={{
                   indicator: classes.indicator,
                 }}
-                style={{marginTop: 8}}
+                style={{ marginTop: 8 }}
               >
                 <Tab icon={<PhotoIcon />} label="عکس ها" />
                 <Tab icon={<AudiotrackIcon />} label="صدا ها" />
@@ -993,7 +1021,7 @@ export default function RoomPage(props) {
                     left: 16 + 56 + 16,
                   }}
                   onClick={() => {
-                    gotoPage('/app/chat')
+                    gotoPage('/app/chat', { room_id: props.room_id })
                   }}
                 >
                   <Chat />
@@ -1103,7 +1131,7 @@ export default function RoomPage(props) {
               <div
                 onClick={() => {
                   setMenuOpen(false)
-                  gotoPage('/app/settings', {room_id: props.room_id})
+                  gotoPage('/app/settings', { room_id: props.room_id })
                 }}
                 style={{
                   borderRadius: 32,
