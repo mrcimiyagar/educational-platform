@@ -8,6 +8,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import React from 'react';
 import { isDesktop } from '../../App';
 import store, { setCurrentMessengerNav } from '../../redux/main';
+import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
 import { updateHome } from '../HomeMain';
 
@@ -16,8 +17,6 @@ const useStyles = makeStyles({
     height: 72,
     position: 'fixed',
     bottom: 0,
-    backgroundColor: 'rgba(21, 96, 233, 0.65)',
-    backdropFilter: 'blur(10px)'
   },
 });
 
@@ -55,6 +54,8 @@ export default function HomeBottombar(props) {
       showLabels
       className={classes.root}
       style={{
+        backgroundColor: colors.primaryMedium,
+        backdropFilter: 'blur(10px)',
         width: isDesktop() ? 400 : '100%',
         transform: isDesktop() ? 'rotate(90deg)' : undefined,
         position: isDesktop() ? 'fixed' : undefined,

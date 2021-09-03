@@ -133,6 +133,7 @@ router.post('/upload_present', jsonParser, async function (req, res) {
           ext === 'jpg' ||
           ext === 'jpeg' ||
           ext === 'gif' ||
+          ext === 'webp' ||
           ext === 'svg'
         ) {
           fs.copyFileSync(

@@ -72,6 +72,7 @@ export function PresentBox(props) {
             ext === 'png' ||
             ext === 'jpg' ||
             ext === 'jpeg' ||
+            ext === 'webp' ||
             ext === 'gif' ||
             ext === 'svg'
               ? 'photo'
@@ -291,7 +292,8 @@ export function PresentBox(props) {
           files[currentPresent].extension === 'jpg' ||
           files[currentPresent].extension === 'jpeg' ||
           files[currentPresent].extension === 'svg' ||
-          files[currentPresent].extension === 'gif' ? (
+          files[currentPresent].extension === 'gif' ||
+          files[currentPresent].extension === 'webp' ? (
             <TransformWrapper>
               <TransformComponent>
                 <img

@@ -14,7 +14,7 @@ import React, { useEffect } from "react";
 import { gotoPage, isDesktop, isInRoom } from '../../App';
 import { updateRoomBottomBar } from "../../components/RoomBottombar";
 import store, { switchConf } from "../../redux/main";
-import { me } from '../../util/settings';
+import { colors, me } from '../../util/settings';
 import { useForceUpdate } from "../../util/Utils";
 import './style.css';
 
@@ -71,7 +71,7 @@ export let ConfBox = (props) => {
         
         <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
           borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
-          backgroundColor: 'rgba(21, 96, 233, 0.65)',
+          backgroundColor: colors.primaryMedium,
           backdropFilter: 'blur(10px)',
           position: 'fixed', left: (isDesktop() && isInRoom()) ? 'calc(50% - 225px)' : '50%', transform: 'translateX(-50%)'}}>
           <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>

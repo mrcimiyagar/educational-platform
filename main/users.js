@@ -1,9 +1,16 @@
+
 const sw = require('./db/models');
+const { 
+    v1: uuidv1,
+    v4: uuidv4,
+  } = require('uuid');
+const { token } = require('morgan');
 
 let users = {};
 let guestAccs = {};
 let guestAccsOutOfRoom = {};
 let guestAccsByUserId = {};
+let invites = {}
 
 module.exports = {
     users: users,
@@ -150,5 +157,20 @@ module.exports = {
             return guestAccsOutOfRoom[token];
         }
         return null;
+    },
+    generateInvite: roomId => {
+        let invite = {roomId: roomId, token: uuidv4()}
+        invites[invite.token] = invite
+        return 'http://localhost:2001/room/invite/' + invite.token
+    },
+    resolveInvite: token => {
+        let invite = invites[token]
+        if (invite === undefined) {
+            return false
+        }
+        else {
+            delete invites[token]
+            return true
+        }
     }
 };

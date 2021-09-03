@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import CloudIcon from './images/logo.png';
 import RoomWallpaper from './images/roomWallpaper.png';
 import store from "./redux/main";
+import DesktopWallpaper from './images/desktop-wallpaper.webp'
 
 const MainApp = React.lazy(() => {
 	return Promise.all([
@@ -34,10 +35,11 @@ let Loading = (props) => {
 	)
 }
 
-export let setWallpaper = undefined
+export let setWallpaper = undefined, wallpaper = undefined
+let setWall = undefined
 
 let AppContainer = (props) => {
-	let [wall, setWall] = React.useState('')
+    [wallpaper, setWall] = React.useState({type: ''})
 	setWallpaper = (w) => {
 		setWall(w)
 	}
@@ -54,19 +56,23 @@ let AppContainer = (props) => {
 			}, 1000);
 		}, 4000);
 	}, [])
+	
 	return (
 		<div style={{width: '100%', height: '100%'}}>
 			{
-				wall === undefined || wall === null ?
+				wallpaper === undefined || wallpaper === null ?
 				  null :  
-				  wall.startsWith('http') ?
-					  <img src={wall} style={{position: 'fixed', left: 0, top: 0, width: '100%', height: '100%', objectFit: 'cover'}}/> :
-					  wall.startsWith('#') ?
-						  <div style={{backgroundColor: wall, position: 'fixed', left: 0, top: 0, width: '100%', height: '100%'}}/> :
-						  null						
+				  wallpaper.type === 'photo' ?
+					  <img src={wallpaper.photo} style={{position: 'fixed', left: 0, top: 0, width: '100%', height: '100%', objectFit: 'cover'}}/> :
+					  wallpaper.type === 'video' ?
+					  	  <video loop autoPlay src={wallpaper.video} style={{position: 'fixed', left: 0, top: 0, width: '100%', height: '100%', objectFit: 'cover'}}/> :
+							wallpaper.type === 'color' ?
+							  <div style={{backgroundColor: wallpaper.color, position: 'fixed', left: 0, top: 0, width: '100%', height: '100%'}}/> :
+							  null
 			}
 	   	    <Suspense fallback={
 	  			<div style={{width: '100%', height: '100vh', position: 'fixed', left: 0, top: 0}}>
+					<img style={{width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, objectFit: 'fill'}} src={DesktopWallpaper}/>
 			  		<div style={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.45)', position: 'fixed', top: 0, left: 0}}/>
 		  			<Loading style={{width: '100%', height: '100%', position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}/>
 				</div>

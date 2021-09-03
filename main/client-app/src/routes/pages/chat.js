@@ -19,6 +19,7 @@ import ChatAppBar from "../../components/ChatAppBar";
 import { WaveSurferBox } from '../../components/WaveSurfer';
 import { me, token } from '../../util/settings';
 import { serverRoot, useForceUpdate } from '../../util/Utils';
+import ChatWallpaper from '../../images/chat-wallpaper.jpg'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -220,8 +221,8 @@ export default function Chat(props) {
                     boxShadow: 'none'
                 },
             }}
-            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)', zIndex: 2501}}>
-            <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0}}>
+            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{zIndex: 2501}}>
+            <div style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0, backgroundImage: `url(${ChatWallpaper})`}}>
                 <Viewer
                     zIndex={99999}
                     style={{position: 'fixed', left: 0, top: 0}}

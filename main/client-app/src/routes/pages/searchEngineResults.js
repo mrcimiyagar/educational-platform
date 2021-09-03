@@ -1,277 +1,47 @@
-import { AppBar, Card, Dialog, ImageList, ImageListItem, Slide, Toolbar, Typography } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import { makeStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import { Audiotrack, Chat, Photo, Videocam } from "@material-ui/icons";
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import EmailIcon from '@material-ui/icons/Email';
-import PeopleIcon from '@material-ui/icons/People';
-import RedditIcon from '@material-ui/icons/Reddit';
-import PropTypes from 'prop-types';
-import React, { useEffect } from "react";
-import SwipeableViews from 'react-swipeable-views';
-import { gotoPage, popPage, query, registerDialogOpen, setQuery } from "../../App";
-import HomeToolbar from '../../components/HomeToolbar';
-import PhotoGrid from "../../components/PhotoGrid";
-import Post from '../../components/Post';
-import SearchEngineResultsSearchbar from '../../components/SearchEngineResultsSearchbar';
-import SearchResultsMessages from "../../components/SearchResultsMessages";
-import SearchResultsUsers from '../../components/SearchResultsUsers';
-import SearchResultsVideos from "../../components/SearchResultsVideos";
-import AudioWallpaper from '../../images/audio-wallpaper.jpg';
-import EmptyIcon from '../../images/empty.png';
-import { setToken, token } from "../../util/settings";
-import { serverRoot } from "../../util/Utils";
-
-const itemData = [
-  {
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 2
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    cols: 1
-},
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        cols: 1
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        cols: 2
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        cols: 2
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        cols: 1
-    },
-];
-
-const itemData2 = [
-  {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Room A',
-    author: 'author',
-    featured: true,
-},
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Room A',
-        author: 'author',
-        featured: true,
-    },
-];
+import {
+  AppBar,
+  Card,
+  Dialog,
+  ImageList,
+  ImageListItem,
+  Slide,
+  Toolbar,
+  Typography,
+} from '@material-ui/core'
+import Box from '@material-ui/core/Box'
+import { makeStyles } from '@material-ui/core/styles'
+import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
+import { Audiotrack, Chat, Photo, Videocam } from '@material-ui/icons'
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
+import EmailIcon from '@material-ui/icons/Email'
+import PeopleIcon from '@material-ui/icons/People'
+import RedditIcon from '@material-ui/icons/Reddit'
+import PropTypes from 'prop-types'
+import React, { useEffect } from 'react'
+import SwipeableViews from 'react-swipeable-views'
+import {
+  gotoPage,
+  isDesktop,
+  popPage,
+  query,
+  registerDialogOpen,
+  setQuery,
+} from '../../App'
+import HomeToolbar from '../../components/HomeToolbar'
+import PhotoGrid from '../../components/PhotoGrid'
+import Post from '../../components/Post'
+import SearchEngineResultsSearchbar from '../../components/SearchEngineResultsSearchbar'
+import SearchResultsMessages from '../../components/SearchResultsMessages'
+import SearchResultsUsers from '../../components/SearchResultsUsers'
+import SearchResultsVideos from '../../components/SearchResultsVideos'
+import AudioWallpaper from '../../images/audio-wallpaper.jpg'
+import EmptyIcon from '../../images/empty.png'
+import { colors, setToken, token } from '../../util/settings'
+import { serverRoot } from '../../util/Utils'
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, ...other } = props
 
   return (
     <div
@@ -281,39 +51,31 @@ function TabPanel(props) {
       aria-labelledby={`nav-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3} style={{padding: -16}}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
-  );
+  )
 }
 
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
-};
+}
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    direction: 'rtl'
-  },
   indicator: {
     backgroundColor: 'white',
   },
-}));
+  imageList: {
+    overflow: 'auto',
+  },
+}))
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+  return <Slide direction="up" ref={ref} {...props} />
+})
 
 function SearchEngineResults(props) {
-
-  setToken(localStorage.getItem('token'))
-
   const classes = useStyles()
   const [value, setValue] = React.useState(0)
   const [open, setOpen] = React.useState(true)
@@ -344,124 +106,122 @@ function SearchEngineResults(props) {
     let requestOptions = {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
-          'token': token
+        'Content-Type': 'application/json',
+        token: token,
       },
       body: JSON.stringify({
-        query: query
+        query: query,
       }),
-      redirect: 'follow'
-    };
-    fetch(serverRoot + "/search/search_users", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log(JSON.stringify(result));
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/search/search_users', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
         if (result.users !== undefined) {
           setUsers(result.users)
         }
       })
-      .catch(error => console.log('error', error));
+      .catch((error) => console.log('error', error))
   }
 
   let fetchBots = () => {
     let requestOptions = {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
-          'token': token
+        'Content-Type': 'application/json',
+        token: token,
       },
       body: JSON.stringify({
-        query: query
+        query: query,
       }),
-      redirect: 'follow'
-    };
-    fetch(serverRoot + "/search/search_bots", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log(JSON.stringify(result));
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/search/search_bots', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
         if (result.bots !== undefined) {
           setBots(result.bots)
         }
       })
-      .catch(error => console.log('error', error));
+      .catch((error) => console.log('error', error))
   }
 
   let fetchRooms = () => {
     let requestOptions = {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
-          'token': token
+        'Content-Type': 'application/json',
+        token: token,
       },
       body: JSON.stringify({
-        query: query
+        query: query,
       }),
-      redirect: 'follow'
-    };
-    fetch(serverRoot + "/search/search_rooms", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log(JSON.stringify(result));
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/search/search_rooms', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
         if (result.rooms !== undefined) {
           setRooms(result.rooms)
         }
       })
-      .catch(error => console.log('error', error));
+      .catch((error) => console.log('error', error))
   }
 
   let fetchFiles = (fileType) => {
     let requestOptions = {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
-          'token': token
+        'Content-Type': 'application/json',
+        token: token,
       },
       body: JSON.stringify({
         query: query,
-        fileType: fileType
+        fileType: fileType,
       }),
-      redirect: 'follow'
-    };
-    fetch(serverRoot + "/search/search_files", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log(JSON.stringify(result));
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/search/search_files', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
         if (result.files !== undefined) {
           if (fileType === 'photo') {
             setPhotos(result.files)
-          }
-          else if (fileType === 'audio') {
+          } else if (fileType === 'audio') {
             setAudios(result.files)
-          }
-          else if (fileType === 'video') {
+          } else if (fileType === 'video') {
             setVideos(result.files)
           }
         }
       })
-      .catch(error => console.log('error', error));
+      .catch((error) => console.log('error', error))
   }
 
   let fetchMessages = () => {
     let requestOptions = {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
-          'token': token
+        'Content-Type': 'application/json',
+        token: token,
       },
       body: JSON.stringify({
-        query: query
+        query: query,
       }),
-      redirect: 'follow'
-    };
-    fetch(serverRoot + "/search/search_messages", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log(JSON.stringify(result));
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/search/search_messages', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
         if (result.messages !== undefined) {
           setMessages(result.messages)
         }
       })
-      .catch(error => console.log('error', error));
+      .catch((error) => console.log('error', error))
   }
 
   let fetchTotal = () => {
@@ -480,137 +240,359 @@ function SearchEngineResults(props) {
 
   return (
     <Dialog
-        onTouchStart={(e) => {e.stopPropagation();}}
-        PaperProps={{
-            style: {
-                backgroundColor: 'transparent',
-                boxShadow: 'none',
-            },
+      onTouchStart={(e) => {
+        e.stopPropagation()
+      }}
+      PaperProps={{
+        style: {
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+        },
+      }}
+      fullScreen={!isDesktop()}
+      open={open}
+      onClose={handleClose}
+      TransitionComponent={Transition}
+    >
+      <div
+        style={{
+          direction: 'ltr',
+          width: isDesktop() ? 450 : '100%',
+          height: isDesktop() ? 650 : '100%',
+          position: 'fixed',
+          transform: isDesktop() ? 'translate(-50%, -50%)' : undefined,
+          left: isDesktop() ? '50%' : 0,
+          right: isDesktop() ? undefined : 0,
+          top: isDesktop() ? '50%' : 0,
+          bottom: isDesktop() ? undefined : 0,
+          backdropFilter: 'blur(10px)',
         }}
-        fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
-  <div className={classes.root} style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0}}>   
-    <div>
-      <HomeToolbar>
-        <AppBar style={{backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
-          <Toolbar style={{marginTop: 16}}>
-            <SearchEngineResultsSearchbar handleClose={handleClose} onQueryChange={(q) => {
-              setQuery(q)
-              fetchTotal()
-            }}/>
-          </Toolbar>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            variant="scrollable"
-            scrollButtons="on"
-            classes={{
-              indicator: classes.indicator
-            }}
-            style={{marginTop: 8}}
-          >
-          <Tab icon={<EmailIcon />} label="پست ها" />
-            <Tab icon={<PeopleIcon />} label="کاربران"/>
-            <Tab icon={<RedditIcon />} label="بات ها" />
-            <Tab icon={<AccountBalanceIcon />} label="فضا ها" />
-            <Tab icon={<Photo />} label="عکس ها" />
-            <Tab icon={<Audiotrack />} label="صدا ها" />
-            <Tab icon={<Videocam />} label="ویدئو ها" />
-            <Tab icon={<Chat />} label="پیام ها" />
-          </Tabs>
-        </AppBar>
-      </HomeToolbar>
-      <SwipeableViews
-        axis={'x-reverse'}
-        index={value}
-        onChangeIndex={handleChangeIndex}
       >
-        <TabPanel value={value} index={0}>
-          <div style={{height: 72}}/>
-            <div style={{width: 'calc(100% + 32px)', marginLeft: -16, marginRight: -16}}>
-              {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(index => (
-                <Post/>
-              ))}
-            </div>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <div style={{height: 88}}/>
-          <SearchResultsUsers data={users}/>
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <div style={{height: 88}}/>
-          <ImageList rowHeight={196} className={classes.imageList} cols={2}>
-            {bots.length > 0 ?
-              bots.map((bot) => (
-                <ImageListItem key={'search-bot-' + bot.id} cols={1} onClick={() => gotoPage('/app/storebot')}>
-                  <div style={{position: 'relative'}}>
-                    <img src={serverRoot + `/file/download_bot_avatar?token=${token}&botId=${bot.id}`} alt={bot.title} style={{paddingLeft: 24, paddingRight: 24, paddingTop: 16, paddingBottom: 16, backgroundColor: '#fff', borderRadius: 16, marginTop: 16, marginRight: '5%', width: '95%', height: 128}} />
-                    <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
-                      <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{bot.title}</Typography>
-                    </Card>
+        <div style={{ width: '100%', height: '100%' }}>
+          <HomeToolbar>
+            <AppBar
+              style={{
+                backgroundColor: colors.primaryMedium,
+                backdropFilter: 'blur(10px)',
+              }}
+            >
+              <Toolbar style={{ marginTop: 16 }}>
+                <SearchEngineResultsSearchbar
+                  handleClose={handleClose}
+                  onQueryChange={(q) => {
+                    setQuery(q)
+                    fetchTotal()
+                  }}
+                />
+              </Toolbar>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                variant="scrollable"
+                scrollButtons="on"
+                classes={{
+                  indicator: classes.indicator,
+                }}
+                style={{ marginTop: 8 }}
+              >
+                <Tab icon={<EmailIcon />} label="پست ها" />
+                <Tab icon={<PeopleIcon />} label="کاربران" />
+                <Tab icon={<RedditIcon />} label="بات ها" />
+                <Tab icon={<AccountBalanceIcon />} label="فضا ها" />
+                <Tab icon={<Photo />} label="عکس ها" />
+                <Tab icon={<Audiotrack />} label="صدا ها" />
+                <Tab icon={<Videocam />} label="ویدئو ها" />
+                <Tab icon={<Chat />} label="پیام ها" />
+              </Tabs>
+            </AppBar>
+          </HomeToolbar>
+          <SwipeableViews
+            axis={'x-reverse'}
+            index={value}
+            onChangeIndex={handleChangeIndex}
+            style={{ width: '100%', height: 'calc(100vh - 56px)' }}
+          >
+            <TabPanel>
+              <ImageList
+                rowHeight={462}
+                style={{
+                  overflowY: 'auto',
+                  overflow: 'auto',
+                  height: 'calc(100vh - 56px)',
+                }}
+                cols={1}
+              >
+                <div style={{width: '100%', height: 72}}/>
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
+                  <ImageListItem
+                    key={'search-post-' + 0}
+                    cols={1}
+                  >
+                    <Post />
+                  </ImageListItem>
+                ))}
+                <div style={{width: '100%', height: 72}}/>
+              </ImageList>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <div style={{ height: 88 }} />
+              <SearchResultsUsers data={users} />
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              <div style={{ height: 88 }} />
+              <ImageList rowHeight={196} className={classes.imageList} cols={2}>
+                {bots.length > 0 ? (
+                  bots.map((bot) => (
+                    <ImageListItem
+                      key={'search-bot-' + bot.id}
+                      cols={1}
+                      onClick={() => gotoPage('/app/storebot')}
+                    >
+                      <div style={{ position: 'relative' }}>
+                        <img
+                          src={
+                            serverRoot +
+                            `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
+                          }
+                          alt={bot.title}
+                          style={{
+                            paddingLeft: 24,
+                            paddingRight: 24,
+                            paddingTop: 16,
+                            paddingBottom: 16,
+                            backgroundColor: '#fff',
+                            borderRadius: 16,
+                            marginTop: 16,
+                            marginRight: '5%',
+                            width: '95%',
+                            height: 128,
+                          }}
+                        />
+                        <Card
+                          style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                            borderRadius: 16,
+                            width: '95%',
+                            height: 72,
+                            marginRight: '2.5%',
+                            marginTop: -32,
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              position: 'absolute',
+                              top: 156,
+                              left: '50%',
+                              transform: 'translateX(-50%)',
+                            }}
+                          >
+                            {bot.title}
+                          </Typography>
+                        </Card>
+                      </div>
+                    </ImageListItem>
+                  ))
+                ) : (
+                  <div
+                    style={{
+                      width: 'calc(100% - 96px)',
+                      height: '100%',
+                      marginLeft: 48,
+                      marginRight: 48,
+                      marginTop: 80,
+                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                      backdropFilter: 'blur(10px)',
+                      borderRadius: '50%',
+                    }}
+                  >
+                    <img
+                      src={EmptyIcon}
+                      style={{ width: '100%', height: '100%', padding: 64 }}
+                    />
                   </div>
-                </ImageListItem>
-              ))  :
-              <div style={{width: 'calc(100% - 96px)', height: '100%', marginLeft: 48, marginRight: 48, marginTop: 80, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-                <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
-              </div>
-            }
-          </ImageList>
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          <div style={{height: 80}}/>
-          <ImageList style={{zIndex: 2}} rowHeight={188} cols={3} gap={1} className={classes.imageList} style={{marginLeft: -16, marginRight: -16, width: 'calc(100% + 32px)'}}>
-            {rooms.length > 0 ?
-              rooms.map((room) => (
-                <ImageListItem key={'search-room-' + room.id} cols={1} rows={1} onClick={() => {gotoPage('/app/conf?room_id=1')}}>
-                  <div style={{position: 'relative'}}>
-                    <img src={serverRoot + `/file/download_room_avatar?token=${token}&roomId=${room.id}`} alt={room.title} style={{borderRadius: 16, marginTop: 16, marginRight: '2.5%', width: '95%', height: 128}} />
-                    <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32 }}>
-                      <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)'}}>{room.title}</Typography>
-                    </Card>
+                )}
+              </ImageList>
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+              <div style={{ height: 80 }} />
+              <ImageList
+                style={{ zIndex: 2 }}
+                rowHeight={200}
+                cols={3}
+                gap={1}
+                className={classes.imageList}
+                style={{
+                  marginLeft: -16,
+                  marginRight: -16,
+                  width: 'calc(100% + 32px)',
+                }}
+              >
+                {rooms.length > 0 ? (
+                  rooms.map((room) => (
+                    <ImageListItem
+                      key={'search-room-' + room.id}
+                      cols={1}
+                      rows={1}
+                      onClick={() => {
+                        gotoPage('/app/conf?room_id=1')
+                      }}
+                    >
+                      <div style={{ position: 'relative' }}>
+                        <img
+                          src={
+                            'https://cdn.dribbble.com/users/6093092/screenshots/15548423/media/54c06b30c11db3ffd26b25c83ab9a737.jpg'
+                          }
+                          alt={room.title}
+                          style={{
+                            borderRadius: 16,
+                            marginTop: 16,
+                            marginRight: '2.5%',
+                            width: '95%',
+                            height: 128,
+                          }}
+                        />
+                        <Card
+                          style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                            borderRadius: 16,
+                            width: '95%',
+                            height: 72,
+                            marginRight: '2.5%',
+                            marginTop: -32,
+                          }}
+                        >
+                          <Typography
+                            style={{
+                              position: 'absolute',
+                              top: 156,
+                              left: '50%',
+                              transform: 'translateX(-50%)',
+                            }}
+                          >
+                            {room.title}
+                          </Typography>
+                        </Card>
+                      </div>
+                    </ImageListItem>
+                  ))
+                ) : (
+                  <div
+                    style={{
+                      width: 'calc(100% - 96px)',
+                      height: '100%',
+                      marginLeft: 48,
+                      marginRight: 48,
+                      marginTop: 80,
+                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                      backdropFilter: 'blur(10px)',
+                      borderRadius: '50%',
+                    }}
+                  >
+                    <img
+                      src={EmptyIcon}
+                      style={{ width: '100%', height: '100%', padding: 64 }}
+                    />
                   </div>
-                </ImageListItem>
-              ))  :
-              <div style={{width: 'calc(100% - 96px)', height: '100%', marginLeft: 48, marginRight: 48, marginTop: 80, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-                <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
-              </div>
-            }
-          </ImageList>
-        </TabPanel>
-        <TabPanel value={value} index={4}>
-          <div style={{height: 80}}/>
-          <PhotoGrid data={photos}/>
-        </TabPanel>
-        <TabPanel value={value} index={5}>
-          <div style={{height: 88}}/>
-          {audios.length > 0 ?
-            <ImageList rowHeight={196} style={{width: 'calc(100% + 32px)', marginLeft: -16, marginRight: -16}} cols={2}>
-              {audios.map((audio) => (
-                <ImageListItem key={'search-audio-' + audio.id} cols={1}>
-                  <div style={{position: 'relative', display: 'flex', flexWrap: 'nowrap'}}>
-                    <div style={{borderRadius: 176 / 2, backgroundColor: '#000', width: 176 - 32, height: 176 - 32, marginTop: 16 + 16, marginRight: -112}}/>
-                    <img src={AudioWallpaper} alt={audio.title} style={{borderRadius: 16, marginTop: 16, marginRight: -72, width: 'calc(95% - 32px)', height: 176}} />
-                    <Typography style={{background: 'rgba(255, 255, 255, 0.5)', borderRadius: '12px 0px 0px 12px', marginLeft: -72, marginTop: 136, width: 144, height: 24, textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>{audio.title}</Typography>
-                  </div>
-                </ImageListItem>
-              ))}
-            </ImageList>  :
-            <div style={{width: 'calc(100% - 96px)', height: '100%', marginLeft: 48, marginRight: 48, marginTop: 80, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-              <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
-            </div>
-          }
-        </TabPanel>
-        <TabPanel value={value} index={6}>
-          <div style={{height: 80}}/>
-          <SearchResultsVideos data={videos}/>
-        </TabPanel>
-        <TabPanel value={value} index={7}>
-          <div style={{height: 88}}/>
-          <SearchResultsMessages data={messages}/>
-        </TabPanel>
-      </SwipeableViews>
-    </div>
-  </div>
-  </Dialog>
-  );
+                )}
+              </ImageList>
+            </TabPanel>
+            <TabPanel value={value} index={4}>
+              <div style={{ height: 80 }} />
+              <PhotoGrid data={photos} />
+            </TabPanel>
+            <TabPanel value={value} index={5}>
+              <div style={{ height: 88 }} />
+              {audios.length > 0 ? (
+                <ImageList
+                  rowHeight={196}
+                  style={{
+                    width: 'calc(100% + 32px)',
+                    marginLeft: -16,
+                    marginRight: -16,
+                  }}
+                  cols={2}
+                >
+                  {audios.map((audio) => (
+                    <ImageListItem key={'search-audio-' + audio.id} cols={1}>
+                      <div
+                        style={{
+                          position: 'relative',
+                          display: 'flex',
+                          flexWrap: 'nowrap',
+                        }}
+                      >
+                        <div
+                          style={{
+                            borderRadius: 176 / 2,
+                            backgroundColor: '#000',
+                            width: 176 - 32,
+                            height: 176 - 32,
+                            marginTop: 16 + 16,
+                            marginRight: -112,
+                          }}
+                        />
+                        <img
+                          src={AudioWallpaper}
+                          alt={audio.title}
+                          style={{
+                            borderRadius: 16,
+                            marginTop: 16,
+                            marginRight: -72,
+                            width: 'calc(95% - 32px)',
+                            height: 176,
+                          }}
+                        />
+                        <Typography
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.5)',
+                            borderRadius: '12px 0px 0px 12px',
+                            marginLeft: -72,
+                            marginTop: 136,
+                            width: 144,
+                            height: 24,
+                            textAlign: 'center',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          {audio['User.firstName'] + ' ' + audio['User.lastName']}
+                        </Typography>
+                      </div>
+                    </ImageListItem>
+                  ))}
+                </ImageList>
+              ) : (
+                <div
+                  style={{
+                    width: 'calc(100% - 96px)',
+                    height: '100%',
+                    marginLeft: 48,
+                    marginRight: 48,
+                    marginTop: 80,
+                    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(10px)',
+                    borderRadius: '50%',
+                  }}
+                >
+                  <img
+                    src={EmptyIcon}
+                    style={{ width: '100%', height: '100%', padding: 64 }}
+                  />
+                </div>
+              )}
+            </TabPanel>
+            <TabPanel value={value} index={6}>
+              <div style={{ height: 80 }} />
+              <SearchResultsVideos data={videos} />
+            </TabPanel>
+            <TabPanel value={value} index={7}>
+              <div style={{ height: 88 }} />
+              <SearchResultsMessages data={messages} />
+            </TabPanel>
+          </SwipeableViews>
+        </div>
+      </div>
+    </Dialog>
+  )
 }
-export default SearchEngineResults;
+export default SearchEngineResults

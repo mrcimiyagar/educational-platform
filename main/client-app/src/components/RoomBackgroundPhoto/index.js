@@ -26,7 +26,7 @@ import GradientPicker from '../GradientPicker'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import { token } from '../../util/settings'
 import { serverRoot, useForceUpdate } from '../../util/Utils'
-import { setWallpaper } from '../..'
+import { setWallpaper, wallpaper } from '../..'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -67,13 +67,22 @@ function RoomBackgroundPhoto(props) {
         console.log(JSON.stringify(result))
         let wall = JSON.parse(result.wallpaper)
         if (wall.type === 'photo') {
-          setUploadedFile({id: wall.photoId})
-          setWallpaper(
-            serverRoot +
-              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
-          )
+          setUploadedFile({ id: wall.photoId })
+          setWallpaper({
+            type: 'photo',
+            photo:
+              serverRoot +
+              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${wall.photoId}`,
+          })
+        } else if (wall.type === 'video') {
+          setWallpaper({
+            type: 'video',
+            video:
+              serverRoot +
+              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${wall.photoId}`,
+          })
         } else if (wall.type === 'color') {
-          setWallpaper(wall.color)
+          setWallpaper(wall)
         }
       })
       .catch((error) => console.log('error', error))
@@ -99,6 +108,7 @@ function RoomBackgroundPhoto(props) {
             ext === 'jpg' ||
             ext === 'jpeg' ||
             ext === 'gif' ||
+            ext === 'webp' ||
             ext === 'svg'
               ? 'photo'
               : ext === 'wav' ||
@@ -135,7 +145,10 @@ function RoomBackgroundPhoto(props) {
                   title: props.room.title,
                   avatarId: props.room.avatarId,
                   wallpaper: JSON.stringify({
-                    type: 'photo',
+                    type:
+                      ext === 'mp4' || ext === 'webm' || ext === '3gp'
+                        ? 'video'
+                        : 'photo',
                     photoId: JSON.parse(request.responseText).file.id,
                   }),
                 }),
@@ -146,12 +159,22 @@ function RoomBackgroundPhoto(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   setUploadedFile(JSON.parse(request.responseText).file)
-                  setWallpaper(
-                    serverRoot +
+                  setWallpaper({
+                    type:
+                      ext === 'mp4' || ext === 'webm' || ext === '3gp'
+                        ? 'video'
+                        : 'photo',
+                    photo:
+                      serverRoot +
                       `/file/download_file?token=${token}&roomId=${
                         props.roomId
                       }&fileId=${JSON.parse(request.responseText).file.id}`,
-                  )
+                    video:
+                      serverRoot +
+                      `/file/download_file?token=${token}&roomId=${
+                        props.roomId
+                      }&fileId=${JSON.parse(request.responseText).file.id}`,
+                  })
                 })
                 .catch((error) => console.log('error', error))
             }
@@ -195,18 +218,29 @@ function RoomBackgroundPhoto(props) {
           marginTop: 64,
         }}
       >
-        <img
-          style={{
-            objectFit: 'contain',
-            width: '100%',
-            height: '100%',
-          }}
-          src={
-            serverRoot +
-            `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${
-              uploadedFile === undefined ? 0 : uploadedFile.id}`
-          }
-        />
+        {wallpaper !== undefined ? (
+          wallpaper.type === 'photo' ? (
+            <img
+              style={{
+                objectFit: 'contain',
+                width: '100%',
+                height: '100%',
+              }}
+              src={wallpaper.photo}
+            />
+          ) : wallpaper.type === 'video' ? (
+            <video
+              autoPlay
+              loop
+              style={{
+                objectFit: 'contain',
+                width: '100%',
+                height: '100%',
+              }}
+              src={wallpaper.video}
+            />
+          ) : null
+        ) : null}
 
         <Button
           onClick={() => {

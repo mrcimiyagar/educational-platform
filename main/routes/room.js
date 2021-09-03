@@ -2,7 +2,7 @@
 const sockets = require("../socket").sockets;
 
 const sw = require('../db/models');
-const {addUser, getRoomUsers, addGuestAcc, authenticateMember, guestAccsByUserId, removeUser, guestAccs, authenticateMemberWithoutResponse} = require('../users');
+const {addUser, getRoomUsers, addGuestAcc, authenticateMember, guestAccsByUserId, removeUser, guestAccs, authenticateMemberWithoutResponse, generateInvite, resolveInvite} = require('../users');
 const tools = require('../tools');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -541,12 +541,25 @@ router.post('/get_invites', jsonParser, async function (req, res) {
     });
 });
 
-router.post('/make_personality', jsonParser, async function (req, res) {
-    sw.Room.findOne({where: {id: req.body.roomId}}).then(async room => {
+router.get('/generate_invite_link', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user) => {
+        let room = await sw.Room.findOne({where: {id: req.query.roomId}})
         if (room === null) {
-            res.send({status: 'error', errorCode: 'e0005', message: 'room does not exist.'});
-            return;
+            res.send({status: 'error', errorCode: 'e0005', message: 'room does not exist.'})
+            return
         }
+        let roomSecret = await sw.RoomSecret.findOne({where: {roomId: room.id}})
+        if (roomSecret.ownerId !== session.userId) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'})
+            return
+        }
+        let link = generateInvite(room.id)
+        res.send({status: 'success', link: link});
+    })
+});
+
+router.post('/invite/:token', jsonParser, async function (req, res) {
+    if (resolveInvite()) {
         let user = await sw.User.create({
             id: uuid() + '-' + Date.now(),
             firstName: req.body.name,
@@ -567,7 +580,7 @@ router.post('/make_personality', jsonParser, async function (req, res) {
         addGuestAcc(acc);
         require("../server").pushTo('room_' + req.body.roomId, 'user_joined', user);
         res.send({status: 'success', token: acc.token, user: user});
-    });
+    }
 });
 
 router.post('/leave_room', jsonParser, async function (req, res) {

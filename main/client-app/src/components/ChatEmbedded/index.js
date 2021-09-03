@@ -14,11 +14,12 @@ import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
 import { gotoPage, histPage, isDesktop, isInRoom, isTablet } from '../../App'
 import EmptyIcon from '../../images/empty.png'
-import { me, setToken, token } from '../../util/settings'
+import { colors, me, setToken, token } from '../../util/settings'
 import { isMobile, serverRoot, useForceUpdate } from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
 import EmptySign from '../EmptySign'
 import { WaveSurferBox } from '../WaveSurfer'
+import ChatWallpaper from '../../images/chat-wallpaper.png'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -231,32 +232,30 @@ export default function ChatEmbedded(props) {
   let [width, setWidth] = React.useState(0)
   let [height, setHeight] = React.useState(0)
   let [left, setLeft] = React.useState(0)
+  let [right, setRight] = React.useState(0)
   let [top, setTop] = React.useState(0)
 
   useEffect(() => {
     if (isDesktop()) {
       if (histPage === '/app/room' || histPage === '/app/settings') {
-        alert('hello 1')
         setWidth(450)
         setHeight('100%')
         setLeft('calc(100% - 450px)')
+        setRight(0)
         setTop(0)
-      } else if (histPage === 'messenger') {
-        alert('hello 2')
+      } else if (histPage === '/app/messenger') {
         setWidth('calc(100% - 64px - 256px - 64px - 72px + 180px - 48px)')
         setHeight('100%')
         setLeft(128)
-        setTop(32)
+        setTop(48)
       }
     } else if (isMobile() || isTablet()) {
       if (histPage === '/app/room' || histPage === '/app/settings') {
-        alert('hello 3')
         setWidth('100%')
         setHeight('100%')
         setLeft(0)
         setTop(0)
-      } else if (histPage === 'messenger') {
-        alert('hello 4')
+      } else if (histPage === '/app/messenger') {
         setWidth('100%')
         setHeight('100%')
         setLeft(0)
@@ -275,6 +274,7 @@ export default function ChatEmbedded(props) {
         position: 'absolute',
         top: top,
         left: left,
+        right: right,
         bottom: isDesktop() ? 16 : 0,
       }}
     >
@@ -283,7 +283,7 @@ export default function ChatEmbedded(props) {
           width: '100%',
           height: '100%',
           position: 'absolute',
-          backgroundColor: 'rgba(255, 255, 255, 0.45)',
+          backgroundImage: `url(${ChatWallpaper})`,
           top: isDesktop() ? 16 : 0,
           left: isDesktop() ? 96 : 0,
           right: isDesktop()
@@ -452,7 +452,7 @@ export default function ChatEmbedded(props) {
                           right: 48,
                           marginTop: 16,
                           background:
-                            'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)',
+                            `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
                         }}
                       >
                         <Typography
@@ -573,7 +573,7 @@ export default function ChatEmbedded(props) {
                           borderRadius: '16px 16px 0px 16px',
                           marginTop: 16,
                           background:
-                            'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)',
+                            `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
                         }}
                       >
                         <Typography
@@ -710,7 +710,7 @@ export default function ChatEmbedded(props) {
                           left: 48,
                           marginTop: 16,
                           background:
-                            'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)',
+                            `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
                         }}
                       >
                         <Typography
@@ -831,7 +831,7 @@ export default function ChatEmbedded(props) {
                           color: '#fff',
                           left: 0,
                           background:
-                            'linear-gradient(135deg, rgba(7,0,120,1) 0%, rgba(9,9,121,1) 13%, rgba(179,0,255,1) 100%)',
+                            `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
                         }}
                       >
                         <Typography

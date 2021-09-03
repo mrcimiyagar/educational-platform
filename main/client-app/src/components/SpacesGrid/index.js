@@ -8,6 +8,7 @@ import { gotoPage, isDesktop } from '../../App';
 import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
+import EmptySign from '../EmptySign';
 import HomeToolbar from '../HomeToolbar';
 import SpacesSearchbar from '../SpacesSearchbar';
 
@@ -21,10 +22,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '100%',
     overflow: 'auto',
-    direction: 'ltr',
+    direction: 'rtl',
     paddingBottom: 112,
-    paddingLeft: 16,
-    paddingRight: 16,
+    paddingLeft: isDesktop() ? 112 : 16,
+    paddingRight: isDesktop() ? 388 : 16,
     transform: 'translateZ(0)',
   },
   titleBar: {
@@ -36,153 +37,6 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
   },
 }));
-
-const itemData = [
-  {
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-    title: 'Space A',
-    author: 'author',
-    featured: true,
-},
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://material-ui.com/static/images/image-list/breakfast.jpg',
-        title: 'Space A',
-        author: 'author',
-        featured: true,
-    },
-];
 
 export default function SpacesGrid(props) {
   const classes = useStyles();
@@ -217,7 +71,7 @@ export default function SpacesGrid(props) {
           <SpacesSearchbar setDrawerOpen={props.setDrawerOpen}/>
         </div>
       </HomeToolbar>
-      <ImageList style={{zIndex: 2}} rowHeight={188} cols={3} gap={1} className={classes.imageList}>
+      <ImageList style={{zIndex: 2}} rowHeight={188} cols={Math.floor((window.innerWidth - 112 - 360) / 150)} gap={1} className={classes.imageList}>
         {spaces.length > 0 ?
         spaces.map((item) => (
           <ImageListItem key={item.img} cols={1} rows={1} onClick={() => {gotoPage('/app/room', {room_id: 1})}}>
@@ -227,9 +81,7 @@ export default function SpacesGrid(props) {
             </Card>
           </ImageListItem>
         )) :
-        <div style={{width: 'calc(100% - 96px)', height: '100%', marginLeft: 48, marginRight: 48, marginTop: 144, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-          <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
-        </div>
+        <EmptySign/>
         }
       </ImageList>
       <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop() ? 16 : 72 + 16, left: 16}}>

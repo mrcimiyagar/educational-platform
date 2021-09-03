@@ -10,6 +10,7 @@ import React from 'react';
 import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
+import EmptySign from '../EmptySign';
 import './index.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -48,10 +49,10 @@ export default function SearchResultsVideos(props) {
               <video src={serverRoot + `/file/download_file?token=${token}&roomId=${video.roomId}&fileId=${video.id}`} className={'roundImage'} style={{width: '100%', height: '100%'}}/>
             </div>
             <ImageListItemBar
-              title={<Typography style={{marginRight: 8, marginTop: 24}}>{video.User.firstName + ' ' + video.User.lastName}</Typography>}
+              title={<Typography style={{marginRight: 8, marginTop: 24}}>{video['User.firstName'] + ' ' + video['User.lastName']}</Typography>}
               position="top"
               actionIcon={
-                <Avatar style={{width: 40, height: 40, marginRight: 16, marginTop: 24}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${video.User.id}`}/>
+                <Avatar style={{width: 40, height: 40, marginRight: 16, marginTop: 24}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${video['User.id']}`}/>
               }
               actionPosition="right"
               className={classes.titleBar}
@@ -74,9 +75,7 @@ export default function SearchResultsVideos(props) {
           </ImageListItem>
           ))}
         </ImageList>  :
-        <div style={{width: 'calc(100% - 96px)', height: '100%', marginLeft: 48, marginRight: 48, marginTop: 80, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-          <img src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
-        </div>
+        <EmptySign/>
       }
     </div>
   );

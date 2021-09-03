@@ -10,6 +10,7 @@ import React, { useEffect } from 'react';
 import { isDesktop, isInRoom } from '../../App';
 import { isConfConnected } from '../../modules/confbox';
 import { currentRoomNavBackup } from '../../routes/pages/room';
+import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
 
 const useStyles = makeStyles({
@@ -58,7 +59,7 @@ export default function RoomBottombar(props) {
       }}
       showLabels
       className={classes.root}
-      style={{width: isDesktop() ? 450 : '100%', height: 72, transform: isDesktop() ? 'rotate(90deg)' : undefined, zIndex: 2499, position: 'absolute', bottom: (isDesktop() && isInRoom()) ? (currentRoomNavBackup === 2 && isConfConnected) ? 'calc(50% + 112px)' : '50%' : bottom, left: isDesktop() ? -160 : undefined, borderRadius: isDesktop() ? 32 : 0, transition: 'bottom .5s', backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}
+      style={{width: isDesktop() ? 450 : '100%', height: 72, transform: isDesktop() ? 'rotate(90deg)' : undefined, zIndex: 2499, position: 'absolute', bottom: (isDesktop() && isInRoom()) ? (currentRoomNavBackup === 2 && isConfConnected) ? 'calc(50% + 112px)' : '50%' : bottom, left: isDesktop() ? -160 : undefined, borderRadius: isDesktop() ? 32 : 0, transition: 'bottom .5s', backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}
     >
       <BottomNavigationAction value={0} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="میز کار" icon={<DesktopMacIcon />} />
       <BottomNavigationAction value={1} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="وایت بورد" icon={<BorderColorIcon />} />

@@ -35,7 +35,7 @@ export default function PhotoGrid(props) {
                   <img src={serverRoot + `/file/download_file?token=${token}&roomId=${photo.roomId}&fileId=${photo.id}`} alt={''} />
                   <ImageListItemBar
                     style={{color: '#fff'}}
-                    title={photo.User.firstName + ' ' + photo.User.lastName}
+                    title={photo['User.firstName'] + ' ' + photo['User.lastName']}
                     actionIcon={
                       <IconButton className={classes.icon}>
                         <Info style={{fill: '#fff'}}/>

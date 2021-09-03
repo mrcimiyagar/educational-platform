@@ -52,7 +52,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                         previewFileId: preview.id,
                         isPreview: false,
                         isPresent: isPresent === true ? true : false,
-                        fileType: (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg') ? 'photo' :
+                        fileType: (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg' || ext === 'webp') ? 'photo' :
                                   (ext === 'wav' || ext === 'mpeg' || ext === 'mp4' || ext === 'mp3') ? 'audio' :
                                   (ext === 'webm' || ext === 'mkv' || ext === 'flv' || ext === '3gp') ? 'video' :
                                   'document'
@@ -96,7 +96,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                             })
                             .catch(err => console.error(err))
                     }
-                    else if (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg') {
+                    else if (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg' || ext === 'webp') {
                         fs.copyFileSync(rootPath + '/files/' + file.id, rootPath + '/files/' + preview.id);
                         require("../server").pushTo('room_' + membership.roomId, 'file-added', file);
                         res.send({status: 'success', file: file});

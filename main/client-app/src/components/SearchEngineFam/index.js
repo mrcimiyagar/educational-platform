@@ -1,5 +1,5 @@
 import { pink } from '@material-ui/core/colors';
-import { createTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { Home } from '@material-ui/icons';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import ExploreIcon from '@material-ui/icons/Explore';
@@ -10,6 +10,7 @@ import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import React from 'react';
 import { animatePageChange, gotoPageWithDelay, isDesktop } from '../../App';
+import { theme } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
 
 export let notifyUrlChanged = undefined
@@ -48,16 +49,6 @@ export default function Jumper(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#2196f3',
-      },
-      secondary: pink
-    },
-  });
-
   return (
     <div className={classes.root}
       style={{

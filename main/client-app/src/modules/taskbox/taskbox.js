@@ -7,7 +7,7 @@ import PollIcon from '@material-ui/icons/Poll';
 import React, { useEffect } from "react";
 import Board, { createTranslate } from 'react-trello';
 import { gotoPage, isDesktop, isInRoom } from "../../App";
-import { token } from "../../util/settings";
+import { colors, token } from "../../util/settings";
 import { serverRoot, useForceUpdate } from "../../util/Utils";
 import './style.css';
 
@@ -87,7 +87,7 @@ export let TaskBox = (props) => {
     <div style={{height: 'calc(100% - 64px - 72px)', display: props.style.display}}>
       <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
           borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
-          backgroundColor: 'rgba(21, 96, 233, 0.65)',
+          backgroundColor: colors.primaryMedium,
           backdropFilter: 'blur(10px)',
           position: 'fixed', left: (isDesktop() && isInRoom()) ? 'calc(50% - 225px)' : '50%', transform: 'translateX(-50%)'}}>
         <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>

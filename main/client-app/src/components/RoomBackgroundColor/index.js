@@ -57,7 +57,10 @@ function RoomBackgroundColor(props) {
             .then((response) => response.json())
             .then((result) => {
               console.log(JSON.stringify(result))
-              setWallpaper(color.hex)
+              setWallpaper({
+                type: 'color',
+                color: color.hex
+              })
             })
             .catch((error) => console.log('error', error))
         }}

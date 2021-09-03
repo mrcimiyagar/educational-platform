@@ -59,9 +59,9 @@ function SettingsPage(props) {
           style={{
             width: isMobile() || isTablet() ? '100%' : 516,
             height: 64,
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-258px, -390px)',
+            top: isDesktop() ? '50%' : 0,
+            left: isDesktop() ? '50%' : 0,
+            transform: isDesktop() ? 'translate(-258px, -390px)' : undefined,
             position: 'fixed',
             backgroundColor: 'rgba(21, 96, 233, 0.65)',
             backdropFilter: 'blur(15px)',

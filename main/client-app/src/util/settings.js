@@ -1,62 +1,46 @@
-import { createTheme } from "@material-ui/core";
-import { pink } from "@material-ui/core/colors";
-import React, { useEffect } from "react";
-import { serverRoot, validateToken } from "./Utils";
+import { createTheme } from '@material-ui/core'
+import { pink } from '@material-ui/core/colors'
+import React, { useEffect } from 'react'
+import { serverRoot, validateToken } from './Utils'
 
-export const theme = createTheme({
+export let theme = undefined
+export let colors = {}
+export let setColors = (c) => {}
+export let ColorBase = (props) => {
+  ;[colors, setColors] = React.useState({
+    primaryLight: 'rgba(99, 172, 229, 0.75)',
+    primaryMedium: 'rgba(75, 134, 180, 0.75)',
+    primaryDark: 'rgba(42, 77, 105, 0.75)',
+    accent: 'rgba(231, 239, 246, 0.75)',
+    accentDark: 'rgba(173, 203, 227, 0.75)',
+  })
+  theme = createTheme({
     palette: {
       primary: {
-        main: '#2196f3',
+        main: 'rgba(75, 134, 180, 0.75)',
       },
-      secondary: pink
+      secondary: pink,
     },
-  });
-
-export let colors = {}, setColors = (c) => {};
-export let ColorBase = (props) => {
-    [colors, setColors] = React.useState({})
-    useEffect(() => {
-        validateToken(token, (result) => {
-			if (result) {
-                let requestOptions4 = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'token': token
-                    },
-                    redirect: 'follow'
-                };
-                fetch(serverRoot + "/auth/fetch_config", requestOptions4)
-                    .then(response => response.json())
-                    .then(result => {
-                        console.log(JSON.stringify(result));
-                        if (result.config !== undefined) {
-                            localStorage.setItem('themeColor', result.config.themeColor);
-                            setColors(JSON.parse(result.config.themeColor));
-                        }
-                    });
-            }
-        });
-    }, []);
-    return <div/>;
+  })
+  return <div />
 }
 
-export let token = '';
+export let token = ''
 export function setToken(t) {
-    token = t;
+  token = t
 }
 
-export let phone = '';
+export let phone = ''
 export function setPhone(t) {
-    phone = t;
+  phone = t
 }
 
-export let me = {};
+export let me = {}
 export function setMe(m) {
-    me = m;
+  me = m
 }
 
-export let currentSurvey = {};
+export let currentSurvey = {}
 export function setCurrentSurvey(m) {
-    currentSurvey = m;
+  currentSurvey = m
 }

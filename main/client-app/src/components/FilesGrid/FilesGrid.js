@@ -127,7 +127,7 @@ export default function FilesGrid(props) {
           }}
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
-        <ImageList rowHeight={(window.innerWidth / cols)} className={classes.imageList} cols={cols}>
+        <ImageList rowHeight={window.innerWidth / (cols + 1)} className={classes.imageList} cols={cols}>
           {props.files.map((file, index) => {
             return (
               <ImageListItem key={file.id} cols={1}>

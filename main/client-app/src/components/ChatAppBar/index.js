@@ -11,7 +11,7 @@ import VideocamIcon from '@material-ui/icons/Videocam';
 import React from 'react';
 import { gotoPage, histPage, isDesktop, isInRoom, isMobile, isTablet } from '../../App';
 import { setCurrentRoomNavBackup } from '../../routes/pages/room';
-import { token } from '../../util/settings';
+import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
@@ -61,7 +61,7 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="fixed" style={{width: isDesktop() ? (histPage === '/app/room' ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px - 16px)') : isTablet() ? (window.location.pathname === '/app/room' ? '100%' : 'calc(100% - 450px)') : '100%', borderRadius: isTablet() || isMobile() ? 0 : ((window.location.pathname === '/app/chat' || histPage === '/app/room') ? 0 : '24px 0 0 0'), position: isDesktop() || isTablet() ? 'fixed' : undefined, top: isDesktop() ? (histPage === '/app/room' ? 0 : 32) : 0, left: histPage === '/app/room' ? (isDesktop() ? 'calc(100% - 450px)' : 96) : (isDesktop() ? (96 + 16) : 0), paddingTop: 8, height: 64, backgroundColor: 'rgba(21, 96, 233, 0.75)', backdropFilter: 'blur(10px)'}}>
+            <AppBar position="fixed" style={{width: isDesktop() ? (histPage === '/app/room' ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px - 16px)') : isTablet() ? (window.location.pathname === '/app/room' ? '100%' : 'calc(100% - 450px)') : '100%', borderRadius: isTablet() || isMobile() ? 0 : ((window.location.pathname === '/app/chat' || histPage === '/app/room') ? 0 : '24px 0 0 0'), position: isDesktop() || isTablet() ? 'fixed' : undefined, top: isDesktop() ? (histPage === '/app/room' ? 0 : 32) : 0, left: histPage === '/app/room' ? (isDesktop() ? 'calc(100% - 450px)' : 96) : (isDesktop() ? (96 + 16) : 0), paddingTop: 8, height: 64, backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}>
                 <Toolbar style={{height: '100%', marginTop: (isDesktop() || isTablet()) ? -8 : 0}}>
                     {isMobile() || isTablet() ?
                         <IconButton style={{marginRight: -16}} onClick={() => props.handleClose() }>

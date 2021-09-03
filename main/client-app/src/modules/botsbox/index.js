@@ -9,7 +9,7 @@ import BotsBoxSearchbar from '../../components/BotsBoxSearchbar';
 import HomeToolbar from '../../components/HomeToolbar';
 import ClockHand1 from '../../images/clock-hand-1.png';
 import ClockHand2 from '../../images/clock-hand-2.png';
-import { token } from '../../util/settings';
+import { theme, token } from '../../util/settings';
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils';
 
 var lastScrollTop = 0
@@ -289,14 +289,6 @@ export default function BotsBox(props) {
         }
     }, [menuOpen])
 
-    const theme = createTheme({
-      palette: {
-        primary: {
-          main: '#2196f3',
-        },
-        secondary: pink
-      },
-    });
     return (
         <div style={{width: "100%", height: '100%', display: props.style.display}}>
             <HomeToolbar>

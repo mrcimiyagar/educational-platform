@@ -50,7 +50,7 @@ import { ConfBox } from '../../modules/confbox'
 import { TaskBox } from '../../modules/taskbox/taskbox'
 import { UsersBox } from '../../modules/usersbox/usersbox'
 import store, { changeConferenceMode } from '../../redux/main'
-import { colors, setToken, token } from '../../util/settings'
+import { colors, setToken, theme, token } from '../../util/settings'
 import {
   ConnectToIo,
   leaveRoom,
@@ -283,6 +283,7 @@ export default function RoomPage(props) {
             ext === 'jpg' ||
             ext === 'jpeg' ||
             ext === 'gif' ||
+            ext === 'webp' ||
             ext === 'svg'
               ? 'photo'
               : ext === 'wav' ||
@@ -372,12 +373,21 @@ export default function RoomPage(props) {
         console.log(JSON.stringify(result))
         let wall = JSON.parse(result.wallpaper)
         if (wall.type === 'photo') {
-          setWallpaper(
-            serverRoot +
+          setWallpaper({
+            type: 'photo',
+            photo:
+              serverRoot +
               `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
-          )
+          })
+        } else if (wall.type === 'video') {
+          setWallpaper({
+            type: 'video',
+            video:
+              serverRoot +
+              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
+          })
         } else if (wall.type === 'color') {
-          setWallpaper(wall.color)
+          setWallpaper(wall)
         }
       })
       .catch((error) => console.log('error', error))
@@ -386,14 +396,6 @@ export default function RoomPage(props) {
   if (!loaded) {
     return <div />
   }
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#2196f3',
-      },
-      secondary: pink,
-    },
-  })
   if (isDesktop()) {
     return (
       <div
@@ -475,7 +477,7 @@ export default function RoomPage(props) {
                 width: isDesktop() ? 550 : '100%',
                 height: 144,
                 borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
-                backgroundColor: 'rgba(21, 96, 233, 0.65)',
+                backgroundColor: colors.primaryMedium,
                 backdropFilter: 'blur(10px)',
                 position: 'fixed',
                 left: isDesktop() && isInRoom() ? 'calc(50% - 225px)' : '50%',
