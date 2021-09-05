@@ -352,21 +352,15 @@ router.post('/update_room', jsonParser, async function (req, res) {
 });
 
 router.post('/get_room_wallpaper', jsonParser, async function (req, res) {
-    sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
-        if (session === null) {
-            res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+    authenticateMember(req, res, async (membership, session, user) => {
+        if (membership === null) {
+            res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'});
             return;
         }
-        sw.Membership.findOne({where: {userId: session.userId, roomId: req.body.roomId}}).then(async function (membership) {
-            if (membership === null) {
-                res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'});
-                return;
-            }
-            sw.RoomSecret.findOne({where: {roomId: membership.roomId}}).then(async function (roomSecret) {
-                res.send({status: 'success', wallpaper: roomSecret.wallpaper});
-            });
+        sw.RoomSecret.findOne({where: {roomId: membership.roomId}}).then(async function (roomSecret) {
+            res.send({status: 'success', wallpaper: roomSecret.wallpaper});
         });
-    });
+    })
 });
 
 router.post('/get_spaces', jsonParser, async function (req, res) {
@@ -558,17 +552,19 @@ router.get('/generate_invite_link', jsonParser, async function (req, res) {
     })
 });
 
-router.post('/invite/:token', jsonParser, async function (req, res) {
-    if (resolveInvite()) {
+router.get('/use_invitation', jsonParser, async function (req, res) {
+    let invite = resolveInvite(req.query.token)
+    if (invite.valid) {
         let user = await sw.User.create({
             id: uuid() + '-' + Date.now(),
-            firstName: req.body.name,
+            firstName: req.query.name,
             lastName: '',
             username: tools.makeRandomCode(32),
+            isGuest: true,
         });
         let acc = {
             id: user.id,
-            roomId: req.body.roomId,
+            roomId: invite.roomId,
             user: user,
             userId: user.id,
             isGuest: true,
@@ -576,10 +572,13 @@ router.post('/invite/:token', jsonParser, async function (req, res) {
             themeColor: tools.lightTheme,
             token: tools.makeRandomCode(64)
         };
-        addUser(req.body.roomId, user);
+        addUser(invite.roomId, user);
         addGuestAcc(acc);
-        require("../server").pushTo('room_' + req.body.roomId, 'user_joined', user);
-        res.send({status: 'success', token: acc.token, user: user});
+        require("../server").pushTo('room_' + invite.roomId, 'user_joined', user);
+        res.redirect(`http://localhost:2002/app/room?room_id=${invite.roomId}&token=${acc.token}`)
+    }
+    else {
+        res.send({status: 'error', errorCode: 'e005', message: 'invitation invalid'});
     }
 });
 

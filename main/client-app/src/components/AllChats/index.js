@@ -34,7 +34,7 @@ export default function AllChats(props) {
   return props.chats.length > 0 ?
     <List className={classes.root}>
       {props.chats.map(chat => {
-      let dateTime = new Date(Number(chat.lastMessage.time))
+      let dateTime = chat.lastMessage === undefined ? undefined : new Date(Number(chat.lastMessage.time))
       return (
       <div>
       <ListItem alignItems="flex-start" button style={{height: 80}} onClick={() => {

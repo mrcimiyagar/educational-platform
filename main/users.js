@@ -94,7 +94,6 @@ module.exports = {
             if (roomId === undefined) {
                 sw.User.findOne({where: {id: session.userId}}).then(async function (user) {
                     callback(undefined, session, user);
-                    return;
                 });
                 return;
             }
@@ -161,16 +160,17 @@ module.exports = {
     generateInvite: roomId => {
         let invite = {roomId: roomId, token: uuidv4()}
         invites[invite.token] = invite
-        return 'http://localhost:2001/room/invite/' + invite.token
+        return 'http://localhost:2001/room/use_invitation?token=' + invite.token
     },
     resolveInvite: token => {
         let invite = invites[token]
         if (invite === undefined) {
-            return false
+            return {valid: false}
         }
         else {
+            let roomId = invite.roomId
             delete invites[token]
-            return true
+            return {valid: true, roomId: roomId}
         }
     }
 };

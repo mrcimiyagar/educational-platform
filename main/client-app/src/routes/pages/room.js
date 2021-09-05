@@ -59,6 +59,7 @@ import {
   socket,
   useForceUpdate,
 } from '../../util/Utils'
+import DesktopWallpaper2 from '../../images/desktop-wallpaper.jpg'
 
 let accessChangeCallback = undefined
 export let notifyMeOnAccessChange = (callback) => {
@@ -124,6 +125,10 @@ let setMembership = undefined
 let pickingFile = false
 
 export default function RoomPage(props) {
+  if (props.token !== undefined) {
+    localStorage.setItem('token', props.token)
+    window.location.href = 'http://localhost:2002/app/room?room_id=' + props.room_id
+  }
   const useStyles = makeStyles({
     root: {
       width: '100%',
@@ -371,6 +376,12 @@ export default function RoomPage(props) {
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
+        if (result.wallpaper === null) {
+          setWallpaper({
+            type: 'photo',
+            photo: DesktopWallpaper2
+          })
+        }
         let wall = JSON.parse(result.wallpaper)
         if (wall.type === 'photo') {
           setWallpaper({

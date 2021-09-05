@@ -23,7 +23,14 @@ import StoreBot from './routes/pages/storeBot'
 import VideoPlayer from './routes/pages/videoPlayer'
 import SettingsPage from './routes/pages/settings'
 import StartupSound from './sounds/startup.mp3'
-import { ColorBase, colors, setMe, setToken, theme, token } from './util/settings'
+import {
+  ColorBase,
+  colors,
+  setMe,
+  setToken,
+  theme,
+  token,
+} from './util/settings'
 import { ConnectToIo, serverRoot, useForceUpdate } from './util/Utils'
 import { setWallpaper } from '.'
 
@@ -43,7 +50,28 @@ export let isMobile = () => {
   return sizeMode === 'mobile'
 }
 export let isInRoom = () => {
-  return currentStaticPage === '/app/room'
+  let counter = series.length - 1
+  while (counter >= 0) {
+    if (series[counter] in pages) {
+      if (series[counter] === '/app/room') {
+        return true
+      }
+    }
+    counter--
+  }
+  return false
+}
+export let isInMessenger = () => {
+  let counter = series.length - 1
+  while (counter >= 0) {
+    if (series[counter] in pages) {
+      if (series[counter] === '/app/messenger') {
+        return true
+      }
+    }
+    counter--
+  }
+  return false
 }
 let series = ['/app/messenger']
 let paramsSeries = [{}]
@@ -179,12 +207,13 @@ export let registerDialogOpen = (setOpen) => {
 export let animatePageChange = undefined
 
 export default function MainApp(props) {
+  console.warn = () => {}
   setToken(localStorage.getItem('token'))
   ConnectToIo(localStorage.getItem('token'))
 
   forceUpdate = useForceUpdate()
-  
-  const [hp, sethp] = React.useState(window.location.pathname)
+
+  const [hp, sethp] = React.useState()
   histPage = hp
   setHp = sethp
 
@@ -199,11 +228,44 @@ export default function MainApp(props) {
 
   useEffect(() => {
     if (histPage === '/app/messenger' || histPage === '/app/searchengine') {
-      setWallpaper({type: 'color', color: colors.accentDark})
+      setWallpaper({ type: 'color', color: colors.accentDark })
     }
   }, [histPage])
 
+  window.onpopstate = function (event) {
+    if (setDialogOpen !== null) {
+      setDialogOpen(false)
+    }
+    setTimeout(popPage, 250)
+  }
+
+  let P = undefined
+  let D = undefined
+  let pQuery = undefined
+  let dQuery = undefined
+  if (series[series.length - 1] in pages) {
+    P = pages[series[series.length - 1]]
+    pQuery = paramsSeries[paramsSeries.length - 1]
+  } else {
+    if (series[series.length - 1] in dialogs) {
+      D = dialogs[series[series.length - 1]]
+      dQuery = paramsSeries[paramsSeries.length - 1]
+      let counter = series.length - 2
+      while (counter >= 0) {
+        if (series[counter] in pages) {
+          P = pages[series[counter]]
+          pQuery = paramsSeries[counter]
+          break
+        }
+        counter--
+      }
+    }
+  }
+
   useEffect(() => {
+    let audio = new Audio(StartupSound)
+    audio.play()
+
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -223,50 +285,22 @@ export default function MainApp(props) {
       .catch((error) => console.log('error', error))
 
     animatePageChange()
+
+    let query = window.location.search
+    let params = {}
+    if (query !== undefined && query !== null) {
+      if (query.length > 1) {
+        query = query.substr(1)
+      }
+      let querySep = query.split('&')
+      querySep.forEach((part) => {
+        let keyValue = part.split('=')
+        params[keyValue[0]] = keyValue[1]
+      })
+    }
+
+    gotoPage(window.location.pathname, params)
   }, [])
-
-  window.onpopstate = function (event) {
-    if (setDialogOpen !== null) {
-      setDialogOpen(false)
-    }
-    setTimeout(popPage, 250)
-  }
-
-  let P = undefined
-  let D = undefined
-  if (dialogs[window.location.pathname] !== undefined) {
-    D = dialogs[window.location.pathname]
-    P = pages[series[series.length - 2]]
-    currentStaticPage = series[series.length - 2]
-    let counter = 3
-    while (series.length - counter >= 0) {
-      P = pages[series[series.length - counter]]
-      currentStaticPage = series[series.length - counter]
-      if (series[series.length - counter] in pages) break
-      counter++
-    }
-  } else {
-    P = pages[window.location.pathname]
-    currentStaticPage = window.location.pathname
-  }
-
-  useEffect(() => {
-    let audio = new Audio(StartupSound)
-    audio.play()
-  }, [])
-
-  let query = window.location.search
-  let params = {}
-  if (query !== undefined && query !== null) {
-    if (query.length > 1) {
-      query = query.substr(1)
-    }
-    let querySep = query.split('&')
-    querySep.forEach((part) => {
-      let keyValue = part.split('=')
-      params[keyValue[0]] = keyValue[1]
-    })
-  }
 
   return (
     <div
@@ -290,8 +324,8 @@ export default function MainApp(props) {
         }}
       >
         <ThemeProvider theme={theme}>
-          {P !== undefined ? <P {...params} /> : null}
-          {D !== undefined ? <D {...params} open={true} /> : null}
+          {P !== undefined ? <P {...pQuery} /> : null}
+          {D !== undefined ? <D {...dQuery} open={true} /> : null}
         </ThemeProvider>
       </div>
     </div>

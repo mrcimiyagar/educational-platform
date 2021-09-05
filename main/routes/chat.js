@@ -120,13 +120,8 @@ router.post('/delete_message', jsonParser, async function (req, res) {
 
 router.post('/get_messages', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
-            
-            sw.Message.findAll({ include: [{ all: true }], where: {roomId: membership.roomId}, offset: req.body.offset, limit: req.body.limit,
-            order: [
-                ['time', 'ASC'],
-            ]}).then(async function (msgs) {
-                res.send({status: 'success', messages: msgs});
-            });
+        let messages = await sw.Message.findAll({raw: true, include: [{ all: true }], where: {roomId: membership.roomId}, order: [['time', 'ASC']]})
+        res.send({status: 'success', messages: messages});
     });
 });
 

@@ -8,6 +8,7 @@ import CloudIcon from './images/logo.png';
 import RoomWallpaper from './images/roomWallpaper.png';
 import store from "./redux/main";
 import DesktopWallpaper from './images/desktop-wallpaper.webp'
+import DesktopWallpaper2 from './images/desktop-wallpaper.jpg'
 
 const MainApp = React.lazy(() => {
 	return Promise.all([
