@@ -17,6 +17,8 @@ import store, { switchConf } from "../../redux/main";
 import { colors, me } from '../../util/settings';
 import { useForceUpdate } from "../../util/Utils";
 import './style.css';
+import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
+import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled';
 
 export let updateConfBox = undefined
 export let isConfConnected = false
@@ -125,21 +127,25 @@ export let ConfBox = (props) => {
               <Fab id="endCallButton" color={'secondary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: (isDesktop() && isInRoom()) ? 48 : (16 + 72)}} onClick={() => {
                 store.dispatch(switchConf('video', false))
                 store.dispatch(switchConf('audio', false))
+                store.dispatch(switchConf('screen', false))
                 setConnected(false)
                 setUniqueKey(Math.random())
                 forceUpdate()
               }}><CallEndIcon/></Fab>
               {video ?
                 <Fab id="camButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
-                  window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.video}, 'http://localhost:1010')
+                  window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchVideoFlag', stream: !store.getState().global.conf.video}, 'http://localhost:1010')
                   store.dispatch(switchConf('video', !store.getState().global.conf.video))
                   forceUpdate()
                 }}>{store.getState().global.conf.video ? <VideocamIcon/> : <VideocamOff/>}</Fab> :
                 null
               }
-              <Fab id="settingsButton" color={'primary'} style={{position: 'absolute', left: video ? ((isDesktop() && isInRoom()) ? (32 + 56 + 16 + 56 + 16) : (16 + 56 + 16 + 56 + 16)) : ((isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16)), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
-                
-              }}><SettingsIcon/></Fab>
+              {video ?<Fab id="screenButton" color={'primary'} style={{position: 'absolute', left: video ? ((isDesktop() && isInRoom()) ? (32 + 56 + 16 + 56 + 16) : (16 + 56 + 16 + 56 + 16)) : ((isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16)), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
+                window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchScreenFlag', stream: !store.getState().global.conf.screen}, 'http://localhost:1010')
+                store.dispatch(switchConf('screen', !store.getState().global.conf.screen))
+                forceUpdate()
+              }}>{store.getState().global.conf.screen ? <DesktopWindowsIcon/> : <DesktopAccessDisabledIcon/>}</Fab> :
+              null}
             </ThemeProvider>
         </div>:
         <ThemeProvider theme={theme2}>

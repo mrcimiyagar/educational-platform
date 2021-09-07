@@ -161,7 +161,7 @@ export let UsersBox = (props) => {
             setUsers(users)
             try {
               window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
-              window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
+              //window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
             }
             catch(ex){console.log(ex)}
           });
@@ -176,7 +176,7 @@ export let UsersBox = (props) => {
             setUsers(users)
             try {
               window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
-              window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
+              //window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
             }
             catch(ex){console.log(ex)}
           });
@@ -187,7 +187,7 @@ export let UsersBox = (props) => {
           
           try {
             window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
-            window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
+            //window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
           }
           catch(ex){console.log(ex)}
     }, []);

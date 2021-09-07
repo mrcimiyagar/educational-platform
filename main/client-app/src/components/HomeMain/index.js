@@ -11,7 +11,7 @@ import RadioIcon from '@material-ui/icons/Radio'
 import RedditIcon from '@material-ui/icons/Reddit'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
-import { histPage, isDesktop, isMobile, isTablet } from '../../App'
+import { histPage, isDesktop, isInMessenger, isMobile, isTablet } from '../../App'
 import ChatEmbedded from '../../components/ChatEmbedded'
 import store from '../../redux/main'
 import { setColors, colors, token } from '../../util/settings'
@@ -19,6 +19,7 @@ import { serverRoot, useForceUpdate } from '../../util/Utils'
 import AllChats from '../AllChats'
 import BotChats from '../BotChats'
 import ChannelChats from '../ChannelChats'
+import ChatEmbeddedInMessenger from '../ChatEmbeddedInMessenger'
 import GroupChats from '../GroupChats'
 import HomeBottombar from '../HomeBottombar'
 import HomeDrawer from '../HomeDrawer'
@@ -284,18 +285,8 @@ export default function HomeAppbar(props) {
               </div>
             </TabPanel>
           </div>
-          {isDesktop() ? (
-            <div
-              style={{
-                width: 'calc(100% - 625px)',
-                height: 'calc(100% - 96px)',
-                position: 'fixed',
-                left: 0,
-                top: 0,
-              }}
-            >
-              <ChatEmbedded roomId={selectedRoomId} userId={selectedUserId} />
-            </div>
+          {isDesktop() && isInMessenger() ? (
+            <ChatEmbeddedInMessenger key={'chat1'} roomId={selectedRoomId} userId={selectedUserId} />
           ) : isTablet() ? (
             <div
               style={{
@@ -306,7 +297,7 @@ export default function HomeAppbar(props) {
                 top: 0,
               }}
             >
-              <ChatEmbedded roomId={selectedRoomId} userId={selectedUserId} />
+              <ChatEmbedded key={'chat2'} roomId={selectedRoomId} userId={selectedUserId} />
             </div>
           ) : null}
           <Fab

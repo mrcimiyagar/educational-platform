@@ -34,8 +34,10 @@ import {
 import { ConnectToIo, serverRoot, useForceUpdate } from './util/Utils'
 import { setWallpaper } from '.'
 
-export let histPage = null,
-  setHp = null
+export let histPage = undefined
+let setHistPage = undefined
+export let routeTrigger = undefined
+let setRouteTrigger = undefined
 
 export let sizeMode
 let setSizeMode
@@ -80,7 +82,8 @@ let forceUpdate = undefined
 export let gotoPage = (p, params) => {
   series.push(p)
   paramsSeries.push(params)
-  setHp(p)
+  setHistPage(p)
+  setRouteTrigger(!routeTrigger)
 
   let query = ''
   for (let key in params) {
@@ -99,7 +102,8 @@ export let gotoPageWithDelay = (p, params) => {
   series.push(p)
   paramsSeries.push(params)
   setTimeout(() => {
-    setHp(p)
+    setHistPage(p)
+    setRouteTrigger(!routeTrigger)
   }, 125)
 
   let query = ''
@@ -118,7 +122,8 @@ export let popPage = () => {
   if (series.length > 1) {
     series.pop()
     paramsSeries.pop()
-    setHp(series[series.length - 1])
+    setHistPage(series[series.length - 1])
+    setRouteTrigger(!routeTrigger)
 
     let params = paramsSeries[paramsSeries.length - 1]
     let query = ''
@@ -213,10 +218,11 @@ export default function MainApp(props) {
 
   forceUpdate = useForceUpdate()
 
-  const [hp, sethp] = React.useState()
-  histPage = hp
-  setHp = sethp
-
+  let [hp, setHp] = React.useState()
+  setHistPage = setHp;
+  histPage = hp;
+  [routeTrigger, setRouteTrigger] = React.useState(false)
+  
   let [opacity, setOpacity] = React.useState(0)
 
   animatePageChange = () => {
@@ -299,7 +305,7 @@ export default function MainApp(props) {
       })
     }
 
-    gotoPage(window.location.pathname, params)
+    setTimeout(() => gotoPage(window.location.pathname, params), 2500)
   }, [])
 
   return (

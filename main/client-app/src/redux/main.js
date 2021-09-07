@@ -100,6 +100,7 @@ const defaultState = {
     conf: {
       video: false,
       audio: false,
+      screen: false,
       isAudioEnable: false,
       isVideoEnable: false
     },

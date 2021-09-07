@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 
 export let updateChatEmbedded = undefined
 
-export default function ChatEmbedded(props) {
+export default function ChatEmbeddedInMessenger(props) {
   document.documentElement.style.overflowY = 'hidden'
 
   let forceUpdate = useForceUpdate()
@@ -241,64 +241,31 @@ export default function ChatEmbedded(props) {
   let right = 0
   let top = 0
 
-  if (isDesktop()) {
-    if (isInRoom()) {
-      width = 450
-      height = '100%'
-      left = 'calc(100% - 450px)'
-      right = 0
-      top = 0
-    } else if (isInMessenger()) {
-      width = '100٪'
-      height = '100%'
-      left = 128
-      right = undefined
-      top = 48
-    }
-  } else if (isMobile() || isTablet()) {
-    if (isInRoom()) {
-      width = '100%'
-      height = '100%'
-      right = undefined
-      left = 0
-      top = 0
-    } else if (isInMessenger()) {
-      width = '100%'
-      height = '100%'
-      left = 0
-      right = undefined
-      top = 0
-    }
-  }
-
   return (
     <div
       style={{
         display:
           props.roomId === undefined || props.roomId === 0 ? 'none' : 'block',
-        width: width,
-        height: height,
+        width: isDesktop() ? 'calc(100% - 450px - 450px - 48px)' : 0,
+        height: 'calc(100% - 16px)',
         position: 'absolute',
-        top: top,
-        left: left,
-        right: right,
-        bottom: isDesktop() ? 16 : 0,
+        top: isDesktop() ? 16 : 0,
+        left: isDesktop() ? 128 : 0
       }}
     >
       <div
         style={{
           width: '100%',
-          height: '100%',
+          height: 'calc(100% - 112px)',
           position: 'absolute',
           backgroundImage: `url(${ChatWallpaper})`,
-          top: isDesktop() ? 16 : 0,
+          top: isDesktop() ? 16 + 64 : 0,
           left: isDesktop() ? 96 : 0,
           right: isDesktop()
             ? histPage === '/app/room' || histPage === '/app/settings'
               ? 0
               : 16
             : 0,
-          bottom: isDesktop() ? -16 : 0,
           backdropFilter: 'blur(10px)',
           borderRadius: '0 0 0 24px',
         }}
