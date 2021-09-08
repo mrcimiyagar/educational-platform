@@ -8,16 +8,16 @@ app.use(cors())
 
 app.get('*', (req, res) => {
     res.send({
-        mainBackend: 'http://localhost:2001',
-        mainFrontend: 'http://localhost:2002',
-        audioPlayer: 'http://localhost:8085',
-        waveSurferBox: 'http://localhost:8084',
-        whiteBoard: 'http://localhost:8081',
-        sharedNotes: 'http://localhost:8082',
-        videoConfVideo: 'http://localhost:1010',
-        videoConfAudio: 'http://localhost:1011',
-        videoConfScreen: 'http://localhost:1012',
-        mainWebsocket: 'ws://localhost:2001'
+        mainBackend: 'http://185.81.96.105:2001',
+        mainFrontend: 'http://185.81.96.105:2002',
+        audioPlayer: 'http://185.81.96.105:8085',
+        waveSurferBox: 'http://185.81.96.105:8084',
+        whiteBoard: 'http://185.81.96.105:8081',
+        sharedNotes: 'http://185.81.96.105:8082',
+        videoConfVideo: 'http://185.81.96.105:1010',
+        videoConfAudio: 'http://185.81.96.105:1011',
+        videoConfScreen: 'http://185.81.96.105:1012',
+        mainWebsocket: 'ws://185.81.96.105:2001'
     })
 });
         
