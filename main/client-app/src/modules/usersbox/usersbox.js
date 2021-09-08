@@ -12,6 +12,7 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import 'react-sortable-tree/style.css';
 import "react-table/react-table.css";
+import { pathConfig } from "../..";
 import { NotificationManager } from "../../components/ReactNotifications";
 import { colors, token } from "../../util/settings";
 import { room, serverRoot, socket, useForceUpdate } from "../../util/Utils";
@@ -160,8 +161,8 @@ export let UsersBox = (props) => {
             })
             setUsers(users)
             try {
-              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
-              //window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
+              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, pathConfig.videoConfVideo)
+              //window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, pathConfig.videoConfAudio)
             }
             catch(ex){console.log(ex)}
           });
@@ -175,8 +176,8 @@ export let UsersBox = (props) => {
             })
             setUsers(users)
             try {
-              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
-              //window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
+              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, pathConfig.videoConfVideo)
+              //window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, pathConfig.videoConfAudio)
             }
             catch(ex){console.log(ex)}
           });
@@ -186,8 +187,8 @@ export let UsersBox = (props) => {
           });
           
           try {
-            window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1010')
-            //window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, 'http://localhost:1011')
+            window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'getPermissions'}, pathConfig.videoConfVideo)
+            //window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'getPermissions'}, pathConfig.videoConfAudio)
           }
           catch(ex){console.log(ex)}
     }, []);
@@ -248,13 +249,13 @@ export let UsersBox = (props) => {
                     {props.membership.canEditVideoSound && currentHover === index ?
                       <div style={{marginTop: -12, position: 'absolute', left: 0, display: 'flex', backgroundColor: colors.primary}}>
                         <IconButton onClick={(e) => {
-                          window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchPermission', targetId: user.id, status: !video[user.id]}, 'http://localhost:1010')
+                          window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchPermission', targetId: user.id, status: !video[user.id]}, pathConfig.videoConfVideo)
                           video[user.id] = !video[user.id]
                           setVideo(video)
                           forceUpdate()
                         }}>{video[user.id] ? <VideocamIcon style={{fill: colors.textIcons}}/> : <VideocamOff style={{fill: colors.textIcons}}/>}</IconButton>
                         <IconButton  onClick={(e) => {
-                          window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchPermission', targetId: user.id, status: !audio[user.id]}, 'http://localhost:1011')
+                          window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchPermission', targetId: user.id, status: !audio[user.id]}, pathConfig.videoConfAudio)
                           audio[user.id] = !audio[user.id]
                           setAudio(audio)
                           forceUpdate()

@@ -1,443 +1,507 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <!-- This adapter.js file de-prefixes the webkit* and moz* prefixed RTC
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <!-- This adapter.js file de-prefixes the webkit* and moz* prefixed RTC
              methods. When RTC becomes a more solid standard, this adapter should no
              longer be necessary. -->
-        <!-- <script src="https://webrtc.googlecode.com/svn/trunk/samples/js/base/adapter.js"></script> -->
-        <style>
-            html, body { 
-                background-color: #333; 
-            }
-            video {
-                width:  320px;
-                height:  240px;
-                border:  1px solid black;
-            }
-        </style>
+    <!-- <script src="https://webrtc.googlecode.com/svn/trunk/samples/js/base/adapter.js"></script> -->
+    <style>
+      html,
+      body {
+        background-color: #333;
+      }
+      video {
+        width: 320px;
+        height: 240px;
+        border: 1px solid black;
+      }
+    </style>
 
-        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-        <script>
-            /** CONFIG **/
-            var SIGNALING_SERVER = "http://localhost:1011"
-            var USE_AUDIO = true
-            var USE_VIDEO = true
-            var DEFAULT_CHANNEL = 'some-global-channel-name'
-            var MUTE_AUDIO_BY_DEFAULT = false
-            var userId = undefined
-            var roomId = undefined
-            var permises = {}
-
-            /** You should probably use a different stun server doing commercial stuff **/
-            /** Also see: https://gist.github.com/zziuni/3741933 **/
-            var ICE_SERVERS = [
-            {"url":"stun:185.81.96.230:3478"},
-            {
-              "url":"turn:185.81.96.230:3478",
-              "username":"guest",
-              "credential":"somepassword"
-            }
-        ];
-        </script>
-
-
-        <script>
-            let attachMediaStream = function(element, stream) {
-                console.log('DEPRECATED, attachMediaStream will soon be removed.');
-                element.srcObject = stream;
-            };
-            function join_chat_channel(channel, userdata) {
-                signaling_socket.emit('join', {"channel": channel, "userdata": userdata});
-            }
-            function part_chat_channel(channel) {
-                signaling_socket.emit('part', channel);
-            }
-            function produceEmptyStream() {
-                const createEmptyAudioTrack = () => {
-                    const ctx = new AudioContext()
-                    const oscillator = ctx.createOscillator()
-                    const dst = oscillator.connect(ctx.createMediaStreamDestination())
-                    oscillator.start()
-                    const track = dst.stream.getAudioTracks()[0]
-                    return Object.assign(track, { enabled: false })
-                }
-
-                const createEmptyVideoTrack = ({ width, height }) => {
-                    const canvas = Object.assign(document.createElement('canvas'), { width, height })
-                    canvas.getContext('2d').fillRect(0, 0, width, height)
-
-                    const stream = canvas.captureStream()
-                    const track = stream.getVideoTracks()[0]
-
-                    return Object.assign(track, { enabled: false })
-                }
-
-                let ms = new MediaStream([createEmptyAudioTrack(), createEmptyVideoTrack({ width:640, height:480 })])
-
-                return ms
-            }
-            var signaling_socket = null;   /* our socket.io connection to our webserver */
-            var local_media_stream = null; /* our own microphone / webcam */
-            var peers = {};                /* keep track of our peer connections, indexed by peer_id (aka socket.io id) */
-            var peer_media_elements = {};  /* keep track of our <video>/<audio> tags, indexed by peer_id */
-            var localMediaEl = undefined
-            let isMediaAvailable = false
-
-            function init() {
-                console.log("Connecting to signaling server");
-                signaling_socket = io(SIGNALING_SERVER, {query: `userId=${userId}`});
-
-                signaling_socket.on('connect', function() {
-                    console.log("Connected to signaling server");
-                    setup_local_media({}, function(stream) {
-                        /* once the user has given us access to their
-                         * microphone/camcorder, join the channel and start peering up */
-                        join_chat_channel(roomId, {'whatever-you-want-here': 'stuff'});
-                    });
-                });
-                signaling_socket.on('disconnect', function() {
-                    console.log("Disconnected from signaling server");
-                    /* Tear down all of our peer connections and remove all the
-                     * media divs when we disconnect */
-                    for (peer_id in peer_media_elements) {
-                        peer_media_elements[peer_id].remove();
-                    }
-                    for (peer_id in peers) {
-                        peers[peer_id].close();
-                    }
-
-                    peers = {};
-                    peer_media_elements = {};
-                });
-                
-                signaling_socket.on('show_peer', peer_id => {
-                    if (peer_media_elements[peer_id] !== undefined)
-                        peer_media_elements[peer_id][0].style.display = 'block'
-                })
-
-                signaling_socket.on('hide_peer', peer_id => {
-                    if (peer_media_elements[peer_id] !== undefined)
-                        peer_media_elements[peer_id][0].style.display = 'none'
-                })
-
-                /** 
-                * When we join a group, our signaling server will send out 'addPeer' events to each pair
-                * of users in the group (creating a fully-connected graph of users, ie if there are 6 people
-                * in the channel you will connect directly to the other 5, so there will be a total of 15 
-                * connections in the network). 
-                */
-                signaling_socket.on('addPeer', function(config) {
-                    console.log('Signaling server said to add peer:', config);
-                    var peer_id = config.peer_id;
-                    if (peer_id in peers) {
-                        /* This could happen if the user joins multiple channels where the other peer is also in. */
-                        console.log("Already connected to peer ", peer_id);
-                        return;
-                    }
-                    var peer_connection = new RTCPeerConnection(
-                        {"iceServers": ICE_SERVERS},
-                        {"optional": [{"DtlsSrtpKeyAgreement": true}]} /* this will no longer be needed by chrome
-                                                                        * eventually (supposedly), but is necessary 
-                                                                        * for now to get firefox to talk to chrome */
-                    );
-                    peers[peer_id] = peer_connection;
-
-                    peer_connection.onicecandidate = function(event) {
-                        if (event.candidate) {
-                            signaling_socket.emit('relayICECandidate', {
-                                'peer_id': peer_id, 
-                                'ice_candidate': {
-                                    'sdpMLineIndex': event.candidate.sdpMLineIndex,
-                                    'candidate': event.candidate.candidate
-                                }
-                            });
-                        }
-                    }
-                    peer_connection.onaddstream = function(event) {
-                        console.log("onAddStream", event)
-                        var remote_media = $("<audio>")
-                        remote_media.attr("autoplay", "autoplay")
-                        if (MUTE_AUDIO_BY_DEFAULT) {
-                            remote_media.attr("muted", "true")
-                        }
-                        remote_media.attr("controls", "")
-                        remote_media[0].style.display = 'none'
-                        peer_media_elements[peer_id] = remote_media
-                        $('body').append(remote_media)
-                        attachMediaStream(remote_media[0], event.stream)
-                    }
-
-                    /* Add our local stream */
-                    peer_connection.addStream(local_media_stream);
-
-                    /* Only one side of the peer connection should create the
-                     * offer, the signaling server picks one to be the offerer. 
-                     * The other user will get a 'sessionDescription' event and will
-                     * create an offer, then send back an answer 'sessionDescription' to us
-                     */
-                    if (config.should_create_offer) {
-                        console.log("Creating RTC offer to ", peer_id);
-                        peer_connection.createOffer(
-                            function (local_description) { 
-                                console.log("Local offer description is: ", local_description);
-                                peer_connection.setLocalDescription(local_description,
-                                    function() { 
-                                        signaling_socket.emit('relaySessionDescription', 
-                                            {'peer_id': peer_id, 'session_description': local_description});
-                                        console.log("Offer setLocalDescription succeeded");
-                                    },
-                                    function() { Alert("Offer setLocalDescription failed!"); }
-                                );
-                            },
-                            function (error) {
-                                console.log("Error sending offer: ", error);
-                            });
-                    }
-                });
-
-                signaling_socket.on('askAppearence', peer_id => {
-                    if (isMediaAvailable) {
-                        signaling_socket.emit('answerAppearence', peer_id)
-                    }
-                })
-
-                /** 
-                 * Peers exchange session descriptions which contains information
-                 * about their audio / video settings and that sort of stuff. First
-                 * the 'offerer' sends a description to the 'answerer' (with type
-                 * "offer"), then the answerer sends one back (with type "answer").  
-                 */
-                signaling_socket.on('sessionDescription', function(config) {
-                    console.log('Remote description received: ', config);
-                    var peer_id = config.peer_id;
-                    var peer = peers[peer_id];
-                    var remote_description = config.session_description;
-                    console.log(config.session_description);
-
-                    var desc = new RTCSessionDescription(remote_description);
-                    var stuff = peer.setRemoteDescription(desc, 
-                        function() {
-                            console.log("setRemoteDescription succeeded");
-                            if (remote_description.type == "offer") {
-                                console.log("Creating answer");
-                                peer.createAnswer(
-                                    function(local_description) {
-                                        console.log("Answer description is: ", local_description);
-                                        peer.setLocalDescription(local_description,
-                                            function() { 
-                                                signaling_socket.emit('relaySessionDescription', 
-                                                    {'peer_id': peer_id, 'session_description': local_description});
-                                                console.log("Answer setLocalDescription succeeded");
-                                            },
-                                            function() { Alert("Answer setLocalDescription failed!"); }
-                                        );
-                                    },
-                                    function(error) {
-                                        console.log("Error creating answer: ", error);
-                                        console.log(peer);
-                                    });
-                            }
-                        },
-                        function(error) {
-                            console.log("setRemoteDescription error: ", error);
-                        }
-                    );
-                    console.log("Description Object: ", desc);
-
-                });
-
-                /**
-                 * The offerer will send a number of ICE Candidate blobs to the answerer so they 
-                 * can begin trying to find the best path to one another on the net.
-                 */
-                signaling_socket.on('iceCandidate', function(config) {
-                    var peer = peers[config.peer_id];
-                    var ice_candidate = config.ice_candidate;
-                    peer.addIceCandidate(new RTCIceCandidate(ice_candidate));
-                });
-
-
-                /**
-                 * When a user leaves a channel (or is disconnected from the
-                 * signaling server) everyone will recieve a 'removePeer' message
-                 * telling them to trash the media channels they have open for those
-                 * that peer. If it was this client that left a channel, they'll also
-                 * receive the removePeers. If this client was disconnected, they
-                 * wont receive removePeers, but rather the
-                 * signaling_socket.on('disconnect') code will kick in and tear down
-                 * all the peer sessions.
-                 */
-                signaling_socket.on('removePeer', function(config) {
-                    console.log('Signaling server said to remove peer:', config);
-                    var peer_id = config.peer_id;
-                    if (peer_id in peer_media_elements) {
-                        peer_media_elements[peer_id].remove();
-                    }
-                    if (peer_id in peers) {
-                        peers[peer_id].close();
-                    }
-
-                    delete peers[peer_id];
-                    delete peer_media_elements[config.peer_id];
-                });
-
-                window.onunload = () => {
-                    signaling_socket.emit('hide')
-                    local_media_stream.getAudioTracks().forEach(track => track.stop())
-                    signaling_socket.close()
-                }
-
-                window.onbeforeunload = () => {
-                    signaling_socket.emit('hide')
-                    local_media_stream.getAudioTracks().forEach(track => track.stop())
-                    signaling_socket.close()
-                }
-
-                signaling_socket.on('takePermissions', permissions => {
-                    permises = permissions
-                    window.parent.postMessage({sender: 'confaudio', action: 'takePermissions', permissions: permissions}, 'http://localhost:2002')
-                    if (permissions[userId] === true) {
-                        window.parent.postMessage({sender: 'confaudio', action: 'switchAudioControlVisibility', visibility: true}, 'http://localhost:2002')
-                    }
-                    else {
-                        endAudio()
-                        window.parent.postMessage({sender: 'confaudio', action: 'switchAudioControlVisibility', visibility: false}, 'http://localhost:2002')
-                    }
-                })
-
-                window.addEventListener('message', e => {
-                    console.log(e.data)
-                    if (e.data.sender === 'main') {
-                        if (e.data.action === 'switchPermission') {
-                            signaling_socket.emit('switchPermission', {userId: e.data.targetId, permission: e.data.status})
-                        }
-                        else if (e.data.action === 'getPermissions') {
-                            signaling_socket.emit('getPermissions')
-                        }
-                    }
-                })
-            }
-
-
-
-
-            /***********************/
-            /** Local media stuff **/
-            /***********************/
-            function setup_local_media(constraints, callback, errorback) {
-                /* Ask user for permission to use the computers microphone and/or camera, 
-                 * attach it to an <audio> or <video> tag if they give us access. */
-                console.log("Requesting access to local audio / video inputs");
-
-                if (constraints.video === undefined && constraints.audio === undefined) {
-                    let stream = produceEmptyStream()
-                    local_media_stream = stream
-                    if (localMediaEl === undefined) {
-                        var local_media = $("<audio>")
-                        local_media.attr("autoplay", "autoplay")
-                        local_media.attr("muted", "true") /* always mute ourselves by default */
-                        local_media.attr("controls", "")
-                        local_media[0].style.display = 'none'
-                        $('body').append(local_media)
-                        local_media[0].muted = true 
-                        localMediaEl = local_media[0]
-                    }
-                    attachMediaStream(localMediaEl, stream);
-                    if (callback) callback(stream);
-                    return
-                }
-
-                navigator.getUserMedia = ( navigator.getUserMedia ||
-                       navigator.webkitGetUserMedia ||
-                       navigator.mozGetUserMedia ||
-                       navigator.msGetUserMedia);
-
-                navigator.getUserMedia(constraints,
-                    function(stream) { /* user accepted access to a/v */
-                        console.log("Access granted to audio/video");
-                        local_media_stream = stream
-                        if (localMediaEl === undefined) {
-                            var local_media = $("<audio>")
-                            local_media.attr("autoplay", "autoplay")
-                            local_media.attr("muted", "true") /* always mute ourselves by default */
-                            local_media.attr("controls", "")
-                            local_media[0].style.display = 'none'
-                            $('body').append(local_media)
-                            local_media[0].muted = true 
-                            localMediaEl = local_media[0]
-                        }
-                        attachMediaStream(localMediaEl, stream);
-                        if (callback) callback(stream);
-                    },
-                    function() { /* user denied access to a/v */
-                        console.log("Access denied for audio/video");
-                        alert("You chose not to provide access to the camera/microphone, demo will not work.");
-                        if (errorback) errorback();
-                    });
-            }
-            
-            let startAudio = () => {
-                if (local_media_stream !== null && local_media_stream !== undefined) {
-                    local_media_stream.getAudioTracks().forEach(track => {
-                        track.stop()
-                    });
-                }
-                setup_local_media({audio: true}, function(stream) {
-                    let audioTrack = stream.getAudioTracks()[0];
-                    for (let id in peers) {
-                        if (peers[id] === undefined) continue
-                        let pc = peers[id]
-                        var sender = pc.getSenders().find(function(s) {
-                            return s.track.kind == audioTrack.kind;
-                        });
-                        console.log('found sender:', sender);
-                        sender.replaceTrack(audioTrack);
-                    }
-                    isMediaAvailable = true
-                    signaling_socket.emit('show')
-                })
-            }
-            
-            let endAudio = () => {
-                local_media_stream.getAudioTracks().forEach(track => {
-                    track.stop()
-                });
-                isMediaAvailable = false
-                signaling_socket.emit('hide')
-            }
-
-        </script>
-    </head>
-    <body style="width: auto; height: auto;">
-    
-    </body>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script>
-        window.addEventListener('message', e => {
-            console.log(e.data)
-            if (e.data.sender === 'main') {
-                if (e.data.action === 'switchFlag') {
-                    if (e.data.stream === true) {
-                        startAudio()
-                    }
-                    else if (e.data.stream === false) {
-                        endAudio()
-                    }
-                }
-                else if (e.data.userId !== undefined && e.data.roomId !== undefined) {
-                    userId = e.data.userId
-                    roomId = e.data.roomId
-                    init()
-                }
-                else if (e.data.targetId !== undefined) {
-                    if (e.data.status === true) {
-                        signaling_socket.emit('enableUser', e.data.targetId)
-                    }
-                    else if (e.data.status === false) {
-                        signaling_socket.emit('disableUser', e.data.targetId)
-                    }
-                }
-            }
-        })
+      /** CONFIG **/
+      var USE_AUDIO = true
+      var USE_VIDEO = true
+      var DEFAULT_CHANNEL = 'some-global-channel-name'
+      var MUTE_AUDIO_BY_DEFAULT = false
+      var userId = undefined
+      var roomId = undefined
+      let pathConfig = undefined
+      var permises = {}
+
+      /** You should probably use a different stun server doing commercial stuff **/
+      /** Also see: https://gist.github.com/zziuni/3741933 **/
+      var ICE_SERVERS = [
+        { url: 'stun:185.81.96.230:3478' },
+        {
+          url: 'turn:185.81.96.230:3478',
+          username: 'guest',
+          credential: 'somepassword',
+        },
+      ]
     </script>
+
+    <script>
+      let attachMediaStream = function (element, stream) {
+        console.log('DEPRECATED, attachMediaStream will soon be removed.')
+        element.srcObject = stream
+      }
+      function join_chat_channel(channel, userdata) {
+        signaling_socket.emit('join', { channel: channel, userdata: userdata })
+      }
+      function part_chat_channel(channel) {
+        signaling_socket.emit('part', channel)
+      }
+      function produceEmptyStream() {
+        const createEmptyAudioTrack = () => {
+          const ctx = new AudioContext()
+          const oscillator = ctx.createOscillator()
+          const dst = oscillator.connect(ctx.createMediaStreamDestination())
+          oscillator.start()
+          const track = dst.stream.getAudioTracks()[0]
+          return Object.assign(track, { enabled: false })
+        }
+
+        const createEmptyVideoTrack = ({ width, height }) => {
+          const canvas = Object.assign(document.createElement('canvas'), {
+            width,
+            height,
+          })
+          canvas.getContext('2d').fillRect(0, 0, width, height)
+
+          const stream = canvas.captureStream()
+          const track = stream.getVideoTracks()[0]
+
+          return Object.assign(track, { enabled: false })
+        }
+
+        let ms = new MediaStream([
+          createEmptyAudioTrack(),
+          createEmptyVideoTrack({ width: 640, height: 480 }),
+        ])
+
+        return ms
+      }
+      var signaling_socket = null /* our socket.io connection to our webserver */
+      var local_media_stream = null /* our own microphone / webcam */
+      var peers = {} /* keep track of our peer connections, indexed by peer_id (aka socket.io id) */
+      var peer_media_elements = {} /* keep track of our <video>/<audio> tags, indexed by peer_id */
+      var localMediaEl = undefined
+      let isMediaAvailable = false
+
+      function init(audioServerWebsocket) {
+        let requestOptions = {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          redirect: 'follow',
+        }
+        fetch('http://localhost:8080', requestOptions)
+          .then((response) => response.json())
+          .then((result) => {
+            pathConfig = result
+            initInner(audioServerWebsocket)
+          })
+      }
+
+      function initInner(audioServerWebsocket) {
+        console.log('Connecting to signaling server')
+        signaling_socket = io(audioServerWebsocket, {
+          query: `userId=${userId}`,
+        })
+
+        signaling_socket.on('connect', function () {
+          console.log('Connected to signaling server')
+          setup_local_media({}, function (stream) {
+            /* once the user has given us access to their
+             * microphone/camcorder, join the channel and start peering up */
+            join_chat_channel(roomId, { 'whatever-you-want-here': 'stuff' })
+          })
+        })
+        signaling_socket.on('disconnect', function () {
+          console.log('Disconnected from signaling server')
+          /* Tear down all of our peer connections and remove all the
+           * media divs when we disconnect */
+          for (peer_id in peer_media_elements) {
+            peer_media_elements[peer_id].remove()
+          }
+          for (peer_id in peers) {
+            peers[peer_id].close()
+          }
+
+          peers = {}
+          peer_media_elements = {}
+        })
+
+        signaling_socket.on('show_peer', (peer_id) => {
+          if (peer_media_elements[peer_id] !== undefined)
+            peer_media_elements[peer_id][0].style.display = 'block'
+        })
+
+        signaling_socket.on('hide_peer', (peer_id) => {
+          if (peer_media_elements[peer_id] !== undefined)
+            peer_media_elements[peer_id][0].style.display = 'none'
+        })
+
+        /**
+         * When we join a group, our signaling server will send out 'addPeer' events to each pair
+         * of users in the group (creating a fully-connected graph of users, ie if there are 6 people
+         * in the channel you will connect directly to the other 5, so there will be a total of 15
+         * connections in the network).
+         */
+        signaling_socket.on('addPeer', function (config) {
+          console.log('Signaling server said to add peer:', config)
+          var peer_id = config.peer_id
+          if (peer_id in peers) {
+            /* This could happen if the user joins multiple channels where the other peer is also in. */
+            console.log('Already connected to peer ', peer_id)
+            return
+          }
+          var peer_connection = new RTCPeerConnection(
+            { iceServers: ICE_SERVERS },
+            { optional: [{ DtlsSrtpKeyAgreement: true }] }
+            /* this will no longer be needed by chrome
+             * eventually (supposedly), but is necessary
+             * for now to get firefox to talk to chrome */,
+          )
+          peers[peer_id] = peer_connection
+
+          peer_connection.onicecandidate = function (event) {
+            if (event.candidate) {
+              signaling_socket.emit('relayICECandidate', {
+                peer_id: peer_id,
+                ice_candidate: {
+                  sdpMLineIndex: event.candidate.sdpMLineIndex,
+                  candidate: event.candidate.candidate,
+                },
+              })
+            }
+          }
+          peer_connection.onaddstream = function (event) {
+            console.log('onAddStream', event)
+            var remote_media = $('<audio>')
+            remote_media.attr('autoplay', 'autoplay')
+            if (MUTE_AUDIO_BY_DEFAULT) {
+              remote_media.attr('muted', 'true')
+            }
+            remote_media.attr('controls', '')
+            remote_media[0].style.display = 'none'
+            peer_media_elements[peer_id] = remote_media
+            $('body').append(remote_media)
+            attachMediaStream(remote_media[0], event.stream)
+          }
+
+          /* Add our local stream */
+          peer_connection.addStream(local_media_stream)
+
+          /* Only one side of the peer connection should create the
+           * offer, the signaling server picks one to be the offerer.
+           * The other user will get a 'sessionDescription' event and will
+           * create an offer, then send back an answer 'sessionDescription' to us
+           */
+          if (config.should_create_offer) {
+            console.log('Creating RTC offer to ', peer_id)
+            peer_connection.createOffer(
+              function (local_description) {
+                console.log('Local offer description is: ', local_description)
+                peer_connection.setLocalDescription(
+                  local_description,
+                  function () {
+                    signaling_socket.emit('relaySessionDescription', {
+                      peer_id: peer_id,
+                      session_description: local_description,
+                    })
+                    console.log('Offer setLocalDescription succeeded')
+                  },
+                  function () {
+                    Alert('Offer setLocalDescription failed!')
+                  },
+                )
+              },
+              function (error) {
+                console.log('Error sending offer: ', error)
+              },
+            )
+          }
+        })
+
+        signaling_socket.on('askAppearence', (peer_id) => {
+          if (isMediaAvailable) {
+            signaling_socket.emit('answerAppearence', peer_id)
+          }
+        })
+
+        /**
+         * Peers exchange session descriptions which contains information
+         * about their audio / video settings and that sort of stuff. First
+         * the 'offerer' sends a description to the 'answerer' (with type
+         * "offer"), then the answerer sends one back (with type "answer").
+         */
+        signaling_socket.on('sessionDescription', function (config) {
+          console.log('Remote description received: ', config)
+          var peer_id = config.peer_id
+          var peer = peers[peer_id]
+          var remote_description = config.session_description
+          console.log(config.session_description)
+
+          var desc = new RTCSessionDescription(remote_description)
+          var stuff = peer.setRemoteDescription(
+            desc,
+            function () {
+              console.log('setRemoteDescription succeeded')
+              if (remote_description.type == 'offer') {
+                console.log('Creating answer')
+                peer.createAnswer(
+                  function (local_description) {
+                    console.log('Answer description is: ', local_description)
+                    peer.setLocalDescription(
+                      local_description,
+                      function () {
+                        signaling_socket.emit('relaySessionDescription', {
+                          peer_id: peer_id,
+                          session_description: local_description,
+                        })
+                        console.log('Answer setLocalDescription succeeded')
+                      },
+                      function () {
+                        Alert('Answer setLocalDescription failed!')
+                      },
+                    )
+                  },
+                  function (error) {
+                    console.log('Error creating answer: ', error)
+                    console.log(peer)
+                  },
+                )
+              }
+            },
+            function (error) {
+              console.log('setRemoteDescription error: ', error)
+            },
+          )
+          console.log('Description Object: ', desc)
+        })
+
+        /**
+         * The offerer will send a number of ICE Candidate blobs to the answerer so they
+         * can begin trying to find the best path to one another on the net.
+         */
+        signaling_socket.on('iceCandidate', function (config) {
+          var peer = peers[config.peer_id]
+          var ice_candidate = config.ice_candidate
+          peer.addIceCandidate(new RTCIceCandidate(ice_candidate))
+        })
+
+        /**
+         * When a user leaves a channel (or is disconnected from the
+         * signaling server) everyone will recieve a 'removePeer' message
+         * telling them to trash the media channels they have open for those
+         * that peer. If it was this client that left a channel, they'll also
+         * receive the removePeers. If this client was disconnected, they
+         * wont receive removePeers, but rather the
+         * signaling_socket.on('disconnect') code will kick in and tear down
+         * all the peer sessions.
+         */
+        signaling_socket.on('removePeer', function (config) {
+          console.log('Signaling server said to remove peer:', config)
+          var peer_id = config.peer_id
+          if (peer_id in peer_media_elements) {
+            peer_media_elements[peer_id].remove()
+          }
+          if (peer_id in peers) {
+            peers[peer_id].close()
+          }
+
+          delete peers[peer_id]
+          delete peer_media_elements[config.peer_id]
+        })
+
+        window.onunload = () => {
+          signaling_socket.emit('hide')
+          local_media_stream.getAudioTracks().forEach((track) => track.stop())
+          signaling_socket.close()
+        }
+
+        window.onbeforeunload = () => {
+          signaling_socket.emit('hide')
+          local_media_stream.getAudioTracks().forEach((track) => track.stop())
+          signaling_socket.close()
+        }
+
+        signaling_socket.on('takePermissions', (permissions) => {
+          permises = permissions
+          window.parent.postMessage(
+            {
+              sender: 'confaudio',
+              action: 'takePermissions',
+              permissions: permissions,
+            },
+            pathConfig.mainFrontend,
+          )
+          if (permissions[userId] === true) {
+            window.parent.postMessage(
+              {
+                sender: 'confaudio',
+                action: 'switchAudioControlVisibility',
+                visibility: true,
+              },
+              pathConfig.mainFrontend,
+            )
+          } else {
+            endAudio()
+            window.parent.postMessage(
+              {
+                sender: 'confaudio',
+                action: 'switchAudioControlVisibility',
+                visibility: false,
+              },
+              pathConfig.mainFrontend,
+            )
+          }
+        })
+
+        window.addEventListener('message', (e) => {
+          console.log(e.data)
+          if (e.data.sender === 'main') {
+            if (e.data.action === 'switchPermission') {
+              signaling_socket.emit('switchPermission', {
+                userId: e.data.targetId,
+                permission: e.data.status,
+              })
+            } else if (e.data.action === 'getPermissions') {
+              signaling_socket.emit('getPermissions')
+            }
+          }
+        })
+      }
+
+      /***********************/
+      /** Local media stuff **/
+      /***********************/
+      function setup_local_media(constraints, callback, errorback) {
+        /* Ask user for permission to use the computers microphone and/or camera,
+         * attach it to an <audio> or <video> tag if they give us access. */
+        console.log('Requesting access to local audio / video inputs')
+
+        if (
+          constraints.video === undefined &&
+          constraints.audio === undefined
+        ) {
+          let stream = produceEmptyStream()
+          local_media_stream = stream
+          if (localMediaEl === undefined) {
+            var local_media = $('<audio>')
+            local_media.attr('autoplay', 'autoplay')
+            local_media.attr(
+              'muted',
+              'true',
+            ) /* always mute ourselves by default */
+            local_media.attr('controls', '')
+            local_media[0].style.display = 'none'
+            $('body').append(local_media)
+            local_media[0].muted = true
+            localMediaEl = local_media[0]
+          }
+          attachMediaStream(localMediaEl, stream)
+          if (callback) callback(stream)
+          return
+        }
+
+        navigator.getUserMedia =
+          navigator.getUserMedia ||
+          navigator.webkitGetUserMedia ||
+          navigator.mozGetUserMedia ||
+          navigator.msGetUserMedia
+
+        navigator.getUserMedia(
+          constraints,
+          function (stream) {
+            /* user accepted access to a/v */
+            console.log('Access granted to audio/video')
+            local_media_stream = stream
+            if (localMediaEl === undefined) {
+              var local_media = $('<audio>')
+              local_media.attr('autoplay', 'autoplay')
+              local_media.attr(
+                'muted',
+                'true',
+              ) /* always mute ourselves by default */
+              local_media.attr('controls', '')
+              local_media[0].style.display = 'none'
+              $('body').append(local_media)
+              local_media[0].muted = true
+              localMediaEl = local_media[0]
+            }
+            attachMediaStream(localMediaEl, stream)
+            if (callback) callback(stream)
+          },
+          function () {
+            /* user denied access to a/v */
+            console.log('Access denied for audio/video')
+            alert(
+              'You chose not to provide access to the camera/microphone, demo will not work.',
+            )
+            if (errorback) errorback()
+          },
+        )
+      }
+
+      let startAudio = () => {
+        if (local_media_stream !== null && local_media_stream !== undefined) {
+          local_media_stream.getAudioTracks().forEach((track) => {
+            track.stop()
+          })
+        }
+        setup_local_media({ audio: true }, function (stream) {
+          let audioTrack = stream.getAudioTracks()[0]
+          for (let id in peers) {
+            if (peers[id] === undefined) continue
+            let pc = peers[id]
+            var sender = pc.getSenders().find(function (s) {
+              return s.track.kind == audioTrack.kind
+            })
+            console.log('found sender:', sender)
+            sender.replaceTrack(audioTrack)
+          }
+          isMediaAvailable = true
+          signaling_socket.emit('show')
+        })
+      }
+
+      let endAudio = () => {
+        local_media_stream.getAudioTracks().forEach((track) => {
+          track.stop()
+        })
+        isMediaAvailable = false
+        signaling_socket.emit('hide')
+      }
+    </script>
+  </head>
+  <body style="width: auto; height: auto;"></body>
+  <script>
+    window.addEventListener('message', (e) => {
+      console.log(e.data)
+      if (e.data.sender === 'main') {
+        if (e.data.action === 'switchFlag') {
+          if (e.data.stream === true) {
+            startAudio()
+          } else if (e.data.stream === false) {
+            endAudio()
+          }
+        } else if (e.data.userId !== undefined && e.data.roomId !== undefined) {
+          userId = e.data.userId
+          roomId = e.data.roomId
+          init(e.data.audioServerWebsocket)
+        } else if (e.data.targetId !== undefined) {
+          if (e.data.status === true) {
+            signaling_socket.emit('enableUser', e.data.targetId)
+          } else if (e.data.status === false) {
+            signaling_socket.emit('disableUser', e.data.targetId)
+          }
+        }
+      }
+    })
+  </script>
 </html>

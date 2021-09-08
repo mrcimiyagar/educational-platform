@@ -1,15 +1,16 @@
 import React from "react";
+import { pathConfig } from "..";
 import { changeSendButtonState } from '../modules/chatbox/chatbox';
 import store, { changeConferenceMode } from "../redux/main";
 import { setMe, token } from "./settings";
 
-export const roothPath = 'https://kaspersoft.cloud';
-export const whiteboardPath = 'http://localhost:1000';
-export const taskManagerPath = 'https://taskmanager.kaspersoft.cloud';
-export const notesPath = 'https://notes.kaspersoft.cloud';
-export const websocketPath = 'ws://localhost:2001';
+export let websocketPath = undefined
+export let serverRoot = undefined
 
-export const serverRoot = "http://192.168.43.63:2001";
+export let setup = () => {
+  websocketPath = pathConfig.mainWebsocket
+  serverRoot = pathConfig.mainBackend
+}
 
 export function leaveRoom(callback) {
   store.dispatch(changeConferenceMode(false));
@@ -88,7 +89,7 @@ let setupSocketReconnection = (ws, t) => {
 
 export class Kasperio {
   constructor(onConnect, t) {
-    this.ws = new WebSocket(websocketPath);
+    this.ws = new WebSocket(pathConfig.mainWebsocket);
     this.ws.onopen = () => {
       console.log('WebSocket Client Connected');
       if (changeSendButtonState) {

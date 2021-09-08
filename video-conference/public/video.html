@@ -50,8 +50,8 @@
                     }
                 }
                 else if (e.data.userId !== undefined && e.data.roomId !== undefined) {
-                    window.initVideo(e.data.userId, e.data.roomId)
-                    window.initScreen(e.data.userId, e.data.roomId)
+                    window.initVideo(e.data.userId, e.data.roomId, e.data.videoServerWebsocket)
+                    window.initScreen(e.data.userId, e.data.roomId, e.data.screenServerWebsocket)
                 }
                 else if (e.data.targetId !== undefined) {
                     if (e.data.status === true) {

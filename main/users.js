@@ -4,7 +4,6 @@ const {
     v1: uuidv1,
     v4: uuidv4,
   } = require('uuid');
-const { token } = require('morgan');
 
 let users = {};
 let guestAccs = {};
@@ -160,7 +159,7 @@ module.exports = {
     generateInvite: roomId => {
         let invite = {roomId: roomId, token: uuidv4()}
         invites[invite.token] = invite
-        return 'http://localhost:2001/room/use_invitation?token=' + invite.token
+        return invite.token
     },
     resolveInvite: token => {
         let invite = invites[token]

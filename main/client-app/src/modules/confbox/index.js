@@ -19,6 +19,7 @@ import { useForceUpdate } from "../../util/Utils";
 import './style.css';
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled';
+import { pathConfig } from "../..";
 
 export let updateConfBox = undefined
 export let isConfConnected = false
@@ -103,13 +104,13 @@ export let ConfBox = (props) => {
         
         {connected ?
           <div style={{width: '100%', height: '100%'}}>
-              <iframe allowTransparency={true} onLoad={() => window.frames['conf-video-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId}, 'http://localhost:1010')} 
-                id ={'conf-video-frame'} name="conf-video-frame" src={'http://localhost:1010/video.html'} allow={'microphone; camera'}
+              <iframe allowTransparency={true} onLoad={() => window.frames['conf-video-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId, videoServerWebsocket: pathConfig.videoConfVideo, screenServerWebsocket: pathConfig.videoConfScreen, audioServerWebsocket: pathConfig.videoConfAudio}, pathConfig.videoConfVideo)} 
+                id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.videoConfVideo + '/video.html'} allow={'microphone; camera'}
                 style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
                 marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
         
-              <iframe allowTransparency={true} onLoad={() => window.frames['conf-audio-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId}, 'http://localhost:1011')} 
-                id ={'conf-audio-frame'} name="conf-audio-frame" src={'http://localhost:1011/audio.html'} allow={'microphone; camera'}
+              <iframe allowTransparency={true} onLoad={() => window.frames['conf-audio-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId, videoServerWebsocket: pathConfig.videoConfVideo, screenServerWebsocket: pathConfig.videoConfScreen, audioServerWebsocket: pathConfig.videoConfAudio}, pathConfig.videoConfAudio)} 
+                id ={'conf-audio-frame'} name="conf-audio-frame" src={pathConfig.videoConfAudio + '/audio.html'} allow={'microphone; camera'}
                 style={{width: 400, height: 128, position: 'absolute', bottom: 32, display: 'none'}} frameBorder="0"></iframe>
 
               <ThemeProvider theme={theme}>
@@ -118,7 +119,7 @@ export let ConfBox = (props) => {
                 }}><Chat/></Fab>
               {audio ? 
                 <Fab id="audioButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: (isDesktop() && isInRoom()) ? (48 + 56 + 16) : (16 + 72 + 56 + 16)}} onClick={() => {
-                  window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.audio}, 'http://localhost:1011')
+                  window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.audio}, pathConfig.videoConfAudio)
                   store.dispatch(switchConf('audio', !store.getState().global.conf.audio))
                   forceUpdate()
                 }}>{store.getState().global.conf.audio ? <Mic/> : <MicOff/>}</Fab> :
@@ -134,14 +135,14 @@ export let ConfBox = (props) => {
               }}><CallEndIcon/></Fab>
               {video ?
                 <Fab id="camButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
-                  window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchVideoFlag', stream: !store.getState().global.conf.video}, 'http://localhost:1010')
+                  window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchVideoFlag', stream: !store.getState().global.conf.video}, pathConfig.videoConfVideo)
                   store.dispatch(switchConf('video', !store.getState().global.conf.video))
                   forceUpdate()
                 }}>{store.getState().global.conf.video ? <VideocamIcon/> : <VideocamOff/>}</Fab> :
                 null
               }
               {video ?<Fab id="screenButton" color={'primary'} style={{position: 'absolute', left: video ? ((isDesktop() && isInRoom()) ? (32 + 56 + 16 + 56 + 16) : (16 + 56 + 16 + 56 + 16)) : ((isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16)), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
-                window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchScreenFlag', stream: !store.getState().global.conf.screen}, 'http://localhost:1010')
+                window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchScreenFlag', stream: !store.getState().global.conf.screen}, pathConfig.videoConfVideo)
                 store.dispatch(switchConf('screen', !store.getState().global.conf.screen))
                 forceUpdate()
               }}>{store.getState().global.conf.screen ? <DesktopWindowsIcon/> : <DesktopAccessDisabledIcon/>}</Fab> :

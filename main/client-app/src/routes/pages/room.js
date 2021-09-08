@@ -27,7 +27,7 @@ import ViewCarouselIcon from '@material-ui/icons/ViewCarousel'
 import React, { useEffect } from 'react'
 import SwipeableViews from 'react-swipeable-views'
 import { useFilePicker } from 'use-file-picker'
-import { setWallpaper } from '../..'
+import { pathConfig, setWallpaper } from '../..'
 import {
   gotoPage,
   isDesktop,
@@ -127,7 +127,8 @@ let pickingFile = false
 export default function RoomPage(props) {
   if (props.token !== undefined) {
     localStorage.setItem('token', props.token)
-    window.location.href = 'http://localhost:2002/app/room?room_id=' + props.room_id
+    gotoPage()
+    window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + props.room_id
   }
   const useStyles = makeStyles({
     root: {

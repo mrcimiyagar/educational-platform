@@ -1,6 +1,7 @@
 import { AppBar, IconButton, Toolbar, Typography } from "@material-ui/core";
 import { ArrowForward } from "@material-ui/icons";
 import React from "react";
+import { pathConfig } from "../..";
 import { isDesktop } from "../../App";
 
 export let AudioBox = (props) => {
@@ -26,8 +27,8 @@ export let AudioBox = (props) => {
               </Toolbar>
             </AppBar>
             
-            <iframe allowTransparency={true} name="audio-player-frame" id={'audio-player-frame'} src={'http://localhost:1013'}
-              onLoad={() => {window.frames['audio-player-frame'].postMessage({sender: 'main', action: 'config', src: props.src, isDesktop: isDesktop()}, 'http://localhost:1013')}}
+            <iframe allowTransparency={true} name="audio-player-frame" id={'audio-player-frame'} src={pathConfig.audioPlayer}
+              onLoad={() => {window.frames['audio-player-frame'].postMessage({sender: 'main', action: 'config', src: props.src, isDesktop: isDesktop()}, pathConfig.audioPlayer)}}
               style={{width: '100%', height: 'calc(100% - 64px)', position: 'absolute', left: 0, top: 64, bottom: 0, right: 0}} frameBorder="0"></iframe>
           </div>
       </div>);

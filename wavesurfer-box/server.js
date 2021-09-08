@@ -9,4 +9,4 @@ app.get('*', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');
 });
         
-server.listen(1012);
+server.listen(8084);

@@ -1,11 +1,11 @@
 ;(function () {
-  var SIGNALING_SERVER = 'http://localhost:1012'
   var USE_AUDIO = true
   var USE_VIDEO = true
   var MUTE_AUDIO_BY_DEFAULT = false
   var userId = undefined
   var roomId = undefined
   var permises = {}
+  let pathConfig = undefined
 
   /** You should probably use a different stun server doing commercial stuff **/
   /** Also see: https://gist.github.com/zziuni/3741933 **/
@@ -66,11 +66,27 @@
   var localMediaEl = undefined
   let isMediaAvailable = false
 
-  function init(user_id, room_id) {
+  function init(user_id, room_id, screenServerWebsocket) {
+    let requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      redirect: 'follow',
+    }
+    fetch('http://localhost:8080', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        pathConfig = result
+        initInner(user_id, room_id, screenServerWebsocket)
+      })
+  }
+
+  function initInner(user_id, room_id, screenServerWebsocket) {
       userId = user_id
       roomId = room_id
     console.log('Connecting to signaling server')
-    signaling_socket = io(SIGNALING_SERVER, { query: `userId=${userId}` })
+    signaling_socket = io(screenServerWebsocket, { query: `userId=${userId}` })
 
     signaling_socket.on('connect', function () {
       console.log('Connected to signaling server')
@@ -323,7 +339,7 @@
           action: 'takePermissions',
           permissions: permissions,
         },
-        'http://localhost:2002',
+        pathConfig.mainFrontend,
       )
       if (permissions[userId] === true) {
         window.parent.postMessage(
@@ -332,7 +348,7 @@
             action: 'switchVideoControlVisibility',
             visibility: true,
           },
-          'http://localhost:2002',
+          pathConfig.mainFrontend,
         )
       } else {
         endVideo()
@@ -342,7 +358,7 @@
             action: 'switchVideoControlVisibility',
             visibility: false,
           },
-          'http://localhost:2002',
+          pathConfig.mainFrontend,
         )
       }
     })

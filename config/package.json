@@ -5,8 +5,8 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
+    "cors": "^2.8.5",
     "delay": "^4.2.0",
-    "material-ui-color-picker": "^3.5.1",
     "react": "^16.8.6",
     "react-color": "^2.19.3",
     "react-dom": "^16.8.6",
@@ -15,10 +15,7 @@
     "react-spring": "^8.0.20"
   },
   "scripts": {
-    "start": "PORT=8081 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "node server.js"
   },
   "eslintConfig": {
     "extends": "react-app"
