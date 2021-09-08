@@ -75,8 +75,8 @@ export let isInMessenger = () => {
   }
   return false
 }
-let series = ['/app/messenger']
-let paramsSeries = [{}]
+let series = []
+let paramsSeries = []
 let forceUpdate = undefined
 
 export let gotoPage = (p, params) => {
