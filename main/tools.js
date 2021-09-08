@@ -55,8 +55,8 @@ module.exports = {
         thirdText: '#666',
         divider: '#888'
     }),
-    'parentPath': '/home/keyhan/Desktop/AsemanWeb',
-    'rootPath': '/home/keyhan/Desktop/AsemanWeb/main',
+    'parentPath': '/root/AsemanWeb',
+    'rootPath': '/root/AsemanWeb/main',
     'makeRandomCode' : function(length) {
         let result = '';
         let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
