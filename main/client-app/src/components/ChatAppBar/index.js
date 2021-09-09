@@ -82,13 +82,11 @@ export default function ChatAppBar(props) {
                     </Typography>
                     <div className={classes.search}>
                         <IconButton onClick={() => {
-                            setCurrentRoomNavBackup(2)
                             gotoPage('/app/room', {room_id: props.room.id});
                         }}>
                             <VideocamIcon style={{fill: '#fff'}}/>
                         </IconButton>
                         <IconButton onClick={() => {
-                            setCurrentRoomNavBackup(2)
                             gotoPage('/app/room', {room_id: props.room.id});
                         }}>
                             <CallIcon style={{fill: '#fff'}}/>
