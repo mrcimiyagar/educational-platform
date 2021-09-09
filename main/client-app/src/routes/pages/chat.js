@@ -249,9 +249,6 @@ export default function Chat(props) {
       TransitionComponent={Transition}
       style={{ zIndex: 2501 }}
     >
-      <div style={{display: 'none'}}>
-        <RoomPage/>
-      </div>
       <div
         style={{
           width: '100%',
