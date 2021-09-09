@@ -20,6 +20,7 @@ import { WaveSurferBox } from '../../components/WaveSurfer'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot, useForceUpdate } from '../../util/Utils'
 import ChatWallpaper from '../../images/chat-wallpaper.jpg'
+import RoomPage from './room'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -248,6 +249,9 @@ export default function Chat(props) {
       TransitionComponent={Transition}
       style={{ zIndex: 2501 }}
     >
+      <div style={{display: 'none'}}>
+        <RoomPage/>
+      </div>
       <div
         style={{
           width: '100%',
