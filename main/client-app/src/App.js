@@ -269,8 +269,11 @@ export default function MainApp(props) {
   }
 
   useEffect(() => {
-    let audio = new Audio(StartupSound)
-    audio.play()
+    
+    try {
+      let audio = new Audio(StartupSound)
+      audio.play()
+    } catch(ex) {console.log(ex)}
 
     let requestOptions = {
       method: 'POST',
