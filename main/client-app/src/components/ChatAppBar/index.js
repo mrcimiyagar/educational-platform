@@ -59,6 +59,8 @@ const useStyles = makeStyles((theme) => ({
 export default function ChatAppBar(props) {
     const classes = useStyles();
 
+    alert('hello')
+
     alert(JSON.stringify(props.room))
 
     return (
