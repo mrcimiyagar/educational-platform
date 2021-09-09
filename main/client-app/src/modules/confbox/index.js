@@ -12,7 +12,6 @@ import VideocamIcon from '@material-ui/icons/Videocam';
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
 import React, { useEffect } from "react";
 import { gotoPage, isDesktop, isInRoom } from '../../App';
-import { updateRoomBottomBar } from "../../components/RoomBottombar";
 import store, { switchConf } from "../../redux/main";
 import { colors, me } from '../../util/settings';
 import { useForceUpdate } from "../../util/Utils";

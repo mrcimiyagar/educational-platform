@@ -34,7 +34,7 @@ const useStylesAction = makeStyles({
   selected: {},
 });
 
-export let updateRoomBottomBar = undefined
+export let updateRoomBottomBar = () => {}
 
 export default function RoomBottombar(props) {
   const classes = useStyles();
