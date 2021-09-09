@@ -837,7 +837,7 @@ router.get('/generate_invite_link', jsonParser, async function (req, res) {
       },
       redirect: 'follow',
     }
-    fetch('http://185.81.96.105:8080', requestOptions)
+    fetch('https://config.kaspersoft.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
           res.send({ status: 'success', link: result.mainBackend + '/room/use_invitation?token=' + token})
@@ -876,7 +876,7 @@ router.get('/use_invitation', jsonParser, async function (req, res) {
       },
       redirect: 'follow',
     }
-    fetch('http://185.81.96.105:8080', requestOptions)
+    fetch('https://config.kaspersoft.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
         res.redirect(

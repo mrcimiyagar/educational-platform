@@ -85,7 +85,7 @@ let AppContainer = (props) => {
       },
       redirect: 'follow',
     }
-    fetch('http://185.81.96.105:8080', requestOptions)
+    fetch('https://config.kaspersoft.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
 		pathConfig = result
