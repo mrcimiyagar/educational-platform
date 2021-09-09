@@ -15,6 +15,27 @@ let serv = https.createServer({
   else if (req.headers.host === 'backend.kaspersoft.cloud') {
     proxy.web(req, res, { target: 'http://localhost:2001' }, e => {})
   }
+  else if (req.headers.host === 'confvideo.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:1010' }, e => {})
+  }
+  else if (req.headers.host === 'confaudio.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:1011' }, e => {})
+  }
+  else if (req.headers.host === 'confscreen.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:1012' }, e => {})
+  }
+  else if (req.headers.host === 'audioplayer.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:8085' }, e => {})
+  }
+  else if (req.headers.host === 'wavesurferbox.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:8084' }, e => {})
+  }
+  else if (req.headers.host === 'whiteboard.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:8081' }, e => {})
+  }
+  else if (req.headers.host === 'sharednotes.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:8082' }, e => {})
+  }
 })
 
 serv.on('upgrade', function (req, socket, head) {
