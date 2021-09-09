@@ -17,7 +17,7 @@ app.get('*', (req, res) => {
         videoConfVideo: 'http://185.81.96.105:1010',
         videoConfAudio: 'http://185.81.96.105:1011',
         videoConfScreen: 'http://185.81.96.105:1012',
-        mainWebsocket: 'ws://185.81.96.105:2001'
+        mainWebsocket: 'wss://kaspersoft.cloud:2001'
     })
 });
         

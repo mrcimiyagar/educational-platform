@@ -55,7 +55,7 @@ let serv = https.createServer({
 
 serv.on('upgrade', function (req, socket, head) {
   if (req.headers.host === 'kaspersoft.cloud') {
-    proxy.ws(req, socket, { target: 'ws://localhost:1002' }, e => {})
+    proxy.ws(req, socket, { target: 'ws://localhost:2001' }, e => {})
   }
   else if (req.headers.host === 'code.kaspersoft.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:8080' }, e => {})
