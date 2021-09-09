@@ -269,11 +269,6 @@ export default function MainApp(props) {
   }
 
   useEffect(() => {
-    
-    try {
-      let audio = new Audio(StartupSound)
-      audio.play()
-    } catch(ex) {console.log(ex)}
 
     let requestOptions = {
       method: 'POST',
