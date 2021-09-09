@@ -104,9 +104,6 @@ const data = {
 }
 
 export let currentRoomNavBackup = 0
-export let setCurrentRoomNavBackup = (p) => {
-  currentRoomNavBackup = p
-}
 
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
@@ -158,9 +155,7 @@ export default function RoomPage(props) {
   ;[membership, setMembership] = React.useState({})
   const [loaded, setLoaded] = React.useState(false)
   const [menuOpen, setMenuOpen] = React.useState(false)
-  const [currentRoomNav, setCurrentRoomNav] = React.useState(
-    currentRoomNavBackup,
-  )
+  const [currentRoomNav, setCurrentRoomNav] = React.useState(props.tab_index)
   const [fileMode, setFileMode] = React.useState(0)
   const [menuMode, setMenuMode] = React.useState(0)
   const [opacity, setOpacity] = React.useState(1)
