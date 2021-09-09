@@ -66,11 +66,6 @@ export let ConfBox = (props) => {
         secondary: green
       },
     });
-    useEffect(() => {
-      try {
-        updateRoomBottomBar()
-      } catch(ex) {}
-    }, [connected])
     return (
       <div key={uniqueKey} style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr', display: props.style.display}}>
         
