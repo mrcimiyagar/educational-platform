@@ -686,9 +686,6 @@ export default function RoomPage(props) {
           <Jumper open={jumperOpen} setOpen={setJumperOpen} />
         </div>
         <RoomBottombar
-          setCurrentRoomNavBackup={(v) => {
-            currentRoomNavBackup = v
-          }}
           setCurrentRoomNav={(i) => {
             setOpacity(0)
             setTimeout(() => {
@@ -1048,9 +1045,6 @@ export default function RoomPage(props) {
           <Jumper open={jumperOpen} setOpen={setJumperOpen} />
         </div>
         <RoomBottombar
-          setCurrentRoomNavBackup={(v) => {
-            currentRoomNavBackup = v
-          }}
           setCurrentRoomNav={(i) => {
             setOpacity(0)
             setTimeout(() => {
