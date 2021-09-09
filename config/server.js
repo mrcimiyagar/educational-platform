@@ -8,8 +8,8 @@ app.use(cors())
 
 app.get('*', (req, res) => {
     res.send({
-        mainBackend: 'http://185.81.96.105:2001',
-        mainFrontend: 'http://185.81.96.105:2002',
+        mainBackend: 'https://backend.kaspersoft.cloud',
+        mainFrontend: 'https://kaspersoft.cloud',
         audioPlayer: 'http://185.81.96.105:8085',
         waveSurferBox: 'http://185.81.96.105:8084',
         whiteBoard: 'http://185.81.96.105:8081',
