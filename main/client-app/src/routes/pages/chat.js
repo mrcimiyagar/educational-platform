@@ -95,27 +95,6 @@ export default function Chat(props) {
         }
       })
       .catch((error) => console.log('error', error))
-    let requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: props.room_id,
-      }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/room/get_room', requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result))
-        if (result.room !== undefined) {
-          setRoom(result.room)
-          forceUpdate()
-        }
-      })
-      .catch((error) => console.log('error', error))
     let requestOptions2 = {
       method: 'POST',
       headers: {
@@ -127,7 +106,28 @@ export default function Chat(props) {
       }),
       redirect: 'follow',
     }
-    fetch(serverRoot + '/chat/get_messages', requestOptions2)
+    fetch(serverRoot + '/room/get_room', requestOptions2)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        if (result.room !== undefined) {
+          setRoom(result.room)
+          forceUpdate()
+        }
+      })
+      .catch((error) => console.log('error', error))
+    let requestOptions3 = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.room_id,
+      }),
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/chat/get_messages', requestOptions3)
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
