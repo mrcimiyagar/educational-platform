@@ -13,7 +13,7 @@ import ViewCarousel from "@material-ui/icons/ViewCarousel";
 import React, { useEffect } from "react";
 import { gotoPage, isDesktop, isInRoom } from '../../App';
 import store, { switchConf } from "../../redux/main";
-import { colors, me } from '../../util/settings';
+import { colors, me, theme } from '../../util/settings';
 import { useForceUpdate } from "../../util/Utils";
 import './style.css';
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
@@ -48,14 +48,6 @@ export let ConfBox = (props) => {
         }
       })
     }, [])
-    const theme = createTheme({
-      palette: {
-        primary: {
-          main: '#2196f3',
-        },
-        secondary: pink
-      },
-    });
     let [uniqueKey, setUniqueKey] = React.useState(Math.random())
     const theme2 = createTheme({
       palette: {
