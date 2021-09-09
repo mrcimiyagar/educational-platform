@@ -145,4 +145,4 @@ export function ConfBox(props) {
           }
       </div>
     );
-};
+}
