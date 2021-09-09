@@ -67,7 +67,7 @@ export let ConfBox = (props) => {
       },
     });
     useEffect(() => {
-      updateRoomBottomBar()
+      if (updateRoomBottomBar !== undefined) updateRoomBottomBar()
     }, [connected])
     return (
       <div key={uniqueKey} style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr', display: props.style.display}}>
