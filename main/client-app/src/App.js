@@ -9,7 +9,6 @@ import CreateRoom from './routes/pages/createRoom'
 import DeckPage from './routes/pages/deck'
 import MessengerPage from './routes/pages/messenger'
 import NotePage from './routes/pages/notes'
-import P2pCall from './routes/pages/p2pCall'
 import PhotoViewer from './routes/pages/photoViewer'
 import PollPage from './routes/pages/polls'
 import Profile from './routes/pages/profile'
@@ -192,7 +191,6 @@ let dialogs = {
   '/app/createroom': CreateRoom,
   '/app/roomstree': RoomsTree,
   '/app/audioplayer': AudioPlayer,
-  '/app/p2pCall': P2pCall,
   '/app/settings': SettingsPage,
   '/app/videoplayer': VideoPlayer,
 }

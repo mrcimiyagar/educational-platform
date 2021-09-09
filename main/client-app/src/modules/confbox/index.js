@@ -78,14 +78,9 @@ export function ConfBox(props) {
             }}><PollIcon style={{fill: '#fff'}}/></IconButton>
             <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>سالن کنفرانس</Typography>
             <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => {
-              if (window.location.pathname === '/app/p2pCall') {
-                props.handleClose()
-              }
-              else {
-                props.setMenuOpen(true)
-              }
+              props.setMenuOpen(true)
             }}>
-              {window.location.pathname === '/app/p2pCall' ? <ArrowForward style={{fill: '#fff'}}/> : <Menu style={{fill: '#fff'}}/>}
+              <Menu style={{fill: '#fff'}}/>
             </IconButton>
           </Toolbar>
         </AppBar>
