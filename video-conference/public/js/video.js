@@ -25,7 +25,11 @@
     element.srcObject = stream
   }
   function join_chat_channel(channel, userId, userdata) {
-    signaling_socket.emit('join', { channel: channel, userId: userId, userdata: userdata })
+    signaling_socket.emit('join', {
+      channel: channel,
+      userId: userId,
+      userdata: userdata,
+    })
   }
   function part_chat_channel(channel) {
     signaling_socket.emit('part', channel)
@@ -83,8 +87,8 @@
   }
 
   function initInner(user_id, room_id, videoServerWebsocket) {
-      userId = user_id
-      roomId = room_id
+    userId = user_id
+    roomId = room_id
     console.log('Connecting to signaling server')
     signaling_socket = io(videoServerWebsocket, { query: `userId=${userId}` })
 
@@ -113,14 +117,12 @@
 
     signaling_socket.on('show_peer', (peer_id) => {
       let el = document.getElementById('videoconf' + peer_id)
-      if (el !== undefined)
-        $('#videoconf' + peer_id)[0].style.display = 'block'
+      if (el !== undefined) $('#videoconf' + peer_id)[0].style.display = 'block'
     })
 
     signaling_socket.on('hide_peer', (peer_id) => {
       let el = document.getElementById('videoconf' + peer_id)
-      if (el !== undefined)
-        $('#videoconf' + peer_id)[0].style.display = 'none'
+      if (el !== undefined) $('#videoconf' + peer_id)[0].style.display = 'none'
     })
 
     /**
@@ -140,10 +142,10 @@
       }
       var peer_connection = new RTCPeerConnection(
         { iceServers: ICE_SERVERS },
-        { optional: [{ DtlsSrtpKeyAgreement: true }] }
+        { optional: [{ DtlsSrtpKeyAgreement: true }] },
         /* this will no longer be needed by chrome
          * eventually (supposedly), but is necessary
-         * for now to get firefox to talk to chrome */,
+         * for now to get firefox to talk to chrome */
       )
       peer_connection.userId = config.userId
       peers[peer_id] = peer_connection
@@ -176,12 +178,16 @@
           remote_div[0].style.height = 'auto'
           remote_div[0].style.margin = '8px'
           $('body').append(remote_div)
+
+          var button = document.createElement('BUTTON')
+          button.innerHTML = 'Button'
+          document.getElementById('videoconf' + userId).append(button)
+
           window.peer_media_elements[userId] = remote_div
         }
         remote_media[0].style.width = '100%'
         remote_media[0].style.height = 'auto'
         remote_media[0].style.margin = '8px'
-        remote_media[0].onclick = "() => {alert('hello');}"
         remote_media[0].style.display = 'none'
         $('#videoconf' + userId).append(remote_media)
         attachMediaStream(remote_media[0], event.stream)
