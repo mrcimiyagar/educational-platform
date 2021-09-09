@@ -24,42 +24,32 @@ export let updateConfBox = undefined
 export let isConfConnected = false
 
 export let ConfBox = (props) => {
-    let forceUpdate = useForceUpdate()
-    updateConfBox = forceUpdate
-    let [video, setVideo] = React.useState(false)
-    let [audio, setAudio] = React.useState(false)
-    let [connected, setConnected] = React.useState(false)
-    isConfConnected = connected
+    let forceUpdate = useForceUpdate();
+    updateConfBox = forceUpdate;
+    let [video, setVideo] = React.useState(false);
+    let [audio, setAudio] = React.useState(false);
+    let [connected, setConnected] = React.useState(false);
+    isConfConnected = connected;
     useEffect(() => {
       window.addEventListener('message', e => {
         if (e.data.action === 'switchVideoControlVisibility') {
           if (!e.data.visibility)
-            store.dispatch(switchConf('video', false))
-          store.dispatch(switchConf('isVideoEnable', e.data.visibility))
-          setVideo(e.data.visibility)
-          forceUpdate()
+            store.dispatch(switchConf('video', false));
+          store.dispatch(switchConf('isVideoEnable', e.data.visibility));
+          setVideo(e.data.visibility);
+          forceUpdate();
         }
         else if (e.data.action === 'switchAudioControlVisibility') {
           if (!e.data.visibility)
-            store.dispatch(switchConf('audio', false))
-          store.dispatch(switchConf('isAudioEnable', e.data.visibility))
-          setAudio(e.data.visibility)
-          forceUpdate()
+            store.dispatch(switchConf('audio', false));
+          store.dispatch(switchConf('isAudioEnable', e.data.visibility));
+          setAudio(e.data.visibility);
+          forceUpdate();
         }
       })
-    }, [])
-    let [uniqueKey, setUniqueKey] = React.useState(Math.random())
-    const theme2 = createTheme({
-      palette: {
-        primary: {
-          main: '#2196f3',
-        },
-        secondary: green
-      },
-    });
+    }, []);
     return (
       <div>
-        
         hello
       </div>
     );
