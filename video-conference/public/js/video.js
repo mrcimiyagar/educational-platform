@@ -181,12 +181,12 @@
         remote_media[0].style.width = '100%'
         remote_media[0].style.height = 'auto'
         remote_media[0].style.margin = '8px'
+        remote_media[0].onclick = "() => {alert('hello');}"
         remote_media[0].style.display = 'none'
         $('#videoconf' + userId).append(remote_media)
         attachMediaStream(remote_media[0], event.stream)
         signaling_socket.on('answerAppearence', (peer_id) => {
           remote_media[0].style.display = 'block'
-          remote_media[0].onclick = "() => {alert('hello');}"
         })
         signaling_socket.emit('askAppearence', peer_id)
       }
