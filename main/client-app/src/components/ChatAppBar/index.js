@@ -59,6 +59,8 @@ const useStyles = makeStyles((theme) => ({
 export default function ChatAppBar(props) {
     const classes = useStyles();
 
+    alert(JSON.stringify(props.room))
+
     return (
         <div className={classes.root}>
             <AppBar position="fixed" style={{width: isDesktop() ? (isInRoom() ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px - 16px)') : isTablet() ? (isInRoom() ? '100%' : 'calc(100% - 450px)') : '100%', borderRadius: isTablet() || isMobile() ? 0 : ((window.location.pathname === '/app/chat' || histPage === '/app/room') ? 0 : '24px 0 0 0'), position: isDesktop() || isTablet() ? 'fixed' : undefined, top: isDesktop() ? (histPage === '/app/room' ? 0 : 32) : 0, left: histPage === '/app/room' ? (isDesktop() ? 'calc(100% - 450px)' : 96) : (isDesktop() ? (96 + 16) : 0), paddingTop: 8, height: 64, backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}>
@@ -76,7 +78,7 @@ export default function ChatAppBar(props) {
                             props.user !== undefined ?
                                 (serverRoot + `/file/download_user_avatar?token=${token}&userId=${props.user.id}`) :
                                 ''
-                            }  onClick={() => {gotoPage('/app/userprofile', {user_id: props.user});}}/>
+                            }  onClick={() => {gotoPage('/app/userprofile', {user_id: props.user.id});}}/>
                     <Typography variant="h6" style={{fontFamily: 'mainFont', marginRight: 8}}>
                         {props.user !== undefined ? (props.user.firstName + ' ' + props.user.lastName) : props.room !== undefined ? props.room.title : ''}
                     </Typography>
