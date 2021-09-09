@@ -878,7 +878,7 @@ export default function RoomPage(props) {
               style={{
                 width: '100%',
                 height: 72 + 72,
-                backgroundColor: 'rgba(21, 96, 233, 0.65)',
+                backgroundColor: colors.primaryMedium,
                 backdropFilter: 'blur(10px)',
               }}
             >

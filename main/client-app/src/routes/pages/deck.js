@@ -8,6 +8,7 @@ import ViewListIcon from '@material-ui/icons/ViewList'
 import React from 'react'
 import { popPage } from '../../App'
 import { PresentBox } from '../../modules/presentbox/presentbox'
+import { colors } from '../../util/settings'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -76,7 +77,7 @@ export default function Deck(props) {
           style={{
             width: '100%',
             height: 64,
-            backgroundColor: 'rgba(21, 96, 233, 0.65)',
+            backgroundColor: colors.primaryMedium,
             backdropFilter: 'blur(10px)',
           }}
         >

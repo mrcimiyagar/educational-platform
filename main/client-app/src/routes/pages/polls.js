@@ -7,6 +7,7 @@ import { ArrowForward, Search } from '@material-ui/icons';
 import React from 'react';
 import { isDesktop, isInRoom, isMobile, isTablet, popPage, registerDialogOpen } from "../../App";
 import { PollBox } from '../../modules/pollbox/pollbox';
+import { colors } from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -60,7 +61,7 @@ export default function PollPage(props) {
                 <AppBar position={'static'} style={{
                     width: '100%',
                     height: 64,
-                    backgroundColor: 'rgba(21, 96, 233, 0.65)',
+                    backgroundColor: colors.primaryMedium,
                     borderRadius: isDesktop() ? '24px 24px 0 0' : undefined
                 }}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>

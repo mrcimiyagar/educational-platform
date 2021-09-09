@@ -7,6 +7,7 @@ import { ArrowForward, Search } from '@material-ui/icons';
 import React from 'react';
 import { isDesktop, isMobile, isTablet, popPage } from "../../App";
 import { NoteBox } from '../../modules/notebox/notebox';
+import { colors } from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -67,7 +68,7 @@ export default function NotePage(props) {
                     marginRight: '25%',
                     marginTop: '3%',
                     height: 64, 
-                    backgroundColor: 'rgba(21, 96, 233, 0.65)',
+                    backgroundColor: colors.primaryMedium,
                     backdropFilter: isDesktop() ? 'blur(15px)' : undefined,
                     borderRadius: isDesktop() ? '24px 24px 0 0' : undefined}}>
                     <Toolbar style={{marginTop: (isDesktop() || isTablet()) ? 0 : 8, width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
