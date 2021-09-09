@@ -155,7 +155,10 @@ class DrawApp extends React.Component {
                 }} 
                     onMouseMove={(e)=>this.drawing(e)} 
                     onMouseDown={(e)=>this.penDown(e)} 
-                    onMouseUp={(e)=>this.penUp(e)}>
+                    onMouseUp={(e)=>this.penUp(e)}
+                    onTouchMove={(e)=>this.drawing(e)} 
+                    onTouchStart={(e)=>this.penDown(e)} 
+                    onTouchEnd={(e)=>this.penUp(e)}>
                 </canvas>
             </div>
         )
