@@ -15,6 +15,7 @@ import Poll from 'react-polls'
 import { isDesktop, isInRoom } from '../../App'
 import { colors, token } from '../../util/settings'
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import BlackColorTextField from '../../components/BlackColorTextField'
 
 export let togglePolling = undefined
 
@@ -129,21 +130,21 @@ export function PollBox(props) {
   let theme = createTheme({
     palette: {
       primary: {
-        main: 'rgba(75, 134, 180, 0.75)'
+        main: 'rgba(75, 134, 180, 0.75)',
       },
       secondary: {
-        main: '#000'
-      }
+        main: '#000',
+      },
     },
   })
   let theme2 = createTheme({
     palette: {
       primary: {
-        main: 'rgba(75, 134, 180, 0.75)'
+        main: 'rgba(75, 134, 180, 0.75)',
       },
       secondary: {
-        main: '#fff'
-      }
+        main: '#fff',
+      },
     },
   })
 
@@ -207,13 +208,11 @@ export function PollBox(props) {
         onClose={() => props.setOpen(false)}
         open={props.open}
         anchor={'right'}
-        style={{ width: 280 }}
       >
         <div
           style={{
             background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 35%, ${colors.accent} 100%)`,
-            minWidth: 300,
-            width: '100%',
+            width: 360,
             height: '100vh',
             alignItems: 'center',
             justifyContent: 'center',
@@ -229,18 +228,16 @@ export function PollBox(props) {
             </Typography>
           </div>
           <div>
-            <ThemeProvider theme={theme2}>
-            <TextField
+            <BlackColorTextField
               label="متن سوال"
               variant="outlined"
               color={'secondary'}
-              style={{marginRight: 24, marginTop: 24}}
+              style={{ marginRight: 32, marginTop: 24 }}
               defaultValue={pollQuestion}
               onChange={(event) => {
                 setPollQuestion(event.target.value)
               }}
             />
-            </ThemeProvider>
             {pollOptions.map((option, index) => {
               return (
                 <>
@@ -248,15 +245,14 @@ export function PollBox(props) {
                     style={{
                       display: 'flex',
                       width: 'calc(100% - 48px)',
-                      marginLeft: 48,
+                      marginLeft: 38,
                     }}
                   >
-                  <ThemeProvider theme={theme2}>
-                    <TextField
-                    color={'secondary'}
+                    <BlackColorTextField
                       label={'گزینه ی' + ' ' + (index + 1)}
                       variant="outlined"
-                      style={{marginRight: 24, marginTop: 16 }}
+                      color={'secondary'}
+                      style={{ marginRight: 12, marginTop: 16 }}
                       defaultValue={pollOptions[index].caption}
                       onChange={(event) => {
                         let options = pollOptions
@@ -265,7 +261,6 @@ export function PollBox(props) {
                         forceUpdate()
                       }}
                     />
-                    </ThemeProvider>
                     <IconButton
                       style={{ color: '#fff' }}
                       onClick={() => {
