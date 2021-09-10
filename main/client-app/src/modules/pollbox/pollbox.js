@@ -141,12 +141,13 @@ export function PollBox(props) {
       <Fab color={'secondary'} style={{position: 'fixed', bottom: 16, left: 16}} onClick={() => props.setOpen(true)}><Add/></Fab>
       </div>
       <Drawer onClose={() => props.setOpen(false)} open={props.open} anchor={'right'} style={{width: 280}}>
-        <div style={{backgroundColor: colors.primaryLight, minWidth: 300, width: '100%', height: '100vh', alignItems: 'center', justifyContent: 'center', textAlign: 'center'}}>
+        <div style={{backgroundColor:  `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 35%, ${colors.accent} 100%)`
+          , minWidth: 300, width: '100%', height: '100vh', alignItems: 'center', justifyContent: 'center', textAlign: 'center'}}>
           <div>
-            <Typography variant={'h6'} style={{marginTop: 24, marginRight: 16}}>افزودن رای گیری جدید</Typography>
+            <Typography variant={'h6'} style={{color: '#fff', marginTop: 24, marginRight: 16}}>افزودن رای گیری جدید</Typography>
           </div>
           <div>
-            <TextField label="متن سوال" variant="outlined" style={{marginRight: 24, marginTop: 24}}
+            <TextField label="متن سوال" variant="outlined" style={{color: '#fff', marginRight: 24, marginTop: 24}}
               defaultValue={pollQuestion}
               onChange={event => {
                 setPollQuestion(event.target.value);
@@ -155,7 +156,7 @@ export function PollBox(props) {
                   return (
                       <>
                         <div style={{display: 'flex', width: 'calc(100% - 48px)', marginLeft: 48}}>
-                          <TextField label={"گزینه ی" + ' ' + (index + 1)} variant="outlined" style={{marginRight: 24, marginTop: 16}}
+                          <TextField label={"گزینه ی" + ' ' + (index + 1)} variant="outlined" style={{color: '#fff', marginRight: 24, marginTop: 16}}
                             defaultValue={pollOptions[index].caption}
                             onChange={event => {
                               let options = pollOptions;
@@ -165,6 +166,7 @@ export function PollBox(props) {
                             }}
                           />
                           <IconButton
+                              style={{color: '#fff'}}
                               onClick={() => {
                                 let options = pollOptions;
                                 options.splice(index, 1);
@@ -178,7 +180,7 @@ export function PollBox(props) {
                   );
                 })}
                 <br/>
-                <Button variant={'outlined'} style={{width: 246, height: 56, marginTop: 16, marginRight: 24}} onClick={() => {
+                <Button variant={'outlined'} style={{color: '#fff', width: 246, height: 56, marginTop: 16, marginRight: 24}} onClick={() => {
                   let options = pollOptions;
                   options.push({id: options.length, caption: ''});
                   setPollOptions(options);
@@ -191,11 +193,11 @@ export function PollBox(props) {
                 <Button
                     color="secondary"
                     variant={'outlined'}
-                    style={{margin: 8}}
+                    style={{color: '#fff', margin: 8}}
                     onClick={() => props.setOpen(false)}>
                   لغو
                 </Button>
-                <Button style={{margin: 8}} color="primary" variant={'outlined'} onClick={() => {
+                <Button style={{color: '#fff', margin: 8}} color="primary" variant={'outlined'} onClick={() => {
                   let requestOptions = {
                     method: 'POST',
                     headers: {
