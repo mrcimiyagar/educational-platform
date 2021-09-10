@@ -117,12 +117,12 @@
 
     signaling_socket.on('show_peer', (peer_id) => {
       let el = document.getElementById('videoconf' + peer_id)
-      if (el !== undefined) $('#videoconf' + peer_id)[0].style.display = 'block'
+      if (el !== undefined) el.style.display = 'block'
     })
 
     signaling_socket.on('hide_peer', (peer_id) => {
       let el = document.getElementById('videoconf' + peer_id)
-      if (el !== undefined) $('#videoconf' + peer_id)[0].style.display = 'none'
+      if (el !== undefined) el.style.display = 'none'
     })
 
     /**
