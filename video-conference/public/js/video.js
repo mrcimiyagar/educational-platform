@@ -169,7 +169,7 @@
         if (MUTE_AUDIO_BY_DEFAULT) {
           remote_media.attr('muted', 'true')
         }
-        attachMediaStream(remote_media[0], event.stream)
+        remote_media[0].srcObject = event.stream
         remote_media.attr('controls', '')
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')

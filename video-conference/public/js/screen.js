@@ -165,6 +165,7 @@
         if (MUTE_AUDIO_BY_DEFAULT) {
           remote_media.attr('muted', 'true')
         }
+        remote_media[0].srcObject = event.stream
         remote_media.attr('controls', '')
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')
@@ -189,7 +190,6 @@
         remote_media[0].style.margin = '8px'
         remote_media[0].style.display = 'none'
         $('#videoconf' + userId).append(remote_media)
-        attachMediaStream(remote_media[0], event.stream)
         signaling_socket.on('answerAppearence', (peer_id) => {
           remote_media[0].style.display = 'block'
           document.getElementById('videoconf' + userId).style.display = 'block'
