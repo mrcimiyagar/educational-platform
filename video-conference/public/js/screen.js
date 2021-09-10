@@ -169,7 +169,6 @@
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')
           remote_div.attr('id', 'videoconf' + userId)
-          remote_div[0].innerHTML = '<button>Hello World</button>'
           remote_div[0].style.width = 'calc(50% - 24px)'
           remote_div[0].style.maxWidth = '300px'
           remote_div[0].style.height = 'auto'
