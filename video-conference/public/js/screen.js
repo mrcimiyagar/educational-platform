@@ -113,12 +113,12 @@
 
     signaling_socket.on('show_peer', (peer_id) => {
       let el = document.getElementById('videoconf' + peer_id)
-      if (el !== undefined) el.style.display = 'block'
+      if (el !== null) el.style.display = 'block'
     })
 
     signaling_socket.on('hide_peer', (peer_id) => {
       let el = document.getElementById('videoconf' + peer_id)
-      if (el !== undefined) el.style.display = 'none'
+      if (el !== null) el.style.display = 'none'
     })
 
     /**
@@ -163,7 +163,6 @@
         if (MUTE_AUDIO_BY_DEFAULT) {
           remote_media.attr('muted', 'true')
         }
-        remote_media[0].srcObject = event.stream
         remote_media.attr('controls', '')
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')
@@ -187,6 +186,7 @@
         remote_media[0].style.height = '300px'
         remote_media[0].style.margin = '8px'
         remote_media[0].style.display = 'none'
+        remote_media[0].srcObject = event.stream
         $('#videoconf' + userId).append(remote_media)
         signaling_socket.on('answerAppearence', (peer_id) => {
           remote_media[0].style.display = 'block'
