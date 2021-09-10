@@ -153,7 +153,7 @@ export default function RoomPage(props) {
   ;[membership, setMembership] = React.useState({})
   const [loaded, setLoaded] = React.useState(false)
   const [menuOpen, setMenuOpen] = React.useState(false)
-  const [currentRoomNav, setCurrentRoomNav] = React.useState(2)
+  const [currentRoomNav, setCurrentRoomNav] = React.useState(props.tab_index)
   const [fileMode, setFileMode] = React.useState(0)
   const [menuMode, setMenuMode] = React.useState(0)
   const [opacity, setOpacity] = React.useState(1)
@@ -686,6 +686,9 @@ export default function RoomPage(props) {
           <Jumper open={jumperOpen} setOpen={setJumperOpen} />
         </div>
         <RoomBottombar
+          setCurrentRoomNavBackup={(v) => {
+            props.tab_index = v
+          }}
           setCurrentRoomNav={(i) => {
             setOpacity(0)
             setTimeout(() => {
@@ -1045,6 +1048,9 @@ export default function RoomPage(props) {
           <Jumper open={jumperOpen} setOpen={setJumperOpen} />
         </div>
         <RoomBottombar
+          setCurrentRoomNavBackup={(v) => {
+            props.tab_index = v
+          }}
           setCurrentRoomNav={(i) => {
             setOpacity(0)
             setTimeout(() => {
