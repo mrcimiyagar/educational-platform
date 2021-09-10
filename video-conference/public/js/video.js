@@ -178,6 +178,7 @@
           remote_div[0].style.maxWidth = '300px'
           remote_div[0].style.height = 'auto'
           remote_div[0].style.margin = '8px'
+          remote_div[0].style.display = 'none'
           $('body').append(remote_div)
           window.peer_media_elements[userId] = remote_div
         }
@@ -189,6 +190,7 @@
         attachMediaStream(remote_media[0], event.stream)
         signaling_socket.on('answerAppearence', (peer_id) => {
           remote_media[0].style.display = 'block'
+          remote_div[0].style.display = 'block'
         })
         signaling_socket.emit('askAppearence', peer_id)
       }
