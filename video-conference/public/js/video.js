@@ -180,13 +180,17 @@
           remote_div[0].style.display = 'none'
           $('body').append(remote_div)
           window.peer_media_elements[userId] = remote_div
+          window.peer_media_streams[userId] = {webcam: event.stream}
+        }
+        else {
+          window.peer_media_streams[userId].webcam = event.stream
         }
         remote_media[0].onclick = function (e) {
           document.getElementById('max').style.display = 'block'
           let webcamMax = document.getElementById('webcamMax')
-          webcamMax.srcObject = document.getElementById('max').children[0].srcObject
+          webcamMax.srcObject = window.peer_media_streams[userId].webcam
           let screenMax = document.getElementById('screenMax')
-          screenMax.srcObject = document.getElementById('max').children[1].srcObject
+          screenMax.srcObject = window.peer_media_streams[userId].screen
         }
         remote_media[0].style.width = '100%'
         remote_media[0].style.height = '300px'
