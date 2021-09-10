@@ -23,14 +23,17 @@
         <script>
             window.peer_media_elements = {}
             window.peer_media_streams = {}
+            let disableMax = function(e) {
+                document.getElementById('max').style.display = 'none'
+            }
         </script>
         <script src="/js/video.js?v=2"></script>
         <script src="/js/screen.js?v=2"></script>
     </head>
     <body style="width: auto; height: 100vh; display: flex; flex-wrap: wrap;">
         <div id="max" style="display: none; width: 100%; height: 100%; position: relative; z-index: 99999;">
-            <video autoplay id='webcamMax' style="object-fit: cover; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"></video>
-            <video autoplay id='screenMax' style="object-fit: cover; position: absolute; right: 0px; top: 0px; width: 250px; height: 250px;"></video>
+            <video onclick="disableMax()" autoplay id='webcamMax' style="object-fit: cover; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"></video>
+            <video onclick="disableMax()" autoplay id='screenMax' style="object-fit: cover; position: absolute; right: 0px; top: 0px; width: 250px; height: 250px;"></video>
         </div>
     </body>
     <script>
