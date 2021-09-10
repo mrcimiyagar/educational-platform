@@ -179,7 +179,7 @@
         }
         remote_media[0].onclick = function (e) {
           document.getElementById('max').style.display = 'block'
-          document.getElementById('webcamMax').src = event.stream
+          document.getElementById('webcamMax').srcObject = event.stream
         }
         remote_media[0].style.width = '100%'
         remote_media[0].style.height = 'auto'
