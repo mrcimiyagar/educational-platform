@@ -180,11 +180,16 @@
           window.peer_media_streams[userId].screen = event.stream
         }
         remote_media[0].onclick = function (e) {
-          document.getElementById('max').style.display = 'block'
-          let webcamMax = document.getElementById('webcamMax')
-          webcamMax.srcObject = window.peer_media_streams[userId].webcam
-          let screenMax = document.getElementById('screenMax')
-          screenMax.srcObject = window.peer_media_streams[userId].screen
+          if (document.getElementById('max').style.display === 'none') {
+            document.getElementById('max').style.display = 'block'
+            let webcamMax = document.getElementById('webcamMax')
+            webcamMax.srcObject = window.peer_media_streams[userId].webcam
+            let screenMax = document.getElementById('screenMax')
+            screenMax.srcObject = window.peer_media_streams[userId].screen
+          }
+          else {
+            document.getElementById('max').style.display = 'none'
+          }
         }
         remote_media[0].style.width = '100%'
         remote_media[0].style.height = '300px'
