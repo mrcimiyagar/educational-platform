@@ -169,6 +169,7 @@
         if (MUTE_AUDIO_BY_DEFAULT) {
           remote_media.attr('muted', 'true')
         }
+        attachMediaStream(remote_media[0], event.stream)
         remote_media.attr('controls', '')
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')
@@ -183,14 +184,16 @@
         }
         remote_media[0].onclick = function (e) {
           document.getElementById('max').style.display = 'block'
-          document.getElementById('webcamMax').srcObject = event.stream
+          let webcamMax = document.getElementById('webcamMax')
+          webcamMax.srcObject = document.getElementById('max').children[0].srcObject
+          let screenMax = document.getElementById('screenMax')
+          screenMax.srcObject = document.getElementById('max').children[1].srcObject
         }
         remote_media[0].style.width = '100%'
         remote_media[0].style.height = '300px'
         remote_media[0].style.margin = '8px'
         remote_media[0].style.display = 'none'
         $('#videoconf' + userId).append(remote_media)
-        attachMediaStream(remote_media[0], event.stream)
         signaling_socket.on('answerAppearence', (peer_id) => {
           remote_media[0].style.display = 'block'
           document.getElementById('videoconf' + userId).style.display = 'block'

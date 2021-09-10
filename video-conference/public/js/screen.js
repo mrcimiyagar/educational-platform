@@ -179,7 +179,10 @@
         }
         remote_media[0].onclick = function (e) {
           document.getElementById('max').style.display = 'block'
-          document.getElementById('webcamMax').srcObject = event.stream
+          let webcamMax = document.getElementById('webcamMax')
+          webcamMax.srcObject = document.getElementById('max').children[0].srcObject
+          let screenMax = document.getElementById('screenMax')
+          screenMax.srcObject = document.getElementById('max').children[1].srcObject
         }
         remote_media[0].style.width = '100%'
         remote_media[0].style.height = '300px'
