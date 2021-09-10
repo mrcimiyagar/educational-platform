@@ -182,7 +182,7 @@
           document.getElementById('webcamMax').srcObject = event.stream
         }
         remote_media[0].style.width = '100%'
-        remote_media[0].style.height = 'auto'
+        remote_media[0].style.height = '300px'
         remote_media[0].style.margin = '8px'
         remote_media[0].style.display = 'none'
         $('#videoconf' + userId).append(remote_media)
