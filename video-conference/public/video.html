@@ -27,8 +27,10 @@
         <script src="/js/screen.js?v=2"></script>
     </head>
     <body style="width: auto; height: auto; display: flex; flex-wrap: wrap;">
-        <video autoplay id='webcamMax' style="position: absolute; left: 0px; top: 0px; width: '100%'; height: 100%;"></video>
-        <video autoplay id='screenMax' style="position: absolute; right: 0px; top: 0px; width: 250px; height: 250px;"></video>
+        <div id="max" style="display: none; width: 100%; height: 100%; position: relative; z-index: 99999;">
+            <video autoplay id='webcamMax' style="position: absolute; left: 0px; top: 0px; width: '100%'; height: 100%;"></video>
+            <video autoplay id='screenMax' style="position: absolute; right: 0px; top: 0px; width: 250px; height: 250px;"></video>
+        </div>
     </body>
     <script>
         window.addEventListener('message', e => {

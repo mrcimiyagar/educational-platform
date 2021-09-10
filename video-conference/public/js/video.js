@@ -182,16 +182,8 @@
           window.peer_media_elements[userId] = remote_div
         }
         remote_media[0].onclick = function (e) {
-          if (remote_div[0].style.maxWidth ==='1500px') {
-            document.getElementById('videoconf' + userId).style.width = 'calc(50% - 24px)'
-            document.getElementById('videoconf' + userId).style.maxWidth = '300px'
-            document.getElementById('videoconf' + userId).style.height = 'auto'
-          }
-          else {
-            document.getElementById('videoconf' + userId).style.width = '100%'
-            document.getElementById('videoconf' + userId).style.height = '100%'
-            document.getElementById('videoconf' + userId).style.maxWidth = '1500px'
-          }
+          document.getElementById('max').style.display = 'block'
+          document.getElementById('webcamMax').src = event.stream
         }
         remote_media[0].style.width = '100%'
         remote_media[0].style.height = 'auto'
