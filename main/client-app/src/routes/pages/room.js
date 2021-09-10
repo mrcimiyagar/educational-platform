@@ -153,7 +153,7 @@ export default function RoomPage(props) {
   ;[membership, setMembership] = React.useState({})
   const [loaded, setLoaded] = React.useState(false)
   const [menuOpen, setMenuOpen] = React.useState(false)
-  const [currentRoomNav, setCurrentRoomNav] = React.useState(props.tab_index)
+  const [currentRoomNav, setCurrentRoomNav] = React.useState(Number(props.tab_index))
   const [fileMode, setFileMode] = React.useState(0)
   const [menuMode, setMenuMode] = React.useState(0)
   const [opacity, setOpacity] = React.useState(1)
