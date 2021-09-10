@@ -169,9 +169,17 @@
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')
           remote_div.attr('id', 'videoconf' + userId)
-          remote_div[0].onclick = function (e) {
-            remote_div[0].style.width = '100%'
-            remote_div[0].style.height = '100%'
+          remote_media[0].onclick = function (e) {
+            if (remote_div[0].style.maxWidth ==='1500px') {
+              remote_div[0].style.width = 'calc(50% - 24px)'
+              remote_div[0].style.maxWidth = '300px'
+              remote_div[0].style.height = 'auto'
+            }
+            else {
+              remote_div[0].style.width = '100%'
+              remote_div[0].style.height = '100%'
+              remote_div[0].style.maxWidth = '1500px'
+            }
           }
           remote_div[0].style.width = 'calc(50% - 24px)'
           remote_div[0].style.maxWidth = '300px'
