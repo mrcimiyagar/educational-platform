@@ -193,7 +193,7 @@
         attachMediaStream(remote_media[0], event.stream)
         signaling_socket.on('answerAppearence', (peer_id) => {
           remote_media[0].style.display = 'block'
-          remote_div[0].style.display = 'block'
+          document.getElementById('videoconf' + userId).style.display = 'block'
         })
         signaling_socket.emit('askAppearence', peer_id)
       }
