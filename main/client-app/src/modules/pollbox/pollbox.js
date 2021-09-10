@@ -141,7 +141,7 @@ export function PollBox(props) {
       <Fab color={'secondary'} style={{position: 'fixed', bottom: 16, left: 16}} onClick={() => props.setOpen(true)}><Add/></Fab>
       </div>
       <Drawer onClose={() => props.setOpen(false)} open={props.open} anchor={'right'} style={{width: 280}}>
-        <div style={{backgroundColor:  `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 35%, ${colors.accent} 100%)`
+        <div style={{background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 35%, ${colors.accent} 100%)`
           , minWidth: 300, width: '100%', height: '100vh', alignItems: 'center', justifyContent: 'center', textAlign: 'center'}}>
           <div>
             <Typography variant={'h6'} style={{color: '#fff', marginTop: 24, marginRight: 16}}>افزودن رای گیری جدید</Typography>
