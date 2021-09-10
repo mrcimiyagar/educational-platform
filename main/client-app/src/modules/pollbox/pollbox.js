@@ -129,9 +129,21 @@ export function PollBox(props) {
   let theme = createTheme({
     palette: {
       primary: {
-        main: 'rgba(75, 134, 180, 0.75)',
+        main: 'rgba(75, 134, 180, 0.75)'
       },
-      secondary: '#000',
+      secondary: {
+        main: '#000'
+      }
+    },
+  })
+  let theme2 = createTheme({
+    palette: {
+      primary: {
+        main: 'rgba(75, 134, 180, 0.75)'
+      },
+      secondary: {
+        main: '#fff'
+      }
     },
   })
 
@@ -217,15 +229,18 @@ export function PollBox(props) {
             </Typography>
           </div>
           <div>
+            <ThemeProvider theme={theme2}>
             <TextField
               label="متن سوال"
               variant="outlined"
-              style={{ color: '#fff', marginRight: 24, marginTop: 24 }}
+              color={'secondary'}
+              style={{marginRight: 24, marginTop: 24}}
               defaultValue={pollQuestion}
               onChange={(event) => {
                 setPollQuestion(event.target.value)
               }}
             />
+            </ThemeProvider>
             {pollOptions.map((option, index) => {
               return (
                 <>
@@ -236,10 +251,12 @@ export function PollBox(props) {
                       marginLeft: 48,
                     }}
                   >
+                  <ThemeProvider theme={theme2}>
                     <TextField
+                    color={'secondary'}
                       label={'گزینه ی' + ' ' + (index + 1)}
                       variant="outlined"
-                      style={{ color: '#fff', marginRight: 24, marginTop: 16 }}
+                      style={{marginRight: 24, marginTop: 16 }}
                       defaultValue={pollOptions[index].caption}
                       onChange={(event) => {
                         let options = pollOptions
@@ -248,6 +265,7 @@ export function PollBox(props) {
                         forceUpdate()
                       }}
                     />
+                    </ThemeProvider>
                     <IconButton
                       style={{ color: '#fff' }}
                       onClick={() => {
