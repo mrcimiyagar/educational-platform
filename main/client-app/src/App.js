@@ -199,8 +199,7 @@ let pages = {
   '/app/messenger': MessengerPage,
   '/app/room': RoomPage,
   '/app/searchengine': SearchEngine,
-  '/app/auth': Auth4,
-  '/': MessengerPage
+  '/app/auth': Auth4
 }
 
 let setDialogOpen = null
@@ -303,7 +302,12 @@ export default function MainApp(props) {
     validateToken(token, (result) => {
       if (result) {
         animatePageChange()
-        gotoPage(window.location.pathname, params)
+        if (window.location.pathname === '/') {
+          gotoPage('/app/messenger', {})
+        }
+        else {
+          gotoPage(window.location.pathname, params)
+        }
       }
       else {
         animatePageChange()
