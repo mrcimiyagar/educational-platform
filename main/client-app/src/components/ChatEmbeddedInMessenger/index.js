@@ -149,6 +149,15 @@ export default function ChatEmbeddedInMessenger(props) {
     width: '100%',
   })
 
+  let addMessageToList = (msg) => {
+    msg['User.id'] = msg.User.id
+    msg['User.username'] = msg.User.username
+    msg['User.firstName'] = msg.User.firstName
+    messages.push(msg)
+    setMessages(messages)
+    forceUpdate()
+  }
+
   useEffect(() => {
     if (
       !loading &&
@@ -215,14 +224,7 @@ export default function ChatEmbeddedInMessenger(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
-                    result.message['User.id'] = result.message.User.id
-                    result.message['User.username'] =
-                      result.message.User.username
-                    result.message['User.firstName'] =
-                      result.message.User.firstName
-                    messages.push(result.message)
-                    setMessages(messages)
-                    forceUpdate()
+                    addMessageToList(result.message)
                     document.getElementById('chatText').value = ''
                   }
                 })
@@ -243,14 +245,9 @@ export default function ChatEmbeddedInMessenger(props) {
   }, [loading])
 
   useEffect(() => {
-    socket.on('message-added', ({msgCopy}) => {
+    socket.on('message-added', ({ msgCopy }) => {
       if (me.id !== msgCopy.userId) {
-        msgCopy['User.id'] = msgCopy.User.id
-        msgCopy['User.username'] = msgCopy.User.username
-        msgCopy['User.firstName'] = msgCopy.User.firstName
-        messages.push(msgCopy)
-        setMessages(messages)
-        forceUpdate()
+        addMessageToList(msgCopy)
       }
     })
   }, [])
