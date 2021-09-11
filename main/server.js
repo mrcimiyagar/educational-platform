@@ -34,14 +34,14 @@ const expressStaticGzip = require('express-static-gzip');
 
 let jsonParser = bodyParser.json();
 
+app.use(cors());
+
 server.listen(2001);
 
 let kasperio = socket.setup(server);
 
 models.setup().then(() => {
     mongo.setup((s, a) => {
-
-        app.use(cors());
 
         var myIceServers = [
             {"url":"stun:185.81.96.230:3478"},
