@@ -247,7 +247,7 @@ export default function ChatEmbeddedInMessenger(props) {
 
   useEffect(() => {
     socket.on('message-added', ({ msgCopy }) => {
-      if (me.id !== msgCopy.userId) {
+      if (me.id !== msgCopy.authorId) {
         addMessageToList(msgCopy)
       }
     })

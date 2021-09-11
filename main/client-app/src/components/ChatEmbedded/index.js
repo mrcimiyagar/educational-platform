@@ -71,6 +71,16 @@ export default function ChatEmbedded(props) {
     readAs: 'DataURL',
   })
 
+  let addMessageToList = (msg) => {
+    alert(JSON.stringify(messages))
+    msg['User.id'] = msg.User.id
+    msg['User.username'] = msg.User.username
+    msg['User.firstName'] = msg.User.firstName
+    messages.push(msg)
+    setMessages(messages)
+    forceUpdate()
+  }
+
   useEffect(() => {
     if (props.userId !== undefined) {
       let requestOptions = {
@@ -208,14 +218,7 @@ export default function ChatEmbedded(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
-                    result.message['User.id'] = result.message.User.id
-                    result.message['User.username'] =
-                      result.message.User.username
-                    result.message['User.firstName'] =
-                      result.message.User.firstName
-                    messages.push(result.message)
-                    setMessages(messages)
-                    forceUpdate()
+                    addMessageToList(result.message)
                     document.getElementById('chatText').value = ''
                   }
                 })
@@ -273,13 +276,8 @@ export default function ChatEmbedded(props) {
 
   useEffect(() => {
     socket.on('message-added', ({msgCopy}) => {
-      if (me.id !== msgCopy.userId) {
-        msgCopy['User.id'] = msgCopy.User.id
-        msgCopy['User.username'] = msgCopy.User.username
-        msgCopy['User.firstName'] = msgCopy.User.firstName
-        messages.push(msgCopy)
-        setMessages(messages)
-        forceUpdate()
+      if (me.id !== msgCopy.authorId) {
+        addMessageToList(msgCopy)
       }
     })
   }, [])
@@ -374,6 +372,7 @@ export default function ChatEmbedded(props) {
                     roomId: props.roomId,
                     text: document.getElementById('chatText').value,
                     messageType: 'text',
+                    fileId: null
                   }),
                   redirect: 'follow',
                 }
@@ -382,14 +381,7 @@ export default function ChatEmbedded(props) {
                   .then((result) => {
                     console.log(JSON.stringify(result))
                     if (result.message !== undefined) {
-                      result.message['User.id'] = result.message.User.id
-                      result.message['User.username'] =
-                        result.message.User.username
-                      result.message['User.firstName'] =
-                        result.message.User.firstName
-                      messages.push(result.message)
-                      setMessages(messages)
-                      forceUpdate()
+                      addMessageToList(result.message)
                       document.getElementById('chatText').value = ''
                     }
                   })
