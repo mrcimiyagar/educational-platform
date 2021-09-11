@@ -302,7 +302,7 @@ export default function MainApp(props) {
     validateToken(token, (result) => {
       if (result) {
         animatePageChange()
-        if (window.location.pathname === '/') {
+        if (window.location.pathname === '/' || window.location.pathname === '') {
           gotoPage('/app/messenger', {})
         }
         else {
