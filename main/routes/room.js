@@ -635,11 +635,9 @@ router.post('/exit_room', jsonParser, async function (req, res) {
           },
         )
       })
-      res.send({ status: 'success' })
-    } else {
-      res.send({ status: 'success' })
     }
   })
+  res.send({ status: 'success' })
 })
 
 router.post('/invite_to_room', jsonParser, async function (req, res) {
