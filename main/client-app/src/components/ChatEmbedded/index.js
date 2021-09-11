@@ -99,7 +99,7 @@ export default function ChatEmbedded(props) {
   }
 
   useEffect(() => {
-    
+
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -121,7 +121,7 @@ export default function ChatEmbedded(props) {
       })
       .catch((error) => console.log('error', error))
 
-    let requestOptions = {
+    let requestOptions2 = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export default function ChatEmbedded(props) {
       }),
       redirect: 'follow',
     }
-    fetch(serverRoot + '/room/get_room', requestOptions)
+    fetch(serverRoot + '/room/get_room', requestOptions2)
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
