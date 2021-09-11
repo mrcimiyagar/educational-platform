@@ -79,29 +79,6 @@ export default function ChatEmbeddedInMessenger(props) {
     readAs: 'DataURL',
   })
 
-  let fetchMessages = () => {
-    let requestOptions3 = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: props.roomId,
-      }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/chat/get_messages', requestOptions3)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result))
-        if (result.messages !== undefined) {
-          setMessages(result.messages)
-        }
-      })
-      .catch((error) => console.log('error', error))
-  }
-
   useEffect(() => {
     let requestOptions = {
       method: 'POST',
@@ -145,7 +122,27 @@ export default function ChatEmbeddedInMessenger(props) {
       })
       .catch((error) => console.log('error', error))
 
-    fetchMessages()
+      let requestOptions3 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify({
+          roomId: props.roomId,
+        }),
+        redirect: 'follow',
+      }
+      fetch(serverRoot + '/chat/get_messages', requestOptions3)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(JSON.stringify(result))
+          if (result.messages !== undefined) {
+            setMessages(result.messages)
+          }
+        })
+        .catch((error) => console.log('error', error))
+
   }, [props.roomId, props.userId])
 
   const ROOT_CSS = css({
@@ -252,6 +249,31 @@ export default function ChatEmbeddedInMessenger(props) {
     socket.on('message-added', ({ msgCopy }) => {
       if (me.id !== msgCopy.authorId) {
         addMessageToList(msgCopy)
+
+        let requestOptions3 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: props.roomId,
+          }),
+          redirect: 'follow',
+      }
+      fetch(serverRoot + '/chat/get_messages', requestOptions3)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result))
+            if (result.messages !== undefined) {
+              msgCopy['User.id'] = msgCopy.User.id
+              msgCopy['User.username'] = msgCopy.User.username
+              msgCopy['User.firstName'] = msgCopy.User.firstName
+              result.messages.push(msgCopy)
+              setMessages(result.messages)
+            }
+          })
+          .catch((error) => console.log('error', error))
       }
     })
   }, [])
