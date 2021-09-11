@@ -419,7 +419,7 @@
         $('body').append(local_media)
         local_media[0].style.width = 'calc(50% - 24px)'
         local_media[0].style.maxWidth = '300px'
-        local_media[0].style.height = 'auto'
+        local_media[0].style.height = '300px'
         local_media[0].style.margin = '8px'
         local_media[0].muted = true
         localMediaEl = local_media[0]
@@ -452,7 +452,7 @@
           $('body').append(local_media)
           local_media[0].style.width = 'calc(50% - 24px)'
           local_media[0].style.maxWidth = '300px'
-          local_media[0].style.height = 'auto'
+          local_media[0].style.height = '300px'
           local_media[0].style.margin = '8px'
           local_media[0].muted = true
           localMediaEl = local_media[0]

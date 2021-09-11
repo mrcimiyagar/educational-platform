@@ -195,6 +195,7 @@
         remote_media[0].style.height = '300px'
         remote_media[0].style.margin = '8px'
         remote_media[0].style.display = 'none'
+        remote_media[0].style.transform = 'rotateY(0)' 
         remote_media[0].srcObject = event.stream
         $('#videoconf' + userId).append(remote_media)
         signaling_socket.on('answerAppearence', (peer_id) => {
@@ -415,6 +416,7 @@
         local_media[0].style.maxWidth = '300px'
         local_media[0].style.height = 'auto'
         local_media[0].style.margin = '8px'
+        local_media[0].style.transform = 'rotateY(0)'
         local_media[0].muted = true
         localMediaEl = local_media[0]
       }
@@ -445,6 +447,7 @@
           local_media[0].style.maxWidth = '300px'
           local_media[0].style.height = 'auto'
           local_media[0].style.margin = '8px'
+          local_media[0].style.transform = 'rotateY(0)'
           local_media[0].muted = true
           localMediaEl = local_media[0]
         }
