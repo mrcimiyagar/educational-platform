@@ -78,7 +78,6 @@ export default function ChatEmbedded(props) {
     msg['User.firstName'] = msg.User.firstName
     messages.push(msg)
     setMessages(messages)
-    forceUpdate()
   }
 
   useEffect(() => {
@@ -275,7 +274,8 @@ export default function ChatEmbedded(props) {
   }
 
   useEffect(() => {
-    socket.on('message-added', ({msgCopy}) => {
+    socket.off('message-added')
+    socket.on('message-added', ({ msgCopy }) => {
       if (me.id !== msgCopy.authorId) {
         addMessageToList(msgCopy)
       }
