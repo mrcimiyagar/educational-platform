@@ -174,7 +174,6 @@
           var remote_div = $('<div>')
           remote_div.attr('id', 'videoconf' + userId)
           remote_div[0].style.width = 'auto'
-          remote_div[0].style.maxWidth = '300px'
           remote_div[0].style.height = 'auto'
           remote_div[0].style.margin = '8px'
           $('body').append(remote_div)
