@@ -12,10 +12,18 @@ import React, { useEffect } from 'react'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
-import { gotoPage, histPage, isDesktop, isInMessenger, isInRoom, isTablet, routeTrigger } from '../../App'
+import {
+  gotoPage,
+  histPage,
+  isDesktop,
+  isInMessenger,
+  isInRoom,
+  isTablet,
+  routeTrigger,
+} from '../../App'
 import EmptyIcon from '../../images/empty.png'
 import { colors, me, setToken, token } from '../../util/settings'
-import { isMobile, serverRoot, useForceUpdate } from '../../util/Utils'
+import { isMobile, serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
 import EmptySign from '../EmptySign'
 import { WaveSurferBox } from '../WaveSurfer'
@@ -72,49 +80,27 @@ export default function ChatEmbeddedInMessenger(props) {
   })
 
   useEffect(() => {
-    if (props.userId !== undefined) {
-      let requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          token: token,
-        },
-        body: JSON.stringify({
-          userId: props.userId,
-        }),
-        redirect: 'follow',
-      }
-      fetch(serverRoot + '/auth/get_user', requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(JSON.stringify(result))
-          if (result.user !== undefined) {
-            setUser(result.user)
-          }
-        })
-        .catch((error) => console.log('error', error))
-    } else {
-      let requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          token: token,
-        },
-        body: JSON.stringify({
-          roomId: props.roomId,
-        }),
-        redirect: 'follow',
-      }
-      fetch(serverRoot + '/room/get_room', requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(JSON.stringify(result))
-          if (result.room !== undefined) {
-            setRoom(result.room)
-          }
-        })
-        .catch((error) => console.log('error', error))
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        userId: props.userId,
+      }),
+      redirect: 'follow',
     }
+    fetch(serverRoot + '/auth/get_user', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        if (result.user !== undefined) {
+          setUser(result.user)
+        }
+      })
+      .catch((error) => console.log('error', error))
+
     let requestOptions2 = {
       method: 'POST',
       headers: {
@@ -126,7 +112,28 @@ export default function ChatEmbeddedInMessenger(props) {
       }),
       redirect: 'follow',
     }
-    fetch(serverRoot + '/chat/get_messages', requestOptions2)
+    fetch(serverRoot + '/room/get_room', requestOptions2)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        if (result.room !== undefined) {
+          setRoom(result.room)
+        }
+      })
+      .catch((error) => console.log('error', error))
+
+    let requestOptions3 = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.roomId,
+      }),
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/chat/get_messages', requestOptions3)
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
@@ -235,11 +242,16 @@ export default function ChatEmbeddedInMessenger(props) {
     }
   }, [loading])
 
-  let width = 0
-  let height = 0
-  let left = 0
-  let right = 0
-  let top = 0
+  useEffect(() => {
+    socket.on('message-added', (msgCopy) => {
+      msgCopy['User.id'] = msgCopy.User.id
+      msgCopy['User.username'] = msgCopy.User.username
+      msgCopy['User.firstName'] = msgCopy.User.firstName
+      messages.push(msgCopy)
+      setMessages(messages)
+      forceUpdate()
+    })
+  }, [])
 
   return (
     <div
@@ -250,7 +262,7 @@ export default function ChatEmbeddedInMessenger(props) {
         height: 'calc(100% - 16px)',
         position: 'absolute',
         top: isDesktop() ? 16 : 0,
-        left: isDesktop() ? 128 : 0
+        left: isDesktop() ? 128 : 0,
       }}
     >
       <div
