@@ -31,7 +31,7 @@ import {
   token,
 } from './util/settings'
 import { ConnectToIo, serverRoot, useForceUpdate, validateToken } from './util/Utils'
-import { setWallpaper } from '.'
+import { pathConfig, setWallpaper } from '.'
 
 export let histPage = undefined
 let setHistPage = undefined
@@ -286,8 +286,6 @@ export default function MainApp(props) {
       })
       .catch((error) => console.log('error', error))
 
-    animatePageChange()
-
     let query = window.location.search
     let params = {}
     if (query !== undefined && query !== null) {
@@ -301,20 +299,23 @@ export default function MainApp(props) {
       })
     }
 
+    alert(window.location.pathname)
+
     validateToken(localStorage.getItem('token'), (result) => {
       if (result) {
         if (window.location.pathname === '' || window.location.pathname === '/') {
-          gotoPage('/app/messenger', {})
+          window.location.href = pathConfig.mainFrontend + '/app/messenger'
         }
         else {
-          gotoPage(window.location.pathname, params)
+          animatePageChange()
         }
       }
       else {
+        animatePageChange()
         gotoPage('/app/auth', {})
       }
     })
-    
+
   }, [])
 
   return (
