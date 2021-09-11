@@ -12,7 +12,7 @@ import React from 'react';
 import { gotoPage, isDesktop, isTablet } from '../../App';
 import EmptySign from '../../components/EmptySign';
 import { token } from '../../util/settings';
-import { serverRoot } from '../../util/Utils';
+import { leaveRoom, serverRoot } from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,8 +39,27 @@ export default function AllChats(props) {
       <div>
       <ListItem alignItems="flex-start" button style={{height: 80}} onClick={() => {
         if (isDesktop() || isTablet()) {
-          props.setSelectedRoomId(chat.id)
-          props.setSelectedUserId(chat.participent.id)
+          leaveRoom(() => {
+            props.setSelectedRoomId(chat.id)
+            props.setSelectedUserId(chat.participent.id)
+            let requestOptions2 = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                token: token,
+              },
+              body: JSON.stringify({
+                roomId: chat.id,
+              }),
+              redirect: 'follow',
+            }
+            fetch(serverRoot + '/room/enter_room', requestOptions2)
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(JSON.stringify(result))
+              })
+              .catch((error) => console.log('error', error))
+          })
         }
         else {
           gotoPage('/app/chat', {room_id: chat.id, user_id: chat.participent.id});
