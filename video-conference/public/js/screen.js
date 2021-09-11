@@ -167,11 +167,9 @@
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')
           remote_div.attr('id', 'videoconf' + userId)
-          remote_div[0].style.width = 'calc(50% - 24px)'
-          remote_div[0].style.maxWidth = '300px'
+          remote_div[0].style.width = 'auto'
           remote_div[0].style.height = 'auto'
           remote_div[0].style.margin = '8px'
-          remote_div[0].style.display = 'none'
           $('body').append(remote_div)
           window.peer_media_elements[userId] = remote_div
           window.peer_media_streams[userId] = {screen: event.stream}
@@ -191,7 +189,8 @@
             document.getElementById('max').style.display = 'none'
           }
         }
-        remote_media[0].style.width = '100%'
+        remote_media[0].style.width = (window.innerWidth / 2) - 24 + 'px'
+        remote_media[0].style.maxWidth = '300px'
         remote_media[0].style.height = '300px'
         remote_media[0].style.margin = '8px'
         remote_media[0].style.display = 'none'
@@ -200,7 +199,6 @@
         $('#videoconf' + userId).append(remote_media)
         signaling_socket.on('answerAppearence', (peer_id) => {
           remote_media[0].style.display = 'block'
-          window.peer_media_elements[userId][0].style.display = 'block'
         })
         signaling_socket.emit('askAppearence', peer_id)
       }
