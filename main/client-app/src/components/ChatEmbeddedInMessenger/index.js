@@ -243,7 +243,7 @@ export default function ChatEmbeddedInMessenger(props) {
   }, [loading])
 
   useEffect(() => {
-    socket.on('message-added', (msgCopy) => {
+    socket.on('message-added', ({msgCopy}) => {
       msgCopy['User.id'] = msgCopy.User.id
       msgCopy['User.username'] = msgCopy.User.username
       msgCopy['User.firstName'] = msgCopy.User.firstName
