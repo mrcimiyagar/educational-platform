@@ -303,11 +303,12 @@ export default function MainApp(props) {
 
     validateToken(localStorage.getItem('token'), (result) => {
       if (result) {
+        animatePageChange()
         if (window.location.pathname === '' || window.location.pathname === '/') {
-          window.location.href = pathConfig.mainFrontend + '/app/messenger'
+          gotoPage('/app/messenger', {})
         }
         else {
-          animatePageChange()
+          gotoPage(window.location.pathname, params)
         }
       }
       else {
