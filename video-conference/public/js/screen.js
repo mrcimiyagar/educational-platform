@@ -414,7 +414,7 @@
         $('body').append(local_media)
         local_media[0].style.width = 'calc(50% - 24px)'
         local_media[0].style.maxWidth = '300px'
-        local_media[0].style.height = 'auto'
+        local_media[0].style.height = 'min(300px, calc(50% - 24px))'
         local_media[0].style.margin = '8px'
         local_media[0].style.transform = 'rotateY(0)'
         local_media[0].muted = true
@@ -445,7 +445,7 @@
           $('body').append(local_media)
           local_media[0].style.width = 'calc(50% - 24px)'
           local_media[0].style.maxWidth = '300px'
-          local_media[0].style.height = 'auto'
+          local_media[0].style.height = 'min(300px, calc(50% - 24px))'
           local_media[0].style.margin = '8px'
           local_media[0].style.transform = 'rotateY(0)'
           local_media[0].muted = true
