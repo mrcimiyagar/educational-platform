@@ -244,12 +244,14 @@ export default function ChatEmbeddedInMessenger(props) {
 
   useEffect(() => {
     socket.on('message-added', ({msgCopy}) => {
-      msgCopy['User.id'] = msgCopy.User.id
-      msgCopy['User.username'] = msgCopy.User.username
-      msgCopy['User.firstName'] = msgCopy.User.firstName
-      messages.push(msgCopy)
-      setMessages(messages)
-      forceUpdate()
+      if (me.id !== msgCopy.userId) {
+        msgCopy['User.id'] = msgCopy.User.id
+        msgCopy['User.username'] = msgCopy.User.username
+        msgCopy['User.firstName'] = msgCopy.User.firstName
+        messages.push(msgCopy)
+        setMessages(messages)
+        forceUpdate()
+      }
     })
   }, [])
 
