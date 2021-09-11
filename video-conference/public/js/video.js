@@ -205,7 +205,7 @@
         $('#videoconf' + userId).append(remote_media)
         signaling_socket.on('answerAppearence', (peer_id) => {
           remote_media[0].style.display = 'block'
-          document.getElementById('videoconf' + userId).style.display = 'block'
+          window.peer_media_elements[userId][0].style.display = 'block'
         })
         signaling_socket.emit('askAppearence', peer_id)
       }
