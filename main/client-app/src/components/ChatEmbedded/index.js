@@ -71,31 +71,13 @@ export default function ChatEmbedded(props) {
     readAs: 'DataURL',
   })
 
-  let fetchMessages = () => {
-    let requestOptions3 = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: props.roomId,
-      }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/chat/get_messages', requestOptions3)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result))
-        if (result.messages !== undefined) {
-          setMessages(result.messages)
-        }
-      })
-      .catch((error) => console.log('error', error))
-  }
-
   let addMessageToList = (msg) => {
-    fetchMessages()
+    alert(JSON.stringify(messages))
+    msg['User.id'] = msg.User.id
+    msg['User.username'] = msg.User.username
+    msg['User.firstName'] = msg.User.firstName
+    messages.push(msg)
+    setMessages(messages)
   }
 
   useEffect(() => {
@@ -142,7 +124,26 @@ export default function ChatEmbedded(props) {
       })
       .catch((error) => console.log('error', error))
 
-    fetchMessages()
+    let requestOptions3 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify({
+          roomId: props.roomId,
+        }),
+        redirect: 'follow',
+    }
+    fetch(serverRoot + '/chat/get_messages', requestOptions3)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(JSON.stringify(result))
+          if (result.messages !== undefined) {
+            setMessages(result.messages)
+          }
+        })
+        .catch((error) => console.log('error', error))
 
   }, [props.roomId, props.userId])
 
