@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+let messagesBackup = []
 export let updateChatEmbedded = undefined
 
 export default function ChatEmbeddedInMessenger(props) {
@@ -138,7 +139,8 @@ export default function ChatEmbeddedInMessenger(props) {
       .then((result) => {
         console.log(JSON.stringify(result))
         if (result.messages !== undefined) {
-          setMessages(result.messages)
+          messagesBackup = result.messages
+          setMessages(messagesBackup)
         }
       })
       .catch((error) => console.log('error', error))
@@ -153,8 +155,8 @@ export default function ChatEmbeddedInMessenger(props) {
     msg['User.id'] = msg.User.id
     msg['User.username'] = msg.User.username
     msg['User.firstName'] = msg.User.firstName
-    messages.push(msg)
-    setMessages(messages)
+    messagesBackup.push(msg)
+    setMessages(messagesBackup)
     forceUpdate()
   }
 
@@ -247,6 +249,7 @@ export default function ChatEmbeddedInMessenger(props) {
   useEffect(() => {
     socket.on('message-added', ({ msgCopy }) => {
       if (me.id !== msgCopy.userId) {
+        alert(JSON.stringify(messages))
         addMessageToList(msgCopy)
       }
     })
@@ -347,14 +350,7 @@ export default function ChatEmbeddedInMessenger(props) {
                   .then((result) => {
                     console.log(JSON.stringify(result))
                     if (result.message !== undefined) {
-                      result.message['User.id'] = result.message.User.id
-                      result.message['User.username'] =
-                        result.message.User.username
-                      result.message['User.firstName'] =
-                        result.message.User.firstName
-                      messages.push(result.message)
-                      setMessages(messages)
-                      forceUpdate()
+                      addMessageToList(result.message)
                       document.getElementById('chatText').value = ''
                     }
                   })
