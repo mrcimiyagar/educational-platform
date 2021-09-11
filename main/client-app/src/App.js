@@ -30,7 +30,7 @@ import {
   theme,
   token,
 } from './util/settings'
-import { ConnectToIo, serverRoot, useForceUpdate } from './util/Utils'
+import { ConnectToIo, serverRoot, useForceUpdate, validateToken } from './util/Utils'
 import { setWallpaper } from '.'
 
 export let histPage = undefined
@@ -192,14 +192,14 @@ let dialogs = {
   '/app/roomstree': RoomsTree,
   '/app/audioplayer': AudioPlayer,
   '/app/settings': SettingsPage,
-  '/app/videoplayer': VideoPlayer,
+  '/app/videoplayer': VideoPlayer
 }
 let pages = {
   '/app/store': Store,
   '/app/messenger': MessengerPage,
   '/app/room': RoomPage,
   '/app/searchengine': SearchEngine,
-  '/app/auth': Auth4,
+  '/app/auth': Auth4
 }
 
 let setDialogOpen = null
@@ -301,7 +301,20 @@ export default function MainApp(props) {
       })
     }
 
-    setTimeout(() => gotoPage(window.location.pathname, params), 2500)
+    validateToken(localStorage.getItem('token'), (result) => {
+      if (result) {
+        if (window.location.pathname === '' || window.location.pathname === '/') {
+          gotoPage('/app/messenger', {})
+        }
+        else {
+          gotoPage(window.location.pathname, params)
+        }
+      }
+      else {
+        gotoPage('/app/auth', {})
+      }
+    })
+    
   }, [])
 
   return (

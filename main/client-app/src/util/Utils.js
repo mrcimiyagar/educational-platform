@@ -258,15 +258,15 @@ export function validateToken(t, callback) {
     },
     redirect: 'follow'
   };
-  fetch(serverRoot + "/auth/fetch_config", requestOptions2)
+  fetch(serverRoot + "/auth/get_me", requestOptions2)
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
-        if (result.status === 'error' && result.errorCode === 'e0006') {
+        if (result.status === 'error' || result.user === null) {
           callback(false);
         }
         else {
-          callback(true, result.config);
+          callback(true, result.user);
         }
       })
       .catch(error => console.log('error', error));

@@ -154,7 +154,6 @@ export default function ChatEmbeddedInMessenger(props) {
   })
 
   let addMessageToList = (msg) => {
-    alert(JSON.stringify(messages))
     msg['User.id'] = msg.User.id
     msg['User.username'] = msg.User.username
     msg['User.firstName'] = msg.User.firstName
