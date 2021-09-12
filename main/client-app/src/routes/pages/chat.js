@@ -236,14 +236,7 @@ export default function Chat(props) {
     socket.off('message-added')
     socket.on('message-added', ({ msgCopy }) => {
       if (me.id !== msgCopy.authorId) {
-        navigator.serviceWorker.register('sw.js');
-        Notification.requestPermission(function(result) {
-          if (result === 'granted') {
-            navigator.serviceWorker.ready.then(function(registration) {
-              registration.showNotification('Notification with ServiceWorker');
-            });
-          }
-        });
+        
 
         let requestOptions3 = {
           method: 'POST',
