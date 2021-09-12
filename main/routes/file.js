@@ -151,6 +151,10 @@ router.get('/download_user_avatar', jsonParser, async function (req, res) {
             return
         }
         sw.File.findOne({where: {id: user.avatarId}}).then(async file => {
+            if (file === null) {
+                res.sendStatus(404);
+                return
+            }
             if (fs.existsSync(rootPath + '/files/' + file.id)) {
                 res.sendFile(rootPath + '/files/' + file.id)
             }
@@ -168,6 +172,10 @@ router.get('/download_bot_avatar', jsonParser, async function (req, res) {
             return
         }
         sw.File.findOne({where: {id: bot.avatarId}}).then(async file => {
+            if (file === null) {
+                res.sendStatus(404);
+                return
+            }
             if (fs.existsSync(rootPath + '/files/' + file.id)) {
                 res.sendFile(rootPath + '/files/' + file.id)
             }
@@ -185,6 +193,10 @@ router.get('/download_space_avatar', jsonParser, async function (req, res) {
             return
         }
         sw.File.findOne({where: {id: space.avatarId}}).then(async file => {
+            if (file === null) {
+                res.sendStatus(404);
+                return
+            }
             if (fs.existsSync(rootPath + '/files/' + file.id)) {
                 res.sendFile(rootPath + '/files/' + file.id)
             }
@@ -207,6 +219,10 @@ router.get('/download_room_avatar', jsonParser, async function (req, res) {
                 return
             }
             sw.File.findOne({where: {id: room.avatarId}}).then(async file => {
+                if (file === null) {
+                    res.sendStatus(404);
+                    return
+                }
                 if (fs.existsSync(rootPath + '/files/' + file.id)) {
                     res.sendFile(rootPath + '/files/' + file.id)
                 }
