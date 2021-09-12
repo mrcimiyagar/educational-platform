@@ -97,9 +97,6 @@ router.post('/create_message', jsonParser, async function (req, res) {
                 User: user
             }
             let members = await sw.Membership.findAll({raw: true, where: {roomId: membership.roomId}});
-            console.log('...........................................................................')
-            console.log(JSON.stringify(sockets))
-            console.log('...........................................................................')
             members.forEach(member => {
                 sockets[member.userId].emit('message-added', {msgCopy});
             });
