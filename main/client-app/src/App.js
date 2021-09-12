@@ -4,7 +4,7 @@ import './App.css'
 import { notifyUrlChanged } from './components/SearchEngineFam'
 import AudioPlayer from './routes/pages/audioPlayer'
 import Auth4 from './routes/pages/auth4'
-import Chat from './routes/pages/chat'
+import Chat, { addMessageToList } from './routes/pages/chat'
 import CreateRoom from './routes/pages/createRoom'
 import DeckPage from './routes/pages/deck'
 import MessengerPage from './routes/pages/messenger'
@@ -25,13 +25,23 @@ import StartupSound from './sounds/startup.mp3'
 import {
   ColorBase,
   colors,
+  me,
   setMe,
   setToken,
   theme,
   token,
 } from './util/settings'
-import { ConnectToIo, serverRoot, useForceUpdate, validateToken } from './util/Utils'
+import {
+  ConnectToIo,
+  serverRoot,
+  socket,
+  useForceUpdate,
+  validateToken,
+} from './util/Utils'
 import { pathConfig, setWallpaper } from '.'
+import { addMessageToList2 } from './components/ChatEmbeddedInMessenger'
+import { addMessageToList3 } from './components/ChatEmbedded'
+import { setLastMessage } from './components/AllChats'
 
 export let histPage = undefined
 let setHistPage = undefined
@@ -192,14 +202,14 @@ let dialogs = {
   '/app/roomstree': RoomsTree,
   '/app/audioplayer': AudioPlayer,
   '/app/settings': SettingsPage,
-  '/app/videoplayer': VideoPlayer
+  '/app/videoplayer': VideoPlayer,
 }
 let pages = {
   '/app/store': Store,
   '/app/messenger': MessengerPage,
   '/app/room': RoomPage,
   '/app/searchengine': SearchEngine,
-  '/app/auth': Auth4
+  '/app/auth': Auth4,
 }
 
 export let setDialogOpen = null
@@ -212,15 +222,25 @@ export let animatePageChange = undefined
 export default function MainApp(props) {
   console.warn = () => {}
   setToken(localStorage.getItem('token'))
-  ConnectToIo(localStorage.getItem('token'))
+  ConnectToIo(localStorage.getItem('token'), () => {
+    socket.off('message-added')
+    socket.on('message-added', ({ msgCopy }) => {
+      if (me.id !== msgCopy.authorId) {
+        addMessageToList(msgCopy)
+        addMessageToList2(msgCopy)
+        addMessageToList3(msgCopy)
+        setLastMessage(msgCopy)
+      }
+    })
+  })
 
   forceUpdate = useForceUpdate()
 
   let [hp, setHp] = React.useState()
-  setHistPage = setHp;
-  histPage = hp;
-  [routeTrigger, setRouteTrigger] = React.useState(false)
-  
+  setHistPage = setHp
+  histPage = hp
+  ;[routeTrigger, setRouteTrigger] = React.useState(false)
+
   let [opacity, setOpacity] = React.useState(0)
 
   animatePageChange = () => {
@@ -267,7 +287,6 @@ export default function MainApp(props) {
   }
 
   useEffect(() => {
-
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -302,19 +321,19 @@ export default function MainApp(props) {
     validateToken(token, (result) => {
       if (result) {
         animatePageChange()
-        if (window.location.pathname === '/' || window.location.pathname === '') {
+        if (
+          window.location.pathname === '/' ||
+          window.location.pathname === ''
+        ) {
           gotoPage('/app/messenger', {})
-        }
-        else {
+        } else {
           gotoPage(window.location.pathname, params)
         }
-      }
-      else {
+      } else {
         animatePageChange()
         gotoPage('/app/auth', {})
       }
     })
-
   }, [])
 
   return (

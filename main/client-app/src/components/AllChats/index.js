@@ -12,7 +12,7 @@ import React from 'react';
 import { gotoPage, isDesktop, isTablet } from '../../App';
 import EmptySign from '../../components/EmptySign';
 import { token } from '../../util/settings';
-import { leaveRoom, serverRoot } from '../../util/Utils';
+import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,8 +28,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export let setLastMessage = () => {}
+
 export default function AllChats(props) {
   const classes = useStyles();
+
+  let forceUpdate = useForceUpdate()
+
+  setLastMessage = (msg) => {
+    try {
+      if (props.chats.filter(c => c.id === msg.roomId).length > 0) {
+        props.chats.filter(c => c.id === msg.roomId)[0].lastMessage = msg
+        forceUpdate()
+      }
+    }
+    catch(ex) {console.log(ex)}
+  }
 
   return props.chats.length > 0 ?
     <List className={classes.root}>

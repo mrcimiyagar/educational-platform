@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {User} = require("../db/models");
 const { authenticateMember } = require('../users');
+const { sockets } = require('../socket');
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
@@ -95,7 +96,12 @@ router.post('/create_message', jsonParser, async function (req, res) {
                 messageType: req.body.messageType,
                 User: user
             }
-            require('../server').pushTo('room_' + membership.roomId, 'message-added', {msgCopy});
+            let members = await sw.Membership.findAll({raw: true, where: {roomId: membership.roomId}});
+            let sessions = await sw.Session.findAll({raw: true, where: {userId: members.map(m => m.userId)}});
+            let socketIds = sessions.map(s => s.socketId);
+            socketIds.forEach(sId => {
+                sockets[sId].emit('message-added', {msgCopy});
+            });
             res.send({status: 'success', message: msgCopy});
     });
 });

@@ -191,6 +191,8 @@ class Kasperio {
                                 }
                             }
                             else {
+                                session.socketId = soc.id
+                                await session.save()
                                 let user = await models.User.findOne({where: {id: session.userId}});
                                 if (user !== null) {
                                     if (sockets[user.id] !== undefined && sockets[user.id] !== null) {

@@ -12,7 +12,17 @@ import React, { useEffect } from 'react'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
-import { gotoPage, histPage, isDesktop, isInMessenger, isInRoom, isTablet, routeTrigger } from '../../App'
+import {
+  gotoPage,
+  histPage,
+  isDesktop,
+  isInMessenger,
+  isInRoom,
+  isTablet,
+  popPage,
+  routeTrigger,
+  setDialogOpen,
+} from '../../App'
 import EmptyIcon from '../../images/empty.png'
 import { colors, me, setToken, token } from '../../util/settings'
 import { isMobile, serverRoot, socket, useForceUpdate } from '../../util/Utils'
@@ -52,6 +62,523 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+function MessageItem(props) {
+  let message = props.message
+  let dateTime = new Date(Number(message.time))
+  return (
+    <div key={message.id}>
+      {message['User.id'] === me.id ? (
+        <div style={{ position: 'relative', display: 'flex' }}>
+          <Avatar
+            src={
+              serverRoot +
+              `/file/download_user_avatar?token=${token}&userId=${message.authorId}`
+            }
+            style={{
+              width: 40,
+              height: 40,
+              position: 'absolute',
+              bottom: 16,
+              right: 0,
+            }}
+          />
+          <div
+            style={{
+              fontFamily: 'mainFont',
+              fontSize: 15,
+              display: 'inline-block',
+              width: 'auto',
+              minWidth: 125,
+              maxWidth: 300,
+              padding: 16,
+              backgroundColor: '#1a8a98',
+              color: '#fff',
+              borderRadius: '16px 16px 0px 16px',
+              position: 'absolute',
+              right: 48,
+              marginTop: 16,
+              background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
+            }}
+          >
+            <Typography
+              style={{
+                position: 'absolute',
+                right: 16,
+                fontWeight: 'bold',
+                fontSize: 20,
+              }}
+            >
+              {message['User.firstName']}
+            </Typography>
+            <br />
+            <div style={{ marginTop: 8 }}>
+              {message.messageType === 'text' ? (
+                message.text
+              ) : message.messageType === 'audio' ? (
+                <WaveSurferBox
+                  fileId={message.fileId}
+                  src={
+                    serverRoot +
+                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                  }
+                />
+              ) : message.messageType === 'photo' ? (
+                <img
+                  onClick={() => {
+                    props.setCurrentPhotoSrc(
+                      serverRoot +
+                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                    )
+                    props.setPhotoViewerVisible(true)
+                  }}
+                  style={{ width: 200 }}
+                  src={
+                    serverRoot +
+                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                  }
+                />
+              ) : message.messageType === 'video' ? (
+                <div>
+                  <video
+                    onClick={() => {
+                      gotoPage('/app/videoplayer', {
+                        src:
+                          serverRoot +
+                          `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                      })
+                    }}
+                    controls={false}
+                    style={{ width: 200 }}
+                    src={
+                      serverRoot +
+                      `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                    }
+                  />
+                </div>
+              ) : (
+                message.text
+              )}
+              {message.messageType === 'video' ? (
+                <IconButton
+                  onClick={() => {
+                    gotoPage('/app/videoplayer', {
+                      src:
+                        serverRoot +
+                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                    })
+                  }}
+                  style={{
+                    width: 64,
+                    height: 64,
+                    position: 'absolute',
+                    left: '50%',
+                    top: 'calc(50% - 24px)',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <PlayArrowTwoTone style={{ width: 64, height: 64 }} />
+                </IconButton>
+              ) : null}
+            </div>
+            <br />
+            <br />
+            <div
+              style={{
+                position: 'absolute',
+                right: 12,
+                bottom: 8,
+                fontSize: 12,
+                color: '#fff',
+              }}
+            >
+              {dateTime.toLocaleDateString('fa-IR').toString() +
+                ' ' +
+                dateTime.getHours() +
+                ':' +
+                dateTime.getMinutes() +
+                ':' +
+                dateTime.getSeconds()}
+            </div>
+          </div>
+          <div
+            style={{
+              visibility: 'hidden',
+              fontFamily: 'mainFont',
+              fontSize: 15,
+              display: 'inline-block',
+              width: 'auto',
+              minWidth: 125,
+              maxWidth: 300,
+              padding: 16,
+              backgroundColor: '#1a8a98',
+              color: '#fff',
+              borderRadius: '16px 16px 0px 16px',
+              marginTop: 16,
+              background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
+            }}
+          >
+            <Typography
+              style={{
+                position: 'absolute',
+                right: 16,
+                fontWeight: 'bold',
+                fontSize: 20,
+              }}
+            >
+              {message['User.firstName']}
+            </Typography>
+            <br />
+            <div style={{ marginTop: 8 }}>
+              {message.messageType === 'text' ? (
+                message.text
+              ) : message.messageType === 'audio' ? (
+                <WaveSurferBox
+                  fileId={message.fileId}
+                  src={
+                    serverRoot +
+                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                  }
+                />
+              ) : message.messageType === 'photo' ? (
+                <img
+                  onClick={() => {
+                    props.setCurrentPhotoSrc(
+                      serverRoot +
+                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                    )
+                    props.setPhotoViewerVisible(true)
+                  }}
+                  style={{ width: 200 }}
+                  src={
+                    serverRoot +
+                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                  }
+                />
+              ) : message.messageType === 'video' ? (
+                <div>
+                  <video
+                    onClick={() => {
+                      gotoPage('/app/videoplayer', {
+                        src:
+                          serverRoot +
+                          `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                      })
+                    }}
+                    controls={false}
+                    style={{ width: 200 }}
+                    src={
+                      serverRoot +
+                      `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                    }
+                  />
+                </div>
+              ) : (
+                message.text
+              )}
+              {message.messageType === 'video' ? (
+                <IconButton
+                  onClick={() => {
+                    gotoPage('/app/videoplayer', {
+                      src:
+                        serverRoot +
+                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                    })
+                  }}
+                  style={{
+                    width: 64,
+                    height: 64,
+                    position: 'absolute',
+                    left: '50%',
+                    top: 'calc(50% - 24px)',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <PlayArrowTwoTone style={{ width: 64, height: 64 }} />
+                </IconButton>
+              ) : null}
+            </div>
+            <br />
+            <br />
+            <div
+              style={{
+                position: 'absolute',
+                right: 12,
+                bottom: 8,
+                fontSize: 12,
+                color: '#fff',
+              }}
+            >
+              {dateTime.toLocaleDateString('fa-IR').toString() +
+                ' ' +
+                dateTime.getHours() +
+                ':' +
+                dateTime.getMinutes() +
+                ':' +
+                dateTime.getSeconds()}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div style={{ position: 'relative', display: 'flex' }}>
+          <Avatar
+            src={
+              serverRoot +
+              `/file/download_user_avatar?token=${token}&userId=${message.authorId}`
+            }
+            style={{
+              width: 40,
+              height: 40,
+              position: 'absolute',
+              bottom: 16,
+              left: 0,
+            }}
+          />
+          <div
+            style={{
+              fontFamily: 'mainFont',
+              fontSize: 15,
+              display: 'inline-block',
+              width: 'auto',
+              minWidth: 125,
+              maxWidth: 300,
+              padding: 16,
+              backgroundColor: '#1a8a98',
+              color: '#fff',
+              borderRadius: '16px 16px 16px 0px',
+              position: 'absolute',
+              left: 48,
+              marginTop: 16,
+              background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
+            }}
+          >
+            <Typography
+              style={{
+                position: 'absolute',
+                left: 16,
+                fontWeight: 'bold',
+                fontSize: 20,
+              }}
+            >
+              {message['User.firstName']}
+            </Typography>
+            <br />
+            <div style={{ marginTop: 8 }}>
+              {message.messageType === 'text' ? (
+                message.text
+              ) : message.messageType === 'audio' ? (
+                <WaveSurferBox
+                  fileId={message.fileId}
+                  src={
+                    serverRoot +
+                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                  }
+                />
+              ) : message.messageType === 'photo' ? (
+                <img
+                  onClick={() => {
+                    props.setCurrentPhotoSrc(
+                      serverRoot +
+                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                    )
+                    props.setPhotoViewerVisible(true)
+                  }}
+                  style={{ width: 200 }}
+                  src={
+                    serverRoot +
+                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                  }
+                />
+              ) : message.messageType === 'video' ? (
+                <div>
+                  <video
+                    onClick={() => {
+                      gotoPage('/app/videoplayer', {
+                        src:
+                          serverRoot +
+                          `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                      })
+                    }}
+                    controls={false}
+                    style={{ width: 200 }}
+                    src={
+                      serverRoot +
+                      `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                    }
+                  />
+                </div>
+              ) : (
+                message.text
+              )}
+              {message.messageType === 'video' ? (
+                <IconButton
+                  onClick={() => {
+                    gotoPage('/app/videoplayer', {
+                      src:
+                        serverRoot +
+                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                    })
+                  }}
+                  style={{
+                    width: 64,
+                    height: 64,
+                    position: 'absolute',
+                    left: '50%',
+                    top: 'calc(50% - 24px)',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <PlayArrowTwoTone style={{ width: 64, height: 64 }} />
+                </IconButton>
+              ) : null}
+            </div>
+            <br />
+            <br />
+            <div
+              style={{
+                position: 'absolute',
+                right: 12,
+                bottom: 8,
+                fontSize: 12,
+                color: '#fff',
+              }}
+            >
+              {dateTime.toLocaleDateString('fa-IR').toString() +
+                ' ' +
+                dateTime.getHours() +
+                ':' +
+                dateTime.getMinutes() +
+                ':' +
+                dateTime.getSeconds()}
+            </div>
+          </div>
+          <div
+            style={{
+              visibility: 'hidden',
+              fontFamily: 'mainFont',
+              fontSize: 15,
+              display: 'inline-block',
+              width: 'auto',
+              minWidth: 125,
+              maxWidth: 300,
+              padding: 16,
+              color: 'transparent',
+              marginLeft: 16,
+              marginTop: 16,
+              color: '#fff',
+              left: 0,
+              background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
+            }}
+          >
+            <Typography
+              style={{
+                position: 'absolute',
+                left: 16,
+                fontWeight: 'bold',
+                fontSize: 20,
+              }}
+            >
+              {message['User.firstName']}
+            </Typography>
+            <br />
+            <div style={{ marginTop: 8 }}>
+              {message.messageType === 'text' ? (
+                message.text
+              ) : message.messageType === 'audio' ? (
+                <WaveSurferBox
+                  fileId={message.fileId}
+                  src={
+                    serverRoot +
+                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                  }
+                />
+              ) : message.messageType === 'photo' ? (
+                <img
+                  onClick={() => {
+                    props.setCurrentPhotoSrc(
+                      serverRoot +
+                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                    )
+                    props.setPhotoViewerVisible(true)
+                  }}
+                  style={{ width: 200 }}
+                  src={
+                    serverRoot +
+                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                  }
+                />
+              ) : message.messageType === 'video' ? (
+                <div>
+                  <video
+                    onClick={() => {
+                      gotoPage('/app/videoplayer', {
+                        src:
+                          serverRoot +
+                          `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                      })
+                    }}
+                    controls={false}
+                    style={{ width: 200 }}
+                    src={
+                      serverRoot +
+                      `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
+                    }
+                  />
+                </div>
+              ) : (
+                message.text
+              )}
+              {message.messageType === 'video' ? (
+                <IconButton
+                  onClick={() => {
+                    gotoPage('/app/videoplayer', {
+                      src:
+                        serverRoot +
+                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
+                    })
+                  }}
+                  style={{
+                    width: 64,
+                    height: 64,
+                    position: 'absolute',
+                    left: '50%',
+                    top: 'calc(50% - 24px)',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <PlayArrowTwoTone style={{ width: 64, height: 64 }} />
+                </IconButton>
+              ) : null}
+            </div>
+            <br />
+            <br />
+            <div
+              style={{
+                position: 'absolute',
+                right: 12,
+                bottom: 8,
+                fontSize: 12,
+                color: '#fff',
+              }}
+            >
+              {dateTime.toLocaleDateString('fa-IR').toString() +
+                ' ' +
+                dateTime.getHours() +
+                ':' +
+                dateTime.getMinutes() +
+                ':' +
+                dateTime.getSeconds()}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+let messagesArr = []
+
+export let addMessageToList3 = () => {}
+
 export let updateChatEmbedded = undefined
 
 export default function ChatEmbedded(props) {
@@ -72,16 +599,23 @@ export default function ChatEmbedded(props) {
   })
 
   let addMessageToList = (msg) => {
-    alert(JSON.stringify(messages))
     msg['User.id'] = msg.User.id
     msg['User.username'] = msg.User.username
     msg['User.firstName'] = msg.User.firstName
-    messages.push(msg)
-    setMessages(messages)
+    let lastMsg = (
+      <MessageItem
+        key={Math.random()}
+        message={msg}
+        setPhotoViewerVisible={setPhotoViewerVisible}
+        setCurrentPhotoSrc={setCurrentPhotoSrc}
+      />
+    )
+    messagesArr.push(lastMsg)
+    forceUpdate()
   }
+  addMessageToList3 = addMessageToList
 
   useEffect(() => {
-
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -125,26 +659,39 @@ export default function ChatEmbedded(props) {
       .catch((error) => console.log('error', error))
 
     let requestOptions3 = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          token: token,
-        },
-        body: JSON.stringify({
-          roomId: props.roomId,
-        }),
-        redirect: 'follow',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.roomId,
+      }),
+      redirect: 'follow',
     }
     fetch(serverRoot + '/chat/get_messages', requestOptions3)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(JSON.stringify(result))
-          if (result.messages !== undefined) {
-            setMessages(result.messages)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        if (result.messages !== undefined) {
+          if (result.messages.length > 10) {
+            result.messages = result.messages.slice(result.messages.length - 10)
           }
-        })
-        .catch((error) => console.log('error', error))
-
+          messagesArr = []
+          result.messages.forEach((message) => {
+            messagesArr.push(
+              <MessageItem
+                key={Math.random()}
+                message={message}
+                setPhotoViewerVisible={setPhotoViewerVisible}
+                setCurrentPhotoSrc={setCurrentPhotoSrc}
+              />,
+            )
+          })
+          forceUpdate()
+        }
+      })
+      .catch((error) => console.log('error', error))
   }, [props.roomId, props.userId])
 
   const ROOT_CSS = css({
@@ -274,15 +821,6 @@ export default function ChatEmbedded(props) {
     }
   }
 
-  useEffect(() => {
-    socket.off('message-added')
-    socket.on('message-added', ({ msgCopy }) => {
-      if (me.id !== msgCopy.authorId) {
-        addMessageToList(msgCopy)
-      }
-    })
-  }, [])
-
   return (
     <div
       style={{
@@ -320,7 +858,7 @@ export default function ChatEmbedded(props) {
         style={{ position: 'fixed', left: 0, top: 0 }}
         visible={photoViewerVisible}
         onClose={() => {
-          setPhotoViewerVisible(false)
+          props.setPhotoViewerVisible(false)
         }}
         images={[{ src: currentPhotoSrc, alt: '' }]}
       />
@@ -346,7 +884,26 @@ export default function ChatEmbedded(props) {
           <IconButton
             className={classes.iconButton}
             onClick={() => {
-              setShowEmojiPad(!showEmojiPad)
+              if (showEmojiPad) {
+                setShowEmojiPad(!showEmojiPad)
+                window.onpopstate = function (event) {
+                  if (setDialogOpen !== null) {
+                    setDialogOpen(false)
+                  }
+                  setTimeout(popPage, 250)
+                }
+              } else {
+                setShowEmojiPad(!showEmojiPad)
+                window.onpopstate = function (event) {
+                  setShowEmojiPad(false)
+                  window.onpopstate = function (event) {
+                    if (setDialogOpen !== null) {
+                      setDialogOpen(false)
+                    }
+                    setTimeout(popPage, 250)
+                  }
+                }
+              }
             }}
           >
             <EmojiEmotionsIcon />
@@ -373,7 +930,7 @@ export default function ChatEmbedded(props) {
                     roomId: props.roomId,
                     text: document.getElementById('chatText').value,
                     messageType: 'text',
-                    fileId: null
+                    fileId: null,
                   }),
                   redirect: 'follow',
                 }
@@ -435,525 +992,7 @@ export default function ChatEmbedded(props) {
       >
         <ScrollToBottom className={ROOT_CSS}>
           <div style={{ height: 64 }} />
-          {messages.map((message) => {
-            let dateTime = new Date(Number(message.time))
-            return (
-              <div key={message.id}>
-                {message['User.id'] === me.id ? (
-                  <div style={{ position: 'relative', display: 'flex' }}>
-                    <Avatar
-                      src={
-                        serverRoot +
-                        `/file/download_user_avatar?token=${token}&userId=${message.authorId}`
-                      }
-                      style={{
-                        width: 40,
-                        height: 40,
-                        position: 'absolute',
-                        bottom: 16,
-                        right: 0,
-                      }}
-                    />
-                    <div
-                      style={{
-                        fontFamily: 'mainFont',
-                        fontSize: 15,
-                        display: 'inline-block',
-                        width: 'auto',
-                        minWidth: 125,
-                        maxWidth: 300,
-                        padding: 16,
-                        backgroundColor: '#1a8a98',
-                        color: '#fff',
-                        borderRadius: '16px 16px 0px 16px',
-                        position: 'absolute',
-                        right: 48,
-                        marginTop: 16,
-                        background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
-                      }}
-                    >
-                      <Typography
-                        style={{
-                          position: 'absolute',
-                          right: 16,
-                          fontWeight: 'bold',
-                          fontSize: 20,
-                        }}
-                      >
-                        {message['User.firstName']}
-                      </Typography>
-                      <br />
-                      <div style={{ marginTop: 8 }}>
-                        {message.messageType === 'text' ? (
-                          message.text
-                        ) : message.messageType === 'audio' ? (
-                          <WaveSurferBox
-                            fileId={message.fileId}
-                            src={
-                              serverRoot +
-                              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                            }
-                          />
-                        ) : message.messageType === 'photo' ? (
-                          <img
-                            onClick={() => {
-                              setCurrentPhotoSrc(
-                                serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                              )
-                              setPhotoViewerVisible(true)
-                            }}
-                            style={{ width: 200 }}
-                            src={
-                              serverRoot +
-                              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                            }
-                          />
-                        ) : message.messageType === 'video' ? (
-                          <div>
-                            <video
-                              onClick={() => {
-                                gotoPage('/app/videoplayer', {
-                                  src:
-                                    serverRoot +
-                                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                                })
-                              }}
-                              controls={false}
-                              style={{ width: 200 }}
-                              src={
-                                serverRoot +
-                                `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                              }
-                            />
-                          </div>
-                        ) : (
-                          message.text
-                        )}
-                        {message.messageType === 'video' ? (
-                          <IconButton
-                            onClick={() => {
-                              gotoPage('/app/videoplayer', {
-                                src:
-                                  serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                              })
-                            }}
-                            style={{
-                              width: 64,
-                              height: 64,
-                              position: 'absolute',
-                              left: '50%',
-                              top: 'calc(50% - 24px)',
-                              transform: 'translate(-50%, -50%)',
-                            }}
-                          >
-                            <PlayArrowTwoTone
-                              style={{ width: 64, height: 64 }}
-                            />
-                          </IconButton>
-                        ) : null}
-                      </div>
-                      <br />
-                      <br />
-                      <div
-                        style={{
-                          position: 'absolute',
-                          right: 12,
-                          bottom: 8,
-                          fontSize: 12,
-                          color: '#fff',
-                        }}
-                      >
-                        {dateTime.toLocaleDateString('fa-IR').toString() +
-                          ' ' +
-                          dateTime.getHours() +
-                          ':' +
-                          dateTime.getMinutes() +
-                          ':' +
-                          dateTime.getSeconds()}
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        visibility: 'hidden',
-                        fontFamily: 'mainFont',
-                        fontSize: 15,
-                        display: 'inline-block',
-                        width: 'auto',
-                        minWidth: 125,
-                        maxWidth: 300,
-                        padding: 16,
-                        backgroundColor: '#1a8a98',
-                        color: '#fff',
-                        borderRadius: '16px 16px 0px 16px',
-                        marginTop: 16,
-                        background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
-                      }}
-                    >
-                      <Typography
-                        style={{
-                          position: 'absolute',
-                          right: 16,
-                          fontWeight: 'bold',
-                          fontSize: 20,
-                        }}
-                      >
-                        {message['User.firstName']}
-                      </Typography>
-                      <br />
-                      <div style={{ marginTop: 8 }}>
-                        {message.messageType === 'text' ? (
-                          message.text
-                        ) : message.messageType === 'audio' ? (
-                          <WaveSurferBox
-                            fileId={message.fileId}
-                            src={
-                              serverRoot +
-                              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                            }
-                          />
-                        ) : message.messageType === 'photo' ? (
-                          <img
-                            onClick={() => {
-                              setCurrentPhotoSrc(
-                                serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                              )
-                              setPhotoViewerVisible(true)
-                            }}
-                            style={{ width: 200 }}
-                            src={
-                              serverRoot +
-                              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                            }
-                          />
-                        ) : message.messageType === 'video' ? (
-                          <div>
-                            <video
-                              onClick={() => {
-                                gotoPage('/app/videoplayer', {
-                                  src:
-                                    serverRoot +
-                                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                                })
-                              }}
-                              controls={false}
-                              style={{ width: 200 }}
-                              src={
-                                serverRoot +
-                                `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                              }
-                            />
-                          </div>
-                        ) : (
-                          message.text
-                        )}
-                        {message.messageType === 'video' ? (
-                          <IconButton
-                            onClick={() => {
-                              gotoPage('/app/videoplayer', {
-                                src:
-                                  serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                              })
-                            }}
-                            style={{
-                              width: 64,
-                              height: 64,
-                              position: 'absolute',
-                              left: '50%',
-                              top: 'calc(50% - 24px)',
-                              transform: 'translate(-50%, -50%)',
-                            }}
-                          >
-                            <PlayArrowTwoTone
-                              style={{ width: 64, height: 64 }}
-                            />
-                          </IconButton>
-                        ) : null}
-                      </div>
-                      <br />
-                      <br />
-                      <div
-                        style={{
-                          position: 'absolute',
-                          right: 12,
-                          bottom: 8,
-                          fontSize: 12,
-                          color: '#fff',
-                        }}
-                      >
-                        {dateTime.toLocaleDateString('fa-IR').toString() +
-                          ' ' +
-                          dateTime.getHours() +
-                          ':' +
-                          dateTime.getMinutes() +
-                          ':' +
-                          dateTime.getSeconds()}
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div style={{ position: 'relative', display: 'flex' }}>
-                    <Avatar
-                      src={
-                        serverRoot +
-                        `/file/download_user_avatar?token=${token}&userId=${message.authorId}`
-                      }
-                      style={{
-                        width: 40,
-                        height: 40,
-                        position: 'absolute',
-                        bottom: 16,
-                        left: 0,
-                      }}
-                    />
-                    <div
-                      style={{
-                        fontFamily: 'mainFont',
-                        fontSize: 15,
-                        display: 'inline-block',
-                        width: 'auto',
-                        minWidth: 125,
-                        maxWidth: 300,
-                        padding: 16,
-                        backgroundColor: '#1a8a98',
-                        color: '#fff',
-                        borderRadius: '16px 16px 0px 16px',
-                        position: 'absolute',
-                        left: 48,
-                        marginTop: 16,
-                        background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
-                      }}
-                    >
-                      <Typography
-                        style={{
-                          position: 'absolute',
-                          left: 16,
-                          fontWeight: 'bold',
-                          fontSize: 20,
-                        }}
-                      >
-                        {message['User.firstName']}
-                      </Typography>
-                      <br />
-                      <div style={{ marginTop: 8 }}>
-                        {message.messageType === 'text' ? (
-                          message.text
-                        ) : message.messageType === 'audio' ? (
-                          <WaveSurferBox
-                            fileId={message.fileId}
-                            src={
-                              serverRoot +
-                              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                            }
-                          />
-                        ) : message.messageType === 'photo' ? (
-                          <img
-                            onClick={() => {
-                              setCurrentPhotoSrc(
-                                serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                              )
-                              setPhotoViewerVisible(true)
-                            }}
-                            style={{ width: 200 }}
-                            src={
-                              serverRoot +
-                              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                            }
-                          />
-                        ) : message.messageType === 'video' ? (
-                          <div>
-                            <video
-                              onClick={() => {
-                                gotoPage('/app/videoplayer', {
-                                  src:
-                                    serverRoot +
-                                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                                })
-                              }}
-                              controls={false}
-                              style={{ width: 200 }}
-                              src={
-                                serverRoot +
-                                `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                              }
-                            />
-                          </div>
-                        ) : (
-                          message.text
-                        )}
-                        {message.messageType === 'video' ? (
-                          <IconButton
-                            onClick={() => {
-                              gotoPage('/app/videoplayer', {
-                                src:
-                                  serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                              })
-                            }}
-                            style={{
-                              width: 64,
-                              height: 64,
-                              position: 'absolute',
-                              left: '50%',
-                              top: 'calc(50% - 24px)',
-                              transform: 'translate(-50%, -50%)',
-                            }}
-                          >
-                            <PlayArrowTwoTone
-                              style={{ width: 64, height: 64 }}
-                            />
-                          </IconButton>
-                        ) : null}
-                      </div>
-                      <br />
-                      <br />
-                      <div
-                        style={{
-                          position: 'absolute',
-                          right: 12,
-                          bottom: 8,
-                          fontSize: 12,
-                          color: '#fff',
-                        }}
-                      >
-                        {dateTime.toLocaleDateString('fa-IR').toString() +
-                          ' ' +
-                          dateTime.getHours() +
-                          ':' +
-                          dateTime.getMinutes() +
-                          ':' +
-                          dateTime.getSeconds()}
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        visibility: 'hidden',
-                        fontFamily: 'mainFont',
-                        fontSize: 15,
-                        display: 'inline-block',
-                        width: 'auto',
-                        minWidth: 125,
-                        maxWidth: 300,
-                        padding: 16,
-                        color: 'transparent',
-                        marginLeft: 16,
-                        marginTop: 16,
-                        color: '#fff',
-                        left: 0,
-                        background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
-                      }}
-                    >
-                      <Typography
-                        style={{
-                          position: 'absolute',
-                          left: 16,
-                          fontWeight: 'bold',
-                          fontSize: 20,
-                        }}
-                      >
-                        {message['User.firstName']}
-                      </Typography>
-                      <br />
-                      <div style={{ marginTop: 8 }}>
-                        {message.messageType === 'text' ? (
-                          message.text
-                        ) : message.messageType === 'audio' ? (
-                          <WaveSurferBox
-                            fileId={message.fileId}
-                            src={
-                              serverRoot +
-                              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                            }
-                          />
-                        ) : message.messageType === 'photo' ? (
-                          <img
-                            onClick={() => {
-                              setCurrentPhotoSrc(
-                                serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                              )
-                              setPhotoViewerVisible(true)
-                            }}
-                            style={{ width: 200 }}
-                            src={
-                              serverRoot +
-                              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                            }
-                          />
-                        ) : message.messageType === 'video' ? (
-                          <div>
-                            <video
-                              onClick={() => {
-                                gotoPage('/app/videoplayer', {
-                                  src:
-                                    serverRoot +
-                                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                                })
-                              }}
-                              controls={false}
-                              style={{ width: 200 }}
-                              src={
-                                serverRoot +
-                                `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                              }
-                            />
-                          </div>
-                        ) : (
-                          message.text
-                        )}
-                        {message.messageType === 'video' ? (
-                          <IconButton
-                            onClick={() => {
-                              gotoPage('/app/videoplayer', {
-                                src:
-                                  serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                              })
-                            }}
-                            style={{
-                              width: 64,
-                              height: 64,
-                              position: 'absolute',
-                              left: '50%',
-                              top: 'calc(50% - 24px)',
-                              transform: 'translate(-50%, -50%)',
-                            }}
-                          >
-                            <PlayArrowTwoTone
-                              style={{ width: 64, height: 64 }}
-                            />
-                          </IconButton>
-                        ) : null}
-                      </div>
-                      <br />
-                      <br />
-                      <div
-                        style={{
-                          position: 'absolute',
-                          right: 12,
-                          bottom: 8,
-                          fontSize: 12,
-                          color: '#fff',
-                        }}
-                      >
-                        {dateTime.toLocaleDateString('fa-IR').toString() +
-                          ' ' +
-                          dateTime.getHours() +
-                          ':' +
-                          dateTime.getMinutes() +
-                          ':' +
-                          dateTime.getSeconds()}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )
-          })}
+          <div id={'messagesContainer'}>{messagesArr}</div>
           <div style={{ width: '100%', height: 80 }} />
         </ScrollToBottom>
       </div>
