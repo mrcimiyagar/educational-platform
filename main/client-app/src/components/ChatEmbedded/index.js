@@ -607,6 +607,7 @@ export default function ChatEmbedded(props) {
       <MessageItem
         key={Math.random()}
         message={msg}
+        roomId={props.roomId}
         setPhotoViewerVisible={setPhotoViewerVisible}
         setCurrentPhotoSrc={setCurrentPhotoSrc}
       />
@@ -684,6 +685,7 @@ export default function ChatEmbedded(props) {
               <MessageItem
                 key={Math.random()}
                 message={message}
+                roomId={props.roomId}
                 setPhotoViewerVisible={setPhotoViewerVisible}
                 setCurrentPhotoSrc={setCurrentPhotoSrc}
               />,
