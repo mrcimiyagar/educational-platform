@@ -18,7 +18,7 @@ import { gotoPage, popPage, registerDialogOpen } from '../../App'
 import ChatAppBar from '../../components/ChatAppBar'
 import { WaveSurferBox } from '../../components/WaveSurfer'
 import { colors, me, token } from '../../util/settings'
-import { serverRoot, useForceUpdate } from '../../util/Utils'
+import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import ChatWallpaper from '../../images/chat-wallpaper.jpg'
 import RoomPage from './room'
 
@@ -231,6 +231,66 @@ export default function Chat(props) {
         })
     }
   }, [loading])
+
+  useEffect(() => {
+    socket.off('message-added')
+    socket.on('message-added', ({ msgCopy }) => {
+      if (me.id !== msgCopy.authorId) {
+        function notifyMe() {
+          // Let's check if the browser supports notifications
+          if (!("Notification" in window)) {
+            console.log("This browser does not support desktop notification");
+          }
+        
+          // Let's check whether notification permissions have alredy been granted
+          else if (Notification.permission === "granted") {
+            // If it's okay let's create a notification
+            var notification = new Notification("Hi there!");
+          }
+        
+          // Otherwise, we need to ask the user for permission
+          else if (Notification.permission !== 'denied' || Notification.permission === "default") {
+            Notification.requestPermission(function (permission) {
+              // If the user accepts, let's create a notification
+              if (permission === "granted") {
+                var notification = new Notification("Hi there!");
+              }
+            });
+          }
+        
+          // At last, if the user has denied notifications, and you
+          // want to be respectful there is no need to bother them any more.
+        }
+
+        notifyMe()
+
+        let requestOptions3 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: props.roomId,
+          }),
+          redirect: 'follow',
+      }
+      fetch(serverRoot + '/chat/get_messages', requestOptions3)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result))
+            if (result.messages !== undefined) {
+              msgCopy['User.id'] = msgCopy.User.id
+              msgCopy['User.username'] = msgCopy.User.username
+              msgCopy['User.firstName'] = msgCopy.User.firstName
+              result.messages.push(msgCopy)
+              setMessages(result.messages)
+            }
+          })
+          .catch((error) => console.log('error', error))
+      }
+    })
+  }, [])
 
   return (
     <Dialog
