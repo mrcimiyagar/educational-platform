@@ -313,7 +313,13 @@ export default function Chat(props) {
                 else {
                   setShowEmojiPad(!showEmojiPad)
                   window.onpopstate = function (event) {
-                    
+                    setShowEmojiPad(false)
+                    window.onpopstate = function (event) {
+                      if (setDialogOpen !== null) {
+                        setDialogOpen(false)
+                      }
+                      setTimeout(popPage, 250)
+                    }
                   }
                 }
               }}
