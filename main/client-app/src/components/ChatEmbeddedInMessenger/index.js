@@ -30,6 +30,7 @@ import ChatAppBar from '../ChatAppBar'
 import EmptySign from '../EmptySign'
 import { WaveSurferBox } from '../WaveSurfer'
 import ChatWallpaper from '../../images/chat-wallpaper.png'
+import { setLastMessage } from '../AllChats'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -771,6 +772,7 @@ export default function ChatEmbeddedInMessenger(props) {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
                     addMessageToList(result.message)
+                    setLastMessage(result.message)
                     document.getElementById('chatText').value = ''
                   }
                 })
@@ -905,6 +907,7 @@ export default function ChatEmbeddedInMessenger(props) {
                     console.log(JSON.stringify(result))
                     if (result.message !== undefined) {
                       addMessageToList(result.message)
+                      setLastMessage(result.message)
                       document.getElementById('chatText').value = ''
                     }
                   })
