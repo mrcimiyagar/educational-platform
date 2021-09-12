@@ -128,12 +128,15 @@ router.get('/download_file_thumbnail', jsonParser, async function (req, res) {
 
 router.get('/download_file', jsonParser, async function (req, res) {
     if (req.query.fileId === undefined) {
-        console.log('\u001b[' + 32 + 'm' + req.query.fileId + '\u001b[0m')
         res.sendStatus(404);
         return
     }
     authenticateMember(req, res, async (membership, session, user) => {
         sw.File.findOne({where: {roomId: membership.roomId, id: req.query.fileId}}).then(async file => {
+            if (file === null) {
+                res.sendStatus(404);
+                return
+            }
             if (fs.existsSync(rootPath + '/files/' + file.id)) {
                 res.sendFile(rootPath + '/files/' + file.id)
             }
