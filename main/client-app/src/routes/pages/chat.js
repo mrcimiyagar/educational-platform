@@ -236,32 +236,11 @@ export default function Chat(props) {
     socket.off('message-added')
     socket.on('message-added', ({ msgCopy }) => {
       if (me.id !== msgCopy.authorId) {
-        
-
-        let requestOptions3 = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            token: token,
-          },
-          body: JSON.stringify({
-            roomId: props.roomId,
-          }),
-          redirect: 'follow',
-      }
-      fetch(serverRoot + '/chat/get_messages', requestOptions3)
-          .then((response) => response.json())
-          .then((result) => {
-            console.log(JSON.stringify(result))
-            if (result.messages !== undefined) {
-              msgCopy['User.id'] = msgCopy.User.id
-              msgCopy['User.username'] = msgCopy.User.username
-              msgCopy['User.firstName'] = msgCopy.User.firstName
-              result.messages.push(msgCopy)
-              setMessages(result.messages)
-            }
-          })
-          .catch((error) => console.log('error', error))
+        msgCopy['User.id'] = msgCopy.User.id
+        msgCopy['User.username'] = msgCopy.User.username
+        msgCopy['User.firstName'] = msgCopy.User.firstName
+        messages.push(msgCopy)
+        setMessages(messages)
       }
     })
   }, [])
@@ -322,7 +301,21 @@ export default function Chat(props) {
             <IconButton
               className={classes.iconButton}
               onClick={() => {
-                setShowEmojiPad(!showEmojiPad)
+                if (showEmojiPad) {
+                  setShowEmojiPad(!showEmojiPad)
+                  window.onpopstate = function (event) {
+                    if (setDialogOpen !== null) {
+                      setDialogOpen(false)
+                    }
+                    setTimeout(popPage, 250)
+                  }
+                }
+                else {
+                  setShowEmojiPad(!showEmojiPad)
+                  window.onpopstate = function (event) {
+                    
+                  }
+                }
               }}
             >
               <EmojiEmotionsIcon />

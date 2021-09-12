@@ -202,7 +202,7 @@ let pages = {
   '/app/auth': Auth4
 }
 
-let setDialogOpen = null
+export let setDialogOpen = null
 export let registerDialogOpen = (setOpen) => {
   setDialogOpen = setOpen
 }
