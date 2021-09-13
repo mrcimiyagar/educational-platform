@@ -2,6 +2,7 @@ import { Fab, makeStyles, TextField, Typography } from '@material-ui/core';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import React, { useEffect } from "react";
+import { pathConfig } from '../..';
 import { gotoPage } from "../../App";
 import CloudIcon from '../../images/logo.png';
 import { setMe, setToken } from "../../util/settings";
@@ -118,7 +119,7 @@ function Auth4(props) {
                   setConfig(result.account);
                   setOpacity(0)
                   setTimeout(() => {
-                    gotoPage('/app/messenger')
+                    window.location.href = pathConfig.mainFrontend + '/app/messenger'
                   }, 1000)
                 }
                 else {
