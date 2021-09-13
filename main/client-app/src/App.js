@@ -41,7 +41,7 @@ import {
 import { pathConfig, setWallpaper } from '.'
 import { addMessageToList2 } from './components/ChatEmbeddedInMessenger'
 import { addMessageToList3 } from './components/ChatEmbedded'
-import { setLastMessage } from './components/AllChats'
+import { addNewChat, setLastMessage } from './components/HomeMain'
 
 export let histPage = undefined
 let setHistPage = undefined
@@ -232,6 +232,10 @@ export default function MainApp(props) {
         setLastMessage(msgCopy)
       }
     })
+    socket.off('chat-created')
+    socket.on('chat-created', ({ room }) => {
+      addNewChat(room)
+    })
   })
 
   forceUpdate = useForceUpdate()
@@ -334,6 +338,9 @@ export default function MainApp(props) {
         gotoPage('/app/auth', {})
       }
     })
+
+    var audio = new Audio(StartupSound);
+    audio.play();
   }, [])
 
   return (

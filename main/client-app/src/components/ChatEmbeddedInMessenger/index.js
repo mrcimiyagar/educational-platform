@@ -30,7 +30,7 @@ import ChatAppBar from '../ChatAppBar'
 import EmptySign from '../EmptySign'
 import { WaveSurferBox } from '../WaveSurfer'
 import ChatWallpaper from '../../images/chat-wallpaper.png'
-import { setLastMessage } from '../AllChats'
+import { setLastMessage } from '../../components/HomeMain'
 
 const useStyles = makeStyles((theme) => ({
   root: {

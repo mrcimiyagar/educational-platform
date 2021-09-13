@@ -21,7 +21,7 @@ import { colors, me, token } from '../../util/settings'
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import ChatWallpaper from '../../images/chat-wallpaper.jpg'
 import RoomPage from './room'
-import { setLastMessage } from '../../components/AllChats'
+import { setLastMessage } from '../../components/HomeMain'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />

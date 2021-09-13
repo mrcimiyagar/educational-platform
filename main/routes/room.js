@@ -387,6 +387,9 @@ router.post('/create_room', jsonParser, async function (req, res) {
           room.save()
         }
       }
+      if (req.body.participentId !== undefined) {
+        sockets[req.body.participentId].emit('chat-created', {room})
+      }
       res.send({ status: 'success', room: room })
     },
   )

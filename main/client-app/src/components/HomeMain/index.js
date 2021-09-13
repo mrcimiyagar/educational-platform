@@ -77,20 +77,40 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export let updateHome = undefined
+export let setLastMessage = () => {}
+export let addNewChat = () => {}
 
 export default function HomeAppbar(props) {
-  updateHome = useForceUpdate()
-  const classes = useStyles()
+  updateHome = useForceUpdate();
+  const classes = useStyles();
 
-  document.documentElement.style.overflowY = 'hidden'
+  document.documentElement.style.overflowY = 'hidden';
 
-  let [selectedRoomId, setSelectedRoomId] = React.useState(props.selectedChatId)
-  let [selectedUserId, setSelectedUserId] = React.useState(props.selectedUserId)
-  const [jumperOpen, setJumperOpen] = React.useState(true)
-  const [value, setValue] = React.useState(3)
-  let currNav = store.getState().global.main.currentMessengerNav
-  let [chats, setChats] = React.useState([])
-  let [drawerOpen, setDrawerOpen] = React.useState(false)
+  let [selectedRoomId, setSelectedRoomId] = React.useState(props.selectedChatId);
+  let [selectedUserId, setSelectedUserId] = React.useState(props.selectedUserId);
+  const [jumperOpen, setJumperOpen] = React.useState(true);
+  const [value, setValue] = React.useState(3);
+  let currNav = store.getState().global.main.currentMessengerNav;
+  let [chats, setChats] = React.useState([]);
+  let [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  setLastMessage = (msg) => {
+    try {
+      if (chats.filter(c => c.id === msg.roomId).length > 0) {
+        chats.filter(c => c.id === msg.roomId)[0].lastMessage = msg;
+        updateHome();
+      }
+    }
+    catch(ex) {console.log(ex)}
+  }
+  addNewChat = (chat) => {
+    try {
+      chats.unshift(chat);
+      setChats(chats);
+      updateHome();
+    }
+    catch(ex) {console.log(ex)}
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
