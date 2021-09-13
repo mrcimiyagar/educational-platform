@@ -364,7 +364,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
       })
       if (req.body.participentId !== undefined) {
         room.chatType = 'p2p'
-        room.save()
+        await room.save()
         let participent = await sw.User.findOne({
           where: { id: req.body.participentId },
         })
@@ -377,8 +377,13 @@ router.post('/create_room', jsonParser, async function (req, res) {
           code: session.userId + ' ' + req.body.participentId,
           roomId: room.id,
         })
-        room.participent = participent
-        sockets[req.body.participentId].emit('chat-created', {room})
+        let roomCopy = {
+          title: room.title,
+          spaceId: room.spaceId,
+          chatType: room.chatType
+        }
+        roomCopy.participent = participent
+        sockets[req.body.participentId].emit('chat-created', {room: roomCopy})
       } else {
         if (
           req.body.chatType === 'group' ||
@@ -386,7 +391,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
           req.body.chatType === 'bot'
         ) {
           room.chatType = req.body.chatType
-          room.save()
+          await room.save()
         }
       }
       res.send({ status: 'success', room: room })
