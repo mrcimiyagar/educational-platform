@@ -395,6 +395,26 @@ router.post('/create_room', jsonParser, async function (req, res) {
           await room.save()
         }
       }
+
+      let msg = await sw.Message.create({
+        authorId: session.userId,
+        time: Date.now(),
+        roomId: room.id,
+        text: 'روم ساخته شذ',
+        fileId: null,
+        messageType: 'text'
+      });
+      let msgCopy = {
+        authorId: session.userId,
+        time: Date.now(),
+        roomId: room.id,
+        text: 'روم ساخته شذ',
+        fileId: null,
+        messageType: 'text',
+        User: user
+      }
+      sockets[req.body.participentId].emit('message-added', {msgCopy})
+
       res.send({ status: 'success', room: room })
     },
   )

@@ -828,7 +828,7 @@ export default function ChatEmbeddedInMessenger(props) {
         style={{ position: 'fixed', left: 0, top: 0 }}
         visible={photoViewerVisible}
         onClose={() => {
-          props.setPhotoViewerVisible(false)
+          setPhotoViewerVisible(false)
         }}
         images={[{ src: currentPhotoSrc, alt: '' }]}
       />
