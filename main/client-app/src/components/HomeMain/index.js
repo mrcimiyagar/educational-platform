@@ -98,6 +98,8 @@ export default function HomeAppbar(props) {
     try {
       if (chats.filter(c => c.id === msg.roomId).length > 0) {
         chats.filter(c => c.id === msg.roomId)[0].lastMessage = msg;
+        chats.sort(function(a, b){return b.lastMessage.time-a.lastMessage.time});
+        setChats(chats)
         updateHome();
       }
     }
@@ -106,6 +108,7 @@ export default function HomeAppbar(props) {
   addNewChat = (chat) => {
     try {
       chats.unshift(chat);
+      chats.sort(function(a, b){return b.lastMessage.time-a.lastMessage.time});
       setChats(chats);
       updateHome();
     }
@@ -129,6 +132,7 @@ export default function HomeAppbar(props) {
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
+        result.rooms.sort(function(a, b){return b.lastMessage.time-a.lastMessage.time});
         setChats(result.rooms)
       })
       .catch((error) => console.log('error', error))
