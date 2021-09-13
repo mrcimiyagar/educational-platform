@@ -11,7 +11,13 @@ import RadioIcon from '@material-ui/icons/Radio'
 import RedditIcon from '@material-ui/icons/Reddit'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
-import { histPage, isDesktop, isInMessenger, isMobile, isTablet } from '../../App'
+import {
+  histPage,
+  isDesktop,
+  isInMessenger,
+  isMobile,
+  isTablet,
+} from '../../App'
 import ChatEmbedded from '../../components/ChatEmbedded'
 import store from '../../redux/main'
 import { setColors, colors, token } from '../../util/settings'
@@ -60,11 +66,14 @@ TabPanel.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    marginRight: isDesktop() && histPage === '/app/room' ? 256 + 32 + 32 + 8 + 64 : undefined,
+    marginRight:
+      isDesktop() && histPage === '/app/room'
+        ? 256 + 32 + 32 + 8 + 64
+        : undefined,
     width: isDesktop() && histPage === '/app/room' ? 450 : '100%',
-    maxWidth: isDesktop() && histPage === '/app/room'  ? 450 : '100%',
+    maxWidth: isDesktop() && histPage === '/app/room' ? 450 : '100%',
     height: '100%',
-    backgroundColor: colors.accentDark
+    backgroundColor: colors.accentDark,
   },
   indicator: {
     backgroundColor: 'white',
@@ -81,42 +90,48 @@ export let setLastMessage = () => {}
 export let addNewChat = () => {}
 
 export default function HomeAppbar(props) {
-  updateHome = useForceUpdate();
-  const classes = useStyles();
+  updateHome = useForceUpdate()
+  const classes = useStyles()
 
-  document.documentElement.style.overflowY = 'hidden';
+  document.documentElement.style.overflowY = 'hidden'
 
-  let [selectedRoomId, setSelectedRoomId] = React.useState(props.selectedChatId);
-  let [selectedUserId, setSelectedUserId] = React.useState(props.selectedUserId);
-  const [jumperOpen, setJumperOpen] = React.useState(true);
-  const [value, setValue] = React.useState(3);
-  let currNav = store.getState().global.main.currentMessengerNav;
-  let [chats, setChats] = React.useState([]);
-  let [drawerOpen, setDrawerOpen] = React.useState(false);
+  let [selectedRoomId, setSelectedRoomId] = React.useState(props.selectedChatId)
+  let [selectedUserId, setSelectedUserId] = React.useState(props.selectedUserId)
+  const [jumperOpen, setJumperOpen] = React.useState(true)
+  const [value, setValue] = React.useState(3)
+  let currNav = store.getState().global.main.currentMessengerNav
+  let [chats, setChats] = React.useState([])
+  let [drawerOpen, setDrawerOpen] = React.useState(false)
 
   setLastMessage = (msg) => {
     try {
-      if (chats.filter(c => c.id === msg.roomId).length > 0) {
-        chats.filter(c => c.id === msg.roomId)[0].lastMessage = msg;
-        chats.sort(function(a, b){
-          if (b.lastMessage === undefined) return (0 - a.lastMessage.time)
-          if (a.lastMessage === undefined) return (b.lastMessage.time - 0)
-          return b.lastMessage.time-a.lastMessage.time
-        });
+      if (chats.filter((c) => c.id === msg.roomId).length > 0) {
+        chats.filter((c) => c.id === msg.roomId)[0].lastMessage = msg
+        chats.sort(function (a, b) {
+          if (b.lastMessage === undefined) return 0 - a.lastMessage.time
+          if (a.lastMessage === undefined) return b.lastMessage.time - 0
+          return b.lastMessage.time - a.lastMessage.time
+        })
         setChats(chats)
-        updateHome();
+        updateHome()
       }
+    } catch (ex) {
+      console.log(ex)
     }
-    catch(ex) {console.log(ex)}
   }
   addNewChat = (chat) => {
     try {
-      chats.unshift(chat);
-      chats.sort(function(a, b){return b.lastMessage.time-a.lastMessage.time});
-      setChats(chats);
-      updateHome();
+      chats.unshift(chat)
+      chats.sort(function (a, b) {
+        if (b.lastMessage === undefined) return 0 - a.lastMessage.time
+        if (a.lastMessage === undefined) return b.lastMessage.time - 0
+        return b.lastMessage.time - a.lastMessage.time
+      })
+      setChats(chats)
+      updateHome()
+    } catch (ex) {
+      console.log(ex)
     }
-    catch(ex) {console.log(ex)}
   }
 
   const handleChange = (event, newValue) => {
@@ -136,7 +151,11 @@ export default function HomeAppbar(props) {
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
-        result.rooms.sort(function(a, b){return b.lastMessage.time-a.lastMessage.time});
+        result.rooms.sort(function (a, b) {
+          if (b.lastMessage === undefined) return 0 - a.lastMessage.time
+          if (a.lastMessage === undefined) return b.lastMessage.time - 0
+          return b.lastMessage.time - a.lastMessage.time
+        })
         setChats(result.rooms)
       })
       .catch((error) => console.log('error', error))
@@ -145,7 +164,12 @@ export default function HomeAppbar(props) {
   return (
     <div className={classes.root}>
       {currNav === 0 ? (
-        <div style={{ background: 'transparent', marginRight: (isMobile() || isTablet()) ? 0 : 256 + 136 }}>
+        <div
+          style={{
+            background: 'transparent',
+            marginRight: isMobile() || isTablet() ? 0 : 256 + 136,
+          }}
+        >
           <HomeToolbar>
             <AppBar
               style={{
@@ -314,7 +338,11 @@ export default function HomeAppbar(props) {
             </TabPanel>
           </div>
           {isDesktop() && isInMessenger() ? (
-            <ChatEmbeddedInMessenger key={'chat1'} roomId={selectedRoomId} userId={selectedUserId} />
+            <ChatEmbeddedInMessenger
+              key={'chat1'}
+              roomId={selectedRoomId}
+              userId={selectedUserId}
+            />
           ) : isTablet() ? (
             <div
               style={{
@@ -325,7 +353,11 @@ export default function HomeAppbar(props) {
                 top: 0,
               }}
             >
-              <ChatEmbedded key={'chat2'} roomId={selectedRoomId} userId={selectedUserId} />
+              <ChatEmbedded
+                key={'chat2'}
+                roomId={selectedRoomId}
+                userId={selectedUserId}
+              />
             </div>
           ) : null}
           <Fab
