@@ -383,7 +383,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
           spaceId: room.spaceId,
           chatType: room.chatType
         }
-        roomCopy.participent = participent
+        roomCopy.participent = session.user
         sockets[req.body.participentId].emit('chat-created', {room: roomCopy})
       } else {
         if (
