@@ -411,7 +411,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
         text: 'روم ساخته شذ',
         fileId: null,
         messageType: 'text',
-        User: user
+        User: await sw.User.findOne({where: {id: session.userId}})
       }
       sockets[req.body.participentId].emit('message-added', {msgCopy})
 
