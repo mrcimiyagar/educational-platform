@@ -9,6 +9,7 @@ import store from './redux/main'
 import DesktopWallpaper from './images/desktop-wallpaper.webp'
 import DesktopWallpaper2 from './images/desktop-wallpaper.jpg'
 import { setup } from './util/Utils'
+import {register} from './serviceWorkerRegistration';
 
 export let pathConfig = {}
 
@@ -213,3 +214,5 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'),
 )
+
+register()
