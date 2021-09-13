@@ -98,7 +98,11 @@ export default function HomeAppbar(props) {
     try {
       if (chats.filter(c => c.id === msg.roomId).length > 0) {
         chats.filter(c => c.id === msg.roomId)[0].lastMessage = msg;
-        chats.sort(function(a, b){return b.lastMessage.time-a.lastMessage.time});
+        chats.sort(function(a, b){
+          if (b.lastMessage === undefined) return (0 - a.lastMessage.time)
+          if (a.lastMessage === undefined) return (b.lastMessage.time - 0)
+          return b.lastMessage.time-a.lastMessage.time
+        });
         setChats(chats)
         updateHome();
       }
