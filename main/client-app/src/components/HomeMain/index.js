@@ -108,6 +108,7 @@ export default function HomeAppbar(props) {
       if (chats.filter((c) => c.id === msg.roomId).length > 0) {
         chats.filter((c) => c.id === msg.roomId)[0].lastMessage = msg
         chats.sort(function (a, b) {
+          if (a.lastMessage === undefined && b.lastMessage === undefined) return 0;
           if (b.lastMessage === undefined) return 0 - a.lastMessage.time
           if (a.lastMessage === undefined) return b.lastMessage.time - 0
           return b.lastMessage.time - a.lastMessage.time
@@ -123,6 +124,7 @@ export default function HomeAppbar(props) {
     try {
       chats.unshift(chat)
       chats.sort(function (a, b) {
+        if (a.lastMessage === undefined && b.lastMessage === undefined) return 0;
         if (b.lastMessage === undefined) return 0 - a.lastMessage.time
         if (a.lastMessage === undefined) return b.lastMessage.time - 0
         return b.lastMessage.time - a.lastMessage.time
@@ -152,6 +154,7 @@ export default function HomeAppbar(props) {
       .then((result) => {
         console.log(JSON.stringify(result))
         result.rooms.sort(function (a, b) {
+          if (a.lastMessage === undefined && b.lastMessage === undefined) return 0;
           if (b.lastMessage === undefined) return 0 - a.lastMessage.time
           if (a.lastMessage === undefined) return b.lastMessage.time - 0
           return b.lastMessage.time - a.lastMessage.time
