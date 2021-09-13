@@ -70,6 +70,7 @@ let Loading = (props) => {
 export let setWallpaper = undefined,
   wallpaper = undefined
 let setWall = undefined
+let loaded = false
 
 let AppContainer = (props) => {
   ;[wallpaper, setWall] = React.useState({ type: '' })
@@ -91,6 +92,7 @@ let AppContainer = (props) => {
       .then((result) => {
 		pathConfig = result
     setup()
+    loaded = true
         setTimeout(() => {
           setOpacity(1)
           setTimeout(() => {
@@ -102,6 +104,8 @@ let AppContainer = (props) => {
         }, 4000)
       })
   }, [])
+
+  if (!loaded) return <div/>
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
