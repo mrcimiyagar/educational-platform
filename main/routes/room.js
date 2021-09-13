@@ -378,6 +378,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
           roomId: room.id,
         })
         let roomCopy = {
+          id: room.id,
           title: room.title,
           spaceId: room.spaceId,
           chatType: room.chatType
