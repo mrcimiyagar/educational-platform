@@ -377,6 +377,8 @@ router.post('/create_room', jsonParser, async function (req, res) {
           code: session.userId + ' ' + req.body.participentId,
           roomId: room.id,
         })
+        room.participent = participent
+        sockets[req.body.participentId].emit('chat-created', {room})
       } else {
         if (
           req.body.chatType === 'group' ||
@@ -386,9 +388,6 @@ router.post('/create_room', jsonParser, async function (req, res) {
           room.chatType = req.body.chatType
           room.save()
         }
-      }
-      if (req.body.participentId !== undefined) {
-        sockets[req.body.participentId].emit('chat-created', {room})
       }
       res.send({ status: 'success', room: room })
     },
