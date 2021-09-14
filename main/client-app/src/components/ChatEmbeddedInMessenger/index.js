@@ -703,7 +703,7 @@ export default function ChatEmbeddedInMessenger(props) {
         messagesArr.push(lastMsg)
         forceUpdate()
       }
-    } catch (ex) {}
+    } catch (ex) {console.log(ex)}
   }
   addMessageToList2 = addMessageToList
 
@@ -738,6 +738,36 @@ export default function ChatEmbeddedInMessenger(props) {
           })
           request.onreadystatechange = function () {
             if (request.readyState === XMLHttpRequest.DONE) {
+              let msg = {
+                id: 'message_' + Date.now(),
+                time: Date.now(),
+                authorId: me.id,
+                roomId: props.roomId,
+                text: document.getElementById('chatText').value,
+                messageType:
+                    dataUrl.name.endsWith('.svg') ||
+                    dataUrl.name.endsWith('.png') ||
+                    dataUrl.name.endsWith('.jpg') ||
+                    dataUrl.name.endsWith('.jpeg') ||
+                    dataUrl.name.endsWith('.gif')
+                      ? 'photo'
+                      : dataUrl.name.endsWith('.wav') ||
+                        dataUrl.name.endsWith('.mp3') ||
+                        dataUrl.name.endsWith('.mpeg') ||
+                        dataUrl.name.endsWith('.mp4')
+                      ? 'audio'
+                      : dataUrl.name.endsWith('.webm') ||
+                        dataUrl.name.endsWith('.mkv') ||
+                        dataUrl.name.endsWith('.flv') ||
+                        dataUrl.name.endsWith('.3gp')
+                      ? 'video'
+                      : undefined,
+                  fileId: JSON.parse(request.responseText).file.id,
+                User: me
+              }
+              addMessageToList(msg)
+              setLastMessage(msg)
+              document.getElementById('chatText').value = ''
               let requestOptions = {
                 method: 'POST',
                 headers: {
@@ -773,9 +803,7 @@ export default function ChatEmbeddedInMessenger(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
-                    addMessageToList(result.message)
-                    setLastMessage(result.message)
-                    document.getElementById('chatText').value = ''
+
                   }
                 })
                 .catch((error) => console.log('error', error))
@@ -890,6 +918,18 @@ export default function ChatEmbeddedInMessenger(props) {
             style={{ transform: 'rotate(180deg)' }}
             onClick={() => {
               if (document.getElementById('chatText').value !== '') {
+                let msg = {
+                  id: 'message_' + Date.now(),
+                  time: Date.now(),
+                  authorId: me.id,
+                  roomId: props.roomId,
+                  text: document.getElementById('chatText').value,
+                  messageType: 'text',
+                  User: me
+                }
+                addMessageToList(msg)
+                setLastMessage(msg)
+                document.getElementById('chatText').value = ''
                 let requestOptions = {
                   method: 'POST',
                   headers: {
@@ -908,9 +948,7 @@ export default function ChatEmbeddedInMessenger(props) {
                   .then((result) => {
                     console.log(JSON.stringify(result))
                     if (result.message !== undefined) {
-                      addMessageToList(result.message)
-                      setLastMessage(result.message)
-                      document.getElementById('chatText').value = ''
+
                     }
                   })
                   .catch((error) => console.log('error', error))
