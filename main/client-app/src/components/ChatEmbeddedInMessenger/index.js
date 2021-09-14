@@ -999,11 +999,11 @@ export default function ChatEmbeddedInMessenger(props) {
           marginRight: 16,
         }}
       >
-        <ScrollToBottom className={ROOT_CSS}>
+        <div>
           <div style={{ height: 64 }} />
           <div id={'messagesContainer'}>{messagesArr}</div>
           <div style={{ width: '100%', height: 80 }} />
-        </ScrollToBottom>
+        </div>
       </div>
     </div>
   )
