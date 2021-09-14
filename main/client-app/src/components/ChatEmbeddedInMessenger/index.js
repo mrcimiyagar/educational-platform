@@ -686,8 +686,9 @@ export default function ChatEmbeddedInMessenger(props) {
   })
 
   let addMessageToList = (msg) => {
+    console.log(msg.roomId + ' ' + props.roomId)
     try {
-      if (msg.roomId === props.room_id) {
+      if (msg.roomId === props.roomId) {
         msg['User.id'] = msg.User.id
         msg['User.username'] = msg.User.username
         msg['User.firstName'] = msg.User.firstName
