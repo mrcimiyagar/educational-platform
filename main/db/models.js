@@ -34,6 +34,7 @@ let StoreCategory;
 let StorePackage;
 let Notification;
 let P2pExistance;
+let MessageSeen;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
@@ -84,6 +85,7 @@ module.exports = {
         await prepareStorePackageModel();
         await prepareNotificationModel();
         await prepareP2pExistanceModel();
+        await prepareMessageSeenModel();
 
         let adminAcc = await Account.findOne({where: {role: 'admin'}});
         if (adminAcc === null) {
@@ -140,6 +142,30 @@ function prepareSequelizeInstance() {
             idle: 10000
         }
     });
+}
+
+async function prepareMessageSeenModel() {
+    MessageSeen = sequelizeClient.define('MessageSeen', {
+        id: {
+            type: Sequelize.BIGINT,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        userId: {
+            type: Sequelize.BIGINT,
+            unique: 'MessageSeenUnique'
+        },
+        messageId: {
+            type: Sequelize.BIGINT,
+            unique: 'MessageSeenUnique'
+        }
+    }, {
+        freezeTableName: true
+    });
+    MessageSeen.belongsTo(User, { foreignKey: 'userId' });
+    MessageSeen.belongsTo(Message, { foreignKey: 'messageId' });
+    await MessageSeen.sync();
+    module.exports['MessageSeen'] = MessageSeen;
 }
 
 async function prepareP2pExistanceModel() {

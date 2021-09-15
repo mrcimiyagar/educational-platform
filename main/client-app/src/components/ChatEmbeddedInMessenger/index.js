@@ -1,15 +1,18 @@
 import { css } from '@emotion/css'
-import { Avatar, Typography } from '@material-ui/core'
+import { Avatar, Fab, Typography } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import InputBase from '@material-ui/core/InputBase'
 import { makeStyles } from '@material-ui/core/styles'
-import { PlayArrowTwoTone } from '@material-ui/icons'
+import {
+  ArrowDownward,
+  ArrowUpward,
+  PlayArrowTwoTone,
+} from '@material-ui/icons'
 import DescriptionIcon from '@material-ui/icons/Description'
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions'
 import SendIcon from '@material-ui/icons/Send'
 import Picker from 'emoji-picker-react'
 import React, { useEffect } from 'react'
-import ScrollToBottom from 'react-scroll-to-bottom'
 import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
 import {
@@ -31,6 +34,9 @@ import EmptySign from '../EmptySign'
 import { WaveSurferBox } from '../WaveSurfer'
 import ChatWallpaper from '../../images/chat-wallpaper.png'
 import { setLastMessage } from '../../components/HomeMain'
+import DoneIcon from '@material-ui/icons/Done'
+import DoneAllIcon from '@material-ui/icons/DoneAll'
+import $ from 'jquery'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,7 +97,7 @@ function MessageItem(props) {
               fontSize: 15,
               display: 'inline-block',
               width: 'auto',
-              minWidth: 125,
+              minWidth: 150,
               maxWidth: 300,
               padding: 16,
               backgroundColor: '#1a8a98',
@@ -184,16 +190,24 @@ function MessageItem(props) {
               ) : null}
             </div>
             <br />
-            <br />
             <div
               style={{
                 position: 'absolute',
                 right: 12,
                 bottom: 8,
                 fontSize: 12,
+                display: 'flex',
                 color: '#fff',
+                width: 'auto',
               }}
             >
+              {message.seen > 0 ? (
+                <DoneAllIcon
+                  style={{ width: 16, height: 16, marginRight: 12 }}
+                />
+              ) : (
+                <DoneIcon style={{ width: 16, height: 16, marginRight: 12 }} />
+              )}
               {dateTime.toLocaleDateString('fa-IR').toString() +
                 ' ' +
                 dateTime.getHours() +
@@ -210,7 +224,7 @@ function MessageItem(props) {
               fontSize: 15,
               display: 'inline-block',
               width: 'auto',
-              minWidth: 125,
+              minWidth: 150,
               maxWidth: 300,
               padding: 16,
               backgroundColor: '#1a8a98',
@@ -308,9 +322,18 @@ function MessageItem(props) {
                 right: 12,
                 bottom: 8,
                 fontSize: 12,
+                display: 'flex',
                 color: '#fff',
+                width: 'auto',
               }}
             >
+              {message.seen > 0 ? (
+                <DoneAllIcon
+                  style={{ width: 16, height: 16, marginRight: 12 }}
+                />
+              ) : (
+                <DoneIcon style={{ width: 16, height: 16, marginRight: 12 }} />
+              )}
               {dateTime.toLocaleDateString('fa-IR').toString() +
                 ' ' +
                 dateTime.getHours() +
@@ -342,7 +365,7 @@ function MessageItem(props) {
               fontSize: 15,
               display: 'inline-block',
               width: 'auto',
-              minWidth: 125,
+              minWidth: 150,
               maxWidth: 300,
               padding: 16,
               backgroundColor: '#1a8a98',
@@ -461,7 +484,7 @@ function MessageItem(props) {
               fontSize: 15,
               display: 'inline-block',
               width: 'auto',
-              minWidth: 125,
+              minWidth: 150,
               maxWidth: 300,
               padding: 16,
               color: 'transparent',
@@ -599,8 +622,27 @@ export default function ChatEmbeddedInMessenger(props) {
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
     readAs: 'DataURL',
   })
+  let [scrollTrigger, setScrollTrigger] = React.useState(false)
+  let [showScrollDown, setShowScrollDown] = React.useState(false)
 
   useEffect(() => {
+    let scroller = document.getElementById('scroller')
+    scroller.scrollTo(0, scroller.scrollHeight)
+  }, [scrollTrigger])
+
+  useEffect(() => {
+    let scroller = document.getElementById('scroller')
+    scroller.onscroll = () => {
+      if (
+        scroller.scrollTop + $('#scroller').innerHeight() >=
+        scroller.scrollHeight
+      ) {
+        setShowScrollDown(false)
+      } else {
+        setShowScrollDown(true)
+      }
+    }
+
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -675,6 +717,7 @@ export default function ChatEmbeddedInMessenger(props) {
             )
           })
           forceUpdate()
+          setScrollTrigger(!scrollTrigger)
         }
       })
       .catch((error) => console.log('error', error))
@@ -686,9 +729,16 @@ export default function ChatEmbeddedInMessenger(props) {
   })
 
   let addMessageToList = (msg) => {
-    alert(msg.roomId + ' ' + props.roomId)
     try {
       if (msg.roomId === props.roomId) {
+        let isAtEnd = false
+        let scroller = document.getElementById('scroller')
+        if (
+          scroller.scrollTop + $('#scroller').innerHeight() >=
+          scroller.scrollHeight
+        ) {
+          isAtEnd = true
+        }
         msg['User.id'] = msg.User.id
         msg['User.username'] = msg.User.username
         msg['User.firstName'] = msg.User.firstName
@@ -703,8 +753,11 @@ export default function ChatEmbeddedInMessenger(props) {
         )
         messagesArr.push(lastMsg)
         forceUpdate()
+        if (isAtEnd) setScrollTrigger(!scrollTrigger)
       }
-    } catch (ex) {console.log(ex)}
+    } catch (ex) {
+      console.log(ex)
+    }
   }
   addMessageToList2 = addMessageToList
 
@@ -746,29 +799,28 @@ export default function ChatEmbeddedInMessenger(props) {
                 roomId: props.roomId,
                 text: document.getElementById('chatText').value,
                 messageType:
-                    dataUrl.name.endsWith('.svg') ||
-                    dataUrl.name.endsWith('.png') ||
-                    dataUrl.name.endsWith('.jpg') ||
-                    dataUrl.name.endsWith('.jpeg') ||
-                    dataUrl.name.endsWith('.gif')
-                      ? 'photo'
-                      : dataUrl.name.endsWith('.wav') ||
-                        dataUrl.name.endsWith('.mp3') ||
-                        dataUrl.name.endsWith('.mpeg') ||
-                        dataUrl.name.endsWith('.mp4')
-                      ? 'audio'
-                      : dataUrl.name.endsWith('.webm') ||
-                        dataUrl.name.endsWith('.mkv') ||
-                        dataUrl.name.endsWith('.flv') ||
-                        dataUrl.name.endsWith('.3gp')
-                      ? 'video'
-                      : undefined,
-                  fileId: JSON.parse(request.responseText).file.id,
-                User: me
+                  dataUrl.name.endsWith('.svg') ||
+                  dataUrl.name.endsWith('.png') ||
+                  dataUrl.name.endsWith('.jpg') ||
+                  dataUrl.name.endsWith('.jpeg') ||
+                  dataUrl.name.endsWith('.gif')
+                    ? 'photo'
+                    : dataUrl.name.endsWith('.wav') ||
+                      dataUrl.name.endsWith('.mp3') ||
+                      dataUrl.name.endsWith('.mpeg') ||
+                      dataUrl.name.endsWith('.mp4')
+                    ? 'audio'
+                    : dataUrl.name.endsWith('.webm') ||
+                      dataUrl.name.endsWith('.mkv') ||
+                      dataUrl.name.endsWith('.flv') ||
+                      dataUrl.name.endsWith('.3gp')
+                    ? 'video'
+                    : undefined,
+                fileId: JSON.parse(request.responseText).file.id,
+                User: me,
               }
               addMessageToList(msg)
               setLastMessage(msg)
-              document.getElementById('chatText').value = ''
               let requestOptions = {
                 method: 'POST',
                 headers: {
@@ -804,10 +856,10 @@ export default function ChatEmbeddedInMessenger(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
-
                   }
                 })
                 .catch((error) => console.log('error', error))
+              document.getElementById('chatText').value = ''
             }
           }
           if (FileReader) {
@@ -926,11 +978,10 @@ export default function ChatEmbeddedInMessenger(props) {
                   roomId: props.roomId,
                   text: document.getElementById('chatText').value,
                   messageType: 'text',
-                  User: me
+                  User: me,
                 }
                 addMessageToList(msg)
                 setLastMessage(msg)
-                document.getElementById('chatText').value = ''
                 let requestOptions = {
                   method: 'POST',
                   headers: {
@@ -949,10 +1000,10 @@ export default function ChatEmbeddedInMessenger(props) {
                   .then((result) => {
                     console.log(JSON.stringify(result))
                     if (result.message !== undefined) {
-
                     }
                   })
                   .catch((error) => console.log('error', error))
+                document.getElementById('chatText').value = ''
               }
             }}
           >
@@ -984,6 +1035,7 @@ export default function ChatEmbeddedInMessenger(props) {
       </div>
       <div
         style={{
+          position: 'relative',
           direction: 'ltr',
           width: isDesktop() ? 'calc(100% - 48px)' : '100%',
           height: showEmojiPad
@@ -999,11 +1051,28 @@ export default function ChatEmbeddedInMessenger(props) {
           marginRight: 16,
         }}
       >
-        <div>
+        <div
+          style={{ width: '100%', height: '100%', overflow: 'auto' }}
+          id={'scroller'}
+        >
           <div style={{ height: 64 }} />
           <div id={'messagesContainer'}>{messagesArr}</div>
           <div style={{ width: '100%', height: 80 }} />
         </div>
+        <Fab
+          color={'secondary'}
+          style={{
+            display: showScrollDown ? 'block' : 'none',
+            position: 'fixed',
+            left: 112 + 16,
+            bottom: 48 + 16,
+          }}
+          onClick={() => {
+            setScrollTrigger(!scrollTrigger)
+          }}
+        >
+          <ArrowDownward />
+        </Fab>
       </div>
     </div>
   )
