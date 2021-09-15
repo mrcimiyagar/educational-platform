@@ -152,7 +152,7 @@ async function prepareMessageSeenModel() {
             primaryKey: true,
         },
         userId: {
-            type: Sequelize.BIGINT,
+            type: Sequelize.STRING,
             unique: 'MessageSeenUnique'
         },
         messageId: {
