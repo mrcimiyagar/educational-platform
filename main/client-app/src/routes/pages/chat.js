@@ -24,6 +24,7 @@ import RoomPage from './room'
 import { setLastMessage } from '../../components/HomeMain'
 import $ from 'jquery'
 import Done from '@material-ui/icons/Done'
+import ReactDOM from 'react-dom';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -56,8 +57,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 function MessageItem(props) {
-  let message = props.message
-  let dateTime = new Date(Number(message.time))
+  let message = props.message;
+  let dateTime = new Date(Number(message.time));
   return (
     <div key={message.id} id={'message-' + message.id}>
       {message['User.id'] === me.id ? (
@@ -184,11 +185,8 @@ function MessageItem(props) {
                 display: 'flex',
               }}
             >
-              {message.seen > 0 ? (
-                <DoneAll style={{ width: 16, height: 16, marginRight: 12 }} />
-              ) : (
-                <Done style={{ width: 16, height: 16, marginRight: 12 }} />
-              )}
+              <DoneAll id={'message-seen-' + message.id} style={{ display: message.seen > 0 ? 'block' : 'none', width: 16, height: 16, marginRight: 12 }} />
+              <Done id={'message-not-seen-' + message.id} style={{ display: message.seen > 0 ? 'none' : 'block', width: 16, height: 16, marginRight: 12 }} />
               {dateTime.toLocaleDateString('fa-IR').toString() +
                 ' ' +
                 dateTime.getHours() +
@@ -306,11 +304,6 @@ function MessageItem(props) {
                 display: 'flex',
               }}
             >
-              {message.seen > 0 ? (
-                <DoneAll style={{ width: 16, height: 16, marginRight: 12 }} />
-              ) : (
-                <Done style={{ width: 16, height: 16, marginRight: 12 }} />
-              )}
               {dateTime.toLocaleDateString('fa-IR').toString() +
                 ' ' +
                 dateTime.getHours() +
@@ -613,22 +606,30 @@ export default function Chat(props) {
   }, [scrollTrigger])
 
   replaceMessageInTheList = (msg) => {
-    if (msg.roomId === props.roomId) {
-      let oldMessage = document.getElementById('message-' + msg.id);
-      if (oldMessage === null) return;
-      let messagesContainer = document.getElementById('messagesContainer');
+    if (msg.roomId === props.room_id) {
       let lastMsg = (
         <MessageItem
-          key={Math.random()}
+          key={'message-' + msg.id}
           message={msg}
           setPhotoViewerVisible={setPhotoViewerVisible}
           setCurrentPhotoSrc={setCurrentPhotoSrc}
         />
       );
-      messagesContainer.replaceChild(oldMessage, lastMsg);
+      let messageSeen = document.getElementById('message-seen-' + msg.id);
+      let messageNotSeen = document.getElementById('message-not-seen-' + msg.id);
+      if (messageSeen !== null && messageNotSeen !== null) {
+        if (msg.seen > 0) {
+          messageSeen.style.display = 'block';
+          messageNotSeen.style.display = 'none';
+        }
+        else {
+          messageSeen.style.display = 'none';
+          messageNotSeen.style.display = 'block';
+        }
+        forceUpdate();
+      }
     }
   }
-
   addMessageToList = (msg) => {
     try {
       if (msg.roomId === props.room_id) {
@@ -645,7 +646,7 @@ export default function Chat(props) {
         msg['User.firstName'] = msg.User.firstName
         let lastMsg = (
           <MessageItem
-            key={Math.random()}
+            key={'message-' + msg.id}
             message={msg}
             setPhotoViewerVisible={setPhotoViewerVisible}
             setCurrentPhotoSrc={setCurrentPhotoSrc}
@@ -653,7 +654,26 @@ export default function Chat(props) {
         )
         messagesArr.push(lastMsg)
         forceUpdate()
-        if (isAtEnd) setScrollTrigger(!scrollTrigger)
+        if (isAtEnd) {
+          setScrollTrigger(!scrollTrigger);
+        }
+        let requestOptions3 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: props.room_id,
+          }),
+          redirect: 'follow',
+        }
+        fetch(serverRoot + '/chat/get_messages', requestOptions3)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result))
+          })
+          .catch((error) => console.log('error', error))
       }
     } catch (ex) {
       console.log(ex)
@@ -753,7 +773,7 @@ export default function Chat(props) {
           result.messages.forEach((message) => {
             messagesArr.push(
               <MessageItem
-                key={Math.random()}
+                key={'message-' + message.id}
                 message={message}
                 setPhotoViewerVisible={setPhotoViewerVisible}
                 setCurrentPhotoSrc={setCurrentPhotoSrc}
@@ -862,6 +882,14 @@ export default function Chat(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
+                    let msgEl = document.getElementById('message-' + msg.id);
+                    let msgSeenEl = document.getElementById('message-seen-' + msg.id);
+                    let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);
+                    msgEl.id = 'message-' + result.message.id;
+                    msgSeenEl.id = 'message-seen-' + result.message.id;
+                    msgNotSeenEl.id = 'message-not-seen-' + result.message.id;
+                    msg.id = result.message.id;
+                    forceUpdate();
                   }
                 })
                 .catch((error) => console.log('error', error))
@@ -1001,6 +1029,14 @@ export default function Chat(props) {
                     .then((result) => {
                       console.log(JSON.stringify(result))
                       if (result.message !== undefined) {
+                        let msgEl = document.getElementById('message-' + msg.id);
+                        let msgSeenEl = document.getElementById('message-seen-' + msg.id);
+                        let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);
+                        msgEl.id = 'message-' + result.message.id;
+                        msgSeenEl.id = 'message-seen-' + result.message.id;
+                        msgNotSeenEl.id = 'message-not-seen-' + result.message.id;
+                        msg.id = result.message.id;
+                        forceUpdate();
                       }
                     })
                     .catch((error) => console.log('error', error))
