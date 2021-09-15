@@ -69,7 +69,7 @@ router.post('/get_user', jsonParser, async function (req, res) {
     res.send({status: 'success', user: user})
 });
 
-router.post('/get_me', jsonParser, async function (req, res) {
+router.get('/get_me', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {
         res.send({status: 'success', user: user})
     })
