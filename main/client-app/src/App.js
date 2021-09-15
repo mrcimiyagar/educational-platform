@@ -4,7 +4,7 @@ import './App.css'
 import { notifyUrlChanged } from './components/SearchEngineFam'
 import AudioPlayer from './routes/pages/audioPlayer'
 import Auth4 from './routes/pages/auth4'
-import Chat, { addMessageToList } from './routes/pages/chat'
+import Chat, { addMessageToList, replaceMessageInTheList } from './routes/pages/chat'
 import CreateRoom from './routes/pages/createRoom'
 import DeckPage from './routes/pages/deck'
 import MessengerPage from './routes/pages/messenger'
@@ -235,6 +235,10 @@ export default function MainApp(props) {
     socket.off('chat-created')
     socket.on('chat-created', ({ room }) => {
       addNewChat(room)
+    })
+    socket.off('message-seen')
+    socket.on('message-seen', ({ messages }) => {
+      messages.forEach(msg => replaceMessageInTheList(msg));
     })
   })
 

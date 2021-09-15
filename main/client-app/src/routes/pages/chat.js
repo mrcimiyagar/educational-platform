@@ -59,7 +59,7 @@ function MessageItem(props) {
   let message = props.message
   let dateTime = new Date(Number(message.time))
   return (
-    <div key={message.id}>
+    <div key={message.id} id={'message-' + message.id}>
       {message['User.id'] === me.id ? (
         <div style={{ position: 'relative', display: 'flex' }}>
           <Avatar
@@ -581,6 +581,7 @@ let messagesArr = []
 let uplaodedFileId = 0
 
 export let addMessageToList = () => {}
+export let replaceMessageInTheList = () => {}
 
 export default function Chat(props) {
   document.documentElement.style.overflowY = 'hidden'
@@ -610,6 +611,23 @@ export default function Chat(props) {
     let scroller = document.getElementById('chatScroller')
     if (scroller !== null) scroller.scrollTo(0, scroller.scrollHeight)
   }, [scrollTrigger])
+
+  replaceMessageInTheList = (msg) => {
+    if (msg.roomId === props.roomId) {
+      let oldMessage = document.getElementById('message-' + msg.id);
+      if (oldMessage === null) return;
+      let messagesContainer = document.getElementById('messagesContainer');
+      let lastMsg = (
+        <MessageItem
+          key={Math.random()}
+          message={msg}
+          setPhotoViewerVisible={setPhotoViewerVisible}
+          setCurrentPhotoSrc={setCurrentPhotoSrc}
+        />
+      );
+      messagesContainer.replaceChild(oldMessage, lastMsg);
+    }
+  }
 
   addMessageToList = (msg) => {
     try {
