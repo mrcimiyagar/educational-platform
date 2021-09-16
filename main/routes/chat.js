@@ -179,6 +179,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     let messages = await sw.Message.findAll({
       raw: true,
       limit: 10,
+      include: [{ all: true }],
       where: { roomId: membership.roomId },
       order: [ [ 'createdAt', 'DESC' ]]
     }); 
