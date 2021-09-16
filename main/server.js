@@ -41,7 +41,7 @@ webpush.setVapidDetails(
     vapidKeys.publicKey,
     vapidKeys.privateKey
 );
-app.get('/get_push_key', (req, res) => {
+app.get('/app/undefined/get_push_key', (req, res) => {
     res.send({key: vapidKeys.publicKey});
 });
 app.post("/subscribe", (req, res) => {
