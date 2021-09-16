@@ -6,7 +6,7 @@ import {
 } from './util/Utils'
 
 let requestOptions = {
-  method: 'POST',
+  method: 'GET',
   headers: {
     'Content-Type': 'application/json',
     token: token,
