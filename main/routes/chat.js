@@ -178,10 +178,10 @@ router.post('/get_messages', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     let messages = await sw.Message.findAll({
       raw: true,
-      include: [{ all: true }],
+      limit: 10,
       where: { roomId: membership.roomId },
-      order: [['time', 'ASC']],
-    })
+      order: [ [ 'createdAt', 'DESC' ]]
+    }); 
     for (let i = 0; i < messages.length; i++) {
       let message = messages[i]
       if (session.userId !== message.authorId) {
@@ -202,6 +202,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
         col: 'userId',
       })
     }
+    messages = messages.reverse();
     let members = await sw.Membership.findAll({
       raw: true,
       where: { roomId: membership.roomId },

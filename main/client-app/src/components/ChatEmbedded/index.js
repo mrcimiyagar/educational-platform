@@ -461,7 +461,7 @@ export default function ChatEmbedded(props) {
         style={{ position: 'fixed', left: 0, top: 0 }}
         visible={photoViewerVisible}
         onClose={() => {
-          props.setPhotoViewerVisible(false)
+          setPhotoViewerVisible(false)
         }}
         images={[{ src: currentPhotoSrc, alt: '' }]}
       />
@@ -609,6 +609,7 @@ export default function ChatEmbedded(props) {
           marginTop: 32,
           marginLeft: isDesktop() ? 32 : 0,
           marginRight: 16,
+          position: 'relative'
         }}
       >
         <div style={{width: '100%', height: '100%', overflow: 'auto'}} id={'scroller'}>
@@ -616,7 +617,7 @@ export default function ChatEmbedded(props) {
           <div id={'messagesContainer'}>{messagesArr}</div>
           <div style={{ width: '100%', height: 80 }} />
         </div>
-        <Fab color={'secondary'} style={{display: showScrollDown ? 'block' : 'none', position: 'fixed', left: 24 + 16, bottom: 72 + 16}} onClick={() => {
+        <Fab color={'secondary'} style={{display: showScrollDown ? 'block' : 'none', position: 'fixed', left: isInMessenger() ? 24 + 16 : undefined, right: isInRoom() ? (450 - 56 - 16) : undefined, bottom: isInMessenger() ? (72 + 16) : (72 + 32 + 16)}} onClick={() => {
           setScrollTrigger(!scrollTrigger)
         }}>
           <ArrowDownward/>
