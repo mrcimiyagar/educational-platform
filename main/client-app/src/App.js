@@ -39,8 +39,8 @@ import {
   validateToken,
 } from './util/Utils'
 import { pathConfig, setWallpaper } from '.'
-import { addMessageToList2 } from './components/ChatEmbeddedInMessenger'
-import { addMessageToList3 } from './components/ChatEmbedded'
+import { addMessageToList2, replaceMessageInTheList2 } from './components/ChatEmbeddedInMessenger'
+import { addMessageToList3, replaceMessageInTheList3 } from './components/ChatEmbedded'
 import { addNewChat, setLastMessage } from './components/HomeMain'
 
 export let histPage = undefined
@@ -239,6 +239,8 @@ export default function MainApp(props) {
     socket.off('message-seen')
     socket.on('message-seen', ({ messages }) => {
       messages.forEach(msg => replaceMessageInTheList(msg));
+      messages.forEach(msg => replaceMessageInTheList2(msg));
+      messages.forEach(msg => replaceMessageInTheList3(msg));
     })
   })
 

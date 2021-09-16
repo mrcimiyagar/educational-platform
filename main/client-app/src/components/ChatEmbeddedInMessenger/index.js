@@ -26,17 +26,13 @@ import {
   routeTrigger,
   setDialogOpen,
 } from '../../App'
-import EmptyIcon from '../../images/empty.png'
 import { colors, me, setToken, token } from '../../util/settings'
 import { isMobile, serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
-import EmptySign from '../EmptySign'
-import { WaveSurferBox } from '../WaveSurfer'
 import ChatWallpaper from '../../images/chat-wallpaper.png'
 import { setLastMessage } from '../../components/HomeMain'
-import DoneIcon from '@material-ui/icons/Done'
-import DoneAllIcon from '@material-ui/icons/DoneAll'
-import $ from 'jquery'
+import $ from 'jquery';
+import MessageItem from '../MessageItem';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,539 +67,10 @@ const useStyles = makeStyles((theme) => ({
 
 export let updateChatEmbedded = undefined
 
-function MessageItem(props) {
-  let message = props.message
-  let dateTime = new Date(Number(message.time))
-  return (
-    <div key={message.id}>
-      {message['User.id'] === me.id ? (
-        <div style={{ position: 'relative', display: 'flex' }}>
-          <Avatar
-            src={
-              serverRoot +
-              `/file/download_user_avatar?token=${token}&userId=${message.authorId}`
-            }
-            style={{
-              width: 40,
-              height: 40,
-              position: 'absolute',
-              bottom: 16,
-              right: 0,
-            }}
-          />
-          <div
-            style={{
-              fontFamily: 'mainFont',
-              fontSize: 15,
-              display: 'inline-block',
-              width: 'auto',
-              minWidth: 150,
-              maxWidth: 300,
-              padding: 16,
-              backgroundColor: '#1a8a98',
-              color: '#fff',
-              borderRadius: '16px 16px 0px 16px',
-              position: 'absolute',
-              right: 48,
-              marginTop: 16,
-              background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
-            }}
-          >
-            <Typography
-              style={{
-                position: 'absolute',
-                right: 16,
-                fontWeight: 'bold',
-                fontSize: 20,
-              }}
-            >
-              {message['User.firstName']}
-            </Typography>
-            <br />
-            <div style={{ marginTop: 8 }}>
-              {message.messageType === 'text' ? (
-                message.text
-              ) : message.messageType === 'audio' ? (
-                <WaveSurferBox
-                  fileId={message.fileId}
-                  src={
-                    serverRoot +
-                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                  }
-                />
-              ) : message.messageType === 'photo' ? (
-                <img
-                  onClick={() => {
-                    props.setCurrentPhotoSrc(
-                      serverRoot +
-                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                    )
-                    props.setPhotoViewerVisible(true)
-                  }}
-                  style={{ width: 200 }}
-                  src={
-                    serverRoot +
-                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                  }
-                />
-              ) : message.messageType === 'video' ? (
-                <div>
-                  <video
-                    onClick={() => {
-                      gotoPage('/app/videoplayer', {
-                        src:
-                          serverRoot +
-                          `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                      })
-                    }}
-                    controls={false}
-                    style={{ width: 200 }}
-                    src={
-                      serverRoot +
-                      `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                    }
-                  />
-                </div>
-              ) : (
-                message.text
-              )}
-              {message.messageType === 'video' ? (
-                <IconButton
-                  onClick={() => {
-                    gotoPage('/app/videoplayer', {
-                      src:
-                        serverRoot +
-                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                    })
-                  }}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    position: 'absolute',
-                    left: '50%',
-                    top: 'calc(50% - 24px)',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
-                  <PlayArrowTwoTone style={{ width: 64, height: 64 }} />
-                </IconButton>
-              ) : null}
-            </div>
-            <br />
-            <div
-              style={{
-                position: 'absolute',
-                right: 12,
-                bottom: 8,
-                fontSize: 12,
-                display: 'flex',
-                color: '#fff',
-                width: 'auto',
-              }}
-            >
-              {message.seen > 0 ? (
-                <DoneAllIcon
-                  style={{ width: 16, height: 16, marginRight: 12 }}
-                />
-              ) : (
-                <DoneIcon style={{ width: 16, height: 16, marginRight: 12 }} />
-              )}
-              {dateTime.toLocaleDateString('fa-IR').toString() +
-                ' ' +
-                dateTime.getHours() +
-                ':' +
-                dateTime.getMinutes() +
-                ':' +
-                dateTime.getSeconds()}
-            </div>
-          </div>
-          <div
-            style={{
-              visibility: 'hidden',
-              fontFamily: 'mainFont',
-              fontSize: 15,
-              display: 'inline-block',
-              width: 'auto',
-              minWidth: 150,
-              maxWidth: 300,
-              padding: 16,
-              backgroundColor: '#1a8a98',
-              color: '#fff',
-              borderRadius: '16px 16px 0px 16px',
-              marginTop: 16,
-              background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
-            }}
-          >
-            <Typography
-              style={{
-                position: 'absolute',
-                right: 16,
-                fontWeight: 'bold',
-                fontSize: 20,
-              }}
-            >
-              {message['User.firstName']}
-            </Typography>
-            <br />
-            <div style={{ marginTop: 8 }}>
-              {message.messageType === 'text' ? (
-                message.text
-              ) : message.messageType === 'audio' ? (
-                <WaveSurferBox
-                  fileId={message.fileId}
-                  src={
-                    serverRoot +
-                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                  }
-                />
-              ) : message.messageType === 'photo' ? (
-                <img
-                  onClick={() => {
-                    props.setCurrentPhotoSrc(
-                      serverRoot +
-                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                    )
-                    props.setPhotoViewerVisible(true)
-                  }}
-                  style={{ width: 200 }}
-                  src={
-                    serverRoot +
-                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                  }
-                />
-              ) : message.messageType === 'video' ? (
-                <div>
-                  <video
-                    onClick={() => {
-                      gotoPage('/app/videoplayer', {
-                        src:
-                          serverRoot +
-                          `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                      })
-                    }}
-                    controls={false}
-                    style={{ width: 200 }}
-                    src={
-                      serverRoot +
-                      `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                    }
-                  />
-                </div>
-              ) : (
-                message.text
-              )}
-              {message.messageType === 'video' ? (
-                <IconButton
-                  onClick={() => {
-                    gotoPage('/app/videoplayer', {
-                      src:
-                        serverRoot +
-                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                    })
-                  }}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    position: 'absolute',
-                    left: '50%',
-                    top: 'calc(50% - 24px)',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
-                  <PlayArrowTwoTone style={{ width: 64, height: 64 }} />
-                </IconButton>
-              ) : null}
-            </div>
-            <br />
-            <br />
-            <div
-              style={{
-                position: 'absolute',
-                right: 12,
-                bottom: 8,
-                fontSize: 12,
-                display: 'flex',
-                color: '#fff',
-                width: 'auto',
-              }}
-            >
-              {message.seen > 0 ? (
-                <DoneAllIcon
-                  style={{ width: 16, height: 16, marginRight: 12 }}
-                />
-              ) : (
-                <DoneIcon style={{ width: 16, height: 16, marginRight: 12 }} />
-              )}
-              {dateTime.toLocaleDateString('fa-IR').toString() +
-                ' ' +
-                dateTime.getHours() +
-                ':' +
-                dateTime.getMinutes() +
-                ':' +
-                dateTime.getSeconds()}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div style={{ position: 'relative', display: 'flex' }}>
-          <Avatar
-            src={
-              serverRoot +
-              `/file/download_user_avatar?token=${token}&userId=${message.authorId}`
-            }
-            style={{
-              width: 40,
-              height: 40,
-              position: 'absolute',
-              bottom: 16,
-              left: 0,
-            }}
-          />
-          <div
-            style={{
-              fontFamily: 'mainFont',
-              fontSize: 15,
-              display: 'inline-block',
-              width: 'auto',
-              minWidth: 150,
-              maxWidth: 300,
-              padding: 16,
-              backgroundColor: '#1a8a98',
-              color: '#fff',
-              borderRadius: '16px 16px 16px 0px',
-              position: 'absolute',
-              left: 48,
-              marginTop: 16,
-              background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
-            }}
-          >
-            <Typography
-              style={{
-                position: 'absolute',
-                left: 16,
-                fontWeight: 'bold',
-                fontSize: 20,
-              }}
-            >
-              {message['User.firstName']}
-            </Typography>
-            <br />
-            <div style={{ marginTop: 8 }}>
-              {message.messageType === 'text' ? (
-                message.text
-              ) : message.messageType === 'audio' ? (
-                <WaveSurferBox
-                  fileId={message.fileId}
-                  src={
-                    serverRoot +
-                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                  }
-                />
-              ) : message.messageType === 'photo' ? (
-                <img
-                  onClick={() => {
-                    props.setCurrentPhotoSrc(
-                      serverRoot +
-                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                    )
-                    props.setPhotoViewerVisible(true)
-                  }}
-                  style={{ width: 200 }}
-                  src={
-                    serverRoot +
-                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                  }
-                />
-              ) : message.messageType === 'video' ? (
-                <div>
-                  <video
-                    onClick={() => {
-                      gotoPage('/app/videoplayer', {
-                        src:
-                          serverRoot +
-                          `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                      })
-                    }}
-                    controls={false}
-                    style={{ width: 200 }}
-                    src={
-                      serverRoot +
-                      `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                    }
-                  />
-                </div>
-              ) : (
-                message.text
-              )}
-              {message.messageType === 'video' ? (
-                <IconButton
-                  onClick={() => {
-                    gotoPage('/app/videoplayer', {
-                      src:
-                        serverRoot +
-                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                    })
-                  }}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    position: 'absolute',
-                    left: '50%',
-                    top: 'calc(50% - 24px)',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
-                  <PlayArrowTwoTone style={{ width: 64, height: 64 }} />
-                </IconButton>
-              ) : null}
-            </div>
-            <br />
-            <br />
-            <div
-              style={{
-                position: 'absolute',
-                right: 12,
-                bottom: 8,
-                fontSize: 12,
-                color: '#fff',
-              }}
-            >
-              {dateTime.toLocaleDateString('fa-IR').toString() +
-                ' ' +
-                dateTime.getHours() +
-                ':' +
-                dateTime.getMinutes() +
-                ':' +
-                dateTime.getSeconds()}
-            </div>
-          </div>
-          <div
-            style={{
-              visibility: 'hidden',
-              fontFamily: 'mainFont',
-              fontSize: 15,
-              display: 'inline-block',
-              width: 'auto',
-              minWidth: 150,
-              maxWidth: 300,
-              padding: 16,
-              color: 'transparent',
-              marginLeft: 16,
-              marginTop: 16,
-              color: '#fff',
-              left: 0,
-              background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
-            }}
-          >
-            <Typography
-              style={{
-                position: 'absolute',
-                left: 16,
-                fontWeight: 'bold',
-                fontSize: 20,
-              }}
-            >
-              {message['User.firstName']}
-            </Typography>
-            <br />
-            <div style={{ marginTop: 8 }}>
-              {message.messageType === 'text' ? (
-                message.text
-              ) : message.messageType === 'audio' ? (
-                <WaveSurferBox
-                  fileId={message.fileId}
-                  src={
-                    serverRoot +
-                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                  }
-                />
-              ) : message.messageType === 'photo' ? (
-                <img
-                  onClick={() => {
-                    props.setCurrentPhotoSrc(
-                      serverRoot +
-                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                    )
-                    props.setPhotoViewerVisible(true)
-                  }}
-                  style={{ width: 200 }}
-                  src={
-                    serverRoot +
-                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                  }
-                />
-              ) : message.messageType === 'video' ? (
-                <div>
-                  <video
-                    onClick={() => {
-                      gotoPage('/app/videoplayer', {
-                        src:
-                          serverRoot +
-                          `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                      })
-                    }}
-                    controls={false}
-                    style={{ width: 200 }}
-                    src={
-                      serverRoot +
-                      `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`
-                    }
-                  />
-                </div>
-              ) : (
-                message.text
-              )}
-              {message.messageType === 'video' ? (
-                <IconButton
-                  onClick={() => {
-                    gotoPage('/app/videoplayer', {
-                      src:
-                        serverRoot +
-                        `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${message.fileId}`,
-                    })
-                  }}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    position: 'absolute',
-                    left: '50%',
-                    top: 'calc(50% - 24px)',
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
-                  <PlayArrowTwoTone style={{ width: 64, height: 64 }} />
-                </IconButton>
-              ) : null}
-            </div>
-            <br />
-            <br />
-            <div
-              style={{
-                position: 'absolute',
-                right: 12,
-                bottom: 8,
-                fontSize: 12,
-                color: '#fff',
-              }}
-            >
-              {dateTime.toLocaleDateString('fa-IR').toString() +
-                ' ' +
-                dateTime.getHours() +
-                ':' +
-                dateTime.getMinutes() +
-                ':' +
-                dateTime.getSeconds()}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
 let messagesArr = []
 
 export let addMessageToList2 = () => {}
+export let replaceMessageInTheList2 = () => {}
 
 export default function ChatEmbeddedInMessenger(props) {
   document.documentElement.style.overflowY = 'hidden'
@@ -708,9 +175,8 @@ export default function ChatEmbeddedInMessenger(props) {
           result.messages.forEach((message) => {
             messagesArr.push(
               <MessageItem
-                key={Math.random()}
+                key={'message-' + message.id}
                 message={message}
-                roomId={props.roomId}
                 setPhotoViewerVisible={setPhotoViewerVisible}
                 setCurrentPhotoSrc={setCurrentPhotoSrc}
               />,
@@ -728,6 +194,32 @@ export default function ChatEmbeddedInMessenger(props) {
     width: '100%',
   })
 
+  let replaceMessageInTheList = (msg) => {
+    if (msg.roomId === props.roomId) {
+      let lastMsg = (
+        <MessageItem
+          key={'message-' + msg.id}
+          message={msg}
+          setPhotoViewerVisible={setPhotoViewerVisible}
+          setCurrentPhotoSrc={setCurrentPhotoSrc}
+        />
+      );
+      let messageSeen = document.getElementById('message-seen-' + msg.id);
+      let messageNotSeen = document.getElementById('message-not-seen-' + msg.id);
+      if (messageSeen !== null && messageNotSeen !== null) {
+        if (msg.seen > 0) {
+          messageSeen.style.display = 'block';
+          messageNotSeen.style.display = 'none';
+        }
+        else {
+          messageSeen.style.display = 'none';
+          messageNotSeen.style.display = 'block';
+        }
+        forceUpdate();
+      }
+    }
+  }
+  replaceMessageInTheList2 = replaceMessageInTheList;
   let addMessageToList = (msg) => {
     try {
       if (msg.roomId === props.roomId) {
@@ -744,16 +236,34 @@ export default function ChatEmbeddedInMessenger(props) {
         msg['User.firstName'] = msg.User.firstName
         let lastMsg = (
           <MessageItem
-            key={Math.random()}
+            key={'message-' + msg.id}
             message={msg}
-            roomId={props.roomId}
             setPhotoViewerVisible={setPhotoViewerVisible}
             setCurrentPhotoSrc={setCurrentPhotoSrc}
           />
         )
         messagesArr.push(lastMsg)
         forceUpdate()
-        if (isAtEnd) setScrollTrigger(!scrollTrigger)
+        if (isAtEnd) {
+          setScrollTrigger(!scrollTrigger);
+        }
+        let requestOptions3 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: props.roomId,
+          }),
+          redirect: 'follow',
+        }
+        fetch(serverRoot + '/chat/get_messages', requestOptions3)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result))
+          })
+          .catch((error) => console.log('error', error))
       }
     } catch (ex) {
       console.log(ex)
@@ -856,6 +366,14 @@ export default function ChatEmbeddedInMessenger(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
+                    let msgEl = document.getElementById('message-' + msg.id);
+                    let msgSeenEl = document.getElementById('message-seen-' + msg.id);
+                    let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);
+                    msgEl.id = 'message-' + result.message.id;
+                    msgSeenEl.id = 'message-seen-' + result.message.id;
+                    msgNotSeenEl.id = 'message-not-seen-' + result.message.id;
+                    msg.id = result.message.id;
+                    forceUpdate();
                   }
                 })
                 .catch((error) => console.log('error', error))
@@ -1000,6 +518,14 @@ export default function ChatEmbeddedInMessenger(props) {
                   .then((result) => {
                     console.log(JSON.stringify(result))
                     if (result.message !== undefined) {
+                      let msgEl = document.getElementById('message-' + msg.id);
+                      let msgSeenEl = document.getElementById('message-seen-' + msg.id);
+                      let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);
+                      msgEl.id = 'message-' + result.message.id;
+                      msgSeenEl.id = 'message-seen-' + result.message.id;
+                      msgNotSeenEl.id = 'message-not-seen-' + result.message.id;
+                      msg.id = result.message.id;
+                      forceUpdate();
                     }
                   })
                   .catch((error) => console.log('error', error))
