@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const { User } = require('../db/models')
 const { authenticateMember } = require('../users')
 const { sockets } = require('../socket')
+const Sequelize = require('sequelize');
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
@@ -74,10 +75,10 @@ router.post('/get_chats', jsonParser, async function (req, res) {
               room.lastMessage = entries[0]
             }
             let roomMessagesCount = await sw.Message.count({
-              where: { roomId: room.id }
+              where: { roomId: room.id, userId: {[Sequelize.Op.not]: session.userId} }
             }); 
             let roomReadCount = await sw.MessageSeen.count({
-              where: { roomId: room.id },
+              where: { roomId: room.id},
               distinct: true,
               col: 'messageId',
             });

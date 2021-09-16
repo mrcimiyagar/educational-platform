@@ -12,7 +12,7 @@ import React from 'react'
 import { Badge } from 'reactstrap'
 import { gotoPage, isDesktop, isTablet } from '../../App'
 import EmptySign from '../../components/EmptySign'
-import { token } from '../../util/settings'
+import { colors, token } from '../../util/settings'
 import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils'
 
 const useStyles = makeStyles((theme) => ({
@@ -127,63 +127,82 @@ export default function AllChats(props) {
                   </React.Fragment>
                 }
                 secondary={
-                  <div style={{width: '100%', position: 'relative'}}>
-                    {
-                    chat.lastMessage === undefined ? null :
-                    chat.lastMessage.messageType === 'photo' ?
-                    <Chip
-                      style={{
-                        position: 'absolute',
-                        right: 16 + 56,
-                        direction: 'ltr',
-                        transform: 'translateY(8px)',
-                      }}
-                      icon={<Photo style={{ borderRadius: 4 }} />}
-                      label="عکس"
-                      color="primary"
-                      size={'small'}
-                    />
-                    : chat.lastMessage.messageType === 'audio' ?
-                    <Chip
-                      style={{
-                        position: 'absolute',
-                        right: 16 + 56,
-                        direction: 'ltr',
-                        transform: 'translateY(8px)',
-                      }}
-                      icon={<Audiotrack style={{ borderRadius: 4 }} />}
-                      label="صدا"
-                      color="primary"
-                      size={'small'}
-                    />
-                    : chat.lastMessage.messageType === 'video' ?
-                    <Chip
-                      style={{
-                        position: 'absolute',
-                        right: 16 + 56,
-                        direction: 'ltr',
-                        transform: 'translateY(8px)',
-                      }}
-                      icon={<Videocam style={{ borderRadius: 4 }} />}
-                      label="ویدئو"
-                      color="primary"
-                      size={'small'}
-                    />
-                    :
-                    <Typography
-                      noWrap
-                      style={{
-                        width: '100%',
-                        textAlign: 'right',
-                        color: '#000',
-                        fontSize: 14,
-                      }}
-                    >
-                      {chat.lastMessage.text}
-                    </Typography>
-                }
-                  <div style={{position: 'absolute', left: 16}}>{chat.unread}</div>
-                </div>
+                  <div style={{ width: '100%', position: 'relative' }}>
+                    {chat.lastMessage === undefined ? null : chat.lastMessage
+                        .messageType === 'photo' ? (
+                      <Chip
+                        style={{
+                          position: 'absolute',
+                          right: 16 + 56,
+                          direction: 'ltr',
+                          transform: 'translateY(8px)',
+                        }}
+                        icon={<Photo style={{ borderRadius: 4 }} />}
+                        label="عکس"
+                        color="primary"
+                        size={'small'}
+                      />
+                    ) : chat.lastMessage.messageType === 'audio' ? (
+                      <Chip
+                        style={{
+                          position: 'absolute',
+                          right: 16 + 56,
+                          direction: 'ltr',
+                          transform: 'translateY(8px)',
+                        }}
+                        icon={<Audiotrack style={{ borderRadius: 4 }} />}
+                        label="صدا"
+                        color="primary"
+                        size={'small'}
+                      />
+                    ) : chat.lastMessage.messageType === 'video' ? (
+                      <Chip
+                        style={{
+                          position: 'absolute',
+                          right: 16 + 56,
+                          direction: 'ltr',
+                          transform: 'translateY(8px)',
+                        }}
+                        icon={<Videocam style={{ borderRadius: 4 }} />}
+                        label="ویدئو"
+                        color="primary"
+                        size={'small'}
+                      />
+                    ) : (
+                      <Typography
+                        noWrap
+                        style={{
+                          width: '100%',
+                          textAlign: 'right',
+                          color: '#000',
+                          fontSize: 14,
+                        }}
+                      >
+                        {chat.lastMessage.text}
+                      </Typography>
+                    )}
+                    {chat.unread > 0 ? 
+                      <div
+                        style={{
+                          borderRadius: '50%',
+                          backgroundColor: colors.primaryMedium,
+                          paddingLeft: 4,
+                          paddingRight: 4,
+                          paddingTop: 4,
+                          paddingBottom: 4,
+                          width: 28,
+                          height: 28,
+                          position: 'absolute',
+                          left: 16,
+                          transform: 'translateY(-20px)',
+                          color: '#fff'
+                        }}
+                      >
+                        {chat.unread}
+                      </div>  :
+                      null
+                    }
+                  </div>
                 }
               />
             </ListItem>
