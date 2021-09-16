@@ -53,6 +53,7 @@
     "underscore": "1.5.x",
     "uuidv4": "^6.2.7",
     "wavesurfer.js": "^5.2.0",
+    "web-push": "^3.4.5",
     "webrtc-adapter": "^7.3.0",
     "webshot": "^0.18.0",
     "websocket": "^1.0.34",

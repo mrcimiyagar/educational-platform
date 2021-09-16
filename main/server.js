@@ -31,8 +31,31 @@ const sw = require('./db/models');
 const bodyParser = require('body-parser');
 const { authenticateMember } = require('./users');
 const expressStaticGzip = require('express-static-gzip');
+const webpush = require('web-push');
 
 let jsonParser = bodyParser.json();
+
+const vapidKeys = webpush.generateVAPIDKeys();
+webpush.setVapidDetails(
+    "mailto:theprogrammermachine@gmail.com",
+    vapidKeys.publicKey,
+    vapidKeys.privateKey
+);
+app.post('/get_push_key', (req, res) => {
+    res.send({key: vapidKeys.publicKey});
+});
+app.post("/subscribe", (req, res) => {
+    // Get pushSubscription object
+    const subscription = req.body;  
+    // Send 201 - resource created
+    res.status(201).json({});
+    // Create payload
+    const payload = JSON.stringify({ title: "Push Test" });
+    // Pass object into sendNotification
+    webpush
+      .sendNotification(subscription, payload)
+      .catch(err => console.error(err));
+});  
 
 app.use(cors());
 
