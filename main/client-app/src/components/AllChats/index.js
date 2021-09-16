@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { Audiotrack, Photo, Videocam } from '@material-ui/icons';
 import React from 'react';
+import { Badge } from 'reactstrap';
 import { gotoPage, isDesktop, isTablet } from '../../App';
 import EmptySign from '../../components/EmptySign';
 import { token } from '../../util/settings';
@@ -68,7 +69,9 @@ export default function AllChats(props) {
         })
       }}>
         <ListItemAvatar>
+        <Badge color="secondary" badgeContent={chat.unread}>
           <Avatar src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${chat.participent.id}`} />
+        </Badge>
         </ListItemAvatar>
         <ListItemText
           primary={

@@ -48,12 +48,12 @@ module.exports = {
             port: 5432,
             host: 'localhost'
         };
-        /*try {
+        try {
             await pgTools.dropdb(config, dbName);
         } catch (e) {console.log(e);}
         try {
             await pgTools.createdb(config, dbName);
-        } catch (e) {console.log(e);}*/
+        } catch (e) {console.log(e);}
         prepareSequelizeInstance();
         await prepareUserModel();
         await prepareAccountModel();
@@ -158,12 +158,14 @@ async function prepareMessageSeenModel() {
         messageId: {
             type: Sequelize.BIGINT,
             unique: 'MessageSeenUnique'
-        }
+        },
+        roomId: Sequelize.BIGINT
     }, {
         freezeTableName: true
     });
     MessageSeen.belongsTo(User, { foreignKey: 'userId' });
     MessageSeen.belongsTo(Message, { foreignKey: 'messageId' });
+    MessageSeen.belongsTo(Room, { foreignKey: 'roomId' });
     await MessageSeen.sync();
     module.exports['MessageSeen'] = MessageSeen;
 }

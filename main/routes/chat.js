@@ -73,6 +73,15 @@ router.post('/get_chats', jsonParser, async function (req, res) {
             if (entries.length === 1) {
               room.lastMessage = entries[0]
             }
+            let roomMessagesCount = await sw.Message.count({
+              where: { roomId: membership.roomId }
+            }); 
+            let roomReadCount = await sw.MessageSeen.count({
+              where: { roomId: membership.roomId },
+              distinct: true,
+              col: 'messageId',
+            });
+            room.unread = roomMessagesCount - roomReadCount;
           }
           res.send({ status: 'success', rooms: rooms })
         })
@@ -194,6 +203,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
           await sw.MessageSeen.create({
             userId: session.userId,
             messageId: message.id,
+            roomId: message.roomId
           })
         }
       }
