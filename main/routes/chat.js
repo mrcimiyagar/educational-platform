@@ -75,7 +75,7 @@ router.post('/get_chats', jsonParser, async function (req, res) {
               room.lastMessage = entries[0]
             }
             let roomMessagesCount = await sw.Message.count({
-              where: { roomId: room.id, userId: {[Sequelize.Op.not]: session.userId} }
+              where: { roomId: room.id, authorId: {[Sequelize.Op.not]: session.userId} }
             }); 
             let roomReadCount = await sw.MessageSeen.count({
               where: { roomId: room.id},
