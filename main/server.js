@@ -32,6 +32,7 @@ const bodyParser = require('body-parser');
 const { authenticateMember } = require('./users');
 const expressStaticGzip = require('express-static-gzip');
 const webpush = require('web-push');
+const { dirname } = require('path');
 
 let jsonParser = bodyParser.json();
 
@@ -51,7 +52,11 @@ app.post("/subscribe", (req, res) => {
     webpush
       .sendNotification(subscription, payload)
       .catch(err => console.error(err));
-});  
+});
+
+app.get("/serviceWorker.js", (req, res) => {
+    res.sendFile(__dirname + "/serviceWorker.js");
+});
 
 app.use(cors());
 
