@@ -1,4 +1,4 @@
-export let initPush = () => {
+export let setupNotifier = () => {
   
   const publicVapidKey =
     'BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s'
@@ -12,7 +12,7 @@ export let initPush = () => {
   async function send() {
     // Register Service Worker
     console.log('Registering service worker...')
-    const register = await navigator.serviceWorker.register('/worker.js', {
+    const register = await navigator.serviceWorker.register('/serviceWorker.js', {
       scope: '/',
     })
     console.log('Service Worker Registered...')
@@ -24,7 +24,7 @@ export let initPush = () => {
       applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
     })
     console.log('Push Registered...')
-
+    
     // Send Push Notification
     console.log('Sending Push...')
     await fetch('/subscribe', {
