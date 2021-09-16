@@ -9,7 +9,7 @@ import store from './redux/main';
 import DesktopWallpaper from './images/desktop-wallpaper.webp';
 import DesktopWallpaper2 from './images/desktop-wallpaper.jpg';
 import { setup } from './util/Utils';
-import { setupNotifier } from './notifClient'
+import './notifClient'
 
 export let pathConfig = {}
 
@@ -219,4 +219,3 @@ ReactDOM.render(
   document.getElementById('root'),
 )
 
-setupNotifier()
