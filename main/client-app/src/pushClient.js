@@ -13,7 +13,7 @@ let requestOptions = {
   },
   redirect: 'follow',
 }
-fetch(serverRoot + '/get_push_key', requestOptions)
+fetch('https://backend.kaspersoft.cloud/get_push_key', requestOptions)
   .then((response) => response.json())
   .then((result) => {
     console.log(JSON.stringify(result))
