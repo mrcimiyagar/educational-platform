@@ -74,10 +74,10 @@ router.post('/get_chats', jsonParser, async function (req, res) {
               room.lastMessage = entries[0]
             }
             let roomMessagesCount = await sw.Message.count({
-              where: { roomId: membership.roomId }
+              where: { roomId: room.id }
             }); 
             let roomReadCount = await sw.MessageSeen.count({
-              where: { roomId: membership.roomId },
+              where: { roomId: room.id },
               distinct: true,
               col: 'messageId',
             });
