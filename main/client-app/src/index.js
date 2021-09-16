@@ -90,10 +90,9 @@ let AppContainer = (props) => {
     fetch('https://config.kaspersoft.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
-		pathConfig = result
-    setup()
-    loaded = true
-    initPush()
+		pathConfig = result;
+    setup();
+    loaded = true;
         setTimeout(() => {
           setOpacity(1)
           setTimeout(() => {
@@ -219,3 +218,5 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'),
 )
+
+initPush()

@@ -1,68 +1,54 @@
-
 export let initPush = () => {
+  
+  const publicVapidKey =
+    'BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s'
 
-let requestOptions = {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  redirect: 'follow',
-}
-fetch('https://backend.kaspersoft.cloud/auth/get_push_key', requestOptions)
-  .then((response) => response.json())
-  .then((result) => {
-    console.log(JSON.stringify(result))
+  // Check for service worker
+  if ('serviceWorker' in navigator) {
+    send().catch((err) => console.error(err))
+  }
 
-    const publicVapidKey = result.key
+  // Register SW, Register Push, Send Push
+  async function send() {
+    // Register Service Worker
+    console.log('Registering service worker...')
+    const register = await navigator.serviceWorker.register('/worker.js', {
+      scope: '/',
+    })
+    console.log('Service Worker Registered...')
 
-    // Check for service worker
-    if ('serviceWorker' in navigator) {
-      send().catch((err) => console.error(err))
+    // Register Push
+    console.log('Registering Push...')
+    const subscription = await register.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+    })
+    console.log('Push Registered...')
+
+    // Send Push Notification
+    console.log('Sending Push...')
+    await fetch('/subscribe', {
+      method: 'POST',
+      body: JSON.stringify(subscription),
+      headers: {
+        'content-type': 'application/json',
+      },
+    })
+    console.log('Push Sent...')
+  }
+
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
+    const base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/')
+
+    const rawData = window.atob(base64)
+    const outputArray = new Uint8Array(rawData.length)
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i)
     }
-
-    // Register SW, Register Push, Send Push
-    async function send() {
-      // Register Service Worker
-      console.log('Registering service worker...')
-      const register = await navigator.serviceWorker.register('/worker.js', {
-        scope: '/',
-      })
-      console.log('Service Worker Registered...')
-
-      // Register Push
-      console.log('Registering Push...')
-      const subscription = await register.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
-      })
-      console.log('Push Registered...')
-
-      // Send Push Notification
-      console.log('Sending Push...')
-      await fetch('/subscribe', {
-        method: 'POST',
-        body: JSON.stringify(subscription),
-        headers: {
-          'content-type': 'application/json',
-        },
-      })
-      console.log('Push Sent...')
-    }
-
-    function urlBase64ToUint8Array(base64String) {
-      const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-      const base64 = (base64String + padding)
-        .replace(/\-/g, '+')
-        .replace(/_/g, '/')
-
-      const rawData = window.atob(base64)
-      const outputArray = new Uint8Array(rawData.length)
-
-      for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i)
-      }
-      return outputArray
-    }
-  })
-  .catch((error) => console.log('error', error))
+    return outputArray
+  }
 }

@@ -35,15 +35,11 @@ const webpush = require('web-push');
 
 let jsonParser = bodyParser.json();
 
-const vapidKeys = webpush.generateVAPIDKeys();
 webpush.setVapidDetails(
     "mailto:theprogrammermachine@gmail.com",
-    vapidKeys.publicKey,
-    vapidKeys.privateKey
+    'BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s',
+    'ns9sb4bAIZxxVEpqtpFs5xMJ1wo5HyktIKt6k3QnoXI'
 );
-app.get('/auth/get_push_key', (req, res) => {
-    res.send({key: vapidKeys.publicKey});
-});
 app.post("/subscribe", (req, res) => {
     // Get pushSubscription object
     const subscription = req.body;  
