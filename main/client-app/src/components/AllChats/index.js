@@ -69,9 +69,7 @@ export default function AllChats(props) {
         })
       }}>
         <ListItemAvatar>
-        <Badge color="secondary" badgeContent={99}>
           <Avatar src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${chat.participent.id}`} />
-        </Badge>
         </ListItemAvatar>
         <ListItemText
           primary={
@@ -113,7 +111,7 @@ export default function AllChats(props) {
                       size={'small'}
                     /> :
                     <Typography noWrap style={{width: '100%', textAlign: 'right', color: '#000', fontSize: 14}}>
-                      {chat.lastMessage.text}
+                      {chat.lastMessage.text + ' ' + chat.unread}
                     </Typography>
           }
         />
