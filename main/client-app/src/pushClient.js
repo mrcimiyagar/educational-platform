@@ -1,19 +1,14 @@
-import {
-  token,
-} from './util/settings'
-import {
-  serverRoot
-} from './util/Utils'
+
+export let initPush = () => {
 
 let requestOptions = {
   method: 'GET',
   headers: {
-    'Content-Type': 'application/json',
-    token: token,
+    'Content-Type': 'application/json'
   },
   redirect: 'follow',
 }
-fetch('https://backend.kaspersoft.cloud/get_push_key', requestOptions)
+fetch('https://backend.kaspersoft.cloud/auth/get_push_key', requestOptions)
   .then((response) => response.json())
   .then((result) => {
     console.log(JSON.stringify(result))
@@ -70,3 +65,4 @@ fetch('https://backend.kaspersoft.cloud/get_push_key', requestOptions)
     }
   })
   .catch((error) => console.log('error', error))
+}

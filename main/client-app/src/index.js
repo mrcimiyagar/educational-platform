@@ -4,11 +4,12 @@ import React, { Suspense, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import CloudIcon from './images/logo.png'
-import RoomWallpaper from './images/roomWallpaper.png'
-import store from './redux/main'
-import DesktopWallpaper from './images/desktop-wallpaper.webp'
-import DesktopWallpaper2 from './images/desktop-wallpaper.jpg'
-import { setup } from './util/Utils'
+import RoomWallpaper from './images/roomWallpaper.png';
+import store from './redux/main';
+import DesktopWallpaper from './images/desktop-wallpaper.webp';
+import DesktopWallpaper2 from './images/desktop-wallpaper.jpg';
+import { setup } from './util/Utils';
+import { initPush } from './pushClient'
 
 export let pathConfig = {}
 
@@ -92,6 +93,7 @@ let AppContainer = (props) => {
 		pathConfig = result
     setup()
     loaded = true
+    initPush()
         setTimeout(() => {
           setOpacity(1)
           setTimeout(() => {
@@ -217,5 +219,3 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'),
 )
-
-require('./pushClient');
