@@ -13,11 +13,6 @@ import {register} from './serviceWorkerRegistration';
 
 export let pathConfig = {}
 
-if (process.env.NODE_ENV !== 'production') {
-  const {whyDidYouUpdate} = require('why-did-you-update');
-  whyDidYouUpdate(React);
-}
-
 const MainApp = React.lazy(() => {
   return Promise.all([
     import('./App'),

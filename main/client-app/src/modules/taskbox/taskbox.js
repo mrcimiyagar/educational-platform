@@ -105,7 +105,7 @@ export let TaskBox = (props) => {
           <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
         </Toolbar>
       </AppBar>
-      <Board t={customTranslation} data={data} style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 112px)' : '100%', paddingLeft: 128, height: 'calc(100% + 56px)', paddingRight: 64, backgroundColor: 'transparent', background: 'transparent', marginTop: 80, overflow: 'auto'}}/>
+      <Board  data={data} style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 112px)' : '100%', paddingLeft: 128, height: 'calc(100% + 56px)', paddingRight: 64, backgroundColor: 'transparent', background: 'transparent', marginTop: 80, overflow: 'auto'}}/>
       {(isDesktop() && isInRoom()) ? null :
       <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16, bottom: 72 + 16}} onClick={() => {
           gotoPage('/app/chat')
