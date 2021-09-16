@@ -69,7 +69,7 @@ export default function AllChats(props) {
         })
       }}>
         <ListItemAvatar>
-        <Badge color="secondary" badgeContent={chat.unread}>
+        <Badge color="secondary" badgeContent={99}>
           <Avatar src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${chat.participent.id}`} />
         </Badge>
         </ListItemAvatar>
