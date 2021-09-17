@@ -41,7 +41,7 @@ import {
 import { pathConfig, setWallpaper } from '.'
 import { addMessageToList2, replaceMessageInTheList2 } from './components/ChatEmbeddedInMessenger'
 import { addMessageToList3, replaceMessageInTheList3 } from './components/ChatEmbedded'
-import { addNewChat, setLastMessage } from './components/HomeMain'
+import { addNewChat, setLastMessage, updateChat } from './components/HomeMain'
 
 export let histPage = undefined
 let setHistPage = undefined
@@ -230,6 +230,22 @@ export default function MainApp(props) {
         addMessageToList2(msgCopy)
         addMessageToList3(msgCopy)
         setLastMessage(msgCopy)
+        let requestOptions3 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: msgCopy.roomId,
+          }),
+          redirect: 'follow',
+        }
+        fetch(serverRoot + '/chat/get_chat', requestOptions3)
+          .then((response) => response.json())
+          .then((result) => {
+            updateChat(result.room);
+          });
       }
     })
     socket.off('chat-created')
