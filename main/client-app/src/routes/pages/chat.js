@@ -249,9 +249,6 @@ export default function Chat(props) {
       .then((result) => {
         console.log(JSON.stringify(result))
         if (result.messages !== undefined) {
-          if (result.messages.length > 10) {
-            result.messages = result.messages.slice(result.messages.length - 10)
-          }
           messagesArr = []
           result.messages.forEach((message) => {
             messagesArr.push(
