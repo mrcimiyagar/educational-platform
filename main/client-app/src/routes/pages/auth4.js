@@ -7,6 +7,8 @@ import { gotoPage } from "../../App";
 import CloudIcon from '../../images/logo.png';
 import { setMe, setToken } from "../../util/settings";
 import { ConnectToIo, serverRoot, setConfig } from "../../util/Utils";
+import Wallpaper from '../../images/roomWallpaper.png'
+import WhiteColorTextField from '../../components/WhiteColorTextField';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,21 +30,21 @@ function Auth4(props) {
     }, 2000)
   }, [])
   return (
-    <div style={{width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000, backgroundColor: 'rgba(0, 0, 0, 0.25)', backdropFilter: 'blur(10px)'}}>
-      
+    <div style={{height: '100%', overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
+      <img src={Wallpaper} style={{position: 'fixed', width: '100%', height: '100%', objectFit: 'cover'}}/>
       {register ? 
-        <div style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+        <div style={{borderRadius: 32, height: 'auto', paddingLeft: 32, paddingRight: 32, paddingtop: 16, paddingBottom: 16, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', textAlign: 'center', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
           <div style={{width: '100%', height: 'auto'}}>
             <img src={CloudIcon} style={{width: 300, height: 300, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
-            <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#fff', marginTop: -56, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
+            <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#000', marginTop: -56, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
           </div>
-          <TextField className={classes.root} id="registerUsername" label="نام کاربری" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
-          <TextField className={classes.root} id="registerPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
-          <TextField className={classes.root} id="registerConfirmPass" label="تکرار رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
-          <TextField className={classes.root} id="registerFirstName" label="نام" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
-          <TextField className={classes.root} id="registerLastName" label="نام خانوادگی" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
+          <WhiteColorTextField className={classes.root} id="registerUsername" label="نام کاربری" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
+          <WhiteColorTextField className={classes.root} id="registerPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
+          <WhiteColorTextField className={classes.root} id="registerConfirmPass" label="تکرار رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
+          <WhiteColorTextField className={classes.root} id="registerFirstName" label="نام" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
+          <WhiteColorTextField className={classes.root} id="registerLastName" label="نام خانوادگی" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
           <div style={{width: 'auto', marginTop: 48}}>
-            <Fab style={{marginLeft: 24}} onClick={() => {
+            <Fab color={'primary'} variant="extended" style={{marginLeft: 24}} onClick={() => {
               if (document.getElementById('registerPassword').value !== document.getElementById('registerConfirmPass').value) {
                 alert('passwords does not match')
                 return
@@ -78,22 +80,24 @@ function Auth4(props) {
               })
               .catch(error => console.log('error', error));
             }}>
-              <VpnKeyIcon/>
+              <VpnKeyIcon sx={{ mr: 1 }}/>
+              <div style={{marginRight: 8}}>ثبت نام</div>
             </Fab>
-            <Fab onClick={() => setRegister(false)}>
-              <ListAltIcon/>
+            <Fab color={'primary'} variant="extended" onClick={() => setRegister(false)}>
+              <ListAltIcon sx={{ mr: 1 }}/>
+              <div style={{marginRight: 8}}>برو به لاگین</div>
             </Fab>
           </div>
         </div> :
-        <div style={{textAlign: 'center', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+        <div style={{borderRadius: 32, textAlign: 'center', paddingLeft: 32, paddingRight: 32, paddingtop: 32, paddingBottom: 32, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
           <div style={{width: '100%', height: 'auto'}}>
             <img src={CloudIcon} style={{width: 300, height: 300, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
-            <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#fff', marginTop: -56, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
+            <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#000', marginTop: -56, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
           </div>
-          <TextField className={classes.root} id="loginUsername" label="نام کاربری" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
-          <TextField className={classes.root} id="loginPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
+          <WhiteColorTextField className={classes.root} id="loginUsername" label="نام کاربری" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
+          <WhiteColorTextField className={classes.root} id="loginPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
           <div style={{width: 'auto', marginTop: 48}}>
-            <Fab style={{marginLeft: 24}} onClick={() => {
+            <Fab color={'primary'} variant="extended" style={{marginLeft: 24}} onClick={() => {
               let requestOptions = {
                 method: 'POST',
                 headers: {
@@ -129,13 +133,16 @@ function Auth4(props) {
               .catch(error => console.log('error', error));
             }}>
               <VpnKeyIcon/>
+              <div style={{marginRight: 8}}>لاگین</div>
             </Fab>
-            <Fab onClick={() => setRegister(true)}>
+            <Fab color={'primary'} variant="extended" onClick={() => setRegister(true)}>
               <ListAltIcon/>
+              <div style={{marginRight: 8}}>برو به ثبت نام</div>
             </Fab>
           </div>
         </div>
       }
+      <div style={{width: '100%', height: 72}}/>
     </div>
   )
 }
