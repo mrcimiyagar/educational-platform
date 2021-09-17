@@ -88,6 +88,7 @@ const useStyles = makeStyles((theme) => ({
 export let updateHome = undefined
 export let setLastMessage = () => {}
 export let addNewChat = () => {}
+export let updateChat = () => {}
 
 export default function HomeAppbar(props) {
   updateHome = useForceUpdate()
@@ -133,6 +134,17 @@ export default function HomeAppbar(props) {
       updateHome()
     } catch (ex) {
       console.log(ex)
+    }
+  }
+
+  updateChat = (chat) => {
+    for (let i = 0; i < chats.length; i++) {
+      if (chats[i].id === chat.id) {
+        chats[i] = chat;
+        setChats(chats);
+        updateHome();
+        break;
+      }
     }
   }
 

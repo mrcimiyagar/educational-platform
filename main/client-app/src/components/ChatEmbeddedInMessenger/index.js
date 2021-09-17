@@ -179,7 +179,7 @@ export default function ChatEmbeddedInMessenger(props) {
                 message={message}
                 setPhotoViewerVisible={setPhotoViewerVisible}
                 setCurrentPhotoSrc={setCurrentPhotoSrc}
-              />,
+              />
             )
           })
           forceUpdate()

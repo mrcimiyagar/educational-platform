@@ -4,7 +4,8 @@ const bodyParser = require('body-parser')
 const { User } = require('../db/models')
 const { authenticateMember } = require('../users')
 const { sockets } = require('../socket')
-const Sequelize = require('sequelize');
+const Sequelize = require('sequelize')
+const { roomId } = require('../client-app/src/App')
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
@@ -37,6 +38,54 @@ router.post('/get_participent', jsonParser, async function (req, res) {
         : await sw.User.findOne({ where: { userId: roomMembers[0].userId } })
 
     res.send({ status: 'success', participent: participent })
+  })
+})
+
+router.post('/get_chat', jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user) => {
+    if (membership !== null && membership !== undefined) {
+      let room = await sw.Room.findOne({ where: { roomId: membership.roomId } });
+      if (room.chatType === 'p2p') {
+        let members = await sw.Membership.findAll({
+          raw: true,
+          where: { roomId: room.id },
+        })
+        room.participent =
+          members[0].userId === session.userId
+            ? await sw.User.findOne({ where: { id: members[1].userId } })
+            : await sw.User.findOne({ where: { id: members[0].userId } })
+      } else if (room.chatType === 'group') {
+        room.group = { title: room.title, avatarId: room.avatarId }
+      } else if (room.chatType === 'channel') {
+        room.channel = { title: room.title, avatarId: room.avatarId }
+      } else if (room.chatType === 'bot') {
+      }
+      let entries = await sw.Message.findAll({
+        raw: true,
+        where: { roomId: room.id },
+        limit: 1,
+        order: [['createdAt', 'DESC']],
+      })
+      if (entries.length === 1) {
+        room.lastMessage = entries[0]
+      }
+      let roomMessagesCount = await sw.Message.count({
+        where: {
+          roomId: room.id,
+          authorId: { [Sequelize.Op.not]: session.userId },
+        },
+      })
+      let roomReadCount = await sw.MessageSeen.count({
+        where: { roomId: room.id, userId: session.userId },
+        distinct: true,
+        col: 'messageId',
+      })
+      room.unread = roomMessagesCount - roomReadCount
+      res.send({ status: 'success', room: room })
+    }
+    else {
+      res.send({ status: 'error', errorCode: 'e0005', message: 'access denied.' })
+    }
   })
 })
 
@@ -75,14 +124,17 @@ router.post('/get_chats', jsonParser, async function (req, res) {
               room.lastMessage = entries[0]
             }
             let roomMessagesCount = await sw.Message.count({
-              where: { roomId: room.id, authorId: {[Sequelize.Op.not]: session.userId} }
-            }); 
+              where: {
+                roomId: room.id,
+                authorId: { [Sequelize.Op.not]: session.userId },
+              },
+            })
             let roomReadCount = await sw.MessageSeen.count({
-              where: { roomId: room.id, userId: session.userId},
+              where: { roomId: room.id, userId: session.userId },
               distinct: true,
               col: 'messageId',
-            });
-            room.unread = roomMessagesCount - roomReadCount;
+            })
+            room.unread = roomMessagesCount - roomReadCount
           }
           res.send({ status: 'success', rooms: rooms })
         })
@@ -191,8 +243,8 @@ router.post('/get_messages', jsonParser, async function (req, res) {
       limit: 10,
       include: [{ all: true }],
       where: { roomId: membership.roomId },
-      order: [ [ 'createdAt', 'DESC' ]]
-    }); 
+      order: [['createdAt', 'DESC']],
+    })
     for (let i = 0; i < messages.length; i++) {
       let message = messages[i]
       if (session.userId !== message.authorId) {
@@ -204,7 +256,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
           await sw.MessageSeen.create({
             userId: session.userId,
             messageId: message.id,
-            roomId: message.roomId
+            roomId: message.roomId,
           })
         }
       }
@@ -214,7 +266,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
         col: 'userId',
       })
     }
-    messages = messages.reverse();
+    messages = messages.reverse()
     let members = await sw.Membership.findAll({
       raw: true,
       where: { roomId: membership.roomId },
