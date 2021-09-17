@@ -65,7 +65,7 @@ router.post('/get_chat', jsonParser, async function (req, res) {
         limit: 100,
         order: [['createdAt', 'DESC']],
       })
-      if (entries.length === 1) {
+      if (entries.length > 0) {
         room.lastMessage = entries[0]
       }
       let roomMessagesCount = await sw.Message.count({
@@ -121,7 +121,7 @@ router.post('/get_chats', jsonParser, async function (req, res) {
               limit: 100,
               order: [['createdAt', 'DESC']],
             })
-            if (entries.length === 1) {
+            if (entries.length > 0) {
               room.lastMessage = entries[0]
             }
             let roomMessagesCount = await sw.Message.count({
