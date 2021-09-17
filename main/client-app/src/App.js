@@ -230,7 +230,6 @@ export default function MainApp(props) {
         addMessageToList2(msgCopy)
         addMessageToList3(msgCopy)
         setLastMessage(msgCopy)
-        if (paramsSeries[paramsSeries.length - 1].room_id === msgCopy.roomId) return;
         let requestOptions3 = {
           method: 'POST',
           headers: {

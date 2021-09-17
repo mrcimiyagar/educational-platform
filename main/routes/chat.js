@@ -62,7 +62,7 @@ router.post('/get_chat', jsonParser, async function (req, res) {
       let entries = await sw.Message.findAll({
         raw: true,
         where: { roomId: room.id },
-        limit: 1,
+        limit: 100,
         order: [['createdAt', 'DESC']],
       })
       if (entries.length === 1) {
@@ -70,12 +70,14 @@ router.post('/get_chat', jsonParser, async function (req, res) {
       }
       let roomMessagesCount = await sw.Message.count({
         where: {
+          id: {[Sequelize.Op.gt]: entries[entries.length - 1].id},
           roomId: room.id,
           authorId: { [Sequelize.Op.not]: session.userId },
-        },
+        }
       })
       let roomReadCount = await sw.MessageSeen.count({
-        where: { roomId: room.id, userId: session.userId },
+        where: { roomId: room.id, userId: session.userId,
+          messageId: {[Sequelize.Op.gt]: entries[entries.length - 1].id} },
         distinct: true,
         col: 'messageId',
       })
@@ -116,7 +118,7 @@ router.post('/get_chats', jsonParser, async function (req, res) {
             let entries = await sw.Message.findAll({
               raw: true,
               where: { roomId: room.id },
-              limit: 1,
+              limit: 100,
               order: [['createdAt', 'DESC']],
             })
             if (entries.length === 1) {
@@ -124,16 +126,18 @@ router.post('/get_chats', jsonParser, async function (req, res) {
             }
             let roomMessagesCount = await sw.Message.count({
               where: {
+                id: {[Sequelize.Op.gt]: entries[entries.length - 1].id},
                 roomId: room.id,
                 authorId: { [Sequelize.Op.not]: session.userId },
-              },
+              }
             })
             let roomReadCount = await sw.MessageSeen.count({
-              where: { roomId: room.id, userId: session.userId },
+              where: { roomId: room.id, userId: session.userId,
+                messageId: {[Sequelize.Op.gt]: entries[entries.length - 1].id} },
               distinct: true,
               col: 'messageId',
             })
-            room.unread = roomMessagesCount - roomReadCount
+            room.unread = roomMessagesCount - roomReadCount;
           }
           res.send({ status: 'success', rooms: rooms })
         })
@@ -237,6 +241,7 @@ router.post('/delete_message', jsonParser, async function (req, res) {
 
 router.post('/get_messages', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
+    
     let messages = await sw.Message.findAll({
       raw: true,
       limit: 10,
