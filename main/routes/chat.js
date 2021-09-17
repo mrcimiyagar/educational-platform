@@ -257,7 +257,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     let breakPoint = 0;
     let found = false;
     for (let i = 0; i < messages.length; i++) {
-      if (dict[messages[i].id] !== true) {
+      if (dict[messages[i].id] !== true && messages[i].authorId !== session.userId) {
         breakPoint = i;
         found = true;
         console.log('............................................................................................................')
