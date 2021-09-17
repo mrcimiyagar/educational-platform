@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import './App.css'
 import { notifyUrlChanged } from './components/SearchEngineFam'
 import AudioPlayer from './routes/pages/audioPlayer'
-import Auth4 from './routes/pages/auth4'
+import Authentication from './routes/pages/authentication'
 import Chat, { addMessageToList, replaceMessageInTheList } from './routes/pages/chat'
 import CreateRoom from './routes/pages/createRoom'
 import DeckPage from './routes/pages/deck'
@@ -209,7 +209,7 @@ let pages = {
   '/app/messenger': MessengerPage,
   '/app/room': RoomPage,
   '/app/searchengine': SearchEngine,
-  '/app/auth': Auth4,
+  '/app/auth': Authentication,
 }
 
 export let setDialogOpen = null

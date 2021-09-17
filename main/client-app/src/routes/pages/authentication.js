@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Auth4(props) {
+function Authentication(props) {
   let [logoTop, setLogoTop] = React.useState(400)
   let [opacity, setOpacity] = React.useState(0)
   let [register, setRegister] = React.useState(false)
@@ -147,4 +147,4 @@ function Auth4(props) {
   )
 }
 
-export default Auth4;
+export default Authentication;
