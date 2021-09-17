@@ -43,7 +43,7 @@ router.post('/get_participent', jsonParser, async function (req, res) {
 router.post('/get_chat', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     if (membership !== null && membership !== undefined) {
-      let room = await sw.Room.findOne({ where: { roomId: membership.roomId } });
+      let room = await sw.Room.findOne({ where: { id: membership.roomId } });
       if (room.chatType === 'p2p') {
         let members = await sw.Membership.findAll({
           raw: true,
