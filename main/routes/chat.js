@@ -5,7 +5,6 @@ const { User } = require('../db/models')
 const { authenticateMember } = require('../users')
 const { sockets } = require('../socket')
 const Sequelize = require('sequelize')
-const { roomId } = require('../client-app/src/App')
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
