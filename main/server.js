@@ -68,9 +68,9 @@ models.setup().then(() => {
     mongo.setup((s, a) => {
 
         var myIceServers = [
-            {"url":"stun:185.81.96.230:3478"},
+            {"url":"stun:185.81.96.105:3478"},
             {
-              "url":"turn:185.81.96.230:3478",
+              "url":"turn:185.81.96.105:3478",
               "username":"guest",
               "credential":"somepassword"
             }
