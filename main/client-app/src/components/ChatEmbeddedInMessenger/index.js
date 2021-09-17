@@ -30,7 +30,7 @@ import { colors, me, setToken, token } from '../../util/settings'
 import { isMobile, serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
 import ChatWallpaper from '../../images/chat-wallpaper.png'
-import { setLastMessage } from '../../components/HomeMain'
+import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery';
 import MessageItem from '../MessageItem';
 
@@ -184,6 +184,23 @@ export default function ChatEmbeddedInMessenger(props) {
           })
           forceUpdate()
           setScrollTrigger(!scrollTrigger)
+
+          let requestOptions3 = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              token: token,
+            },
+            body: JSON.stringify({
+              roomId: props.roomId,
+            }),
+            redirect: 'follow',
+          }
+          fetch(serverRoot + '/chat/get_chat', requestOptions3)
+            .then((response) => response.json())
+            .then((result) => {
+              updateChat(result.room);
+            });
         }
       })
       .catch((error) => console.log('error', error))
