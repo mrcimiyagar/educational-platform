@@ -241,15 +241,29 @@ router.post('/delete_message', jsonParser, async function (req, res) {
 
 router.post('/get_messages', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
-    
     let messages = await sw.Message.findAll({
       raw: true,
-      limit: 10,
+      limit: 100,
       include: [{ all: true }],
       where: { roomId: membership.roomId },
       order: [['createdAt', 'DESC']],
     })
+    messages = messages.reverse();
+    let allRecentSeens = await sw.MessageSeen.findAll({raw: true, where: {id: messages.map(m => m.id), roomId: membership.roomId, userId: session.userId}})
+    let dict = {}
+    allRecentSeens.forEach(recentSeen => {
+      dict[recentSeen.messageId] = true;
+    });
+    let breakPoint = 0;
     for (let i = 0; i < messages.length; i++) {
+      if (dict[messages[i].id] !== true) {
+        breakPoint = i;
+        break;
+      }
+    }
+    breakPoint = Math.min(breakPoint, (messages.length > 10) ? (messages.length - 10) : 0)
+    let result = [];
+    for (let i = breakPoint; i < messages.length; i++) {
       let message = messages[i]
       if (session.userId !== message.authorId) {
         if (
@@ -269,8 +283,9 @@ router.post('/get_messages', jsonParser, async function (req, res) {
         distinct: true,
         col: 'userId',
       })
+      result.push(message);
     }
-    messages = messages.reverse()
+    messages = result;
     let members = await sw.Membership.findAll({
       raw: true,
       where: { roomId: membership.roomId },
