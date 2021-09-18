@@ -293,6 +293,7 @@ export default function Chat(props) {
     if (!loading && pickingFile) {
       setPickingFile(false)
       let dataUrl = filesContent[0]
+      alert(dataUrl.name);
       fetch(dataUrl.content)
         .then((res) => res.blob())
         .then((file) => {
@@ -331,6 +332,7 @@ export default function Chat(props) {
                     : dataUrl.name.endsWith('.wav') ||
                       dataUrl.name.endsWith('.mp3') ||
                       dataUrl.name.endsWith('.mpeg') ||
+                      dataUrl.name.endsWith('.aac') ||
                       dataUrl.name.endsWith('.mp4')
                     ? 'audio'
                     : dataUrl.name.endsWith('.webm') ||
@@ -342,7 +344,6 @@ export default function Chat(props) {
                 fileId: JSON.parse(request.responseText).file.id,
                 User: me,
               }
-              alert(msg.messageType);
               addMessageToList(msg)
               setLastMessage(msg)
               let requestOptions = {
@@ -363,6 +364,7 @@ export default function Chat(props) {
                       : dataUrl.name.endsWith('.wav') ||
                         dataUrl.name.endsWith('.mp3') ||
                         dataUrl.name.endsWith('.mpeg') ||
+                        dataUrl.name.endsWith('.aac') ||
                         dataUrl.name.endsWith('.mp4')
                       ? 'audio'
                       : dataUrl.name.endsWith('.webm') ||

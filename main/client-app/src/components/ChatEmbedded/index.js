@@ -327,6 +327,7 @@ export default function ChatEmbedded(props) {
                     : dataUrl.name.endsWith('.wav') ||
                       dataUrl.name.endsWith('.mp3') ||
                       dataUrl.name.endsWith('.mpeg') ||
+                      dataUrl.name.endsWith('.aac') ||
                       dataUrl.name.endsWith('.mp4')
                     ? 'audio'
                     : dataUrl.name.endsWith('.webm') ||
@@ -358,6 +359,7 @@ export default function ChatEmbedded(props) {
                       : dataUrl.name.endsWith('.wav') ||
                         dataUrl.name.endsWith('.mp3') ||
                         dataUrl.name.endsWith('.mpeg') ||
+                        dataUrl.name.endsWith('.aac') ||
                         dataUrl.name.endsWith('.mp4')
                       ? 'audio'
                       : dataUrl.name.endsWith('.webm') ||

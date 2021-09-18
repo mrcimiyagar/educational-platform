@@ -79,6 +79,7 @@ export function PresentBox(props) {
               : ext === 'wav' ||
                 ext === 'mpeg' ||
                 ext === 'mp4' ||
+                ext === 'aac' ||
                 ext === 'mp3'
               ? 'audio'
               : ext === 'webm' ||
