@@ -36,6 +36,8 @@ const { dirname } = require('path');
 
 let jsonParser = bodyParser.json();
 
+app.use(cors());
+
 webpush.setVapidDetails(
     "mailto:theprogrammermachine@gmail.com",
     'BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s',
@@ -53,8 +55,6 @@ app.post("/subscribe", (req, res) => {
       .sendNotification(subscription, payload)
       .catch(err => console.error(err));
 });
-
-app.use(cors());
 
 server.listen(2001);
 
