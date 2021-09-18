@@ -11,14 +11,39 @@ if ('serviceWorker' in navigator) {
 async function send() {
   // Register Service Worker
   console.log('Registering service worker...')
-  const register = await navigator.serviceWorker.register('https://kaspersoft.cloud/serviceWorker.js', {
-    scope: '/',
-  })
+
+  navigator.serviceWorker.register('https://kaspersoft.cloud/serviceWorker.js', {scope: "/"})
+  .then(
+  function (reg) {
+      var serviceWorker;
+      if (reg.installing) {
+          serviceWorker = reg.installing;
+          // console.log('Service worker installing');
+      } else if (reg.waiting) {
+          serviceWorker = reg.waiting;
+          // console.log('Service worker installed & waiting');
+      } else if (reg.active) {
+          serviceWorker = reg.active;
+          // console.log('Service worker active');
+      }
+
+      if (serviceWorker) {
+          console.log("sw current state", serviceWorker.state);
+          if (serviceWorker.state == "activated") {
+              //If push subscription wasnt done yet have to do here
+              console.log("sw already activated - Do watever needed here");
+          }
+          serviceWorker.addEventListener("statechange", async function(e) {
+              console.log("sw statechange : ", e.target.state);
+              if (e.target.state == "activated") {
+                  // use pushManger for subscribing here.
+                  console.log("Just now activated. now we can subscribe for push notification")
+                  
   console.log('Service Worker Registered...')
 
   // Register Push
   console.log('Registering Push...')
-  const subscription = await register.pushManager.subscribe({
+  const subscription = await reg.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
   })
@@ -34,6 +59,14 @@ async function send() {
     },
   })
   console.log('Push Sent...')
+              }
+          });
+      }
+  },
+  function (err) {
+      console.error('unsuccessful registration with ', err);
+  }
+);
 }
 
 function urlBase64ToUint8Array(base64String) {
