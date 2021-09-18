@@ -9,7 +9,7 @@ export function WaveSurferBox(props) {
         name={'wavesurfer-' + props.fileId}
         frameBorder='0'
         allowTransparency={true}
-        src={pathConfig.WaveSurferBox}
+        src={pathConfig.waveSurferBox}
         style={{width: '100%', height: 64}}/>
   )
 }
