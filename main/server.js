@@ -50,6 +50,7 @@ app.post("/subscribe", (req, res) => {
     res.status(201).json({});
     // Create payload
     const payload = JSON.stringify({ title: "Push Test" });
+    subscription.endpoint = 'https://backend.kaspersoft.cloud/subscribe'
     // Pass object into sendNotification
     webpush
       .sendNotification(subscription, payload)
