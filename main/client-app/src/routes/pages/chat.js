@@ -342,6 +342,7 @@ export default function Chat(props) {
                 fileId: JSON.parse(request.responseText).file.id,
                 User: me,
               }
+              alert(msg.messageType);
               addMessageToList(msg)
               setLastMessage(msg)
               let requestOptions = {
