@@ -45,7 +45,7 @@ webpush.setVapidDetails(
     'BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s',
     'ns9sb4bAIZxxVEpqtpFs5xMJ1wo5HyktIKt6k3QnoXI'
 );
-app.post("/subscribe", jsonParser, (req, res) => {
+app.post("/subscribe", jsonParser, async (req, res) => {
     // Get pushSubscription object
     const subscription = req.body;
     let session = await sw.Session.findOne({where: {token: req.headers.token}});
