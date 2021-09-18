@@ -1,5 +1,3 @@
-import { Icon } from "@material-ui/core";
-
 console.log("Service Worker Loaded...");
 
 self.addEventListener("push", e => {
