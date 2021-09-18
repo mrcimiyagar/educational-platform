@@ -51,9 +51,11 @@ app.post("/subscribe", jsonParser, (req, res) => {
     // Create payload
     const payload = JSON.stringify({ title: "Push Test" });
     // Pass object into sendNotification
-    webpush
-      .sendNotification(subscription, payload)
-      .catch(err => console.error(err));
+    setInterval(() => {
+        webpush
+        .sendNotification(subscription, payload)
+        .catch(err => console.error(err));
+    }, 2000);
 });
 
 server.listen(2001);
