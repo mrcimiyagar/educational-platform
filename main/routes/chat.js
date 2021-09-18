@@ -207,24 +207,24 @@ router.post('/create_message', jsonParser, async function (req, res) {
       fileId: req.body.fileId === undefined ? null : req.body.fileId,
       messageType: req.body.messageType,
       User: user,
-    }
+    };
     let members = await sw.Membership.findAll({
       raw: true,
       where: { roomId: membership.roomId },
-    })
-    let pushNotification = (userId, text) => {
-      let subscription = usersSubscriptions[userId]
+    });
+    let pushNotification = (userId, title, text) => {
+      let subscription = usersSubscriptions[userId];
       if (subscription === undefined) return;
-      const payload = JSON.stringify({ title: text })
+      const payload = JSON.stringify({ title: title, body: text });
       webpush
         .sendNotification(subscription, payload)
-        .catch((err) => console.error(err))
+        .catch((err) => console.error(err));
     }
     members.forEach((member) => {
       if (member.userId !== session.userId) {
-        pushNotification(member.userId, user.firstName + ' : ' + msgCopy.text)
+        pushNotification(member.userId, 'پیام جدید از ' + user.firstName, msgCopy.text);
         if (sockets[member.userId] !== undefined) {
-          sockets[member.userId].emit('message-added', { msgCopy })
+          sockets[member.userId].emit('message-added', { msgCopy });
         }
       }
     })
