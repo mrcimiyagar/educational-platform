@@ -287,13 +287,13 @@ export default function RoomPage(props) {
               ? 'photo'
               : ext === 'wav' ||
                 ext === 'mpeg' ||
-                ext === 'mp4' ||
                 ext === 'aac' ||
                 ext === 'mp3'
               ? 'audio'
               : ext === 'webm' ||
                 ext === 'mkv' ||
                 ext === 'flv' ||
+                ext === 'mp4' ||
                 ext === '3gp'
               ? 'video'
               : 'document'

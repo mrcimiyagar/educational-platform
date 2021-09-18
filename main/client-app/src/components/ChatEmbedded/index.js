@@ -327,13 +327,13 @@ export default function ChatEmbedded(props) {
                     : dataUrl.name.endsWith('.wav') ||
                       dataUrl.name.endsWith('.mp3') ||
                       dataUrl.name.endsWith('.mpeg') ||
-                      dataUrl.name.endsWith('.aac') ||
-                      dataUrl.name.endsWith('.mp4')
+                      dataUrl.name.endsWith('.aac')
                     ? 'audio'
                     : dataUrl.name.endsWith('.webm') ||
                       dataUrl.name.endsWith('.mkv') ||
                       dataUrl.name.endsWith('.flv') ||
-                      dataUrl.name.endsWith('.3gp')
+                      dataUrl.name.endsWith('.3gp') ||
+                      dataUrl.name.endsWith('.mp4')
                     ? 'video'
                     : undefined,
                 fileId: JSON.parse(request.responseText).file.id,
@@ -359,13 +359,13 @@ export default function ChatEmbedded(props) {
                       : dataUrl.name.endsWith('.wav') ||
                         dataUrl.name.endsWith('.mp3') ||
                         dataUrl.name.endsWith('.mpeg') ||
-                        dataUrl.name.endsWith('.aac') ||
-                        dataUrl.name.endsWith('.mp4')
+                        dataUrl.name.endsWith('.aac')
                       ? 'audio'
                       : dataUrl.name.endsWith('.webm') ||
                         dataUrl.name.endsWith('.mkv') ||
                         dataUrl.name.endsWith('.flv') ||
-                        dataUrl.name.endsWith('.3gp')
+                        dataUrl.name.endsWith('.3gp') ||
+                        dataUrl.name.endsWith('.mp4')
                       ? 'video'
                       : undefined,
                   fileId: JSON.parse(request.responseText).file.id,

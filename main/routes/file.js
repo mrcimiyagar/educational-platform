@@ -53,8 +53,8 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                         isPreview: false,
                         isPresent: isPresent === true ? true : false,
                         fileType: (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg' || ext === 'webp') ? 'photo' :
-                                  (ext === 'wav' || ext === 'mpeg' || ext === 'mp4' || ext === 'mp3' || ext === 'aac') ? 'audio' :
-                                  (ext === 'webm' || ext === 'mkv' || ext === 'flv' || ext === '3gp') ? 'video' :
+                                  (ext === 'wav' || ext === 'mpeg' || ext === 'mp3' || ext === 'aac') ? 'audio' :
+                                  (ext === 'webm' || ext === 'mkv' || ext === 'flv' || ext === '3gp' || ext === 'mp4') ? 'video' :
                                   'document'
                     });
                     let oldPath = files.file.path;
