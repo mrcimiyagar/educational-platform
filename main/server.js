@@ -54,10 +54,6 @@ app.post("/subscribe", (req, res) => {
       .catch(err => console.error(err));
 });
 
-app.get("/serviceWorker.js", (req, res) => {
-    res.sendFile(__dirname + "/serviceWorker.js");
-});
-
 app.use(cors());
 
 server.listen(2001);
