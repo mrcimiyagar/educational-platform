@@ -6,6 +6,7 @@ const { authenticateMember, usersSubscriptions } = require('../users')
 const { sockets } = require('../socket')
 const Sequelize = require('sequelize')
 const { pushNotification } = require('../server')
+const webpush = require('web-push');
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
