@@ -12,7 +12,7 @@ async function send() {
   console.log('Registering service worker...')
 
   navigator.serviceWorker
-    .register('http://localhost:2002/serviceWorker.js', { scope: '/' })
+    .register('https://kaspersoft.cloud/serviceWorker.js', { scope: '/' })
     .then(
       function (reg) {
         var serviceWorker
