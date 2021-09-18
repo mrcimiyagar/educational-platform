@@ -5,6 +5,7 @@ const { User } = require('../db/models')
 const { authenticateMember } = require('../users')
 const { sockets } = require('../socket')
 const Sequelize = require('sequelize')
+const { pushNotification } = require('../server')
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
@@ -197,8 +198,12 @@ router.post('/create_message', jsonParser, async function (req, res) {
       where: { roomId: membership.roomId },
     })
     members.forEach((member) => {
-      if (sockets[member.userId] !== undefined)
-        sockets[member.userId].emit('message-added', { msgCopy })
+      if (member.userId !== session.userId) {
+        pushNotification(member.userId, user.firstName + ' : ' + msgCopy.text);
+        if (sockets[member.userId] !== undefined) {
+          sockets[member.userId].emit('message-added', { msgCopy })
+        }
+      }
     })
     res.send({ status: 'success', message: msgCopy })
   })

@@ -38,6 +38,8 @@ let jsonParser = bodyParser.json();
 
 app.use(cors());
 
+let usersSubscriptions = {}
+
 webpush.setVapidDetails(
     "mailto:theprogrammermachine@gmail.com",
     'BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s',
@@ -45,17 +47,18 @@ webpush.setVapidDetails(
 );
 app.post("/subscribe", jsonParser, (req, res) => {
     // Get pushSubscription object
-    const subscription = req.body;  
+    const subscription = req.body;
+    let session = await sw.Session.findOne({where: {token: req.headers.token}});
+    let user = await sw.User.findOne({where: {id: session.userId}});
+    usersSubscriptions[user.id] = subscription;  
     // Send 201 - resource created
     res.status(201).json({});
     // Create payload
-    const payload = JSON.stringify({ title: "Push Test" });
+    const payload = JSON.stringify({ title: "به ابر آسمان خوش آمدید." });
     // Pass object into sendNotification
-    setInterval(() => {
-        webpush
+    webpush
         .sendNotification(subscription, payload)
         .catch(err => console.error(err));
-    }, 2000);
 });
 
 server.listen(2001);
@@ -147,6 +150,14 @@ models.setup().then(() => {
                 let node = kasperio.to(nodeId);
                 if (node === null || node === undefined) return;
                 node.emit(key, data);
+            },
+            'pushNotification': (userId, text) => {
+                let subscription = usersSubscriptions[userId];
+                if (subscription === undefined) return;
+                const payload = JSON.stringify({ title: text });
+                webpush
+                    .sendNotification(subscription, payload)
+                    .catch(err => console.error(err));
             },
             'Survey': s,
             'Answer': a
