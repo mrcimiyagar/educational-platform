@@ -29,7 +29,7 @@ const mongo = require("./db/mongo");
 const cors = require('cors');
 const sw = require('./db/models');
 const bodyParser = require('body-parser');
-const { authenticateMember } = require('./users');
+const { authenticateMember, usersSubscriptions } = require('./users');
 const expressStaticGzip = require('express-static-gzip');
 const webpush = require('web-push');
 const { dirname } = require('path');
@@ -37,8 +37,6 @@ const { dirname } = require('path');
 let jsonParser = bodyParser.json();
 
 app.use(cors());
-
-let usersSubscriptions = {}
 
 webpush.setVapidDetails(
     "mailto:theprogrammermachine@gmail.com",
@@ -150,14 +148,6 @@ models.setup().then(() => {
                 let node = kasperio.to(nodeId);
                 if (node === null || node === undefined) return;
                 node.emit(key, data);
-            },
-            'pushNotification': (userId, text) => {
-                let subscription = usersSubscriptions[userId];
-                if (subscription === undefined) return;
-                const payload = JSON.stringify({ title: text });
-                webpush
-                    .sendNotification(subscription, payload)
-                    .catch(err => console.error(err));
             },
             'Survey': s,
             'Answer': a

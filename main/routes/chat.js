@@ -2,7 +2,7 @@ const sw = require('../db/models')
 const express = require('express')
 const bodyParser = require('body-parser')
 const { User } = require('../db/models')
-const { authenticateMember } = require('../users')
+const { authenticateMember, usersSubscriptions } = require('../users')
 const { sockets } = require('../socket')
 const Sequelize = require('sequelize')
 const { pushNotification } = require('../server')
@@ -44,7 +44,10 @@ router.post('/get_participent', jsonParser, async function (req, res) {
 router.post('/get_chat', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     if (membership !== null && membership !== undefined) {
-      let room = await sw.Room.findOne({ raw: true, where: { id: membership.roomId } });
+      let room = await sw.Room.findOne({
+        raw: true,
+        where: { id: membership.roomId },
+      })
       if (room.chatType === 'p2p') {
         let members = await sw.Membership.findAll({
           raw: true,
@@ -71,22 +74,28 @@ router.post('/get_chat', jsonParser, async function (req, res) {
       }
       let roomMessagesCount = await sw.Message.count({
         where: {
-          id: {[Sequelize.Op.gt]: entries[entries.length - 1].id},
+          id: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
           roomId: room.id,
           authorId: { [Sequelize.Op.not]: session.userId },
-        }
+        },
       })
       let roomReadCount = await sw.MessageSeen.count({
-        where: { roomId: room.id, userId: session.userId,
-          messageId: {[Sequelize.Op.gt]: entries[entries.length - 1].id} },
+        where: {
+          roomId: room.id,
+          userId: session.userId,
+          messageId: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
+        },
         distinct: true,
         col: 'messageId',
       })
       room.unread = roomMessagesCount - roomReadCount
       res.send({ status: 'success', room: room })
-    }
-    else {
-      res.send({ status: 'error', errorCode: 'e0005', message: 'access denied.' })
+    } else {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      })
     }
   })
 })
@@ -127,18 +136,23 @@ router.post('/get_chats', jsonParser, async function (req, res) {
             }
             let roomMessagesCount = await sw.Message.count({
               where: {
-                id: {[Sequelize.Op.gt]: entries[entries.length - 1].id},
+                id: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
                 roomId: room.id,
                 authorId: { [Sequelize.Op.not]: session.userId },
-              }
+              },
             })
             let roomReadCount = await sw.MessageSeen.count({
-              where: { roomId: room.id, userId: session.userId,
-                messageId: {[Sequelize.Op.gt]: entries[entries.length - 1].id} },
+              where: {
+                roomId: room.id,
+                userId: session.userId,
+                messageId: {
+                  [Sequelize.Op.gt]: entries[entries.length - 1].id,
+                },
+              },
               distinct: true,
               col: 'messageId',
             })
-            room.unread = roomMessagesCount - roomReadCount;
+            room.unread = roomMessagesCount - roomReadCount
           }
           res.send({ status: 'success', rooms: rooms })
         })
@@ -197,9 +211,17 @@ router.post('/create_message', jsonParser, async function (req, res) {
       raw: true,
       where: { roomId: membership.roomId },
     })
+    let pushNotification = (userId, text) => {
+      let subscription = usersSubscriptions[userId]
+      if (subscription === undefined) return;
+      const payload = JSON.stringify({ title: text })
+      webpush
+        .sendNotification(subscription, payload)
+        .catch((err) => console.error(err))
+    }
     members.forEach((member) => {
       if (member.userId !== session.userId) {
-        pushNotification(member.userId, user.firstName + ' : ' + msgCopy.text);
+        pushNotification(member.userId, user.firstName + ' : ' + msgCopy.text)
         if (sockets[member.userId] !== undefined) {
           sockets[member.userId].emit('message-added', { msgCopy })
         }
@@ -253,27 +275,40 @@ router.post('/get_messages', jsonParser, async function (req, res) {
       where: { roomId: membership.roomId },
       order: [['createdAt', 'DESC']],
     })
-    messages = messages.reverse();
-    let allRecentSeens = await sw.MessageSeen.findAll({raw: true, where: {messageId: messages.map(m => m.id), roomId: membership.roomId, userId: session.userId}})
+    messages = messages.reverse()
+    let allRecentSeens = await sw.MessageSeen.findAll({
+      raw: true,
+      where: {
+        messageId: messages.map((m) => m.id),
+        roomId: membership.roomId,
+        userId: session.userId,
+      },
+    })
     let dict = {}
-    allRecentSeens.forEach(recentSeen => {
-      dict[recentSeen.messageId] = true;
-    });
-    let breakPoint = 0;
-    let found = false;
+    allRecentSeens.forEach((recentSeen) => {
+      dict[recentSeen.messageId] = true
+    })
+    let breakPoint = 0
+    let found = false
     for (let i = 0; i < messages.length; i++) {
-      if (dict[messages[i].id] !== true && messages[i].authorId !== session.userId) {
-        breakPoint = i;
-        found = true;
-        break;
+      if (
+        dict[messages[i].id] !== true &&
+        messages[i].authorId !== session.userId
+      ) {
+        breakPoint = i
+        found = true
+        break
       }
     }
     if (!found) {
-      breakPoint = messages.length - 1;
+      breakPoint = messages.length - 1
     }
 
-    breakPoint = Math.min(breakPoint, (messages.length > 10) ? (messages.length - 10) : 0)
-    let result = [];
+    breakPoint = Math.min(
+      breakPoint,
+      messages.length > 10 ? messages.length - 10 : 0,
+    )
+    let result = []
     for (let i = breakPoint; i < messages.length; i++) {
       let message = messages[i]
       if (session.userId !== message.authorId) {
@@ -294,9 +329,9 @@ router.post('/get_messages', jsonParser, async function (req, res) {
         distinct: true,
         col: 'userId',
       })
-      result.push(message);
+      result.push(message)
     }
-    messages = result;
+    messages = result
     let members = await sw.Membership.findAll({
       raw: true,
       where: { roomId: membership.roomId },

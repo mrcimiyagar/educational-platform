@@ -10,8 +10,10 @@ let guestAccs = {};
 let guestAccsOutOfRoom = {};
 let guestAccsByUserId = {};
 let invites = {}
+let usersSubscriptions = {}
 
 module.exports = {
+    usersSubscriptions: usersSubscriptions,
     users: users,
     guestAccsByUserId: guestAccsByUserId,
     guestAccs: guestAccs,
