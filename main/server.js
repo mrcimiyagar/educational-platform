@@ -43,14 +43,13 @@ webpush.setVapidDetails(
     'BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s',
     'ns9sb4bAIZxxVEpqtpFs5xMJ1wo5HyktIKt6k3QnoXI'
 );
-app.post("/subscribe", (req, res) => {
+app.post("/subscribe", jsonParser, (req, res) => {
     // Get pushSubscription object
     const subscription = req.body;  
     // Send 201 - resource created
     res.status(201).json({});
     // Create payload
     const payload = JSON.stringify({ title: "Push Test" });
-    subscription.endpoint = 'https://backend.kaspersoft.cloud/subscribe'
     // Pass object into sendNotification
     webpush
       .sendNotification(subscription, payload)
