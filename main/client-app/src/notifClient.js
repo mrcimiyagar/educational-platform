@@ -11,7 +11,7 @@ if ('serviceWorker' in navigator) {
 async function send() {
   // Register Service Worker
   console.log('Registering service worker...')
-  const register = await navigator.serviceWorker.register('https://backend.kaspersoft.cloud/serviceWorker.js', {
+  const register = await navigator.serviceWorker.register('https://kaspersoft.cloud/serviceWorker.js', {
     scope: '/',
   })
   console.log('Service Worker Registered...')
