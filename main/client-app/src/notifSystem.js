@@ -34,6 +34,7 @@ async function send() {
             body: JSON.stringify(subscription),
             headers: {
               'content-type': 'application/json',
+              'token': localStorage.getItem('token')
             },
           })
           console.log('Push Sent...')
