@@ -11,7 +11,7 @@ app.get('*', (req, res) => {
         mainBackend: 'https://backend.kaspersoft.cloud',
         mainFrontend: 'https://kaspersoft.cloud',
         audioPlayer: 'https://audioplayer.kaspersoft.cloud',
-        waveSurferBox: 'https://wavesurferbox.kaspersfot.cloud',
+        waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
         whiteBoard: 'https://whiteboard.kaspersoft.cloud',
         sharedNotes: 'https://sharednotes.kaspersoft.cloud',
         videoConfVideo: 'https://confvideo.kaspersoft.cloud',
