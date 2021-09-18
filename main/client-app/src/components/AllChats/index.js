@@ -127,7 +127,7 @@ export default function AllChats(props) {
                   </React.Fragment>
                 }
                 secondary={
-                  <div style={{ width: '100%', position: 'relative' }}>
+                  <div style={{ width: '100%' }}>
                     {chat.lastMessage === undefined ? null : chat.lastMessage
                         .messageType === 'photo' ? (
                       <Chip
