@@ -61,7 +61,7 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
-            <AppBar position="fixed" style={{width: isDesktop() ? (isInRoom() ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px - 16px)') : isTablet() ? (isInRoom() ? '100%' : 'calc(100% - 450px)') : '100%', borderRadius: isTablet() || isMobile() ? 0 : ((window.location.pathname === '/app/chat' || histPage === '/app/room') ? 0 : '24px 0 0 0'), position: isDesktop() || isTablet() ? 'fixed' : undefined, top: isDesktop() ? (histPage === '/app/room' ? 0 : 32) : 0, left: histPage === '/app/room' ? (isDesktop() ? 'calc(100% - 450px)' : 96) : (isDesktop() ? (96 + 16) : 0), paddingTop: 8, height: 64, backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}>
+            <AppBar position="fixed" style={{width: isDesktop() ? (isInRoom() ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px - 16px)') : isTablet() ? (isInRoom() ? '100%' : 'calc(100% - 450px)') : '100%', borderRadius: isTablet() || isMobile() ? 0 : ((window.location.pathname === '/app/chat' || histPage === '/app/room') ? 0 : '24px 0 0 0'), position: isDesktop() || isTablet() ? 'fixed' : undefined, top: isDesktop() ? (histPage === '/app/room' ? 0 : 32) : 0, left: histPage === '/app/room' ? (isDesktop() ? 'calc(100% - 450px)' : 96) : (isDesktop() ? (96 + 16) : 0), paddingTop: 8, height: 64, backgroundColor: colors.primaryMedium}}>
                 <Toolbar style={{height: '100%', marginTop: (isDesktop() || isTablet()) ? -8 : 0}}>
                     {isMobile() ?
                         <IconButton style={{marginRight: -16}} onClick={() => props.handleClose() }>

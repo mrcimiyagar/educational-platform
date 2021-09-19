@@ -4,10 +4,8 @@ import React, { Suspense, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import CloudIcon from './images/logo.png'
-import RoomWallpaper from './images/roomWallpaper.png';
+import DesktopWallpaper from './images/roomWallpaper.png';
 import store from './redux/main';
-import DesktopWallpaper from './images/desktop-wallpaper.webp';
-import DesktopWallpaper2 from './images/desktop-wallpaper.jpg';
 import { setup } from './util/Utils';
 import './notifSystem';
 
@@ -72,6 +70,50 @@ export let setWallpaper = undefined,
 let setWall = undefined
 let loaded = false
 
+let loading = (
+  <div
+            style={{
+              width: '100%',
+              height: '100vh',
+              position: 'fixed',
+              left: 0,
+              top: 0,
+            }}
+          >
+            <img
+              style={{
+                width: '100%',
+                height: '100%',
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                objectFit: 'cover',
+              }}
+              src={DesktopWallpaper}
+            />
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.45)',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+              }}
+            />
+            <Loading
+              style={{
+                width: '100%',
+                height: '100%',
+                position: 'fixed',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          </div>
+);
+
 let AppContainer = (props) => {
   ;[wallpaper, setWall] = React.useState({ type: '' })
   setWallpaper = (w) => {
@@ -80,6 +122,10 @@ let AppContainer = (props) => {
   let [opacity, setOpacity] = React.useState(0)
   let [display, setDisplay] = React.useState('block')
   useEffect(() => {
+    ['./images/chat-wallpaper.png'].forEach(imageSrc => {
+      const img = new Image();
+      img.src = imageSrc;
+    })
     let requestOptions = {
       method: 'GET',
       headers: {
@@ -90,22 +136,16 @@ let AppContainer = (props) => {
     fetch('https://config.kaspersoft.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
-		pathConfig = result;
-    setup();
-    loaded = true;
+		    pathConfig = result;
+        setup();
+        loaded = true;
         setTimeout(() => {
-          setOpacity(1)
-          setTimeout(() => {
-            setOpacity(0)
-            setTimeout(() => {
-              setDisplay('none')
-            }, 750)
-          }, 1000)
-        }, 4000)
+          setDisplay('none');
+        }, 5000);
       })
   }, [])
 
-  if (!loaded) return <div/>
+  if (!loaded) return loading;
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
@@ -150,47 +190,7 @@ let AppContainer = (props) => {
       ) : null}
       <Suspense
         fallback={
-          <div
-            style={{
-              width: '100%',
-              height: '100vh',
-              position: 'fixed',
-              left: 0,
-              top: 0,
-            }}
-          >
-            <img
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'fixed',
-                left: 0,
-                top: 0,
-                objectFit: 'fill',
-              }}
-              src={DesktopWallpaper}
-            />
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'rgba(0, 0, 0, 0.45)',
-                position: 'fixed',
-                top: 0,
-                left: 0,
-              }}
-            />
-            <Loading
-              style={{
-                width: '100%',
-                height: '100%',
-                position: 'fixed',
-                left: '50%',
-                top: '50%',
-                transform: 'translate(-50%, -50%)',
-              }}
-            />
-          </div>
+          loading
         }
       >
         <MainApp />

@@ -33,13 +33,7 @@ export default function VideoPlayer(props) {
   return (
     <Dialog
             onTouchStart={(e) => {e.stopPropagation();}}
-            PaperProps={{
-                style: {
-                    backgroundColor: 'transparent',
-                    boxShadow: 'none',
-                },
-            }}
-            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
+            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <div style={{width: '100%', height: '100%'}}>
           <IconButton style={{position: 'fixed', right: 12, top: 24}} onClick={() => {setOpen(false); setTimeout(popPage, 250)}}>
             <ArrowForwardTwoTone style={{fill: '#fff'}}/>

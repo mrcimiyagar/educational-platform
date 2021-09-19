@@ -68,6 +68,9 @@ const useStyles = makeStyles((theme) => ({
 export let updateChatEmbedded = undefined
 
 let messagesArr = []
+export let resetMessages2 = () => {
+  messagesArr = []
+}
 
 export let addMessageToList2 = () => {}
 export let replaceMessageInTheList2 = () => {}

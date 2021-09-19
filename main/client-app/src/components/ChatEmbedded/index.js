@@ -62,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 let messagesArr = []
+export let resetMessages3 = () => {
+  messagesArr = []
+}
 
 export let addMessageToList3 = () => {}
 export let replaceMessageInTheList3 = () => {}

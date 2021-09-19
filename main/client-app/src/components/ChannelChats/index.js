@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { Audiotrack, Photo, Videocam } from '@material-ui/icons';
 import React from 'react';
 import { gotoPage, isDesktop, isTablet } from '../../App';
+import { resetMessages } from '../../routes/pages/chat';
 import { colors } from '../../util/settings';
 import EmptySign from '../EmptySign';
 
@@ -36,6 +37,7 @@ export default function ChannelChats(props) {
   return (
   <div>
   <ListItem alignItems="flex-start" button style={{height: 80}} onClick={() => {
+      resetMessages();
       if (isDesktop() || isTablet()) {
         props.setSelectedRoomId(chat.id)
       }

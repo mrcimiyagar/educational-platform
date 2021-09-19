@@ -12,6 +12,7 @@ import React from 'react'
 import { Badge } from 'reactstrap'
 import { gotoPage, isDesktop, isTablet } from '../../App'
 import EmptySign from '../../components/EmptySign'
+import { resetMessages } from '../../routes/pages/chat'
 import { colors, token } from '../../util/settings'
 import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils'
 
@@ -48,34 +49,16 @@ export default function AllChats(props) {
               button
               style={{ height: 80 }}
               onClick={() => {
-                leaveRoom(() => {
-                  let requestOptions2 = {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      token: token,
-                    },
-                    body: JSON.stringify({
-                      roomId: chat.id,
-                    }),
-                    redirect: 'follow',
-                  }
-                  fetch(serverRoot + '/room/enter_room', requestOptions2)
-                    .then((response) => response.json())
-                    .then((result) => {
-                      console.log(JSON.stringify(result))
-                      if (isDesktop() || isTablet()) {
-                        props.setSelectedRoomId(chat.id)
-                        props.setSelectedUserId(chat.participent.id)
-                      } else {
-                        gotoPage('/app/chat', {
-                          room_id: chat.id,
-                          user_id: chat.participent.id,
-                        })
-                      }
-                    })
-                    .catch((error) => console.log('error', error))
-                })
+                resetMessages();
+                if (isDesktop() || isTablet()) {
+                  props.setSelectedRoomId(chat.id)
+                  props.setSelectedUserId(chat.participent.id)
+                } else {
+                  gotoPage('/app/chat', {
+                    room_id: chat.id,
+                    user_id: chat.participent.id,
+                  })
+                }
               }}
             >
               <ListItemAvatar>

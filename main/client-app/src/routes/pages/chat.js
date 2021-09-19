@@ -21,6 +21,8 @@ import ChatWallpaper from '../../images/chat-wallpaper.jpg';
 import { setLastMessage, updateChat } from '../../components/HomeMain';
 import $ from 'jquery';
 import MessageItem from '../../components/MessageItem';
+import { resetMessages2 } from '../../components/ChatEmbeddedInMessenger'
+import { resetMessages3 } from '../../components/ChatEmbedded'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -53,6 +55,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 let messagesArr = []
+export let resetMessages = () => {
+  messagesArr = [];
+  resetMessages2();
+  resetMessages3();
+}
 
 let uplaodedFileId = 0
 
@@ -233,55 +240,57 @@ export default function Chat(props) {
         }
       })
       .catch((error) => console.log('error', error))
-    let requestOptions3 = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: props.room_id,
-      }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/chat/get_messages', requestOptions3)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result))
-        if (result.messages !== undefined) {
-          messagesArr = []
-          result.messages.forEach((message) => {
-            messagesArr.push(
-              <MessageItem
-                key={'message-' + message.id}
-                message={message}
-                setPhotoViewerVisible={setPhotoViewerVisible}
-                setCurrentPhotoSrc={setCurrentPhotoSrc}
-              />,
-            )
-          })
-          forceUpdate()
-          setScrollTrigger(!scrollTrigger)
-
-          let requestOptions3 = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              token: token,
-            },
-            body: JSON.stringify({
-              roomId: props.room_id,
-            }),
-            redirect: 'follow',
-          }
-          fetch(serverRoot + '/chat/get_chat', requestOptions3)
-            .then((response) => response.json())
-            .then((result) => {
-              updateChat(result.room);
-            });
+    setTimeout(() => {
+        let requestOptions3 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: props.room_id,
+          }),
+          redirect: 'follow',
         }
-      })
-      .catch((error) => console.log('error', error))
+        fetch(serverRoot + '/chat/get_messages', requestOptions3)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result))
+            if (result.messages !== undefined) {
+              messagesArr = []
+              result.messages.forEach((message) => {
+                messagesArr.push(
+                  <MessageItem
+                    key={'message-' + message.id}
+                    message={message}
+                    setPhotoViewerVisible={setPhotoViewerVisible}
+                    setCurrentPhotoSrc={setCurrentPhotoSrc}
+                  />,
+                )
+              })
+              forceUpdate()
+              setScrollTrigger(!scrollTrigger)
+    
+              let requestOptions3 = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  token: token,
+                },
+                body: JSON.stringify({
+                  roomId: props.room_id,
+                }),
+                redirect: 'follow',
+              }
+              fetch(serverRoot + '/chat/get_chat', requestOptions3)
+                .then((response) => response.json())
+                .then((result) => {
+                  updateChat(result.room);
+                });
+            }
+          })
+        .catch((error) => console.log('error', error))
+      });
   }, [])
 
   const ROOT_CSS = css({

@@ -11,6 +11,7 @@ import { Audiotrack, Videocam } from '@material-ui/icons';
 import Photo from '@material-ui/icons/Photo';
 import React from 'react';
 import { gotoPage, isDesktop, isTablet } from '../../App';
+import { resetMessages } from '../../routes/pages/chat';
 import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 import EmptySign from '../EmptySign';
@@ -38,6 +39,7 @@ export default function GroupChats(props) {
   return (
   <div>
    <ListItem alignItems="flex-start" button style={{height: 80, direction: 'rtl'}} onClick={() => {
+      resetMessages();
       if (isDesktop() || isTablet()) {
         props.setSelectedRoomId(chat.id)
       }
