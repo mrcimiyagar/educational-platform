@@ -835,7 +835,7 @@ router.post('/get_invites', jsonParser, async function (req, res) {
 
 router.get('/generate_invite_link', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
-    let room = await sw.Room.findOne({ where: { id: req.query.roomId } })
+    let room = await sw.Room.findOne({ where: { id: membership.roomId } })
     if (room === null) {
       res.send({
         status: 'error',

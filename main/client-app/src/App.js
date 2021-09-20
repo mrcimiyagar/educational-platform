@@ -65,24 +65,30 @@ export let isInRoom = () => {
   while (counter >= 0) {
     if (series[counter] in pages) {
       if (series[counter] === '/app/room') {
-        return true
+        return true;
+      }
+      else {
+        return false;
       }
     }
-    counter--
+    counter--;
   }
-  return false
+  return false;
 }
 export let isInMessenger = () => {
   let counter = series.length - 1
   while (counter >= 0) {
     if (series[counter] in pages) {
       if (series[counter] === '/app/messenger') {
-        return true
+        return true;
+      }
+      else {
+        return false;
       }
     }
-    counter--
+    counter--;
   }
-  return false
+  return false;
 }
 let series = []
 let paramsSeries = []
