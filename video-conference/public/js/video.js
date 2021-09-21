@@ -415,9 +415,7 @@
         local_media.attr('muted', 'true') /* always mute ourselves by default */
         local_media.attr('controls', '')
         document.getElementById('me').appendChild(local_media[0])
-        local_media[0].style.width = 'calc(50% - 24px)'
-        local_media[0].style.maxWidth = '300px'
-        local_media[0].style.height = 'min(300px, ' + (window.innerWidth / 2 - 24) + 'px' + ')';
+        local_media[0].class = "text";
         local_media[0].style.margin = '8px'
         local_media[0].muted = true
         localMediaEl = local_media[0]
@@ -448,9 +446,7 @@
           ) /* always mute ourselves by default */
           local_media.attr('controls', '')
           document.getElementById('me').appendChild(local_media[0])
-          local_media[0].style.width = 'calc(50% - 24px)'
-          local_media[0].style.maxWidth = '300px'
-          local_media[0].style.height = 'min(300px, ' + (window.innerWidth / 2 - 24) + 'px' + ')';
+          local_media[0].class = "text";
           local_media[0].style.margin = '8px'
           local_media[0].muted = true
           localMediaEl = local_media[0]
