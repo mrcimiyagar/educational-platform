@@ -410,6 +410,8 @@
         local_media.attr('muted', 'true') /* always mute ourselves by default */
         local_media.attr('controls', '')
         document.getElementById('me').appendChild(local_media[0])
+        local_media[0].style.width = '100%'
+        local_media[0].style.aspectRatio = '1 / 1'
         local_media[0].style.margin = '8px'
         local_media[0].style.transform = 'rotateY(0)'
         local_media[0].muted = true
@@ -438,6 +440,8 @@
           ) /* always mute ourselves by default */
           local_media.attr('controls', '')
           document.getElementById('me').appendChild(local_media[0])
+          local_media[0].style.width = '100%'
+          local_media[0].style.aspectRatio = '1 / 1'
           local_media[0].style.margin = '8px'
           local_media[0].style.transform = 'rotateY(0)'
           local_media[0].muted = true
