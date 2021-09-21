@@ -418,6 +418,7 @@
         window.isScreenEnable = false;
         local_media[0].muted = true;
         localMediaEl = local_media[0];
+        window.screenEl = localMediaEl;
       }
       attachMediaStream(localMediaEl, stream)
       if (callback) callback(stream)
@@ -450,6 +451,7 @@
           window.isScreenEnable = false;
           local_media[0].muted = true;
           localMediaEl = local_media[0];
+          window.screenEl = localMediaEl;
         }
         attachMediaStream(localMediaEl, stream)
         if (callback) callback(stream)
@@ -494,6 +496,14 @@
       }
       else {
         myDiv.style.display = 'block';
+        if (window.isWebcamEnable) {
+          if (window.isScreenEnable) {
+            window.webcamEl.width = '25%';
+          }
+          else {
+            window.webcamEl.width = '100%';
+          }
+        }
       }
     })
   }
@@ -512,6 +522,14 @@
     }
     else {
       myDiv.style.display = 'block';
+      if (window.isWebcamEnable) {
+        if (window.isScreenEnable) {
+          window.webcamEl.width = '25%';
+        }
+        else {
+          window.webcamEl.width = '100%';
+        }
+      }
     }
   }
 

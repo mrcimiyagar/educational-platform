@@ -29,6 +29,8 @@
         <script>
             window.isScreenEnable = false;
             window.isWebcamEnable = false;
+            window.screenEl = undefined;
+            window.webcamEl = undefined;
             window.peer_media_elements = {}
             window.peer_media_streams = {}
             let disableMax = function(e) {
@@ -43,7 +45,7 @@
             <video onclick="disableMax()" autoplay id='screenMax' style="transform: rotateY(0); object-fit: cover; position: absolute; left: 0px; top: 0px; width: calc(100% - 200px - 16px); height: auto;"></video>
             <video onclick="disableMax()" autoplay id='webcamMax' style="object-fit: cover; position: absolute; right: 0px; top: 0px; width: 200px; height: 200px;"></video>
         </div>
-        <div id="me" class="container">
+        <div id="me" class="container" style="display: none;">
             
         </div>
     </body>
