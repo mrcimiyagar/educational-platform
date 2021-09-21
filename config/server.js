@@ -14,9 +14,9 @@ app.get('*', (req, res) => {
         waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
         whiteBoard: 'https://whiteboard.kaspersoft.cloud',
         sharedNotes: 'https://sharednotes.kaspersoft.cloud',
-        videoConfVideo: 'http://localhost:1010',
+        videoConfVideo: 'https://confvideo.kaspersoft.cloud',
         videoConfAudio: 'https://confaudio.kaspersoft.cloud',
-        videoConfScreen: 'http://localhost:1012',
+        videoConfScreen: 'https://confscreen.kaspersoft.cloud',
         mainWebsocket: 'wss://kaspersoft.cloud'
     })
 });
