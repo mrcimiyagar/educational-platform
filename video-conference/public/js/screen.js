@@ -409,7 +409,7 @@
         local_media.attr('autoplay', 'autoplay')
         local_media.attr('muted', 'true') /* always mute ourselves by default */
         local_media.attr('controls', '')
-        $('body').append(local_media)
+        $('#me').append(local_media)
         local_media[0].style.width = 'calc(50% - 24px)'
         local_media[0].style.maxWidth = '300px'
         local_media[0].style.height = 'min(300px, calc(50% - 24px))'
@@ -440,7 +440,7 @@
             'true',
           ) /* always mute ourselves by default */
           local_media.attr('controls', '')
-          $('body').append(local_media)
+          $('#me').append(local_media)
           local_media[0].style.width = 'calc(50% - 24px)'
           local_media[0].style.maxWidth = '300px'
           local_media[0].style.height = 'min(300px, calc(50% - 24px))'
