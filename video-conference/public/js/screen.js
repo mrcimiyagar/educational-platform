@@ -486,8 +486,15 @@
       }
       isMediaAvailable = true;
       signaling_socket.emit('show');
-      window.isWebcamEnable = true;
+      window.isScreenEnable = true;
       if (localMediaEl !== undefined) localMediaEl.style.display = 'block';
+      let myDiv = document.getElementById('me');
+      if (window.isScreenEnable === false && window.isWebcamEnable === false) {
+        myDiv.style.display = 'none';
+      }
+      else {
+        myDiv.style.display = 'block';
+      }
     })
   }
 
@@ -497,7 +504,15 @@
     })
     isMediaAvailable = false
     signaling_socket.emit('hide')
+    window.isScreenEnable = false;
     if (localMediaEl !== undefined) localMediaEl.style.display = 'none';
+    let myDiv = document.getElementById('me');
+    if (window.isScreenEnable === false && window.isWebcamEnable === false) {
+      myDiv.style.display = 'none';
+    }
+    else {
+      myDiv.style.display = 'block';
+    }
   }
 
   let enableVideoUser = (targetId) => {

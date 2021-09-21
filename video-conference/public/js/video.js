@@ -492,7 +492,15 @@
       }
       isMediaAvailable = true
       signaling_socket.emit('show')
+      window.isWebcamEnable = true;
       if (localMediaEl !== undefined) localMediaEl.style.display = 'block';
+      let myDiv = document.getElementById('me');
+      if (window.isScreenEnable === false && window.isWebcamEnable === false) {
+        myDiv.style.display = 'none';
+      }
+      else {
+        myDiv.style.display = 'block';
+      }
     })
   }
 
@@ -502,7 +510,15 @@
     })
     isMediaAvailable = false
     signaling_socket.emit('hide')
+    window.isWebcamEnable = false;
     if (localMediaEl !== undefined) localMediaEl.style.display = 'none';
+    let myDiv = document.getElementById('me');
+    if (window.isScreenEnable === false && window.isWebcamEnable === false) {
+      myDiv.style.display = 'none';
+    }
+    else {
+      myDiv.style.display = 'block';
+    }
   }
 
   let enableVideoUser = (targetId) => {
