@@ -497,10 +497,13 @@
       else {
         myDiv.style.display = 'block';
         if (window.isWebcamEnable) {
+          alert('hello 0');
           if (window.isScreenEnable) {
+            alert('hello 2');
             window.webcamEl.width = '25%';
           }
           else {
+            alert('hello 4');
             window.webcamEl.width = '100%';
           }
         }
