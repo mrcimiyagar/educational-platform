@@ -489,6 +489,7 @@
       isMediaAvailable = true;
       signaling_socket.emit('show');
       window.isScreenEnable = true;
+      alert('hello -4');
       if (localMediaEl !== undefined) localMediaEl.style.display = 'block';
       let myDiv = document.getElementById('me');
       if (window.isScreenEnable === false && window.isWebcamEnable === false) {
@@ -496,6 +497,7 @@
       }
       else {
         myDiv.style.display = 'block';
+        alert('hello -2');
         if (window.isWebcamEnable) {
           alert('hello 0');
           if (window.isScreenEnable) {
