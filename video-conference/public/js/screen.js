@@ -189,11 +189,15 @@
             document.getElementById('max').style.display = 'none'
           }
         }
-        remote_media[0].style.width = (window.innerWidth / 2) - 24 + 'px'
-        remote_media[0].style.maxWidth = '300px'
-        remote_media[0].style.height = '300px'
+        remote_media[0].style.width = '100%'
+        remote_media[0].style.aspectRatio = '1 / 1'
         remote_media[0].style.margin = '8px'
-        remote_media[0].style.display = 'none'
+        remote_media[0].style.transform = 'rotateY(0)'
+        remote_media[0].style.display = 'none';
+        remote_media[0].style.position = 'absolute';
+        remote_media[0].style.top = '0px';
+        remote_media[0].style.right = '0px';
+
         remote_media[0].style.transform = 'rotateY(0)' 
         remote_media[0].srcObject = event.stream
         $('#videoconf' + userId).append(remote_media)
