@@ -489,7 +489,6 @@
       isMediaAvailable = true;
       signaling_socket.emit('show');
       window.isScreenEnable = true;
-      alert('hello -4');
       if (localMediaEl !== undefined) localMediaEl.style.display = 'block';
       let myDiv = document.getElementById('me');
       if (window.isScreenEnable === false && window.isWebcamEnable === false) {
@@ -497,16 +496,12 @@
       }
       else {
         myDiv.style.display = 'block';
-        alert('hello -2');
         if (window.isWebcamEnable) {
-          alert('hello 0');
           if (window.isScreenEnable) {
-            alert('hello 2');
-            window.webcamEl.width = '25%';
+            window.webcamEl.style.width = '25%';
           }
           else {
-            alert('hello 4');
-            window.webcamEl.width = '100%';
+            window.webcamEl.style.width = '100%';
           }
         }
       }
@@ -529,10 +524,10 @@
       myDiv.style.display = 'block';
       if (window.isWebcamEnable) {
         if (window.isScreenEnable) {
-          window.webcamEl.width = '25%';
+          window.webcamEl.style.width = '25%';
         }
         else {
-          window.webcamEl.width = '100%';
+          window.webcamEl.style.width = '100%';
         }
       }
     }

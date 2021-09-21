@@ -504,10 +504,10 @@
         myDiv.style.display = 'block';
         if (window.isWebcamEnable) {
           if (window.isScreenEnable) {
-            window.webcamEl.width = '25%';
+            window.webcamEl.style.width = '25%';
           }
           else {
-            window.webcamEl.width = '100%';
+            window.webcamEl.style.width = '100%';
           }
         }
       }
@@ -530,10 +530,10 @@
       myDiv.style.display = 'block';
       if (window.isWebcamEnable) {
         if (window.isScreenEnable) {
-          window.webcamEl.width = '25%';
+          window.webcamEl.style.width = '25%';
         }
         else {
-          window.webcamEl.width = '100%';
+          window.webcamEl.style.width = '100%';
         }
       }
     }
