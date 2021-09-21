@@ -419,8 +419,9 @@
         local_media[0].style.aspectRatio = '1 / 1'
         local_media[0].style.margin = '8px'
         local_media[0].style.display = 'none';
-        local_media[0].muted = true
-        localMediaEl = local_media[0]
+        window.isWebcamEnable = false;
+        local_media[0].muted = true;
+        localMediaEl = local_media[0];
       }
       attachMediaStream(localMediaEl, stream)
       if (callback) callback(stream)
@@ -452,8 +453,9 @@
           local_media[0].style.aspectRatio = '1 / 1'
           local_media[0].style.margin = '8px'
           local_media[0].style.display = 'none';
-          local_media[0].muted = true
-          localMediaEl = local_media[0]
+          window.isWebcamEnable = false;
+          local_media[0].muted = true;
+          localMediaEl = local_media[0];
         }
         attachMediaStream(localMediaEl, stream)
         if (callback) callback(stream)
@@ -490,6 +492,7 @@
       }
       isMediaAvailable = true
       signaling_socket.emit('show')
+      if (localMediaEl !== undefined) localMediaEl.style.display = 'block';
     })
   }
 
@@ -499,6 +502,7 @@
     })
     isMediaAvailable = false
     signaling_socket.emit('hide')
+    if (localMediaEl !== undefined) localMediaEl.style.display = 'none';
   }
 
   let enableVideoUser = (targetId) => {

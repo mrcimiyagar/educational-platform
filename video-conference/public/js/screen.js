@@ -415,8 +415,9 @@
         local_media[0].style.margin = '8px'
         local_media[0].style.transform = 'rotateY(0)'
         local_media[0].style.display = 'none';
-        local_media[0].muted = true
-        localMediaEl = local_media[0]
+        window.isScreenEnable = false;
+        local_media[0].muted = true;
+        localMediaEl = local_media[0];
       }
       attachMediaStream(localMediaEl, stream)
       if (callback) callback(stream)
@@ -446,8 +447,9 @@
           local_media[0].style.margin = '8px'
           local_media[0].style.transform = 'rotateY(0)'
           local_media[0].style.display = 'none';
-          local_media[0].muted = true
-          localMediaEl = local_media[0]
+          window.isScreenEnable = false;
+          local_media[0].muted = true;
+          localMediaEl = local_media[0];
         }
         attachMediaStream(localMediaEl, stream)
         if (callback) callback(stream)
@@ -466,24 +468,26 @@
   let startScreen = () => {
     if (local_media_stream !== null && local_media_stream !== undefined) {
       local_media_stream.getVideoTracks().forEach((track) => {
-        track.stop()
+        track.stop();
       })
     }
     setup_local_media({ video: { width: 480, height: 480 } }, function (
       stream,
     ) {
-      let videoTrack = stream.getVideoTracks()[0]
+      let videoTrack = stream.getVideoTracks()[0];
       for (let id in peers) {
-        if (peers[id] === undefined) continue
-        let pc = peers[id]
+        if (peers[id] === undefined) continue;
+        let pc = peers[id];
         var sender = pc.getSenders().find(function (s) {
-          return s.track.kind == videoTrack.kind
+          return s.track.kind == videoTrack.kind;
         })
-        console.log('found sender:', sender)
-        sender.replaceTrack(videoTrack)
+        console.log('found sender:', sender);
+        sender.replaceTrack(videoTrack);
       }
-      isMediaAvailable = true
-      signaling_socket.emit('show')
+      isMediaAvailable = true;
+      signaling_socket.emit('show');
+      window.isWebcamEnable = true;
+      if (localMediaEl !== undefined) localMediaEl.style.display = 'block';
     })
   }
 
@@ -493,6 +497,7 @@
     })
     isMediaAvailable = false
     signaling_socket.emit('hide')
+    if (localMediaEl !== undefined) localMediaEl.style.display = 'none';
   }
 
   let enableVideoUser = (targetId) => {
