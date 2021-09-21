@@ -418,6 +418,7 @@
         local_media[0].style.width = '100%'
         local_media[0].style.aspectRatio = '1 / 1'
         local_media[0].style.margin = '8px'
+        local_media[0].style.display = 'none';
         local_media[0].muted = true
         localMediaEl = local_media[0]
       }
@@ -450,6 +451,7 @@
           local_media[0].style.width = '100%'
           local_media[0].style.aspectRatio = '1 / 1'
           local_media[0].style.margin = '8px'
+          local_media[0].style.display = 'none';
           local_media[0].muted = true
           localMediaEl = local_media[0]
         }
