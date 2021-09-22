@@ -213,9 +213,11 @@
         remote_media[0].srcObject = event.stream
         $('#videoconf' + userId).append(remote_media)
         signaling_socket.on('answerAppearence', (peer_id) => {
-          remote_media[0].style.display = 'block'
-          window.peer_media_availability['screen-' + userId] = true;
-          window.updateVideoScreen(userId);
+          if (window.peer_owners_dict[peer_id] === userId) {
+            remote_media[0].style.display = 'block';
+          }
+          window.peer_media_availability['screen-' + window.peer_owners_dict[peer_id]] = true;
+          window.updateVideoScreen(window.peer_owners_dict[peer_id]);
         })
         signaling_socket.emit('askAppearence', peer_id)
       }
