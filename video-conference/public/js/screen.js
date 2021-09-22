@@ -167,8 +167,7 @@
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')
           remote_div.attr('id', 'videoconf' + userId)
-          remote_div[0].style.width = 'auto'
-          remote_div[0].style.height = 'auto'
+          remote_div[0].class = 'container'
           remote_div[0].style.margin = '8px'
           $('body').append(remote_div)
           window.peer_media_elements[userId] = remote_div
