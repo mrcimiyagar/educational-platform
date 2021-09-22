@@ -212,11 +212,12 @@
         remote_media[0].style.transform = 'rotateY(0)' 
         remote_media[0].srcObject = event.stream
         $('#videoconf' + userId).append(remote_media)
+        alert('screen');
         signaling_socket.on('answerAppearence', (peer_id) => {
+          alert('screen-' + window.peer_owners_dict[peer_id]);
           if (window.peer_owners_dict[peer_id] === userId) {
             remote_media[0].style.display = 'block';
           }
-          alert('screen-' + window.peer_owners_dict[peer_id])
           window.peer_media_availability['screen-' + window.peer_owners_dict[peer_id]] = true;
           window.updateVideoScreen(window.peer_owners_dict[peer_id]);
         })
