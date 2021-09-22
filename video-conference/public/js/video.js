@@ -196,7 +196,6 @@
         }
         remote_media[0].style.width = '100%'
         remote_media[0].style.aspectRatio = '1 / 1'
-        remote_media[0].style.transform = 'rotateY(0)'
         remote_media[0].style.display = 'none';
         remote_media[0].style.position = 'absolute';
         remote_media[0].style.top = '0px';
