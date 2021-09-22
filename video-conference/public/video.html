@@ -33,9 +33,10 @@
         <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
         <script>
             window.updateVideoScreen = (userId) => {
-                if (window.peer_media_availability['video-' + userId] !== undefined) {
+                    alert('t 0');
+                if (window.peer_media_availability['video-' + userId] === true) {
                     alert('t 1');
-                    if (window.peer_media_availability['screen-' + userId] !== undefined) {
+                    if (window.peer_media_availability['screen-' + userId] === true) {
                         alert('t 2');
                         window.peer_media_subelements['video-' + userId].style.width = '25%';
                     }
