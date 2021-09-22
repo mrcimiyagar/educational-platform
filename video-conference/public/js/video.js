@@ -120,6 +120,7 @@
       if (el !== null) {
         el.style.display = 'block'
         window.peer_media_availability[peer_id] = true;
+        window.updateVideoScreen(window.peer_owners_dict[peer_id]);
       }
     })
 
@@ -128,6 +129,7 @@
       if (el !== null) {
         el.style.display = 'none';
         window.peer_media_availability[peer_id] = false;
+        window.updateVideoScreen(window.peer_owners_dict[peer_id]);
       }
     })
 
@@ -175,7 +177,8 @@
         if (MUTE_AUDIO_BY_DEFAULT) {
           remote_media.attr('muted', 'true')
         }
-        window.peer_media_subelements['video-' + peer_id] = remote_media[0];
+        window.peer_owners_dict[peer_id] = userId;
+        window.peer_media_subelements['video-' + userId] = remote_media[0];
         remote_media.attr('controls', '')
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')
@@ -209,21 +212,15 @@
         remote_media[0].style.right = '0px';
         remote_media[0].style.zIndex = 1001;
 
-        if (window.peer_media_subelements['video-' + peer_id] !== undefined) {
-          if (window.peer_media_subelements['screen-' + peer_id] !== undefined) {
-            window.peer_media_subelements['video-' + peer_id].style.width = '25%';
-          }
-          else {
-            window.peer_media_subelements['video-' + peer_id].style.width = '100%';
-          }
-        }
+        window.updateVideoScreen(userId);
         
         remote_media[0].style.display = 'none'
         remote_media[0].srcObject = event.stream
         $('#videoconf' + userId).append(remote_media)
         signaling_socket.on('answerAppearence', (peer_id) => {
           remote_media[0].style.display = 'block';
-          window.peer_media_availability[peer_id] = true;
+          window.peer_media_availability['video-' + userId] = true;
+          window.updateVideoScreen(userId);
         })
         signaling_socket.emit('askAppearence', peer_id)
       }

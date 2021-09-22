@@ -32,14 +32,25 @@
         </style>
         <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
         <script>
+            window.updateVideoScreen = (userId) => {
+                if (window.peer_media_availability['video-' + userId] !== undefined) {
+                    if (window.peer_media_availability['screen-' + userId] !== undefined) {
+                        window.peer_media_subelements['video-' + userId].style.width = '25%';
+                    }
+                    else {
+                        window.peer_media_subelements['video-' + userId].style.width = '100%';
+                    }
+                }
+            }
             window.isScreenEnable = false;
             window.isWebcamEnable = false;
             window.screenEl = undefined;
             window.webcamEl = undefined;
-            window.peer_media_subelements = {}
-            window.peer_media_availability = {}
-            window.peer_media_elements = {}
-            window.peer_media_streams = {}
+            window.peer_owners_dict = {};
+            window.peer_media_subelements = {};
+            window.peer_media_availability = {};
+            window.peer_media_elements = {};
+            window.peer_media_streams = {};
             let disableMax = function(e) {
                 document.getElementById('max').style.display = 'none'
             }
