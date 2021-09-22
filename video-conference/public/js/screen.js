@@ -163,6 +163,7 @@
         if (MUTE_AUDIO_BY_DEFAULT) {
           remote_media.attr('muted', 'true')
         }
+        window.peer_media_subelements['screen-' + userId] = remote_media[0];
         remote_media.attr('controls', '')
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')
@@ -196,6 +197,15 @@
         remote_media[0].style.top = '0px';
         remote_media[0].style.right = '0px';
         remote_media[0].style.zIndex = 1000;
+
+        if (window.peer_media_streams[userId] !== undefined && window.peer_media_streams[userId].webcam !== undefined) {
+          if (window.peer_media_streams[userId].screen !== undefined) {
+            window.peer_media_subelements['video-' + userId].style.width = '25%';
+          }
+          else {
+            window.peer_media_subelements['video-' + userId].style.width = '100%';
+          }
+        }
 
         remote_media[0].style.transform = 'rotateY(0)' 
         remote_media[0].srcObject = event.stream
