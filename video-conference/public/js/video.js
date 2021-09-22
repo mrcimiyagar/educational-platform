@@ -202,6 +202,7 @@
         remote_media[0].style.position = 'absolute';
         remote_media[0].style.top = '0px';
         remote_media[0].style.right = '0px';
+        remote_media[0].style.zIndex = 1001;
         
         remote_media[0].style.display = 'none'
         remote_media[0].srcObject = event.stream

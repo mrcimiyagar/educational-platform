@@ -196,6 +196,7 @@
         remote_media[0].style.position = 'absolute';
         remote_media[0].style.top = '0px';
         remote_media[0].style.right = '0px';
+        remote_media[0].style.zIndex = 1000;
 
         remote_media[0].style.transform = 'rotateY(0)' 
         remote_media[0].srcObject = event.stream
