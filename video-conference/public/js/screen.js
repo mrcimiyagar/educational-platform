@@ -113,12 +113,18 @@
 
     signaling_socket.on('show_peer', (peer_id) => {
       let el = document.getElementById('videoconf' + peer_id)
-      if (el !== null) el.style.display = 'block'
+      if (el !== null) {
+        el.style.display = 'block'
+        window.peer_media_availability[peer_id] = true;
+      }
     })
 
     signaling_socket.on('hide_peer', (peer_id) => {
       let el = document.getElementById('videoconf' + peer_id)
-      if (el !== null) el.style.display = 'none'
+      if (el !== null) {
+        el.style.display = 'none';
+        window.peer_media_availability[peer_id] = false;
+      }
     })
 
     /**
@@ -163,7 +169,7 @@
         if (MUTE_AUDIO_BY_DEFAULT) {
           remote_media.attr('muted', 'true')
         }
-        window.peer_media_subelements['screen-' + userId] = remote_media[0];
+        window.peer_media_subelements['screen-' + peer_id] = remote_media[0];
         remote_media.attr('controls', '')
         if (!(userId in window.peer_media_elements)) {
           var remote_div = $('<div>')
@@ -198,12 +204,12 @@
         remote_media[0].style.right = '0px';
         remote_media[0].style.zIndex = 1000;
 
-        if (window.peer_media_subelements['video-' + userId] !== undefined) {
-          if (window.peer_media_subelements['screen-' + userId] !== undefined) {
-            window.peer_media_subelements['video-' + userId].style.width = '25%';
+        if (window.peer_media_subelements['video-' + peer_id] !== undefined) {
+          if (window.peer_media_subelements['screen-' + peer_id] !== undefined) {
+            window.peer_media_subelements['video-' + peer_id].style.width = '25%';
           }
           else {
-            window.peer_media_subelements['video-' + userId].style.width = '100%';
+            window.peer_media_subelements['video-' + peer_id].style.width = '100%';
           }
         }
 
@@ -212,6 +218,7 @@
         $('#videoconf' + userId).append(remote_media)
         signaling_socket.on('answerAppearence', (peer_id) => {
           remote_media[0].style.display = 'block'
+          window.peer_media_availability[peer_id] = true;
         })
         signaling_socket.emit('askAppearence', peer_id)
       }
