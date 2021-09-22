@@ -193,7 +193,7 @@
         else {
           window.peer_media_streams[userId].screen = event.stream
         }
-        remote_media[0].onclick = function (e) {
+        let videoClickEvent = function (e) {
           if (document.getElementById('max').style.display === 'none') {
             document.getElementById('max').style.display = 'block'
             let webcamMax = document.getElementById('webcamMax')
@@ -205,6 +205,16 @@
             document.getElementById('max').style.display = 'none'
           }
         }
+
+        remote_media.click(function(e){
+          if (typeof InstallTrigger === 'undefined') {
+            var clickY = (e.pageY - $(this).offset().top);
+            var height = parseFloat( $(this).height() );
+            if (clickY > 0.82*height) return;
+            videoClickEvent();
+          }
+        });
+        
         remote_media[0].style.width = '100%'
         remote_media[0].style.aspectRatio = '1 / 1'
         remote_media[0].style.transform = 'rotateY(0)'
