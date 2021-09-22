@@ -133,6 +133,13 @@
       }
     })
 
+    signaling_socket.on('answerAppearence', (peer_id) => {
+      alert('video-' + window.peer_owners_dict[peer_id]);
+      document.getElementById('videoconf' + peer_id).style.display = 'block';
+      window.peer_media_availability['video-' + window.peer_owners_dict[peer_id]] = true;
+      window.updateVideoScreen(window.peer_owners_dict[peer_id]);
+    })
+
     /**
      * When we join a group, our signaling server will send out 'addPeer' events to each pair
      * of users in the group (creating a fully-connected graph of users, ie if there are 6 people
@@ -192,7 +199,7 @@
         else {
           window.peer_media_streams[userId].webcam = event.stream
         }
-        remote_media[0].onclick = function (e) {
+        let videoClickEvent = function (e) {
           if (document.getElementById('max').style.display === 'none') {
             document.getElementById('max').style.display = 'block'
             let webcamMax = document.getElementById('webcamMax')
@@ -204,6 +211,16 @@
             document.getElementById('max').style.display = 'none'
           }
         }
+
+        remote_media.click(function(e){
+          if (typeof InstallTrigger === 'undefined') {
+            var clickY = (e.pageY - $(this).offset().top);
+            var height = parseFloat( $(this).height() );
+            if (clickY > 0.82*height) return;
+            videoClickEvent();
+          }
+        });
+
         remote_media[0].style.width = '100%'
         remote_media[0].style.aspectRatio = '1 / 1'
         remote_media[0].style.display = 'none';
@@ -217,13 +234,7 @@
         remote_media[0].style.display = 'none'
         remote_media[0].srcObject = event.stream
         $('#videoconf' + userId).append(remote_media)
-        signaling_socket.on('answerAppearence', (peer_id) => {
-          if (window.peer_owners_dict[peer_id] === userId) {
-            remote_media[0].style.display = 'block';
-          }
-          window.peer_media_availability['video-' + window.peer_owners_dict[peer_id]] = true;
-          window.updateVideoScreen(window.peer_owners_dict[peer_id]);
-        })
+        
         signaling_socket.emit('askAppearence', peer_id)
       }
 

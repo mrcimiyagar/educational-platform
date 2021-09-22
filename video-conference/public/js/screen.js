@@ -129,6 +129,13 @@
       }
     })
 
+    signaling_socket.on('answerAppearence', (peer_id) => {
+      alert('screen-' + window.peer_owners_dict[peer_id]);
+      document.getElementById('videoconf' + peer_id).style.display = 'block';
+      window.peer_media_availability['screen-' + window.peer_owners_dict[peer_id]] = true;
+      window.updateVideoScreen(window.peer_owners_dict[peer_id]);
+    })
+
     /**
      * When we join a group, our signaling server will send out 'addPeer' events to each pair
      * of users in the group (creating a fully-connected graph of users, ie if there are 6 people
@@ -212,15 +219,7 @@
         remote_media[0].style.transform = 'rotateY(0)' 
         remote_media[0].srcObject = event.stream
         $('#videoconf' + userId).append(remote_media)
-        alert('screen');
-        signaling_socket.on('answerAppearence', (peer_id) => {
-          alert('screen-' + window.peer_owners_dict[peer_id]);
-          if (window.peer_owners_dict[peer_id] === userId) {
-            remote_media[0].style.display = 'block';
-          }
-          window.peer_media_availability['screen-' + window.peer_owners_dict[peer_id]] = true;
-          window.updateVideoScreen(window.peer_owners_dict[peer_id]);
-        })
+        
         signaling_socket.emit('askAppearence', peer_id)
       }
 
