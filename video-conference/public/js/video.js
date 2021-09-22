@@ -175,6 +175,7 @@
           remote_div.attr('id', 'videoconf' + userId)
           remote_div[0].className = 'container'
           remote_div[0].style.margin = '8px'
+          remote_div[0].style.position = 'relative'
           $('body').append(remote_div)
           window.peer_media_elements[userId] = remote_div
           window.peer_media_streams[userId] = {webcam: event.stream}
