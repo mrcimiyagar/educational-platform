@@ -198,8 +198,8 @@
         remote_media[0].style.right = '0px';
         remote_media[0].style.zIndex = 1000;
 
-        if (window.peer_media_streams[userId] !== undefined && window.peer_media_streams[userId].webcam !== undefined) {
-          if (window.peer_media_streams[userId].screen !== undefined) {
+        if (window.peer_media_subelements['video-' + userId] !== undefined) {
+          if (window.peer_media_subelements['screen-' + userId] !== undefined) {
             window.peer_media_subelements['video-' + userId].style.width = '25%';
           }
           else {
