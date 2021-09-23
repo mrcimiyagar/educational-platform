@@ -249,6 +249,7 @@
             peer_connection.setLocalDescription(
               local_description,
               function () {
+                local_description.sdp = setMediaBitrates(local_description.sdp);
                 signaling_socket.emit('relaySessionDescription', {
                   peer_id: peer_id,
                   session_description: local_description,
@@ -304,6 +305,7 @@
                 peer.setLocalDescription(
                   local_description,
                   function () {
+                    local_description.sdp = setMediaBitrates(local_description.sdp);
                     signaling_socket.emit('relaySessionDescription', {
                       peer_id: peer_id,
                       session_description: local_description,
