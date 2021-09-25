@@ -81,6 +81,8 @@ io.sockets.on('connection', function (socket) {
             socket.emit('addPeer', {'peer_id': id, 'userId': socket.userId, 'should_create_offer': true});
         }
 
+        permissions[config.userId] = true;
+
         channels[channel][socket.id] = socket;
         socket.channels[channel] = channel;
     });
