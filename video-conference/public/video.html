@@ -44,12 +44,9 @@
       window.peer_media_streams = {}
       window.updateVideoScreen = (userId) => {
         if (window.peer_media_availability['video-' + userId] === true) {
-          alert('t 1')
           if (window.peer_media_availability['screen-' + userId] === true) {
-            alert('t 2')
             window.peer_media_subelements['video-' + userId].style.width = '25%'
           } else {
-            alert('t 3')
             window.peer_media_subelements['video-' + userId].style.width =
               '100%'
           }
@@ -102,8 +99,9 @@
         return newLines.join('\n')
       }
     </script>
-    <script src="/js/video.js?v=7"></script>
-    <script src="/js/screen.js?v=7"></script>
+    <script src="/js/video.js?v=8"></script>
+    <script src="/js/screen.js?v=8"></script>
+    <script src="/js/audio.js?v=8"></script>
   </head>
   <body style="width: auto; height: 100vh; display: flex; flex-wrap: wrap;">
     <div

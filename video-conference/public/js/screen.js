@@ -115,7 +115,7 @@
       let el = document.getElementById('videoconf' + peer_id)
       if (el !== null) {
         el.style.display = 'block'
-        window.peer_media_availability[peer_id] = true;
+        window.peer_media_availability['screen-' + window.peer_owners_dict[peer_id]] = true;
         window.updateVideoScreen(window.peer_owners_dict[peer_id]);
       }
     })
@@ -124,7 +124,7 @@
       let el = document.getElementById('videoconf' + peer_id)
       if (el !== null) {
         el.style.display = 'none';
-        window.peer_media_availability[peer_id] = false;
+        window.peer_media_availability['screen-' + window.peer_owners_dict[peer_id]] = false;
         window.updateVideoScreen(window.peer_owners_dict[peer_id]);
       }
     })

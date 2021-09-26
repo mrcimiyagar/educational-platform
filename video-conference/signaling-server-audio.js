@@ -1,7 +1,7 @@
 /**************/
 /*** CONFIG ***/
 /**************/
-var PORT = 1011;
+var PORT = 1012;
 
 
 /*************/
@@ -64,6 +64,9 @@ io.sockets.on('connection', function (socket) {
         var channel = config.channel;
         var userdata = config.userdata;
 
+        socket.userId = config.userId
+        socket.roomId = channel
+
         if (channel in socket.channels) {
             console.log("["+ socket.id + "] ERROR: already joined ", channel);
             return;
@@ -74,11 +77,9 @@ io.sockets.on('connection', function (socket) {
         }
 
         for (id in channels[channel]) {
-            channels[channel][id].emit('addPeer', {'peer_id': socket.id, 'should_create_offer': false});
-            socket.emit('addPeer', {'peer_id': id, 'should_create_offer': true});
+            channels[channel][id].emit('addPeer', {'peer_id': socket.id, 'userId': socket.userId, 'should_create_offer': false});
+            socket.emit('addPeer', {'peer_id': id, 'userId': socket.userId, 'should_create_offer': true});
         }
-
-        permissions[config.userId] = true;
 
         channels[channel][socket.id] = socket;
         socket.channels[channel] = channel;
@@ -160,5 +161,3 @@ io.sockets.on('connection', function (socket) {
 
     socket.emit('takePermissions', permissions)
 });
-
-

@@ -119,7 +119,7 @@
       let el = document.getElementById('videoconf' + peer_id)
       if (el !== null) {
         el.style.display = 'block'
-        window.peer_media_availability['video-' + window.peer_owners_dict[peer_id]] = true;
+        window.peer_media_availability[peer_id] = true;
         window.updateVideoScreen(window.peer_owners_dict[peer_id]);
       }
     })
@@ -128,7 +128,7 @@
       let el = document.getElementById('videoconf' + peer_id)
       if (el !== null) {
         el.style.display = 'none';
-        window.peer_media_availability['video-' + window.peer_owners_dict[peer_id]] = false;
+        window.peer_media_availability[peer_id] = false;
         window.updateVideoScreen(window.peer_owners_dict[peer_id]);
       }
     })
@@ -178,7 +178,7 @@
       }
       peer_connection.onaddstream = function (event) {
         console.log('onAddStream', event)
-        var remote_media = $('<video>')
+        var remote_media = $('<audio>')
         remote_media.attr('id', 'videoconf' + peer_id)
         remote_media.attr('autoplay', 'autoplay')
         if (MUTE_AUDIO_BY_DEFAULT) {
@@ -318,7 +318,7 @@
                     console.log('Answer setLocalDescription succeeded')
                   },
                   function () {
-                    console.log('Answer setLocalDescription failed!')
+                    Alert('Answer setLocalDescription failed!')
                   },
                 )
               },
@@ -435,14 +435,14 @@
   /***********************/
   function setup_local_media(constraints, callback, errorback) {
     /* Ask user for permission to use the computers microphone and/or camera,
-     * attach it to an <video> or <video> tag if they give us access. */
+     * attach it to an <audio> or <audio> tag if they give us access. */
     console.log('Requesting access to local video / video inputs')
 
-    if (constraints.video === undefined && constraints.video === undefined) {
+    if (constraints.video === undefined && constraints.audio === undefined) {
       let stream = produceEmptyStream()
       local_media_stream = stream
       if (localMediaEl === undefined) {
-        var local_media = $('<video>')
+        var local_media = $('<audio>')
         local_media.attr('autoplay', 'autoplay')
         local_media.attr('muted', 'true') /* always mute ourselves by default */
         local_media.attr('controls', '')
@@ -476,7 +476,7 @@
         console.log('Access granted to video/video')
         local_media_stream = stream
         if (localMediaEl === undefined) {
-          var local_media = $('<video>')
+          var local_media = $('<audio>')
           local_media.attr('autoplay', 'autoplay')
           local_media.attr(
             'muted',
@@ -510,13 +510,13 @@
     )
   }
 
-  let startVideo = () => {
+  let startAudio = () => {
     if (local_media_stream !== null && local_media_stream !== undefined) {
-      local_media_stream.getVideoTracks().forEach((track) => {
+      local_media_stream.getAudioTracks().forEach((track) => {
         track.stop()
       })
     }
-    setup_local_media({ video: { width: 480, height: 480 } }, function (
+    setup_local_media({ audio: true }, function (
       stream,
     ) {
       let videoTrack = stream.getVideoTracks()[0]
@@ -551,8 +551,8 @@
     })
   }
 
-  let endVideo = () => {
-    local_media_stream.getVideoTracks().forEach((track) => {
+  let endAudio = () => {
+    local_media_stream.getAudioTracks().forEach((track) => {
       track.stop()
     })
     isMediaAvailable = false
@@ -584,9 +584,9 @@
     signaling_socket.emit('disableUser', targetId)
   }
 
-  window.startVideo = startVideo
-  window.endVideo = endVideo
-  window.initVideo = init
-  window.enableVideoUser = enableVideoUser
-  window.disableVideoUser = disableVideoUser
+  window.startVideo = startAudio;
+  window.endVideo = endAudio;
+  window.initVideo = init;
+  window.enableVideoUser = enableVideoUser;
+  window.disableVideoUser = disableVideoUser;
 })()
