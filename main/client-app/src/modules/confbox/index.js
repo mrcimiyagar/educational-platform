@@ -91,7 +91,6 @@ export function ConfBox(props) {
                 id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.videoConfVideo + '/video.html'} allow={'microphone; camera'}
                 style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
                 marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
-
               <ThemeProvider theme={theme}>
                 <Fab id="messagesButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: audio ? ((isDesktop() && isInRoom()) ? (48 + 56 + 16 + 56 + 16) : (16 + 72 + 56 + 16 + 56 + 16)) : ((isDesktop() && isInRoom()) ? (48 + 56 + 16) : (16 + 72 + 56 + 16))}} onClick={() => {
                   gotoPage('/app/chat')
