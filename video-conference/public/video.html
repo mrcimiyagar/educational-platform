@@ -161,6 +161,13 @@
           } else if (e.data.stream === false) {
             window.endVideo()
           }
+        }
+        else if (e.data.action === 'switchAudioFlag') {
+          if (e.data.stream === true) {
+            window.startAudio()
+          } else if (e.data.stream === false) {
+            window.endAudio()
+          }
         } else if (e.data.action === 'switchScreenFlag') {
           if (e.data.stream === true) {
             window.startScreen()
