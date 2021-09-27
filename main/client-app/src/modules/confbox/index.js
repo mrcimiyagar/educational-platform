@@ -33,6 +33,7 @@ export function ConfBox(props) {
     useEffect(() => {
       window.addEventListener('message', e => {
         if (e.data.action === 'switchVideoControlVisibility') {
+          alert('hello');
           if (!e.data.visibility)
             store.dispatch(switchConf('video', false));
           store.dispatch(switchConf('isVideoEnable', e.data.visibility));
