@@ -388,7 +388,7 @@
       window.parent.postMessage(
         {
           sender: 'confvideo',
-          action: 'takeVideoPermissions',
+          action: 'takeAudioPermissions',
           permissions: permissions,
         },
         pathConfig.mainFrontend,
@@ -397,7 +397,7 @@
         window.parent.postMessage(
           {
             sender: 'confvideo',
-            action: 'switchVideoControlVisibility',
+            action: 'switchAudioControlVisibility',
             visibility: true,
           },
           pathConfig.mainFrontend,
@@ -407,7 +407,7 @@
         window.parent.postMessage(
           {
             sender: 'confvideo',
-            action: 'switchVideoControlVisibility',
+            action: 'switchAudioControlVisibility',
             visibility: false,
           },
           pathConfig.mainFrontend,
