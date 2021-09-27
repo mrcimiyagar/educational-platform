@@ -557,23 +557,6 @@
     })
     isMediaAvailable = false
     signaling_socket.emit('hide')
-    window.isWebcamEnable = false;
-    if (localMediaEl !== undefined) localMediaEl.style.display = 'none';
-    let myDiv = document.getElementById('me');
-    if (window.isScreenEnable === false && window.isWebcamEnable === false) {
-      myDiv.style.display = 'none';
-    }
-    else {
-      myDiv.style.display = 'block';
-      if (window.isWebcamEnable) {
-        if (window.isScreenEnable) {
-          window.webcamEl.style.width = '25%';
-        }
-        else {
-          window.webcamEl.style.width = '100%';
-        }
-      }
-    }
   }
 
   let enableAudioUser = (targetId) => {
