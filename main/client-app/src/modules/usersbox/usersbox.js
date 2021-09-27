@@ -118,18 +118,18 @@ export let UsersBox = (props) => {
     window.addEventListener('message', (e) => {
       if (e.data.sender === 'confvideo') {
         if (e.data.action === 'takeVideoPermissions') {
-          setVideo(e.data.permissions.video);
+          setVideo(e.data.permissions);
           forceUpdate();
         } else if (e.data.action === 'takeVideoPermission') {
-          video[e.data.userId] = e.data.permission.video;
+          video[e.data.userId] = e.data.permission;
           setVideo(video);
           forceUpdate();
         }
         else if (e.data.action === 'takeAudioPermissions') {
-          setAudio(e.data.permissions.audio);
+          setAudio(e.data.permissions);
           forceUpdate();
         } else if (e.data.action === 'takeAudioPermission') {
-          audio[e.data.userId] = e.data.permission.audio;
+          audio[e.data.userId] = e.data.permission;
           setAudio(audio);
           forceUpdate();
         }
