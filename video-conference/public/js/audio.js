@@ -576,17 +576,17 @@
     }
   }
 
-  let enableVideoUser = (targetId) => {
+  let enableAudioUser = (targetId) => {
     signaling_socket.emit('enableUser', targetId)
   }
 
-  let disableVideoUser = (targetId) => {
+  let disableAudioUser = (targetId) => {
     signaling_socket.emit('disableUser', targetId)
   }
 
-  window.startVideo = startAudio;
-  window.endVideo = endAudio;
-  window.initVideo = init;
-  window.enableVideoUser = enableVideoUser;
-  window.disableVideoUser = disableVideoUser;
+  window.startAudio = startAudio;
+  window.endAudio = endAudio;
+  window.initAudio = init;
+  window.enableAudioUser = enableAudioUser;
+  window.disableAudioUser = disableAudioUser;
 })()
