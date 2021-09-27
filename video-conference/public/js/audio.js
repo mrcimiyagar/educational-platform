@@ -519,15 +519,15 @@
     setup_local_media({ audio: true }, function (
       stream,
     ) {
-      let videoTrack = stream.getVideoTracks()[0]
+      let audioTrack = stream.getAudioTracks()[0]
       for (let id in peers) {
         if (peers[id] === undefined) continue
         let pc = peers[id]
         var sender = pc.getSenders().find(function (s) {
-          return s.track.kind == videoTrack.kind
+          return s.track.kind == audioTrack.kind
         })
         console.log('found sender:', sender)
-        sender.replaceTrack(videoTrack)
+        sender.replaceTrack(audioTrack)
       }
       isMediaAvailable = true
       signaling_socket.emit('show')
