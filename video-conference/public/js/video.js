@@ -388,7 +388,7 @@
       window.parent.postMessage(
         {
           sender: 'confvideo',
-          action: 'takePermissions',
+          action: 'takeVideoPermissions',
           permissions: permissions,
         },
         pathConfig.mainFrontend,
@@ -418,12 +418,12 @@
     window.addEventListener('message', (e) => {
       console.log(e.data)
       if (e.data.sender === 'main') {
-        if (e.data.action === 'switchPermission') {
+        if (e.data.action === 'switchVideoPermission') {
           signaling_socket.emit('switchPermission', {
             userId: e.data.targetId,
             permission: e.data.status,
           })
-        } else if (e.data.action === 'getPermissions') {
+        } else if (e.data.action === 'getVideoPermissions') {
           signaling_socket.emit('getPermissions')
         }
       }

@@ -91,10 +91,6 @@ export function ConfBox(props) {
                 id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.videoConfVideo + '/video.html'} allow={'microphone; camera'}
                 style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
                 marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
-        
-              <iframe allowTransparency={true} onLoad={() => window.frames['conf-audio-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId, videoServerWebsocket: pathConfig.videoConfVideo, screenServerWebsocket: pathConfig.videoConfScreen, audioServerWebsocket: pathConfig.videoConfAudio}, pathConfig.videoConfAudio)} 
-                id ={'conf-audio-frame'} name="conf-audio-frame" src={pathConfig.videoConfAudio + '/audio.html'} allow={'microphone; camera'}
-                style={{width: 400, height: 128, position: 'absolute', bottom: 32, display: 'none'}} frameBorder="0"></iframe>
 
               <ThemeProvider theme={theme}>
                 <Fab id="messagesButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: audio ? ((isDesktop() && isInRoom()) ? (48 + 56 + 16 + 56 + 16) : (16 + 72 + 56 + 16 + 56 + 16)) : ((isDesktop() && isInRoom()) ? (48 + 56 + 16) : (16 + 72 + 56 + 16))}} onClick={() => {
@@ -102,7 +98,7 @@ export function ConfBox(props) {
                 }}><Chat/></Fab>
               {audio ? 
                 <Fab id="audioButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: (isDesktop() && isInRoom()) ? (48 + 56 + 16) : (16 + 72 + 56 + 16)}} onClick={() => {
-                  window.frames['conf-audio-frame'].postMessage({sender: 'main', action: 'switchFlag', stream: !store.getState().global.conf.audio}, pathConfig.videoConfAudio)
+                  window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchAudioFlag', stream: !store.getState().global.conf.audio}, pathConfig.videoConfVideo)
                   store.dispatch(switchConf('audio', !store.getState().global.conf.audio))
                   forceUpdate()
                 }}>{store.getState().global.conf.audio ? <Mic/> : <MicOff/>}</Fab> :
