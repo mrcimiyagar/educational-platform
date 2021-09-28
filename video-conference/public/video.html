@@ -42,6 +42,24 @@
       window.peer_media_availability = {}
       window.peer_media_elements = {}
       window.peer_media_streams = {}
+      window.openCallPage = () => {
+        document.getElementById('openContainer').style.display = 'none';
+        window.initVideo(
+          e.data.userId,
+          e.data.roomId,
+          e.data.videoServerWebsocket,
+        );
+        window.initAudio(
+          e.data.userId,
+          e.data.roomId,
+          e.data.audioServerWebsocket,
+        );
+        window.initScreen(
+          e.data.userId,
+          e.data.roomId,
+          e.data.screenServerWebsocket,
+        );
+      }
       window.updateVideoScreen = (userId) => {
         if (window.peer_media_availability['video-' + userId] === true) {
           if (window.peer_media_availability['screen-' + userId] === true) {
@@ -150,6 +168,11 @@
       <div id="me" class="container" style="display: none;"></div>
     </div>
     <div style="width: 100%; height: 128px;"></div>
+    <div id="openContainer" style="width: 100%; height: 100%; position: fixed; left: 0px; top: 0px; z-index: 99999; display: block;">
+      <button id="openBtn" style="display: none;" onclick="window.openCallPage()">
+        ورود به مکالمه
+      </button>
+    </div>
   </body>
   <script>
     window.addEventListener('message', (e) => {
@@ -175,21 +198,7 @@
             window.endScreen()
           }
         } else if (e.data.userId !== undefined && e.data.roomId !== undefined) {
-          window.initVideo(
-            e.data.userId,
-            e.data.roomId,
-            e.data.videoServerWebsocket,
-          )
-          window.initAudio(
-            e.data.userId,
-            e.data.roomId,
-            e.data.audioServerWebsocket,
-          )
-          window.initScreen(
-            e.data.userId,
-            e.data.roomId,
-            e.data.screenServerWebsocket,
-          )
+          document.getElementById('openBtn').style.display = 'block';
         } else if (e.data.targetId !== undefined) {
           if (e.data.status === true) {
             window.enableVideoUser(e.data.targetId)
