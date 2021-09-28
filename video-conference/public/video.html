@@ -33,6 +33,11 @@
     </style>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script>
+      let roomId = 0;
+      let userId = '';
+      let videoServerWebsocket = '';
+      let audioServerWebsocket = '';
+      let screenServerWebsocket = '';
       window.isScreenEnable = false
       window.isWebcamEnable = false
       window.screenEl = undefined
@@ -45,19 +50,19 @@
       window.openCallPage = () => {
         document.getElementById('openContainer').style.display = 'none';
         window.initVideo(
-          e.data.userId,
-          e.data.roomId,
-          e.data.videoServerWebsocket,
+          userId,
+          roomId,
+          videoServerWebsocket,
         );
         window.initAudio(
-          e.data.userId,
-          e.data.roomId,
-          e.data.audioServerWebsocket,
+          userId,
+          roomId,
+          audioServerWebsocket,
         );
         window.initScreen(
-          e.data.userId,
-          e.data.roomId,
-          e.data.screenServerWebsocket,
+          userId,
+          roomId,
+          screenServerWebsocket,
         );
       }
       window.updateVideoScreen = (userId) => {
@@ -198,6 +203,11 @@
             window.endScreen()
           }
         } else if (e.data.userId !== undefined && e.data.roomId !== undefined) {
+          roomId = e.data.roomId;
+          userId = e.data.userId;
+          videoServerWebsocket = e.data.videoServerWebsocket;
+          audioServerWebsocket = e.data.audioServerWebsocket;
+          screenServerWebsocket = e.data.screenServerWebsocket;
           document.getElementById('openBtn').style.display = 'block';
         } else if (e.data.targetId !== undefined) {
           if (e.data.status === true) {
