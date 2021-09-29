@@ -19,7 +19,7 @@ let loginMsg = '';
 let loginClass = '';
 
 //For static files
-app.use(express.static(path.join(__dirname, 'Views/')));
+app.use(express.static(path.join(__dirname, 'views/')));
 
 app.use(express.json());
 
