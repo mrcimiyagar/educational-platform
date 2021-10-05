@@ -400,7 +400,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
         authorId: session.userId,
         time: Date.now(),
         roomId: room.id,
-        text: 'روم ساخته شذ',
+        text: 'روم ساخته شد',
         fileId: null,
         messageType: 'text'
       });
@@ -408,7 +408,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
         authorId: session.userId,
         time: Date.now(),
         roomId: room.id,
-        text: 'روم ساخته شذ',
+        text: 'روم ساخته شد',
         fileId: null,
         messageType: 'text',
         User: await sw.User.findOne({where: {id: session.userId}})

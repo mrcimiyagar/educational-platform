@@ -22,6 +22,37 @@ router.post('/register', jsonParser, async function (req, res) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
     });
+    let home = await sw.User.create({
+        title: req.body.title,
+        mainRoomId: null,
+    });
+    let spaceSecret = await sw.SpaceSecret.create({
+      ownerId: user.id,
+      spaceId: home.id,
+    });
+    let room = await sw.Room.create({
+        title: req.body.title,
+        spaceId: home.id,
+    });
+    home.mainRoomId = room.id;
+    home.save();
+    let RoomSecret = await sw.RoomSecret.create({
+      ownerId: user.id,
+      roomId: room.id,
+    });
+    let mem = await sw.Membership.create({
+        userId: user.id,
+        roomId: room.id,
+        ...tools.adminPermissions,
+    });
+    let msg = await sw.Message.create({
+        authorId: user.id,
+        time: Date.now(),
+        roomId: room.id,
+        text: 'روم ساخته شد',
+        fileId: null,
+        messageType: 'text'
+      });
     let account = await sw.Account.create({
         userId: user.id,
         pending: false,
@@ -29,6 +60,7 @@ router.post('/register', jsonParser, async function (req, res) {
         vCode: '',
         password: req.body.password,
         themeColor: tools.lightTheme,
+        homeSpaceId: home.id,
         canAddRoom: true,
         canAddSurvey: false,
         canRemoveSurvey: false,
@@ -41,7 +73,7 @@ router.post('/register', jsonParser, async function (req, res) {
         userId: user.id,
         token: tools.makeRandomCode(64)
     });
-    res.send({status: 'success', user: user, account: account, session: session})
+    res.send({status: 'success', user: user, account: account, session: session, home: home, room: room})
 });
 
 router.post('/login', jsonParser, async function (req, res) {

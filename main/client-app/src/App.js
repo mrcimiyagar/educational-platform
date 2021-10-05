@@ -21,6 +21,7 @@ import StoreAds from './routes/pages/storeAds'
 import StoreBot from './routes/pages/storeBot'
 import VideoPlayer from './routes/pages/videoPlayer'
 import SettingsPage from './routes/pages/settings'
+import HomePage from './routes/pages/home'
 import StartupSound from './sounds/startup.mp3'
 import {
   ColorBase,
@@ -216,6 +217,7 @@ let pages = {
   '/app/room': RoomPage,
   '/app/searchengine': SearchEngine,
   '/app/auth': Authentication,
+  '/app/home': HomePage,
 }
 
 export let setDialogOpen = null

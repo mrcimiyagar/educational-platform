@@ -430,6 +430,7 @@ async function prepareAccountModel() {
         vCode: Sequelize.STRING,
         role: Sequelize.STRING,
         password: Sequelize.STRING,
+        homeSpaceId: Sequelize.BIGINT,
         themeColor: Sequelize.STRING,
         canAddRoom: Sequelize.BOOLEAN,
         canAddSurvey: Sequelize.BOOLEAN,
