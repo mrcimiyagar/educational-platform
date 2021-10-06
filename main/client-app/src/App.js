@@ -27,6 +27,8 @@ import {
   ColorBase,
   colors,
   me,
+  setHomeRoomId,
+  setHomeSpaceId,
   setMe,
   setToken,
   theme,
@@ -230,6 +232,8 @@ export let animatePageChange = undefined
 export default function MainApp(props) {
   console.warn = () => {}
   setToken(localStorage.getItem('token'))
+  setHomeSpaceId(localStorage.getItem('homeSpaceId'))
+  setHomeRoomId(localStorage.getItem('homeRoomId'))
   ConnectToIo(localStorage.getItem('token'), () => {
     socket.off('message-added')
     socket.on('message-added', ({ msgCopy }) => {

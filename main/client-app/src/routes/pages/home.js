@@ -59,7 +59,8 @@ import {
   socket,
   useForceUpdate,
 } from '../../util/Utils'
-import DesktopWallpaper2 from '../../images/desktop-wallpaper.jpg'
+import DesktopWallpaper2 from '../../images/desktop-wallpaper.jpg';
+import {homeRoomId} from '../../util/settings';
 
 let accessChangeCallback = undefined
 export let notifyMeOnAccessChange = (callback) => {
@@ -122,7 +123,7 @@ export default function HomePage(props) {
   if (props.token !== undefined) {
     localStorage.setItem('token', props.token)
     gotoPage()
-    window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + props.room_id
+    window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + homeRoomId
   }
   const useStyles = makeStyles({
     root: {
@@ -157,7 +158,7 @@ export default function HomePage(props) {
   const [menuMode, setMenuMode] = React.useState(0)
   const [opacity, setOpacity] = React.useState(1)
 
-  let roomId = props.room_id
+  let roomId = homeRoomId
   setRoomId(roomId)
 
   let loadData = (callback) => {
@@ -223,13 +224,13 @@ export default function HomePage(props) {
   }, [])
 
   let openDeck = () => {
-    gotoPage('/app/deck', { room_id: props.room_id })
+    gotoPage('/app/deck', { room_id: homeRoomId })
   }
   let openNotes = () => {
-    gotoPage('/app/notes', { room_id: props.room_id })
+    gotoPage('/app/notes', { room_id: homeRoomId })
   }
   let openPolls = () => {
-    gotoPage('/app/poll', { room_id: props.room_id })
+    gotoPage('/app/poll', { room_id: homeRoomId })
   }
 
   useEffect(() => {
@@ -240,7 +241,7 @@ export default function HomePage(props) {
         token: token,
       },
       body: JSON.stringify({
-        roomId: props.room_id,
+        roomId: homeRoomId,
       }),
       redirect: 'follow',
     }
@@ -260,14 +261,14 @@ export default function HomePage(props) {
             type: 'photo',
             photo:
               serverRoot +
-              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
+              `/file/download_file?token=${token}&roomId=${homeRoomId}&fileId=${wall.photoId}`,
           })
         } else if (wall.type === 'video') {
           setWallpaper({
             type: 'video',
             video:
               serverRoot +
-              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
+              `/file/download_file?token=${token}&roomId=${homeRoomId}&fileId=${wall.photoId}`,
           })
         } else if (wall.type === 'color') {
           setWallpaper(wall)
@@ -299,7 +300,7 @@ export default function HomePage(props) {
             top: 0,
           }}
         >
-          <ChatEmbedded roomId={props.room_id} />
+          <ChatEmbedded roomId={homeRoomId} />
         </div>
         <div
           style={{
@@ -319,7 +320,7 @@ export default function HomePage(props) {
             openPolls={openPolls}
             setMenuOpen={setMenuOpen}
             membership={membership}
-            roomId={props.room_id}
+            roomId={homeRoomId}
             style={{ display: currentRoomNav === 0 ? 'block' : 'none' }}
           />
         </div>
@@ -394,7 +395,7 @@ export default function HomePage(props) {
               <Avatar
                 onClick={() => {
                   setMenuOpen(false)
-                  gotoPage('/app/roomstree', { room_id: props.room_id })
+                  gotoPage('/app/roomstree', { room_id: homeRoomId })
                 }}
                 style={{
                   width: 64,
@@ -428,7 +429,7 @@ export default function HomePage(props) {
             </div>
             <div style={{ width: 280, height: '100%' }}>
               {menuMode === 0 ? (
-                <UsersBox membership={membership} roomId={props.room_id} />
+                <UsersBox membership={membership} roomId={homeRoomId} />
               ) : null}
             </div>
           </div>
@@ -464,7 +465,7 @@ export default function HomePage(props) {
             openPolls={openPolls}
             setMenuOpen={setMenuOpen}
             membership={membership}
-            roomId={props.room_id}
+            roomId={homeRoomId}
             style={{ display: currentRoomNav === 0 ? 'block' : 'none' }}
           />
         </div>
@@ -538,7 +539,7 @@ export default function HomePage(props) {
               <Avatar
                 onClick={() => {
                   setMenuOpen(false)
-                  gotoPage('/app/roomstree', { room_id: props.room_id })
+                  gotoPage('/app/roomstree', { room_id: homeRoomId })
                 }}
                 style={{
                   width: 64,
@@ -554,7 +555,7 @@ export default function HomePage(props) {
               <div
                 onClick={() => {
                   setMenuOpen(false)
-                  gotoPage('/app/settings', { room_id: props.room_id })
+                  gotoPage('/app/settings', { room_id: homeRoomId })
                 }}
                 style={{
                   borderRadius: 32,
@@ -572,7 +573,7 @@ export default function HomePage(props) {
             </div>
             <div style={{ width: 280, height: '100%' }}>
               {menuMode === 0 ? (
-                <UsersBox membership={membership} roomId={props.room_id} />
+                <UsersBox membership={membership} roomId={homeRoomId} />
               ) : null}
             </div>
           </div>

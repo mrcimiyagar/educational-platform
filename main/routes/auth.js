@@ -22,7 +22,7 @@ router.post('/register', jsonParser, async function (req, res) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
     });
-    let home = await sw.User.create({
+    let home = await sw.Space.create({
         title: req.body.title,
         mainRoomId: null,
     });

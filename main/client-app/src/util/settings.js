@@ -30,6 +30,16 @@ export function setToken(t) {
   token = t
 }
 
+export let homeSpaceId = ''
+export function setHomeSpaceId(t) {
+  homeSpaceId = t
+}
+
+export let homeRoomId = ''
+export function setHomeRoomId(t) {
+  homeRoomId = t
+}
+
 export let phone = ''
 export function setPhone(t) {
   phone = t

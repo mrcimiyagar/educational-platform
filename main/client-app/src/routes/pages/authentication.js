@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { pathConfig } from '../..';
 import { gotoPage } from "../../App";
 import CloudIcon from '../../images/logo.png';
-import { setMe, setToken } from "../../util/settings";
+import { setHomeRoomId, setHomeSpaceId, setMe, setToken } from "../../util/settings";
 import { ConnectToIo, serverRoot, setConfig } from "../../util/Utils";
 import Wallpaper from '../../images/roomWallpaper.png'
 import WhiteColorTextField from '../../components/WhiteColorTextField';
@@ -116,6 +116,8 @@ function Authentication(props) {
                 if (result.status === 'success') {
                   setMe(result.user);
                   setToken(result.session.token);
+                  setHomeSpaceId(result.space.id);
+                  setHomeRoomId(result.room.id);
                   localStorage.setItem('token', result.session.token);
                   ConnectToIo();
                   document.getElementById('loginUsername').value = '';
