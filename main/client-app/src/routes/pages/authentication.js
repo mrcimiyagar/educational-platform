@@ -119,6 +119,8 @@ function Authentication(props) {
                   setHomeSpaceId(result.space.id);
                   setHomeRoomId(result.room.id);
                   localStorage.setItem('token', result.session.token);
+                  localStorage.setItem('homeSpaceId', result.space.id);
+                  localStorage.setItem('homeRoomId', result.room.id);
                   ConnectToIo();
                   document.getElementById('loginUsername').value = '';
                   document.getElementById('loginPassword').value = '';
