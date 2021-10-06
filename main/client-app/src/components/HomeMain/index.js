@@ -15,6 +15,7 @@ import {
   histPage,
   isDesktop,
   isInMessenger,
+  isInRoom,
   isMobile,
   isTablet,
 } from '../../App'
@@ -67,11 +68,11 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     marginRight:
-      isDesktop() && histPage === '/app/room'
+      isDesktop() && isInRoom()
         ? 256 + 32 + 32 + 8 + 64
         : undefined,
-    width: isDesktop() && histPage === '/app/room' ? 450 : '100%',
-    maxWidth: isDesktop() && histPage === '/app/room' ? 450 : '100%',
+    width: isDesktop() && isInRoom() ? 450 : '100%',
+    maxWidth: isDesktop() && isInRoom() ? 450 : '100%',
     height: '100%',
     backgroundColor: colors.accentDark,
   },

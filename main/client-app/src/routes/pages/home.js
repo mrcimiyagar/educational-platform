@@ -321,7 +321,7 @@ export default function HomePage(props) {
             setMenuOpen={setMenuOpen}
             membership={membership}
             roomId={homeRoomId}
-            style={{ display: currentRoomNav === 0 ? 'block' : 'none' }}
+            style={{ display: 'block' }}
           />
         </div>
         <div

@@ -67,7 +67,7 @@ export let isInRoom = () => {
   let counter = series.length - 1
   while (counter >= 0) {
     if (series[counter] in pages) {
-      if (series[counter] === '/app/room') {
+      if (series[counter] === '/app/room' || series[counter] === '/app/home') {
         return true;
       }
       else {

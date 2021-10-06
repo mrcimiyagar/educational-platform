@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
       : '100%',
     position: 'fixed',
     left: isDesktop()
-      ? histPage === '/app/room' || histPage === '/app/settings'
+      ? isInRoom() || histPage === '/app/settings'
         ? 'calc(100% - 288px)'
         : 'calc(50% - 256px - 32px - 32px - 16px - 112px)'
       : 'calc(50% - 256px - 16px)',
@@ -433,7 +433,7 @@ export default function ChatEmbeddedInMessenger(props) {
           top: isDesktop() ? 16 + 64 : 0,
           left: isDesktop() ? 96 : 0,
           right: isDesktop()
-            ? histPage === '/app/room' || histPage === '/app/settings'
+            ? isInRoom() || histPage === '/app/settings'
               ? 0
               : 16
             : 0,
@@ -559,14 +559,14 @@ export default function ChatEmbeddedInMessenger(props) {
         <Picker
           pickerStyle={{
             width: isDesktop()
-              ? histPage === '/app/room' || histPage === '/app/settings'
+              ? isInRoom() || histPage === '/app/settings'
                 ? 450
                 : 'calc(100% - 658px - 96px)'
               : 'calc(100% - 450px)',
             height: showEmojiPad ? 356 : 0,
             position: 'fixed',
             left: isDesktop()
-              ? histPage === '/app/room' || histPage === '/app/settings'
+              ? isInRoom() || histPage === '/app/settings'
                 ? 'calc(100% - 450px)'
                 : 96
               : 0,
@@ -588,7 +588,7 @@ export default function ChatEmbeddedInMessenger(props) {
             : isTablet()
             ? 'calc(100% - 64px - 72px)'
             : isDesktop() &&
-              (histPage === '/app/room' || histPage === '/app/settings')
+              (isInRoom() || histPage === '/app/settings')
             ? 'calc(100% - 96px)'
             : 'calc(100% - 64px)',
           marginTop: 32,
