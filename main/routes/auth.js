@@ -77,23 +77,25 @@ router.post('/register', jsonParser, async function (req, res) {
 });
 
 router.post('/login', jsonParser, async function (req, res) {
-    let user = await sw.User.findOne({where: {username: req.body.username}})
+    let user = await sw.User.findOne({where: {username: req.body.username}});
     if (user === null) {
-        res.send({status: 'error', errorCode: 'e001', message: 'نام کاربری موجود نیست'})
-        return
+        res.send({status: 'error', errorCode: 'e001', message: 'نام کاربری موجود نیست'});
+        return;
     }
     let account = await sw.Account.findOne({where: {
         userId: user.id,
         password: req.body.password
-    }})
+    }});
     if (account === null) {
-        res.send({status: 'error', errorCode: 'e001', message: 'رمز عبور اشتباه است'})
-        return
+        res.send({status: 'error', errorCode: 'e001', message: 'رمز عبور اشتباه است'});
+        return;
     }
     let session = await sw.Session.findOne({where: {
         userId: user.id,
-    }})
-    res.send({status: 'success', user: user, account: account, session: session})
+    }});
+    let home = await sw.Space.findOne({where: {id: account.homeSpaceId}});
+    let room = await sw.Room.findOne({where: {id: home.mainRoomId}});
+    res.send({status: 'success', user: user, account: account, session: session, space: home, room: room});
 });
 
 router.post('/get_user', jsonParser, async function (req, res) {
