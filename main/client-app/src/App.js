@@ -359,7 +359,7 @@ export default function MainApp(props) {
           window.location.pathname === '/' ||
           window.location.pathname === ''
         ) {
-          gotoPage('/app/messenger', {})
+          gotoPage('/app/home', {})
         } else {
           gotoPage(window.location.pathname, params)
         }
