@@ -216,41 +216,8 @@ export default function HomePage(props) {
     })
   }
 
-  let loadFiles = () => {
-    let requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: roomId,
-        fileMode:
-          fileMode === 0
-            ? 'photo'
-            : fileMode === 1
-            ? 'audio'
-            : fileMode === 'video'
-            ? 2
-            : 3,
-      }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/file/get_files', requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result))
-        result.files.forEach((fi) => {
-          fi.progress = 100
-        })
-        setFiles(result.files)
-      })
-      .catch((error) => console.log('error', error))
-  }
-
   useEffect(() => {
     loadData(() => {
-      loadFiles()
       setLoaded(true)
     })
   }, [])
