@@ -127,7 +127,7 @@ function Authentication(props) {
                   setConfig(result.account);
                   setOpacity(0)
                   setTimeout(() => {
-                    window.location.href = pathConfig.mainFrontend + '/app/messenger'
+                    window.location.href = pathConfig.mainFrontend + '/app/home'
                   }, 1000)
                 }
                 else {
