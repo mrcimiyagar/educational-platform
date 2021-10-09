@@ -318,10 +318,10 @@ export default function BotsBox(props) {
                 </div>
             </div>
             <ThemeProvider theme={theme}>
-                <Fab color={'secondary'} style={{position: 'fixed', bottom: 16 + 72, left: (isDesktop() && isInRoom()) ? 32 : 16, zIndex: 4}} onClick={() => setEditMode(!editMode)}>
+                <Fab color={'secondary'} style={{position: 'fixed', bottom: window.location.pathname === '/app/home' ? 16 : (16 + 72), left: (isDesktop() && isInRoom()) ? 32 : 16, zIndex: 4}} onClick={() => setEditMode(!editMode)}>
                     <Edit/>
                 </Fab>
-                <Fab size={'medium'} color={'primary'} style={{position: 'fixed', bottom: 16 + 72 + 56 + 16, left: ((isDesktop() && isInRoom()) ? 32 : 16) + 4, zIndex: 4}} 
+                <Fab size={'medium'} color={'primary'} style={{position: 'fixed', bottom: window.location.pathname === '/app/home' ? (56 + 16 + 16) : (16 + 72 + 56 + 16), left: ((isDesktop() && isInRoom()) ? 32 : 16) + 4, zIndex: 4}} 
                     onClick={() => setMenuOpen(true)}>
                     <Add/>
                 </Fab>

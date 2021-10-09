@@ -8,10 +8,13 @@ import DescriptionIcon from '@material-ui/icons/Description'
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions'
 import SendIcon from '@material-ui/icons/Send'
 import Picker from 'emoji-picker-react'
-import React, { useEffect } from 'react';
-import Viewer from 'react-viewer';
-import { useFilePicker } from 'use-file-picker';
+import React, { useEffect } from 'react'
+import Viewer from 'react-viewer'
+import { useFilePicker } from 'use-file-picker'
 import {
+  cacheMessage,
+  db,
+  fetchMessagesOfRoom,
   gotoPage,
   histPage,
   isDesktop,
@@ -21,14 +24,14 @@ import {
   popPage,
   routeTrigger,
   setDialogOpen,
-} from '../../App';
-import { colors, me, setToken, token } from '../../util/settings';
-import { isMobile, serverRoot, socket, useForceUpdate } from '../../util/Utils';
-import ChatAppBar from '../ChatAppBar';
-import ChatWallpaper from '../../images/chat-wallpaper.png';
-import { setLastMessage, updateChat } from '../../components/HomeMain';
-import $ from 'jquery';
-import MessageItem from '../MessageItem';
+} from '../../App'
+import { colors, me, setToken, token } from '../../util/settings'
+import { isMobile, serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import ChatAppBar from '../ChatAppBar'
+import ChatWallpaper from '../../images/chat-wallpaper.png'
+import { setLastMessage, updateChat } from '../../components/HomeMain'
+import $ from 'jquery'
+import MessageItem from '../MessageItem'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,21 +77,37 @@ export let updateChatEmbedded = undefined
 export default function ChatEmbedded(props) {
   document.documentElement.style.overflowY = 'hidden'
 
-  let forceUpdate = useForceUpdate()
-  updateChatEmbedded = forceUpdate
-  let [messages, setMessages] = React.useState([])
-  let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false)
-  let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('')
-  let [user, setUser] = React.useState(undefined)
-  let [room, setRoom] = React.useState(undefined)
-  const [showEmojiPad, setShowEmojiPad] = React.useState(false)
-  let [pickingFile, setPickingFile] = React.useState(false)
-  let classes = useStyles()
+  let forceUpdate = useForceUpdate();
+  updateChatEmbedded = forceUpdate;
+  let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false);
+  let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('');
+  let [user, setUser] = React.useState(undefined);
+  let [room, setRoom] = React.useState(undefined);
+  const [showEmojiPad, setShowEmojiPad] = React.useState(false);
+  let [pickingFile, setPickingFile] = React.useState(false);
+  let classes = useStyles();
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
     readAs: 'DataURL',
-  })
-  let [scrollTrigger, setScrollTrigger] = React.useState(false)
-  let [showScrollDown, setShowScrollDown] = React.useState(false)
+  });
+  let [scrollTrigger, setScrollTrigger] = React.useState(false);
+  let [showScrollDown, setShowScrollDown] = React.useState(false);
+
+  useEffect(() => {
+    fetchMessagesOfRoom(props.roomId).then(data => {
+      data.forEach((message) => {
+        messagesArr.push(
+          <MessageItem
+            key={'message-' + message.id}
+            message={message}
+            setPhotoViewerVisible={setPhotoViewerVisible}
+            setCurrentPhotoSrc={setCurrentPhotoSrc}
+          />
+        );
+      });
+      forceUpdate()
+      setScrollTrigger(!scrollTrigger)
+    });
+  }, [props.roomId, props.userId])
 
   useEffect(() => {
     let scroller = document.getElementById('scroller')
@@ -104,23 +123,22 @@ export default function ChatEmbedded(props) {
           setPhotoViewerVisible={setPhotoViewerVisible}
           setCurrentPhotoSrc={setCurrentPhotoSrc}
         />
-      );
-      let messageSeen = document.getElementById('message-seen-' + msg.id);
-      let messageNotSeen = document.getElementById('message-not-seen-' + msg.id);
+      )
+      let messageSeen = document.getElementById('message-seen-' + msg.id)
+      let messageNotSeen = document.getElementById('message-not-seen-' + msg.id)
       if (messageSeen !== null && messageNotSeen !== null) {
         if (msg.seen > 0) {
-          messageSeen.style.display = 'block';
-          messageNotSeen.style.display = 'none';
+          messageSeen.style.display = 'block'
+          messageNotSeen.style.display = 'none'
+        } else {
+          messageSeen.style.display = 'none'
+          messageNotSeen.style.display = 'block'
         }
-        else {
-          messageSeen.style.display = 'none';
-          messageNotSeen.style.display = 'block';
-        }
-        forceUpdate();
+        forceUpdate()
       }
     }
   }
-  replaceMessageInTheList3 = replaceMessageInTheList;
+  replaceMessageInTheList3 = replaceMessageInTheList
   let addMessageToList = (msg) => {
     try {
       if (msg.roomId === props.roomId) {
@@ -146,7 +164,7 @@ export default function ChatEmbedded(props) {
         messagesArr.push(lastMsg)
         forceUpdate()
         if (isAtEnd) {
-          setScrollTrigger(!scrollTrigger);
+          setScrollTrigger(!scrollTrigger)
         }
         let requestOptions3 = {
           method: 'POST',
@@ -245,6 +263,7 @@ export default function ChatEmbedded(props) {
         if (result.messages !== undefined) {
           messagesArr = []
           result.messages.forEach((message) => {
+            cacheMessage(message);
             messagesArr.push(
               <MessageItem
                 key={'message-' + message.id}
@@ -271,8 +290,8 @@ export default function ChatEmbedded(props) {
           fetch(serverRoot + '/chat/get_chat', requestOptions3)
             .then((response) => response.json())
             .then((result) => {
-              updateChat(result.room);
-            });
+              updateChat(result.room)
+            })
         }
       })
       .catch((error) => console.log('error', error))
@@ -380,14 +399,19 @@ export default function ChatEmbedded(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
-                      let msgEl = document.getElementById('message-' + msg.id);
-                      let msgSeenEl = document.getElementById('message-seen-' + msg.id);
-                      let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);
-                      msgEl.id = 'message-' + result.message.id;
-                      msgSeenEl.id = 'message-seen-' + result.message.id;
-                      msgNotSeenEl.id = 'message-not-seen-' + result.message.id;
-                      msg.id = result.message.id;
-                      forceUpdate();
+                    cacheMessage(result.message);
+                    let msgEl = document.getElementById('message-' + msg.id)
+                    let msgSeenEl = document.getElementById(
+                      'message-seen-' + msg.id,
+                    )
+                    let msgNotSeenEl = document.getElementById(
+                      'message-not-seen-' + msg.id,
+                    )
+                    msgEl.id = 'message-' + result.message.id
+                    msgSeenEl.id = 'message-seen-' + result.message.id
+                    msgNotSeenEl.id = 'message-not-seen-' + result.message.id
+                    msg.id = result.message.id
+                    forceUpdate()
                   }
                 })
                 .catch((error) => console.log('error', error))
@@ -572,14 +596,19 @@ export default function ChatEmbedded(props) {
                   .then((result) => {
                     console.log(JSON.stringify(result))
                     if (result.message !== undefined) {
-                      let msgEl = document.getElementById('message-' + msg.id);
-                      let msgSeenEl = document.getElementById('message-seen-' + msg.id);
-                      let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);
-                      msgEl.id = 'message-' + result.message.id;
-                      msgSeenEl.id = 'message-seen-' + result.message.id;
-                      msgNotSeenEl.id = 'message-not-seen-' + result.message.id;
-                      msg.id = result.message.id;
-                      forceUpdate();
+                      cacheMessage(result.message);
+                      let msgEl = document.getElementById('message-' + msg.id)
+                      let msgSeenEl = document.getElementById(
+                        'message-seen-' + msg.id,
+                      )
+                      let msgNotSeenEl = document.getElementById(
+                        'message-not-seen-' + msg.id,
+                      )
+                      msgEl.id = 'message-' + result.message.id
+                      msgSeenEl.id = 'message-seen-' + result.message.id
+                      msgNotSeenEl.id = 'message-not-seen-' + result.message.id
+                      msg.id = result.message.id
+                      forceUpdate()
                     }
                   })
                   .catch((error) => console.log('error', error))
@@ -621,25 +650,37 @@ export default function ChatEmbedded(props) {
             ? 'calc(100% - 300px - 56px)'
             : isTablet()
             ? 'calc(100% - 64px - 72px)'
-            : isDesktop() &&
-              (isInRoom() || histPage === '/app/settings')
+            : isDesktop() && (isInRoom() || histPage === '/app/settings')
             ? 'calc(100% - 96px)'
             : 'calc(100% - 64px)',
           marginTop: 32,
           marginLeft: isDesktop() ? 32 : 0,
           marginRight: 16,
-          position: 'relative'
+          position: 'relative',
         }}
       >
-        <div style={{width: '100%', height: '100%', overflow: 'auto'}} id={'scroller'}>
+        <div
+          style={{ width: '100%', height: '100%', overflow: 'auto' }}
+          id={'scroller'}
+        >
           <div style={{ height: 64 }} />
           <div id={'messagesContainer'}>{messagesArr}</div>
           <div style={{ width: '100%', height: 80 }} />
         </div>
-        <Fab color={'secondary'} style={{display: showScrollDown ? 'block' : 'none', position: 'fixed', left: isInMessenger() ? 24 + 16 : undefined, right: isInRoom() ? (450 - 56 - 16) : undefined, bottom: isInMessenger() ? (72 + 16) : (72 + 32 + 16)}} onClick={() => {
-          setScrollTrigger(!scrollTrigger)
-        }}>
-          <ArrowDownward/>
+        <Fab
+          color={'secondary'}
+          style={{
+            display: showScrollDown ? 'block' : 'none',
+            position: 'fixed',
+            left: isInMessenger() ? 24 + 16 : undefined,
+            right: isInRoom() ? 450 - 56 - 16 : undefined,
+            bottom: isInMessenger() ? 72 + 16 : 72 + 32 + 16,
+          }}
+          onClick={() => {
+            setScrollTrigger(!scrollTrigger)
+          }}
+        >
+          <ArrowDownward />
         </Fab>
       </div>
     </div>

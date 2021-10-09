@@ -13,7 +13,7 @@ import Picker from 'emoji-picker-react'
 import React, { useEffect } from 'react'
 import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
-import { gotoPage, popPage, registerDialogOpen, setDialogOpen } from '../../App'
+import { cacheMessage, fetchMessagesOfRoom, gotoPage, popPage, registerDialogOpen, setDialogOpen } from '../../App'
 import ChatAppBar from '../../components/ChatAppBar'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
@@ -89,6 +89,23 @@ export default function Chat(props) {
   })
   let [scrollTrigger, setScrollTrigger] = React.useState(false)
   let [showScrollDown, setShowScrollDown] = React.useState(false)
+
+  useEffect(() => {
+    fetchMessagesOfRoom(props.roomId).then(data => {
+      data.forEach((message) => {
+        messagesArr.push(
+          <MessageItem
+            key={'message-' + message.id}
+            message={message}
+            setPhotoViewerVisible={setPhotoViewerVisible}
+            setCurrentPhotoSrc={setCurrentPhotoSrc}
+          />,
+        );
+      });
+      forceUpdate()
+      setScrollTrigger(!scrollTrigger)
+    });
+  }, [props.roomId, props.userId])
 
   useEffect(() => {
     let scroller = document.getElementById('chatScroller')
@@ -259,6 +276,7 @@ export default function Chat(props) {
             if (result.messages !== undefined) {
               messagesArr = []
               result.messages.forEach((message) => {
+                cacheMessage(message);
                 messagesArr.push(
                   <MessageItem
                     key={'message-' + message.id}
@@ -391,6 +409,7 @@ export default function Chat(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
+                    cacheMessage(result.message);
                     let msgEl = document.getElementById('message-' + msg.id);
                     let msgSeenEl = document.getElementById('message-seen-' + msg.id);
                     let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);
@@ -538,6 +557,7 @@ export default function Chat(props) {
                     .then((result) => {
                       console.log(JSON.stringify(result))
                       if (result.message !== undefined) {
+                        cacheMessage(result.message);
                         let msgEl = document.getElementById('message-' + msg.id);
                         let msgSeenEl = document.getElementById('message-seen-' + msg.id);
                         let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);

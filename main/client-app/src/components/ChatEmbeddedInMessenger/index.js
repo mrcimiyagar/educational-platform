@@ -16,6 +16,8 @@ import React, { useEffect } from 'react'
 import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
 import {
+  cacheMessage,
+  fetchMessagesOfRoom,
   gotoPage,
   histPage,
   isDesktop,
@@ -80,8 +82,6 @@ export default function ChatEmbeddedInMessenger(props) {
 
   let forceUpdate = useForceUpdate()
   updateChatEmbedded = forceUpdate
-  const [count, setCount] = React.useState(0)
-  let [messages, setMessages] = React.useState([])
   let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false)
   let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('')
   let [user, setUser] = React.useState(undefined)
@@ -94,6 +94,23 @@ export default function ChatEmbeddedInMessenger(props) {
   })
   let [scrollTrigger, setScrollTrigger] = React.useState(false)
   let [showScrollDown, setShowScrollDown] = React.useState(false)
+
+  useEffect(() => {
+    fetchMessagesOfRoom(props.roomId).then(data => {
+      data.forEach((message) => {
+        messagesArr.push(
+          <MessageItem
+            key={'message-' + message.id}
+            message={message}
+            setPhotoViewerVisible={setPhotoViewerVisible}
+            setCurrentPhotoSrc={setCurrentPhotoSrc}
+          />,
+        );
+      });
+      forceUpdate()
+      setScrollTrigger(!scrollTrigger)
+    });
+  }, [props.roomId, props.userId])
 
   useEffect(() => {
     let scroller = document.getElementById('scroller')
@@ -173,6 +190,7 @@ export default function ChatEmbeddedInMessenger(props) {
         if (result.messages !== undefined) {
           messagesArr = []
           result.messages.forEach((message) => {
+            cacheMessage(message);
             messagesArr.push(
               <MessageItem
                 key={'message-' + message.id}
@@ -385,6 +403,7 @@ export default function ChatEmbeddedInMessenger(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
+                    cacheMessage(result.message);
                     let msgEl = document.getElementById('message-' + msg.id);
                     let msgSeenEl = document.getElementById('message-seen-' + msg.id);
                     let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);
@@ -537,6 +556,7 @@ export default function ChatEmbeddedInMessenger(props) {
                   .then((result) => {
                     console.log(JSON.stringify(result))
                     if (result.message !== undefined) {
+                      cacheMessage(result.message);
                       let msgEl = document.getElementById('message-' + msg.id);
                       let msgSeenEl = document.getElementById('message-seen-' + msg.id);
                       let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);

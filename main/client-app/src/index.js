@@ -7,7 +7,7 @@ import CloudIcon from './images/logo.png'
 import DesktopWallpaper from './images/roomWallpaper.png';
 import store from './redux/main';
 import { setup } from './util/Utils';
-import './notifSystem';
+//import './notifSystem';
 
 export let pathConfig = {}
 
@@ -122,10 +122,6 @@ let AppContainer = (props) => {
   let [opacity, setOpacity] = React.useState(0)
   let [display, setDisplay] = React.useState('block')
   useEffect(() => {
-    ['./images/chat-wallpaper.png'].forEach(imageSrc => {
-      const img = new Image();
-      img.src = imageSrc;
-    })
     let requestOptions = {
       method: 'GET',
       headers: {

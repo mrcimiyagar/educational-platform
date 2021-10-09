@@ -466,14 +466,14 @@ export default function HomePage(props) {
             setMenuOpen={setMenuOpen}
             membership={membership}
             roomId={homeRoomId}
-            style={{ display: currentRoomNav === 0 ? 'block' : 'none' }}
+            style={{ display: 'block' }}
           />
         </div>
         <div
           style={{
             position: 'fixed',
             right: isDesktop() ? (isInRoom() ? 450 + 16 : 16) : 16,
-            bottom: 4,
+            bottom: -4,
             zIndex: 2500,
           }}
         >

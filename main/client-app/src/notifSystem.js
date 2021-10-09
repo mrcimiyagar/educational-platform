@@ -74,7 +74,9 @@ async function send() {
       function (err) {
         console.error('unsuccessful registration with ', err)
       },
-    )
+    ).catch(ex => {
+      console.log(ex);
+    });
 }
 
 function urlBase64ToUint8Array(base64String) {

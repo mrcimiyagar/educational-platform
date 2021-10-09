@@ -45,6 +45,7 @@ import { pathConfig, setWallpaper } from '.'
 import { addMessageToList2, replaceMessageInTheList2 } from './components/ChatEmbeddedInMessenger'
 import { addMessageToList3, replaceMessageInTheList3 } from './components/ChatEmbedded'
 import { addNewChat, setLastMessage, updateChat } from './components/HomeMain'
+const PouchDB = require('pouchdb').default;
 
 export let histPage = undefined
 let setHistPage = undefined
@@ -229,7 +230,40 @@ export let registerDialogOpen = (setOpen) => {
 
 export let animatePageChange = undefined
 
+PouchDB.plugin(require('pouchdb-upsert'));
+PouchDB.plugin(require('pouchdb-quick-search'));
+PouchDB.plugin(require('pouchdb-find').default);
+export let db = new PouchDB('SkyDime');
+
+export let cacheMessage = (msg) => {
+  db.putIfNotExists('message_' + msg.id, msg)
+  .then(function (res) {})
+  .catch(function (err) {})
+}
+
+export let fetchMessagesOfRoom = async (roomId) => {
+  let data = await db.find({
+    selector: {roomId: {$eq: roomId}}
+  });
+  data = data.docs;
+  data.forEach(message => {
+    message.time = Number(message.time);
+  })
+  function compare( a, b ) {
+    if (a.time < b.time) {
+      return -1;
+    }
+    if (a.time > b.time) {
+      return 1;
+    }
+    return 0;
+  }
+  data.sort(compare);
+  return data;
+}
+
 export default function MainApp(props) {
+
   console.warn = () => {}
   setToken(localStorage.getItem('token'))
   setHomeSpaceId(localStorage.getItem('homeSpaceId'))

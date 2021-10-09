@@ -9,9 +9,9 @@ import StoreMallDirectoryIcon from '@material-ui/icons/StoreMallDirectory';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import React from 'react';
-import { animatePageChange, gotoPageWithDelay, isDesktop } from '../../App';
+import { animatePageChange, gotoPageWithDelay, isDesktop, isInMessenger, isInRoom, isTablet } from '../../App';
 import { theme } from '../../util/settings';
-import { useForceUpdate } from '../../util/Utils';
+import { isMobile, useForceUpdate } from '../../util/Utils';
 
 export let notifyUrlChanged = undefined
 
@@ -53,7 +53,8 @@ export default function Jumper(props) {
     <div className={classes.root}
       style={{
         bottom: window.location.pathname === '/app/searchengine' ? 0 :
-                (window.location.pathname === '/app/messenger' && isDesktop()) ? -12 :
+                (isInMessenger() && isDesktop()) ? -12 :
+                window.location.pathname === '/app/home' ? ((isMobile() || isTablet()) ? -16 : 40) :
                 60
       }}>
       <ThemeProvider theme={theme}>
