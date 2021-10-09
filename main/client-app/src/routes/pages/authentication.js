@@ -5,10 +5,31 @@ import React, { useEffect } from "react";
 import { pathConfig } from '../..';
 import { gotoPage } from "../../App";
 import CloudIcon from '../../images/logo.png';
-import { setHomeRoomId, setHomeSpaceId, setMe, setToken } from "../../util/settings";
-import { ConnectToIo, serverRoot, setConfig } from "../../util/Utils";
 import Wallpaper from '../../images/roomWallpaper.png'
 import WhiteColorTextField from '../../components/WhiteColorTextField';
+import {
+  ColorBase,
+  colors,
+  me,
+  setHomeRoomId,
+  setHomeSpaceId,
+  setMe,
+  setToken,
+  theme,
+  token,
+} from '../../util/settings'
+import {
+  ConnectToIo,
+  serverRoot,
+  socket,
+  useForceUpdate,
+  validateToken,
+  setConfig
+} from '../../util/Utils'
+import { addMessageToList, replaceMessageInTheList } from './chat'
+import { addMessageToList2, replaceMessageInTheList2 } from '../../components/ChatEmbeddedInMessenger'
+import { addMessageToList3, replaceMessageInTheList3 } from '../../components/ChatEmbedded'
+import { addNewChat, setLastMessage, updateChat } from '../../components/HomeMain'
 
 const useStyles = makeStyles((theme) => ({
   root: {

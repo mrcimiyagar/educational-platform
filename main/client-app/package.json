@@ -183,12 +183,18 @@
   },
   "scripts": {
     "start": "PORT=2002 react-scripts start",
+    "start-win": "set BROWSER=none && react-scripts start",
+    "start-electron": "export ELECTRON_START_URL=http://localhost:2002 && electron .",
+    "start-electron-win": "set ELECTRON_START_URL=http://localhost:2002 && electron .",
+    "clean": "rm -rf build dist",
+    "clean-win": "rmdir build /S /Q & rmdir dist/S /Q",
     "build": "react-scripts build",
+    "build-electron": "mkdir build/src && cp -r electron/. build/electron && cp -r src/shared/. build/src/shared",
+    "build-electron-win": "mkdir build/src && robocopy electron build/electron /S & robocopy src/shared build/src/shared /S",
+    "package": "npm run build && npm run build-electron && electron-builder -c.extraMetadata.main=build/electron/main.js",
+    "package-win": "electron-builder build --win -c.extraMetadata.main=build/electron/main.js --publish never",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron-dev": "concurrently \"cross-env BROWSER=none PORT=2002 npm start\" \"wait-on http://localhost:2002 && electron .\"",
-    "electron-pack": "ELECTRON_ENABLE_LOGGING=1 electron-builder -c.extraMetadata.main=build/electron.js",
-    "preelectron-pack": "react-scripts build"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
