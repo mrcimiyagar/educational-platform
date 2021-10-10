@@ -12,6 +12,9 @@ let serv = https.createServer({
   if (req.headers.host === 'kaspersoft.cloud') {
     proxy.web(req, res, { target: 'http://localhost:2002' }, e => {})
   }
+  else if (req.headers.host === 'code.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:8100' }, e => {})
+  }
   else if (req.headers.host === 'backend.kaspersoft.cloud') {
     proxy.web(req, res, { target: 'http://localhost:2001' }, e => {})
   }
@@ -46,7 +49,7 @@ serv.on('upgrade', function (req, socket, head) {
     proxy.ws(req, socket, { target: 'ws://localhost:2001' }, e => {})
   }
   else if (req.headers.host === 'code.kaspersoft.cloud') {
-    proxy.ws(req, socket, { target: 'ws://localhost:8080' }, e => {})
+    proxy.ws(req, socket, { target: 'ws://localhost:8100' }, e => {})
   }
   else if (req.headers.host === 'webinar.kaspersoft.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:1001'}, e => {})
