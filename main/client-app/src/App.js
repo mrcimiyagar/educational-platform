@@ -1,28 +1,28 @@
-import { ThemeProvider } from '@material-ui/core'
-import React, { useEffect } from 'react'
-import './App.css'
-import { notifyUrlChanged } from './components/SearchEngineFam'
-import AudioPlayer from './routes/pages/audioPlayer'
-import Authentication from './routes/pages/authentication'
-import Chat, { addMessageToList, replaceMessageInTheList } from './routes/pages/chat'
-import CreateRoom from './routes/pages/createRoom'
-import DeckPage from './routes/pages/deck'
-import MessengerPage from './routes/pages/messenger'
-import NotePage from './routes/pages/notes'
-import PhotoViewer from './routes/pages/photoViewer'
-import PollPage from './routes/pages/polls'
-import Profile from './routes/pages/profile'
-import RoomPage from './routes/pages/room'
-import RoomsTree from './routes/pages/roomsTree'
-import SearchEngine from './routes/pages/searchEngine'
-import SearchEngineResults from './routes/pages/searchEngineResults'
-import Store from './routes/pages/store'
-import StoreAds from './routes/pages/storeAds'
-import StoreBot from './routes/pages/storeBot'
-import VideoPlayer from './routes/pages/videoPlayer'
-import SettingsPage from './routes/pages/settings'
-import HomePage from './routes/pages/home'
-import StartupSound from './sounds/startup.mp3'
+import { ThemeProvider } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import './App.css';
+import { notifyUrlChanged } from './components/SearchEngineFam';
+import AudioPlayer from './routes/pages/audioPlayer';
+import Authentication from './routes/pages/authentication';
+import Chat, { addMessageToList, replaceMessageInTheList } from './routes/pages/chat';
+import CreateRoom from './routes/pages/createRoom';
+import DeckPage from './routes/pages/deck';
+import MessengerPage from './routes/pages/messenger';
+import NotePage from './routes/pages/notes';
+import PhotoViewer from './routes/pages/photoViewer';
+import PollPage from './routes/pages/polls';
+import Profile from './routes/pages/profile';
+import RoomPage from './routes/pages/room';
+import RoomsTree from './routes/pages/roomsTree';
+import SearchEngine from './routes/pages/searchEngine';
+import SearchEngineResults from './routes/pages/searchEngineResults';
+import Store from './routes/pages/store';
+import StoreAds from './routes/pages/storeAds';
+import StoreBot from './routes/pages/storeBot';
+import VideoPlayer from './routes/pages/videoPlayer';
+import SettingsPage from './routes/pages/settings';
+import HomePage from './routes/pages/home';
+import StartupSound from './sounds/startup.mp3';
 import {
   ColorBase,
   colors,
@@ -33,18 +33,19 @@ import {
   setToken,
   theme,
   token,
-} from './util/settings'
+} from './util/settings';
 import {
   ConnectToIo,
   serverRoot,
   socket,
   useForceUpdate,
   validateToken,
-} from './util/Utils'
-import { pathConfig, setWallpaper } from '.'
-import { addMessageToList2, replaceMessageInTheList2 } from './components/ChatEmbeddedInMessenger'
-import { addMessageToList3, replaceMessageInTheList3 } from './components/ChatEmbedded'
-import { addNewChat, setLastMessage, updateChat } from './components/HomeMain'
+} from './util/Utils';
+import { pathConfig, setWallpaper } from '.';
+import { addMessageToList2, replaceMessageInTheList2 } from './components/ChatEmbeddedInMessenger';
+import { addMessageToList3, replaceMessageInTheList3 } from './components/ChatEmbedded';
+import { addNewChat, setLastMessage, updateChat } from './components/HomeMain';
+import DesktopWallpaper from './images/roomWallpaper.png';
 const PouchDB = require('pouchdb').default;
 
 export let histPage = undefined
@@ -236,6 +237,7 @@ PouchDB.plugin(require('pouchdb-find').default);
 export let db = new PouchDB('SkyDime');
 
 export let cacheMessage = (msg) => {
+  msg.type = 'message';
   db.putIfNotExists('message_' + msg.id, msg)
   .then(function (res) {})
   .catch(function (err) {})
@@ -243,7 +245,7 @@ export let cacheMessage = (msg) => {
 
 export let fetchMessagesOfRoom = async (roomId) => {
   let data = await db.find({
-    selector: {roomId: {$eq: roomId}}
+    selector: {roomId: {$eq: roomId}, type: {$eq: 'message'}}
   });
   data = data.docs;
   data.forEach(message => {
@@ -254,6 +256,34 @@ export let fetchMessagesOfRoom = async (roomId) => {
       return -1;
     }
     if (a.time > b.time) {
+      return 1;
+    }
+    return 0;
+  }
+  data.sort(compare);
+  return data;
+}
+
+export let cacheChat = (chat) => {
+  chat.type = 'chat';
+  db.putIfNotExists('chat_' + chat.id, chat)
+  .then(function (res) {})
+  .catch(function (err) {})
+}
+
+export let fetchChats = async () => {
+  let data = await db.find({
+    selector: {type: {$eq: 'chat'}}
+  });
+  data = data.docs;
+  data.forEach(chat => {
+    chat.lastMessage.time = Number(chat.lastMessage.time);
+  })
+  function compare( a, b ) {
+    if (a.lastMessage.time < b.lastMessage.time) {
+      return -1;
+    }
+    if (a.lastMessage.time > b.lastMessage.time) {
       return 1;
     }
     return 0;
@@ -323,8 +353,14 @@ export default function MainApp(props) {
   }
 
   useEffect(() => {
-    if (histPage === '/app/messenger' || histPage === '/app/searchengine') {
+    if (histPage === '/app/searchengine') {
       setWallpaper({ type: 'color', color: colors.accentDark })
+    }
+    else if (isInMessenger()) {
+      setWallpaper({
+        type: 'photo',
+        photo: DesktopWallpaper
+      })
     }
   }, [histPage])
 
@@ -397,7 +433,7 @@ export default function MainApp(props) {
           window.location.pathname === '/' ||
           window.location.pathname === ''
         ) {
-          gotoPage('/app/messenger', {})
+          gotoPage('/app/home', {})
         } else {
           gotoPage(window.location.pathname, params)
         }

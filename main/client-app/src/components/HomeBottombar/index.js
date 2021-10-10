@@ -23,9 +23,9 @@ const useStyles = makeStyles({
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
   root: {
-    color: '#ddd',
+    color: '#666',
     '&$selected': {
-      color: '#fff',
+      color: '#333',
     },
   },
   /* Styles applied to the root element if selected. */
@@ -54,8 +54,8 @@ export default function HomeBottombar(props) {
       showLabels
       className={classes.root}
       style={{
-        backgroundColor: colors.primaryMedium,
-        backdropFilter: 'blur(10px)',
+        background: 'rgba(255, 255, 255, 0.5)',
+        backdropFilter: 'blur(15px)',
         width: isDesktop() ? 400 : '100%',
         transform: isDesktop() ? 'rotate(90deg)' : undefined,
         position: isDesktop() ? 'fixed' : undefined,

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   indicator: {
-    backgroundColor: 'white',
+    backgroundColor: '#333',
   },
 }));
 
@@ -53,7 +53,7 @@ export default function HomeNotifs() {
 
   return (
     <div className={classes.root}>
-      <AppBar style={{backgroundColor: 'rgba(21, 96, 233, 0.65)', backdropFilter: 'blur(10px)'}}>
+      <AppBar style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(15px)'}}>
           <Tabs
             variant="fullWidth"
             value={value}
@@ -61,10 +61,10 @@ export default function HomeNotifs() {
             classes={{
               indicator: classes.indicator
             }}
-            style={{marginTop: 8}}
+            style={{marginTop: 8, color: '#333'}}
           >
-            <Tab icon={<NotificationsIcon />} label="اعلانات" />
-            <Tab icon={<AlternateEmailIcon />} label="منشن ها" />
+            <Tab icon={<NotificationsIcon style={{fill: '#333'}} />} label="اعلانات" />
+            <Tab icon={<AlternateEmailIcon style={{fill: '#333'}} />} label="منشن ها" />
           </Tabs>
         </AppBar>
         <div style={{width: '100%', height: '100%'}}>

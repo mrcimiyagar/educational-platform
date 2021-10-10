@@ -149,14 +149,14 @@ export default function RoomPage(props) {
   const classes = useStyles()
   const classesAction = useStylesAction()
 
-  const [jumperOpen, setJumperOpen] = React.useState(true)
-  ;[membership, setMembership] = React.useState({})
-  const [loaded, setLoaded] = React.useState(false)
-  const [menuOpen, setMenuOpen] = React.useState(false)
-  const [currentRoomNav, setCurrentRoomNav] = React.useState(Number(props.tab_index))
-  const [fileMode, setFileMode] = React.useState(0)
-  const [menuMode, setMenuMode] = React.useState(0)
-  const [opacity, setOpacity] = React.useState(1)
+  const [jumperOpen, setJumperOpen] = React.useState(true);
+  [membership, setMembership] = React.useState({});
+  const [loaded, setLoaded] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [currentRoomNav, setCurrentRoomNav] = React.useState(Number(props.tab_index));
+  const [fileMode, setFileMode] = React.useState(0);
+  const [menuMode, setMenuMode] = React.useState(0);
+  const [opacity, setOpacity] = React.useState(1);
 
   let roomId = props.room_id
   setRoomId(roomId)

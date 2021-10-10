@@ -12,6 +12,8 @@ import RedditIcon from '@material-ui/icons/Reddit'
 import PropTypes from 'prop-types'
 import React, { useEffect } from 'react'
 import {
+  cacheChat,
+  fetchChats,
   histPage,
   isDesktop,
   isInMessenger,
@@ -73,16 +75,16 @@ const useStyles = makeStyles((theme) => ({
         : undefined,
     width: isDesktop() && isInRoom() ? 450 : '100%',
     maxWidth: isDesktop() && isInRoom() ? 450 : '100%',
-    height: '100%',
-    backgroundColor: colors.accentDark,
+    height: '100%'
   },
   indicator: {
-    backgroundColor: 'white',
+    backgroundColor: '#333',
   },
   tab: {
     minWidth: isDesktop() || isTablet() ? 100 : undefined,
     maxWidth: isDesktop() || isTablet() ? 100 : undefined,
     width: isDesktop() || isTablet() ? 100 : undefined,
+    color: '#333'
   },
 }))
 
@@ -104,6 +106,12 @@ export default function HomeAppbar(props) {
   let currNav = store.getState().global.main.currentMessengerNav
   let [chats, setChats] = React.useState([])
   let [drawerOpen, setDrawerOpen] = React.useState(false)
+
+  useEffect(() => {
+    fetchChats().then(chats => {
+      setChats(chats);
+    })
+  }, [])
 
   setLastMessage = (msg) => {
     try {
@@ -166,6 +174,9 @@ export default function HomeAppbar(props) {
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
+        result.rooms.forEach(chat => {
+          cacheChat(chat);
+        });
         result.rooms.sort(function (a, b) {
           if (a.lastMessage === undefined && b.lastMessage === undefined) return 0;
           if (b.lastMessage === undefined) return 0 - a.lastMessage.time
@@ -197,8 +208,8 @@ export default function HomeAppbar(props) {
                 marginRight: isDesktop() ? 256 + 32 + 32 + 64 : undefined,
                 marginTop: isDesktop() ? 32 : undefined,
                 width: isDesktop() || isTablet() ? 450 : '100%',
-                backgroundColor: colors.primaryMedium,
-                backdropFilter: 'blur(10px)',
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                backdropFilter: 'blur(15px)',
               }}
             >
               <Toolbar style={{ marginTop: 16 }}>

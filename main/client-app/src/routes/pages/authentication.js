@@ -49,6 +49,11 @@ function Authentication(props) {
       setLogoTop(100);
       setOpacity(1)
     }, 2000)
+    // if (localStorage.getItem('username') !== undefined) {
+    //   document.getElementById('loginUsername').value = localStorage.getItem('username');
+    //   document.getElementById('loginPassword').value = localStorage.getItem('password');
+    //   document.getElementById('loginBtn').click();
+    // }
   }, [])
   return (
     <div style={{height: '100%', overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
@@ -118,7 +123,7 @@ function Authentication(props) {
           <WhiteColorTextField className={classes.root} id="loginUsername" label="نام کاربری" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
           <WhiteColorTextField className={classes.root} id="loginPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
           <div style={{width: 'auto', marginTop: 48}}>
-            <Fab color={'primary'} variant="extended" style={{marginLeft: 24}} onClick={() => {
+            <Fab id={'loginBtn'} color={'primary'} variant="extended" style={{marginLeft: 24}} onClick={() => {
               let requestOptions = {
                 method: 'POST',
                 headers: {
@@ -179,6 +184,8 @@ function Authentication(props) {
                       messages.forEach(msg => replaceMessageInTheList3(msg));
                     })
                   })
+                  localStorage.setItem('username', document.getElementById('loginUsername').value);
+                  localStorage.setItem('password', document.getElementById('loginPassword').value);                  
                   document.getElementById('loginUsername').value = '';
                   document.getElementById('loginPassword').value = '';
                   setConfig(result.account);

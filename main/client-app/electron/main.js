@@ -6,11 +6,6 @@ const { channels } = require('../src/shared/constants');
 let mainWindow;
 
 function createWindow () {
-  const startUrl = process.env.ELECTRON_START_URL || url.format({
-    pathname: path.join(__dirname, '../index.html'),
-    protocol: 'file:',
-    slashes: true,
-  });
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -18,7 +13,7 @@ function createWindow () {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
-  mainWindow.loadURL(startUrl);
+  mainWindow.loadFile(`build/index.html`);
   mainWindow.on('closed', function () {
     mainWindow = null;
   });

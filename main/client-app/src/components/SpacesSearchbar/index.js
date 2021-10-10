@@ -17,13 +17,12 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     left: '50%',
     transform: 'translateX(-50%)',
-    backgroundColor: 'rgba(21, 96, 233, 0.65)',
-    backdropFilter: 'blur(10px)'
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backdropFilter: 'blur(15px)'
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
-    color: '#fff'
   },
   iconButton: {
     padding: 10,
@@ -40,14 +39,14 @@ export default function SpacesSearchbar(props) {
   return (
     <Paper component="form" className={classes.root}>
       <IconButton onClick={() => props.setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
-        <MenuIcon style={{fill: '#fff'}}/>
+        <MenuIcon/>
       </IconButton>
       <InputBase
         className={classes.input}
         placeholder="جستجو در آسمان"
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
-        <SearchIcon style={{fill: '#fff'}}/>
+        <SearchIcon/>
       </IconButton>
     </Paper>
   );

@@ -10,6 +10,7 @@ import React, { useEffect } from 'react';
 import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
+import EmptySign from '../EmptySign';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -140,7 +141,5 @@ export default function NotifsList() {
         ))
       }
     </List> :
-    <div style={{width: 'calc(100% - 48px)', height: '100%', marginLeft: 24, marginRight: 24, marginTop: 160, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
-      <img alt={''} src={EmptyIcon} style={{width: 'calc(100% - 128px)', height: '100%', padding: 64}}/>
-    </div>
+    <EmptySign/>
 }
