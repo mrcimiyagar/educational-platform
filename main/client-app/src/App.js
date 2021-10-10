@@ -46,6 +46,12 @@ import { addMessageToList2, replaceMessageInTheList2 } from './components/ChatEm
 import { addMessageToList3, replaceMessageInTheList3 } from './components/ChatEmbedded';
 import { addNewChat, setLastMessage, updateChat } from './components/HomeMain';
 import DesktopWallpaper from './images/roomWallpaper.png';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 const PouchDB = require('pouchdb').default;
 
 export let histPage = undefined
@@ -292,7 +298,7 @@ export let fetchChats = async () => {
   return data;
 }
 
-export default function MainApp(props) {
+export function MainApp(props) {
 
   console.warn = () => {}
   setToken(localStorage.getItem('token'))
@@ -474,5 +480,15 @@ export default function MainApp(props) {
         </ThemeProvider>
       </div>
     </div>
+  )
+}
+
+export default function MainAppLight(props) {
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route path="/" component={Authentication} />
+      </Switch>
+    </BrowserRouter>
   )
 }
