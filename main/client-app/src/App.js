@@ -390,7 +390,7 @@ export let fetchChats = async () => {
 }
 
 export default function MainApp(props) {
-
+ 
   console.warn = () => {}
   setToken(localStorage.getItem('token'))
   setHomeSpaceId(localStorage.getItem('homeSpaceId'))
