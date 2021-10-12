@@ -200,12 +200,12 @@ export default function Chat(props) {
     }
   }
 
-  /*let checkScroller = () => {
+  let checkScroller = () => {
     let scroller = document.getElementById('chatScroller')
     if (scroller !== null) {
       attachScrollListener(scroller)
     } else {
-      setInterval(() => {
+      setTimeout() => {
         checkScroller()
       }, 250)
     }
@@ -213,7 +213,7 @@ export default function Chat(props) {
 
   useEffect(() => {
     checkScroller()
-  }, [])*/
+  }, [])
 
   useEffect(() => {
     let requestOptions = {
