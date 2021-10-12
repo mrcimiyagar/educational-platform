@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@material-ui/core';
 import React, { useEffect } from 'react';
+import {BrowserRouter, Switch, Route, Link, useHistory} from 'react-router-dom';
 import './App.css';
 import { notifyUrlChanged } from './components/SearchEngineFam';
 import AudioPlayer from './routes/pages/audioPlayer';
@@ -48,10 +49,11 @@ import { addNewChat, setLastMessage, updateChat } from './components/HomeMain';
 import DesktopWallpaper from './images/roomWallpaper.png';
 const PouchDB = require('pouchdb').default;
 
-export let histPage = undefined
-let setHistPage = undefined
-export let routeTrigger = undefined
-let setRouteTrigger = undefined
+export let histPage = undefined;
+let setHistPage = undefined;
+export let routeTrigger = undefined;
+let setRouteTrigger = undefined;
+let popTrigger = undefined, setPopTrigger = undefined;
 
 export let sizeMode
 let setSizeMode
@@ -161,6 +163,101 @@ export let popPage = () => {
     )
     if (notifyUrlChanged !== undefined) notifyUrlChanged()
   }
+}
+
+// export let gotoPage = (p, params) => {
+//   series.push(p);
+//   paramsSeries.push(params);
+
+//   let query = ''
+//   for (let key in params) {
+//     query += key + '=' + params[key] + '&'
+//   }
+//   if (query.length > 0) {
+//     query = query.substr(0, query.length - 1)
+//   }
+
+//   if (isTablet() || isDesktop()) {
+//     setHistPage(p);
+//   }
+//   else if (isMobile()) {
+//     setHistPage(p + (query.length > 0 ? '?' : '') + query);
+//   }
+//   setRouteTrigger(!routeTrigger)
+
+//   if (isTablet() || isDesktop()) {
+//     window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
+//     if (notifyUrlChanged !== undefined) notifyUrlChanged()
+//     forceUpdate()
+//   }
+// }
+
+// export let gotoPageWithDelay = (p, params) => {
+//   series.push(p)
+//   paramsSeries.push(params)
+
+//   if (isTablet() || isDesktop()) {
+//     setTimeout(() => {
+//       setHistPage(p)
+//       setRouteTrigger(!routeTrigger)
+//     }, 125)
+//   }
+//   else if (isMobile()) {
+//     setTimeout(() => {
+//       setHistPage(p + (query.length > 0 ? '?' : '') + query);
+//     }, 125);
+//   }
+
+//   if (isTablet() || isDesktop()) {
+//     window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
+//     if (notifyUrlChanged !== undefined) notifyUrlChanged()
+//     forceUpdate()
+//   }
+// }
+
+// export let popPage = () => {
+//   setPopTrigger(!popTrigger);
+//   if (series.length > 1) {
+//     series.pop()
+//     paramsSeries.pop()
+    
+//     if (isTablet() || isDesktop()) {
+//       setHistPage(series[series.length - 1])
+//       setRouteTrigger(!routeTrigger)
+
+//       let params = paramsSeries[paramsSeries.length - 1]
+//       let query = ''
+//       for (let key in params) {
+//         query += key + '=' + params[key] + '&'
+//       }
+//       if (query.length > 0) {
+//         query = query.substr(0, query.length - 1)
+//       }
+
+//       window.history.pushState(
+//         '',
+//         '',
+//         series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
+//       )
+//       if (notifyUrlChanged !== undefined) notifyUrlChanged()
+//     }
+//   }
+// }
+
+function HistController() {
+  const history = useHistory();
+
+  useEffect(() => {
+    history.push(histPage);
+  }, [histPage]);
+
+  useEffect(() => {
+    history.goBack();
+  }, [popTrigger]);
+
+  return (
+    <div/>
+  );
 }
 
 let DesktopDetector = () => {
@@ -474,5 +571,154 @@ export default function MainApp(props) {
         </ThemeProvider>
       </div>
     </div>
+  )
+}
+
+let mobileUrlParams = undefined, setMobileUrlParams = undefined;
+
+export function MainAppLight(props) {
+  console.warn = () => {}
+
+  [mobileUrlParams, setMobileUrlParams] = React.useState({});
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    let mup = Object.fromEntries(urlSearchParams.entries());
+    alert(JSON.stringify(mup));
+    setMobileUrlParams(mup);
+  }, [routeTrigger]);
+
+  setToken(localStorage.getItem('token'))
+  setHomeSpaceId(localStorage.getItem('homeSpaceId'))
+  setHomeRoomId(localStorage.getItem('homeRoomId'))
+  ConnectToIo(localStorage.getItem('token'), () => {
+    socket.off('message-added')
+    socket.on('message-added', ({ msgCopy }) => {
+      if (me.id !== msgCopy.authorId) {
+        addMessageToList(msgCopy)
+        addMessageToList2(msgCopy)
+        addMessageToList3(msgCopy)
+        setLastMessage(msgCopy)
+        let requestOptions3 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: msgCopy.roomId,
+          }),
+          redirect: 'follow',
+        }
+        fetch(serverRoot + '/chat/get_chat', requestOptions3)
+          .then((response) => response.json())
+          .then((result) => {
+            updateChat(result.room);
+          });
+      }
+    })
+    socket.off('chat-created')
+    socket.on('chat-created', ({ room }) => {
+      addNewChat(room)
+    })
+    socket.off('message-seen')
+    socket.on('message-seen', ({ messages }) => {
+      messages.forEach(msg => replaceMessageInTheList(msg));
+      messages.forEach(msg => replaceMessageInTheList2(msg));
+      messages.forEach(msg => replaceMessageInTheList3(msg));
+    })
+  })
+
+  forceUpdate = useForceUpdate()
+
+  let [hp, setHp] = React.useState();
+  setHistPage = setHp;
+  histPage = hp;
+  [routeTrigger, setRouteTrigger] = React.useState(false);
+  [popTrigger, setPopTrigger] = React.useState(false);
+  let [opacity, setOpacity] = React.useState(0);
+
+  useEffect(() => {
+    if (window.location.pathname === '/app/searchengine') {
+      setWallpaper({ type: 'color', color: colors.accentDark })
+    }
+    else if (window.location.pathname === '/app/messenger') {
+      setWallpaper({
+        type: 'photo',
+        photo: DesktopWallpaper
+      })
+    }
+  }, [histPage])
+
+  animatePageChange = () => {
+    setOpacity(0);
+    setTimeout(() => {
+      setOpacity(1);
+    }, 250);
+  };
+
+  return (
+    <BrowserRouter>
+    <div
+      style={{
+        width: window.innerWidth + 'px',
+        minHeight: '100vh',
+        height: '100vh',
+        maxHeight: '100vh',
+        direction: 'rtl',
+      }}>
+        <HistController histPage={histPage} />
+        <ColorBase />
+        <DesktopDetector />
+          <Switch>
+            <Route path="/app">
+              <InnerApp />
+            </Route>
+          </Switch>
+    </div>
+        </BrowserRouter>
+  );
+}
+
+let InnerApp = (props) => {
+  return (
+    <main>
+      <Switch>
+        <Route path="/app/auth">
+          <Authentication {...mobileUrlParams}/>
+        </Route>
+        <Route path="/app/home">
+          <HomePage {...mobileUrlParams}/>
+        </Route>
+        <Route path="/app/store">
+          <Store {...mobileUrlParams}/>
+        </Route>
+        <Route path="/app/messenger">
+          <MessengerPage {...mobileUrlParams}/>
+        </Route>
+        <Route path="/app/room">
+          <RoomPage {...mobileUrlParams}/>
+        </Route>
+        <Route path="/app/searchengine">
+          <SearchEngine {...mobileUrlParams}/>
+        </Route>
+        <Route path="/app/chat">
+          <Chat {...mobileUrlParams}/>
+        </Route>
+        <Route path="/app/storebot" component={StoreBot}/>
+        <Route path="/app/storeads" component={StoreAds}/>
+        <Route path="/app/photoviewer" component={PhotoViewer}/>
+        <Route path="/app/poll" component={PollPage}/>
+        <Route path="/app/notes" component={NotePage}/>
+        <Route path="/app/deck" component={DeckPage}/>
+        <Route path="/app/searchengineresults" component={SearchEngineResults}/>
+        <Route path="/app/userprofile" component={Profile}/>
+        <Route path="/app/createroom" component={CreateRoom}/>
+        <Route path="/app/roomstree" component={RoomsTree}/>
+        <Route path="/app/audioplayer" component={AudioPlayer}/>
+        <Route path="/app/settings" component={SettingsPage}/>
+        <Route path="/app/videoplayer" component={VideoPlayer}/>
+      </Switch>
+    </main>
   )
 }

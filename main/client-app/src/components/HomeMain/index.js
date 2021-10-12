@@ -107,11 +107,11 @@ export default function HomeAppbar(props) {
   let [chats, setChats] = React.useState([])
   let [drawerOpen, setDrawerOpen] = React.useState(false)
 
-  useEffect(() => {
-    fetchChats().then(chats => {
-      setChats(chats);
-    })
-  }, [])
+  // useEffect(() => {
+  //   fetchChats().then(chats => {
+  //     setChats(chats);
+  //   })
+  // }, [])
 
   setLastMessage = (msg) => {
     try {
