@@ -115,53 +115,17 @@ let series = []
 let paramsSeries = []
 let forceUpdate = undefined
 
-export let gotoPage = (p, params) => {
-  series.push(p)
-  paramsSeries.push(params)
-  setHistPage(p)
-  setRouteTrigger(!routeTrigger)
+export let popPage
+export let gotoPage
+export let gotoPageWithDelay
 
-  let query = ''
-  for (let key in params) {
-    query += key + '=' + params[key] + '&'
-  }
-  if (query.length > 0) {
-    query = query.substr(0, query.length - 1)
-  }
-
-  window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
-  if (notifyUrlChanged !== undefined) notifyUrlChanged()
-  forceUpdate()
-}
-
-export let gotoPageWithDelay = (p, params) => {
-  series.push(p)
-  paramsSeries.push(params)
-  setTimeout(() => {
+if (window.innerWidth > 900) {
+  gotoPage = (p, params) => {
+    series.push(p)
+    paramsSeries.push(params)
     setHistPage(p)
     setRouteTrigger(!routeTrigger)
-  }, 125)
 
-  let query = ''
-  for (let key in params) {
-    query += key + '=' + params[key] + '&'
-  }
-  if (query.length > 0) {
-    query = query.substr(0, query.length - 1)
-  }
-
-  window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
-  if (notifyUrlChanged !== undefined) notifyUrlChanged()
-}
-
-export let popPage = () => {
-  if (series.length > 1) {
-    series.pop()
-    paramsSeries.pop()
-    setHistPage(series[series.length - 1])
-    setRouteTrigger(!routeTrigger)
-
-    let params = paramsSeries[paramsSeries.length - 1]
     let query = ''
     for (let key in params) {
       query += key + '=' + params[key] + '&'
@@ -170,93 +134,141 @@ export let popPage = () => {
       query = query.substr(0, query.length - 1)
     }
 
-    window.history.pushState(
-      '',
-      '',
-      series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
-    )
+    window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
+    if (notifyUrlChanged !== undefined) notifyUrlChanged()
+    forceUpdate()
+  }
+
+  gotoPageWithDelay = (p, params) => {
+    series.push(p)
+    paramsSeries.push(params)
+    setTimeout(() => {
+      setHistPage(p)
+      setRouteTrigger(!routeTrigger)
+    }, 125)
+
+    let query = ''
+    for (let key in params) {
+      query += key + '=' + params[key] + '&'
+    }
+    if (query.length > 0) {
+      query = query.substr(0, query.length - 1)
+    }
+
+    window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
     if (notifyUrlChanged !== undefined) notifyUrlChanged()
   }
+
+  popPage = () => {
+    if (series.length > 1) {
+      series.pop()
+      paramsSeries.pop()
+      setHistPage(series[series.length - 1])
+      setRouteTrigger(!routeTrigger)
+
+      let params = paramsSeries[paramsSeries.length - 1]
+      let query = ''
+      for (let key in params) {
+        query += key + '=' + params[key] + '&'
+      }
+      if (query.length > 0) {
+        query = query.substr(0, query.length - 1)
+      }
+
+      window.history.pushState(
+        '',
+        '',
+        series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
+      )
+      if (notifyUrlChanged !== undefined) notifyUrlChanged()
+    }
+  }
+} else {
+  gotoPage = (p, params) => {
+    series.push(p)
+    paramsSeries.push(params)
+
+    let query = ''
+    for (let key in params) {
+      query += key + '=' + params[key] + '&'
+    }
+    if (query.length > 0) {
+      query = query.substr(0, query.length - 1)
+    }
+
+    if (isTablet() || isDesktop()) {
+      setHistPage(p)
+    } else if (isMobile()) {
+      setHistPage(p + (query.length > 0 ? '?' : '') + query)
+    }
+    setRouteTrigger(!routeTrigger)
+
+    if (isTablet() || isDesktop()) {
+      window.history.pushState(
+        '',
+        '',
+        p + (query.length > 0 ? '?' : '') + query,
+      )
+      if (notifyUrlChanged !== undefined) notifyUrlChanged()
+      forceUpdate()
+    }
+  }
+
+  gotoPageWithDelay = (p, params) => {
+    series.push(p)
+    paramsSeries.push(params)
+
+    if (isTablet() || isDesktop()) {
+      setTimeout(() => {
+        setHistPage(p)
+        setRouteTrigger(!routeTrigger)
+      }, 125)
+    } else if (isMobile()) {
+      setTimeout(() => {
+        setHistPage(p + (query.length > 0 ? '?' : '') + query)
+      }, 125)
+    }
+
+    if (isTablet() || isDesktop()) {
+      window.history.pushState(
+        '',
+        '',
+        p + (query.length > 0 ? '?' : '') + query,
+      )
+      if (notifyUrlChanged !== undefined) notifyUrlChanged()
+      forceUpdate()
+    }
+  }
+
+  popPage = () => {
+    setPopTrigger(!popTrigger)
+    if (series.length > 1) {
+      series.pop()
+      paramsSeries.pop()
+
+      if (isTablet() || isDesktop()) {
+        setHistPage(series[series.length - 1])
+        setRouteTrigger(!routeTrigger)
+
+        let params = paramsSeries[paramsSeries.length - 1]
+        let query = ''
+        for (let key in params) {
+          query += key + '=' + params[key] + '&'
+        }
+        if (query.length > 0) {
+          query = query.substr(0, query.length - 1)
+        }
+
+        window.history.pushState(
+          '',
+          '',
+          series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
+        )
+        if (notifyUrlChanged !== undefined) notifyUrlChanged()
+      }
+    }
+  }
 }
-
-// export let gotoPage = (p, params) => {
-//   series.push(p);
-//   paramsSeries.push(params);
-
-//   let query = ''
-//   for (let key in params) {
-//     query += key + '=' + params[key] + '&'
-//   }
-//   if (query.length > 0) {
-//     query = query.substr(0, query.length - 1)
-//   }
-
-//   if (isTablet() || isDesktop()) {
-//     setHistPage(p);
-//   }
-//   else if (isMobile()) {
-//     setHistPage(p + (query.length > 0 ? '?' : '') + query);
-//   }
-//   setRouteTrigger(!routeTrigger)
-
-//   if (isTablet() || isDesktop()) {
-//     window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
-//     if (notifyUrlChanged !== undefined) notifyUrlChanged()
-//     forceUpdate()
-//   }
-// }
-
-// export let gotoPageWithDelay = (p, params) => {
-//   series.push(p)
-//   paramsSeries.push(params)
-
-//   if (isTablet() || isDesktop()) {
-//     setTimeout(() => {
-//       setHistPage(p)
-//       setRouteTrigger(!routeTrigger)
-//     }, 125)
-//   }
-//   else if (isMobile()) {
-//     setTimeout(() => {
-//       setHistPage(p + (query.length > 0 ? '?' : '') + query);
-//     }, 125);
-//   }
-
-//   if (isTablet() || isDesktop()) {
-//     window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
-//     if (notifyUrlChanged !== undefined) notifyUrlChanged()
-//     forceUpdate()
-//   }
-// }
-
-// export let popPage = () => {
-//   setPopTrigger(!popTrigger);
-//   if (series.length > 1) {
-//     series.pop()
-//     paramsSeries.pop()
-
-//     if (isTablet() || isDesktop()) {
-//       setHistPage(series[series.length - 1])
-//       setRouteTrigger(!routeTrigger)
-
-//       let params = paramsSeries[paramsSeries.length - 1]
-//       let query = ''
-//       for (let key in params) {
-//         query += key + '=' + params[key] + '&'
-//       }
-//       if (query.length > 0) {
-//         query = query.substr(0, query.length - 1)
-//       }
-
-//       window.history.pushState(
-//         '',
-//         '',
-//         series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
-//       )
-//       if (notifyUrlChanged !== undefined) notifyUrlChanged()
-//     }
-//   }
-// }
 
 function HistController() {
   const history = useHistory()
@@ -409,25 +421,25 @@ let InnerApp = (props) => {
     <main>
       <Switch>
         <Route path="/app/auth">
-          <Authentication {...mobileUrlParams} />
+          <Authentication />
         </Route>
         <Route path="/app/home">
-          <HomePage {...mobileUrlParams} />
+          <HomePage />
         </Route>
         <Route path="/app/store">
-          <Store {...mobileUrlParams} />
+          <Store />
         </Route>
         <Route path="/app/messenger">
-          <MessengerPage {...mobileUrlParams} />
+          <MessengerPage />
         </Route>
         <Route path="/app/room">
-          <RoomPage {...mobileUrlParams} />
+          <RoomPage />
         </Route>
         <Route path="/app/searchengine">
-          <SearchEngine {...mobileUrlParams} />
+          <SearchEngine />
         </Route>
         <Route path="/app/chat">
-          <Chat {...mobileUrlParams} />
+          <Chat />
         </Route>
         <Route path="/app/storebot" component={StoreBot} />
         <Route path="/app/storeads" component={StoreAds} />
@@ -450,7 +462,7 @@ let InnerApp = (props) => {
   )
 }
 
-export let MainAppContainer
+let MainAppContainer;
 
 if (window.innerWidth > 900) {
   MainAppContainer = (props) => {
@@ -637,16 +649,8 @@ if (window.innerWidth > 900) {
   }
 } else {
   MainAppContainer = (props) => {
-    console.warn = () => {}
-
-    ;[mobileUrlParams, setMobileUrlParams] = React.useState({})
-
-    useEffect(() => {
-      const urlSearchParams = new URLSearchParams(window.location.search)
-      let mup = Object.fromEntries(urlSearchParams.entries())
-      alert(JSON.stringify(mup))
-      setMobileUrlParams(mup)
-    }, [routeTrigger])
+    console.warn = () => {};
+    [mobileUrlParams, setMobileUrlParams] = React.useState({});
 
     setToken(localStorage.getItem('token'))
     setHomeSpaceId(localStorage.getItem('homeSpaceId'))
@@ -716,6 +720,59 @@ if (window.innerWidth > 900) {
       }, 250)
     }
 
+    useEffect(() => {
+      let requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        redirect: 'follow',
+      }
+      fetch(serverRoot + '/auth/get_me', requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(JSON.stringify(result))
+          if (result.user !== undefined && result.user !== null) {
+            setMe(result.user)
+          }
+        })
+        .catch((error) => console.log('error', error))
+
+      let query = window.location.search
+      let params = {}
+      if (query !== undefined && query !== null) {
+        if (query.length > 1) {
+          query = query.substr(1)
+        }
+        let querySep = query.split('&')
+        querySep.forEach((part) => {
+          let keyValue = part.split('=')
+          params[keyValue[0]] = keyValue[1]
+        })
+      }
+
+      validateToken(token, (result) => {
+        if (result) {
+          animatePageChange()
+          if (
+            window.location.pathname === '/' ||
+            window.location.pathname === ''
+          ) {
+            gotoPage('/app/home', {})
+          } else {
+            gotoPage(window.location.pathname, params)
+          }
+        } else {
+          animatePageChange()
+          gotoPage('/app/auth', {})
+        }
+      })
+
+      var audio = new Audio(StartupSound)
+      audio.play()
+    }, [])
+
     return (
       <BrowserRouter>
         <div
@@ -740,3 +797,5 @@ if (window.innerWidth > 900) {
     )
   }
 }
+
+export default MainAppContainer;

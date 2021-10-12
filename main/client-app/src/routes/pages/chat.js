@@ -67,6 +67,10 @@ export let addMessageToList = () => {}
 export let replaceMessageInTheList = () => {}
 
 export default function Chat(props) {
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  props = Object.fromEntries(urlSearchParams.entries());
+
   document.documentElement.style.overflowY = 'hidden'
 
   let forceUpdate = useForceUpdate()
@@ -205,7 +209,7 @@ export default function Chat(props) {
     if (scroller !== null) {
       attachScrollListener(scroller)
     } else {
-      setTimeout() => {
+      setTimeout(() => {
         checkScroller()
       }, 250)
     }
