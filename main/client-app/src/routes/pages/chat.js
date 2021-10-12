@@ -200,7 +200,7 @@ export default function Chat(props) {
     }
   }
 
-  let checkScroller = () => {
+  /*let checkScroller = () => {
     let scroller = document.getElementById('chatScroller')
     if (scroller !== null) {
       attachScrollListener(scroller)
@@ -213,7 +213,7 @@ export default function Chat(props) {
 
   useEffect(() => {
     checkScroller()
-  }, [])
+  }, [])*/
 
   useEffect(() => {
     let requestOptions = {
