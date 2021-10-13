@@ -141,7 +141,7 @@ let AppContainer = (props) => {
       })
   }, [])
 
-  if (!loaded) return loading;
+  if (!loaded) return <div/>;
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
