@@ -710,7 +710,6 @@ if (window.innerWidth > 900) {
     }
 
     useEffect(() => {
-      setWallpaper({ type: 'color', color: '#fff' });
       let requestOptions = {
         method: 'POST',
         headers: {
