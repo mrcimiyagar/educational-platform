@@ -13,7 +13,7 @@ import Picker from 'emoji-picker-react'
 import React, { useEffect } from 'react'
 import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
-import { cacheMessage, fetchMessagesOfRoom, gotoPage, popPage, registerDialogOpen, setDialogOpen } from '../../App'
+import { cacheMessage, fetchMessagesOfRoom, gotoPage, popPage, registerDialogOpen, setDialogOpen, setInTheGame } from '../../App'
 import ChatAppBar from '../../components/ChatAppBar'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
@@ -84,8 +84,8 @@ export default function Chat(props) {
   let [pickingFile, setPickingFile] = React.useState(false)
   registerDialogOpen(setOpen)
   const handleClose = () => {
-    setOpen(false)
-    setTimeout(popPage, 250)
+    setInTheGame(false);
+    setTimeout(() => {popPage();}, 1000 + 250);
   }
   let classes = useStyles()
   const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({

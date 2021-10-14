@@ -15,25 +15,21 @@ import EmptySign from '../../components/EmptySign'
 import { resetMessages } from '../../routes/pages/chat'
 import { colors, token } from '../../util/settings'
 import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils'
+import {inTheGame} from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     height: 'auto',
-    direction: 'rtl',
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    direction: 'rtl'
   },
   inline: {
-    display: 'inline',
+    display: 'inline'
   },
 }))
 
 export default function AllChats(props) {
   const classes = useStyles()
-
-  let forceUpdate = useForceUpdate()
-
   return props.chats.length > 0 ? (
     <List className={classes.root}>
       {props.chats.map((chat, index) => {
@@ -42,23 +38,26 @@ export default function AllChats(props) {
             ? undefined
             : new Date(Number(chat.lastMessage.time))
         return (
-          <Grow in {...{ timeout: (index + 1) * 1000 }}>
+          <Grow in={inTheGame} {...{ timeout: (index + 1) * 1000 }} transitionDuration={1000}>
           <div>
             <ListItem
               alignItems="flex-start"
               button
-              style={{ height: 80 }}
+              style={{ height: 80, backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(10px)', borderRadius: (index === 0 ? '16px 16px ' : '0 0 ') + (index === (props.chats.length - 1) ? '16px 16px' : '0 0')}}
               onClick={() => {
-                resetMessages();
-                if (isDesktop() || isTablet()) {
-                  props.setSelectedRoomId(chat.id)
-                  props.setSelectedUserId(chat.participent.id)
-                } else {
-                  gotoPage('/app/chat', {
-                    room_id: chat.id,
-                    user_id: chat.participent.id,
-                  })
-                }
+                props.setInTheGame(false);
+                setTimeout(() => {
+                  resetMessages();
+                  if (isDesktop() || isTablet()) {
+                    props.setSelectedRoomId(chat.id)
+                    props.setSelectedUserId(chat.participent.id)
+                  } else {
+                    gotoPage('/app/chat', {
+                      room_id: chat.id,
+                      user_id: chat.participent.id,
+                    })
+                  }
+                }, 1250);
               }}
             >
               <ListItemAvatar>

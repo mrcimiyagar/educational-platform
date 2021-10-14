@@ -1,4 +1,4 @@
-import { Fab, Toolbar } from '@material-ui/core'
+import { Fab, Slide, Toolbar, Zoom } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
@@ -15,11 +15,13 @@ import {
   cacheChat,
   fetchChats,
   histPage,
+  inTheGame,
   isDesktop,
   isInMessenger,
   isInRoom,
   isMobile,
   isTablet,
+  setInTheGame,
 } from '../../App'
 import ChatEmbedded from '../../components/ChatEmbedded'
 import store from '../../redux/main'
@@ -69,13 +71,10 @@ TabPanel.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    marginRight:
-      isDesktop() && isInRoom()
-        ? 256 + 32 + 32 + 8 + 64
-        : undefined,
+    marginRight: isDesktop() && isInRoom() ? 256 + 32 + 32 + 8 + 64 : undefined,
     width: isDesktop() && isInRoom() ? 450 : '100%',
     maxWidth: isDesktop() && isInRoom() ? 450 : '100%',
-    height: '100%'
+    height: '100%',
   },
   indicator: {
     backgroundColor: '#333',
@@ -84,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: isDesktop() || isTablet() ? 100 : undefined,
     maxWidth: isDesktop() || isTablet() ? 100 : undefined,
     width: isDesktop() || isTablet() ? 100 : undefined,
-    color: '#333'
+    color: '#333',
   },
 }))
 
@@ -118,7 +117,8 @@ export default function HomeAppbar(props) {
       if (chats.filter((c) => c.id === msg.roomId).length > 0) {
         chats.filter((c) => c.id === msg.roomId)[0].lastMessage = msg
         chats.sort(function (a, b) {
-          if (a.lastMessage === undefined && b.lastMessage === undefined) return 0;
+          if (a.lastMessage === undefined && b.lastMessage === undefined)
+            return 0
           if (b.lastMessage === undefined) return 0 - a.lastMessage.time
           if (a.lastMessage === undefined) return b.lastMessage.time - 0
           return b.lastMessage.time - a.lastMessage.time
@@ -134,7 +134,7 @@ export default function HomeAppbar(props) {
     try {
       chats.unshift(chat)
       chats.sort(function (a, b) {
-        if (a.lastMessage === undefined && b.lastMessage === undefined) return 0;
+        if (a.lastMessage === undefined && b.lastMessage === undefined) return 0
         if (b.lastMessage === undefined) return 0 - a.lastMessage.time
         if (a.lastMessage === undefined) return b.lastMessage.time - 0
         return b.lastMessage.time - a.lastMessage.time
@@ -149,10 +149,10 @@ export default function HomeAppbar(props) {
   updateChat = (chat) => {
     for (let i = 0; i < chats.length; i++) {
       if (chats[i].id === chat.id) {
-        chats[i] = chat;
-        setChats(chats);
-        updateHome();
-        break;
+        chats[i] = chat
+        setChats(chats)
+        updateHome()
+        break
       }
     }
   }
@@ -174,11 +174,12 @@ export default function HomeAppbar(props) {
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
-        result.rooms.forEach(chat => {
-          cacheChat(chat);
-        });
+        result.rooms.forEach((chat) => {
+          cacheChat(chat)
+        })
         result.rooms.sort(function (a, b) {
-          if (a.lastMessage === undefined && b.lastMessage === undefined) return 0;
+          if (a.lastMessage === undefined && b.lastMessage === undefined)
+            return 0
           if (b.lastMessage === undefined) return 0 - a.lastMessage.time
           if (a.lastMessage === undefined) return b.lastMessage.time - 0
           return b.lastMessage.time - a.lastMessage.time
@@ -186,13 +187,11 @@ export default function HomeAppbar(props) {
         setChats(result.rooms)
       })
       .catch((error) => console.log('error', error))
+
+      setTimeout(() => {
+        setInTheGame(true);
+      }, 1000);
   }, [])
-
-  let [inTheGame, setInTheGame] = React.useState(false);
-
-  setTimeout(() => {
-    setInTheGame(true);
-  }, 1000);
 
   return (
     <div className={classes.root}>
@@ -214,7 +213,7 @@ export default function HomeAppbar(props) {
                 marginRight: isDesktop() ? 256 + 32 + 32 + 64 : undefined,
                 marginTop: isDesktop() ? 32 : undefined,
                 width: isDesktop() || isTablet() ? 450 : '100%',
-                backgroundColor: colors.primaryLight
+                backgroundColor: colors.primaryLight,
               }}
             >
               <Toolbar style={{ marginTop: 16 }}>
@@ -295,6 +294,7 @@ export default function HomeAppbar(props) {
               >
                 <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
                 <AllChats
+                  setInTheGame={setInTheGame}
                   setSelectedRoomId={setSelectedRoomId}
                   setSelectedUserId={setSelectedUserId}
                   chats={chats.filter((c) => c.chatType === 'p2p')}
@@ -318,6 +318,7 @@ export default function HomeAppbar(props) {
               >
                 <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
                 <GroupChats
+                  setInTheGame={setInTheGame}
                   setSelectedRoomId={setSelectedRoomId}
                   chats={chats.filter((c) => c.chatType === 'group')}
                 />
@@ -340,6 +341,7 @@ export default function HomeAppbar(props) {
               >
                 <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
                 <ChannelChats
+                  setInTheGame={setInTheGame}
                   setSelectedRoomId={setSelectedRoomId}
                   chats={chats.filter((c) => c.chatType === 'channel')}
                 />
@@ -362,6 +364,7 @@ export default function HomeAppbar(props) {
               >
                 <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
                 <BotChats
+                  setInTheGame={setInTheGame}
                   setSelectedRoomId={setSelectedRoomId}
                   chats={chats.filter((c) => c.chatType === 'bot')}
                 />
@@ -392,21 +395,23 @@ export default function HomeAppbar(props) {
               />
             </div>
           ) : null}
-          <Fab
-            color="secondary"
-            style={{
-              position: 'fixed',
-              bottom: isDesktop() ? 48 : isTablet() ? 104 : 88,
-              left: isDesktop() || isTablet() ? undefined : 16,
-              right: isDesktop()
-                ? 568 + 64 + 256 + 32 + 32 - 16 - 180
-                : isTablet()
-                ? 450 - 56 - 16 - 16
-                : undefined,
-            }}
-          >
-            <EditIcon />
-          </Fab>
+          <Slide direction="right" in={inTheGame} mountOnEnter unmountOnExit {...{timeout: 1000}}>
+              <Fab
+                color="secondary"
+                style={{
+                  position: 'fixed',
+                  bottom: isDesktop() ? 48 : isTablet() ? 104 : 88,
+                  left: isDesktop() || isTablet() ? undefined : 16,
+                  right: isDesktop()
+                    ? 568 + 64 + 256 + 32 + 32 - 16 - 180
+                    : isTablet()
+                    ? 450 - 56 - 16 - 16
+                    : undefined,
+                }}
+              >
+                <EditIcon />
+              </Fab>
+          </Slide>
         </div>
       ) : currNav === 1 ? (
         <SpacesGrid setDrawerOpen={setDrawerOpen} />
@@ -428,9 +433,13 @@ export default function HomeAppbar(props) {
           zIndex: 2500,
         }}
       >
-        <Jumper open={jumperOpen} setOpen={setJumperOpen} />
+        <Jumper
+          inTheGame={inTheGame}
+          open={jumperOpen}
+          setOpen={setJumperOpen}
+        />
       </div>
-      <HomeBottombar inTheGame={inTheGame}/>
+      <HomeBottombar inTheGame={inTheGame} />
       <HomeDrawer
         open={drawerOpen}
         setOpen={setDrawerOpen}

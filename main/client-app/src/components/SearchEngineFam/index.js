@@ -1,3 +1,4 @@
+import { Slide, Zoom } from '@material-ui/core';
 import { pink } from '@material-ui/core/colors';
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { Home } from '@material-ui/icons';
@@ -58,6 +59,7 @@ export default function Jumper(props) {
                 60
       }}>
       <ThemeProvider theme={theme}>
+          <Slide direction="left" in={props.inTheGame} mountOnEnter unmountOnExit {...{timeout: 1000}}>
       <SpeedDial
         ariaLabel=""
         color={'secondary'}
@@ -95,6 +97,7 @@ export default function Jumper(props) {
           />
         ))}
       </SpeedDial>
+      </Slide>
       </ThemeProvider>
     </div>
   );

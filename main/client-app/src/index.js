@@ -4,7 +4,7 @@ import React, { Suspense, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import CloudIcon from './images/logo.png'
-import DesktopWallpaper from './images/roomWallpaper.png'
+import DesktopWallpaper from './images/roomWallpaper2.jpg'
 import store from './redux/main'
 import { setup } from './util/Utils'
 //import './notifSystem';

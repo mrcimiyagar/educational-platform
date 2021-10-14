@@ -6,7 +6,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import React from 'react';
-import { isDesktop } from '../../App';
+import { isDesktop, setInTheGame } from '../../App';
 import store, { setCurrentMessengerNav } from '../../redux/main';
 import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
   root: {
-    color: '#666',
+    color: '#333',
     '&$selected': {
       color: '#333',
     },
@@ -45,11 +45,15 @@ export default function HomeBottombar(props) {
     <BottomNavigation
       value={value}
       onChange={(event, newValue) => {
-        store.dispatch(setCurrentMessengerNav(newValue))
         setValue(newValue)
-        valueBackup = newValue
-        updateHome()
-        forceUpdate()
+        setInTheGame(false);
+        setTimeout(() => {
+          store.dispatch(setCurrentMessengerNav(newValue));
+          valueBackup = newValue;
+          updateHome();
+          forceUpdate();
+          setInTheGame(true);
+        }, 1000);
       }}
       showLabels
       className={classes.root}

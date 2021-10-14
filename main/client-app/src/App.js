@@ -462,11 +462,14 @@ let InnerApp = (props) => {
   )
 }
 
+export let inTheGame, setInTheGame;
+
 let MainAppContainer;
 
 if (window.innerWidth > 900) {
   MainAppContainer = (props) => {
     console.warn = () => {};
+    ;[inTheGame, setInTheGame] = React.useState(false);
     setToken(localStorage.getItem('token'));
     setHomeSpaceId(localStorage.getItem('homeSpaceId'));
     setHomeRoomId(localStorage.getItem('homeRoomId'));
@@ -613,6 +616,10 @@ if (window.innerWidth > 900) {
           gotoPage('/app/auth', {});
         }
       })
+      
+      setTimeout(() => {
+        setInTheGame(true)
+      }, 1000)
 
       var audio = new Audio(StartupSound);
       audio.play();
@@ -650,7 +657,8 @@ if (window.innerWidth > 900) {
 } else {
   MainAppContainer = (props) => {
     console.warn = () => {};
-    [mobileUrlParams, setMobileUrlParams] = React.useState({});
+    ;[inTheGame, setInTheGame] = React.useState(false);
+    ;[mobileUrlParams, setMobileUrlParams] = React.useState({});
 
     setToken(localStorage.getItem('token'));
     setHomeSpaceId(localStorage.getItem('homeSpaceId'));
@@ -710,7 +718,6 @@ if (window.innerWidth > 900) {
     };
 
     useEffect(() => {
-      setWallpaper({ type: 'color', color: '#ddd' });
       setDisplay2('none');
       let requestOptions = {
         method: 'POST',
@@ -759,6 +766,10 @@ if (window.innerWidth > 900) {
           gotoPage('/app/auth', {});
         }
       })
+      
+      setTimeout(() => {
+        setInTheGame(true)
+      }, 1000)
 
       var audio = new Audio(StartupSound);
       audio.play();
