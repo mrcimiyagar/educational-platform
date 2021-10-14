@@ -702,16 +702,7 @@ if (window.innerWidth > 900) {
     ;[popTrigger, setPopTrigger] = React.useState(false)
     let [opacity, setOpacity] = React.useState(0)
 
-    useEffect(() => {
-      if (window.location.pathname === '/app/searchengine') {
-        setWallpaper({ type: 'color', color: colors.accentDark })
-      } else if (window.location.pathname === '/app/messenger') {
-        setWallpaper({
-          type: 'photo',
-          photo: DesktopWallpaper,
-        })
-      }
-    }, [histPage])
+    setWallpaper({ type: 'color', color: '#fff' });
 
     animatePageChange = () => {
       setOpacity(0)

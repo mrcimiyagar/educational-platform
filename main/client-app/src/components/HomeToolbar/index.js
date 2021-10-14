@@ -13,7 +13,7 @@ function HideOnScroll(props) {
   const trigger = useScrollTrigger({ target: window ? window() : undefined });
 
   return (
-    <Slide appear={false} direction="down" in={!trigger} style={{background: 'transparent'}}>
+    <Slide appear={false} direction="down" in={!trigger && props.inTheGame} style={{background: 'transparent'}}>
       {children}
     </Slide>
   );

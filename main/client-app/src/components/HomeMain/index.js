@@ -188,6 +188,12 @@ export default function HomeAppbar(props) {
       .catch((error) => console.log('error', error))
   }, [])
 
+  let [inTheGame, setInTheGame] = React.useState(false);
+
+  setTimeout(() => {
+    setInTheGame(true);
+  }, 1000);
+
   return (
     <div className={classes.root}>
       {currNav === 0 ? (
@@ -197,7 +203,7 @@ export default function HomeAppbar(props) {
             marginRight: isMobile() || isTablet() ? 0 : 256 + 136,
           }}
         >
-          <HomeToolbar>
+          <HomeToolbar inTheGame={inTheGame}>
             <AppBar
               style={{
                 borderRadius: !isDesktop()
@@ -208,8 +214,7 @@ export default function HomeAppbar(props) {
                 marginRight: isDesktop() ? 256 + 32 + 32 + 64 : undefined,
                 marginTop: isDesktop() ? 32 : undefined,
                 width: isDesktop() || isTablet() ? 450 : '100%',
-                backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                backdropFilter: 'blur(15px)',
+                backgroundColor: colors.primaryLight
               }}
             >
               <Toolbar style={{ marginTop: 16 }}>
@@ -425,7 +430,7 @@ export default function HomeAppbar(props) {
       >
         <Jumper open={jumperOpen} setOpen={setJumperOpen} />
       </div>
-      <HomeBottombar />
+      <HomeBottombar inTheGame={inTheGame}/>
       <HomeDrawer
         open={drawerOpen}
         setOpen={setDrawerOpen}

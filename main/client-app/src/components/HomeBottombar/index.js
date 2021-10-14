@@ -23,9 +23,9 @@ const useStyles = makeStyles({
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
   root: {
-    color: '#666',
+    color: '#ddd',
     '&$selected': {
-      color: '#333',
+      color: '#fff',
     },
   },
   /* Styles applied to the root element if selected. */
@@ -35,7 +35,7 @@ const useStylesAction = makeStyles({
 let valueBackup = 0
 
 export default function HomeBottombar(props) {
-  let forceUpdate = useForceUpdate()
+  let forceUpdate = useForceUpdate();
   const classes = useStyles();
   const classesAction = useStylesAction();
 
@@ -54,8 +54,9 @@ export default function HomeBottombar(props) {
       showLabels
       className={classes.root}
       style={{
-        background: 'rgba(255, 255, 255, 0.5)',
-        backdropFilter: 'blur(15px)',
+        bottom: props.inTheGame ? 0 : -80,
+        transition: 'bottom 1s',
+        background: colors.primaryMedium,
         width: isDesktop() ? 400 : '100%',
         transform: isDesktop() ? 'rotate(90deg)' : undefined,
         position: isDesktop() ? 'fixed' : undefined,
