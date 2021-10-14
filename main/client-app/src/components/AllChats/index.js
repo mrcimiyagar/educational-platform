@@ -1,4 +1,4 @@
-import { Chip } from '@material-ui/core'
+import { Chip, Fade, Grow } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar'
 import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
@@ -21,8 +21,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: 'auto',
     direction: 'rtl',
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
-    backdropFilter: 'blur(10px)',
+    backgroundColor: '#fff',
     borderRadius: 16,
   },
   inline: {
@@ -37,12 +36,13 @@ export default function AllChats(props) {
 
   return props.chats.length > 0 ? (
     <List className={classes.root}>
-      {props.chats.map((chat) => {
+      {props.chats.map((chat, index) => {
         let dateTime =
           chat.lastMessage === undefined
             ? undefined
             : new Date(Number(chat.lastMessage.time))
         return (
+          <Grow in {...{ timeout: (index + 1) * 1000 }}>
           <div>
             <ListItem
               alignItems="flex-start"
@@ -189,8 +189,13 @@ export default function AllChats(props) {
                 }
               />
             </ListItem>
-            <Divider component="li" />
+            {
+              (props.chats.length - 1) > index ?
+                <Divider component="li" /> :
+                null
+            }
           </div>
+          </Grow>
         )
       })}
     </List>

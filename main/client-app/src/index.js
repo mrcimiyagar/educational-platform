@@ -140,16 +140,19 @@ let loading = (
   </div>
 )
 
+export let display2, setDisplay2;
+
 let AppContainer = (props) => {
   ;[wallpaper, setWall] = React.useState({
     type: 'photo',
     photo: DesktopWallpaper,
-  })
+  });
   setWallpaper = (w) => {
-    setWall(w)
+    setWall(w);
   }
-  let [opacity, setOpacity] = React.useState(0)
-  let [display, setDisplay] = React.useState('block')
+  let [opacity, setOpacity] = React.useState(0);
+  let [display, setDisplay] = React.useState('block');
+  ;[display2, setDisplay2] = React.useState('block');
   useEffect(() => {
     let requestOptions = {
       method: 'GET',
@@ -270,6 +273,7 @@ let AppContainer = (props) => {
       ) : null}
       <div
         style={{
+          display: display2,
           width: '100%',
           height: '100%',
           backgroundColor: 'rgba(0, 0, 0, 0.45)',

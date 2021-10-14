@@ -51,7 +51,7 @@ import {
   useForceUpdate,
   validateToken,
 } from './util/Utils'
-import { pathConfig, setWallpaper } from '.'
+import { pathConfig, setDisplay2, setWallpaper } from '.'
 import {
   addMessageToList2,
   replaceMessageInTheList2,
@@ -691,7 +691,7 @@ if (window.innerWidth > 900) {
         messages.forEach((msg) => replaceMessageInTheList2(msg));
         messages.forEach((msg) => replaceMessageInTheList3(msg));
       })
-    })
+    });
 
     forceUpdate = useForceUpdate();
 
@@ -710,6 +710,8 @@ if (window.innerWidth > 900) {
     };
 
     useEffect(() => {
+      setWallpaper({ type: 'color', color: '#ddd' });
+      setDisplay2('none');
       let requestOptions = {
         method: 'POST',
         headers: {
