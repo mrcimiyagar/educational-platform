@@ -702,8 +702,6 @@ if (window.innerWidth > 900) {
     ;[popTrigger, setPopTrigger] = React.useState(false)
     let [opacity, setOpacity] = React.useState(0)
 
-    setWallpaper({ type: 'color', color: '#fff' });
-
     animatePageChange = () => {
       setOpacity(0)
       setTimeout(() => {
@@ -712,6 +710,7 @@ if (window.innerWidth > 900) {
     }
 
     useEffect(() => {
+      setWallpaper({ type: 'color', color: '#fff' });
       let requestOptions = {
         method: 'POST',
         headers: {
