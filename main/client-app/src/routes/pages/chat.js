@@ -25,7 +25,7 @@ import { resetMessages2 } from '../../components/ChatEmbeddedInMessenger'
 import { resetMessages3 } from '../../components/ChatEmbedded'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />
+  return <Slide direction="left" ref={ref} {...props} />
 })
 
 const useStyles = makeStyles((theme) => ({

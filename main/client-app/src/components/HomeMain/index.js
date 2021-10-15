@@ -77,13 +77,13 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
   },
   indicator: {
-    backgroundColor: '#333',
+    backgroundColor: '#fff',
   },
   tab: {
     minWidth: isDesktop() || isTablet() ? 100 : undefined,
     maxWidth: isDesktop() || isTablet() ? 100 : undefined,
     width: isDesktop() || isTablet() ? 100 : undefined,
-    color: '#333',
+    color: '#fff',
   },
 }))
 
@@ -211,7 +211,7 @@ export default function HomeAppbar(props) {
                 marginRight: isDesktop() ? 256 + 32 + 32 + 64 : undefined,
                 marginTop: isDesktop() ? 32 : undefined,
                 width: isDesktop() || isTablet() ? 450 : '100%',
-                backgroundColor: colors.primaryLight,
+                backgroundColor: colors.primaryMedium,
               }}
             >
               <Toolbar style={{ marginTop: 16 }}>

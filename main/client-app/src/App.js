@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@material-ui/core'
+import { createTheme, ThemeProvider } from '@material-ui/core'
 import React, { useEffect } from 'react'
 import {
   BrowserRouter,
@@ -36,7 +36,9 @@ import StartupSound from './sounds/startup.mp3'
 import {
   ColorBase,
   colors,
+  initTheme,
   me,
+  setColors,
   setHomeRoomId,
   setHomeSpaceId,
   setMe,
@@ -635,7 +637,7 @@ if (window.innerWidth > 900) {
           direction: 'rtl',
         }}
       >
-        <ColorBase />
+        <ColorBase/>
         <DesktopDetector />
         <div
           style={{
@@ -787,9 +789,9 @@ if (window.innerWidth > 900) {
             direction: 'rtl',
           }}
         >
-          <HistController histPage={histPage} />
-          <ColorBase />
+          <ColorBase/>
           <DesktopDetector />
+          <HistController histPage={histPage} />
           <Switch>
             <Route path="/app">
               <InnerApp />

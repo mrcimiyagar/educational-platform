@@ -14,7 +14,7 @@ import { gotoPage, isDesktop, isTablet } from '../../App'
 import EmptySign from '../../components/EmptySign'
 import { resetMessages } from '../../routes/pages/chat'
 import { colors, token } from '../../util/settings'
-import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils'
+import { isMobile, leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils'
 import {inTheGame} from '../../App';
 
 const useStyles = makeStyles((theme) => ({
@@ -45,7 +45,7 @@ export default function AllChats(props) {
               button
               style={{ height: 80, backgroundColor: 'rgba(255, 255, 255, 0.75)', borderRadius: (index === 0 ? '16px 16px ' : '0 0 ') + (index === (props.chats.length - 1) ? '16px 16px' : '0 0')}}
               onClick={() => {
-                props.setInTheGame(false);
+                if (isMobile()) props.setInTheGame(false);
                 setTimeout(() => {
                   resetMessages();
                   if (isDesktop() || isTablet()) {

@@ -34,6 +34,7 @@ import {
   isInRoom,
   isMobile,
   isTablet,
+  setInTheGame,
   setRoomId,
 } from '../../App'
 import ChatEmbedded from '../../components/ChatEmbedded'
@@ -50,7 +51,7 @@ import { ConfBox } from '../../modules/confbox'
 import { TaskBox } from '../../modules/taskbox/taskbox'
 import { UsersBox } from '../../modules/usersbox/usersbox'
 import store, { changeConferenceMode } from '../../redux/main'
-import { colors, setToken, theme, token } from '../../util/settings'
+import { colors, setToken, token } from '../../util/settings'
 import {
   ConnectToIo,
   leaveRoom,
@@ -106,7 +107,7 @@ const data = {
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
   root: {
-    color: '#ddd',
+    color: '#eee',
     '&$selected': {
       color: '#fff',
     },
@@ -120,6 +121,10 @@ let setMembership = undefined
 let pickingFile = false
 
 export default function RoomPage(props) {
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  props = Object.fromEntries(urlSearchParams.entries());
+  
   if (props.token !== undefined) {
     localStorage.setItem('token', props.token)
     gotoPage()
@@ -130,10 +135,10 @@ export default function RoomPage(props) {
       width: '100%',
       position: 'fixed',
       bottom: 0,
-      backgroundColor: '#2196f3',
+      backgroundColor: colors.primaryMedium,
     },
     indicator: {
-      backgroundColor: 'white',
+      backgroundColor: '#fff',
     },
     tab: {
       minWidth: isDesktop() || isTablet() ? 100 : undefined,
@@ -253,6 +258,9 @@ export default function RoomPage(props) {
     loadData(() => {
       loadFiles()
       setLoaded(true)
+      setTimeout(() => {
+        setInTheGame(true);
+      }, 500);
     })
   }, [])
 
@@ -402,6 +410,18 @@ export default function RoomPage(props) {
   if (!loaded) {
     return <div />
   }
+
+  let theme = createTheme({
+    palette: {
+      primary: {
+        main: '#BBDEFB'
+      },
+      secondary: {
+        main: '#FFC107'
+      },
+    },
+  });
+
   if (isDesktop()) {
     return (
       <div
@@ -483,7 +503,7 @@ export default function RoomPage(props) {
                 width: isDesktop() ? 550 : '100%',
                 height: 144,
                 borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
-                backgroundColor: colors.primaryMedium,
+                backgroundColor: colors.primaryLight,
                 backdropFilter: 'blur(10px)',
                 position: 'fixed',
                 left: isDesktop() && isInRoom() ? 'calc(50% - 225px)' : '50%',
@@ -935,7 +955,7 @@ export default function RoomPage(props) {
                 </IconButton>
                 <Typography
                   variant={'h6'}
-                  style={{ position: 'absolute', right: 16 + 32 + 16 }}
+                  style={{ position: 'absolute', right: 16 + 32 + 16 , color: '#fff'}}
                 >
                   فایل ها
                 </Typography>
@@ -958,12 +978,12 @@ export default function RoomPage(props) {
                 classes={{
                   indicator: classes.indicator,
                 }}
-                style={{ marginTop: 8 }}
+                style={{ marginTop: 8, color: '#fff' }}
               >
-                <Tab icon={<PhotoIcon />} label="عکس ها" />
-                <Tab icon={<AudiotrackIcon />} label="صدا ها" />
-                <Tab icon={<PlayCircleFilledIcon />} label="ویدئو ها" />
-                <Tab icon={<InsertDriveFileIcon />} label="سند ها" />
+                <Tab icon={<PhotoIcon style={{ fill: '#fff' }} />} label="عکس ها" />
+                <Tab icon={<AudiotrackIcon style={{ fill: '#fff' }} />} label="صدا ها" />
+                <Tab icon={<PlayCircleFilledIcon style={{ fill: '#fff' }} />} label="ویدئو ها" />
+                <Tab icon={<InsertDriveFileIcon style={{ fill: '#fff' }} />} label="سند ها" />
               </Tabs>
             </AppBar>
             <div
@@ -1010,7 +1030,6 @@ export default function RoomPage(props) {
                   />
                 </div>
               </SwipeableViews>
-              <ThemeProvider theme={theme}>
                 <Fab
                   color="secondary"
                   style={{ position: 'fixed', bottom: 72 + 16, left: 16 }}
@@ -1034,7 +1053,6 @@ export default function RoomPage(props) {
                 >
                   <Chat />
                 </Fab>
-              </ThemeProvider>
             </div>
           </div>
         </div>

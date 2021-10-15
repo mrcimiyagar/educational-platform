@@ -16,15 +16,14 @@ const useStyles = makeStyles({
   root: {
     width: '100%',
     position: 'fixed',
-    bottom: 0,
-    backgroundColor: '#2196f3'
+    bottom: 0
   },
 });
 
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
   root: {
-    color: '#ddd',
+    color: '#eee',
     '&$selected': {
       color: '#fff',
     },
@@ -41,11 +40,13 @@ export default function RoomBottombar(props) {
 
   updateRoomBottomBar = useForceUpdate()
 
-  let [bottom, setBottom] = React.useState(isDesktop() ? 16 : 0)
+  let [bottom, setBottom] = React.useState(isDesktop() ? 16 : -80)
 
   useEffect(() => {
-    setBottom(isDesktop() ? 16 : 0)
-  }, [isDesktop])
+    setTimeout(() => {
+      setBottom(isDesktop() ? 16 : 0)
+    }, 500);
+  }, [])
 
   return (
     <BottomNavigation

@@ -23,9 +23,9 @@ const useStyles = makeStyles({
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
   root: {
-    color: '#333',
+    color: '#eee',
     '&$selected': {
-      color: '#333',
+      color: '#fff',
     },
   },
   /* Styles applied to the root element if selected. */
@@ -60,7 +60,7 @@ export default function HomeBottombar(props) {
       style={{
         bottom: props.inTheGame ? 0 : -80,
         transition: 'bottom .5s',
-        backgroundColor: colors.primaryLight,
+        backgroundColor: colors.primaryMedium,
         width: isDesktop() ? 400 : '100%',
         transform: isDesktop() ? 'rotate(90deg)' : undefined,
         position: isDesktop() ? 'fixed' : undefined,
