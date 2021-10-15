@@ -38,12 +38,12 @@ export default function AllChats(props) {
             ? undefined
             : new Date(Number(chat.lastMessage.time))
         return (
-          <Grow in={inTheGame} {...{ timeout: (index + 1) * 1000 }} transitionDuration={1000}>
+          <Grow in={inTheGame} {...{ timeout: (index + 1) * 500 }} transitionDuration={1000}>
           <div>
             <ListItem
               alignItems="flex-start"
               button
-              style={{ height: 80, backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(10px)', borderRadius: (index === 0 ? '16px 16px ' : '0 0 ') + (index === (props.chats.length - 1) ? '16px 16px' : '0 0')}}
+              style={{ height: 80, backgroundColor: 'rgba(255, 255, 255, 0.75)', borderRadius: (index === 0 ? '16px 16px ' : '0 0 ') + (index === (props.chats.length - 1) ? '16px 16px' : '0 0')}}
               onClick={() => {
                 props.setInTheGame(false);
                 setTimeout(() => {

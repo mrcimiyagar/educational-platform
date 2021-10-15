@@ -6,6 +6,8 @@ import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { colors } from '../../util/settings';
+import HomeToolbar from '../HomeToolbar';
 import NotifsList from '../NotifsList';
 
 function TabPanel(props) {
@@ -53,7 +55,8 @@ export default function HomeNotifs() {
 
   return (
     <div className={classes.root}>
-      <AppBar style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(15px)'}}>
+      <HomeToolbar>
+      <AppBar style={{backgroundColor: colors.primaryLight}}>
           <Tabs
             variant="fullWidth"
             value={value}
@@ -67,6 +70,7 @@ export default function HomeNotifs() {
             <Tab icon={<AlternateEmailIcon style={{fill: '#333'}} />} label="منشن ها" />
           </Tabs>
         </AppBar>
+        </HomeToolbar>
         <div style={{width: '100%', height: '100%'}}>
         <TabPanel value={value} index={0}>
             <Container>

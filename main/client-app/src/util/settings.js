@@ -1,5 +1,5 @@
 import { createTheme } from '@material-ui/core'
-import { pink } from '@material-ui/core/colors'
+import { pink, purple } from '@material-ui/core/colors'
 import React, { useEffect } from 'react'
 import { serverRoot, validateToken } from './Utils'
 
@@ -16,10 +16,8 @@ export let ColorBase = (props) => {
   })
   theme = createTheme({
     palette: {
-      primary: {
-        main: 'rgba(75, 134, 180, 0.75)',
-      },
-      secondary: pink,
+      primary: purple,
+      secondary: purple,
     },
   })
   return <div />

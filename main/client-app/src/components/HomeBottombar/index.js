@@ -59,7 +59,7 @@ export default function HomeBottombar(props) {
       className={classes.root}
       style={{
         bottom: props.inTheGame ? 0 : -80,
-        transition: 'bottom 1s',
+        transition: 'bottom .5s',
         backgroundColor: colors.primaryLight,
         width: isDesktop() ? 400 : '100%',
         transform: isDesktop() ? 'rotate(90deg)' : undefined,

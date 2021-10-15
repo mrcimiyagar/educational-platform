@@ -1,9 +1,9 @@
 
-import { Avatar, Fab, Typography } from '@material-ui/core'
+import { Avatar, Fab, Grow, Typography } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import { ArrowDownward, DoneAll, PlayArrowTwoTone } from '@material-ui/icons'
 import React, { useEffect } from 'react'
-import { gotoPage, popPage, registerDialogOpen, setDialogOpen } from '../../App'
+import { gotoPage, inTheGame, popPage, registerDialogOpen, setDialogOpen } from '../../App'
 import { WaveSurferBox } from '../../components/WaveSurfer'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
@@ -15,6 +15,7 @@ export default function MessageItem(props) {
     return (
       <div key={message.id} id={'message-' + message.id}>
         {message['User.id'] === me.id ? (
+          <Grow in={inTheGame} {...{ timeout: (props.index + 1) * 500 }} transitionDuration={1000}>
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar
               src={
@@ -267,7 +268,9 @@ export default function MessageItem(props) {
               </div>
             </div>
           </div>
+          </Grow>
         ) : (
+          <Grow in={inTheGame} {...{ timeout: (props.index + 1) * 500 }} transitionDuration={1000}>
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar
               src={
@@ -517,6 +520,7 @@ export default function MessageItem(props) {
               </div>
             </div>
           </div>
+          </Grow>
         )}
       </div>
     )

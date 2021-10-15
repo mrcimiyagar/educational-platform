@@ -13,6 +13,7 @@ import { gotoPage, histPage, isDesktop, isInRoom, isMobile, isTablet } from '../
 import { setCurrentRoomNavBackup } from '../../routes/pages/room';
 import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
+import HomeToolbar from '../HomeToolbar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -61,6 +62,7 @@ export default function ChatAppBar(props) {
 
     return (
         <div className={classes.root}>
+            <HomeToolbar>
             <AppBar position="fixed" style={{width: isDesktop() ? (isInRoom() ? 450 : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px - 16px)') : isTablet() ? (isInRoom() ? '100%' : 'calc(100% - 450px)') : '100%', borderRadius: isTablet() || isMobile() ? 0 : ((window.location.pathname === '/app/chat' || isInRoom()) ? 0 : '24px 0 0 0'), position: isDesktop() || isTablet() ? 'fixed' : undefined, top: isDesktop() ? (isInRoom() ? 0 : 32) : 0, left: isInRoom() ? (isDesktop() ? 'calc(100% - 450px)' : 96) : (isDesktop() ? (96 + 16) : 0), paddingTop: 8, height: 64, backgroundColor: colors.primaryMedium}}>
                 <Toolbar style={{height: '100%', marginTop: (isDesktop() || isTablet()) ? -8 : 0}}>
                     {isMobile() ?
@@ -97,6 +99,7 @@ export default function ChatAppBar(props) {
                     </div>
                 </Toolbar>
             </AppBar>
+            </HomeToolbar>
         </div>
     );
 }

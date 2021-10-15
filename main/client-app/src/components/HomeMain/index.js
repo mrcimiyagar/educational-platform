@@ -96,8 +96,6 @@ export default function HomeAppbar(props) {
   updateHome = useForceUpdate()
   const classes = useStyles()
 
-  document.documentElement.style.overflowY = 'hidden'
-
   let [selectedRoomId, setSelectedRoomId] = React.useState(props.selectedChatId)
   let [selectedUserId, setSelectedUserId] = React.useState(props.selectedUserId)
   const [jumperOpen, setJumperOpen] = React.useState(true)

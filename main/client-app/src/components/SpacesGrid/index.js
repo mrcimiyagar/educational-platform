@@ -74,7 +74,7 @@ export default function SpacesGrid(props) {
       <ImageList style={{zIndex: 2}} rowHeight={188} cols={Math.floor((window.innerWidth - 112 - 360) / 150)} gap={1} className={classes.imageList}>
         {spaces.length > 0 ?
         spaces.map((item, index) => (
-          <Grow in={inTheGame} {...{ timeout: (index + 1) * 1000 }} transitionDuration={1000}>
+          <Grow in={inTheGame} {...{ timeout: (index + 1) * 500 }} transitionDuration={1000}>
           <ImageListItem key={item.img} cols={1} rows={1} onClick={() => {gotoPage('/app/room', {room_id: 1})}}>
             <Card style={{position: 'relative', margin: 4, backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 16}}>
                 <img src={'https://cdn.dribbble.com/users/6093092/screenshots/15548423/media/54c06b30c11db3ffd26b25c83ab9a737.jpg'} alt={item.title} style={{borderRadius: 16, width: '100%', height: 112}} />

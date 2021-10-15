@@ -4,6 +4,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { inTheGame } from '../../App';
 
 function HideOnScroll(props) {
   const { children, window } = props;
@@ -13,7 +14,7 @@ function HideOnScroll(props) {
   const trigger = useScrollTrigger({ target: window ? window() : undefined });
 
   return (
-    <Slide appear={false} direction="down" in={!trigger && props.inTheGame} style={{background: 'transparent'}}>
+    <Slide appear={false} direction="down" in={!trigger && inTheGame} style={{background: 'transparent'}}>
       {children}
     </Slide>
   );

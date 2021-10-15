@@ -718,6 +718,7 @@ if (window.innerWidth > 900) {
     };
 
     useEffect(() => {
+      setWallpaper({ type: 'color', color: colors.accentDark });
       setDisplay2('none');
       let requestOptions = {
         method: 'POST',

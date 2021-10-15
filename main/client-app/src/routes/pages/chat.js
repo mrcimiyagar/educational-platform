@@ -13,7 +13,7 @@ import Picker from 'emoji-picker-react'
 import React, { useEffect } from 'react'
 import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
-import { cacheMessage, fetchMessagesOfRoom, gotoPage, popPage, registerDialogOpen, setDialogOpen, setInTheGame } from '../../App'
+import { cacheMessage, fetchMessagesOfRoom, gotoPage, inTheGame, popPage, registerDialogOpen, setDialogOpen, setInTheGame } from '../../App'
 import ChatAppBar from '../../components/ChatAppBar'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
@@ -85,7 +85,12 @@ export default function Chat(props) {
   registerDialogOpen(setOpen)
   const handleClose = () => {
     setInTheGame(false);
-    setTimeout(() => {popPage();}, 1000 + 250);
+    setTimeout(() => {
+      setOpen(false);
+      setTimeout(() => {
+        popPage();
+      }, 250);
+    }, 500);
   }
   let classes = useStyles()
   const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
@@ -96,15 +101,18 @@ export default function Chat(props) {
 
   useEffect(() => {
     fetchMessagesOfRoom(props.roomId).then(data => {
+      let index = 0;
       data.forEach((message) => {
         messagesArr.push(
           <MessageItem
+            index={index}
             key={'message-' + message.id}
             message={message}
             setPhotoViewerVisible={setPhotoViewerVisible}
             setCurrentPhotoSrc={setCurrentPhotoSrc}
           />,
         );
+        index++;
       });
       forceUpdate()
       setScrollTrigger(!scrollTrigger)
@@ -118,14 +126,6 @@ export default function Chat(props) {
 
   replaceMessageInTheList = (msg) => {
     if (msg.roomId === props.room_id) {
-      let lastMsg = (
-        <MessageItem
-          key={'message-' + msg.id}
-          message={msg}
-          setPhotoViewerVisible={setPhotoViewerVisible}
-          setCurrentPhotoSrc={setCurrentPhotoSrc}
-        />
-      );
       let messageSeen = document.getElementById('message-seen-' + msg.id);
       let messageNotSeen = document.getElementById('message-not-seen-' + msg.id);
       if (messageSeen !== null && messageNotSeen !== null) {
@@ -157,6 +157,7 @@ export default function Chat(props) {
         msg['User.firstName'] = msg.User.firstName
         let lastMsg = (
           <MessageItem
+            index={1}
             key={'message-' + msg.id}
             message={msg}
             setPhotoViewerVisible={setPhotoViewerVisible}
@@ -262,7 +263,7 @@ export default function Chat(props) {
       })
       .catch((error) => console.log('error', error))
     setTimeout(() => {
-        let requestOptions3 = {
+      let requestOptions3 = {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -272,23 +273,26 @@ export default function Chat(props) {
             roomId: props.room_id,
           }),
           redirect: 'follow',
-        }
-        fetch(serverRoot + '/chat/get_messages', requestOptions3)
-          .then((response) => response.json())
-          .then((result) => {
+      }
+      fetch(serverRoot + '/chat/get_messages', requestOptions3)
+        .then((response) => response.json())
+        .then((result) => {
             console.log(JSON.stringify(result))
             if (result.messages !== undefined) {
               messagesArr = []
+              let index = 0;
               result.messages.forEach((message) => {
                 cacheMessage(message);
                 messagesArr.push(
                   <MessageItem
+                    index={index}
                     key={'message-' + message.id}
                     message={message}
                     setPhotoViewerVisible={setPhotoViewerVisible}
                     setCurrentPhotoSrc={setCurrentPhotoSrc}
                   />,
-                )
+                );
+                index++;
               })
               forceUpdate()
               setScrollTrigger(!scrollTrigger)
@@ -310,9 +314,12 @@ export default function Chat(props) {
                   updateChat(result.room);
                 });
             }
-          })
-        .catch((error) => console.log('error', error))
-      });
+        })
+        .catch((error) => console.log('error', error));
+    });
+    setTimeout(() => {
+      setInTheGame(true);
+    }, 1000);
   }, [])
 
   const ROOT_CSS = css({
@@ -483,7 +490,7 @@ export default function Chat(props) {
         >
           <div
             className={classes.root}
-            style={{ height: 56, bottom: showEmojiPad ? 300 : 0 }}
+            style={{ height: 56, bottom: inTheGame ? (showEmojiPad ? 300 : 0) : -72, transition: 'bottom .5s'  }}
           >
             <IconButton
               className={classes.iconButton}
