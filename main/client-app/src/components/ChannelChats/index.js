@@ -12,6 +12,7 @@ import React from 'react';
 import { gotoPage, isDesktop, isTablet } from '../../App';
 import { resetMessages } from '../../routes/pages/chat';
 import { colors } from '../../util/settings';
+import { isMobile } from '../../util/Utils';
 import EmptySign from '../EmptySign';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,6 +38,7 @@ export default function ChannelChats(props) {
   return (
   <div>
   <ListItem alignItems="flex-start" button style={{height: 80}} onClick={() => {
+      if (isMobile()) props.setInTheGame(false);
       resetMessages();
       if (isDesktop() || isTablet()) {
         props.setSelectedRoomId(chat.id)

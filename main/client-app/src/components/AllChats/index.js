@@ -46,18 +46,16 @@ export default function AllChats(props) {
               style={{ height: 80, backgroundColor: 'rgba(255, 255, 255, 0.75)', borderRadius: (index === 0 ? '16px 16px ' : '0 0 ') + (index === (props.chats.length - 1) ? '16px 16px' : '0 0')}}
               onClick={() => {
                 if (isMobile()) props.setInTheGame(false);
-                setTimeout(() => {
-                  resetMessages();
-                  if (isDesktop() || isTablet()) {
-                    props.setSelectedRoomId(chat.id)
-                    props.setSelectedUserId(chat.participent.id)
-                  } else {
-                    gotoPage('/app/chat', {
-                      room_id: chat.id,
-                      user_id: chat.participent.id,
-                    })
-                  }
-                }, 1250);
+                resetMessages();
+                if (isDesktop() || isTablet()) {
+                  props.setSelectedRoomId(chat.id)
+                  props.setSelectedUserId(chat.participent.id)
+                } else {
+                  gotoPage('/app/chat', {
+                    room_id: chat.id,
+                    user_id: chat.participent.id,
+                  })
+                }
               }}
             >
               <ListItemAvatar>

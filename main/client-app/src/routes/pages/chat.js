@@ -293,7 +293,7 @@ export default function Chat(props) {
                   />,
                 );
                 index++;
-              })
+              });
               forceUpdate()
               setScrollTrigger(!scrollTrigger)
     

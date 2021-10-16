@@ -3,13 +3,14 @@ import {
   createTheme,
   Drawer,
   Fab,
+  Slide,
   ThemeProvider,
 } from '@material-ui/core'
 import { pink } from '@material-ui/core/colors'
 import Add from '@material-ui/icons/Add'
 import Edit from '@material-ui/icons/Edit'
 import React, { useEffect } from 'react'
-import { isDesktop, isInRoom } from '../../App'
+import { inTheGame, isDesktop, isInRoom } from '../../App'
 import BotContainer from '../../components/BotContainer'
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar'
 import HomeToolbar from '../../components/HomeToolbar'
@@ -202,7 +203,7 @@ let memDict = {}
 export default function BotsBox(props) {
   let forceUpdate = useForceUpdate()
   let [editMode, setEditMode] = React.useState(false)
-  let [widgetPreviews, setWidgetPreviews] = React.useState([])
+  let [widgetPreviews, setWidgetPreviews] = React.useState([widget1Gui])
   let [widgets, setWidgets] = React.useState([])
   let [guis, setGuis] = React.useState({})
   let [mirrors, setMirrors] = React.useState([])
@@ -240,7 +241,7 @@ export default function BotsBox(props) {
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
-        setWidgetPreviews(result.widgets)
+        //setWidgetPreviews(result.widgets)
         forceUpdate()
       })
       .catch((error) => console.log('error', error))
@@ -392,6 +393,13 @@ export default function BotsBox(props) {
         </div>
       </div>
       <ThemeProvider theme={theme}>
+      <Slide
+          direction="right"
+          in={inTheGame}
+          mountOnEnter
+          unmountOnExit
+          {...{ timeout: 750 }}
+        >
       <Fab
         color={'secondary'}
         style={{
@@ -404,6 +412,14 @@ export default function BotsBox(props) {
       >
         <Edit />
       </Fab>
+      </Slide>
+      <Slide
+          direction="right"
+          in={inTheGame}
+          mountOnEnter
+          unmountOnExit
+          {...{ timeout: 1500 }}
+        >
       <Fab
         size={'medium'}
         color={'primary'}
@@ -420,6 +436,7 @@ export default function BotsBox(props) {
       >
         <Add />
       </Fab>
+      </Slide>
       </ThemeProvider>
       <Drawer
         onClose={() => setMenuOpen(false)}

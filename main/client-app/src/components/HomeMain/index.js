@@ -1,16 +1,16 @@
-import { Fab, Slide, Toolbar, Zoom } from '@material-ui/core'
-import AppBar from '@material-ui/core/AppBar'
-import Box from '@material-ui/core/Box'
-import { makeStyles } from '@material-ui/core/styles'
-import Tab from '@material-ui/core/Tab'
-import Tabs from '@material-ui/core/Tabs'
-import ChatIcon from '@material-ui/icons/Chat'
-import EditIcon from '@material-ui/icons/Edit'
-import GroupIcon from '@material-ui/icons/Group'
-import RadioIcon from '@material-ui/icons/Radio'
-import RedditIcon from '@material-ui/icons/Reddit'
-import PropTypes from 'prop-types'
-import React, { useEffect } from 'react'
+import { Fab, Slide, Toolbar, Zoom } from '@material-ui/core';
+import AppBar from '@material-ui/core/AppBar';
+import Box from '@material-ui/core/Box';
+import { makeStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import ChatIcon from '@material-ui/icons/Chat';
+import EditIcon from '@material-ui/icons/Edit';
+import GroupIcon from '@material-ui/icons/Group';
+import RadioIcon from '@material-ui/icons/Radio';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import { setWallpaper } from '../..';
 import {
   cacheChat,
   fetchChats,
@@ -22,24 +22,25 @@ import {
   isMobile,
   isTablet,
   setInTheGame,
-} from '../../App'
-import ChatEmbedded from '../../components/ChatEmbedded'
-import store from '../../redux/main'
-import { setColors, colors, token } from '../../util/settings'
-import { serverRoot, useForceUpdate } from '../../util/Utils'
-import AllChats from '../AllChats'
-import BotChats from '../BotChats'
-import ChannelChats from '../ChannelChats'
-import ChatEmbeddedInMessenger from '../ChatEmbeddedInMessenger'
-import GroupChats from '../GroupChats'
-import HomeBottombar from '../HomeBottombar'
-import HomeDrawer from '../HomeDrawer'
-import HomeNotifs from '../HomeNotifs'
-import HomeSearchbar from '../HomeSearchbar'
-import HomeSettings from '../HomeSettings'
-import HomeToolbar from '../HomeToolbar'
-import Jumper from '../SearchEngineFam'
-import SpacesGrid from '../SpacesGrid'
+} from '../../App';
+import ChatEmbedded from '../../components/ChatEmbedded';
+import store from '../../redux/main';
+import { setColors, colors, token } from '../../util/settings';
+import { serverRoot, useForceUpdate } from '../../util/Utils';
+import AllChats from '../AllChats';
+import BotChats from '../BotChats';
+import ChannelChats from '../ChannelChats';
+import ChatEmbeddedInMessenger from '../ChatEmbeddedInMessenger';
+import GroupChats from '../GroupChats';
+import HomeBottombar from '../HomeBottombar';
+import HomeDrawer from '../HomeDrawer';
+import HomeNotifs from '../HomeNotifs';
+import HomeSearchbar from '../HomeSearchbar';
+import HomeSettings from '../HomeSettings';
+import HomeToolbar from '../HomeToolbar';
+import Jumper from '../SearchEngineFam';
+import SpacesGrid from '../SpacesGrid';
+import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -103,6 +104,10 @@ export default function HomeAppbar(props) {
   let currNav = store.getState().global.main.currentMessengerNav
   let [chats, setChats] = React.useState([])
   let [drawerOpen, setDrawerOpen] = React.useState(false)
+
+  useEffect(() => {
+    setWallpaper({ type: 'color', color: colors.accentDark });
+  }, []);
 
   // useEffect(() => {
   //   fetchChats().then(chats => {
@@ -229,7 +234,7 @@ export default function HomeAppbar(props) {
               >
                 <Tab
                   classes={{ root: classes.tab }}
-                  icon={<RedditIcon />}
+                  icon={<SmartToyOutlinedIcon />}
                   label="ربات ها"
                 />
                 <Tab

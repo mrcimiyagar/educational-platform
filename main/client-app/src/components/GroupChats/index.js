@@ -13,7 +13,7 @@ import React from 'react';
 import { gotoPage, isDesktop, isTablet } from '../../App';
 import { resetMessages } from '../../routes/pages/chat';
 import { colors, token } from '../../util/settings';
-import { serverRoot } from '../../util/Utils';
+import { isMobile, serverRoot } from '../../util/Utils';
 import EmptySign from '../EmptySign';
 
 const useStyles = makeStyles((theme) => ({
@@ -39,6 +39,7 @@ export default function GroupChats(props) {
   return (
   <div>
    <ListItem alignItems="flex-start" button style={{height: 80, direction: 'rtl'}} onClick={() => {
+      if (isMobile()) props.setInTheGame(false);
       resetMessages();
       if (isDesktop() || isTablet()) {
         props.setSelectedRoomId(chat.id)

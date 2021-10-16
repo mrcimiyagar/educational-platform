@@ -23,6 +23,7 @@ import {
 import { homeRoomId, theme } from '../../util/settings'
 import { isMobile, useForceUpdate } from '../../util/Utils'
 import { createTheme } from '@material-ui/core';
+import Chat from '@material-ui/icons/Chat'
 
 export let notifyUrlChanged = undefined
 
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const actions = [
-  { icon: <Home />, name: 'خانه' },
+  { icon: <Chat />, name: 'پیامرسان' },
   { icon: <LocationCityIcon />, name: 'شهر' },
   { icon: <ExploreIcon />, name: 'گردش' },
   { icon: <StoreMallDirectoryIcon />, name: 'فروشگاه' },

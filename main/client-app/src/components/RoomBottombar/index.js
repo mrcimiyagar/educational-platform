@@ -7,7 +7,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import DesktopMacIcon from '@material-ui/icons/DesktopMac';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import React, { useEffect } from 'react';
-import { isDesktop, isInRoom } from '../../App';
+import { inTheGame, isDesktop, isInRoom } from '../../App';
 import { isConfConnected } from '../../modules/confbox';
 import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
@@ -40,11 +40,11 @@ export default function RoomBottombar(props) {
 
   updateRoomBottomBar = useForceUpdate()
 
-  let [bottom, setBottom] = React.useState(isDesktop() ? 16 : -80)
+  let [shown, setShown] = React.useState(false)
 
   useEffect(() => {
     setTimeout(() => {
-      setBottom(isDesktop() ? 16 : 0)
+      setShown(true);
     }, 500);
   }, [])
 
@@ -53,12 +53,12 @@ export default function RoomBottombar(props) {
       value={props.currentRoomNav}
       onChange={(event, newValue) => {
         props.setCurrentRoomNav(newValue);
-        setBottom(-80)
-        setTimeout(() => setBottom(isDesktop() ? 16 : 0), 500)
+        setShown(false);
+        setTimeout(() => setShown(true), 500);
       }}
       showLabels
       className={classes.root}
-      style={{width: isDesktop() ? 450 : '100%', height: 72, transform: isDesktop() ? 'rotate(90deg)' : undefined, zIndex: 2499, position: 'fixed', bottom: (isDesktop() && isInRoom()) ? (isConfConnected) ? 'calc(50% + 112px)' : '50%' : bottom, left: isDesktop() ? -160 : undefined, borderRadius: isDesktop() ? 32 : 0, transition: 'bottom .5s', backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}
+      style={{width: isDesktop() ? 450 : '100%', height: 72, transform: isDesktop() ? 'rotate(90deg)' : undefined, zIndex: 2499, position: 'fixed', bottom: (inTheGame && shown) ? 0 : -80, left: isDesktop() ? -160 : undefined, borderRadius: isDesktop() ? 32 : 0, transition: 'bottom .5s', backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}
     >
       <BottomNavigationAction value={0} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="میز کار" icon={<DesktopMacIcon />} />
       <BottomNavigationAction value={1} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="وایت بورد" icon={<BorderColorIcon />} />
