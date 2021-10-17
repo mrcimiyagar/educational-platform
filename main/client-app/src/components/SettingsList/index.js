@@ -178,6 +178,7 @@ export default function SettingsList(props) {
                   />
                   <Typography
                     style={{
+                      color: '#333',
                       position: 'absolute',
                       top: 156,
                       left: '50%',

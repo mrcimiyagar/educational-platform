@@ -64,6 +64,8 @@ import {
 } from './components/ChatEmbedded'
 import { addNewChat, setLastMessage, updateChat } from './components/HomeMain'
 import DesktopWallpaper from './images/roomWallpaper.png'
+import GenerateLink from './routes/pages/generateLink'
+import GenerateInvitation from './routes/pages/generateInvitation'
 const PouchDB = require('pouchdb').default
 
 export let histPage = undefined
@@ -337,6 +339,8 @@ let dialogs = {
   '/app/audioplayer': AudioPlayer,
   '/app/settings': SettingsPage,
   '/app/videoplayer': VideoPlayer,
+  '/app/generate_invite_link': GenerateLink,
+  '/app/generate_invitation': GenerateInvitation
 }
 let pages = {
   '/app/store': Store,
@@ -442,6 +446,12 @@ let InnerApp = (props) => {
         </Route>
         <Route path="/app/chat">
           <Chat />
+        </Route>
+        <Route path="/app/generate_invite_link">
+          <GenerateLink />
+        </Route>
+        <Route path="/app/generate_invitation">
+          <GenerateInvitation />
         </Route>
         <Route path="/app/storebot" component={StoreBot} />
         <Route path="/app/storeads" component={StoreAds} />

@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   indicator: {
-    backgroundColor: '#333',
+    backgroundColor: '#fff',
   },
 }));
 
@@ -56,7 +56,7 @@ export default function HomeNotifs() {
   return (
     <div className={classes.root}>
       <HomeToolbar>
-      <AppBar style={{backgroundColor: colors.primaryLight}}>
+      <AppBar style={{backgroundColor: colors.primaryMedium}}>
           <Tabs
             variant="fullWidth"
             value={value}
@@ -64,10 +64,10 @@ export default function HomeNotifs() {
             classes={{
               indicator: classes.indicator
             }}
-            style={{marginTop: 8, color: '#333'}}
+            style={{marginTop: 8, color: '#fff'}}
           >
-            <Tab icon={<NotificationsIcon style={{fill: '#333'}} />} label="اعلانات" />
-            <Tab icon={<AlternateEmailIcon style={{fill: '#333'}} />} label="منشن ها" />
+            <Tab icon={<NotificationsIcon style={{fill: '#fff'}} />} label="اعلانات" />
+            <Tab icon={<AlternateEmailIcon style={{fill: '#fff'}} />} label="منشن ها" />
           </Tabs>
         </AppBar>
         </HomeToolbar>

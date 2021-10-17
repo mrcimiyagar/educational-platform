@@ -101,7 +101,7 @@ let widget1Gui = {
       position: 'absolute',
       left: 0,
       top: 'calc(50% - 12.5px)',
-      transform: 'rotate(-90deg)',
+      transform: 'rotate(75deg)',
       transition: 'transform 1s',
       zIndex: 3,
       children: [
@@ -124,7 +124,7 @@ let widget1Gui = {
       position: 'absolute',
       left: '0',
       top: 'calc(50% - 12.5px)',
-      transform: 'rotate(-90deg)',
+      transform: 'rotate(-135deg)',
       transition: 'transform 1s',
       zIndex: 3,
       children: [
@@ -147,7 +147,7 @@ let widget1Gui = {
       position: 'absolute',
       left: 0,
       top: 'calc(50% - 12.5px)',
-      transform: 'rotate(-90deg)',
+      transform: 'rotate(295deg)',
       transition: 'transform 1s',
       zIndex: 3,
       children: [
@@ -203,9 +203,9 @@ let memDict = {}
 export default function BotsBox(props) {
   let forceUpdate = useForceUpdate()
   let [editMode, setEditMode] = React.useState(false)
-  let [widgetPreviews, setWidgetPreviews] = React.useState([widget1Gui])
+  let [widgetPreviews, setWidgetPreviews] = React.useState([{id: 1}])
   let [widgets, setWidgets] = React.useState([])
-  let [guis, setGuis] = React.useState({})
+  let [guis, setGuis] = React.useState({'widget-1': widget1Gui})
   let [mirrors, setMirrors] = React.useState([])
   let [timers, setTimers] = React.useState({})
   let [menuOpen, setMenuOpen] = React.useState(false)

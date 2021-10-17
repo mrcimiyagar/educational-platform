@@ -12,13 +12,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: 'rgba(21, 96, 233, 0.65)',
+    backgroundColor: 'rgba(255, 255, 255, 0.65)',
     backdropFilter: 'blur(10px)'
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
-    color: '#fff'
+    color: '#333'
   },
   iconButton: {
     padding: 10,
@@ -35,14 +35,14 @@ export default function SettingsSearchbar(props) {
   return (
     <Paper component="form" className={classes.root}>
       <IconButton onClick={() => props.setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
-        <MenuIcon style={{fill: '#fff'}}/>
+        <MenuIcon style={{fill: '#333'}}/>
       </IconButton>
       <InputBase
         className={classes.input}
         placeholder="جستجو در تنظیمات"
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
-        <SearchIcon style={{fill: '#fff'}}/>
+        <SearchIcon style={{fill: '#333'}}/>
       </IconButton>
     </Paper>
   );
