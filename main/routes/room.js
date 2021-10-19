@@ -903,7 +903,7 @@ router.get('/use_invitation', jsonParser, async function (req, res) {
       .then((response) => response.json())
       .then((result) => {
         res.redirect(
-          result.mainFrontend + `/app/room?room_id=${invite.roomId}&token=${acc.token}`,
+          result.mainFrontend + `/app/room?room_id=${invite.roomId}&tab_index=0&token=${acc.token}`,
         )
       })
   } else {
