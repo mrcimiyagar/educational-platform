@@ -750,19 +750,6 @@ if (window.innerWidth > 900) {
         })
         .catch((error) => console.log('error', error));
 
-      let query = window.location.search;
-      let params = {};
-      if (query !== undefined && query !== null) {
-        if (query.length > 1) {
-          query = query.substr(1);
-        }
-        let querySep = query.split('&');
-        querySep.forEach((part) => {
-          let keyValue = part.split('=');
-          params[keyValue[0]] = keyValue[1];
-        });
-      }
-
       validateToken(token, (result) => {
         if (result) {
           animatePageChange();
@@ -772,6 +759,8 @@ if (window.innerWidth > 900) {
           ) {
             gotoPage('/app/home', {});
           } else {
+            const urlSearchParams = new URLSearchParams(window.location.search);
+            let params = Object.fromEntries(urlSearchParams.entries());
             gotoPage(window.location.pathname, params);
           }
         } else {
