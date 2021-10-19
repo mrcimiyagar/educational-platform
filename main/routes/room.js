@@ -869,11 +869,11 @@ router.get('/generate_invite_link', jsonParser, async function (req, res) {
 })
 
 router.get('/use_invitation', jsonParser, async function (req, res) {
-  let invite = resolveInvite(req.query.token)
+  let invite = resolveInvite(req.body.token)
   if (invite.valid) {
     let user = await sw.User.create({
       id: uuid() + '-' + Date.now(),
-      firstName: req.query.name,
+      firstName: req.body.name,
       lastName: '',
       username: tools.makeRandomCode(32),
       isGuest: true,
@@ -891,7 +891,6 @@ router.get('/use_invitation', jsonParser, async function (req, res) {
     addUser(invite.roomId, user)
     addGuestAcc(acc)
     require('../server').pushTo('room_' + invite.roomId, 'user_joined', user)
-    const fetch = require('node-fetch')
     let requestOptions = {
       method: 'GET',
       headers: {
@@ -902,6 +901,8 @@ router.get('/use_invitation', jsonParser, async function (req, res) {
     fetch('https://config.kaspersoft.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        res.send({status: 'success', token: acc.token, roomId: invite.roomId});
+        return;
         res.redirect(
           result.mainFrontend + `/app/room?room_id=${invite.roomId}&tab_index=0&token=${acc.token}`,
         )

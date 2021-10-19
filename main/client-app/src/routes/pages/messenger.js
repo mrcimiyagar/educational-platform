@@ -9,8 +9,6 @@ import { setToken } from "../../util/settings";
 import { ConnectToIo } from "../../util/Utils";
 import './messenger.css';
 
-
-
 export let reloadRoomsList = undefined;
 
 function MessengerPage(props) {

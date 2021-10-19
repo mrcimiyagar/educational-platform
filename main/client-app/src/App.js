@@ -1,38 +1,38 @@
-import { createTheme, ThemeProvider } from '@material-ui/core'
-import React, { useEffect } from 'react'
+import { createTheme, ThemeProvider } from '@material-ui/core';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter,
   Switch,
   Route,
   Link,
   useHistory,
-} from 'react-router-dom'
-import './App.css'
-import { notifyUrlChanged } from './components/SearchEngineFam'
-import AudioPlayer from './routes/pages/audioPlayer'
-import Authentication from './routes/pages/authentication'
+} from 'react-router-dom';
+import './App.css';
+import { notifyUrlChanged } from './components/SearchEngineFam';
+import AudioPlayer from './routes/pages/audioPlayer';
+import Authentication from './routes/pages/authentication';
 import Chat, {
   addMessageToList,
   replaceMessageInTheList,
-} from './routes/pages/chat'
-import CreateRoom from './routes/pages/createRoom'
-import DeckPage from './routes/pages/deck'
-import MessengerPage from './routes/pages/messenger'
-import NotePage from './routes/pages/notes'
-import PhotoViewer from './routes/pages/photoViewer'
-import PollPage from './routes/pages/polls'
-import Profile from './routes/pages/profile'
-import RoomPage from './routes/pages/room'
-import RoomsTree from './routes/pages/roomsTree'
-import SearchEngine from './routes/pages/searchEngine'
-import SearchEngineResults from './routes/pages/searchEngineResults'
-import Store from './routes/pages/store'
-import StoreAds from './routes/pages/storeAds'
-import StoreBot from './routes/pages/storeBot'
-import VideoPlayer from './routes/pages/videoPlayer'
-import SettingsPage from './routes/pages/settings'
-import HomePage from './routes/pages/home'
-import StartupSound from './sounds/startup.mp3'
+} from './routes/pages/chat';
+import CreateRoom from './routes/pages/createRoom';
+import DeckPage from './routes/pages/deck';
+import MessengerPage from './routes/pages/messenger';
+import NotePage from './routes/pages/notes';
+import PhotoViewer from './routes/pages/photoViewer';
+import PollPage from './routes/pages/polls';
+import Profile from './routes/pages/profile';
+import RoomPage from './routes/pages/room';
+import RoomsTree from './routes/pages/roomsTree';
+import SearchEngine from './routes/pages/searchEngine';
+import SearchEngineResults from './routes/pages/searchEngineResults';
+import Store from './routes/pages/store';
+import StoreAds from './routes/pages/storeAds';
+import StoreBot from './routes/pages/storeBot';
+import VideoPlayer from './routes/pages/videoPlayer';
+import SettingsPage from './routes/pages/settings';
+import HomePage from './routes/pages/home';
+import StartupSound from './sounds/startup.mp3';
 import {
   ColorBase,
   colors,
@@ -45,27 +45,28 @@ import {
   setToken,
   theme,
   token,
-} from './util/settings'
+} from './util/settings';
 import {
   ConnectToIo,
   serverRoot,
   socket,
   useForceUpdate,
   validateToken,
-} from './util/Utils'
-import { pathConfig, setDisplay2, setWallpaper } from '.'
+} from './util/Utils';
+import { pathConfig, setDisplay2, setWallpaper } from '.';
 import {
   addMessageToList2,
   replaceMessageInTheList2,
-} from './components/ChatEmbeddedInMessenger'
+} from './components/ChatEmbeddedInMessenger';
 import {
   addMessageToList3,
   replaceMessageInTheList3,
-} from './components/ChatEmbedded'
-import { addNewChat, setLastMessage, updateChat } from './components/HomeMain'
-import DesktopWallpaper from './images/roomWallpaper.png'
-import GenerateLink from './routes/pages/generateLink'
-import GenerateInvitation from './routes/pages/generateInvitation'
+} from './components/ChatEmbedded';
+import { addNewChat, setLastMessage, updateChat } from './components/HomeMain';
+import DesktopWallpaper from './images/roomWallpaper.png';
+import GenerateLink from './routes/pages/generateLink';
+import GenerateInvitation from './routes/pages/generateInvitation';
+import ConfigGuestAccount from './routes/pages/configGuestAccount';
 const PouchDB = require('pouchdb').default
 
 export let histPage = undefined
@@ -453,6 +454,7 @@ let InnerApp = (props) => {
         <Route path="/app/generate_invitation">
           <GenerateInvitation />
         </Route>
+        <Route path="/app/use_invitation" component={ConfigGuestAccount} />
         <Route path="/app/storebot" component={StoreBot} />
         <Route path="/app/storeads" component={StoreAds} />
         <Route path="/app/photoviewer" component={PhotoViewer} />
