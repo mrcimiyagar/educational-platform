@@ -13,12 +13,17 @@ import {
   registerDialogOpen,
 } from '../../App'
 import RoomSettings from '../../components/RoomSettings'
+import { colors } from '../../util/settings'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
 function SettingsPage(props) {
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  props = Object.fromEntries(urlSearchParams.entries());
+  
   const [open, setOpen] = React.useState(true)
   registerDialogOpen(setOpen)
 
@@ -63,8 +68,7 @@ function SettingsPage(props) {
             left: isDesktop() ? '50%' : 0,
             transform: isDesktop() ? 'translate(-258px, -390px)' : undefined,
             position: 'fixed',
-            backgroundColor: 'rgba(21, 96, 233, 0.65)',
-            backdropFilter: 'blur(15px)',
+            backgroundColor: colors.primaryMedium,
             borderRadius: isDesktop() ? '24px 24px 0 0' : undefined,
           }}
         >

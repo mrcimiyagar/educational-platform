@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PollPage(props) {
+
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    props = Object.fromEntries(urlSearchParams.entries());
       
     const [open, setOpen] = React.useState(true);
     registerDialogOpen(setOpen)

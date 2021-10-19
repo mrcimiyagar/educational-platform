@@ -1,5 +1,4 @@
 const sockets = require('../socket').sockets
-
 const sw = require('../db/models')
 const {
   addUser,
@@ -9,7 +8,6 @@ const {
   guestAccsByUserId,
   removeUser,
   guestAccs,
-  authenticateMemberWithoutResponse,
   generateInvite,
   resolveInvite,
 } = require('../users')
@@ -17,7 +15,7 @@ const tools = require('../tools')
 const express = require('express')
 const bodyParser = require('body-parser')
 const { uuid } = require('uuidv4')
-const { Op } = require('sequelize')
+const fetch = require('node-fetch')
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
@@ -855,7 +853,6 @@ router.get('/generate_invite_link', jsonParser, async function (req, res) {
     }
     let token = generateInvite(room.id)
 
-    const fetch = require('node-fetch')
     let requestOptions = {
       method: 'GET',
       headers: {

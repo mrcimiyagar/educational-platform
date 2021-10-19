@@ -8,7 +8,7 @@ import Add from '@material-ui/icons/Add';
 import React, { useEffect } from 'react';
 import { isDesktop, popPage, registerDialogOpen } from "../../App";
 import { reloadUsersList, RoomTreeBox } from '../../components/RoomTreeBox';
-import { token } from '../../util/settings';
+import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 import { membership } from './room';
 
@@ -45,6 +45,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function RoomsTree(props) {
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  props = Object.fromEntries(urlSearchParams.entries());
+
     const classes = useStyles();
     const [open, setOpen] = React.useState(true);
     registerDialogOpen(setOpen)
@@ -90,7 +94,7 @@ export default function RoomsTree(props) {
                 }}
                 fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}
             >
-                <AppBar position={'fixed'} style={{position: 'fixed', width: '100%', height: 64, backgroundColor: 'rgba(21, 96, 233, 0.65)'}}>
+                <AppBar position={'fixed'} style={{position: 'fixed', width: '100%', height: 64, backgroundColor: colors.primaryMedium}}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
                         <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>نقشه</Typography>

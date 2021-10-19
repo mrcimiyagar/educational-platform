@@ -40,6 +40,10 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function Deck(props) {
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  props = Object.fromEntries(urlSearchParams.entries());
+
   const [open, setOpen] = React.useState(true)
   const [presentOpen, setPresentMenuOpen] = React.useState(false)
   const handleClose = () => {

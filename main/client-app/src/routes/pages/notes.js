@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NotePage(props) {
+
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    props = Object.fromEntries(urlSearchParams.entries());
+    
     const [open, setOpen] = React.useState(true);
     const handleClose = () => {
         setOpen(false);
@@ -63,10 +67,10 @@ export default function NotePage(props) {
             style={{backdropFilter: (isMobile() || isTablet()) ? 'blur(10px)' : undefined}}>
             <div style={{width: "100%", height: '100%', ...((isMobile() || isTablet()) && {position: "absolute", top: 0, left: 0})}}>
                 <AppBar position={'fixed'} style={{
-                    width: '50%',
-                    marginLeft: '25%',
-                    marginRight: '25%',
-                    marginTop: '3%',
+                    width: isDesktop() ? '50%' : '100%',
+                    marginLeft: isDesktop() ? '25%' : undefined,
+                    marginRight: isDesktop() ? '25%' : undefined,
+                    marginTop: isDesktop() ? '3%' : undefined,
                     height: 64, 
                     backgroundColor: colors.primaryMedium,
                     backdropFilter: isDesktop() ? 'blur(15px)' : undefined,
@@ -77,7 +81,7 @@ export default function NotePage(props) {
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
-                <div style={{width: '100%', height: 'calc(100% - 56px)', position: 'absolute', top: 0}}>
+                <div style={{width: '100%', height: isDesktop() ? 'calc(100% - 56px)' : '100%', position: 'absolute', top: isDesktop() ? 0 : 56}}>
                     <NoteBox roomId={props.room_id}/>
                 </div>
             </div>

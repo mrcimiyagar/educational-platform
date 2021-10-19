@@ -1,93 +1,92 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  Menu,
+  MenuItem,
+  Radio,
+  RadioGroup,
+} from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import ArrowRightIcon from '@material-ui/icons/ArrowRight'
+import PersonIcon from '@material-ui/icons/Person'
+import TreeItem from '@material-ui/lab/TreeItem'
+import TreeView from '@material-ui/lab/TreeView'
+import 'chartjs-plugin-datalabels'
+import PropTypes from 'prop-types'
+import React, { useEffect } from 'react'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+import 'react-circular-progressbar/dist/styles.css'
+import 'react-perfect-scrollbar/dist/css/styles.css'
+import SortableTree from 'react-sortable-tree'
+import 'react-sortable-tree/style.css'
+import 'react-table/react-table.css'
+import { isDesktop } from '../../App'
+import { NotificationManager } from '../../components/ReactNotifications'
+import { me, token } from '../../util/settings'
+import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Menu, MenuItem, Radio, RadioGroup } from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import PersonIcon from '@material-ui/icons/Person';
-import TreeItem from '@material-ui/lab/TreeItem';
-import TreeView from '@material-ui/lab/TreeView';
-import "chartjs-plugin-datalabels";
-import PropTypes from 'prop-types';
-import React, { useEffect } from "react";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-circular-progressbar/dist/styles.css";
-import "react-perfect-scrollbar/dist/css/styles.css";
-import SortableTree from 'react-sortable-tree';
-import 'react-sortable-tree/style.css';
-import "react-table/react-table.css";
-import { isDesktop } from "../../App";
-import { NotificationManager } from "../../components/ReactNotifications";
-import { me, token } from "../../util/settings";
-import { serverRoot, socket, useForceUpdate } from "../../util/Utils";
-
-
-
-
-
-export let reloadUsersList = undefined;
+export let reloadUsersList = undefined
 
 let createNotification = (type, message, title) => {
-  let cName = "";
+  let cName = ''
   return () => {
     switch (type) {
-      case "primary":
+      case 'primary':
         NotificationManager.primary(
-          "This is a notification!",
-          "Primary Notification",
+          'This is a notification!',
+          'Primary Notification',
           3000,
           null,
           null,
-          cName
-        );
-        break;
-      case "secondary":
+          cName,
+        )
+        break
+      case 'secondary':
         NotificationManager.secondary(
-          "This is a notification!",
-          "Secondary Notification",
+          'This is a notification!',
+          'Secondary Notification',
           3000,
           null,
           null,
-          cName
-        );
-        break;
-      case "info":
-        NotificationManager.info("Info message", "", 3000, null, null, cName);
-        break;
-      case "success":
+          cName,
+        )
+        break
+      case 'info':
+        NotificationManager.info('Info message', '', 3000, null, null, cName)
+        break
+      case 'success':
         NotificationManager.success(
-          "Success message",
-          "Title here",
+          'Success message',
+          'Title here',
           3000,
           null,
           null,
-          cName
-        );
-        break;
-      case "warning":
+          cName,
+        )
+        break
+      case 'warning':
         NotificationManager.warning(
-          "Warning message",
-          "Close after 3000ms",
+          'Warning message',
+          'Close after 3000ms',
           3000,
           null,
           null,
-          cName
-        );
-        break;
-      case "error":
-        NotificationManager.error(
-          title,
-          message,
-          3000,
-          null,
-          null,
-          cName
-        );
-        break;
+          cName,
+        )
+        break
+      case 'error':
+        NotificationManager.error(title, message, 3000, null, null, cName)
+        break
       default:
-        NotificationManager.info("Info message");
-        break;
+        NotificationManager.info('Info message')
+        break
     }
   }
 }
@@ -142,11 +141,18 @@ const useTreeItemStyles = makeStyles((theme) => ({
     fontWeight: 'inherit',
     flexGrow: 1,
   },
-}));
+}))
 
 function StyledTreeItem(props) {
-  const classes = useTreeItemStyles();
-  const { labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, ...other } = props;
+  const classes = useTreeItemStyles()
+  const {
+    labelText,
+    labelIcon: LabelIcon,
+    labelInfo,
+    color,
+    bgColor,
+    ...other
+  } = props
 
   return (
     <TreeItem
@@ -176,7 +182,7 @@ function StyledTreeItem(props) {
       }}
       {...other}
     />
-  );
+  )
 }
 
 StyledTreeItem.propTypes = {
@@ -185,7 +191,7 @@ StyledTreeItem.propTypes = {
   labelIcon: PropTypes.elementType.isRequired,
   labelInfo: PropTypes.string,
   labelText: PropTypes.string.isRequired,
-};
+}
 
 let selectedRoomId = 0
 
@@ -195,43 +201,43 @@ function ConfirmationDialogRaw(props) {
 
   const handleEntering = () => {
     if (radioGroupRef.current != null) {
-      radioGroupRef.current.focus();
+      radioGroupRef.current.focus()
     }
-  };
+  }
 
   const handleCancel = () => {
-    onClose();
-  };
+    onClose()
+  }
 
   const handleOk = () => {
-    onClose(props.value);
+    onClose(props.value)
     let requestOptions = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'token': token
+        token: token,
       },
       body: JSON.stringify({
         spaceId: props.spaceId,
         userId: selectedUserId,
-        toRoomId: selectedRoomId
+        toRoomId: selectedRoomId,
       }),
-      redirect: 'follow'
-    };
-    fetch(serverRoot + "/room/move_user", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-          console.log(JSON.stringify(result));
-          if (selectedUserId === me.id) {
-            window.location.href = '/app/room?room_id=' + selectedRoomId
-          }
-        })
-        .catch(error => console.log('error', error));
-  };
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/room/move_user', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        if (selectedUserId === me.id) {
+          window.location.href = '/app/room?room_id=' + selectedRoomId
+        }
+      })
+      .catch((error) => console.log('error', error))
+  }
 
   const handleChange = (event) => {
-    props.setValue(event.target.value);
-  };
+    props.setValue(event.target.value)
+  }
 
   return (
     <Dialog
@@ -251,7 +257,15 @@ function ConfirmationDialogRaw(props) {
           onChange={handleChange}
         >
           {props.rooms.map((room) => (
-            <FormControlLabel value={room.id} key={'room-' + room.id} control={<Radio />} label={room.title} onClick={() => {selectedRoomId = room.id}}/>
+            <FormControlLabel
+              value={room.id}
+              key={'room-' + room.id}
+              control={<Radio />}
+              label={room.title}
+              onClick={() => {
+                selectedRoomId = room.id
+              }}
+            />
           ))}
         </RadioGroup>
       </DialogContent>
@@ -264,14 +278,14 @@ function ConfirmationDialogRaw(props) {
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
 ConfirmationDialogRaw.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   value: PropTypes.string.isRequired,
-};
+}
 
 const useStyles = makeStyles({
   root: {
@@ -279,249 +293,185 @@ const useStyles = makeStyles({
     flexGrow: 1,
     maxWidth: 400,
   },
-});
+})
 
 let selectedUserId = 0
 
 export let RoomTreeBox = (props) => {
-  
-  const classes = useStyles();
+  const classes = useStyles()
 
-    let forceUpdate = useForceUpdate();
-    let [treeData, setTreeData] = React.useState([]);
-    let processUsers = (rooms) => {
-      rooms.forEach(room => {
-        room.expanded = true
-        room.title = room.title
-        room.head = true
-        room.users.forEach(user => {
-          user.title = user.firstName
-        })
-        room.children = room.users
+  let forceUpdate = useForceUpdate()
+  let [treeData, setTreeData] = React.useState([])
+  let processUsers = (rooms) => {
+    rooms.forEach((room) => {
+      room.expanded = true
+      room.title = room.title
+      room.head = true
+      room.users.forEach((user) => {
+        user.title = user.firstName
       })
-      setTreeData(rooms)
+      room.children = room.users
+    })
+    setTreeData(rooms)
+  }
+  reloadUsersList = () => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        spaceId: props.room.spaceId,
+        roomId: props.room.id,
+      }),
+      redirect: 'follow',
     }
-    reloadUsersList = () => {
-      let requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'token': token
-        },
-        body: JSON.stringify({
-          spaceId: props.room.spaceId,
-          roomId: props.room.id
-        }),
-        redirect: 'follow'
-      };
-      fetch(serverRoot + "/room/get_room_users", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-            console.log(JSON.stringify(result))
-            processUsers(result.rooms)
-          })
-          .catch(error => console.log('error', error));
+    fetch(serverRoot + '/room/get_room_users', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        processUsers(result.rooms)
+      })
+      .catch((error) => console.log('error', error))
+  }
+  useEffect(() => {
+    reloadUsersList()
+    socket.off('user-entered')
+    socket.on('user-entered', ({ rooms }) => {
+      processUsers(rooms)
+    })
+    socket.off('user-exited')
+    socket.on('user-exited', ({ rooms }) => {
+      processUsers(rooms)
+    })
+    socket.off('profile_updated')
+    socket.on('profile_updated', (user) => {})
+  }, [])
+  useEffect(() => {
+    if (props.room.id !== undefined) {
+      reloadUsersList()
     }
-    useEffect(() => {
-          reloadUsersList();
-          socket.off('user-entered');
-          socket.on('user-entered', ({rooms}) => {
-            processUsers(rooms)
-          });
-          socket.off('user-exited');
-          socket.on('user-exited', ({rooms}) => {
-            processUsers(rooms)
-          });
-          socket.off('profile_updated');
-          socket.on('profile_updated', user => {
-            
-          });
-    }, []);
-    useEffect(() => {
-      if (props.room.id !== undefined) {
-        reloadUsersList()
-      }
-    }, [props.room])
+  }, [props.room])
 
-    const [anchorEl, setAnchorEl] = React.useState(null)
+  const [anchorEl, setAnchorEl] = React.useState(null)
 
-    const handleClick = (event) => {
-      event.preventDefault()
-      setAnchorEl(event.currentTarget);
+  const handleClick = (event) => {
+    event.preventDefault()
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const [open, setOpen] = React.useState(false)
+  const [value, setValue] = React.useState(0)
+  const handleClickListItem = () => {
+    setOpen(true)
+  }
+
+  const handleCloseOfDialog = (newValue) => {
+    setOpen(false)
+
+    if (newValue) {
+      setValue(newValue)
     }
+  }
 
-    const handleClose = () => {
-      setAnchorEl(null);
-    }
-
-    const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState(0);
-    const handleClickListItem = () => {
-      setOpen(true);
-    };
-  
-    const handleCloseOfDialog = (newValue) => {
-      setOpen(false);
-  
-      if (newValue) {
-        setValue(newValue);
-      }
-    };
-
-    const sendUserToRoom = () => {
-      for (let i = 0; i < treeData.length; i++) {
-        let children = treeData[i].children
-        let found = false
-        for (let j = 0; j < children.length; j++) {
-          if (children[j].id === selectedUserId) {
-            setValue(treeData[i].id)
-            handleClickListItem()
-            found = true
-            break
-          }
+  const sendUserToRoom = () => {
+    for (let i = 0; i < treeData.length; i++) {
+      let children = treeData[i].children
+      let found = false
+      for (let j = 0; j < children.length; j++) {
+        if (children[j].id === selectedUserId) {
+          setValue(treeData[i].id)
+          handleClickListItem()
+          found = true
+          break
         }
-        if (found) break
       }
+      if (found) break
     }
+  }
 
-    return (
-    <div style={{width: '100%', height: '100%', marginTop: 16}}>
-      
+  return (
+    <div style={{ width: '100%', height: '100%', marginTop: 16 }}>
       <ConfirmationDialogRaw
-          classes={{
-            paper: classes.paper,
-          }}
-          spaceId={props.room.spaceId}
-          rooms={treeData}
-          keepMounted
-          open={open}
-          onClose={handleCloseOfDialog}
-          value={value}
-          setValue={setValue}
-          fullscreen={!isDesktop()}
+        classes={{
+          paper: classes.paper,
+        }}
+        spaceId={props.room.spaceId}
+        rooms={treeData}
+        keepMounted
+        open={open}
+        onClose={handleCloseOfDialog}
+        value={value}
+        setValue={setValue}
+        fullscreen={!isDesktop()}
       />
 
       <div>
-        <div style={{height: '100%'}}>
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={() => {sendUserToRoom(); handleClose()}}>ارسال به روم دیگر</MenuItem>
-        </Menu>
-              <TreeView
-      className={classes.root}
-      defaultExpanded={treeData.map(room => {
-        return ('room-' + room.id)
-      })}
-      defaultCollapseIcon={<ArrowDropDownIcon />}
-      defaultExpandIcon={<ArrowRightIcon />}
-      defaultEndIcon={<div style={{ width: 24 }} />}
-    >
-      {
-        treeData.map(room => {
-          return (
-            <StyledTreeItem nodeId={'room-' + room.id} labelText={room.title} labelIcon={AccountBalanceIcon} labelInfo={(room.children !== undefined && room.children.length > 0) ? room.children.length : undefined}>
-              {
-                room.children.map(user => {
-                  return (
-                    <StyledTreeItem
-                      onContextMenu={(e) => {selectedUserId = user.id; handleClick(e)}}
-                      nodeId={'user-' + user.id}
-                      labelText={user.title}
-                      labelIcon={PersonIcon}
-                      color="#1a73e8"
-                      bgColor="#e8f0fe"
-                    />
-                  )
-                })
-              }
-            </StyledTreeItem>
-          )
-        })
-      }
-      <div style={{width: '100%', height: 56}}/>
-    </TreeView>
-
-
-                <SortableTree style={{display: 'none'}} rowDirection={'rtl'} canNodeHaveChildren={node => {return node.head === true}} maxDepth={2}
-                  generateNodeProps={rowInfo => ({
-                    onClick: () => {
-                      if (rowInfo.node.head === true) {
-                        let requestOptions = {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                            'token': token
-                          },
-                          body: JSON.stringify({
-                            roomId: rowInfo.node.id
-                          }),
-                          redirect: 'follow'
-                        };
-                        fetch(serverRoot + "/room/is_room_accessible", requestOptions)
-                          .then(response => response.json())
-                          .then(result => {
-                            console.log(JSON.stringify(result));
-                            if (result.status === 'success') {
-                              if (result.isAccessible === true) {
-                                window.location.href = '/app/room?room_id=' + rowInfo.node.id
-                              }
-                              else {
-                                createNotification("error", "عدم دسترسی", "دسترسی به منبع مورد نظر مجاز نمی باشد")();
-                              }
-                            }
-                            else {
-                              createNotification("error", "عدم دسترسی", "دسترسی به منبع مورد نظر مجاز نمی باشد")();
-                            }
-                          })
-                          .catch(error => console.log('error', error));
-                      }
-                      else {
-                        let requestOptions = {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                            'token': token
-                          },
-                          body: JSON.stringify({
-                            roomId: props.room.id,
-                            targetUserId: rowInfo.node.id
-                          }),
-                          redirect: 'follow'
-                        };
-                        fetch(serverRoot + "/room/is_permissions_accessible", requestOptions)
-                          .then(response => response.json())
-                          .then(result => {
-                            console.log(JSON.stringify(result));
-                            if (result.status === 'success') {
-                              if (result.isAccessible) {
-                                
-                              }
-                              else {
-                                createNotification("error", "عدم دسترسی", "دسترسی به منبع مورد نظر مجاز نمی باشد")();
-                              }
-                            }
-                          })
-                          .catch(error => console.log('error', error));
-                      }
-                    }
+        <div style={{ height: '100%' }}>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem
+              onClick={() => {
+                sendUserToRoom()
+                handleClose()
+              }}
+            >
+              ارسال به روم دیگر
+            </MenuItem>
+          </Menu>
+          <TreeView
+            className={classes.root}
+            defaultExpanded={treeData.map((room) => {
+              return 'room-' + room.id
+            })}
+            defaultCollapseIcon={<ArrowDropDownIcon />}
+            defaultExpandIcon={<ArrowRightIcon />}
+            defaultEndIcon={<div style={{ width: 24 }} />}
+          >
+            {treeData.map((room) => {
+              return (
+                <StyledTreeItem
+                  nodeId={'room-' + room.id}
+                  labelText={room.title}
+                  labelIcon={AccountBalanceIcon}
+                  labelInfo={
+                    room.children !== undefined && room.children.length > 0
+                      ? room.children.length
+                      : undefined
+                  }
+                >
+                  {room.children.map((user) => {
+                    return (
+                      <StyledTreeItem
+                        onContextMenu={(e) => {
+                          selectedUserId = user.id
+                          handleClick(e)
+                        }}
+                        nodeId={'user-' + user.id}
+                        labelText={user.title}
+                        labelIcon={PersonIcon}
+                        color="#1a73e8"
+                        bgColor="#e8f0fe"
+                      />
+                    )
                   })}
-                  onMoveNode={({td, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex}) => {
-                    if (node.head !== true && nextParentNode.head === true) {
-                      
-                      }
-                      else {
-                        reloadUsersList()
-                      }
-                  }}
-                  onChange={td => {
-                    reloadUsersList()
-                  }} treeData={treeData}/>
-              </div>
+                </StyledTreeItem>
+              )
+            })}
+            <div style={{ width: '100%', height: 56 }} />
+          </TreeView>
+        </div>
       </div>
-    </div>);
+    </div>
+  )
 }

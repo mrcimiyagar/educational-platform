@@ -150,7 +150,7 @@ export default function GenerateLink(props) {
               },
               redirect: 'follow',
             }
-            fetch(serverRoot + '/room/generate_invite_link?roomId=' + props.roomId, requestOptions)
+            fetch(serverRoot + '/room/generate_invite_link?roomId=' + props.room_id, requestOptions)
               .then((response) => response.json())
               .then((result) => {
                 console.log(JSON.stringify(result))

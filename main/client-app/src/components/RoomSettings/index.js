@@ -28,6 +28,7 @@ import Gradient from '@material-ui/icons/Gradient'
 import RoomBackgroundPhoto from '../../components/RoomBackgroundPhoto'
 import RoomBackgroundColor from '../../components/RoomBackgroundColor'
 import RoomBackgroundGradient from '../../components/RoomBackgroundGradient'
+import { gotoPage } from '../../App'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -584,6 +585,155 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: '#666' }} />
             </IconButton>
           </ListItem>
+
+          <Divider />
+          <ListItem
+            button
+            style={{
+              position: 'relative',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            }}
+          >
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  کاربران
+                </Typography>
+              }
+            />
+          </ListItem>
+          <Divider />
+          <ListItem button style={{ position: 'relative' }}
+            onClick={() => {
+              gotoPage('/app/generate_invite_link', {room_id: props.roomId})
+            }} >
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <LiveHelpIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  لینک مهمان
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+          <Divider />
+          <ListItem button style={{ position: 'relative' }}>
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <LiveHelpIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  دعوتنامه
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+          <Divider />
+          <ListItem button style={{ position: 'relative' }}>
+            <ListItemAvatar>
+              <Avatar
+                style={{
+                  backgroundColor: 'transparent',
+                  width: 56,
+                  height: 56,
+                }}
+              >
+                <LiveHelpIcon style={{ fill: '#666' }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <Typography
+                  style={{
+                    color: '#666',
+                    width: '100%',
+                    textAlign: 'right',
+                    fontSize: 18.5,
+                    paddingRight: 16,
+                  }}
+                >
+                  لیست کل کاربران
+                </Typography>
+              }
+            />
+            <IconButton
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                left: 16,
+                top: 16,
+              }}
+            >
+              <ArrowBackIos style={{ fill: '#666' }} />
+            </IconButton>
+          </ListItem>
+
           <Divider />
           <ListItem
             button
