@@ -669,81 +669,52 @@ router.post('/exit_room', jsonParser, async function (req, res) {
 })
 
 router.post('/switch_room', jsonParser, async function (req, res) {
-  let ended = false;
   authenticateMember(req, res, async (membership, session, user) => {
-    if (sockets[session.userId] === undefined) {
-      res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'socket undefined.',
-        membership: membership,
+    if (sockets[session.userId] !== undefined) {
+      sockets[user.id].join('room_' + membership.roomId)
+      sockets[user.id].roomId = membership.roomId
+      addUser(membership.roomId, user)
+      let room = await sw.Room.findOne({ where: { id: req.body.fromRoomId } })
+      let rooms = sw.Room.findAll({
+        raw: true,
+        where: { spaceId: room.spaceId },
       })
-      return
+      for (let i = 0; i < rooms.length; i++) {
+        let room = rooms[i]
+        room.users = getRoomUsers(room.id)
+      }
+      if (membership !== null && membership !== undefined) {
+        require('../server').pushTo(
+          'room_' + membership.roomId,
+          'user-entered',
+          { rooms: rooms, users: getRoomUsers(membership.roomId) },
+        )
+        let s = sockets[user.id]
+        if (s === undefined) return
+        let roomId = s.roomId
+        sockets[user.id].leave()
+        sockets[user.id].roomId = 0
+        removeUser(roomId, user.id)
+      }
     }
-    sockets[user.id].join('room_' + membership.roomId)
-    sockets[user.id].roomId = membership.roomId
-    addUser(membership.roomId, user)
-
-    sw.Room.findOne({ where: { id: req.body.fromRoomId } }).then((room) => {
-      sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
-        async (rooms) => {
-          for (let i = 0; i < rooms.length; i++) {
-            let room = rooms[i]
-            room.users = getRoomUsers(room.id)
-          }
-          if (membership === null || membership === undefined) {
-            res.send({
-              status: 'error',
-              errorCode: 'e0005',
-              message: 'membership does not exist.',
-            })
-            return
-          }
-          require('../server').pushTo(
-            'room_' + membership.roomId,
-            'user-entered',
-            { rooms: rooms, users: getRoomUsers(membership.roomId) },
-          )
-          let s = sockets[user.id]
-          if (s === undefined) return
-          let roomId = s.roomId
-          sockets[user.id].leave()
-          sockets[user.id].roomId = 0
-          removeUser(roomId, user.id)
-          if (roomId !== undefined) {
-            sw.Room.findOne({ where: { id: req.body.toRoomId } }).then((room) => {
-              sw.Room.findAll({
-                raw: true,
-                where: { spaceId: room.spaceId },
-              }).then(async (rooms) => {
-                for (let i = 0; i < rooms.length; i++) {
-                  let room = rooms[i]
-                  room.users = getRoomUsers(room.id)
-                }
-                if (membership === null || membership === undefined) {
-                  res.send({
-                    status: 'error',
-                    errorCode: 'e0005',
-                    message: 'membership does not exist.',
-                  })
-                  return
-                }
-                require('../server').pushTo(
-                  'room_' + membership.roomId,
-                  'user-exited',
-                  { rooms: rooms, users: getRoomUsers(membership.roomId) },
-                )
-              })
-            })
-          }
-        },
+    room = await sw.Room.findOne({ where: { id: req.body.toRoomId } });
+    rooms = await sw.Room.findAll({
+      raw: true,
+      where: { spaceId: room.spaceId },
+    });
+    for (let i = 0; i < rooms.length; i++) {
+      let room = rooms[i]
+      room.users = getRoomUsers(room.id)
+    }
+    if (membership !== null && membership !== undefined) {
+      require('../server').pushTo(
+        'room_' + membership.roomId,
+        'user-exited',
+        { rooms: rooms, users: getRoomUsers(membership.roomId) },
       )
-    })
-    res.send({ status: 'success', membership: membership });
-    ended = true;
+    }
+    res.send({ status: 'success', membership: membership })
   })
-  if (!ended)
-    res.send({ status: 'success' });
 })
 
 router.post('/invite_to_room', jsonParser, async function (req, res) {
