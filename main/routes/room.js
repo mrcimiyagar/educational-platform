@@ -863,7 +863,7 @@ router.get('/generate_invite_link', jsonParser, async function (req, res) {
     fetch('https://config.kaspersoft.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
-          res.send({ status: 'success', link: result.mainBackend + '/room/use_invitation?token=' + token})
+          res.send({ status: 'success', link: result.mainFrontend + '/app/use_invitation?token=' + token})
       })
   })
 })
