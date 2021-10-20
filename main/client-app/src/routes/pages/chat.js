@@ -532,6 +532,9 @@ export default function Chat(props) {
               id={'chatText'}
               className={classes.input}
               placeholder="پیام خود را بنویسید"
+              onChange={() => {
+                socket.emit('chat-typing')
+              }}
             />
             <IconButton
               color="primary"

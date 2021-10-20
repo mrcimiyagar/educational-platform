@@ -52,18 +52,19 @@ export default function GenerateLink(props) {
   const urlSearchParams = new URLSearchParams(window.location.search);
   props = Object.fromEntries(urlSearchParams.entries());
 
-  const [open, setOpen] = React.useState(true)
-  registerDialogOpen(setOpen)
+  const [open, setOpen] = React.useState(true);
+  registerDialogOpen(setOpen);
+  const [link, setLink] = React.useState('');
   const handleClose = () => {
-    setOpen(false)
-    setTimeout(popPage, 250)
+    setOpen(false);
+    setTimeout(popPage, 250);
   }
   let classes = useStyles();
 
   return (
     <Dialog
       onTouchStart={(e) => {
-        e.stopPropagation()
+        e.stopPropagation();
       }}
       PaperProps={
         isDesktop
@@ -155,15 +156,18 @@ export default function GenerateLink(props) {
               .then((result) => {
                 console.log(JSON.stringify(result))
                 if (result.link !== undefined) {
-                  navigator.clipboard.writeText(result.link + '&name=' + document.getElementById('invitationUserName').value);
+                  setLink(result.link + '&name=' + document.getElementById('invitationUserName').value);
                 }
               })
-              .catch((error) => console.log('error', error))
+              .catch((error) => console.log('error', error));
           }}
         >
           <Add />
           ساخت لینک
         </Fab>
+        <Typography onClick={() => navigator.clipboard.writeText(link)}>
+          {link}
+        </Typography>
       </div>
     </Dialog>
   )

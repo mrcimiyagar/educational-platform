@@ -8,7 +8,7 @@ import { ArrowForward } from '@material-ui/icons'
 import CallIcon from '@material-ui/icons/Call'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import VideocamIcon from '@material-ui/icons/Videocam'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   gotoPage,
   histPage,
@@ -20,7 +20,7 @@ import {
 } from '../../App'
 import { setCurrentRoomNavBackup } from '../../routes/pages/room'
 import { colors, token } from '../../util/settings'
-import { serverRoot } from '../../util/Utils'
+import { serverRoot, socket } from '../../util/Utils'
 import HomeToolbar from '../HomeToolbar'
 
 const useStyles = makeStyles((theme) => ({
@@ -67,6 +67,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ChatAppBar(props) {
   const classes = useStyles()
+
+  let [tl, setTl] = React.useState('');
+
+  useEffect(() => {
+    socket.off('chat-typing');
+    socket.on('chat-typing', typingList => {
+      setTl(typingList);
+    })
+  }, [])
 
   return (
     <div className={classes.root}>
@@ -152,6 +161,10 @@ export default function ChatAppBar(props) {
                 : props.room !== undefined
                 ? props.room.title
                 : ''}
+            </Typography>
+            <br/>
+            <Typography>
+              {tl.toString()}
             </Typography>
             <div className={classes.search}>
               <IconButton

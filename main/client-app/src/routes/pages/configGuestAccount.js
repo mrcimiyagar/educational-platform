@@ -5,7 +5,7 @@ import Slide from '@material-ui/core/Slide'
 import { makeStyles } from '@material-ui/core/styles'
 import Add from '@material-ui/icons/Add'
 import ArrowForwardTwoTone from '@material-ui/icons/ArrowForwardTwoTone'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { pathConfig } from '../..'
 import {
   gotoPage,
@@ -54,26 +54,28 @@ export default function ConfigGuestAccount(props) {
   const urlSearchParams = new URLSearchParams(window.location.search);
   props = Object.fromEntries(urlSearchParams.entries());
 
-  let requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      token: props.token,
-      name: props.name
-    }),
-    redirect: 'follow',
-  }
-  fetch(serverRoot + '/room/use_invitation', requestOptions)
-    .then((response) => response.json())
-    .then((result) => {
-      console.log(JSON.stringify(result));
-      localStorage.setItem('token', result.token);
-      setToken(result.token);
-      window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + result.roomId;
-    })
-    .catch((error) => console.log('error', error));
+  useEffect(() => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: props.token,
+        name: props.name
+      }),
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/room/use_invitation', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result));
+        localStorage.setItem('token', result.token);
+        setToken(result.token);
+        window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + result.roomId + '&tab_index=0';
+      })
+      .catch((error) => console.log('error', error));
+  }, [])
 
   return (<div/>);
 }
