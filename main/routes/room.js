@@ -868,7 +868,7 @@ router.get('/generate_invite_link', jsonParser, async function (req, res) {
   })
 })
 
-router.get('/use_invitation', jsonParser, async function (req, res) {
+router.post('/use_invitation', jsonParser, async function (req, res) {
   let invite = resolveInvite(req.body.token)
   if (invite.valid) {
     let user = await sw.User.create({
@@ -902,10 +902,6 @@ router.get('/use_invitation', jsonParser, async function (req, res) {
       .then((response) => response.json())
       .then((result) => {
         res.send({status: 'success', token: acc.token, roomId: invite.roomId});
-        return;
-        res.redirect(
-          result.mainFrontend + `/app/room?room_id=${invite.roomId}&tab_index=0&token=${acc.token}`,
-        )
       })
   } else {
     res.send({
