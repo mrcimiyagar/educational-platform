@@ -112,7 +112,7 @@ let disconnectWebsocket = (user) => {
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
-            where: { roomId: req.body.roomId, userId: session.userId },
+            where: { roomId: room.id, userId: session.userId },
           })
           if (membership === null || membership === undefined) {
             if (
