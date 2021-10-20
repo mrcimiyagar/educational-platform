@@ -455,6 +455,7 @@ let InnerApp = (props) => {
           <GenerateInvitation />
         </Route>
         <Route path="/app/use_invitation" component={ConfigGuestAccount} />
+        
         <Route path="/app/storebot" component={StoreBot} />
         <Route path="/app/storeads" component={StoreAds} />
         <Route path="/app/photoviewer" component={PhotoViewer} />
