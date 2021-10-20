@@ -58,6 +58,7 @@ import {
   serverRoot,
   setRoom,
   socket,
+  switchRoom,
   useForceUpdate,
 } from '../../util/Utils'
 import DesktopWallpaper2 from '../../images/desktop-wallpaper.jpg'
@@ -120,16 +121,12 @@ export let membership = undefined
 let setMembership = undefined
 let pickingFile = false
 
-export default function RoomPage(props) {
+let botsComp = null
 
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  props = Object.fromEntries(urlSearchParams.entries());
-  
-  if (props.token !== undefined) {
-    localStorage.setItem('token', props.token)
-    gotoPage()
-    window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + props.room_id
-  }
+export default function RoomPage(props) {
+  const urlSearchParams = new URLSearchParams(window.location.search)
+  props = Object.fromEntries(urlSearchParams.entries())
+
   const useStyles = makeStyles({
     root: {
       width: '100%',
@@ -154,20 +151,22 @@ export default function RoomPage(props) {
   const classes = useStyles()
   const classesAction = useStylesAction()
 
-  const [jumperOpen, setJumperOpen] = React.useState(true);
-  [membership, setMembership] = React.useState({});
-  const [loaded, setLoaded] = React.useState(false);
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const [currentRoomNav, setCurrentRoomNav] = React.useState(Number(props.tab_index));
-  const [fileMode, setFileMode] = React.useState(0);
-  const [menuMode, setMenuMode] = React.useState(0);
-  const [opacity, setOpacity] = React.useState(1);
+  const [jumperOpen, setJumperOpen] = React.useState(true)
+  ;[membership, setMembership] = React.useState({})
+  const [loaded, setLoaded] = React.useState(false)
+  const [menuOpen, setMenuOpen] = React.useState(false)
+  const [currentRoomNav, setCurrentRoomNav] = React.useState(
+    Number(props.tab_index),
+  )
+  const [fileMode, setFileMode] = React.useState(0)
+  const [menuMode, setMenuMode] = React.useState(0)
+  const [opacity, setOpacity] = React.useState(1)
 
   let roomId = props.room_id
   setRoomId(roomId)
 
   let loadData = (callback) => {
-    leaveRoom(() => {
+    switchRoom(roomId, () => {
       let requestOptions = {
         method: 'POST',
         headers: {
@@ -184,35 +183,6 @@ export default function RoomPage(props) {
         .then((result) => {
           console.log(JSON.stringify(result))
           setRoom(result.room)
-          setToken(localStorage.getItem('token'))
-
-          ConnectToIo(token, () => {})
-
-          socket.off('membership-updated')
-          socket.on('membership-updated', (mem) => {})
-          socket.off('view-updated')
-          socket.on('view-updated', (v) => {})
-          let requestOptions2 = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              token: token,
-            },
-            body: JSON.stringify({
-              roomId: roomId,
-            }),
-            redirect: 'follow',
-          }
-          fetch(serverRoot + '/room/enter_room', requestOptions2)
-            .then((response) => response.json())
-            .then((result) => {
-              console.log(JSON.stringify(result))
-              setMembership(result.membership)
-              forceUpdate()
-
-              callback()
-            })
-            .catch((error) => console.log('error', error))
 
           window.scrollTo(0, 0)
 
@@ -254,13 +224,12 @@ export default function RoomPage(props) {
       .catch((error) => console.log('error', error))
   }
 
+  setInTheGame(true)
+
   useEffect(() => {
     loadData(() => {
       loadFiles()
       setLoaded(true)
-      setTimeout(() => {
-        setInTheGame(true);
-      }, 500);
     })
   }, [])
 
@@ -382,7 +351,7 @@ export default function RoomPage(props) {
         if (result.wallpaper === null) {
           setWallpaper({
             type: 'photo',
-            photo: DesktopWallpaper2
+            photo: DesktopWallpaper2,
           })
         }
         let wall = JSON.parse(result.wallpaper)
@@ -414,13 +383,13 @@ export default function RoomPage(props) {
   let theme = createTheme({
     palette: {
       primary: {
-        main: '#BBDEFB'
+        main: '#BBDEFB',
       },
       secondary: {
-        main: '#FFC107'
+        main: '#FFC107',
       },
     },
-  });
+  })
 
   if (isDesktop()) {
     return (
@@ -955,7 +924,11 @@ export default function RoomPage(props) {
                 </IconButton>
                 <Typography
                   variant={'h6'}
-                  style={{ position: 'absolute', right: 16 + 32 + 16 , color: '#fff'}}
+                  style={{
+                    position: 'absolute',
+                    right: 16 + 32 + 16,
+                    color: '#fff',
+                  }}
                 >
                   فایل ها
                 </Typography>
@@ -980,10 +953,22 @@ export default function RoomPage(props) {
                 }}
                 style={{ marginTop: 8, color: '#fff' }}
               >
-                <Tab icon={<PhotoIcon style={{ fill: '#fff' }} />} label="عکس ها" />
-                <Tab icon={<AudiotrackIcon style={{ fill: '#fff' }} />} label="صدا ها" />
-                <Tab icon={<PlayCircleFilledIcon style={{ fill: '#fff' }} />} label="ویدئو ها" />
-                <Tab icon={<InsertDriveFileIcon style={{ fill: '#fff' }} />} label="سند ها" />
+                <Tab
+                  icon={<PhotoIcon style={{ fill: '#fff' }} />}
+                  label="عکس ها"
+                />
+                <Tab
+                  icon={<AudiotrackIcon style={{ fill: '#fff' }} />}
+                  label="صدا ها"
+                />
+                <Tab
+                  icon={<PlayCircleFilledIcon style={{ fill: '#fff' }} />}
+                  label="ویدئو ها"
+                />
+                <Tab
+                  icon={<InsertDriveFileIcon style={{ fill: '#fff' }} />}
+                  label="سند ها"
+                />
               </Tabs>
             </AppBar>
             <div
@@ -1030,29 +1015,29 @@ export default function RoomPage(props) {
                   />
                 </div>
               </SwipeableViews>
-                <Fab
-                  color="secondary"
-                  style={{ position: 'fixed', bottom: 72 + 16, left: 16 }}
-                  onClick={() => {
-                    pickingFile = true
-                    openFileSelector()
-                  }}
-                >
-                  <AddIcon />
-                </Fab>
-                <Fab
-                  color="primary"
-                  style={{
-                    position: 'fixed',
-                    bottom: 72 + 16,
-                    left: 16 + 56 + 16,
-                  }}
-                  onClick={() => {
-                    gotoPage('/app/chat', { room_id: props.room_id })
-                  }}
-                >
-                  <Chat />
-                </Fab>
+              <Fab
+                color="secondary"
+                style={{ position: 'fixed', bottom: 72 + 16, left: 16 }}
+                onClick={() => {
+                  pickingFile = true
+                  openFileSelector()
+                }}
+              >
+                <AddIcon />
+              </Fab>
+              <Fab
+                color="primary"
+                style={{
+                  position: 'fixed',
+                  bottom: 72 + 16,
+                  left: 16 + 56 + 16,
+                }}
+                onClick={() => {
+                  gotoPage('/app/chat', { room_id: props.room_id })
+                }}
+              >
+                <Chat />
+              </Fab>
             </div>
           </div>
         </div>

@@ -70,9 +70,11 @@ export default function ConfigGuestAccount(props) {
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result));
-        localStorage.setItem('token', result.token);
-        setToken(result.token);
-        window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + result.roomId + '&tab_index=0';
+        if (result.token != undefined) {
+          localStorage.setItem('token', result.token);
+          setToken(result.token);
+          window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + result.roomId + '&tab_index=0';
+        }
       })
       .catch((error) => console.log('error', error));
   }, [])

@@ -103,7 +103,7 @@ export default function ChatAppBar(props) {
             left: isInRoom()
               ? isDesktop()
                 ? 'calc(100% - 450px)'
-                : 96
+                : 0
               : isDesktop()
               ? 96 + 16
               : 0,
@@ -133,17 +133,17 @@ export default function ChatAppBar(props) {
                 marginRight: isDesktop() || isTablet() ? 8 : -8,
               }}
               alt={
-                props.user !== undefined
+                (props.user !== undefined && props.user !== null)
                   ? props.user.firstName + ' ' + props.user.lastName
-                  : props.room !== undefined
+                  : (props.room !== undefined && props.room !== null)
                   ? props.room.title
                   : ''
               }
               src={
-                props.room !== undefined
+                (props.room !== undefined && props.room !== null)
                   ? serverRoot +
                     `/file/download_room_avatar?token=${token}&roomId=${props.room.id}`
-                  : props.user !== undefined
+                  : (props.user !== undefined && props.user !== null)
                   ? serverRoot +
                     `/file/download_user_avatar?token=${token}&userId=${props.user.id}`
                   : ''
@@ -156,9 +156,9 @@ export default function ChatAppBar(props) {
               variant="h6"
               style={{ fontFamily: 'mainFont', marginRight: 8 }}
             >
-              {props.user !== undefined
+              {(props.user !== undefined && props.user !== null)
                 ? props.user.firstName + ' ' + props.user.lastName
-                : props.room !== undefined
+                : (props.room !== undefined && props.room !== null)
                 ? props.room.title
                 : ''}
             </Typography>

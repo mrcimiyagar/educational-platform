@@ -43,9 +43,7 @@ export default function RoomBottombar(props) {
   let [shown, setShown] = React.useState(false)
 
   useEffect(() => {
-    setTimeout(() => {
-      setShown(true);
-    }, 500);
+    setShown(true);
   }, [])
 
   return (

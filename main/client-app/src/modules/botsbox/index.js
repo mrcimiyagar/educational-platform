@@ -309,11 +309,9 @@ export default function BotsBox(props) {
         }
       }
     })
-    setTimeout(() => {
-      let botsSearchbar = document.getElementById('botsSearchbar')
-      botsSearchbar.style.transform = 'translateY(0)'
-      botsSearchbar.style.transition = 'transform .5s'
-    }, 1000)
+    let botsSearchbar = document.getElementById('botsSearchbar')
+    botsSearchbar.style.transform = 'translateY(0)'
+    botsSearchbar.style.transition = 'transform .5s'
   }, [])
 
   useEffect(() => {
@@ -397,8 +395,6 @@ export default function BotsBox(props) {
           direction="right"
           in={inTheGame}
           mountOnEnter
-          unmountOnExit
-          {...{ timeout: 750 }}
         >
       <Fab
         color={'secondary'}
@@ -417,8 +413,7 @@ export default function BotsBox(props) {
           direction="right"
           in={inTheGame}
           mountOnEnter
-          unmountOnExit
-          {...{ timeout: 1500 }}
+          {...{ timeout: 500 }}
         >
       <Fab
         size={'medium'}

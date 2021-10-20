@@ -379,10 +379,12 @@ router.post('/create_room', jsonParser, async function (req, res) {
           id: room.id,
           title: room.title,
           spaceId: room.spaceId,
-          chatType: room.chatType
+          chatType: room.chatType,
         }
-        roomCopy.participent = await sw.User.findOne({where: {id: session.userId}})
-        sockets[req.body.participentId].emit('chat-created', {room: roomCopy})
+        roomCopy.participent = await sw.User.findOne({
+          where: { id: session.userId },
+        })
+        sockets[req.body.participentId].emit('chat-created', { room: roomCopy })
       } else {
         if (
           req.body.chatType === 'group' ||
@@ -400,8 +402,8 @@ router.post('/create_room', jsonParser, async function (req, res) {
         roomId: room.id,
         text: 'روم ساخته شد',
         fileId: null,
-        messageType: 'text'
-      });
+        messageType: 'text',
+      })
       let msgCopy = {
         authorId: session.userId,
         time: Date.now(),
@@ -409,9 +411,9 @@ router.post('/create_room', jsonParser, async function (req, res) {
         text: 'روم ساخته شد',
         fileId: null,
         messageType: 'text',
-        User: await sw.User.findOne({where: {id: session.userId}})
+        User: await sw.User.findOne({ where: { id: session.userId } }),
       }
-      sockets[req.body.participentId].emit('message-added', {msgCopy})
+      sockets[req.body.participentId].emit('message-added', { msgCopy })
 
       res.send({ status: 'success', room: room })
     },
@@ -666,6 +668,84 @@ router.post('/exit_room', jsonParser, async function (req, res) {
   res.send({ status: 'success' })
 })
 
+router.post('/switch_room', jsonParser, async function (req, res) {
+  let ended = false;
+  authenticateMember(req, res, async (membership, session, user) => {
+    if (sockets[session.userId] === undefined) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'socket undefined.',
+        membership: membership,
+      })
+      return
+    }
+    sockets[user.id].join('room_' + membership.roomId)
+    sockets[user.id].roomId = membership.roomId
+    addUser(membership.roomId, user)
+
+    sw.Room.findOne({ where: { id: req.body.fromRoomId } }).then((room) => {
+      sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
+        async (rooms) => {
+          for (let i = 0; i < rooms.length; i++) {
+            let room = rooms[i]
+            room.users = getRoomUsers(room.id)
+          }
+          if (membership === null || membership === undefined) {
+            res.send({
+              status: 'error',
+              errorCode: 'e0005',
+              message: 'membership does not exist.',
+            })
+            return
+          }
+          require('../server').pushTo(
+            'room_' + membership.roomId,
+            'user-entered',
+            { rooms: rooms, users: getRoomUsers(membership.roomId) },
+          )
+          let s = sockets[user.id]
+          if (s === undefined) return
+          let roomId = s.roomId
+          sockets[user.id].leave()
+          sockets[user.id].roomId = 0
+          removeUser(roomId, user.id)
+          if (roomId !== undefined) {
+            sw.Room.findOne({ where: { id: req.body.toRoomId } }).then((room) => {
+              sw.Room.findAll({
+                raw: true,
+                where: { spaceId: room.spaceId },
+              }).then(async (rooms) => {
+                for (let i = 0; i < rooms.length; i++) {
+                  let room = rooms[i]
+                  room.users = getRoomUsers(room.id)
+                }
+                if (membership === null || membership === undefined) {
+                  res.send({
+                    status: 'error',
+                    errorCode: 'e0005',
+                    message: 'membership does not exist.',
+                  })
+                  return
+                }
+                require('../server').pushTo(
+                  'room_' + membership.roomId,
+                  'user-exited',
+                  { rooms: rooms, users: getRoomUsers(membership.roomId) },
+                )
+              })
+            })
+          }
+        },
+      )
+    })
+    res.send({ status: 'success', membership: membership });
+    ended = true;
+  })
+  if (!ended)
+    res.send({ status: 'success' });
+})
+
 router.post('/invite_to_room', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     if (!membership.canInviteToRoom) {
@@ -863,7 +943,10 @@ router.get('/generate_invite_link', jsonParser, async function (req, res) {
     fetch('https://config.kaspersoft.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
-          res.send({ status: 'success', link: result.mainFrontend + '/app/use_invitation?token=' + token})
+        res.send({
+          status: 'success',
+          link: result.mainFrontend + '/app/use_invitation?token=' + token,
+        })
       })
   })
 })
@@ -901,7 +984,7 @@ router.post('/use_invitation', jsonParser, async function (req, res) {
     fetch('https://config.kaspersoft.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        res.send({status: 'success', token: acc.token, roomId: invite.roomId});
+        res.send({ status: 'success', token: acc.token, roomId: invite.roomId })
       })
   } else {
     res.send({

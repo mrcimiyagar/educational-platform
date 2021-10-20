@@ -120,11 +120,7 @@ export let membership = undefined
 let setMembership = undefined
 
 export default function HomePage(props) {
-  if (props.token !== undefined) {
-    localStorage.setItem('token', props.token)
-    gotoPage()
-    window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + homeRoomId
-  }
+
   const useStyles = makeStyles({
     root: {
       width: '100%',
