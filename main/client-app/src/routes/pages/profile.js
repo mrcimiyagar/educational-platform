@@ -23,6 +23,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 export default function Profile(props) {
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  props = Object.fromEntries(urlSearchParams.entries());
+  
   document.documentElement.style.overflowY = 'hidden'
 
   const [open, setOpen] = React.useState(true)
