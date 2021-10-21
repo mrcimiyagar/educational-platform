@@ -73,6 +73,29 @@ export let TaskBox = (props) => {
                 })
                 .catch(error => console.log('error', error));
             }
+            lane.onCardMoveAcrossLanes = (fromLaneId, toLaneId, cardId, index) => {
+              let requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'token': token
+                },
+                body: JSON.stringify({
+                  fromLaneId: fromLaneId,
+                  toLaneId: toLaneId,
+                  roomId: props.roomId,
+                  cardId: cardId
+                }),
+                redirect: 'follow'
+              };
+              fetch(serverRoot + "/task/add_card", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                  console.log(JSON.stringify(result));
+                  fetchBoard()
+                })
+                .catch(error => console.log('error', error));
+            }
           })
           setData(result.board)
           forceUpdate()
