@@ -109,6 +109,44 @@ module.exports = {
             });
         });
     },
+    authenticateMemberWithRoomId: (req, res, roomId, callback) => {
+        let token = req.headers.token;
+        if (token === undefined) {
+            token = req.query.token;
+        }
+        sw.Session.findOne({where: {token: token}}).then(async function (session) {
+            if (session === null) {
+                if (token in guestAccsOutOfRoom) {
+                    let a = guestAccsOutOfRoom[token];
+                    if (a.roomId === roomId)
+                        callback(a, {userId: a.userId}, a.user);
+                    else if (a.subroomId === roomId) {
+                        let temp = {...a}
+                        temp.roomId = a.subroomId
+                        callback(temp, {userId: temp.userId}, temp.user);
+                    }
+                    return;
+                }
+                res.send({status: 'error', errorCode: 'e0007', message: 'session does not exist.'});
+                return;
+            }
+            if (roomId === undefined) {
+                sw.User.findOne({where: {id: session.userId}}).then(async function (user) {
+                    callback(undefined, session, user);
+                });
+                return;
+            }
+            sw.Membership.findOne({where: {roomId: roomId, userId: session.userId}}).then(membership => {
+                if (membership === null) {
+                    res.send({status: 'error', errorCode: 'e0007', message: 'membership does not exist.'});
+                    return;
+                }
+                sw.User.findOne({where: {id: membership.userId}}).then(async function (user) {
+                    callback(membership, session, user);
+                });
+            });
+        });
+    },
     authenticateMemberWithoutResponse: (req, res, callback) => {
         let token = req.headers.token;
         if (token === undefined) {
