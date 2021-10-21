@@ -121,8 +121,6 @@ export let membership = undefined
 let setMembership = undefined
 let pickingFile = false
 
-let botsComp = null
-
 export default function RoomPage(props) {
   const urlSearchParams = new URLSearchParams(window.location.search)
   props = Object.fromEntries(urlSearchParams.entries())
@@ -166,32 +164,56 @@ export default function RoomPage(props) {
   setRoomId(roomId)
 
   let loadData = (callback) => {
-    switchRoom(roomId, () => {
-      let requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          token: token,
-        },
-        body: JSON.stringify({
-          roomId: roomId,
-        }),
-        redirect: 'follow',
-      }
-      fetch(serverRoot + '/room/get_room', requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(JSON.stringify(result))
-          setRoom(result.room)
 
-          window.scrollTo(0, 0)
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: roomId,
+      }),
+      redirect: 'follow',
+    }
+    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions);
+    getRoomPromise.then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        setRoom(result.room)
+        setToken(localStorage.getItem('token'))
+        ConnectToIo(token, () => {})
+        socket.off('membership-updated')
+        socket.on('membership-updated', (mem) => {})
+        socket.off('view-updated')
+        socket.on('view-updated', (v) => {})
+        window.scrollTo(0, 0)
+        store.dispatch(changeConferenceMode(true))
+      })
+      .catch((error) => console.log('error', error));
+    
+    let requestOptions2 = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: roomId,
+      }),
+      redirect: 'follow',
+    }
+    let enterRoomPromise = fetch(serverRoot + '/room/enter_room', requestOptions2);
 
-          store.dispatch(changeConferenceMode(true))
-
-          callback();
-        })
-        .catch((error) => console.log('error', error))
-    })
+    enterRoomPromise.then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        setMembership(result.membership)
+        forceUpdate();
+      })
+      .catch((error) => console.log('error', error))
+    
+      Promise.all([getRoomPromise, enterRoomPromise]).then(() => callback());
   }
 
   let loadFiles = () => {
@@ -376,6 +398,10 @@ export default function RoomPage(props) {
         }
       })
       .catch((error) => console.log('error', error))
+    
+      return () => { 
+        leaveRoom(() => {});
+       };
   }, [])
 
   if (!loaded) {

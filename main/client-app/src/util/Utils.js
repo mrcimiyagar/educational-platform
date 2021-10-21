@@ -12,31 +12,6 @@ export let setup = () => {
   serverRoot = pathConfig.mainBackend
 }
 
-export function switchRoom(roomId, callback) {
-  store.dispatch(changeConferenceMode(false));
-  let requestOptions2 = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'token': token
-    },
-    body: JSON.stringify({
-      fromRoomId: roomId,
-      toRoomId: roomId
-    }),
-    redirect: 'follow'
-  };
-  fetch(serverRoot + "/room/switch_room", requestOptions2)
-      .then(response => response.json())
-      .then(result => {
-        console.log(JSON.stringify(result));
-        if (callback !== undefined) {
-          callback();
-        }
-      })
-      .catch(error => console.log('error', error));
-}
-
 export function leaveRoom(callback) {
   store.dispatch(changeConferenceMode(false));
   let requestOptions2 = {

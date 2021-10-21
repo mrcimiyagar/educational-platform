@@ -15,14 +15,15 @@ import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
 import { cacheMessage, fetchMessagesOfRoom, gotoPage, inTheGame, popPage, registerDialogOpen, setDialogOpen, setInTheGame } from '../../App'
 import ChatAppBar from '../../components/ChatAppBar'
-import { colors, me, token } from '../../util/settings'
-import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { colors, me, setToken, token } from '../../util/settings'
+import { ConnectToIo, leaveRoom, serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import ChatWallpaper from '../../images/chat-wallpaper.jpg';
 import { setLastMessage, updateChat } from '../../components/HomeMain';
 import $ from 'jquery';
 import MessageItem from '../../components/MessageItem';
 import { resetMessages2 } from '../../components/ChatEmbeddedInMessenger'
 import { resetMessages3 } from '../../components/ChatEmbedded'
+import store, { changeConferenceMode } from '../../redux/main'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />
@@ -81,7 +82,58 @@ export default function Chat(props) {
   let [room, setRoom] = React.useState(undefined)
   const [open, setOpen] = React.useState(true)
   const [showEmojiPad, setShowEmojiPad] = React.useState(false)
-  let [pickingFile, setPickingFile] = React.useState(false)
+  let [pickingFile, setPickingFile] = React.useState(false);
+
+  useEffect(() => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.room_id,
+      }),
+      redirect: 'follow',
+    }
+    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions);
+    getRoomPromise.then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        setRoom(result.room)
+        setToken(localStorage.getItem('token'))
+        ConnectToIo(token, () => {})
+        socket.off('membership-updated')
+        socket.on('membership-updated', (mem) => {})
+        socket.off('view-updated')
+        socket.on('view-updated', (v) => {})
+        window.scrollTo(0, 0)
+        store.dispatch(changeConferenceMode(true))
+      })
+      .catch((error) => console.log('error', error));
+    
+    let requestOptions2 = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.room_id,
+      }),
+      redirect: 'follow',
+    }
+    let enterRoomPromise = fetch(serverRoot + '/room/enter_room', requestOptions2);
+    enterRoomPromise.then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        forceUpdate();
+      })
+      .catch((error) => console.log('error', error))
+
+    return () => {leaveRoom(() => {});}
+  }, [])
+
   registerDialogOpen(setOpen)
   const handleClose = () => {
     setInTheGame(false);

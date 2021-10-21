@@ -683,7 +683,7 @@ router.post('/switch_room', jsonParser, async function (req, res) {
         let s = sockets[user.id]
         if (s === undefined) {
           level2()
-          return
+          return;
         }
         let roomId = s.roomId
         sockets[user.id].leave()

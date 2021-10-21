@@ -214,9 +214,10 @@ if (window.innerWidth > 900) {
         '',
         p + (query.length > 0 ? '?' : '') + query,
       )
-      if (notifyUrlChanged !== undefined) notifyUrlChanged()
-      forceUpdate()
     }
+
+    if (notifyUrlChanged !== undefined) notifyUrlChanged()
+    forceUpdate()
   }
 
   gotoPageWithDelay = (p, params) => {
@@ -240,9 +241,10 @@ if (window.innerWidth > 900) {
         '',
         p + (query.length > 0 ? '?' : '') + query,
       )
-      if (notifyUrlChanged !== undefined) notifyUrlChanged()
-      forceUpdate()
     }
+
+    if (notifyUrlChanged !== undefined) notifyUrlChanged()
+    forceUpdate()
   }
 
   popPage = () => {
@@ -269,9 +271,10 @@ if (window.innerWidth > 900) {
           '',
           series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
         )
-        if (notifyUrlChanged !== undefined) notifyUrlChanged()
       }
     }
+    
+    if (notifyUrlChanged !== undefined) notifyUrlChanged()
   }
 }
 
