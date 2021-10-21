@@ -43,6 +43,29 @@ router.post('/add_card', jsonParser, async function (req, res) {
     res.send({status: 'success', card: result})
 });
 
+router.post('/move_card', jsonParser, async function (req, res) {
+    let card = undefined;
+    for (let i = 0; i < data[req.body.roomId].content.lanes.length; i++) {
+        if (data[req.body.roomId].content.lanes[i].id === req.body.fromLaneId) {
+            for (let j = 0; j < data[req.body.roomId].content.lanes[i].cards.length; j++) {
+                if (data[req.body.roomId].content.lanes[i].cards[j] === req.body.cardId) {
+                    card = data[req.body.roomId].content.lanes[i].cards[j];
+                    delete data[req.body.roomId].content.lanes[i].cards[j];
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    for (let i = 0; i < data[req.body.roomId].content.lanes.length; i++) {
+        if (data[req.body.roomId].content.lanes[i].id === req.body.toLaneId) {
+            data[req.body.roomId].content.lanes[i].cards.push(card);
+            break;
+        }
+    }
+    res.send({status: 'success'});
+});
+
 router.post('/get_board', jsonParser, async function (req, res) {
     if (data[req.body.roomId] === undefined) {
         data[req.body.roomId] = {
