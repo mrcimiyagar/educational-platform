@@ -187,6 +187,8 @@ export default function RoomPage(props) {
           window.scrollTo(0, 0)
 
           store.dispatch(changeConferenceMode(true))
+
+          callback();
         })
         .catch((error) => console.log('error', error))
     })
