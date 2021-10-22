@@ -28,84 +28,7 @@ let TRANSLATION_TABLE = {
   }
 }
 
-const customTranslation = createTranslate(TRANSLATION_TABLE)
-
 export let TaskBox = (props) => {
-  let forceUpdate = useForceUpdate()
-  let [data, setData] = React.useState({lanes: []})
-  let fetchBoard = () => {
-    let requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'token': token
-      },
-      body: JSON.stringify({
-        roomId: props.roomId
-      }),
-      redirect: 'follow'
-    };
-    fetch(serverRoot + "/task/get_board", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log(JSON.stringify(result));
-        if (result.board !== undefined) {
-          result.board.lanes.forEach(lane => {
-            lane.onCardAdd = (card, laneId) => {
-              let requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'token': token
-                },
-                body: JSON.stringify({
-                  title: card.title,
-                  laneId: laneId,
-                  roomId: props.roomId
-                }),
-                redirect: 'follow'
-              };
-              fetch(serverRoot + "/task/add_card", requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                  console.log(JSON.stringify(result));
-                  fetchBoard()
-                })
-                .catch(error => console.log('error', error));
-            }
-            lane.onCardMoveAcrossLanes = (fromLaneId, toLaneId, cardId, index) => {
-              let requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'token': token
-                },
-                body: JSON.stringify({
-                  fromLaneId: fromLaneId,
-                  toLaneId: toLaneId,
-                  roomId: props.roomId,
-                  cardId: cardId
-                }),
-                redirect: 'follow'
-              };
-              fetch(serverRoot + "/task/add_card", requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                  console.log(JSON.stringify(result));
-                  fetchBoard()
-                })
-                .catch(error => console.log('error', error));
-            }
-          })
-          setData(result.board)
-          forceUpdate()
-        }
-      })
-      .catch(error => console.log('error', error));
-  }
-  useEffect(() => {
-    fetchBoard()
-  }, [])
   return (
     <div style={{height: 'calc(100% - 64px - 72px)', display: props.style.display}}>
       <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
@@ -128,34 +51,14 @@ export let TaskBox = (props) => {
           <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
         </Toolbar>
       </AppBar>
-      <Board  data={data} style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 112px)' : '100%', paddingLeft: 128, height: 'calc(100% + 56px)', paddingRight: 64, backgroundColor: 'transparent', background: 'transparent', marginTop: 80, overflow: 'auto'}}/>
+      <iframe allowTransparency={true}
+        id ={'task-board-frame'} name="task-board-frame" src={pathConfig.taskBoard}
+        style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
+        marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
       {(isDesktop() && isInRoom()) ? null :
       <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16, bottom: 72 + 16}} onClick={() => {
-          gotoPage('/app/chat')
+          gotoPage('/app/chat', {roomId: props.roomId})
       }}><Chat/></Fab>}
-      <Fab id="addLaneButton" color={'primary'} size={(isDesktop() && isInRoom()) ? undefined : 'medium'} style={{position: 'fixed', left: (isDesktop() && isInRoom()) ? 32 : 20, bottom: (isDesktop() && isInRoom()) ? 48 : (72 + 16 + 56 + 16)}} onClick={() => {
-        let laneTitle = prompt('نامی برای لیست انتخاب کنید')
-        if (laneTitle === null || laneTitle === '') return
-        let requestOptions = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'token': token
-          },
-          body: JSON.stringify({
-            title: laneTitle,
-            roomId: props.roomId
-          }),
-          redirect: 'follow'
-        };
-        fetch(serverRoot + "/task/add_lane", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-            console.log(JSON.stringify(result));
-            fetchBoard()
-          })
-          .catch(error => console.log('error', error));
-      }}><Add/></Fab>
     </div>
   )
 };
