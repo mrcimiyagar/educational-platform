@@ -7,6 +7,7 @@ import PollIcon from '@material-ui/icons/Poll';
 import React, { useEffect } from "react";
 import Board, { createTranslate } from 'react-trello';
 import { gotoPage, isDesktop, isInRoom } from "../../App";
+import { pathConfig } from "../../index";
 import { colors, token } from "../../util/settings";
 import { serverRoot, useForceUpdate } from "../../util/Utils";
 import './style.css';
