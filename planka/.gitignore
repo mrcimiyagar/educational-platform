@@ -1,5 +1,0 @@
-node_modules
-docker-compose.override.yml
-
-.vscode
-.DS_Store
