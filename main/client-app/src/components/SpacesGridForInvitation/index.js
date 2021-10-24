@@ -76,8 +76,8 @@ export default function SpacesGridForInvitation(props) {
                 token: token,
               },
               body: JSON.stringify({
-                roomId: item.defaultRoomId,
-                userId: props.user_id,
+                roomId: item.mainRoomId,
+                userId: props.userId,
               }),
               redirect: 'follow',
             }
