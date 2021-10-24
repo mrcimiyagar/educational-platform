@@ -308,6 +308,7 @@ let DesktopDetector = () => {
         ? 'tablet'
         : 'mobile',
     )
+    forceUpdate();
   }
   return <div />
 }
