@@ -669,102 +669,6 @@ router.post('/exit_room', jsonParser, async function (req, res) {
   res.send({ status: 'success' })
 })
 
-router.post('/switch_room', jsonParser, async function (req, res) {
-  let level1 = () => {
-    let fromRoomId = req.body.fromRoomId
-    if (fromRoomId === undefined) {
-      fromRoomId = req.query.fromRoomId
-    }
-    authenticateMemberWithRoomId(
-      req,
-      res,
-      fromRoomId,
-      async (membership, session, user) => {
-        let s = sockets[user.id]
-        if (s === undefined) {
-          level2()
-          return;
-        }
-        let roomId = s.roomId
-        sockets[user.id].leave()
-        sockets[user.id].roomId = 0
-        removeUser(roomId, user.id)
-        if (roomId !== undefined) {
-          let room = await sw.Room.findOne({ where: { id: roomId } })
-          let rooms = await sw.Room.findAll({
-            raw: true,
-            where: { spaceId: room.spaceId },
-          })
-          for (let i = 0; i < rooms.length; i++) {
-            let room = rooms[i]
-            room.users = getRoomUsers(room.id)
-          }
-          if (membership === null || membership === undefined) {
-            level2()
-            return
-          }
-          require('../server').pushTo(
-            'room_' + membership.roomId,
-            'user-exited',
-            { rooms: rooms, users: getRoomUsers(membership.roomId) },
-          )
-        }
-        level2();
-      },
-    )
-  }
-  let level2 = () => {
-    let toRoomId = req.body.toRoomId
-    if (toRoomId === undefined) {
-      toRoomId = req.query.toRoomId
-    }
-    authenticateMemberWithRoomId(
-      req,
-      res,
-      toRoomId,
-      async (membership, session, user) => {
-        if (sockets[session.userId] === undefined) {
-          res.send({
-            status: 'error',
-            errorCode: 'e0005',
-            message: 'socket undefined.',
-            membership: membership,
-          })
-          return
-        }
-        sockets[user.id].join('room_' + membership.roomId);
-        sockets[user.id].roomId = membership.roomId;
-        addUser(membership.roomId, user);
-        let room = sw.Room.findOne({ where: { id: toRoomId } })
-        let rooms = sw.Room.findAll({
-          raw: true,
-          where: { spaceId: room.spaceId },
-        })
-        for (let i = 0; i < rooms.length; i++) {
-          let room = rooms[i]
-          room.users = getRoomUsers(room.id)
-        }
-        if (membership === null || membership === undefined) {
-          res.send({
-            status: 'error',
-            errorCode: 'e0005',
-            message: 'membership does not exist.',
-          })
-          return
-        }
-        require('../server').pushTo(
-          'room_' + membership.roomId,
-          'user-entered',
-          { rooms: rooms, users: getRoomUsers(membership.roomId) },
-        )
-      },
-    )
-    res.send({ status: 'success', membership: membership })
-  }
-
-  level1();
-})
-
 router.post('/invite_to_room', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     if (!membership.canInviteToRoom) {
@@ -775,9 +679,9 @@ router.post('/invite_to_room', jsonParser, async function (req, res) {
       })
       return
     }
-    sw.Account.findOne({ where: { phone: req.body.phone } }).then(
-      async (acc) => {
-        if (acc === null) {
+    sw.User.findOne({ where: { id: req.body.userId } }).then(
+      async (user) => {
+        if (user === null) {
           res.send({
             status: 'error',
             errorCode: 'e0005',
@@ -786,29 +690,25 @@ router.post('/invite_to_room', jsonParser, async function (req, res) {
           return
         }
         sw.Invite.findOne({
-          where: { userId: acc.userId, roomId: membership.roomId },
+          where: { userId: user.id, roomId: membership.roomId },
         }).then(async (invite) => {
           if (invite !== null) {
             sw.Room.findOne({ where: { id: membership.roomId } }).then(
               async (room) => {
-                sw.User.findOne({ where: { id: acc.userId } }).then(
-                  async (user) => {
-                    if (sockets[acc.userId]) {
-                      sockets[acc.userId].emit('user-invited', {
-                        invite,
-                        user,
-                        room,
-                      })
-                    }
-                    res.send({ status: 'success', invite: invite })
-                  },
-                )
+                if (sockets[user.id]) {
+                  sockets[acc.userId].emit('user-invited', {
+                    invite,
+                    user,
+                    room,
+                  });
+                }
+                res.send({ status: 'success', invite: invite });
               },
             )
-            return
+            return;
           }
           invite = await sw.Invite.create({
-            userId: acc.userId,
+            userId: user.id,
             roomId: membership.roomId,
             title: req.body.title,
             text: req.body.text,
@@ -816,18 +716,14 @@ router.post('/invite_to_room', jsonParser, async function (req, res) {
           })
           sw.Room.findOne({ where: { id: membership.roomId } }).then(
             async (room) => {
-              sw.User.findOne({ where: { id: acc.userId } }).then(
-                async (user) => {
-                  if (sockets[acc.userId]) {
-                    sockets[acc.userId].emit('user-invited', {
-                      invite,
-                      user,
-                      room,
-                    })
-                  }
-                  res.send({ status: 'success', invite: invite })
-                },
-              )
+              if (sockets[user.id]) {
+                sockets[acc.userId].emit('user-invited', {
+                  invite,
+                  user,
+                  room,
+                });
+              }
+              res.send({ status: 'success', invite: invite });
             },
           )
         })

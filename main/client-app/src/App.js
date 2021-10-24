@@ -67,6 +67,7 @@ import DesktopWallpaper from './images/roomWallpaper.png';
 import GenerateLink from './routes/pages/generateLink';
 import GenerateInvitation from './routes/pages/generateInvitation';
 import ConfigGuestAccount from './routes/pages/configGuestAccount';
+import SpacesListPage from './routes/pages/spacesList';
 const PouchDB = require('pouchdb').default
 
 export let histPage = undefined
@@ -345,7 +346,8 @@ let dialogs = {
   '/app/settings': SettingsPage,
   '/app/videoplayer': VideoPlayer,
   '/app/generate_invite_link': GenerateLink,
-  '/app/generate_invitation': GenerateInvitation
+  '/app/generate_invitation': GenerateInvitation,
+  '/app/spaces_list': SpacesListPage
 }
 let pages = {
   '/app/store': Store,

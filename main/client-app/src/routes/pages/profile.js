@@ -112,6 +112,9 @@ export default function Profile(props) {
                   position: 'absolute',
                   left: 84,
                 }}
+                onClick={() => {
+                  gotoPage('/app/spaces_list', {room_id: props.room_id, user_id: props.user_id});
+                }}
               >
                 <GroupAddIcon style={{ fill: '#fff' }} />
               </IconButton>

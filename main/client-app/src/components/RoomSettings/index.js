@@ -654,7 +654,10 @@ export default function RoomSettings(props) {
             </IconButton>
           </ListItem>
           <Divider />
-          <ListItem button style={{ position: 'relative' }}>
+          <ListItem button style={{ position: 'relative' }}
+            onClick={() => {
+              gotoPage('/app/generate_invitation', {room_id: props.roomId})
+            }} >
             <ListItemAvatar>
               <Avatar
                 style={{
