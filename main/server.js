@@ -24,7 +24,6 @@ const view = require('./routes/view');
 const bot = require('./routes/bot');
 const search = require('./routes/search');
 const notif = require('./routes/notifications');
-const task = require('./routes/task');
 const mongo = require("./db/mongo");
 const cors = require('cors');
 const sw = require('./db/models');
@@ -96,7 +95,6 @@ models.setup().then(() => {
         app.use('/bot', bot);
         app.use('/notifications', notif);
         app.use('/search', search);
-        app.use('/task', task);
 
         app.use('/fetch_rooms', (req, res) => {
             sw.Session.findAll({limit: 1}).then(async function (sessions) {
