@@ -287,7 +287,10 @@ export default class extends Model {
     this.getOrderedBoardMembershipsQuerySet()
       .toModelArray()
       .forEach(({ board: { project: projectModel } }) => {
-        if (projectModel && projectIds.includes(projectModel.id)) {
+        if (!projectModel) {
+          return;
+        }
+        if (projectIds.includes(projectModel.id)) {
           return;
         }
 
