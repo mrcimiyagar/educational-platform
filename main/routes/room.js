@@ -696,7 +696,7 @@ router.post('/invite_to_room', jsonParser, async function (req, res) {
             sw.Room.findOne({ where: { id: membership.roomId } }).then(
               async (room) => {
                 if (sockets[user.id]) {
-                  sockets[acc.userId].emit('user-invited', {
+                  sockets[user.id].emit('user-invited', {
                     invite,
                     user,
                     room,
@@ -717,7 +717,7 @@ router.post('/invite_to_room', jsonParser, async function (req, res) {
           sw.Room.findOne({ where: { id: membership.roomId } }).then(
             async (room) => {
               if (sockets[user.id]) {
-                sockets[acc.userId].emit('user-invited', {
+                sockets[user.id].emit('user-invited', {
                   invite,
                   user,
                   room,

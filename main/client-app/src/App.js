@@ -65,7 +65,7 @@ import {
 import { addNewChat, setLastMessage, updateChat } from './components/HomeMain';
 import DesktopWallpaper from './images/roomWallpaper.png';
 import GenerateLink from './routes/pages/generateLink';
-import GenerateInvitation from './routes/pages/generateInvitation';
+import GenerateInvitation from './routes/pages/invitationsList';
 import ConfigGuestAccount from './routes/pages/configGuestAccount';
 import SpacesListPage from './routes/pages/spacesList';
 const PouchDB = require('pouchdb').default
