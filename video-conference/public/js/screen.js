@@ -545,9 +545,11 @@
   }
 
   let endScreen = () => {
-    local_media_stream.getVideoTracks().forEach((track) => {
-      track.stop()
-    })
+    if (local_media_stream !== null && local_media_stream !== undefined) {
+      local_media_stream.getVideoTracks().forEach((track) => {
+        track.stop()
+      });
+    }
     isMediaAvailable = false
     signaling_socket.emit('hide')
     window.isScreenEnable = false;

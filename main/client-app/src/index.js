@@ -19,10 +19,6 @@ const MainApp = React.lazy(() => {
 })
 
 let Loading = (props) => {
-  const { containerProps, indicatorEl } = useLoading({
-    loading: true,
-    indicator: <TailSpin width="276" height="276" />,
-  })
   return (
     <section {...props}>
       <div
@@ -35,31 +31,21 @@ let Loading = (props) => {
       >
         <img
           src={CloudIcon}
-          style={{ width: 176, height: 176, marginTop: -24 }}
+          style={{ width: 212, height: 212, marginTop: -24 }}
         />
         <Typography
           variant={'h5'}
           style={{
             width: '100%',
-            marginTop: -24,
+            marginTop: 16,
             textAlign: 'center',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#fff',
+            color: '#333',
           }}
         >
           ابر آسمان
         </Typography>
-        <div
-          style={{
-            position: 'fixed',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          {indicatorEl}
-        </div>
       </div>
     </section>
   )
@@ -82,31 +68,21 @@ let PreLoading = (props) => {
       >
         <img
           src={CloudIcon}
-          style={{ width: 176, height: 176, marginTop: -24 }}
+          style={{ width: 212, height: 212, marginTop: -24,  }}
         />
         <Typography
           variant={'h5'}
           style={{
             width: '100%',
-            marginTop: -24,
+            marginTop: 16,
             textAlign: 'center',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#fff',
+            color: '#333',
           }}
         >
-          در حال اتصال
+          ابر آسمان
         </Typography>
-        <div
-          style={{
-            position: 'fixed',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
-        >
-          {indicatorEl}
-        </div>
       </div>
     </section>
   )
@@ -143,10 +119,7 @@ let loading = (
 export let display2, setDisplay2;
 
 let AppContainer = (props) => {
-  ;[wallpaper, setWall] = React.useState({
-    type: 'photo',
-    photo: DesktopWallpaper,
-  });
+  ;[wallpaper, setWall] = React.useState({});
   setWallpaper = (w) => {
     setWall(w);
   }
@@ -215,16 +188,6 @@ let AppContainer = (props) => {
             }}
           />
         ) : null}
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.45)',
-            position: 'fixed',
-            top: 0,
-            left: 0,
-          }}
-        />
         <PreLoading />
       </div>
     )
@@ -271,17 +234,6 @@ let AppContainer = (props) => {
           }}
         />
       ) : null}
-      <div
-        style={{
-          display: display2,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.45)',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-        }}
-      />
       <Suspense fallback={loading}>
         <MainApp />
       </Suspense>
