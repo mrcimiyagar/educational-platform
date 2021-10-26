@@ -76,7 +76,7 @@ function HomeDrawer(props) {
       onKeyDown={() => props.setOpen(false)}
     >
       <List>
-        {['خانه', 'مخاطبان', 'دوستان', 'فروشگاه', 'گشت و گذار'].map(
+        {['خانه', 'مخاطبان', 'دوستان', 'دعوت نامه ها'].map(
           (text, index) => (
             <ListItem
               button
@@ -85,12 +85,11 @@ function HomeDrawer(props) {
                 if (index === 0) {
                   gotoPage('/app/messenger')
                 } else if (index === 1) {
+                  
                 } else if (index === 2) {
+
                 } else if (index === 3) {
-                  gotoPage('/app/store')
-                } else if (index === 4) {
-                  gotoPage('/app/searchengine')
-                } else if (index === 5) {
+                  gotoPage('/app/generate_invitation')
                 }
               }}
             >

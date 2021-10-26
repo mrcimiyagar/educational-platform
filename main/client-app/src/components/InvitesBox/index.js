@@ -1,7 +1,8 @@
 import { Card } from '@material-ui/core'
 import Email from '@material-ui/icons/Email';
 import React, { useEffect } from 'react'
-import { Button } from 'reactstrap';
+import { Button, createTheme, ThemeProvider } from '@mui/material';
+import { pathConfig } from '../..';
 import { token } from '../../util/settings';
 
 export default function InvitesBox(props) {
@@ -9,7 +10,7 @@ export default function InvitesBox(props) {
   let [invites, setInvites] = React.useState([]);
 
   let fetchRooms = () => {
-    
+
   }
 
   let fetchInvites = () => {
@@ -21,7 +22,7 @@ export default function InvitesBox(props) {
       },
       redirect: 'follow'
     };
-    fetch("../room/get_invites", requestOptions2)
+    fetch(pathConfig.mainBackend + "/room/get_invites", requestOptions2)
         .then(response => response.json())
         .then(result => {
           console.log(JSON.stringify(result));
@@ -35,20 +36,23 @@ export default function InvitesBox(props) {
     fetchInvites();
   }, []);
 
+  let theme = createTheme({
+    palette: {
+      primary: {
+        main: '#000'
+      },
+      secondary: {
+        main: '#000'
+      },
+    },
+  });
+
   return (
-    <Card style={{ marginTop: 16 }}>
-      <div className="position-absolute card-top-buttons">
-        <button className="btn btn-header-light icon-button">
-          <i className="simple-icon-refresh" />
-        </button>
-      </div>
+    <div style={{ marginTop: 16 }}>
       <div>
-        <div>
-          <div style={{ fontSize: 20 }}>دعوت ها</div>
-        </div>
         <div
           className="scroll dashboard-list-with-thumbs"
-          style={{ height: window.innerHeight / 2 - 176, position: 'relative' }}
+          style={{ height: window.innerHeight / 2 - 176, position: 'relative', padding: 32 }}
         >
             {invites.map((invite, index) => {
               return (
@@ -68,11 +72,9 @@ export default function InvitesBox(props) {
                     <div>
                       <p className="list-item-heading">{invite.Room.name}</p>
                       <div style={{ display: 'flex' }}>
+                        <ThemeProvider theme={theme}>
                         <Button
-                          outline
-                          color="secondary"
-                          className="mb-2"
-                          style={{ fontSize: 14 }}
+                          variant={'outlined'}
                           onClick={() => {
                             let requestOptions = {
                               method: 'POST',
@@ -85,7 +87,7 @@ export default function InvitesBox(props) {
                               }),
                               redirect: 'follow',
                             }
-                            fetch('../room/accept_invite', requestOptions)
+                            fetch(pathConfig.mainBackend + '/room/accept_invite', requestOptions)
                               .then((response) => response.json())
                               .then((result) => {
                                 console.log(JSON.stringify(result))
@@ -103,10 +105,8 @@ export default function InvitesBox(props) {
                           <pre> </pre>
                         </span>
                         <Button
-                          outline
-                          color="secondary"
-                          className="mb-2"
-                          style={{ fontSize: 14 }}
+                          variant={'outlined'}
+                          color={'secondary'}
                           onClick={() => {
                             let requestOptions = {
                               method: 'POST',
@@ -119,7 +119,7 @@ export default function InvitesBox(props) {
                               }),
                               redirect: 'follow',
                             }
-                            fetch('../room/decline_invite', requestOptions)
+                            fetch(pathConfig.mainBackend + '/room/decline_invite', requestOptions)
                               .then((response) => response.json())
                               .then((result) => {
                                 console.log(JSON.stringify(result))
@@ -133,6 +133,7 @@ export default function InvitesBox(props) {
                         >
                           رد کرذن
                         </Button>
+                        </ThemeProvider>
                       </div>
                     </div>
                   </div>
@@ -141,6 +142,6 @@ export default function InvitesBox(props) {
             })}
         </div>
       </div>
-    </Card>
+    </div>
   )
 }
