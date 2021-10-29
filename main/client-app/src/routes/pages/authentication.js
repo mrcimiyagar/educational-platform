@@ -49,11 +49,6 @@ function Authentication(props) {
       setLogoTop(100);
       setOpacity(1)
     }, 2000)
-    // if (localStorage.getItem('username') !== undefined) {
-    //   document.getElementById('loginUsername').value = localStorage.getItem('username');
-    //   document.getElementById('loginPassword').value = localStorage.getItem('password');
-    //   document.getElementById('loginBtn').click();
-    // }
   }, [])
   return (
     <div style={{height: '100%', overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
@@ -61,8 +56,8 @@ function Authentication(props) {
       {register ? 
         <div style={{borderRadius: 32, height: 'auto', paddingLeft: 32, paddingRight: 32, paddingtop: 16, paddingBottom: 16, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', textAlign: 'center', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
           <div style={{width: '100%', height: 'auto'}}>
-            <img src={CloudIcon} style={{width: 300, height: 300, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
-            <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#000', marginTop: -56, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
+            <img src={CloudIcon} style={{width: 150, height: 150, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
+            <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#000', marginTop: 24, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
           </div>
           <WhiteColorTextField className={classes.root} id="registerUsername" label="نام کاربری" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
           <WhiteColorTextField className={classes.root} id="registerPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
@@ -117,8 +112,8 @@ function Authentication(props) {
         </div> :
         <div style={{borderRadius: 32, textAlign: 'center', paddingLeft: 32, paddingRight: 32, paddingtop: 32, paddingBottom: 32, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
           <div style={{width: '100%', height: 'auto'}}>
-            <img src={CloudIcon} style={{width: 300, height: 300, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
-            <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#000', marginTop: -56, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
+            <img src={CloudIcon} style={{width: 150, height: 150, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
+            <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#000', marginTop: 24, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
           </div>
           <WhiteColorTextField className={classes.root} id="loginUsername" label="نام کاربری" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
           <WhiteColorTextField className={classes.root} id="loginPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />

@@ -616,7 +616,7 @@ export default function ChatEmbedded(props) {
               }
             }}
           >
-            <SendIcon />
+            <SendIcon style={{fill: colors.primaryMedium}} />
           </IconButton>
           <br />
         </div>

@@ -207,7 +207,6 @@ if (window.innerWidth > 900) {
     } else if (isMobile()) {
       setHistPage(p + (query.length > 0 ? '?' : '') + query)
     }
-    setRouteTrigger(!routeTrigger)
 
     if (isTablet() || isDesktop()) {
       window.history.pushState(
@@ -253,10 +252,10 @@ if (window.innerWidth > 900) {
     if (series.length > 1) {
       series.pop()
       paramsSeries.pop()
+      
+      setHistPage(series[series.length - 1])
 
       if (isTablet() || isDesktop()) {
-        setHistPage(series[series.length - 1])
-        setRouteTrigger(!routeTrigger)
 
         let params = paramsSeries[paramsSeries.length - 1]
         let query = ''
@@ -433,45 +432,23 @@ let InnerApp = (props) => {
   return (
     <main>
       <Switch>
-        <Route path="/app/auth">
-          <Authentication />
-        </Route>
-        <Route path="/app/home">
-          <HomePage />
-        </Route>
-        <Route path="/app/store">
-          <Store />
-        </Route>
-        <Route path="/app/messenger">
-          <MessengerPage />
-        </Route>
-        <Route path="/app/room">
-          <RoomPage />
-        </Route>
-        <Route path="/app/searchengine">
-          <SearchEngine />
-        </Route>
-        <Route path="/app/chat">
-          <Chat />
-        </Route>
-        <Route path="/app/generate_invite_link">
-          <GenerateLink />
-        </Route>
-        <Route path="/app/generate_invitation">
-          <GenerateInvitation />
-        </Route>
-        <Route path="/app/use_invitation" component={ConfigGuestAccount} />
-        
+        <Route path="/app/auth" component={Authentication}/>
+        <Route path="/app/home" component={HomePage} />
+        <Route path="/app/store" component={Store}/>
+        <Route path="/app/messenger" component={MessengerPage}/>
+        <Route path="/app/room" component={RoomPage}/>
+        <Route path="/app/searchengine" component={SearchEngine}/>
+        <Route path="/app/chat" component={Chat}/>
+        <Route path="/app/generate_invite_link" component={GenerateLink}/>
+        <Route path="/app/generate_invitation" component={GenerateInvitation}/>
+        <Route path="/app/use_invitation" component={ConfigGuestAccount} />        
         <Route path="/app/storebot" component={StoreBot} />
         <Route path="/app/storeads" component={StoreAds} />
         <Route path="/app/photoviewer" component={PhotoViewer} />
         <Route path="/app/poll" component={PollPage} />
         <Route path="/app/notes" component={NotePage} />
         <Route path="/app/deck" component={DeckPage} />
-        <Route
-          path="/app/searchengineresults"
-          component={SearchEngineResults}
-        />
+        <Route path="/app/searchengineresults" component={SearchEngineResults}/>
         <Route path="/app/userprofile" component={Profile} />
         <Route path="/app/createroom" component={CreateRoom} />
         <Route path="/app/roomstree" component={RoomsTree} />
