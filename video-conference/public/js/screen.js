@@ -156,6 +156,7 @@
          * eventually (supposedly), but is necessary
          * for now to get firefox to talk to chrome */,
       )
+      peer_connection.userId = config.userId
       peers[peer_id] = peer_connection
 
       peer_connection.onicecandidate = function (event) {
