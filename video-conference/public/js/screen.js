@@ -130,7 +130,6 @@
     })
 
     signaling_socket.on('answerAppearence', (peer_id) => {
-      alert('screen-' + window.peer_owners_dict[peer_id]);
       document.getElementById('videoconf' + peer_id).style.display = 'block';
       window.peer_media_availability['screen-' + window.peer_owners_dict[peer_id]] = true;
       window.updateVideoScreen(window.peer_owners_dict[peer_id]);
@@ -466,20 +465,20 @@
       navigator.msGetUserMedia
 
     navigator.mediaDevices.getDisplayMedia().then(stream => {
-        console.log('Access granted to video/video')
-        local_media_stream = stream
+        console.log('Access granted to video/video');
+        local_media_stream = stream;
         if (localMediaEl === undefined) {
-          var local_media = $('<video>')
-          local_media.attr('autoplay', 'autoplay')
+          var local_media = $('<video>');
+          local_media.attr('autoplay', 'autoplay');
           local_media.attr(
             'muted',
             'true',
-          ) /* always mute ourselves by default */
-          local_media.attr('controls', '')
-          document.getElementById('me').appendChild(local_media[0])
-          local_media[0].style.width = '100%'
-          local_media[0].style.aspectRatio = '1 / 1'
-          local_media[0].style.transform = 'rotateY(0)'
+          ); /* always mute ourselves by default */
+          local_media.attr('controls', '');
+          document.getElementById('me').appendChild(local_media[0]);
+          local_media[0].style.width = '100%';
+          local_media[0].style.aspectRatio = '1 / 1';
+          local_media[0].style.transform = 'rotateY(0)';
           local_media[0].style.display = 'none';
           local_media[0].style.position = 'absolute';
           local_media[0].style.top = '0px';

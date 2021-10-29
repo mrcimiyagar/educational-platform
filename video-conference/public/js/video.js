@@ -134,7 +134,6 @@
     })
 
     signaling_socket.on('answerAppearence', (peer_id) => {
-      alert('video-' + window.peer_owners_dict[peer_id]);
       document.getElementById('videoconf' + peer_id).style.display = 'block';
       window.peer_media_availability['video-' + window.peer_owners_dict[peer_id]] = true;
       window.updateVideoScreen(window.peer_owners_dict[peer_id]);
