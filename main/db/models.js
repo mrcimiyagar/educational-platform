@@ -38,8 +38,8 @@ let MessageSeen;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
-const dbName = 'MarlikAmoozesh'
-
+const dbName = 'MarlikAmoozesh';
+const dbName2 = 'TaskBoard';
 module.exports = {
     setup: async function() {
         const config = {
@@ -48,12 +48,18 @@ module.exports = {
             port: 5432,
             host: 'localhost'
         };
-        /*try {
+        try {
             await pgTools.dropdb(config, dbName);
         } catch (e) {console.log(e);}
         try {
+            await pgTools.dropdb(config, dbName2);
+        } catch (e) {console.log(e);}
+        try {
             await pgTools.createdb(config, dbName);
-        } catch (e) {console.log(e);}*/
+        } catch (e) {console.log(e);}
+        try {
+            await pgTools.createdb(config, dbName2);
+        } catch (e) {console.log(e);}
         prepareSequelizeInstance();
         await prepareUserModel();
         await prepareAccountModel();

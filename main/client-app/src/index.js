@@ -31,7 +31,7 @@ let Loading = (props) => {
       >
         <img
           src={CloudIcon}
-          style={{ width: 212, height: 212, marginTop: -24 }}
+          style={{ width: 112, height: 112, marginTop: -24 }}
         />
         <Typography
           variant={'h5'}
@@ -68,7 +68,7 @@ let PreLoading = (props) => {
       >
         <img
           src={CloudIcon}
-          style={{ width: 212, height: 212, marginTop: -24,  }}
+          style={{ width: 112, height: 112, marginTop: -24,  }}
         />
         <Typography
           variant={'h5'}

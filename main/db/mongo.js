@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const {ObjectId} = require("bson");
 
 let setup = (callback) => {
-    mongoose.connect('mongodb://aseman:3x2fG1b65sg4hN68sr4yj8j6k5Bstul4yi56l453tsK5346u5s4R648j@localhost:27017', {useNewUrlParser: true, useUnifiedTopology: true});
+/*    mongoose.connect('mongodb://aseman:3x2fG1b65sg4hN68sr4yj8j6k5Bstul4yi56l453tsK5346u5s4R648j@localhost:27017', {useNewUrlParser: true, useUnifiedTopology: true});
     const db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function() {
@@ -42,7 +42,8 @@ let setup = (callback) => {
         let realAnswer = mongoose.model('RealAnswer', RealAnswerSchema);
         console.log('created mongo models');
         callback(survey, answer, realAnswer);
-    });
+    });*/
+callback();
 };
 
 module.exports.setup = setup;
