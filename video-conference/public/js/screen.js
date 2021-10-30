@@ -144,6 +144,7 @@
     signaling_socket.on('addPeer', function (config) {
       console.log('Signaling server said to add peer:', config)
       var peer_id = config.peer_id
+      var userId = config.userId
       if (peer_id in peers) {
         /* This could happen if the user joins multiple channels where the other peer is also in. */
         console.log('Already connected to peer ', peer_id)
