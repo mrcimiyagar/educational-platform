@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 var USE_AUDIO = true
 var USE_VIDEO = true
 var MUTE_AUDIO_BY_DEFAULT = false
