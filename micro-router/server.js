@@ -15,6 +15,9 @@ let serv = https.createServer({
   else if (req.headers.host === 'code.kaspersoft.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8100' }, e => {})
   }
+  else if (req.headers.host === 'confclient.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:1013' }, e => {})
+  }
   else if (req.headers.host === 'taskboardbackend.kaspersoft.cloud') {
     proxy.web(req, res, { target: 'http://localhost:1337' }, e => {})
   }
