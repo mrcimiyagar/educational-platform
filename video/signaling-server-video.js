@@ -13,7 +13,11 @@ var bodyParser = require('body-parser')
 var main = express()
 
 var server = http.createServer(main)
-var io  = require('socket.io').listen(server);
+var io  = require('socket.io').listen(server, {
+    cors: {
+      origin: '*',
+    }
+});
 //io.set('log level', 2);
 
 server.listen(PORT, null, function() {
@@ -21,7 +25,6 @@ server.listen(PORT, null, function() {
 });
 //main.use(express.bodyParser());
 
-main.use(express.static('public'));
 // main.get('/index.html', function(req, res){ res.sendfile('newclient.html'); });
 // main.get('/client.html', function(req, res){ res.sendfile('newclient.html'); });
 
