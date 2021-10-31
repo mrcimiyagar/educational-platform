@@ -15,8 +15,8 @@ function App() {
         }}
       >
         <video
-          onclick="disableMax()"
-          autoplay
+          onClick="disableMax()"
+          autoPlay
           id="screenMax"
           style={{
           transform: 'rotateY(0)',
@@ -29,8 +29,8 @@ function App() {
           }}
         ></video>
         <video
-          onclick="disableMax()"
-          autoplay
+          onClick="disableMax()"
+          autoPlay
           id="webcamMax"
           style={{
           objectFit: 'cover',
@@ -44,10 +44,10 @@ function App() {
       </div>
       <div
         id="participents"
-        class="participents"
+        className="participents"
         style={{width: '100%', height: 'auto'}}
       >
-        <div id="me" class="container" style={{display: 'none'}}></div>
+        <div id="me" className="container" style={{display: 'none'}}></div>
       </div>
       <div style={{width: '100%', height: 128}}></div>
       <div
@@ -57,7 +57,7 @@ function App() {
         <button
           id="openBtn"
           style={{display: 'none', position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', width: '100px', height: '100px', borderRadius: '50px'}}
-          onclick="window.openCallPage()"
+          onClick="window.openCallPage()"
         >
           ورود به مکالمه
         </button>
