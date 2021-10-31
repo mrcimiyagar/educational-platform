@@ -1,6 +1,17 @@
 import React from 'react';
+import Video from './components/Video';
+
+function useForceUpdate(){
+  const [value, setValue] = React.useState(0); // integer state
+  return () => setValue(value => ++value); // update the state to force render
+}
 
 function App() {
+
+  let forceUpdate = useForceUpdate();
+  let [videos, setVideos] = React.useState({});
+  let [audios, setAudios] = React.useState({});
+  let [screens, setScreens] = React.useState({});
 
   return (
     <div style={{width: 'auto', height: '100vh', display: 'flex', flexwrap: 'wrap'}}>
@@ -62,6 +73,7 @@ function App() {
           ورود به مکالمه
         </button>
       </div>
+      <Video data={videos} forceUpdate={forceUpdate}/>
     </div>
   )
 }
