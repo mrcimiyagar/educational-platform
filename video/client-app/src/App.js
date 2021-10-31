@@ -49,7 +49,7 @@ function App() {
       >
         <div id="me" class="container" style={{display: 'none'}}></div>
       </div>
-      <div style="width: 100%; height: 128px;"></div>
+      <div style={{width: '100%', height: 128}}></div>
       <div
         id="openContainer"
         style={{width: '100%', height: '100%', position: 'fixed', left: '0px', top: '0px', zIndex: 99999, display: 'block'}}
