@@ -25,6 +25,56 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <script>
+      let roomId = 0;
+      let userId = '';
+      let videoServerWebsocket = '';
+      let audioServerWebsocket = '';
+      let screenServerWebsocket = '';
+      window.isScreenEnable = false
+      window.isWebcamEnable = false
+      window.screenEl = undefined
+      window.webcamEl = undefined
+      window.peer_owners_dict = {}
+      window.peer_media_subelements = {}
+      window.peer_media_availability = {}
+      window.peer_media_elements = {}
+      window.peer_media_streams = {}
+      window.openCallPage = () => {
+        document.getElementById('openContainer').style.display = 'none';
+        window.initVideo(
+          userId,
+          roomId,
+          videoServerWebsocket,
+        );
+        window.initAudio(
+          userId,
+          roomId,
+          audioServerWebsocket,
+        );
+        window.initScreen(
+          userId,
+          roomId,
+          screenServerWebsocket,
+        );
+      }
+      window.updateVideoScreen = (userId) => {
+        if (window.peer_media_availability['video-' + userId] === true) {
+          if (window.peer_media_availability['screen-' + userId] === true) {
+            window.peer_media_subelements['video-' + userId].style.width = '25%'
+          } else {
+            window.peer_media_subelements['video-' + userId].style.width =
+              '100%'
+          }
+        }
+      }
+      let disableMax = function (e) {
+        document.getElementById('max').style.display = 'none'
+      }
+      function setMediaBitrates(sdp) {
+        return setMediaBitrate(setMediaBitrate(sdp, 'video', 250), 'audio', 50)
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

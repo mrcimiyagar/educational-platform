@@ -1,5 +1,5 @@
 
-var BandwidthHandler = (function() {
+let BandwidthHandler = (function() {
     function setBAS(sdp, bandwidth, isScreen) {
         if (!!navigator.mozGetUserMedia || !bandwidth) {
             return sdp;
@@ -169,3 +169,5 @@ var BandwidthHandler = (function() {
         }
     };
 })();
+
+export default BandwidthHandler;

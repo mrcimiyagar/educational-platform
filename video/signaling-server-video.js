@@ -28,8 +28,6 @@ server.listen(PORT, null, function() {
 // main.get('/index.html', function(req, res){ res.sendfile('newclient.html'); });
 // main.get('/client.html', function(req, res){ res.sendfile('newclient.html'); });
 
-
-
 /*************************/
 /*** INTERESTING STUFF ***/
 /*************************/
@@ -81,7 +79,7 @@ io.sockets.on('connection', function (socket) {
 
         for (id in channels[channel]) {
             channels[channel][id].emit('addPeer', {'peer_id': socket.id, 'userId': socket.userId, 'should_create_offer': false});
-            socket.emit('addPeer', {'peer_id': id, 'userId': socket.userId, 'should_create_offer': true});
+            socket.emit('addPeer', {'peer_id': id, 'userId': sockets[id].userId, 'should_create_offer': true});
         }
 
         channels[channel][socket.id] = socket;
