@@ -70,8 +70,10 @@ function produceEmptyStream() {
 var signaling_socket = null /* our socket.io connection to our webserver */
 var local_media_stream = null /* our own microphone / webcam */
 var peers = {} /* keep track of our peer connections, indexed by peer_id (aka socket.io id) */
-var localMediaEl = undefined
-let isMediaAvailable = false
+
+export let endAudio;
+export let startAudio;
+export let initAudio;
 
 export default function AudioMedia(props) {
 
@@ -130,7 +132,7 @@ export default function AudioMedia(props) {
     )
   }
 
-let startAudio = () => {
+startAudio = () => {
   if (local_media_stream !== null && local_media_stream !== undefined) {
     local_media_stream.getAudioTracks().forEach((track) => {
       track.stop()
@@ -153,7 +155,7 @@ let startAudio = () => {
   })
 }
 
-let endAudio = () => {
+endAudio = () => {
   if (local_media_stream !== null && local_media_stream !== undefined) {
     local_media_stream.getAudioTracks().forEach((track) => {
       track.stop()
@@ -365,7 +367,7 @@ let endAudio = () => {
     })
   }
   
-  function init() {
+  initAudio = () => {
         let requestOptions = {
           method: 'GET',
           headers: {
@@ -380,13 +382,6 @@ let endAudio = () => {
             initInner(pathConfig.videoConfAudio)
           })
   };
-
-  useEffect(() => {
-    init();
-    setTimeout(() => {
-      startAudio();
-    }, 2500);
-  }, []);
 
   return <div/>;
 }

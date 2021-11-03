@@ -101,7 +101,7 @@ io.sockets.on('connection', function (socket) {
 
         for (id in channels[channel]) {
             channels[channel][id].emit('removePeer', {'peer_id': socket.id, 'userId': socket.userId});
-            socket.emit('removePeer', {'peer_id': id, 'userId': sockets[id].userId});
+            socket.emit('removePeer', {'peer_id': id, 'userId': sockets[id] !== undefined ? sockets[id].userId : undefined});
         }
     }
     socket.on('part', part);

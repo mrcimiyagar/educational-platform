@@ -1,9 +1,14 @@
 import React, { useEffect } from 'react';
-import VideoMedia from './components/VideoMedia';
-import AudioMedia from './components/AudioMedia';
-import ScreenMedia from './components/ScreenMedia';
-import {Fab, ThemeProvider} from '@mui/material';
-import { createTheme } from '@mui/system';
+import VideoMedia, { endVideo, initVideo, startVideo } from './components/VideoMedia';
+import AudioMedia, { endAudio, initAudio, startAudio } from './components/AudioMedia';
+import ScreenMedia, { endScreen, initScreen, startScreen } from './components/ScreenMedia';
+import {Fab, ThemeProvider, createTheme} from '@material-ui/core';
+import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
+import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled';
+import { ArrowForward, Mic, MicOff, Notes, VideocamOff } from "@material-ui/icons";
+import CallIcon from '@material-ui/icons/Call';
+import CallEndIcon from '@material-ui/icons/CallEnd';
+import VideocamIcon from '@material-ui/icons/Videocam';
 
 function useForceUpdate(){
   const [value, setValue] = React.useState(0); // integer state
@@ -79,6 +84,7 @@ function App() {
   let [screens, setScreens] = React.useState({});
   let [video, setVideo] = React.useState(false);
   let [audio, setAudio] = React.useState(false);
+  let [screen, setScreen] = React.useState(false);
   let [connected, setConnected] = React.useState(false);
   let [pathConfig, setPathConfig] = React.useState(undefined);
   let [me, setMe] = React.useState(undefined);
@@ -88,6 +94,12 @@ function App() {
     let vs = findValueByPrefix(videos, props.id + '_video');
     let ss = findValueByPrefix(screens, props.id + '_screen');
     let as = findValueByPrefix(audios, props.id + '_audio');
+    console.log('videos');
+    console.log(videos);
+    console.log('audios');
+    console.log(audios);
+    console.log('screens');
+    console.log(screens);
     if (ss !== undefined) {
       if (vs !== undefined) {
         return (
@@ -224,7 +236,7 @@ function App() {
       <div
         id="participents"
         className="participents"
-        style={{width: '100%', height: 'auto'}}
+        style={{width: '100%', height: 'auto', display: connected ? 'block' : 'none'}}
       >
         {result.map(key => {
           return (
@@ -233,62 +245,65 @@ function App() {
         })}
       </div>
       <div style={{width: '100%', height: 128}}></div>
-      <div
-        id="openContainer"
-        style={{width: '100%', height: '100%', position: 'fixed', left: '0px', top: '0px', zIndex: 99999, display: 'block'}}
-      >
-        <button
-          id="openBtn"
-          style={{display: 'none', position: 'fixed', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', width: '100px', height: '100px', borderRadius: '50px'}}
-          onClick={window.openCallPage}
-        >
-          ورود به مکالمه
-        </button>
-      </div>
       {connected ?
           <div style={{width: '100%', height: '100%'}}>
-              <ThemeProvider theme={theme}>
-              {audio ? 
-                <Fab id="audioButton" color={'primary'} style={{position: 'absolute', left: 16, bottom: (48 + 56 + 16)}} onClick={() => {
-                  window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchAudioFlag', stream: !store.getState().global.conf.audio}, pathConfig.videoConfVideo)
-                  store.dispatch(switchConf('audio', !store.getState().global.conf.audio))
+            <ThemeProvider theme={theme}>
+              <Fab id="audioButton" color={'primary'} style={{position: 'absolute', left: 16, bottom: (48 + 56 + 16)}} onClick={() => {
+                  if (audio) {
+                    endAudio();
+                    setAudio(false);
+                  }
+                  else {
+                    startAudio();
+                    setAudio(true);
+                  }
                   forceUpdate()
-                }}>{store.getState().global.conf.audio ? <Mic/> : <MicOff/>}</Fab> :
-                null
-              }  
-              <Fab id="endCallButton" color={'secondary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: (isDesktop() && isInRoom()) ? 48 : (16 + 72)}} onClick={() => {
-                store.dispatch(switchConf('video', false))
-                store.dispatch(switchConf('audio', false))
-                store.dispatch(switchConf('screen', false))
-                setConnected(false)
-                setUniqueKey(Math.random())
-                forceUpdate()
+              }}>{audio ? <Mic/> : <MicOff/>}</Fab>
+              <Fab id="endCallButton" color={'secondary'} style={{position: 'absolute', left: 16, bottom: 48}} onClick={() => {
+                endAudio();
+                endVideo();
+                endScreen();
+                setConnected(false);
+                forceUpdate();
               }}><CallEndIcon/></Fab>
-              {video ?
-                <Fab id="camButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
-                  window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchVideoFlag', stream: !store.getState().global.conf.video}, pathConfig.videoConfVideo)
-                  store.dispatch(switchConf('video', !store.getState().global.conf.video))
+              <Fab id="camButton" color={'primary'} style={{position: 'absolute', left: (16 + 56 + 16 + 72), bottom: 48}} onClick={() => {
+                  if (video) {
+                    endVideo();
+                    setVideo(false);
+                  }
+                  else {
+                    startVideo();
+                    setVideo(true);
+                  }
                   forceUpdate()
-                }}>{store.getState().global.conf.video ? <VideocamIcon/> : <VideocamOff/>}</Fab> :
-                null
-              }
-              {video ?<Fab id="screenButton" color={'primary'} style={{position: 'absolute', left: video ? ((isDesktop() && isInRoom()) ? (32 + 56 + 16 + 56 + 16) : (16 + 56 + 16 + 56 + 16)) : ((isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16)), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
-                window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchScreenFlag', stream: !store.getState().global.conf.screen}, pathConfig.videoConfVideo)
-                store.dispatch(switchConf('screen', !store.getState().global.conf.screen))
+              }}>{video ? <VideocamIcon/> : <VideocamOff/>}</Fab>
+              <Fab id="screenButton" color={'primary'} style={{position: 'absolute', left: (16 + 56 + 16), bottom: 48}} onClick={() => {
+                if (screen) {
+                  endScreen();
+                  setScreen(false);
+                }
+                else {
+                  startScreen();
+                  setScreen(true);
+                }
                 forceUpdate()
-              }}>{store.getState().global.conf.screen ? <DesktopWindowsIcon/> : <DesktopAccessDisabledIcon/>}</Fab> :
-              null}
-            </ThemeProvider>
+            }}>{screen ? <DesktopWindowsIcon/> : <DesktopAccessDisabledIcon/>}</Fab>
+          </ThemeProvider>
         </div>:
-        <ThemeProvider theme={theme2}>
-          <Fab id="callButton" color={'secondary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: (isDesktop() && isInRoom()) ? 48 : (16 + 72)}} onClick={() => {
-            setConnected(true)
+        !connected ?
+          <ThemeProvider theme={theme}>
+          <Fab id="callButton" color={'secondary'} style={{position: 'absolute', left: 16, bottom: 48}} onClick={() => {
+            setConnected(true);
+            initVideo();
+            initScreen();
+            initAudio();
           }}><CallIcon style={{fill: '#fff'}}/></Fab>
-        </ThemeProvider>
-          }
-      <VideoMedia data={videos} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
-      <AudioMedia data={audios} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
-      <ScreenMedia data={screens} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
+        </ThemeProvider> :
+        null
+      }
+      <VideoMedia data={videos} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={roomId}/>
+      <AudioMedia data={audios} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={roomId}/>
+      <ScreenMedia data={screens} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={roomId}/>
     </div>
   )
 }

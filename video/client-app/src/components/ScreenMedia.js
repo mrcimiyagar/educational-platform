@@ -71,6 +71,10 @@ var signaling_socket = null /* our socket.io connection to our webserver */
 var local_media_stream = null /* our own microphone / webcam */
 var peers = {} /* keep track of our peer connections, indexed by peer_id (aka socket.io id) */
 
+export let endScreen;
+export let startScreen;
+export let initScreen;
+
 export default function ScreenMedia(props) {
 
   let userId = props.userId;
@@ -120,7 +124,7 @@ export default function ScreenMedia(props) {
     )
   }
 
-let startScreen = () => {
+startScreen = () => {
   if (local_media_stream !== null && local_media_stream !== undefined) {
     local_media_stream.getVideoTracks().forEach((track) => {
       track.stop()
@@ -143,7 +147,7 @@ let startScreen = () => {
   })
 }
 
-let endScreen = () => {
+endScreen = () => {
   if (local_media_stream !== null && local_media_stream !== undefined) {
     local_media_stream.getVideoTracks().forEach((track) => {
       track.stop()
@@ -360,7 +364,7 @@ let endScreen = () => {
     })
   }
   
-  function init() {
+  initScreen = () => {
         let requestOptions = {
           method: 'GET',
           headers: {
@@ -375,13 +379,6 @@ let endScreen = () => {
             initInner(pathConfig.videoConfScreen)
           })
   };
-
-  useEffect(() => {
-    init();
-    setTimeout(() => {
-      startScreen();
-    }, 2500);
-  }, []);
 
   return <div/>;
 }
