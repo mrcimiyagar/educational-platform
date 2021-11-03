@@ -70,7 +70,7 @@ export function ConfBox(props) {
         </AppBar>
         
         <iframe allowTransparency={true} onLoad={() => window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'setupIds', userId: me.id, roomId: props.roomId, videoServerWebsocket: pathConfig.videoConfVideo, screenServerWebsocket: pathConfig.videoConfScreen, audioServerWebsocket: pathConfig.videoConfAudio}, pathConfig.videoConfVideo)} 
-                id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.videoConfVideo} allow={'microphone; camera'}
+                id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera'}
                 style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
                 marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
       </div>
