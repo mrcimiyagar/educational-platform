@@ -18,28 +18,8 @@ export let isConfConnected = false;
 export function ConfBox(props) {
     let forceUpdate = useForceUpdate();
     updateConfBox = forceUpdate;
-    let [video, setVideo] = React.useState(false);
-    let [audio, setAudio] = React.useState(false);
     let [connected, setConnected] = React.useState(false);
     isConfConnected = connected;
-    useEffect(() => {
-      window.addEventListener('message', e => {
-        if (e.data.action === 'switchVideoControlVisibility') {
-          if (!e.data.visibility)
-            store.dispatch(switchConf('video', false));
-          store.dispatch(switchConf('isVideoEnable', e.data.visibility));
-          setVideo(e.data.visibility);
-          forceUpdate();
-        }
-        else if (e.data.action === 'switchAudioControlVisibility') {
-          if (!e.data.visibility)
-            store.dispatch(switchConf('audio', false));
-          store.dispatch(switchConf('isAudioEnable', e.data.visibility));
-          setAudio(e.data.visibility);
-          forceUpdate();
-        }
-      })
-    }, [])
     let [uniqueKey, setUniqueKey] = React.useState(Math.random());
     return (
       <div key={uniqueKey} style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr', display: props.style.display}}>
@@ -69,8 +49,7 @@ export function ConfBox(props) {
           </Toolbar>
         </AppBar>
         
-        <iframe allowTransparency={true} onLoad={() => window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'setupIds', userId: me.id, roomId: props.roomId, videoServerWebsocket: pathConfig.videoConfVideo, screenServerWebsocket: pathConfig.videoConfScreen, audioServerWebsocket: pathConfig.videoConfAudio}, pathConfig.videoConfVideo)} 
-                id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera'}
+        <iframe allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera'}
                 style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
                 marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
       </div>
