@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import $ from 'jquery';
 import io from 'socket.io-client';
+import { findValueByPrefix } from '../utils/utils';
 
 var USE_AUDIO = true
 var USE_VIDEO = true
@@ -84,7 +85,7 @@ export default function ScreenMedia(props) {
       let stream = produceEmptyStream();
       local_media_stream = stream;
       props.data['me_screen'] = stream;
-      props.updateData(props.data);
+      props.updateData();
       props.forceUpdate();
       if (callback) callback(stream);
       return;
@@ -103,7 +104,7 @@ export default function ScreenMedia(props) {
         if (foundTag !== undefined) {
           props.data[foundTag] = undefined;
         }
-        props.data['me_screen_' + Date.now()] = stream;
+        props.data['me_screen'] = stream;
         props.forceUpdate();
         props.updateData();
         if (callback) callback(stream);
@@ -178,36 +179,6 @@ let endScreen = () => {
       window.peer_media_elements = {}
     })
   
-    signaling_socket.on('show_peer', (peer_id) => {
-      let el = document.getElementById('videoconf' + peer_id)
-      if (el !== null) {
-        el.style.display = 'block'
-        window.peer_media_availability[
-          'video-' + window.peer_owners_dict[peer_id]
-        ] = true
-        window.updateVideoScreen(window.peer_owners_dict[peer_id])
-      }
-    })
-  
-    signaling_socket.on('hide_peer', (peer_id) => {
-      let el = document.getElementById('videoconf' + peer_id)
-      if (el !== null) {
-        el.style.display = 'none'
-        window.peer_media_availability[
-          'video-' + window.peer_owners_dict[peer_id]
-        ] = false
-        window.updateVideoScreen(window.peer_owners_dict[peer_id])
-      }
-    })
-  
-    signaling_socket.on('answerAppearence', (peer_id) => {
-      document.getElementById('videoconf' + peer_id).style.display = 'block'
-      window.peer_media_availability[
-        'video-' + window.peer_owners_dict[peer_id]
-      ] = true
-      window.updateVideoScreen(window.peer_owners_dict[peer_id])
-    })
-  
     /**
      * When we join a group, our signaling server will send out 'addPeer' events to each pair
      * of users in the group (creating a fully-connected graph of users, ie if there are 6 people
@@ -248,14 +219,14 @@ let endScreen = () => {
         console.log('onAddStream', event);
         let foundTag = undefined;
         Object.entries(props.data).forEach(([id, stream]) => {
-          if (id.startsWith(config.userId + '_video_')) {
+          if (id.startsWith(config.userId + '_screen_')) {
             foundTag = id;
           }
         })
         if (foundTag !== undefined) {
           props.data[foundTag] = undefined;
         }
-        props.data[config.userId + '_video_' + Date.now()] = event.stream;
+        props.data[config.userId + '_screen_' + Date.now()] = event.stream;
         props.updateData(props.data);
         props.forceUpdate();
       }
@@ -382,20 +353,11 @@ let endScreen = () => {
       }
   
       delete peers[peer_id]
-      delete window.peer_media_elements[config.peer_id]
+      let foundItem = findValueByPrefix(props.data, config.userId + '_screen');
+      delete props.data[foundItem !== undefined ? foundItem.key : undefined];
+      props.forceUpdate();
+      props.updateData();
     })
-  
-    window.onunload = () => {
-      signaling_socket.emit('hide')
-      local_media_stream.getVideoTracks().forEach((track) => track.stop())
-      signaling_socket.close()
-    }
-  
-    window.onbeforeunload = () => {
-      signaling_socket.emit('hide')
-      local_media_stream.getVideoTracks().forEach((track) => track.stop())
-      signaling_socket.close()
-    }
   }
   
   function init() {

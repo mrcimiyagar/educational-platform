@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import $ from 'jquery';
 import io from 'socket.io-client';
+import {findValueByPrefix} from '../utils/utils';
 
 var USE_AUDIO = true
 var USE_VIDEO = true
@@ -111,7 +112,7 @@ export default function VideoMedia(props) {
         if (foundTag !== undefined) {
           props.data[foundTag] = undefined;
         }
-        props.data['me_video_' + Date.now()] = stream;
+        props.data['me_video'] = stream;
         props.forceUpdate();
         props.updateData();
         if (callback) callback(stream);
@@ -184,36 +185,6 @@ let endVideo = () => {
   
       peers = {}
       window.peer_media_elements = {}
-    })
-  
-    signaling_socket.on('show_peer', (peer_id) => {
-      let el = document.getElementById('videoconf' + peer_id)
-      if (el !== null) {
-        el.style.display = 'block'
-        window.peer_media_availability[
-          'video-' + window.peer_owners_dict[peer_id]
-        ] = true
-        window.updateVideoScreen(window.peer_owners_dict[peer_id])
-      }
-    })
-  
-    signaling_socket.on('hide_peer', (peer_id) => {
-      let el = document.getElementById('videoconf' + peer_id)
-      if (el !== null) {
-        el.style.display = 'none'
-        window.peer_media_availability[
-          'video-' + window.peer_owners_dict[peer_id]
-        ] = false
-        window.updateVideoScreen(window.peer_owners_dict[peer_id])
-      }
-    })
-  
-    signaling_socket.on('answerAppearence', (peer_id) => {
-      document.getElementById('videoconf' + peer_id).style.display = 'block'
-      window.peer_media_availability[
-        'video-' + window.peer_owners_dict[peer_id]
-      ] = true
-      window.updateVideoScreen(window.peer_owners_dict[peer_id])
     })
   
     /**
@@ -302,11 +273,6 @@ let endVideo = () => {
       }
     })
   
-    signaling_socket.on('disableUser', (peer_id) => {
-      if (signaling_socket.id === peer_id) endVideo()
-      else peers[peer_id].close()
-    })
-  
     /**
      * Peers exchange session descriptions which contains information
      * about their video / video settings and that sort of stuff. First
@@ -381,7 +347,6 @@ let endVideo = () => {
     signaling_socket.on('removePeer', function (config) {
       console.log('Signaling server said to remove peer:', config)
       var peer_id = config.peer_id
-      $('#videoconf' + peer_id).remove()
       // if (document.getElementById('videoconf' + userId).childElementCount === 0) {
       //   window.peer_media_elements[userId].remove()
       // }
@@ -390,20 +355,11 @@ let endVideo = () => {
       }
   
       delete peers[peer_id]
-      delete window.peer_media_elements[config.peer_id]
+      let foundItem = findValueByPrefix(props.data, config.userId + '_video');
+      delete props.data[foundItem !== undefined ? foundItem.key : undefined];
+      props.forceUpdate();
+      props.updateData();
     })
-  
-    window.onunload = () => {
-      signaling_socket.emit('hide')
-      local_media_stream.getVideoTracks().forEach((track) => track.stop())
-      signaling_socket.close()
-    }
-  
-    window.onbeforeunload = () => {
-      signaling_socket.emit('hide')
-      local_media_stream.getVideoTracks().forEach((track) => track.stop())
-      signaling_socket.close()
-    }
   }
   
   function init() {

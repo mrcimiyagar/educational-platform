@@ -101,8 +101,8 @@ io.sockets.on('connection', function (socket) {
         delete channels[channel][socket.id];
 
         for (id in channels[channel]) {
-            channels[channel][id].emit('removePeer', {'peer_id': socket.id});
-            socket.emit('removePeer', {'peer_id': id});
+            channels[channel][id].emit('removePeer', {'peer_id': socket.id, 'userId': socket.userId});
+            socket.emit('removePeer', {'peer_id': id, 'userId': sockets[id].userId});
         }
     }
     socket.on('part', part);

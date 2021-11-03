@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import VideoMedia from './components/VideoMedia';
 import AudioMedia from './components/AudioMedia';
 import ScreenMedia from './components/ScreenMedia';
+import {Fab, ThemeProvider} from '@mui/material';
+import { createTheme } from '@mui/system';
 
 function useForceUpdate(){
   const [value, setValue] = React.useState(0); // integer state
@@ -17,12 +19,33 @@ function findValueByPrefix(object, prefix) {
   }
 }
 
+Array.prototype.unique = function() {
+  var a = this.concat();
+  for(var i=0; i<a.length; ++i) {
+      for(var j=i+1; j<a.length; ++j) {
+          if(a[i] === a[j])
+              a.splice(j--, 1);
+      }
+  }
+
+  return a;
+};
+
 function Video(props) {
   useEffect(() => {
     document.getElementById(props.id).srcObject = props.stream;
   }, [])
   return (
-    <video autoPlay controls muted id={props.id}/>
+    <video autoPlay controls muted id={props.id} style={{width: '100%', height: '100%'}}/>
+  );
+}
+
+function Screen(props) {
+  useEffect(() => {
+    document.getElementById(props.id).srcObject = props.stream;
+  }, [])
+  return (
+    <video autoPlay controls muted id={props.id} style={{width: '100%', height: '100%'}}/>
   );
 }
 
@@ -35,76 +58,128 @@ function Audio(props) {
   );
 }
 
-function MediaBox(props) {
-  return (
-    <div>
-      <Video id={props.id + '_video'} stream={props.data.video}/>
-      <Video id={props.id + '_screen'} stream={props.data.screen}/>
-      <Audio id={props.id + '_audio'} stream={props.data.audio}/>
-    </div>
-  );
-}
-
 let myUserId = prompt('enter your username:');
 
 function App() {
+
+  let theme = createTheme({
+    palette: {
+      primary: {
+        main: '#BBDEFB'
+      },
+      secondary: {
+        main: '#FFC107'
+      },
+    },
+  });
   
   let forceUpdate = useForceUpdate();
   let [videos, setVideos] = React.useState({});
   let [audios, setAudios] = React.useState({});
   let [screens, setScreens] = React.useState({});
-  let [f, setF] = React.useState({});
+  let [video, setVideo] = React.useState(false);
+  let [audio, setAudio] = React.useState(false);
+  let [connected, setConnected] = React.useState(false);
+  let [pathConfig, setPathConfig] = React.useState(undefined);
+  let [me, setMe] = React.useState(undefined);
+  let [roomId, setRoomId] = React.useState(undefined);
 
-  let update = () => {
-    f = {};
-    let v = [];
-    let s = [];
-    let a = [];
-    for (let key in videos) {
-      if (videos.hasOwnProperty(key)) {
-        let idParts = key.split('_');
-        v[idParts[0]] = videos[key];
+  function MediaBox(props) {
+    let vs = findValueByPrefix(videos, props.id + '_video');
+    let ss = findValueByPrefix(screens, props.id + '_screen');
+    let as = findValueByPrefix(audios, props.id + '_audio');
+    if (ss !== undefined) {
+      if (vs !== undefined) {
+        return (
+          <div>
+            <div style={{width: 64, height: 64}}>
+              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined}/>
+            </div>
+            <div style={{width: 256 + 128, height: (256 + 128) / 2}}>
+              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined}/>
+            </div>
+            <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
+          </div>
+        );
+      }
+      else {
+        return (
+          <div>
+            <div style={{width: 64, height: 64, display: 'none'}}>
+              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined}/>
+            </div>
+            <div style={{width: 256 + 128, height: (256 + 128) / 2}}>
+              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined}/>
+            </div>
+            <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
+          </div>
+        );
       }
     }
-    for (let key in screens) {
-      if (screens.hasOwnProperty(key)) {
-        let idParts = key.split('_');
-        s[idParts[0]] = screens[key];
+    else {
+      if (vs !== undefined) {
+        return (
+          <div>
+            <div style={{width: 128, height: 128}}>
+              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined}/>
+            </div>
+            <div style={{width: 256 + 128, height: (256 + 128) / 2, display: 'none'}}>
+              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined}/>
+            </div>
+            <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
+          </div>
+        );
+      }
+      else {
+        return (
+          <div>
+            <div style={{width: 64, height: 64, display: 'none'}}>
+              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined}/>
+            </div>
+            <div style={{width: 256 + 128, height: (256 + 128) / 2, display: 'none'}}>
+              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined}/>
+            </div>
+            <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
+          </div>
+        );
       }
     }
-    for (let key in audios) {
-      if (audios.hasOwnProperty(key)) {
-        let idParts = key.split('_');
-        a[idParts[0]] = audios[key];
-      }
+  }
+
+  useEffect(() => {
+    let requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      redirect: 'follow',
     }
-    for (let key in v) {
-      if (v.hasOwnProperty(key)) {
-        if (f[key] === undefined) {
-          f[key] = {};
-        }
-        f[key].video = v[key];
-      }
+    fetch('https://config.kaspersoft.cloud', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setPathConfig(result);
+      });
+  }, []);
+
+  window.onmessage = e => {
+    if (e.data.action === 'init') {
+      setMe(e.data.me);
+      setRoomId(e.data.roomId);
     }
-    for (let key in s) {
-      if (s.hasOwnProperty(key)) {
-        if (f[key] === undefined) {
-          f[key] = {};
-        }
-        f[key].screen = s[key];
-      }
-    }
-    for (let key in a) {
-      if (a.hasOwnProperty(key)) {
-        if (f[key] === undefined) {
-          f[key] = {};
-        }
-        f[key].audio = a[key];
-      }
-    }
-    setF(f);
-    forceUpdate();
-  };
+  }
+
+  if (pathConfig === undefined && me !== undefined && roomId !== undefined) {
+    return <div/>;
+  }
+
+  var result = Object.keys(videos).concat(Object.keys(audios)).unique();
+  result = result.concat(Object.keys(screens)).unique();
+  let tempResult = [];
+  result.forEach(item => {
+    let keyParts = item.split('_');
+    tempResult.push(keyParts[0]);
+  });
+  result = tempResult.unique();
 
   return (
     <div style={{width: 'auto', height: '100vh', display: 'flex', flexwrap: 'wrap'}}>
@@ -151,12 +226,9 @@ function App() {
         className="participents"
         style={{width: '100%', height: 'auto'}}
       >
-        {Object.entries(f).map(([id, data]) => {
-          if (data === undefined) {
-            return null;
-          }
+        {result.map(key => {
           return (
-            <MediaBox id={id} data={data}/>
+            <MediaBox id={key}/>
           );
         })}
       </div>
@@ -173,9 +245,50 @@ function App() {
           ورود به مکالمه
         </button>
       </div>
-      <VideoMedia data={videos} updateData={() => update()} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
-      <AudioMedia data={audios} updateData={() => update()} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
-      <ScreenMedia data={screens} updateData={() => update()} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
+      {connected ?
+          <div style={{width: '100%', height: '100%'}}>
+              <ThemeProvider theme={theme}>
+              {audio ? 
+                <Fab id="audioButton" color={'primary'} style={{position: 'absolute', left: 16, bottom: (48 + 56 + 16)}} onClick={() => {
+                  window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchAudioFlag', stream: !store.getState().global.conf.audio}, pathConfig.videoConfVideo)
+                  store.dispatch(switchConf('audio', !store.getState().global.conf.audio))
+                  forceUpdate()
+                }}>{store.getState().global.conf.audio ? <Mic/> : <MicOff/>}</Fab> :
+                null
+              }  
+              <Fab id="endCallButton" color={'secondary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: (isDesktop() && isInRoom()) ? 48 : (16 + 72)}} onClick={() => {
+                store.dispatch(switchConf('video', false))
+                store.dispatch(switchConf('audio', false))
+                store.dispatch(switchConf('screen', false))
+                setConnected(false)
+                setUniqueKey(Math.random())
+                forceUpdate()
+              }}><CallEndIcon/></Fab>
+              {video ?
+                <Fab id="camButton" color={'primary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
+                  window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchVideoFlag', stream: !store.getState().global.conf.video}, pathConfig.videoConfVideo)
+                  store.dispatch(switchConf('video', !store.getState().global.conf.video))
+                  forceUpdate()
+                }}>{store.getState().global.conf.video ? <VideocamIcon/> : <VideocamOff/>}</Fab> :
+                null
+              }
+              {video ?<Fab id="screenButton" color={'primary'} style={{position: 'absolute', left: video ? ((isDesktop() && isInRoom()) ? (32 + 56 + 16 + 56 + 16) : (16 + 56 + 16 + 56 + 16)) : ((isDesktop() && isInRoom()) ? (32 + 56 + 16) : (16 + 56 + 16)), bottom: (isDesktop() && isInRoom()) ? 48 : 16 + 72}} onClick={() => {
+                window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'switchScreenFlag', stream: !store.getState().global.conf.screen}, pathConfig.videoConfVideo)
+                store.dispatch(switchConf('screen', !store.getState().global.conf.screen))
+                forceUpdate()
+              }}>{store.getState().global.conf.screen ? <DesktopWindowsIcon/> : <DesktopAccessDisabledIcon/>}</Fab> :
+              null}
+            </ThemeProvider>
+        </div>:
+        <ThemeProvider theme={theme2}>
+          <Fab id="callButton" color={'secondary'} style={{position: 'absolute', left: (isDesktop() && isInRoom()) ? 32 : 16, bottom: (isDesktop() && isInRoom()) ? 48 : (16 + 72)}} onClick={() => {
+            setConnected(true)
+          }}><CallIcon style={{fill: '#fff'}}/></Fab>
+        </ThemeProvider>
+          }
+      <VideoMedia data={videos} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
+      <AudioMedia data={audios} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
+      <ScreenMedia data={screens} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
     </div>
   )
 }
