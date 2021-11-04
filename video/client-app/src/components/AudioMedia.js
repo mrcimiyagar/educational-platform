@@ -238,7 +238,7 @@ endAudio = () => {
         if (foundTag !== undefined) {
           props.data[foundTag] = undefined;
         }
-        props.data[config.userId + '_audio_' + Date.now()] = event.stream;
+        props.data[config.userId + '_audio_'] = event.stream;
         props.forceUpdate();
         props.updateData();
       }

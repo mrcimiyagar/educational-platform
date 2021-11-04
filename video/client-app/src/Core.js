@@ -89,26 +89,35 @@ function App() {
   let [pathConfig, setPathConfig] = React.useState(undefined);
   let [me, setMe] = React.useState(undefined);
   let [roomId, setRoomId] = React.useState(undefined);
+  let [maxCamStream, setMaxCamStream] = React.useState(undefined);
+  let [maxScrStream, setMaxScrStream] = React.useState(undefined);
+
+  useEffect(() => {
+    let webcamMax = document.getElementById('webcamMax');
+    let screenMax = document.getElementById('screenMax');
+    webcamMax.srcObject = maxCamStream;
+    screenMax.srcObject = maxScrStream; 
+  }, [maxCamStream, maxScrStream]);
 
   function MediaBox(props) {
     let vs = findValueByPrefix(videos, props.id + '_video');
     let ss = findValueByPrefix(screens, props.id + '_screen');
     let as = findValueByPrefix(audios, props.id + '_audio');
-    console.log('videos');
-    console.log(videos);
-    console.log('audios');
-    console.log(audios);
-    console.log('screens');
-    console.log(screens);
+
+    let handleMediaOpen = () => {
+      setMaxCamStream(vs !== undefined ? vs.value : undefined);
+      setMaxScrStream(ss !== undefined ? ss.value : undefined);
+    };
+
     if (ss !== undefined) {
       if (vs !== undefined) {
         return (
           <div>
             <div style={{width: 64, height: 64}}>
-              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined}/>
+              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2}}>
-              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined}/>
+              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
           </div>
@@ -118,10 +127,10 @@ function App() {
         return (
           <div>
             <div style={{width: 64, height: 64, display: 'none'}}>
-              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined}/>
+              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2}}>
-              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined}/>
+              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
           </div>
@@ -133,10 +142,10 @@ function App() {
         return (
           <div>
             <div style={{width: 128, height: 128}}>
-              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined}/>
+              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2, display: 'none'}}>
-              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined}/>
+              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
           </div>
@@ -146,10 +155,10 @@ function App() {
         return (
           <div>
             <div style={{width: 64, height: 64, display: 'none'}}>
-              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined}/>
+              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2, display: 'none'}}>
-              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined}/>
+              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
           </div>
@@ -198,7 +207,7 @@ function App() {
       <div
         id="max"
         style={{
-          display: 'none',
+          display: (maxCamStream === undefined && maxScrStream === undefined) ? 'none' : 'block',
           width: '100%',
           height: '100%',
           position: 'relative',

@@ -230,7 +230,7 @@ endScreen = () => {
         if (foundTag !== undefined) {
           props.data[foundTag] = undefined;
         }
-        props.data[config.userId + '_screen_' + Date.now()] = event.stream;
+        props.data[config.userId + '_screen_'] = event.stream;
         props.updateData(props.data);
         props.forceUpdate();
       }

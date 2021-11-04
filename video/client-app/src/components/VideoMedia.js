@@ -238,7 +238,7 @@ endVideo = () => {
         if (foundTag !== undefined) {
           props.data[foundTag] = undefined;
         }
-        props.data[config.userId + '_video_' + Date.now()] = event.stream;
+        props.data[config.userId + '_video_'] = event.stream;
         props.forceUpdate();
         props.updateData();
       }
