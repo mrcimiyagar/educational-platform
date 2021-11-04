@@ -95,12 +95,6 @@ export default function VideoMedia(props) {
       return;
     }
   
-    navigator.getUserMedia =
-      navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia ||
-      navigator.msGetUserMedia
-  
     navigator.getUserMedia(
       constraints,
       function (stream) {
@@ -152,6 +146,7 @@ export default function VideoMedia(props) {
       console.log('found sender:', sender)
       sender.replaceTrack(videoTrack)
     }
+    signaling_socket.emit('showMe');
   })
 }
 
@@ -161,6 +156,7 @@ endVideo = () => {
       track.stop()
     })
   }
+  signaling_socket.emit('hideMe');
 }
 
   function initInner(videoServerWebsocket) {
@@ -168,6 +164,18 @@ endVideo = () => {
     console.log('Connecting to signaling server')
     signaling_socket = io(videoServerWebsocket, { query: `userId=${userId}` })
   
+    signaling_socket.on('showUser', function ({peer_id, userId}) {
+      console.log('showing user video...');
+      props.shownUsers[userId] = true;
+      props.forceUpdate();
+    })
+
+    signaling_socket.on('hideUser', function ({peer_id, userId}) {
+      console.log('hiding user video...');
+      delete props.shownUsers[userId];
+      props.forceUpdate();
+    })
+
     signaling_socket.on('connect', function () {
       console.log('Connected to signaling server')
       setup_local_media({}, function (stream) {

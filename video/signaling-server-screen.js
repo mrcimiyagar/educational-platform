@@ -37,6 +37,8 @@ var channels = {};
 var sockets = {};
 var users = {}
 var permissions = {}
+let view = {};
+
 
 /**
  * Users will connect to the signaling server, after which they'll issue a "join"
@@ -61,6 +63,21 @@ io.sockets.on('connection', function (socket) {
         delete sockets[socket.id];
     });
 
+    socket.on('showMe', () => {
+        if (view[socket.roomId] === undefined) view[socket.roomId] = {};
+        view[socket.roomId][socket.userId] = true;
+        for (id in channels[socket.roomId]) {
+            channels[socket.roomId][id].emit('showUser', {'peer_id': socket.id, 'userId': socket.userId});
+        }
+    });
+
+    socket.on('hideMe', () => {
+        if (view[socket.roomId] === undefined) view[socket.roomId] = {};
+        view[socket.roomId][socket.userId] = false;
+        for (id in channels[socket.roomId]) {
+            channels[socket.roomId][id].emit('hideUser', {'peer_id': socket.id, 'userId': socket.userId});
+        }
+    });
 
     socket.on('join', function (config) {
         console.log("["+ socket.id + "] join ", config);
@@ -82,6 +99,8 @@ io.sockets.on('connection', function (socket) {
         for (id in channels[channel]) {
             channels[channel][id].emit('addPeer', {'peer_id': socket.id, 'userId': socket.userId, 'should_create_offer': false});
             socket.emit('addPeer', {'peer_id': id, 'userId': sockets[id].userId, 'should_create_offer': true});
+            if (view[channel] === undefined) view[channel] = {};
+            if (view[channel][sockets[id].userId] === true) socket.emit('showUser', {'peer_id': socket.id, 'userId': sockets[id].userId});
         }
 
         channels[channel][socket.id] = socket;

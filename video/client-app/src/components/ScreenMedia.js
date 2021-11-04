@@ -144,6 +144,7 @@ startScreen = () => {
       console.log('found sender:', sender)
       sender.replaceTrack(videoTrack)
     }
+    signaling_socket.emit('showMe');
   })
 }
 
@@ -153,12 +154,25 @@ endScreen = () => {
       track.stop()
     })
   }
+  signaling_socket.emit('hideMe');
 }
 
   function initInner(videoServerWebsocket) {
 
     console.log('Connecting to signaling server')
     signaling_socket = io(videoServerWebsocket, { query: `userId=${userId}` })
+
+    signaling_socket.on('showUser', function ({peer_id, userId}) {
+      console.log('showing user screen...');
+      props.shownUsers[userId] = true;
+      props.forceUpdate();
+    })
+
+    signaling_socket.on('hideUser', function ({peer_id, userId}) {
+      console.log('hiding user screen...');
+      delete props.shownUsers[userId];
+      props.forceUpdate();
+    })
   
     signaling_socket.on('connect', function () {
       console.log('Connected to signaling server')

@@ -95,12 +95,6 @@ export default function AudioMedia(props) {
       return;
     }
   
-    navigator.getUserMedia =
-      navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia ||
-      navigator.msGetUserMedia
-  
     navigator.getUserMedia(
       constraints,
       function (stream) {
@@ -152,6 +146,7 @@ startAudio = () => {
       console.log('found sender:', sender)
       sender.replaceTrack(audioTrack)
     }
+    signaling_socket.emit('showMe');
   })
 }
 
@@ -161,6 +156,7 @@ endAudio = () => {
       track.stop()
     })
   }
+  signaling_socket.emit('hideMe');
 }
 
   function initInner(audioServerWebsocket) {
@@ -168,6 +164,18 @@ endAudio = () => {
     console.log('Connecting to signaling server')
     signaling_socket = io(audioServerWebsocket, { query: `userId=${userId}` })
   
+    signaling_socket.on('showUser', function ({peer_id, userId}) {
+      console.log('showing user audio...');
+      props.shownUsers[userId] = true;
+      props.forceUpdate();
+    })
+
+    signaling_socket.on('hideUser', function ({peer_id, userId}) {
+      console.log('hiding user audio...');
+      delete props.shownUsers[userId];
+      props.forceUpdate();
+    })
+
     signaling_socket.on('connect', function () {
       console.log('Connected to signaling server')
       setup_local_media({}, function (stream) {

@@ -41,7 +41,7 @@ function Video(props) {
     document.getElementById(props.id).srcObject = props.stream;
   }, [])
   return (
-    <video autoPlay controls muted id={props.id} style={{width: '100%', height: '100%'}}/>
+    <video autoPlay controls muted id={props.id} style={{width: '100%', height: '100%'}} onClick={props.onClick}/>
   );
 }
 
@@ -50,7 +50,7 @@ function Screen(props) {
     document.getElementById(props.id).srcObject = props.stream;
   }, [])
   return (
-    <video autoPlay controls muted id={props.id} style={{width: '100%', height: '100%'}}/>
+    <video autoPlay controls muted id={props.id} style={{width: '100%', height: '100%'}} onClick={props.onClick}/>
   );
 }
 
@@ -62,8 +62,6 @@ function Audio(props) {
     <audio autoPlay id={props.id}/>
   );
 }
-
-let myUserId = prompt('enter your username:');
 
 function App() {
 
@@ -91,6 +89,10 @@ function App() {
   let [roomId, setRoomId] = React.useState(undefined);
   let [maxCamStream, setMaxCamStream] = React.useState(undefined);
   let [maxScrStream, setMaxScrStream] = React.useState(undefined);
+  let [shownVideos, setShownVideos] = React.useState({me: true});
+  let [shownAudios, setShownAudios] = React.useState({me: true});
+  let [shownScreens, setShownScreens] = React.useState({me: true});
+  let [myUserId, setMyUserId] = React.useState(undefined);
 
   useEffect(() => {
     let webcamMax = document.getElementById('webcamMax');
@@ -109,8 +111,8 @@ function App() {
       setMaxScrStream(ss !== undefined ? ss.value : undefined);
     };
 
-    if (ss !== undefined) {
-      if (vs !== undefined) {
+    if (shownScreens[props.id] === true) {
+      if (shownVideos[props.id] === true) {
         return (
           <div>
             <div style={{width: 64, height: 64}}>
@@ -138,7 +140,7 @@ function App() {
       }
     }
     else {
-      if (vs !== undefined) {
+      if (shownVideos[props.id] === true) {
         return (
           <div>
             <div style={{width: 128, height: 128}}>
@@ -194,10 +196,11 @@ function App() {
     if (e.data.action === 'init') {
       setMe(e.data.me);
       setRoomId(e.data.roomId);
+      setMyUserId(e.data.me.id);
     }
   }
 
-  if (pathConfig === undefined && me !== undefined && roomId !== undefined) {
+  if (pathConfig === undefined && me !== undefined && roomId !== undefined && myUserId !== undefined) {
     return <div/>;
   }
 
@@ -223,30 +226,30 @@ function App() {
         }}
       >
         <video
-          onClick={window.disableMax}
-          autoPlay
-          id="screenMax"
-          style={{
-          transform: 'rotateY(0)',
-          objectFit: 'cover',
-          position: 'absolute',
-          left: '0px',
-          top: '0px',
-          width: 'calc(100% - 200px - 16px)',
-          height: 'auto'
+          onClick={() => {
+            setMaxCamStream(undefined);
+            setMaxScrStream(undefined);
           }}
-        ></video>
-        <video
-          onClick={window.disableMax}
           autoPlay
           id="webcamMax"
           style={{
           objectFit: 'cover',
-          position: 'absolute',
-          right: '0px',
-          top: '0px',
           width: '200px',
           height: '200px',
+          }}
+        ></video>
+        <video
+          onClick={() => {
+            setMaxCamStream(undefined);
+            setMaxScrStream(undefined);
+          }}
+          id="screenMax"
+          autoPlay
+          style={{
+          transform: 'rotateY(0)',
+          objectFit: 'cover',
+          width: window.innerWidth + 'px',
+          height: 'auto'
           }}
         ></video>
       </div>
@@ -278,8 +281,11 @@ function App() {
               }}>{audio ? <Mic/> : <MicOff/>}</Fab>
               <Fab id="endCallButton" color={'secondary'} style={{position: 'absolute', left: 16, bottom: 48}} onClick={() => {
                 endAudio();
+                setAudio(false);
                 endVideo();
+                setVideo(false);
                 endScreen();
+                setScreen(false);
                 setConnected(false);
                 forceUpdate();
               }}><CallEndIcon/></Fab>
@@ -306,9 +312,9 @@ function App() {
                 forceUpdate()
             }}>{screen ? <DesktopWindowsIcon/> : <DesktopAccessDisabledIcon/>}</Fab>
           </ThemeProvider>
-          <VideoMedia data={videos} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
-          <AudioMedia data={audios} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
-          <ScreenMedia data={screens} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
+          <VideoMedia shownUsers={shownVideos} data={videos} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={roomId}/>
+          <AudioMedia shownUsers={shownAudios} data={audios} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={roomId}/>
+          <ScreenMedia shownUsers={shownScreens} data={screens} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={roomId}/>
         </div>:
         !connected ?
           <ThemeProvider theme={theme}>
