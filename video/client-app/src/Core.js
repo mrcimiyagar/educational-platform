@@ -182,6 +182,14 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    if (connected) {
+      initVideo();
+      initScreen();
+      initAudio();
+    }
+  }, [connected]);
+
   window.onmessage = e => {
     if (e.data.action === 'init') {
       setMe(e.data.me);
@@ -306,9 +314,6 @@ function App() {
           <ThemeProvider theme={theme}>
           <Fab id="callButton" color={'secondary'} style={{position: 'absolute', left: 16, bottom: 48}} onClick={() => {
             setConnected(true);
-            initVideo();
-            initScreen();
-            initAudio();
           }}><CallIcon style={{fill: '#fff'}}/></Fab>
         </ThemeProvider> :
         null
