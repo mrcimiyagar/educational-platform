@@ -88,9 +88,9 @@ export default function AudioMedia(props) {
     if (constraints.audio === undefined) {
       let stream = produceEmptyStream();
       local_media_stream = stream;
+      props.updateData('me');
       props.data['me_audio'] = stream;
       props.forceUpdate();
-      props.updateData();
       if (callback) callback(stream);
       return;
     }
@@ -110,9 +110,9 @@ export default function AudioMedia(props) {
         if (foundTag !== undefined) {
           props.data[foundTag] = undefined;
         }
+        props.updateData('me');
         props.data['me_audio'] = stream;
         props.forceUpdate();
-        props.updateData();
         if (callback) callback(stream);
       },
       function () {
@@ -166,12 +166,14 @@ endAudio = () => {
   
     signaling_socket.on('showUser', function ({peer_id, userId}) {
       console.log('showing user audio...');
+      props.updateData(userId);
       props.shownUsers[userId] = true;
       props.forceUpdate();
     })
 
     signaling_socket.on('hideUser', function ({peer_id, userId}) {
       console.log('hiding user audio...');
+      props.updateData(userId);
       delete props.shownUsers[userId];
       props.forceUpdate();
     })
@@ -246,9 +248,9 @@ endAudio = () => {
         if (foundTag !== undefined) {
           props.data[foundTag] = undefined;
         }
+        props.updateData(config.userId);
         props.data[config.userId + '_audio_'] = event.stream;
         props.forceUpdate();
-        props.updateData();
       }
   
       /* Add our local stream */

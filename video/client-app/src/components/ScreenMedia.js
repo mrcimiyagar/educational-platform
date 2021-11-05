@@ -88,8 +88,8 @@ export default function ScreenMedia(props) {
     if (constraints.video === undefined) {
       let stream = produceEmptyStream();
       local_media_stream = stream;
+      props.updateData('me');
       props.data['me_screen'] = stream;
-      props.updateData();
       props.forceUpdate();
       if (callback) callback(stream);
       return;
@@ -108,9 +108,9 @@ export default function ScreenMedia(props) {
         if (foundTag !== undefined) {
           props.data[foundTag] = undefined;
         }
+        props.updateData('me');
         props.data['me_screen'] = stream;
         props.forceUpdate();
-        props.updateData();
         if (callback) callback(stream);
       },
       function () {
@@ -164,12 +164,14 @@ endScreen = () => {
 
     signaling_socket.on('showUser', function ({peer_id, userId}) {
       console.log('showing user screen...');
+      props.updateData(userId);
       props.shownUsers[userId] = true;
       props.forceUpdate();
     })
 
     signaling_socket.on('hideUser', function ({peer_id, userId}) {
       console.log('hiding user screen...');
+      props.updateData(userId);
       delete props.shownUsers[userId];
       props.forceUpdate();
     })
@@ -244,8 +246,8 @@ endScreen = () => {
         if (foundTag !== undefined) {
           props.data[foundTag] = undefined;
         }
+        props.updateData(config.userId);
         props.data[config.userId + '_screen_'] = event.stream;
-        props.updateData(props.data);
         props.forceUpdate();
       }
   

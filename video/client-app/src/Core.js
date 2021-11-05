@@ -37,31 +37,40 @@ Array.prototype.unique = function() {
 };
 
 function Video(props) {
+  videoUpdaters[props.id].video = useForceUpdate();
   useEffect(() => {
-    document.getElementById(props.id).srcObject = props.stream;
+    document.getElementById(props.id + '_video').srcObject = props.stream;
   }, [])
   return (
-    <video autoPlay controls muted id={props.id} style={{width: '100%', height: '100%'}} onClick={props.onClick}/>
+    <video autoPlay controls muted id={props.id + '_video'} style={{width: '100%', height: '100%'}} onClick={props.onClick}/>
   );
 }
 
 function Screen(props) {
+  videoUpdaters[props.id].screen = useForceUpdate();
   useEffect(() => {
-    document.getElementById(props.id).srcObject = props.stream;
+    document.getElementById(props.id + '_screen').srcObject = props.stream;
   }, [])
   return (
-    <video autoPlay controls muted id={props.id} style={{width: '100%', height: '100%'}} onClick={props.onClick}/>
+    <video autoPlay controls muted id={props.id + '_screen'} style={{width: '100%', height: '100%'}} onClick={props.onClick}/>
   );
 }
 
 function Audio(props) {
+  videoUpdaters[props.id].audio = useForceUpdate();
   useEffect(() => {
-    document.getElementById(props.id).srcObject = props.stream;
+    document.getElementById(props.id + '_audio').srcObject = props.stream;
   }, [])
   return (
-    <audio autoPlay id={props.id}/>
+    <audio autoPlay id={props.id + '_audio'}/>
   );
 }
+
+let videoCache = {};
+let videoUpdaters = {};
+let needUpdate = {};
+
+let myUserId = prompt('enter username : ');
 
 function App() {
 
@@ -92,7 +101,6 @@ function App() {
   let [shownVideos, setShownVideos] = React.useState({me: true});
   let [shownAudios, setShownAudios] = React.useState({me: true});
   let [shownScreens, setShownScreens] = React.useState({me: true});
-  let [myUserId, setMyUserId] = React.useState(undefined);
 
   useEffect(() => {
     let webcamMax = document.getElementById('webcamMax');
@@ -102,6 +110,9 @@ function App() {
   }, [maxCamStream, maxScrStream]);
 
   function MediaBox(props) {
+    
+    videoUpdaters[props.id] = {};
+
     let vs = findValueByPrefix(videos, props.id + '_video');
     let ss = findValueByPrefix(screens, props.id + '_screen');
     let as = findValueByPrefix(audios, props.id + '_audio');
@@ -114,27 +125,27 @@ function App() {
     if (shownScreens[props.id] === true) {
       if (shownVideos[props.id] === true) {
         return (
-          <div>
+          <div id={props.id}>
             <div style={{width: 64, height: 64}}>
-              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
+              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2}}>
-              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
+              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
-            <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
+            <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
           </div>
         );
       }
       else {
         return (
-          <div>
+          <div id={props.id}>
             <div style={{width: 64, height: 64, display: 'none'}}>
-              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
+              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2}}>
-              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
+              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
-            <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
+            <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
           </div>
         );
       }
@@ -142,27 +153,27 @@ function App() {
     else {
       if (shownVideos[props.id] === true) {
         return (
-          <div>
+          <div id={props.id}>
             <div style={{width: 128, height: 128}}>
-              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
+              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2, display: 'none'}}>
-              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
+              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
-            <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
+            <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
           </div>
         );
       }
       else {
         return (
-          <div>
+          <div id={props.id}>
             <div style={{width: 64, height: 64, display: 'none'}}>
-              <Video id={props.id + '_video'} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
+              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2, display: 'none'}}>
-              <Screen id={props.id + '_screen'} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
+              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
-            <Audio id={props.id + '_audio'} stream={as !== undefined ? as.value : undefined}/>
+            <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
           </div>
         );
       }
@@ -196,7 +207,6 @@ function App() {
     if (e.data.action === 'init') {
       setMe(e.data.me);
       setRoomId(e.data.roomId);
-      setMyUserId(e.data.me.id);
     }
   }
 
@@ -212,6 +222,16 @@ function App() {
     tempResult.push(keyParts[0]);
   });
   result = tempResult.unique();
+
+  let onVideoStreamUpdate = (userId) => {
+    needUpdate[userId] = true;
+  }
+  let onAudioStreamUpdate = (userId) => {
+    needUpdate[userId] = true;
+  }
+  let onScreenStreamUpdate = (userId) => {
+    needUpdate[userId] = true;
+  }
 
   return (
     <div style={{width: 'auto', height: '100vh', display: 'flex', flexwrap: 'wrap'}}>
@@ -259,9 +279,11 @@ function App() {
         style={{width: '100%', height: 'auto', display: connected ? 'block' : 'none'}}
       >
         {result.map(key => {
-          return (
-            <MediaBox id={key}/>
-          );
+          if (needUpdate[key] === true || videoCache[key] === undefined) {
+            videoCache[key] = <MediaBox id={key}/>;
+            delete needUpdate[key];
+          }
+          return videoCache[key];
         })}
       </div>
       <div style={{width: '100%', height: 128}}></div>
@@ -312,9 +334,9 @@ function App() {
                 forceUpdate()
             }}>{screen ? <DesktopWindowsIcon/> : <DesktopAccessDisabledIcon/>}</Fab>
           </ThemeProvider>
-          <VideoMedia shownUsers={shownVideos} data={videos} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={roomId}/>
-          <AudioMedia shownUsers={shownAudios} data={audios} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={roomId}/>
-          <ScreenMedia shownUsers={shownScreens} data={screens} updateData={() => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={roomId}/>
+          <VideoMedia shownUsers={shownVideos} data={videos} updateData={onVideoStreamUpdate} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
+          <AudioMedia shownUsers={shownAudios} data={audios} updateData={onAudioStreamUpdate} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
+          <ScreenMedia shownUsers={shownScreens} data={screens} updateData={onScreenStreamUpdate} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
         </div>:
         !connected ?
           <ThemeProvider theme={theme}>
