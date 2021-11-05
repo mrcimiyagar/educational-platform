@@ -70,8 +70,6 @@ let videoCache = {};
 let videoUpdaters = {};
 let needUpdate = {};
 
-let myUserId = prompt('enter username : ');
-
 function App() {
 
   let theme = createTheme({
@@ -101,6 +99,7 @@ function App() {
   let [shownVideos, setShownVideos] = React.useState({me: true});
   let [shownAudios, setShownAudios] = React.useState({me: true});
   let [shownScreens, setShownScreens] = React.useState({me: true});
+  let [myUserId, setMyUserId] = React.useState(undefined);
 
   useEffect(() => {
     let webcamMax = document.getElementById('webcamMax');
@@ -207,6 +206,7 @@ function App() {
     if (e.data.action === 'init') {
       setMe(e.data.me);
       setRoomId(e.data.roomId);
+      setMyUserId(me.id);
     }
   }
 
