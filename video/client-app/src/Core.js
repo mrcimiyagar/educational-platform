@@ -206,7 +206,7 @@ function App() {
     if (e.data.action === 'init') {
       setMe(e.data.me);
       setRoomId(e.data.roomId);
-      setMyUserId(me.id);
+      setMyUserId(e.data.me.id);
     }
   }
 
