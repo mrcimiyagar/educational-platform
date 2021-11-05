@@ -171,12 +171,12 @@ endVideo = () => {
       props.forceUpdate();
     })
 
-    signaling_socket.on('hideUser', function ({peer_id, userId}) {
-      console.log('hiding user video...');
-      props.updateData(userId);
-      delete props.shownUsers[userId];
-      props.forceUpdate();
-    })
+    // signaling_socket.on('hideUser', function ({peer_id, userId}) {
+    //   console.log('hiding user video...');
+    //   props.updateData(userId);
+    //   delete props.shownUsers[userId];
+    //   props.forceUpdate();
+    // })
 
     signaling_socket.on('connect', function () {
       console.log('Connected to signaling server')
