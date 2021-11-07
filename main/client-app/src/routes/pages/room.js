@@ -161,7 +161,6 @@ export default function RoomPage(props) {
   const [fileMode, setFileMode] = React.useState(0)
   const [menuMode, setMenuMode] = React.useState(0)
   const [opacity, setOpacity] = React.useState(1)
-  let [webcamOn, setWebcamOn] = React.useState(false);
 
   let roomId = props.room_id
   setRoomId(roomId)
@@ -402,26 +401,9 @@ export default function RoomPage(props) {
       })
       .catch((error) => console.log('error', error))
     
-      return () => { 
+      return () => {
         leaveRoom(() => {});
        };
-  }, [])
-
-  useEffect(() => {
-    if (attachWebcamOnMessenger !== undefined) {
-      window.removeEventListener('message', attachWebcamOnMessenger);
-    }
-    attachWebcamOnMessenger = (e) => {
-      if (e.data.sender === 'conf') {
-        if (e.data.action === 'attachWebcamOnMessenger') {
-          setWebcamOn(true);
-        }
-        else if (e.data.action === 'detachWebcamOnMessenger') {
-          setWebcamOn(false);
-        }
-      }
-    };
-    window.addEventListener('message', attachWebcamOnMessenger);
   }, [])
 
   if (!loaded) {
@@ -456,7 +438,7 @@ export default function RoomPage(props) {
             height: '100%',
             position: 'fixed',
             right: 0,
-            top: webcamOn ? 450 : 0,
+            top: 0,
           }}
         >
           <ChatEmbedded roomId={props.room_id} />

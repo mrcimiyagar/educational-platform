@@ -110,6 +110,7 @@ export default function ScreenMedia(props) {
         }
         props.updateData('me');
         props.data['me_screen'] = stream;
+        props.shownUsers['me'] = true;
         props.forceUpdate();
         if (callback) callback(stream);
       },
@@ -154,6 +155,9 @@ endScreen = () => {
       track.stop()
     })
   }
+  delete props.shownUsers['me'];
+  props.updateData('me');
+  props.forceUpdate();
   signaling_socket.emit('hideMe');
 }
 

@@ -112,6 +112,7 @@ export default function VideoMedia(props) {
         }
         props.updateData('me');
         props.data['me_video'] = stream;
+        props.shownUsers['me'] = true;
         props.forceUpdate();
         if (callback) callback(stream);
       },
@@ -156,6 +157,9 @@ endVideo = () => {
       track.stop()
     })
   }
+  delete props.shownUsers['me'];
+  props.updateData('me');
+  props.forceUpdate();
   signaling_socket.emit('hideMe');
 }
 

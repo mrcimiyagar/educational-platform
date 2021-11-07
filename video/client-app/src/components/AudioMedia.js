@@ -112,6 +112,7 @@ export default function AudioMedia(props) {
         //}
         //props.updateData('me');
         //props.data['me_audio'] = stream;
+        //props.shownUsers['me'] = true;
         //props.forceUpdate();
         if (callback) callback(stream);
       },
@@ -156,6 +157,9 @@ endAudio = () => {
       track.stop()
     })
   }
+  delete props.shownUsers['me'];
+  props.updateData('me');
+  props.forceUpdate();
   signaling_socket.emit('hideMe');
 }
 

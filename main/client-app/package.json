@@ -33,6 +33,7 @@
     "detectrtc": "^1.4.1",
     "doka": "^0.1.0",
     "draft-js": "^0.10.5",
+    "easyxdm": "^2.4.19-pre.2",
     "electron-is-dev": "^2.0.0",
     "emoji-picker-react": "^3.4.8",
     "emotion": "^11.0.0",

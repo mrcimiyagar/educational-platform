@@ -32,6 +32,7 @@ import ChatWallpaper from '../../images/chat-wallpaper.png'
 import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery'
 import MessageItem from '../MessageItem'
+import { pathConfig } from '../..'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +75,8 @@ export let replaceMessageInTheList3 = () => {}
 
 export let updateChatEmbedded = undefined
 
+let attachWebcamOnMessenger = undefined;
+
 export default function ChatEmbedded(props) {
   document.documentElement.style.overflowY = 'hidden'
 
@@ -91,6 +94,7 @@ export default function ChatEmbedded(props) {
   });
   let [scrollTrigger, setScrollTrigger] = React.useState(false);
   let [showScrollDown, setShowScrollDown] = React.useState(false);
+  let [webcamOn, setWebcamOn] = React.useState(false);
 
   useEffect(() => {
     fetchMessagesOfRoom(props.roomId).then(data => {
@@ -431,6 +435,23 @@ export default function ChatEmbedded(props) {
     }
   }, [loading])
 
+  useEffect(() => {
+    if (attachWebcamOnMessenger !== undefined) {
+      window.removeEventListener('message', attachWebcamOnMessenger);
+    }
+    attachWebcamOnMessenger = (e) => {
+      if (e.data.sender === 'conf') {
+        if (e.data.action === 'attachWebcamOnMessenger') {
+          setWebcamOn(true);
+        }
+        else if (e.data.action === 'detachWebcamOnMessenger') {
+          setWebcamOn(false);
+        }
+      }
+    };
+    window.addEventListener('message', attachWebcamOnMessenger);
+  }, [])
+
   let width = 0
   let height = 0
   let left = 0
@@ -440,10 +461,10 @@ export default function ChatEmbedded(props) {
   if (isDesktop()) {
     if (isInRoom()) {
       width = 450
-      height = '100%'
+      height = webcamOn ? 'calc(100% - 300px)' : '100%';
       left = 'calc(100% - 450px)'
       right = 0
-      top = 0
+      top = webcamOn ? 300 : 0;
     } else if (isInMessenger()) {
       width = '100٪'
       height = '100%'
@@ -468,6 +489,11 @@ export default function ChatEmbedded(props) {
   }
 
   return (
+    <div style={{width: 450, height: '100%'}}>
+      {webcamOn ? <iframe
+          onLoad={() => {window.frames['webcam-video-frame'].postMessage({sender: 'main', action: 'init', me: me, roomId: props.roomId}, pathConfig.confClient)}}
+          allowTransparency={true} id ={'webcam-video-frame'} name="webcam-video-frame" src={pathConfig.confClient + '/webcam'} allow={'microphone; camera'}
+          style={{width: 450, height: 300}} frameBorder="0"></iframe> : null}
     <div
       style={{
         display:
@@ -508,7 +534,7 @@ export default function ChatEmbedded(props) {
         }}
         images={[{ src: currentPhotoSrc, alt: '' }]}
       />
-      <ChatAppBar user={user} room={room} />
+      <ChatAppBar user={user} room={room} webcamOn={webcamOn} />
       <div style={{ width: '100%', height: 'auto', zIndex: 1000 }}>
         <div
           className={classes.root}
@@ -683,6 +709,7 @@ export default function ChatEmbedded(props) {
           <ArrowDownward />
         </Fab>
       </div>
+    </div>
     </div>
   )
 }

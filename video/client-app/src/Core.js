@@ -92,14 +92,15 @@ function App() {
   let [roomId, setRoomId] = React.useState(undefined);
   let [maxCamStream, setMaxCamStream] = React.useState(undefined);
   let [maxScrStream, setMaxScrStream] = React.useState(undefined);
-  let [shownVideos, setShownVideos] = React.useState({me: true});
-  let [shownAudios, setShownAudios] = React.useState({me: true});
-  let [shownScreens, setShownScreens] = React.useState({me: true});
+  let [shownVideos, setShownVideos] = React.useState({});
+  let [shownAudios, setShownAudios] = React.useState({});
+  let [shownScreens, setShownScreens] = React.useState({});
   let [myUserId, setMyUserId] = React.useState(undefined);
 
   useEffect(() => {
     let webcamMax = document.getElementById('webcamMax');
     let screenMax = document.getElementById('screenMax');
+    if (webcamMax === null || screenMax === null) return;
     webcamMax.srcObject = maxCamStream;
     screenMax.srcObject = maxScrStream; 
   }, [maxCamStream, maxScrStream]);
@@ -204,7 +205,7 @@ function App() {
     }
   }
 
-  if (pathConfig === undefined && me !== undefined && roomId !== undefined && myUserId !== undefined) {
+  if (pathConfig === undefined || me === undefined || roomId === undefined || myUserId === undefined) {
     return <div/>;
   }
 
@@ -219,7 +220,7 @@ function App() {
 
   let notifyWebcamActivated = () => {
     if (pathConfig !== undefined) {
-      if (findValueByPrefix(videos, 'me_video') !== undefined && findValueByPrefix(videos, 'me_screen') !== undefined) {
+      if (shownVideos['me'] === true && shownScreens['me'] === true) {
         window.parent.postMessage({sender: 'conf', action: 'attachWebcamOnMessenger'}, pathConfig.mainFrontend);
       }
       else {
@@ -291,6 +292,7 @@ function App() {
             videoCache[key] = <MediaBox id={key}/>;
             delete needUpdate[key];
           }
+          if (myUserId === key) return null;
           return videoCache[key];
         })}
       </div>

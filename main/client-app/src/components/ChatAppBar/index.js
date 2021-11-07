@@ -99,7 +99,7 @@ export default function ChatAppBar(props) {
                 ? 0
                 : '24px 0 0 0',
             position: isDesktop() || isTablet() ? 'fixed' : undefined,
-            top: isDesktop() ? (isInRoom() ? 0 : 32) : 0,
+            top: isDesktop() ? (isInRoom() ? (props.webcamOn === true) ? 300 : 0 : 32) : 0,
             left: isInRoom()
               ? isDesktop()
                 ? 'calc(100% - 450px)'
