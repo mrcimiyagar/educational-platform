@@ -101,18 +101,18 @@ export default function AudioMedia(props) {
         /* user accepted access to a/v */
         console.log('Access granted to audio/audio')
         local_media_stream = stream;
-        let foundTag = undefined;
-        Object.entries(props.data).forEach(([id, stream]) => {
-          if (id.startsWith('me_audio')) {
-            foundTag = id;
-          }
-        })
-        if (foundTag !== undefined) {
-          props.data[foundTag] = undefined;
-        }
-        props.updateData('me');
-        props.data['me_audio'] = stream;
-        props.forceUpdate();
+        //let foundTag = undefined;
+        //Object.entries(props.data).forEach(([id, stream]) => {
+        //  if (id.startsWith('me_audio')) {
+        //    foundTag = id;
+        //  }
+        //})
+        //if (foundTag !== undefined) {
+        //  props.data[foundTag] = undefined;
+        //}
+        //props.updateData('me');
+        //props.data['me_audio'] = stream;
+        //props.forceUpdate();
         if (callback) callback(stream);
       },
       function () {

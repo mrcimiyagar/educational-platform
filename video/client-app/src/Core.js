@@ -37,7 +37,6 @@ Array.prototype.unique = function() {
 };
 
 function Video(props) {
-  videoUpdaters[props.id].video = useForceUpdate();
   useEffect(() => {
     document.getElementById(props.id + '_video').srcObject = props.stream;
   }, [])
@@ -47,7 +46,6 @@ function Video(props) {
 }
 
 function Screen(props) {
-  videoUpdaters[props.id].screen = useForceUpdate();
   useEffect(() => {
     document.getElementById(props.id + '_screen').srcObject = props.stream;
   }, [])
@@ -57,7 +55,6 @@ function Screen(props) {
 }
 
 function Audio(props) {
-  videoUpdaters[props.id].audio = useForceUpdate();
   useEffect(() => {
     document.getElementById(props.id + '_audio').srcObject = props.stream;
   }, [])
@@ -67,7 +64,6 @@ function Audio(props) {
 }
 
 let videoCache = {};
-let videoUpdaters = {};
 let needUpdate = {};
 
 function App() {
@@ -109,8 +105,6 @@ function App() {
   }, [maxCamStream, maxScrStream]);
 
   function MediaBox(props) {
-    
-    videoUpdaters[props.id] = {};
 
     let vs = findValueByPrefix(videos, props.id + '_video');
     let ss = findValueByPrefix(screens, props.id + '_screen');
@@ -209,6 +203,15 @@ function App() {
       setMyUserId(e.data.me.id);
     }
   }
+
+  useEffect(() => {
+    if (findValueByPrefix(videos, 'me_video') !== undefined && findValueByPrefix(videos, 'me_screen') !== undefined) {
+      window.parent.postMessage({sender: 'conf', action: 'attachWebcamOnMessenger'}, pathConfig.mainFrontend);
+    }
+    else {
+      window.parent.postMessage({sender: 'conf', action: 'detachWebcamOnMessenger'}, pathConfig.mainFrontend);
+    }
+  }, [videos, screens]);
 
   if (pathConfig === undefined && me !== undefined && roomId !== undefined && myUserId !== undefined) {
     return <div/>;
