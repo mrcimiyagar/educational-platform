@@ -204,15 +204,6 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    if (findValueByPrefix(videos, 'me_video') !== undefined && findValueByPrefix(videos, 'me_screen') !== undefined) {
-      window.parent.postMessage({sender: 'conf', action: 'attachWebcamOnMessenger'}, pathConfig.mainFrontend);
-    }
-    else {
-      window.parent.postMessage({sender: 'conf', action: 'detachWebcamOnMessenger'}, pathConfig.mainFrontend);
-    }
-  }, [videos, screens]);
-
   if (pathConfig === undefined && me !== undefined && roomId !== undefined && myUserId !== undefined) {
     return <div/>;
   }
@@ -226,14 +217,28 @@ function App() {
   });
   result = tempResult.unique();
 
+  let notifyWebcamActivated = () => {
+    if (pathConfig !== undefined) {
+      if (findValueByPrefix(videos, 'me_video') !== undefined && findValueByPrefix(videos, 'me_screen') !== undefined) {
+        window.parent.postMessage({sender: 'conf', action: 'attachWebcamOnMessenger'}, pathConfig.mainFrontend);
+      }
+      else {
+        window.parent.postMessage({sender: 'conf', action: 'detachWebcamOnMessenger'}, pathConfig.mainFrontend);
+      }
+    }
+  };
+
   let onVideoStreamUpdate = (userId) => {
     needUpdate[userId] = true;
+    notifyWebcamActivated();
   }
   let onAudioStreamUpdate = (userId) => {
     needUpdate[userId] = true;
+    notifyWebcamActivated();
   }
   let onScreenStreamUpdate = (userId) => {
     needUpdate[userId] = true;
+    notifyWebcamActivated();
   }
 
   return (
