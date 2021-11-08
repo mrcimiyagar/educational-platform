@@ -492,8 +492,8 @@ export default function ChatEmbedded(props) {
     <div style={{width: 450, height: '100%'}}>
       {webcamOn ? <iframe
           onLoad={() => {window.frames['webcam-video-frame'].postMessage({sender: 'main', action: 'init', me: me, roomId: props.roomId}, pathConfig.confClient)}}
-          allowTransparency={true} id ={'webcam-video-frame'} name="webcam-video-frame" src={pathConfig.confClient + '/webcam'} allow={'microphone; camera'}
-          style={{width: 450, height: 300}} frameBorder="0"></iframe> : null}
+          id ={'webcam-video-frame'} name="webcam-video-frame" src={pathConfig.confClient + '/webcam'} allow={'microphone; camera'}
+          style={{width: '100%', height: 300, marginTop: -8}} frameBorder="0"></iframe> : null}
     <div
       style={{
         display:

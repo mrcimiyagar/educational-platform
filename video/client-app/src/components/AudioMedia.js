@@ -136,7 +136,7 @@ startAudio = () => {
   setup_local_media({ audio: true }, function (
     stream,
   ) {
-    document.getElementById('me_audio').srcObject = stream;
+    //document.getElementById('me_audio').srcObject = stream;
     let audioTrack = stream.getAudioTracks()[0]
     for (let id in peers) {
       if (peers[id] === undefined) continue

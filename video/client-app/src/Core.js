@@ -2,13 +2,14 @@ import React, { useEffect } from 'react';
 import VideoMedia, { endVideo, initVideo, startVideo } from './components/VideoMedia';
 import AudioMedia, { endAudio, initAudio, startAudio } from './components/AudioMedia';
 import ScreenMedia, { endScreen, initScreen, startScreen } from './components/ScreenMedia';
-import {Fab, ThemeProvider, createTheme} from '@material-ui/core';
+import {Fab, ThemeProvider, createTheme, Drawer} from '@material-ui/core';
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled';
 import { ArrowForward, Mic, MicOff, Notes, VideocamOff } from "@material-ui/icons";
 import CallIcon from '@material-ui/icons/Call';
 import CallEndIcon from '@material-ui/icons/CallEnd';
 import VideocamIcon from '@material-ui/icons/Videocam';
+import {Card} from '@material-ui/core';
 
 function useForceUpdate(){
   const [value, setValue] = React.useState(0); // integer state
@@ -96,6 +97,8 @@ function App() {
   let [shownAudios, setShownAudios] = React.useState({});
   let [shownScreens, setShownScreens] = React.useState({});
   let [myUserId, setMyUserId] = React.useState(undefined);
+  let [listOpen, setListOpen] = React.useState(false);
+  let [screenOn, setScreenOn] = React.useState(false);
 
   useEffect(() => {
     let webcamMax = document.getElementById('webcamMax');
@@ -119,56 +122,56 @@ function App() {
     if (shownScreens[props.id] === true) {
       if (shownVideos[props.id] === true) {
         return (
-          <div id={props.id}>
-            <div style={{width: 64, height: 64}}>
+          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}}>
+            <div style={{width: (256 + 128) / 2, height: (256 + 128) / 2}}>
               <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2}}>
               <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
-          </div>
+          </Card>
         );
       }
       else {
         return (
-          <div id={props.id}>
-            <div style={{width: 64, height: 64, display: 'none'}}>
+          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}}>
+            <div style={{width: (256 + 128) / 2, height: (256 + 128) / 2, display: 'none'}}>
               <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2}}>
               <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
-          </div>
+          </Card>
         );
       }
     }
     else {
       if (shownVideos[props.id] === true) {
         return (
-          <div id={props.id}>
-            <div style={{width: 128, height: 128}}>
+          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}}>
+            <div style={{width: (256 + 128) / 2, height: (256 + 128) / 2}}>
               <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2, display: 'none'}}>
               <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
-          </div>
+          </Card>
         );
       }
       else {
         return (
-          <div id={props.id}>
-            <div style={{width: 64, height: 64, display: 'none'}}>
+          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}}>
+            <div style={{width: (256 + 128) / 2, height: (256 + 128) / 2, display: 'none'}}>
               <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2, display: 'none'}}>
               <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
             </div>
             <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
-          </div>
+          </Card>
         );
       }
     }
@@ -205,10 +208,6 @@ function App() {
     }
   }
 
-  if (pathConfig === undefined || me === undefined || roomId === undefined || myUserId === undefined) {
-    return <div/>;
-  }
-
   var result = Object.keys(videos).concat(Object.keys(audios)).unique();
   result = result.concat(Object.keys(screens)).unique();
   let tempResult = [];
@@ -217,6 +216,10 @@ function App() {
     tempResult.push(keyParts[0]);
   });
   result = tempResult.unique();
+
+  if (pathConfig === undefined || me === undefined || roomId === undefined || myUserId === undefined) {
+    return <div/>;
+  }
 
   let notifyWebcamActivated = () => {
     if (pathConfig !== undefined) {
@@ -232,6 +235,49 @@ function App() {
   let onVideoStreamUpdate = (userId) => {
     needUpdate[userId] = true;
     notifyWebcamActivated();
+
+    var result = Object.keys(videos).concat(Object.keys(audios)).unique();
+    result = result.concat(Object.keys(screens)).unique();
+    let tempResult = [];
+    result.forEach(item => {
+      let keyParts = item.split('_');
+      tempResult.push(keyParts[0]);
+    });
+    result = tempResult.unique();
+
+    var result2 = Object.keys(shownVideos).concat(Object.keys(shownAudios)).unique();
+    result2 = result2.concat(Object.keys(shownScreens)).unique();
+    let tempResult2 = [];
+    result2.forEach(item => {
+      let keyParts = item.split('_');
+      tempResult2.push(keyParts[0]);
+    });
+    result2 = tempResult2.unique();
+
+    if (result2.length > 0) {
+      if (result2.length === 1 && result2[0] === myUserId) {
+        setScreenOn(false);
+      }
+      else {
+        if (shownVideos[result2[0]] !== true) {
+          setScreenOn(false);
+        }
+        else {
+          if (shownScreens[result2[0]] === true) {
+            setScreenOn(true);
+          }
+          else {
+            setScreenOn(true);
+            let presenter = findValueByPrefix(videos, result[0] + '_video');
+            if (presenter === undefined) return;
+            document.getElementById('screenMax').srcObject = presenter.value;
+          }
+        }
+      }
+    }
+    else {
+      setScreenOn(false);
+    }
   }
   let onAudioStreamUpdate = (userId) => {
     needUpdate[userId] = true;
@@ -240,52 +286,86 @@ function App() {
   let onScreenStreamUpdate = (userId) => {
     needUpdate[userId] = true;
     notifyWebcamActivated();
+    var result = Object.keys(videos).concat(Object.keys(audios)).unique();
+    result = result.concat(Object.keys(screens)).unique();
+    let tempResult = [];
+    result.forEach(item => {
+      let keyParts = item.split('_');
+      tempResult.push(keyParts[0]);
+    });
+    result = tempResult.unique();
+
+    var result2 = Object.keys(shownVideos).concat(Object.keys(shownAudios)).unique();
+    result2 = result2.concat(Object.keys(shownScreens)).unique();
+    let tempResult2 = [];
+    result2.forEach(item => {
+      let keyParts = item.split('_');
+      tempResult2.push(keyParts[0]);
+    });
+    result2 = tempResult2.unique();
+
+    if (result2.length > 0) {
+      if (result2.length === 1 && result2[0] === myUserId) {
+        setScreenOn(false);
+      }
+      else {
+        if (shownScreens[result2[0]] !== true) {
+          setScreenOn(false);
+        }
+        else {
+          setScreenOn(true);
+          let presenter = findValueByPrefix(screens, result[0] + '_screen');
+          if (presenter === undefined) return;
+          document.getElementById('screenMax').srcObject = presenter.value;
+        }
+      }
+    }
+    else {
+      setScreenOn(false);
+    }
   }
 
   return (
-    <div style={{width: 'auto', height: '100vh', display: 'flex', flexwrap: 'wrap'}}>
+    <div style={{width: '100%', height: '100vh', display: 'flex', flexwrap: 'wrap'}}>
       <div
         id="max"
         style={{
-          display: (maxCamStream === undefined && maxScrStream === undefined) ? 'none' : 'block',
-          width: '100%',
-          height: '100%',
+          width: 'calc(100% - 96px - 32px)',
+          height: 'calc(100% - 384px)',
           position: 'relative',
-          zIndex: 99999
+          marginLeft: 96 + 32,
+          display: screenOn ? 'block' : 'none'
         }}
       >
         <video
-          onClick={() => {
-            setMaxCamStream(undefined);
-            setMaxScrStream(undefined);
-          }}
           autoPlay
           id="webcamMax"
           style={{
-          objectFit: 'cover',
-          width: '200px',
-          height: '200px',
+            display: 'none',
+            objectFit: 'cover',
+            width: '200px',
+            height: '200px',
           }}
         ></video>
         <video
-          onClick={() => {
-            setMaxCamStream(undefined);
-            setMaxScrStream(undefined);
-          }}
           id="screenMax"
           autoPlay
           style={{
-          transform: 'rotateY(0)',
-          objectFit: 'cover',
-          width: window.innerWidth + 'px',
-          height: 'auto'
+            transform: 'rotateY(0)',
+            objectFit: 'cover',
+            width: window.innerWidth - 176 + 'px',
+            height: 'auto',
           }}
         ></video>
       </div>
+      <Drawer open={listOpen} onClose={() => {
+        window.parent.postMessage({sender: 'conf', action: 'showBottomBar'}, pathConfig.mainFrontend);
+        setListOpen(false);
+      }} style={{position: 'relative', zIndex: 2490}}>
       <div
         id="participents"
         className="participents"
-        style={{width: '100%', height: 'auto', display: connected ? 'block' : 'none'}}
+        style={{width: '100%', height: 128, flexwrap: 'nowrap'}}
       >
         {result.map(key => {
           if (needUpdate[key] === true || videoCache[key] === undefined) {
@@ -296,6 +376,7 @@ function App() {
           return videoCache[key];
         })}
       </div>
+      </Drawer>
       <div style={{width: '100%', height: 128}}></div>
       {connected ?
           <div style={{width: '100%', height: '100%'}}>
@@ -343,6 +424,10 @@ function App() {
                 }
                 forceUpdate()
             }}>{screen ? <DesktopWindowsIcon/> : <DesktopAccessDisabledIcon/>}</Fab>
+            <Fab id="screenButton" color={'primary'} style={{position: 'absolute', left: (16 + 56 + 16 + 56 + 16 + 56 + 16), bottom: 48}} onClick={() => {
+                window.parent.postMessage({sender: 'conf', action: 'hideBottomBar'}, pathConfig.mainFrontend);
+                setListOpen(true);
+            }}><DesktopWindowsIcon/></Fab>
           </ThemeProvider>
           <VideoMedia shownUsers={shownVideos} data={videos} updateData={onVideoStreamUpdate} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
           <AudioMedia shownUsers={shownAudios} data={audios} updateData={onAudioStreamUpdate} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>

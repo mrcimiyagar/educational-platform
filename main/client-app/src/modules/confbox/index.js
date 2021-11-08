@@ -52,8 +52,8 @@ export function ConfBox(props) {
         <iframe
           onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', me: me, roomId: props.roomId}, pathConfig.confClient)}}
           allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera'}
-          style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: 'calc(100% - 72px)', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
-          marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
+          style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px)' : '100%', height: 'calc(100% - 72px)', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
+          marginBottom: 32, marginLeft: 16}} frameBorder="0"></iframe>
       </div>
     );
 }

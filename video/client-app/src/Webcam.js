@@ -37,36 +37,16 @@ Array.prototype.unique = function() {
   return a;
 };
 
-let videoCache = {};
-let needUpdate = {};
-
 function App() {
-
-  let theme = createTheme({
-    palette: {
-      primary: {
-        main: '#BBDEFB'
-      },
-      secondary: {
-        main: '#FFC107'
-      },
-    },
-  });
   
   let forceUpdate = useForceUpdate();
   let [videos, setVideos] = React.useState({});
   let [audios, setAudios] = React.useState({});
   let [screens, setScreens] = React.useState({});
-  let [video, setVideo] = React.useState(false);
-  let [audio, setAudio] = React.useState(false);
-  let [screen, setScreen] = React.useState(false);
-  let [connected, setConnected] = React.useState(false);
   let [pathConfig, setPathConfig] = React.useState(undefined);
   let [me, setMe] = React.useState(undefined);
   let [roomId, setRoomId] = React.useState(undefined);
   let [shownVideos, setShownVideos] = React.useState({});
-  let [shownAudios, setShownAudios] = React.useState({});
-  let [shownScreens, setShownScreens] = React.useState({});
   let [myUserId, setMyUserId] = React.useState(undefined);
 
   useEffect(() => {
@@ -117,7 +97,7 @@ function App() {
   }
 
   return (
-    <div style={{width: 'auto', height: '100vh', display: 'flex', flexwrap: 'wrap'}}>
+    <div style={{width: 'auto', height: '100vh', display: 'flex', flexwrap: 'wrap', backgroundColor: '#000'}}>
       <VideoMedia shownUsers={shownVideos} data={videos} updateData={(userId) => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
       <video autoPlay controls muted id={'me_video'} style={{width: '100%', height: '100%'}}/>
     </div>

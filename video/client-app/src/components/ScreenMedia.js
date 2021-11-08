@@ -134,7 +134,8 @@ startScreen = () => {
   setup_local_media({ video: { width: 480, height: 480 } }, function (
     stream,
   ) {
-    document.getElementById('me_screen').srcObject = stream;
+    let elem = document.getElementById('me_screen');
+    if (elem !== null) elem.srcObject = stream;
     let videoTrack = stream.getVideoTracks()[0]
     for (let id in peers) {
       if (peers[id] === undefined) continue
