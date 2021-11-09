@@ -101,7 +101,7 @@ function App() {
 
   let updatePresenter = (presenter) => {
     presenterBackup = presenter;
-    setPresenter(presenter);
+    setPresenter(presenter === 'me' ? myUserId : presenter);
     if (shownVideos[presenter] !== true && shownScreens[presenter] !== true) {
       setScreenOn(false);
       window.parent.postMessage({sender: 'conf', action: 'detachWebcamOnMessenger'}, pathConfig.mainFrontend);

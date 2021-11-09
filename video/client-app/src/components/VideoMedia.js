@@ -92,7 +92,9 @@ export default function VideoMedia(props) {
       let stream = produceEmptyStream();
       local_media_stream = stream;
       props.updateData('me');
+      props.updateData(userId);
       props.data['me_video'] = stream;
+      props.data[userId + '_video'] = stream;
       props.forceUpdate();
       if (callback) callback(stream);
       return;
@@ -114,7 +116,9 @@ export default function VideoMedia(props) {
           props.data[foundTag] = undefined;
         }
         props.updateData('me');
+        props.updateData(userId);
         props.data['me_video'] = stream;
+        props.data[userId + '_video'] = stream;
         props.shownUsers['me'] = true;
         props.forceUpdate();
         if (callback) callback(stream);
@@ -162,7 +166,9 @@ endVideo = () => {
     })
   }
   delete props.shownUsers['me'];
+  delete props.shownUsers[userId];
   props.updateData('me');
+  props.updateData(userId);
   props.forceUpdate();
   signaling_socket.emit('hideMe');
 }
@@ -177,6 +183,8 @@ endVideo = () => {
         props.updateWebcam(p);
       }
     })
+
+    signaling_socket.emit('getPresenter');
   
     signaling_socket.on('showUser', function ({peer_id, userId}) {
       console.log('showing user video...');
@@ -255,7 +263,7 @@ endVideo = () => {
         console.log('onAddStream', event);
         let foundTag = undefined;
         Object.entries(props.data).forEach(([id, stream]) => {
-          if (id.startsWith(config.userId + '_video_')) {
+          if (id.startsWith(config.userId + '_video')) {
             foundTag = id;
           }
         })
@@ -263,7 +271,7 @@ endVideo = () => {
           props.data[foundTag] = undefined;
         }
         props.updateData(config.userId);
-        props.data[config.userId + '_video_'] = event.stream;
+        props.data[config.userId + '_video'] = event.stream;
         props.forceUpdate();
       }
   

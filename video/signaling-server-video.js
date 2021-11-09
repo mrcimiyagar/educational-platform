@@ -62,12 +62,16 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('setPresenter', p => {
-        presenter[socket.userId] = p;
-        socket.emit('activatePresenter', presenter[socket.userId]);
+        presenter[socket.roomId] = p;
+        socket.emit('activatePresenter', p);
+        for (id in channels[socket.roomId]) {
+            if (id === socket.userId) continue;
+            channels[socket.roomId][id].emit('activatePresenter', p);
+        }
     });
 
-    socket.on('getPresenter', userId => {
-        socket.emit('activatePresenter', presenter[socket.userId]);
+    socket.on('getPresenter', () => {
+        socket.emit('activatePresenter', presenter[socket.roomId]);
     });
 
     socket.on('showMe', () => {

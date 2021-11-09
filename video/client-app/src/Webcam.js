@@ -69,9 +69,6 @@ function App() {
         setMyUserId(e.data.me.id);
         setTimeout(() => {
           initVideo();
-          setTimeout(() => {
-            startVideo();
-          }, 2500);
         }, 2500);
       }
     }
@@ -92,7 +89,11 @@ function App() {
 
   return (
     <div style={{width: 'auto', height: '100vh', display: 'flex', flexwrap: 'wrap', backgroundColor: '#000'}}>
-      <VideoMedia updateWebcam={(p) => {document.getElementById('me_video').srcObject = videos[p + '_video'];}} shownUsers={shownVideos} data={videos} updateData={(userId) => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
+      <VideoMedia updateWebcam={(p) => {
+        setTimeout(() => {
+          document.getElementById('me_video').srcObject = videos[p + '_video'];
+        }, 500);
+      }} shownUsers={shownVideos} data={videos} updateData={(userId) => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
       <video autoPlay controls muted id={'me_video'} style={{width: '100%', height: '100%'}}/>
     </div>
   )
