@@ -178,6 +178,7 @@ endScreen = () => {
     //   console.log('hiding user screen...');
     //   props.updateData(userId);
     //   delete props.shownUsers[userId];
+    //   props.setShown([props.shownUsers]);
     //   props.forceUpdate();
     // })
   

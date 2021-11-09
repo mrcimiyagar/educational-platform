@@ -74,6 +74,9 @@ var peers = {} /* keep track of our peer connections, indexed by peer_id (aka so
 export let endVideo;
 export let startVideo;
 export let initVideo;
+export let setPresenter = (presenter) => {
+  signaling_socket.emit('setPresenter', presenter);
+}
 
 export default function VideoMedia(props) {
 
@@ -168,6 +171,12 @@ endVideo = () => {
 
     console.log('Connecting to signaling server')
     signaling_socket = io(videoServerWebsocket, { query: `userId=${userId}` })
+
+    signaling_socket.on('activatePresenter', function (p) {
+      if (props.updateWebcam !== undefined) {
+        props.updateWebcam(p);
+      }
+    })
   
     signaling_socket.on('showUser', function ({peer_id, userId}) {
       console.log('showing user video...');

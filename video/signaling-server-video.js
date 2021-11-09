@@ -36,6 +36,7 @@ var sockets = {};
 var users = {}
 var permissions = {}
 let view = {};
+let presenter = {};
 
 /**
  * Users will connect to the signaling server, after which they'll issue a "join"
@@ -58,6 +59,15 @@ io.sockets.on('connection', function (socket) {
         }
         console.log("["+ socket.id + "] disconnected");
         delete sockets[socket.id];
+    });
+
+    socket.on('setPresenter', p => {
+        presenter[socket.userId] = p;
+        socket.emit('activatePresenter', presenter[socket.userId]);
+    });
+
+    socket.on('getPresenter', userId => {
+        socket.emit('activatePresenter', presenter[socket.userId]);
     });
 
     socket.on('showMe', () => {
@@ -141,42 +151,4 @@ io.sockets.on('connection', function (socket) {
             sockets[peer_id].emit('sessionDescription', {'peer_id': socket.id, 'session_description': session_description});
         }
     });
-
-    socket.on('show', () => {
-        socket.broadcast.emit('show_peer', socket.id)
-    })
-
-    socket.on('hide', () => {
-        socket.broadcast.emit('hide_peer', socket.id)
-    })
-
-    socket.on('askAppearence', peer_id => {
-        socket.to(peer_id).emit('askAppearence', socket.id)
-    })
-
-    socket.on('answerAppearence', peer_id => {
-        socket.to(peer_id).emit('answerAppearence', socket.id)
-    })
-
-    socket.on('disableUser', userId => {
-        if (users[userId] !== undefined)
-            socket.broadcast.emit('disableUser', users[userId].id)
-    })
-
-    socket.on('enableUser', userId => {
-        if (users[userId] !== undefined)
-            socket.broadcast.emit('enableUser', users[userId].id)
-    })
-
-    socket.on('switchPermission', ({userId, permission}) => {
-        permissions[userId] = permission
-        socket.broadcast.emit('takePermissions', permissions)
-        socket.emit('takePermissions', permissions)
-    })
-
-    socket.on('getPermissions', () => {
-        socket.emit('takePermissions', permissions)
-    })
-
-    socket.emit('takePermissions', permissions)
 });

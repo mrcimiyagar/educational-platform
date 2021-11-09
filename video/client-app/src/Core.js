@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import VideoMedia, { endVideo, initVideo, startVideo } from './components/VideoMedia';
+import VideoMedia, { endVideo, initVideo, setPresenter, startVideo } from './components/VideoMedia';
 import AudioMedia, { endAudio, initAudio, startAudio } from './components/AudioMedia';
 import ScreenMedia, { endScreen, initScreen, startScreen } from './components/ScreenMedia';
 import {Fab, ThemeProvider, createTheme, Drawer} from '@material-ui/core';
@@ -66,6 +66,7 @@ function Audio(props) {
 
 let videoCache = {};
 let needUpdate = {};
+let presenterBackup = undefined;
 
 function App() {
 
@@ -91,8 +92,6 @@ function App() {
   let [pathConfig, setPathConfig] = React.useState(undefined);
   let [me, setMe] = React.useState(undefined);
   let [roomId, setRoomId] = React.useState(undefined);
-  let [maxCamStream, setMaxCamStream] = React.useState(undefined);
-  let [maxScrStream, setMaxScrStream] = React.useState(undefined);
   let [shownVideos, setShownVideos] = React.useState({});
   let [shownAudios, setShownAudios] = React.useState({});
   let [shownScreens, setShownScreens] = React.useState({});
@@ -100,13 +99,39 @@ function App() {
   let [listOpen, setListOpen] = React.useState(false);
   let [screenOn, setScreenOn] = React.useState(false);
 
-  useEffect(() => {
-    let webcamMax = document.getElementById('webcamMax');
-    let screenMax = document.getElementById('screenMax');
-    if (webcamMax === null || screenMax === null) return;
-    webcamMax.srcObject = maxCamStream;
-    screenMax.srcObject = maxScrStream; 
-  }, [maxCamStream, maxScrStream]);
+  let updatePresenter = (presenter) => {
+    presenterBackup = presenter;
+    setPresenter(presenter);
+    if (shownVideos[presenter] !== true && shownScreens[presenter] !== true) {
+      setScreenOn(false);
+      window.parent.postMessage({sender: 'conf', action: 'detachWebcamOnMessenger'}, pathConfig.mainFrontend);
+      document.getElementById('screenMax').srcObject = undefined; 
+    }
+    else if (shownVideos[presenter] === true && shownScreens[presenter] !== true) {
+      setScreenOn(true);
+      window.parent.postMessage({sender: 'conf', action: 'detachWebcamOnMessenger'}, pathConfig.mainFrontend);
+      let streamPack = findValueByPrefix(videos, presenter + '_video');
+      if (streamPack !== undefined) {
+        document.getElementById('screenMax').srcObject = streamPack.value; 
+      }
+    }
+    else if (shownVideos[presenter] !== true && shownScreens[presenter] === true) {
+      setScreenOn(true);
+      window.parent.postMessage({sender: 'conf', action: 'detachWebcamOnMessenger'}, pathConfig.mainFrontend);
+      let streamPack = findValueByPrefix(screens, presenter + '_screen');
+      if (streamPack !== undefined) {
+        document.getElementById('screenMax').srcObject = streamPack.value; 
+      }
+    }
+    else if (shownVideos[presenter] === true && shownScreens[presenter] === true) {
+      setScreenOn(true);
+      window.parent.postMessage({sender: 'conf', action: 'attachWebcamOnMessenger'}, pathConfig.mainFrontend);
+      let streamPack = findValueByPrefix(screens, presenter + '_screen');
+      if (streamPack !== undefined) {
+        document.getElementById('screenMax').srcObject = streamPack.value; 
+      }
+    }
+  };
 
   function MediaBox(props) {
 
@@ -114,20 +139,15 @@ function App() {
     let ss = findValueByPrefix(screens, props.id + '_screen');
     let as = findValueByPrefix(audios, props.id + '_audio');
 
-    let handleMediaOpen = () => {
-      setMaxCamStream(vs !== undefined ? vs.value : undefined);
-      setMaxScrStream(ss !== undefined ? ss.value : undefined);
-    };
-
     if (shownScreens[props.id] === true) {
       if (shownVideos[props.id] === true) {
         return (
-          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}}>
+          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}} onClick={props.onClick}>
             <div style={{width: (256 + 128) / 2, height: (256 + 128) / 2}}>
-              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
+              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={props.onClick}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2}}>
-              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
+              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={props.onClick}/>
             </div>
             <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
           </Card>
@@ -135,12 +155,12 @@ function App() {
       }
       else {
         return (
-          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}}>
+          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}} onClick={props.onClick}>
             <div style={{width: (256 + 128) / 2, height: (256 + 128) / 2, display: 'none'}}>
-              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
+              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={props.onClick}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2}}>
-              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
+              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={props.onClick}/>
             </div>
             <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
           </Card>
@@ -150,12 +170,12 @@ function App() {
     else {
       if (shownVideos[props.id] === true) {
         return (
-          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}}>
+          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}} onClick={props.onClick}>
             <div style={{width: (256 + 128) / 2, height: (256 + 128) / 2}}>
-              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
+              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={props.onClick}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2, display: 'none'}}>
-              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
+              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={props.onClick}/>
             </div>
             <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
           </Card>
@@ -163,12 +183,12 @@ function App() {
       }
       else {
         return (
-          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}}>
+          <Card id={props.id} style={{display: 'flex', height: (256 + 128) / 2}} onClick={props.onClick}>
             <div style={{width: (256 + 128) / 2, height: (256 + 128) / 2, display: 'none'}}>
-              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={handleMediaOpen}/>
+              <Video id={props.id} stream={vs !== undefined ? vs.value : undefined} onClick={props.onClick}/>
             </div>
             <div style={{width: 256 + 128, height: (256 + 128) / 2, display: 'none'}}>
-              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={handleMediaOpen}/>
+              <Screen id={props.id} stream={ss !== undefined ? ss.value : undefined} onClick={props.onClick}/>
             </div>
             <Audio id={props.id} stream={as !== undefined ? as.value : undefined}/>
           </Card>
@@ -222,62 +242,16 @@ function App() {
   }
 
   let notifyWebcamActivated = () => {
-    if (pathConfig !== undefined) {
-      if (shownVideos['me'] === true && shownScreens['me'] === true) {
-        window.parent.postMessage({sender: 'conf', action: 'attachWebcamOnMessenger'}, pathConfig.mainFrontend);
-      }
-      else {
-        window.parent.postMessage({sender: 'conf', action: 'detachWebcamOnMessenger'}, pathConfig.mainFrontend);
-      }
+    if (connected && screenOn && presenterBackup !== undefined) {
+      setTimeout(() => {
+        updatePresenter(presenterBackup);
+      }, 1000);
     }
   };
 
   let onVideoStreamUpdate = (userId) => {
     needUpdate[userId] = true;
     notifyWebcamActivated();
-
-    var result = Object.keys(videos).concat(Object.keys(audios)).unique();
-    result = result.concat(Object.keys(screens)).unique();
-    let tempResult = [];
-    result.forEach(item => {
-      let keyParts = item.split('_');
-      tempResult.push(keyParts[0]);
-    });
-    result = tempResult.unique();
-
-    var result2 = Object.keys(shownVideos).concat(Object.keys(shownAudios)).unique();
-    result2 = result2.concat(Object.keys(shownScreens)).unique();
-    let tempResult2 = [];
-    result2.forEach(item => {
-      let keyParts = item.split('_');
-      tempResult2.push(keyParts[0]);
-    });
-    result2 = tempResult2.unique();
-
-    if (result2.length > 0) {
-      if (result2.length === 1 && result2[0] === myUserId) {
-        setScreenOn(false);
-      }
-      else {
-        if (shownVideos[result2[0]] !== true) {
-          setScreenOn(false);
-        }
-        else {
-          if (shownScreens[result2[0]] === true) {
-            setScreenOn(true);
-          }
-          else {
-            setScreenOn(true);
-            let presenter = findValueByPrefix(videos, result[0] + '_video');
-            if (presenter === undefined) return;
-            document.getElementById('screenMax').srcObject = presenter.value;
-          }
-        }
-      }
-    }
-    else {
-      setScreenOn(false);
-    }
   }
   let onAudioStreamUpdate = (userId) => {
     needUpdate[userId] = true;
@@ -286,43 +260,6 @@ function App() {
   let onScreenStreamUpdate = (userId) => {
     needUpdate[userId] = true;
     notifyWebcamActivated();
-    var result = Object.keys(videos).concat(Object.keys(audios)).unique();
-    result = result.concat(Object.keys(screens)).unique();
-    let tempResult = [];
-    result.forEach(item => {
-      let keyParts = item.split('_');
-      tempResult.push(keyParts[0]);
-    });
-    result = tempResult.unique();
-
-    var result2 = Object.keys(shownVideos).concat(Object.keys(shownAudios)).unique();
-    result2 = result2.concat(Object.keys(shownScreens)).unique();
-    let tempResult2 = [];
-    result2.forEach(item => {
-      let keyParts = item.split('_');
-      tempResult2.push(keyParts[0]);
-    });
-    result2 = tempResult2.unique();
-
-    if (result2.length > 0) {
-      if (result2.length === 1 && result2[0] === myUserId) {
-        setScreenOn(false);
-      }
-      else {
-        if (shownScreens[result2[0]] !== true) {
-          setScreenOn(false);
-        }
-        else {
-          setScreenOn(true);
-          let presenter = findValueByPrefix(screens, result[0] + '_screen');
-          if (presenter === undefined) return;
-          document.getElementById('screenMax').srcObject = presenter.value;
-        }
-      }
-    }
-    else {
-      setScreenOn(false);
-    }
   }
 
   return (
@@ -334,7 +271,7 @@ function App() {
           height: 'calc(100% - 384px)',
           position: 'relative',
           marginLeft: 96 + 32,
-          display: screenOn ? 'block' : 'none'
+          display: (screenOn && connected) ? 'block' : 'none'
         }}
       >
         <video
@@ -369,7 +306,9 @@ function App() {
       >
         {result.map(key => {
           if (needUpdate[key] === true || videoCache[key] === undefined) {
-            videoCache[key] = <MediaBox id={key}/>;
+            videoCache[key] = <MediaBox id={key} onClick={() => {
+              updatePresenter(key);
+            }}/>;
             delete needUpdate[key];
           }
           if (myUserId === key) return null;
@@ -393,6 +332,9 @@ function App() {
                   forceUpdate()
               }}>{audio ? <Mic/> : <MicOff/>}</Fab>
               <Fab id="endCallButton" color={'secondary'} style={{position: 'absolute', left: 16, bottom: 48}} onClick={() => {
+                window.parent.postMessage({sender: 'conf', action: 'detachWebcamOnMessenger'}, pathConfig.mainFrontend);
+                setScreenOn(false);
+                document.getElementById('screenMax').srcObject = undefined;
                 endAudio();
                 setAudio(false);
                 endVideo();
