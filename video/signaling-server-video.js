@@ -64,9 +64,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('setPresenter', p => {
         presenter[socket.roomId] = p;
         socket.emit('activatePresenter', p);
-        for (id in channels[socket.roomId]) {
-            if (id === socket.userId) continue;
-            channels[socket.roomId][id].emit('activatePresenter', p);
+        if (sockets[socket.userId + '_webcam'] !== undefined) {
+            sockets[socket.userId + '_webcam'].emit('activatePresenter', p);
         }
     });
 

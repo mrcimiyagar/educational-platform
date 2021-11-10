@@ -93,7 +93,7 @@ function App() {
         setTimeout(() => {
           document.getElementById('me_video').srcObject = videos[p + '_video'];
         }, 500);
-      }} shownUsers={shownVideos} data={videos} updateData={(userId) => {}} forceUpdate={forceUpdate} userId={myUserId} roomId={1}/>
+      }} shownUsers={shownVideos} data={videos} updateData={(userId) => {}} forceUpdate={forceUpdate} userId={myUserId + '_webcam'} roomId={1}/>
       <video autoPlay controls muted id={'me_video'} style={{width: '100%', height: '100%'}}/>
     </div>
   )
