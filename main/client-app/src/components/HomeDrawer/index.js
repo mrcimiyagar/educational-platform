@@ -16,7 +16,7 @@ import Language from '@material-ui/icons/Language'
 import SettingsIcon from '@material-ui/icons/Settings'
 import clsx from 'clsx'
 import React from 'react'
-import { gotoPage, isDesktop } from '../../App'
+import { gotoPage, isDesktop, isInRoom } from '../../App'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot } from '../../util/Utils'
 
@@ -83,7 +83,7 @@ function HomeDrawer(props) {
               key={text}
               onClick={() => {
                 if (index === 0) {
-                  gotoPage('/app/messenger')
+                  gotoPage('/app/home')
                 } else if (index === 1) {
                   
                 } else if (index === 2) {
@@ -200,8 +200,8 @@ function HomeDrawer(props) {
               paper: classes.drawerPaper,
             }}
             style={{ zIndex: 2499 }}
-            variant="permanent"
-            open
+            variant={isInRoom() ? "temporary" : "permanent"}
+            open={!isInRoom()}
           >
             <div
               onClick={() => {

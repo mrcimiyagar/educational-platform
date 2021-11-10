@@ -41,6 +41,7 @@ import HomeToolbar from '../HomeToolbar';
 import Jumper from '../SearchEngineFam';
 import SpacesGrid from '../SpacesGrid';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
+import HomePage from '../../routes/pages/home';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -101,7 +102,6 @@ export default function HomeAppbar(props) {
   let [selectedUserId, setSelectedUserId] = React.useState(props.selectedUserId)
   const [jumperOpen, setJumperOpen] = React.useState(true)
   const [value, setValue] = React.useState(3)
-  let currNav = store.getState().global.main.currentMessengerNav
   let [chats, setChats] = React.useState([])
   let [drawerOpen, setDrawerOpen] = React.useState(false)
 
@@ -198,7 +198,9 @@ export default function HomeAppbar(props) {
 
   return (
     <div className={classes.root}>
-      {currNav === 0 ? (
+      {props.tabIndex === '4' ?
+        <HomePage/>
+      : props.tabIndex === '0' ? (
         <div
           style={{
             background: 'transparent',
@@ -416,17 +418,17 @@ export default function HomeAppbar(props) {
               </Fab>
           </Slide>
         </div>
-      ) : currNav === 1 ? (
+      ) : props.tabIndex === '1' ? (
         <SpacesGrid setDrawerOpen={setDrawerOpen} />
-      ) : currNav === 2 ? (
+      ) : props.tabIndex === '2' ? (
         <HomeNotifs setDrawerOpen={setDrawerOpen} />
-      ) : currNav === 3 ? (
+      ) : props.tabIndex === '3' ? (
         <HomeSettings setDrawerOpen={setDrawerOpen} />
       ) : null}
       <div
         style={{
           position: 'fixed',
-          right: isDesktop() ? 48 : isMobile() ? 16 : 32,
+          right: isDesktop() ? (isInRoom() && '/app/home') ? (48 + 450) : 48 : isMobile() ? 16 : 32,
           transform: isDesktop()
             ? 'translateY(-16px)'
             : isTablet()
@@ -442,7 +444,7 @@ export default function HomeAppbar(props) {
           setOpen={setJumperOpen}
         />
       </div>
-      <HomeBottombar inTheGame={inTheGame} />
+      <HomeBottombar inTheGame={inTheGame} tabIndex={props.tabIndex}/>
       <HomeDrawer
         open={drawerOpen}
         setOpen={setDrawerOpen}

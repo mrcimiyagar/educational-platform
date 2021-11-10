@@ -13,6 +13,7 @@ import React from 'react'
 import {
   animatePageChange,
   gotoPage,
+  histPage,
   inTheGame,
   isDesktop,
   isInMessenger,
@@ -71,9 +72,9 @@ export default function Jumper(props) {
             : isInMessenger() && isDesktop()
             ? -12
             : window.location.pathname === '/app/home'
-            ? isMobile() || isTablet()
+            ? (isMobile() || isTablet())
               ? -16
-              : 40
+              : 60
             : 60,
       }}
     >
@@ -104,21 +105,31 @@ export default function Jumper(props) {
                   props.setOpen(false)
                   animatePageChange()
                   if (index === 0) {
-                    setInTheGame(false);
-                    setTimeout(() => {
-                      gotoPage('/app/messenger');
-                    }, 500);
+                    if (histPage !== '/app/home') {
+                      setInTheGame(false);
+                      setTimeout(() => {
+                        gotoPage('/app/home', {tab_index: 0});
+                      }, 500);
+                    }
                   } else if (index === 1) {
-                    setInTheGame(false);
-                    setTimeout(() => {
-                      gotoPage('/app/room', {room_id: homeRoomId, tab_index: 0});
-                    }, 500);
+                    if (histPage !== '/app/room') {
+                      setInTheGame(false);
+                      setTimeout(() => {
+                        gotoPage('/app/room', {room_id: homeRoomId, tab_index: 0});
+                      }, 500);
+                    }
                   } else if (index === 2) {
-                    gotoPage('/app/searchengine')
+                    if (histPage !== '/app/searchengine') {
+                      gotoPage('/app/searchengine');
+                    }
                   } else if (index === 3) {
-                    gotoPage('/app/store')
+                    if (histPage !== '/app/store') {
+                      gotoPage('/app/store');
+                    }
                   } else if (index === 4) {
-                    gotoPage('/app/createroom')
+                    if (histPage !== '/app/createroom') {
+                      gotoPage('/app/createroom');
+                    }
                   }
                 }}
               />

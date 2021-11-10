@@ -90,10 +90,12 @@ export let isMobile = () => {
   return sizeMode === 'mobile'
 }
 export let isInRoom = () => {
+  const urlSearchParams = new URLSearchParams(window.location.search)
+  let entries = Object.fromEntries(urlSearchParams.entries())
   let counter = series.length - 1
   while (counter >= 0) {
     if (series[counter] in pages) {
-      if (series[counter] === '/app/room' || series[counter] === '/app/home') {
+      if (series[counter] === '/app/room' || (series[counter] === '/app/home' && entries.tab_index === '4')) {
         return true
       } else {
         return false
@@ -107,7 +109,7 @@ export let isInMessenger = () => {
   let counter = series.length - 1
   while (counter >= 0) {
     if (series[counter] in pages) {
-      if (series[counter] === '/app/messenger') {
+      if (series[counter] === '/app/home') {
         return true
       } else {
         return false
@@ -350,11 +352,10 @@ let dialogs = {
 }
 let pages = {
   '/app/store': Store,
-  '/app/messenger': MessengerPage,
+  '/app/home': MessengerPage,
   '/app/room': RoomPage,
   '/app/searchengine': SearchEngine,
   '/app/auth': Authentication,
-  '/app/home': HomePage,
 }
 
 export let setDialogOpen = null
@@ -433,9 +434,8 @@ let InnerApp = (props) => {
     <main>
       <Switch>
         <Route path="/app/auth" component={Authentication}/>
-        <Route path="/app/home" component={HomePage} />
+        <Route path="/app/home" component={MessengerPage} />
         <Route path="/app/store" component={Store}/>
-        <Route path="/app/messenger" component={MessengerPage}/>
         <Route path="/app/room" component={RoomPage}/>
         <Route path="/app/searchengine" component={SearchEngine}/>
         <Route path="/app/chat" component={Chat}/>

@@ -266,7 +266,7 @@ export default function Profile(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.room !== undefined) {
-                    gotoPage('/app/messenger', {
+                    gotoPage('/app/home', {
                       user_id: props.user_id,
                       room_id: result.room.id,
                     })

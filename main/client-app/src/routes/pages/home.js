@@ -149,8 +149,6 @@ export default function HomePage(props) {
   ;[membership, setMembership] = React.useState({})
   const [loaded, setLoaded] = React.useState(false)
   const [menuOpen, setMenuOpen] = React.useState(false)
-  const [currentRoomNav, setCurrentRoomNav] = React.useState(Number(props.tab_index))
-  const [fileMode, setFileMode] = React.useState(0)
   const [menuMode, setMenuMode] = React.useState(0)
   const [opacity, setOpacity] = React.useState(1)
 
@@ -320,17 +318,6 @@ export default function HomePage(props) {
             style={{ display: 'block' }}
           />
         </div>
-        <div
-          style={{
-            position: 'fixed',
-            right: isInRoom() ? 450 + 32 : 16,
-            bottom: 0,
-            transform: 'translateY(+48px)',
-            zIndex: 99999,
-          }}
-        >
-          <Jumper open={jumperOpen} setOpen={setJumperOpen} />
-        </div>
         <Drawer
           onClose={() => setMenuOpen(false)}
           open={menuOpen}
@@ -464,16 +451,6 @@ export default function HomePage(props) {
             roomId={homeRoomId}
             style={{ display: 'block' }}
           />
-        </div>
-        <div
-          style={{
-            position: 'fixed',
-            right: isDesktop() ? (isInRoom() ? 450 + 16 : 16) : 16,
-            bottom: -4,
-            zIndex: 2500,
-          }}
-        >
-          <Jumper open={jumperOpen} setOpen={setJumperOpen} />
         </div>
         <Drawer
           onClose={() => setMenuOpen(false)}

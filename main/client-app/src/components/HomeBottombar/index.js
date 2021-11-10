@@ -6,11 +6,12 @@ import HomeIcon from '@material-ui/icons/Home';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import SettingsIcon from '@material-ui/icons/Settings';
 import React from 'react';
-import { isDesktop, setInTheGame } from '../../App';
+import { gotoPage, isDesktop, setInTheGame } from '../../App';
 import store, { setCurrentMessengerNav } from '../../redux/main';
 import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
 import { updateHome } from '../HomeMain';
+import DesktopMacIcon from '@material-ui/icons/DesktopMac';
 
 const useStyles = makeStyles({
   root: {
@@ -32,14 +33,12 @@ const useStylesAction = makeStyles({
   selected: {},
 });
 
-let valueBackup = 0
-
 export default function HomeBottombar(props) {
   let forceUpdate = useForceUpdate();
   const classes = useStyles();
   const classesAction = useStylesAction();
 
-  let [value, setValue] = React.useState(valueBackup)
+  let [value, setValue] = React.useState(props.tabIndex);
 
   return (
     <BottomNavigation
@@ -49,7 +48,10 @@ export default function HomeBottombar(props) {
         setInTheGame(false);
         setTimeout(() => {
           store.dispatch(setCurrentMessengerNav(newValue));
-          valueBackup = newValue;
+          const urlSearchParams = new URLSearchParams(window.location.search)
+          let entries = Object.fromEntries(urlSearchParams.entries())
+          entries.tab_index = newValue;
+          gotoPage('/app/home', entries);
           updateHome();
           forceUpdate();
           setInTheGame(true);
@@ -72,6 +74,9 @@ export default function HomeBottombar(props) {
       <BottomNavigationAction value={0} classes={classesAction} style={{
         transform: isDesktop() ? 'rotate(-90deg)' : undefined
       }} label="گفتگو ها" icon={<HomeIcon />}/>
+      <BottomNavigationAction value={4} classes={classesAction} style={{
+        transform: isDesktop() ? 'rotate(-90deg)' : undefined
+      }} label="میز کار" icon={<DesktopMacIcon />} />
       <BottomNavigationAction value={1} classes={classesAction} style={{
         transform: isDesktop() ? 'rotate(-90deg)' : undefined
       }} label="فضا ها" icon={<AccountBalanceIcon />} />

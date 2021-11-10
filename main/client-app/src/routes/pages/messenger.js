@@ -13,16 +13,17 @@ import './messenger.css';
 export let reloadRoomsList = undefined;
 
 function MessengerPage(props) {
-
-  setToken(localStorage.getItem('token'));
   
+  const urlSearchParams = new URLSearchParams(window.location.search)
+  props = Object.fromEntries(urlSearchParams.entries())
+
   document.documentElement.style.overflow = 'auto';
 
   ConnectToIo()
 
   return (
     <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0}}>
-      <HomeAppbar selectedChatId={props.room_id} selectedUserId={props.user_id}/>
+      <HomeAppbar selectedChatId={props.room_id} selectedUserId={props.user_id} tabIndex={props.tab_index}/>
     </div>
   );
 }
