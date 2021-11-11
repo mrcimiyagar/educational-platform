@@ -356,6 +356,7 @@ let pages = {
   '/app/room': RoomPage,
   '/app/searchengine': SearchEngine,
   '/app/auth': Authentication,
+  '/app/use_invitation': ConfigGuestAccount
 }
 
 export let setDialogOpen = null
