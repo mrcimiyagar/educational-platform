@@ -437,16 +437,16 @@ export default function ChatEmbeddedInMessenger(props) {
         display:
           props.roomId === undefined || props.roomId === 0 ? 'none' : 'block',
         width: isDesktop() ? 'calc(100% - 450px - 450px - 48px)' : 0,
-        height: 'calc(100% - 16px)',
+        height: 'calc(100% - 16px - 56px)',
         position: 'absolute',
-        top: isDesktop() ? 16 : 0,
+        top: 0,
         left: isDesktop() ? 128 : 0,
       }}
     >
       <div
         style={{
           width: '100%',
-          height: 'calc(100% - 112px)',
+          height: 'calc(100% - 40px)',
           position: 'absolute',
           backgroundImage: `url(${ChatWallpaper})`,
           top: isDesktop() ? 16 + 64 : 0,

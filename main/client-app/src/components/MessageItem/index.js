@@ -14,7 +14,7 @@ export default function MessageItem(props) {
     let dateTime = new Date(Number(message.time));
     return (
       <div key={message.id} id={'message-' + message.id}>
-        {message['User.id'] === me.id ? (
+        {message.authorId === me.id ? (
           <Grow in={inTheGame} {...{ timeout: (props.index + 1) * 500 }} transitionDuration={1000}>
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar

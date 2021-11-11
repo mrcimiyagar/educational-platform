@@ -122,10 +122,9 @@ let setMembership = undefined
 let pickingFile = false
 
 let attachWebcamOnMessenger = undefined;
+let roomId = undefined;
 
 export default function RoomPage(props) {
-  const urlSearchParams = new URLSearchParams(window.location.search)
-  props = Object.fromEntries(urlSearchParams.entries())
 
   const useStyles = makeStyles({
     root: {
@@ -161,9 +160,6 @@ export default function RoomPage(props) {
   const [fileMode, setFileMode] = React.useState(0)
   const [menuMode, setMenuMode] = React.useState(0)
   const [opacity, setOpacity] = React.useState(1)
-
-  let roomId = props.room_id
-  setRoomId(roomId)
 
   let loadData = (callback) => {
 
@@ -252,12 +248,17 @@ export default function RoomPage(props) {
 
   setInTheGame(true)
 
+  const urlSearchParams = new URLSearchParams(window.location.search)
+  props = Object.fromEntries(urlSearchParams.entries())
+
   useEffect(() => {
+    roomId = props.room_id
+    setRoomId(roomId)
     loadData(() => {
       loadFiles()
       setLoaded(true)
     })
-  }, [])
+  }, [props.room_id])
 
   const [files, setFiles] = React.useState([])
 

@@ -461,16 +461,16 @@ export default function ChatEmbedded(props) {
   if (isDesktop()) {
     if (isInRoom()) {
       width = 450
-      height = webcamOn ? 'calc(100% - 300px)' : '100%';
+      height = webcamOn ? 'calc(100% - 300px)' : 'calc(100% + 16px)';
       left = 'calc(100% - 450px)'
       right = 0
-      top = webcamOn ? 300 : 0;
+      top = webcamOn ? 300 : -32;
     } else if (isInMessenger()) {
       width = '100٪'
       height = '100%'
       left = 128
       right = undefined
-      top = 48
+      top = 16
     }
   } else if (isMobile() || isTablet()) {
     if (isInRoom()) {
