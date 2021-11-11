@@ -42,6 +42,7 @@ import Jumper from '../SearchEngineFam';
 import SpacesGrid from '../SpacesGrid';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import HomePage from '../../routes/pages/home';
+import HomeMessenger from '../HomeMessenger';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -104,10 +105,6 @@ export default function HomeAppbar(props) {
   const [value, setValue] = React.useState(3)
   let [chats, setChats] = React.useState([])
   let [drawerOpen, setDrawerOpen] = React.useState(false)
-
-  useEffect(() => {
-    setWallpaper({ type: 'color', color: colors.accentDark });
-  }, []);
 
   // useEffect(() => {
   //   fetchChats().then(chats => {
@@ -200,225 +197,17 @@ export default function HomeAppbar(props) {
     <div className={classes.root}>
       {props.tabIndex === '4' ?
         <HomePage/>
-      : props.tabIndex === '0' ? (
-        <div
-          style={{
-            background: 'transparent',
-            marginRight: isMobile() || isTablet() ? 0 : 256 + 136,
-          }}
-        >
-          <HomeToolbar inTheGame={inTheGame}>
-            <AppBar
-              style={{
-                borderRadius: !isDesktop()
-                  ? undefined
-                  : selectedRoomId === undefined
-                  ? '24px 24px 0 0'
-                  : '0 24px 0 0',
-                marginRight: isDesktop() ? 256 + 32 + 32 + 64 : undefined,
-                marginTop: isDesktop() ? 32 : undefined,
-                width: isDesktop() || isTablet() ? 450 : '100%',
-                backgroundColor: colors.primaryMedium,
-              }}
-            >
-              <Toolbar style={{ marginTop: 16 }}>
-                <HomeSearchbar setDrawerOpen={setDrawerOpen} />
-              </Toolbar>
-              <Tabs
-                variant="fullWidth"
-                value={value}
-                onChange={handleChange}
-                classes={{
-                  indicator: classes.indicator,
-                }}
-                style={{ marginTop: 8, direction: 'ltr' }}
-                centered
-              >
-                <Tab
-                  classes={{ root: classes.tab }}
-                  icon={<SmartToyOutlinedIcon />}
-                  label="ربات ها"
-                />
-                <Tab
-                  classes={{ root: classes.tab }}
-                  icon={<RadioIcon />}
-                  label="کانال ها"
-                />
-                <Tab
-                  classes={{ root: classes.tab }}
-                  icon={<GroupIcon />}
-                  label="گروه ها"
-                />
-                <Tab
-                  classes={{ root: classes.tab }}
-                  icon={<ChatIcon />}
-                  label="چت ها"
-                />
-              </Tabs>
-            </AppBar>
-          </HomeToolbar>
-          <div
-            style={{
-              position: 'absolute',
-              width: isDesktop() || isTablet() ? 450 : 'calc(100% + 16px)',
-              height: isDesktop()
-                ? 'calc(100% - 184px)'
-                : isTablet()
-                ? 'calc(100% - 168px)'
-                : 'calc(100% - 128px - 32px)',
-              backgroundColor:
-                isDesktop() || isTablet()
-                  ? 'rgba(255, 255, 255, 0.45)'
-                  : undefined,
-              backdropFilter:
-                isDesktop() || isTablet() ? 'blur(10px)' : undefined,
-              marginLeft: isMobile() ? -8 : undefined,
-              marginRight: isMobile() || isDesktop() ? -8 : undefined,
-              marginTop: isDesktop() ? 88 : 56,
-              borderRadius:
-                isTablet() || isMobile()
-                  ? 0
-                  : selectedRoomId === undefined
-                  ? '0 0 24px 24px'
-                  : '0 0 24px 0',
-            }}
-          >
-            <TabPanel
-              value={value}
-              index={3}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <div
-                className="hiddenScrollbar"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  overflow: 'auto',
-                  direction: 'ltr',
-                }}
-              >
-                <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
-                <AllChats
-                  setInTheGame={setInTheGame}
-                  setSelectedRoomId={setSelectedRoomId}
-                  setSelectedUserId={setSelectedUserId}
-                  chats={chats.filter((c) => c.chatType === 'p2p')}
-                />
-                <div style={{ width: '100%', height: 100 }} />
-              </div>
-            </TabPanel>
-            <TabPanel
-              value={value}
-              index={2}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <div
-                className="hiddenScrollbar"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  overflow: 'auto',
-                  direction: 'ltr',
-                }}
-              >
-                <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
-                <GroupChats
-                  setInTheGame={setInTheGame}
-                  setSelectedRoomId={setSelectedRoomId}
-                  chats={chats.filter((c) => c.chatType === 'group')}
-                />
-                <div style={{ width: '100%', height: 100 }} />
-              </div>
-            </TabPanel>
-            <TabPanel
-              value={value}
-              index={1}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <div
-                className="hiddenScrollbar"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  overflow: 'auto',
-                  direction: 'ltr',
-                }}
-              >
-                <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
-                <ChannelChats
-                  setInTheGame={setInTheGame}
-                  setSelectedRoomId={setSelectedRoomId}
-                  chats={chats.filter((c) => c.chatType === 'channel')}
-                />
-                <div style={{ width: '100%', height: 100 }} />
-              </div>
-            </TabPanel>
-            <TabPanel
-              value={value}
-              index={0}
-              style={{ width: '100%', height: '100%' }}
-            >
-              <div
-                className="hiddenScrollbar"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  overflow: 'auto',
-                  direction: 'ltr',
-                }}
-              >
-                <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
-                <BotChats
-                  setInTheGame={setInTheGame}
-                  setSelectedRoomId={setSelectedRoomId}
-                  chats={chats.filter((c) => c.chatType === 'bot')}
-                />
-                <div style={{ width: '100%', height: 100 }} />
-              </div>
-            </TabPanel>
-          </div>
-          {isDesktop() && isInMessenger() ? (
-            <ChatEmbeddedInMessenger
-              key={'chat1'}
-              roomId={selectedRoomId}
-              userId={selectedUserId}
-            />
-          ) : isTablet() ? (
-            <div
-              style={{
-                width: 'calc(100% - 450px)',
-                height: '100%',
-                position: 'fixed',
-                left: 0,
-                top: 0,
-              }}
-            >
-              <ChatEmbedded
-                key={'chat2'}
-                roomId={selectedRoomId}
-                userId={selectedUserId}
-              />
-            </div>
-          ) : null}
-          <Slide direction="right" in={inTheGame} mountOnEnter unmountOnExit {...{timeout: 1000}}>
-              <Fab
-                color="secondary"
-                style={{
-                  position: 'fixed',
-                  bottom: isDesktop() ? 48 : isTablet() ? 104 : 88,
-                  left: isDesktop() || isTablet() ? undefined : 16,
-                  right: isDesktop()
-                    ? 568 + 64 + 256 + 32 + 32 - 16 - 180
-                    : isTablet()
-                    ? 450 - 56 - 16 - 16
-                    : undefined,
-                }}
-              >
-                <EditIcon />
-              </Fab>
-          </Slide>
-        </div>
-      ) : props.tabIndex === '1' ? (
+      : props.tabIndex === '0' ? 
+        <HomeMessenger
+          chats={chats}
+          value={value}
+          handleChange={handleChange}
+          selectedUserId={selectedUserId}
+          selectedRoomId={selectedRoomId}
+          setSelectedRoomId={setSelectedRoomId}
+          setSelectedUserId={setSelectedUserId}
+          setDrawerOpen={setDrawerOpen}/>
+        : props.tabIndex === '1' ? (
         <SpacesGrid setDrawerOpen={setDrawerOpen} />
       ) : props.tabIndex === '2' ? (
         <HomeNotifs setDrawerOpen={setDrawerOpen} />

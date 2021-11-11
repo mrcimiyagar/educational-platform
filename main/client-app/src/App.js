@@ -529,11 +529,6 @@ if (window.innerWidth > 900) {
     useEffect(() => {
       if (histPage === '/app/searchengine') {
         setWallpaper({ type: 'color', color: colors.accentDark });
-      } else if (isInMessenger()) {
-        setWallpaper({
-          type: 'photo',
-          photo: DesktopWallpaper,
-        });
       }
     }, [histPage]);
 

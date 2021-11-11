@@ -579,16 +579,16 @@ export default function ChatEmbeddedInMessenger(props) {
         <Picker
           pickerStyle={{
             width: isDesktop()
-              ? isInRoom() || histPage === '/app/settings'
+              ? isInRoom()
                 ? 450
-                : 'calc(100% - 658px - 96px)'
+                : 'calc(100% - 800px - 96px - 48px)'
               : 'calc(100% - 450px)',
             height: showEmojiPad ? 356 : 0,
             position: 'fixed',
             left: isDesktop()
-              ? isInRoom() || histPage === '/app/settings'
+              ? isInRoom()
                 ? 'calc(100% - 450px)'
-                : 96
+                : (96 + 16)
               : 0,
             bottom: 0,
             zIndex: 5000,

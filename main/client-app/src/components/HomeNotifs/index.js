@@ -5,7 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { setWallpaper } from '../..';
 import { colors } from '../../util/settings';
 import HomeToolbar from '../HomeToolbar';
 import NotifsList from '../NotifsList';
@@ -52,6 +53,13 @@ export default function HomeNotifs() {
   const handleChange = (event, newValue) => {
     setValue(newValue)
   };
+
+  useEffect(() => {
+    setWallpaper({
+      type: 'color',
+      color: colors.accentDark
+    });
+  }, []);
 
   return (
     <div className={classes.root}>

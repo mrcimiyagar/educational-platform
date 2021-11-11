@@ -1,5 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { setWallpaper } from '../..';
+import { colors } from '../../util/settings';
 import SettingsList from '../SettingsList';
 
 const useStyles = makeStyles((theme) => ({
@@ -10,6 +12,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function HomeSettings(props) {
   const classes = useStyles()
+
+  useEffect(() => {
+    setWallpaper({
+      type: 'color',
+      color: colors.accentDark
+    });
+  }, []);
 
   return (
     <div className={classes.root}>

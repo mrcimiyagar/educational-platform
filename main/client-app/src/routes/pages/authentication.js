@@ -186,7 +186,7 @@ function Authentication(props) {
                   setConfig(result.account);
                   setOpacity(0)
                   setTimeout(() => {
-                    gotoPage('/app/home', {});
+                    gotoPage('/app/home', {tab_index: 0});
                   }, 1000)
                 }
                 else {

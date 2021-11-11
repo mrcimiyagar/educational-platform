@@ -4,9 +4,10 @@ import ImageListItem from '@material-ui/core/ImageListItem';
 import { makeStyles } from '@material-ui/core/styles';
 import HomeIcon from '@material-ui/icons/Home';
 import React, { useEffect } from 'react';
+import { setWallpaper } from '../..';
 import { gotoPage, inTheGame, isDesktop } from '../../App';
 import EmptyIcon from '../../images/empty.png';
-import { token } from '../../util/settings';
+import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 import EmptySign from '../EmptySign';
 import HomeToolbar from '../HomeToolbar';
@@ -43,9 +44,15 @@ export default function SpacesGrid(props) {
 
   document.documentElement.style.overflowY = 'hidden'
 
-  let [spaces, setSpaces] = React.useState([])
+  let [spaces, setSpaces] = React.useState([]);
 
   useEffect(() => {
+
+    setWallpaper({
+      type: 'color',
+      color: colors.accentDark
+    });
+
     let requestOptions = {
       method: 'POST',
       headers: {
