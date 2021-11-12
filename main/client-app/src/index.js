@@ -7,6 +7,7 @@ import CloudIcon from './images/logo.png'
 import DesktopWallpaper from './images/roomWallpaper.png'
 import RoomWallpaper from './images/desktop-wallpaper.jpg'
 import ChatWallpaper from './images/chat-wallpaper.jpg'
+import ProfileHeader from './images/profile-header.jpeg'
 import store from './redux/main'
 import { setup } from './util/Utils'
 import './notifSystem';
@@ -130,7 +131,7 @@ let AppContainer = (props) => {
   ;[display2, setDisplay2] = React.useState('block');
   
   useEffect(() => {
-    [ChatWallpaper, RoomWallpaper, DesktopWallpaper].forEach((picture) => {
+    [ChatWallpaper, RoomWallpaper, DesktopWallpaper, ProfileHeader].forEach((picture) => {
       const img = new Image();
       img.src = picture;
   });
