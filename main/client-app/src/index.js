@@ -4,10 +4,12 @@ import React, { Suspense, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import CloudIcon from './images/logo.png'
-import DesktopWallpaper from './images/roomWallpaper2.jpg'
+import DesktopWallpaper from './images/roomWallpaper.png'
+import RoomWallpaper from './images/desktop-wallpaper.jpg'
+import ChatWallpaper from './images/chat-wallpaper.jpg'
 import store from './redux/main'
 import { setup } from './util/Utils'
-//import './notifSystem';
+import './notifSystem';
 
 export let pathConfig = {}
 
@@ -126,24 +128,50 @@ let AppContainer = (props) => {
   let [opacity, setOpacity] = React.useState(0);
   let [display, setDisplay] = React.useState('block');
   ;[display2, setDisplay2] = React.useState('block');
+  
   useEffect(() => {
+    [ChatWallpaper, RoomWallpaper, DesktopWallpaper].forEach((picture) => {
+      const img = new Image();
+      img.src = picture;
+  });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
     let requestOptions = {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
       redirect: 'follow',
+      signal: controller.signal
     }
     fetch('https://config.kaspersoft.cloud', requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        pathConfig = result
-        setup()
-        loaded = true
-        setTimeout(() => {
-          setDisplay('none')
-        }, 1000)
-      })
+    .then((response) => response.json())
+    .then((result) => {
+      if (result.mainFrontend === undefined) {
+        pathConfig = {
+          mainBackend: 'https://backend.kaspersoft.cloud',
+          mainFrontend: 'https://kaspersoft.cloud',
+          confClient: 'https://confclient.kaspersoft.cloud',
+          audioPlayer: 'https://audioplayer.kaspersoft.cloud',
+          waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
+          whiteBoard: 'https://whiteboard.kaspersoft.cloud',
+          sharedNotes: 'https://sharednotes.kaspersoft.cloud',
+          videoConfVideo: 'https://confvideo.kaspersoft.cloud',
+          videoConfAudio: 'https://confaudio.kaspersoft.cloud',
+          videoConfScreen: 'https://confscreen.kaspersoft.cloud',
+          taskBoard: 'https://taskboard.kaspersoft.cloud',
+          mainWebsocket: 'wss://kaspersoft.cloud'
+        };
+      }
+      else {
+        pathConfig = result;
+      }
+      setup()
+      loaded = true
+      setTimeout(() => {
+        setDisplay('none')
+      }, 1000)
+    });
   }, [])
 
   if (!loaded) {

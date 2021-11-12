@@ -73,7 +73,7 @@ export default function Jumper(props) {
             ? -12
             : window.location.pathname === '/app/home'
             ? (isMobile() || isTablet())
-              ? -16
+              ? 60
               : 60
             : 60,
       }}

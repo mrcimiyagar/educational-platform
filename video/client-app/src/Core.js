@@ -631,7 +631,7 @@ function App() {
           <Fab
             id="callButton"
             color={'secondary'}
-            style={{ position: 'absolute', left: 16, bottom: 48 }}
+            style={{ position: 'absolute', left: isDesktop() ? 16 : 0, bottom: isDesktop() ? 48 : 60 }}
             onClick={() => {
               instantConnectionFlag = true
               setConnected(true)

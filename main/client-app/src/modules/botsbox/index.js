@@ -10,7 +10,7 @@ import { pink } from '@material-ui/core/colors'
 import Add from '@material-ui/icons/Add'
 import Edit from '@material-ui/icons/Edit'
 import React, { useEffect } from 'react'
-import { inTheGame, isDesktop, isInRoom } from '../../App'
+import { inTheGame, isDesktop, isInRoom, isMobile, isTablet } from '../../App'
 import BotContainer from '../../components/BotContainer'
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar'
 import HomeToolbar from '../../components/HomeToolbar'
@@ -400,7 +400,7 @@ export default function BotsBox(props) {
         color={'secondary'}
         style={{
           position: 'fixed',
-          bottom: window.location.pathname === '/app/home' ? 16 : 16 + 72,
+          bottom: (isInRoom() && (isMobile() || isTablet())) ? (72 + 16) : 16,
           left: isDesktop() && isInRoom() ? 32 : 16,
           zIndex: 4,
         }}
@@ -420,10 +420,7 @@ export default function BotsBox(props) {
         color={'primary'}
         style={{
           position: 'fixed',
-          bottom:
-            window.location.pathname === '/app/home'
-              ? 56 + 16 + 16
-              : 16 + 72 + 56 + 16,
+          bottom: (isInRoom() && (isMobile() || isTablet())) ? (56 + 16 + 72 + 16) : (16 + 56 + 16),
           left: (isDesktop() && isInRoom() ? 32 : 16) + 4,
           zIndex: 4,
         }}

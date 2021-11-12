@@ -155,7 +155,7 @@ export default function ChatAppBar(props) {
             />
             <Typography
               variant="h6"
-              style={{ fontFamily: 'mainFont', marginRight: 8 }}
+              style={{ fontFamily: 'mainFont', marginRight: 8, color: '#fff' }}
             >
               {(props.user !== undefined && props.user !== null)
                 ? props.user.firstName + ' ' + props.user.lastName

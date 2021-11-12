@@ -3,7 +3,7 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import EditIcon from '@material-ui/icons/Edit'
 import GroupAddIcon from '@material-ui/icons/GroupAdd'
 import SearchIcon from '@material-ui/icons/Search'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   gotoPage,
   isDesktop,
@@ -11,6 +11,7 @@ import {
   isTablet,
   popPage,
   registerDialogOpen,
+  setInTheGame,
 } from '../../App'
 import ProfileAvatar from '../../images/avatar.jpg'
 import header from '../../images/profile-header.jpeg'
@@ -36,6 +37,10 @@ export default function Profile(props) {
     setOpen(false)
     setTimeout(popPage, 250)
   }
+
+  useEffect(() => {
+    setInTheGame(true);
+  }, [])
 
   if (isDesktop() || isTablet()) {
     return (
