@@ -12,6 +12,7 @@ import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
 import { updateHome } from '../HomeMain';
 import DesktopMacIcon from '@material-ui/icons/DesktopMac';
+import Chat from '@material-ui/icons/Chat';
 
 const useStyles = makeStyles({
   root: {
@@ -73,7 +74,7 @@ export default function HomeBottombar(props) {
     >
       <BottomNavigationAction value={0} classes={classesAction} style={{
         transform: isDesktop() ? 'rotate(-90deg)' : undefined
-      }} label="گفتگو ها" icon={<HomeIcon />}/>
+      }} label="گفتگو ها" icon={<Chat />}/>
       <BottomNavigationAction value={4} classes={classesAction} style={{
         transform: isDesktop() ? 'rotate(-90deg)' : undefined
       }} label="میز کار" icon={<DesktopMacIcon />} />

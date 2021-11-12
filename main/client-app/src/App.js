@@ -739,7 +739,7 @@ if (window.innerWidth > 900) {
             window.location.pathname === '/' ||
             window.location.pathname === ''
           ) {
-            gotoPage('/app/home', {});
+            gotoPage('/app/home', {tab_index: 0});
           } else {
             const urlSearchParams = new URLSearchParams(window.location.search);
             let params = Object.fromEntries(urlSearchParams.entries());

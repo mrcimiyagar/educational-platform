@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const actions = [
-  { icon: <Chat />, name: 'پیامرسان' },
+  { icon: <Home />, name: 'خانه' },
   { icon: <LocationCityIcon />, name: 'شهر' },
   { icon: <ExploreIcon />, name: 'گردش' },
   { icon: <StoreMallDirectoryIcon />, name: 'فروشگاه' },
