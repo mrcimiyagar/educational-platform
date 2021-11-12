@@ -679,7 +679,7 @@ export default function ChatEmbedded(props) {
             : isDesktop() && (isInRoom() || histPage === '/app/settings')
             ? 'calc(100% - 96px)'
             : 'calc(100% - 64px)',
-          marginTop: 32,
+          marginTop: 0,
           marginLeft: isDesktop() ? 32 : 0,
           marginRight: 16,
           position: 'relative',
