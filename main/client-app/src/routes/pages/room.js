@@ -448,7 +448,7 @@ export default function RoomPage(props) {
           style={{
             position: 'absolute',
             left: 0,
-            right: isDesktop() ? 450 : 0,
+            right: (isDesktop() && currentRoomNav !== 0) ? 450 : 0,
             top: 0,
             bottom: 0,
             opacity: opacity,
