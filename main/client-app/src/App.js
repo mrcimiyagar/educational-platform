@@ -602,7 +602,7 @@ if (window.innerWidth > 900) {
             window.location.pathname === '/' ||
             window.location.pathname === ''
           ) {
-            gotoPage('/app/home', {});
+            gotoPage('/app/home', {tab_index: 0});
           } else {
             gotoPage(window.location.pathname, params);
           }

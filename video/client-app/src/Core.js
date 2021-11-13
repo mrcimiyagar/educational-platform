@@ -132,6 +132,7 @@ function App() {
   let [listOpen, setListOpen] = React.useState(false)
   let [screenOn, setScreenOn] = React.useState(false)
   let [sizeMode, setSizeMode] = React.useState(undefined);
+  let [extWebcam, setExtWebcam] = React.useState(false);
 
   let DesktopDetector = () => {
     ;[sizeMode, setSizeMode] = React.useState(
@@ -391,6 +392,12 @@ function App() {
       setMe(e.data.me)
       setRoomId(e.data.roomId)
       setMyUserId(e.data.me.id)
+    }
+    else if (e.data.action === 'extWebcam') {
+      setExtWebcam(true);
+    }
+    else if (e.data.action === 'intWebcam') {
+      setExtWebcam(false);
     }
   }
 

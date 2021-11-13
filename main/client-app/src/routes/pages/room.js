@@ -467,13 +467,26 @@ export default function RoomPage(props) {
           style={{
             position: 'absolute',
             left: 0,
-            right: (isDesktop() && currentRoomNav !== 2) ? 450 : 0,
+            right: (isDesktop() && currentRoomNav !== 2 && !webcamOn) ? 450 : 0,
             top: 0,
             bottom: 0,
             opacity: opacity,
             transition: 'opacity .250s',
           }}
         >
+          <ConfBox
+            openDeck={openDeck}
+            openNotes={openNotes}
+            openPolls={openPolls}
+            setMenuOpen={setMenuOpen}
+            webcamOn={webcamOn}
+            currentRoomNav={currentRoomNav}
+            style={{ display: (currentRoomNav === 2 || webcamOn) ? 'block' : 'none' }}
+            roomId={props.room_id}
+          />
+          <div style={{paddingRight: (webcamOn && currentRoomNav !== 2) ? 450 : 0,
+            width: '100%',
+            height: '100%'}}>
           <BotsBox
             openMenu={() => setMenuOpen(true)}
             openDeck={openDeck}
@@ -483,14 +496,6 @@ export default function RoomPage(props) {
             membership={membership}
             roomId={props.room_id}
             style={{ display: currentRoomNav === 0 ? 'block' : 'none' }}
-          />
-          <ConfBox
-            openDeck={openDeck}
-            openNotes={openNotes}
-            openPolls={openPolls}
-            setMenuOpen={setMenuOpen}
-            style={{ display: currentRoomNav === 2 ? 'block' : 'none' }}
-            roomId={props.room_id}
           />
           <BoardBox
             openDeck={openDeck}
@@ -713,6 +718,7 @@ export default function RoomPage(props) {
               </ThemeProvider>
             </div>
           </div>
+          </div>
         </div>
         <div
           style={{
@@ -863,6 +869,16 @@ export default function RoomPage(props) {
             transition: 'opacity .250s',
           }}
         >
+          <ConfBox
+            openDeck={openDeck}
+            openNotes={openNotes}
+            openPolls={openPolls}
+            setMenuOpen={setMenuOpen}
+            webcamOn={webcamOn}
+            currentRoomNav={currentRoomNav}
+            style={{ display: currentRoomNav === 2 ? 'block' : 'none' }}
+            roomId={props.room_id}
+          />
           <BotsBox
             openMenu={() => setMenuOpen(true)}
             openDeck={openDeck}
@@ -872,14 +888,6 @@ export default function RoomPage(props) {
             membership={membership}
             roomId={props.room_id}
             style={{ display: currentRoomNav === 0 ? 'block' : 'none' }}
-          />
-          <ConfBox
-            openDeck={openDeck}
-            openNotes={openNotes}
-            openPolls={openPolls}
-            setMenuOpen={setMenuOpen}
-            style={{ display: currentRoomNav === 2 ? 'block' : 'none' }}
-            roomId={props.room_id}
           />
           <BoardBox
             openDeck={openDeck}

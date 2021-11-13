@@ -22,9 +22,11 @@ export function ConfBox(props) {
     isConfConnected = connected;
     let [uniqueKey, setUniqueKey] = React.useState(Math.random());
     return (
-      <div key={uniqueKey} style={{width: '100%', height: '100vh', position: 'relative', direction: 'ltr', display: props.style.display}}>
+      <div key={uniqueKey} style={{width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : '100%', height: (props.webcamOn && props.currentRoomNav !== 2) ? 300 : '100vh'
+      , position: (props.webcamOn && props.currentRoomNav !== 2) ? 'fixed' : 'relative', direction: 'ltr', display: props.style.display}}>
         
         <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
+          display: props.currentRoomNav !== 2 && props.webcamOn ? 'none' : 'block',
           borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
           backgroundColor: colors.primaryMedium,
           backdropFilter: 'blur(10px)',
@@ -52,7 +54,9 @@ export function ConfBox(props) {
         <iframe scrolling="no"
           onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', me: me, roomId: props.roomId}, pathConfig.confClient)}}
           allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera'}
-          style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64,
+          style={{position: (props.webcamOn && props.currentRoomNav !== 2) ? 'absolute' : undefined, 
+          right: (props.webcamOn && props.currentRoomNav !== 2) ? 0 : undefined, top: 0, 
+          width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : (isDesktop() && isInRoom()) ? 'calc(100% - 16px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64,
           marginBottom: 32, marginLeft: 16}} frameBorder="0"></iframe>
       </div>
     );
