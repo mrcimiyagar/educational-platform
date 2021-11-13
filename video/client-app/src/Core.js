@@ -65,7 +65,7 @@ function Video(props) {
   return (
     <video
       autoPlay
-      controls
+      controls={false}
       muted
       id={props.id + '_video'}
       style={{ width: '100%', height: '100%' }}
@@ -81,7 +81,7 @@ function Screen(props) {
   return (
     <video
       autoPlay
-      controls
+      controls={false}
       muted
       id={props.id + '_screen'}
       style={{ width: '100%', height: '100%' }}
