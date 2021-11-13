@@ -9,15 +9,15 @@ app.use(cors())
 app.get('*', (req, res) => {
     res.send({
         mainBackend: 'https://backend.kaspersoft.cloud',
-        mainFrontend: 'http://localhost:2002',
-        confClient: 'http://localhost:1013',
+        mainFrontend: 'https://kaspersoft.cloud',
+        confClient: 'https://confclient.kaspersoft.cloud',
         audioPlayer: 'https://audioplayer.kaspersoft.cloud',
         waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
         whiteBoard: 'https://whiteboard.kaspersoft.cloud',
         sharedNotes: 'https://sharednotes.kaspersoft.cloud',
-        videoConfVideo: 'http://localhost:1010',
-        videoConfAudio: 'http://localhost:1011',
-        videoConfScreen: 'http://localhost:1012',
+        videoConfVideo: 'https://confvideo.kaspersoft.cloud',
+        videoConfAudio: 'https://confaudio.kaspersoft.cloud',
+        videoConfScreen: 'https://confscreen.kaspersoft.cloud',
         taskBoard: 'https://taskboard.kaspersoft.cloud',
         mainWebsocket: 'wss://kaspersoft.cloud'
     });
