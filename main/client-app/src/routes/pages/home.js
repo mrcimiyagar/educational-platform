@@ -153,7 +153,7 @@ export default function HomePage(props) {
   const [opacity, setOpacity] = React.useState(1)
 
   let roomId = homeRoomId
-  setRoomId(roomId)
+  setRoomId(homeRoomId)
 
   let loadData = (callback) => {
     leaveRoom(() => {
@@ -188,7 +188,7 @@ export default function HomePage(props) {
               token: token,
             },
             body: JSON.stringify({
-              roomId: roomId,
+              roomId: homeRoomId,
             }),
             redirect: 'follow',
           }
@@ -394,7 +394,7 @@ export default function HomePage(props) {
               <div
                 onClick={() => {
                   setMenuOpen(false)
-                  gotoPage('/app/settings')
+                  gotoPage('/app/settings', { room_id: homeRoomId })
                 }}
                 style={{
                   borderRadius: 32,
