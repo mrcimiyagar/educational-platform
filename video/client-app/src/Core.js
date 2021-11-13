@@ -29,6 +29,7 @@ import CallIcon from '@material-ui/icons/Call'
 import CallEndIcon from '@material-ui/icons/CallEnd'
 import VideocamIcon from '@material-ui/icons/Videocam'
 import { Card } from '@material-ui/core'
+import ListIcon from '@mui/icons-material/List';
 
 function useForceUpdate() {
   const [value, setValue] = React.useState(0) // integer state
@@ -583,7 +584,7 @@ function App() {
               {screen ? <DesktopWindowsIcon /> : <DesktopAccessDisabledIcon />}
             </Fab>
             <Fab
-              id="screenButton"
+              id="listButton"
               color={'primary'}
               style={{
                 position: 'absolute',
@@ -598,7 +599,7 @@ function App() {
                 setListOpen(true)
               }}
             >
-              <DesktopWindowsIcon />
+              <ListIcon />
             </Fab>
           </ThemeProvider>
           <VideoMedia
