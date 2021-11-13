@@ -29,7 +29,7 @@ import CallIcon from '@material-ui/icons/Call'
 import CallEndIcon from '@material-ui/icons/CallEnd'
 import VideocamIcon from '@material-ui/icons/Videocam'
 import { Card } from '@material-ui/core'
-import ListIcon from '@mui/icons-material/List';
+import MenuIcon from '@material-ui/icons/Menu';
 
 function useForceUpdate() {
   const [value, setValue] = React.useState(0) // integer state
@@ -599,7 +599,7 @@ function App() {
                 setListOpen(true)
               }}
             >
-              <ListIcon />
+              <MenuIcon />
             </Fab>
           </ThemeProvider>
           <VideoMedia
