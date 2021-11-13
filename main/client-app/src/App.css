@@ -1,3 +1,6 @@
+iframe {
+	overflow: hidden;
+}
 
 .switch-wrapper {
   position: relative;

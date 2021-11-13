@@ -49,10 +49,10 @@ export function ConfBox(props) {
           </Toolbar>
         </AppBar>
         
-        <iframe
+        <iframe scrolling="no"
           onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', me: me, roomId: props.roomId}, pathConfig.confClient)}}
           allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera'}
-          style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px)' : '100%', height: 'calc(100% - 72px)', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
+          style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64,
           marginBottom: 32, marginLeft: 16}} frameBorder="0"></iframe>
       </div>
     );

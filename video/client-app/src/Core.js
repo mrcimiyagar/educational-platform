@@ -169,6 +169,7 @@ function App() {
           pathConfig.mainFrontend,
         )
         document.getElementById('screenMax').srcObject = undefined
+        document.getElementById('screenMax2').srcObject = undefined
       } else if (
         shownVideos[presenter] === true &&
         shownScreens[presenter] !== true
@@ -181,6 +182,7 @@ function App() {
         let streamPack = findValueByPrefix(videos, presenter + '_video')
         if (streamPack !== undefined) {
           document.getElementById('screenMax').srcObject = streamPack.value
+          document.getElementById('screenMax2').srcObject = undefined
         }
       } else if (
         shownVideos[presenter] !== true &&
@@ -194,6 +196,7 @@ function App() {
         let streamPack = findValueByPrefix(screens, presenter + '_screen')
         if (streamPack !== undefined) {
           document.getElementById('screenMax').srcObject = streamPack.value
+          document.getElementById('screenMax2').srcObject = undefined
         }
       } else if (
         shownVideos[presenter] === true &&
@@ -205,8 +208,12 @@ function App() {
           pathConfig.mainFrontend,
         )
         let streamPack = findValueByPrefix(screens, presenter + '_screen')
+        let streamPack2 = findValueByPrefix(videos, presenter + '_video')
         if (streamPack !== undefined) {
           document.getElementById('screenMax').srcObject = streamPack.value
+        }
+        if (streamPack2 !== undefined) {
+          document.getElementById('screenMax2').srcObject = streamPack2.value
         }
       }
     }
@@ -436,37 +443,31 @@ function App() {
       }}
     >
       <DesktopDetector/>
-      <div
-        id="max"
-        style={{
-          width: 'calc(100% - 96px - 32px)',
-          height: 'calc(100% - 384px)',
-          position: 'relative',
-          marginLeft: shownScreens[presenterBackup] === true ?  (96 + 32) : (isDesktop() ? 'calc(96px + 32px + 50% - 500px)' : 'calc(96px + 32px + 50% - 300px)'),
-          display: screenOn && connected ? 'block' : 'none',
-        }}
-      >
-        <video
-          autoPlay
-          id="webcamMax"
-          style={{
-            display: 'none',
-            objectFit: 'cover',
-            width: '200px',
-            height: '200px',
-          }}
-        ></video>
         <video
           id="screenMax"
           autoPlay
           style={{
-            transform: 'rotateY(0)',
+            position: 'absolute',
+            transform: 'translateX(-50%)',
             objectFit: 'cover',
-            width: shownScreens[presenterBackup] === true ? window.innerWidth - 176 + 'px' : (window.innerWidth / 2) + 'px',
+            top: 80,
+            left: window.innerWidth / 2 - 225 + 'px',
+            width: shownScreens[presenterBackup] === true ? window.innerWidth - 176 - 450 + 'px' : (window.innerWidth / 2 - 225) + 'px',
             height: 'auto',
           }}
         ></video>
-      </div>
+        <video
+          autoPlay
+          id="screenMax2"
+          style={{
+            objectFit: 'cover',
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            width: 450,
+            height: 300,
+          }}
+        ></video>
       <Drawer
         open={listOpen}
         onClose={() => {

@@ -143,23 +143,24 @@ export default function RoomPage(props) {
     },
   })
 
-  document.documentElement.style.overflow = 'auto'
+  document.documentElement.style.overflow = 'auto';
 
-  let forceUpdate = useForceUpdate()
+  let forceUpdate = useForceUpdate();
 
-  const classes = useStyles()
-  const classesAction = useStylesAction()
+  const classes = useStyles();
+  const classesAction = useStylesAction();
 
-  const [jumperOpen, setJumperOpen] = React.useState(true)
-  ;[membership, setMembership] = React.useState({})
-  const [loaded, setLoaded] = React.useState(false)
-  const [menuOpen, setMenuOpen] = React.useState(false)
+  const [jumperOpen, setJumperOpen] = React.useState(true);
+  ;[membership, setMembership] = React.useState({});
+  const [loaded, setLoaded] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
   const [currentRoomNav, setCurrentRoomNav] = React.useState(
     Number(props.tab_index),
-  )
-  const [fileMode, setFileMode] = React.useState(0)
-  const [menuMode, setMenuMode] = React.useState(0)
-  const [opacity, setOpacity] = React.useState(1)
+  );
+  const [fileMode, setFileMode] = React.useState(0);
+  const [menuMode, setMenuMode] = React.useState(0);
+  const [opacity, setOpacity] = React.useState(1);
+  let [webcamOn, setWebcamOn] = React.useState(false);
 
   let loadData = (callback) => {
 
@@ -360,6 +361,23 @@ export default function RoomPage(props) {
   }
 
   useEffect(() => {
+    if (attachWebcamOnMessenger !== undefined) {
+      window.removeEventListener('message', attachWebcamOnMessenger);
+    }
+    attachWebcamOnMessenger = (e) => {
+      if (e.data.sender === 'conf') {
+        if (e.data.action === 'attachWebcamOnMessenger') {
+          setWebcamOn(true);
+        }
+        else if (e.data.action === 'detachWebcamOnMessenger') {
+          setWebcamOn(false);
+        }
+      }
+    };
+    window.addEventListener('message', attachWebcamOnMessenger);
+  }, [])
+
+  useEffect(() => {
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -439,16 +457,17 @@ export default function RoomPage(props) {
             height: '100%',
             position: 'fixed',
             right: 0,
-            top: 0,
+            top: webcamOn ? 300 : 0,
+            zIndex: 2491
           }}
         >
-          <ChatEmbedded roomId={props.room_id} />
+          <ChatEmbedded roomId={props.room_id} webcamOn={webcamOn} />
         </div>
         <div
           style={{
             position: 'absolute',
             left: 0,
-            right: (isDesktop() && currentRoomNav !== 0) ? 450 : 0,
+            right: (isDesktop() && currentRoomNav !== 2) ? 450 : 0,
             top: 0,
             bottom: 0,
             opacity: opacity,

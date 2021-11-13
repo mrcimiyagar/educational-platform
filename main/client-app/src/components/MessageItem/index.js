@@ -54,6 +54,7 @@ export default function MessageItem(props) {
                   right: 16,
                   fontWeight: 'bold',
                   fontSize: 20,
+                  wordWrap: "break-word"
                 }}
               >
                 {message['User.firstName']}
@@ -173,6 +174,7 @@ export default function MessageItem(props) {
                   right: 16,
                   fontWeight: 'bold',
                   fontSize: 20,
+                  wordWrap: "break-word"
                 }}
               >
                 {message['User.firstName']}
@@ -309,6 +311,7 @@ export default function MessageItem(props) {
                   left: 16,
                   fontWeight: 'bold',
                   fontSize: 20,
+                  wordWrap: "break-word"
                 }}
               >
                 {message['User.firstName']}
@@ -426,6 +429,7 @@ export default function MessageItem(props) {
                   left: 16,
                   fontWeight: 'bold',
                   fontSize: 20,
+                  wordWrap: "break-word"
                 }}
               >
                 {message['User.firstName']}
