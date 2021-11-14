@@ -427,8 +427,84 @@ export let fetchChats = async () => {
   return data
 }
 
-let mobileUrlParams = undefined,
-  setMobileUrlParams = undefined
+export let cacheSpace = (space) => {
+  space.type = 'space';
+  db.putIfNotExists('space_' + space.id, space)
+    .then(function (res) {})
+    .catch(function (err) {})
+}
+
+export let fetchSpaces = async () => {
+  let data = await db.find({
+    selector: { type: { $eq: 'space' } },
+  })
+  data = data.docs
+  return data
+}
+
+export let cacheRoom = (room) => {
+  room.type = 'room';
+  db.putIfNotExists('room_' + room.id, room)
+    .then(function (res) {})
+    .catch(function (err) {})
+}
+
+export let fetchRooms = async () => {
+  let data = await db.find({
+    selector: { type: { $eq: 'room' } },
+  })
+  data = data.docs
+  return data
+}
+
+export let fetchRoom = async (roomId) => {
+  let data = await db.find({
+    selector: { type: { $eq: 'room' }, id: { $eq: roomId } },
+  })
+  data = data.docs
+  if (data.length === 0) return {};
+  else return data[0];
+}
+
+export let cacheMembership = (membership) => {
+  membership.type = 'membership';
+  db.putIfNotExists('membership_' + membership.id, membership)
+    .then(function (res) {})
+    .catch(function (err) {})
+}
+
+export let fetchMemberships = async () => {
+  let data = await db.find({
+    selector: { type: { $eq: 'membership' } },
+  })
+  data = data.docs
+  return data
+}
+
+export let fetchMembership = async (roomId) => {
+  let data = await db.find({
+    selector: { type: { $eq: 'membership' }, roomId: { $eq: roomId } },
+  })
+  data = data.docs
+  if (data.length === 0) return {};
+  else return data[0];
+}
+
+export let cacheMe = (me) => {
+  me.type = 'me';
+  db.putIfNotExists('me', me)
+    .then(function (res) {})
+    .catch(function (err) {})
+}
+
+export let fetchMe = async () => {
+  let data = await db.find({
+    selector: { type: { $eq: 'me' } },
+  })
+  data = data.docs
+  if (data.length === 0) return {};
+  else return data[0];
+}
 
 let InnerApp = (props) => {
   return (
@@ -577,6 +653,12 @@ if (window.innerWidth > 900) {
               console.log(JSON.stringify(result));
               if (result.user !== undefined && result.user !== null) {
                 setMe(result.user);
+                cacheMe(result.user);
+              }
+              else {
+                fetchMe().then(m => {
+                  setMe(m);
+                });
               }
             })
             .catch((error) => console.log('error', error));
@@ -620,7 +702,9 @@ if (window.innerWidth > 900) {
       },
       () => {
         isOnline = false;
-        let query = window.location.search;
+        fetchMe().then(m => {
+          setMe(m);
+          let query = window.location.search;
         let params = {};
         if (query !== undefined && query !== null) {
           if (query.length > 1) {
@@ -631,16 +715,17 @@ if (window.innerWidth > 900) {
             let keyValue = part.split('=');
             params[keyValue[0]] = keyValue[1];
           })
-        }        
-        animatePageChange();
-        if (
-          window.location.pathname === '/' ||
-          window.location.pathname === ''
-        ) {
-          gotoPage('/app/home', {tab_index: 0});
-        } else {
-          gotoPage(window.location.pathname, params);
         }
+          animatePageChange();
+          if (
+            window.location.pathname === '/' ||
+            window.location.pathname === ''
+          ) {
+            gotoPage('/app/home', {tab_index: 0});
+          } else {
+            gotoPage(window.location.pathname, params);
+          }
+        });
       });
     }, []);
 
@@ -677,7 +762,6 @@ if (window.innerWidth > 900) {
   MainAppContainer = (props) => {
     console.warn = () => {};
     ;[inTheGame, setInTheGame] = React.useState(false);
-    ;[mobileUrlParams, setMobileUrlParams] = React.useState({});
 
     setToken(localStorage.getItem('token'));
     setHomeSpaceId(localStorage.getItem('homeSpaceId'));

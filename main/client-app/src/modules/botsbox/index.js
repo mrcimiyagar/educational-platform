@@ -10,7 +10,7 @@ import { pink } from '@material-ui/core/colors'
 import Add from '@material-ui/icons/Add'
 import Edit from '@material-ui/icons/Edit'
 import React, { useEffect } from 'react'
-import { inTheGame, isDesktop, isInRoom, isMobile, isTablet } from '../../App'
+import { inTheGame, isDesktop, isInRoom, isMobile, isOnline, isTablet } from '../../App'
 import BotContainer from '../../components/BotContainer'
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar'
 import HomeToolbar from '../../components/HomeToolbar'
@@ -263,8 +263,9 @@ export default function BotsBox(props) {
         idDict[mirror.widgetId][mirror.elId].obj[mirror.property] = varCont
       })
       forceUpdate()
-    }, 1000)
+    }, 1000);
 
+    if (isOnline) {
     socket.on('notifyWidget', ({ widgetId, ev, data }) => {
       if (ev === 'init') {
         guis[widgetId] = data
@@ -309,6 +310,7 @@ export default function BotsBox(props) {
         }
       }
     })
+  }
     let botsSearchbar = document.getElementById('botsSearchbar')
     botsSearchbar.style.transform = 'translateY(0)'
     botsSearchbar.style.transition = 'transform .5s'

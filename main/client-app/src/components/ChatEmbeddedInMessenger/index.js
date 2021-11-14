@@ -171,6 +171,8 @@ export default function ChatEmbeddedInMessenger(props) {
         }
       })
       .catch((error) => console.log('error', error))
+    
+    const requestedRoomId = props.roomId;
 
     let requestOptions3 = {
       method: 'POST',
@@ -188,19 +190,21 @@ export default function ChatEmbeddedInMessenger(props) {
       .then((result) => {
         console.log(JSON.stringify(result))
         if (result.messages !== undefined) {
-          messagesArr = []
-          result.messages.forEach((message) => {
-            cacheMessage(message);
-            messagesArr.push(
-              <MessageItem
-                key={'message-' + message.id}
-                message={message}
-                setPhotoViewerVisible={setPhotoViewerVisible}
-                setCurrentPhotoSrc={setCurrentPhotoSrc}
-              />
-            )
-          })
-          forceUpdate()
+          if (requestedRoomId === props.roomId) {
+            messagesArr = []
+            result.messages.forEach((message) => {
+              cacheMessage(message);
+              messagesArr.push(
+                <MessageItem
+                  key={'message-' + message.id}
+                  message={message}
+                  setPhotoViewerVisible={setPhotoViewerVisible}
+                  setCurrentPhotoSrc={setCurrentPhotoSrc}
+                />
+              );
+            });
+            forceUpdate();
+          }
           setScrollTrigger(!scrollTrigger)
 
           let requestOptions3 = {

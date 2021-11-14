@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import HomeIcon from '@material-ui/icons/Home';
 import React, { useEffect } from 'react';
 import { setWallpaper } from '../..';
-import { gotoPage, inTheGame, isDesktop } from '../../App';
+import { cacheSpace, fetchSpaces, gotoPage, inTheGame, isDesktop } from '../../App';
 import EmptyIcon from '../../images/empty.png';
 import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
@@ -53,23 +53,31 @@ export default function SpacesGrid(props) {
       color: colors.accentDark
     });
 
-    let requestOptions = {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'token': token
-      },
-      redirect: 'follow'
-    };
-    fetch(serverRoot + "/room/get_spaces", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-              console.log(JSON.stringify(result));
-              if (result.spaces !== undefined) {
-                setSpaces(result.spaces);
-              }
-          })
-          .catch(error => console.log('error', error));
+    fetchSpaces().then((result) => {
+      setSpaces(result);
+      let requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'token': token
+        },
+        redirect: 'follow'
+      };
+      fetch(serverRoot + "/room/get_spaces", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                console.log(JSON.stringify(result));
+                if (result.spaces !== undefined) {
+                  setSpaces(result.spaces);
+                  result.spaces.forEach(s => {
+                    cacheSpace(s);
+                  });
+                }
+            })
+            .catch(error => console.log('error', error));
+    }).catch((ex) => {
+      console.log(ex);
+    })
   }, [])
 
   return (

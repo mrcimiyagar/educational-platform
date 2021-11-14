@@ -29,6 +29,10 @@ import SwipeableViews from 'react-swipeable-views'
 import { useFilePicker } from 'use-file-picker'
 import { pathConfig, setWallpaper } from '../..'
 import {
+  cacheMembership,
+  cacheRoom,
+  fetchMembership,
+  fetchRoom,
   gotoPage,
   isDesktop,
   isInRoom,
@@ -153,11 +157,10 @@ export default function HomePage(props) {
   const [menuMode, setMenuMode] = React.useState(0)
   const [opacity, setOpacity] = React.useState(1)
 
-  let roomId = homeRoomId
   setRoomId(homeRoomId)
 
   let loadData = (callback) => {
-    leaveRoom(() => {
+    let c = () => {
       let requestOptions = {
         method: 'POST',
         headers: {
@@ -165,7 +168,7 @@ export default function HomePage(props) {
           token: token,
         },
         body: JSON.stringify({
-          roomId: roomId,
+          roomId: homeRoomId,
         }),
         redirect: 'follow',
       }
@@ -174,6 +177,7 @@ export default function HomePage(props) {
         .then((result) => {
           console.log(JSON.stringify(result))
           setRoom(result.room)
+          cacheRoom(result.room);
           setToken(localStorage.getItem('token'))
 
           if (isOnline) ConnectToIo(token, () => {})
@@ -198,18 +202,27 @@ export default function HomePage(props) {
             .then((result) => {
               console.log(JSON.stringify(result))
               setMembership(result.membership)
+              cacheMembership(result.membership);
               forceUpdate()
 
               callback()
             })
             .catch((error) => console.log('error', error))
 
-          window.scrollTo(0, 0)
+          window.scrollTo(0, 0);
 
-          store.dispatch(changeConferenceMode(true))
+          store.dispatch(changeConferenceMode(true));
         })
         .catch((error) => console.log('error', error))
-    })
+    };
+    if (isOnline) {
+      leaveRoom(c);
+    }
+    else {
+      setRoom(fetchRoom(homeRoomId));
+      setMembership(fetchMembership(homeRoomId));
+      callback();
+    }
   }
 
   useEffect(() => {
