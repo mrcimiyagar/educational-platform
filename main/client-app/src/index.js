@@ -120,6 +120,19 @@ let loading = (
 )
 
 export let display2, setDisplay2;
+export function ifServerOnline(ifOnline, ifOffline)
+{
+    var img = document.body.appendChild(document.createElement("img"));
+    img.onload = function()
+    {
+        ifOnline && ifOnline.constructor == Function && ifOnline();
+    };
+    img.onerror = function()
+    {
+        ifOffline && ifOffline.constructor == Function && ifOffline();
+    };
+    img.src = 'https://kaspersoft.cloud/file/download_user_avatar?userId=admin';
+}
 
 let AppContainer = (props) => {
   ;[wallpaper, setWall] = React.useState({});
@@ -134,21 +147,28 @@ let AppContainer = (props) => {
     [ChatWallpaper, RoomWallpaper, DesktopWallpaper, ProfileHeader].forEach((picture) => {
       const img = new Image();
       img.src = picture;
-  });
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-    let requestOptions = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
+    });
+    ifServerOnline(
+      () => {
+        let requestOptions = {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          redirect: 'follow',
+        }
+        fetch('https://config.kaspersoft.cloud', requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          pathConfig = result;
+          setup()
+          loaded = true
+          setTimeout(() => {
+            setDisplay('none')
+          }, 1000)
+        });
       },
-      redirect: 'follow',
-      signal: controller.signal
-    }
-    fetch('https://config.kaspersoft.cloud', requestOptions)
-    .then((response) => response.json())
-    .then((result) => {
-      if (result.mainFrontend === undefined) {
+      () => {
         pathConfig = {
           mainBackend: 'https://backend.kaspersoft.cloud',
           mainFrontend: 'https://kaspersoft.cloud',
@@ -163,16 +183,13 @@ let AppContainer = (props) => {
           taskBoard: 'https://taskboard.kaspersoft.cloud',
           mainWebsocket: 'wss://kaspersoft.cloud'
         };
+        setup();
+        loaded = true;
+        setTimeout(() => {
+          setDisplay('none');
+        }, 1000);
       }
-      else {
-        pathConfig = result;
-      }
-      setup()
-      loaded = true
-      setTimeout(() => {
-        setDisplay('none')
-      }, 1000)
-    });
+    );
   }, [])
 
   if (!loaded) {

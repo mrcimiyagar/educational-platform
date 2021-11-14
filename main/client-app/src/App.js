@@ -53,7 +53,7 @@ import {
   useForceUpdate,
   validateToken,
 } from './util/Utils';
-import { pathConfig, setDisplay2, setWallpaper } from '.';
+import { ifServerOnline, pathConfig, setDisplay2, setWallpaper } from '.';
 import {
   addMessageToList2,
   replaceMessageInTheList2,
@@ -465,6 +465,8 @@ export let inTheGame, setInTheGame;
 
 let MainAppContainer;
 
+export let isOnline = true;
+
 if (window.innerWidth > 900) {
   MainAppContainer = (props) => {
     console.warn = () => {};
@@ -472,73 +474,29 @@ if (window.innerWidth > 900) {
     setToken(localStorage.getItem('token'));
     setHomeSpaceId(localStorage.getItem('homeSpaceId'));
     setHomeRoomId(localStorage.getItem('homeRoomId'));
-    ConnectToIo(localStorage.getItem('token'), () => {
-      socket.off('message-added');
-      socket.on('message-added', ({ msgCopy }) => {
-        if (me.id !== msgCopy.authorId) {
-          addMessageToList(msgCopy);
-          addMessageToList2(msgCopy);
-          addMessageToList3(msgCopy);
-          setLastMessage(msgCopy);
-          let requestOptions3 = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              token: token,
-            },
-            body: JSON.stringify({
-              roomId: msgCopy.roomId,
-            }),
-            redirect: 'follow',
-          };
-          fetch(serverRoot + '/chat/get_chat', requestOptions3)
-            .then((response) => response.json())
-            .then((result) => {
-              updateChat(result.room);
-            });
-        }
-      })
-      socket.off('chat-created');
-      socket.on('chat-created', ({ room }) => {
-        addNewChat(room);
-      })
-      socket.off('message-seen');
-      socket.on('message-seen', ({ messages }) => {
-        messages.forEach((msg) => replaceMessageInTheList(msg));
-        messages.forEach((msg) => replaceMessageInTheList2(msg));
-        messages.forEach((msg) => replaceMessageInTheList3(msg));
-      })
-    })
-
     forceUpdate = useForceUpdate();
-
     let [hp, setHp] = React.useState();
+    let [opacity, setOpacity] = React.useState(0);
+    ;[routeTrigger, setRouteTrigger] = React.useState(false);
     setHistPage = setHp;
     histPage = hp;
-    [routeTrigger, setRouteTrigger] = React.useState(false);
-
-    let [opacity, setOpacity] = React.useState(0);
-
     animatePageChange = () => {
       setOpacity(0);
       setTimeout(() => {
         setOpacity(1);
       }, 250);
     }
-
     useEffect(() => {
       if (histPage === '/app/searchengine') {
         setWallpaper({ type: 'color', color: colors.accentDark });
       }
     }, [histPage]);
-
     window.onpopstate = function (event) {
       if (setDialogOpen !== null) {
         setDialogOpen(false);
       }
       setTimeout(popPage, 250);
     }
-
     let P = undefined;
     let D = undefined;
     let pQuery = undefined;
@@ -561,64 +519,130 @@ if (window.innerWidth > 900) {
         }
       }
     }
-
     useEffect(() => {
       setDisplay2('none');
-      let requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          token: token,
-        },
-        redirect: 'follow',
-      };
-      fetch(serverRoot + '/auth/get_me', requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(JSON.stringify(result));
-          if (result.user !== undefined && result.user !== null) {
-            setMe(result.user);
+    }, []);
+    useEffect(() => {
+    ifServerOnline(
+      () => {
+        isOnline = true;
+        ConnectToIo(localStorage.getItem('token'), () => {
+          socket.off('message-added');
+          socket.on('message-added', ({ msgCopy }) => {
+            if (me.id !== msgCopy.authorId) {
+              addMessageToList(msgCopy);
+              addMessageToList2(msgCopy);
+              addMessageToList3(msgCopy);
+              setLastMessage(msgCopy);
+              let requestOptions3 = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  token: token,
+                },
+                body: JSON.stringify({
+                  roomId: msgCopy.roomId,
+                }),
+                redirect: 'follow',
+              };
+              fetch(serverRoot + '/chat/get_chat', requestOptions3)
+                .then((response) => response.json())
+                .then((result) => {
+                  updateChat(result.room);
+                });
+            }
+          })
+          socket.off('chat-created');
+          socket.on('chat-created', ({ room }) => {
+            addNewChat(room);
+          })
+          socket.off('message-seen');
+          socket.on('message-seen', ({ messages }) => {
+            messages.forEach((msg) => replaceMessageInTheList(msg));
+            messages.forEach((msg) => replaceMessageInTheList2(msg));
+            messages.forEach((msg) => replaceMessageInTheList3(msg));
+          })
+        });
+          let requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              token: token,
+            },
+            redirect: 'follow',
+          };
+          fetch(serverRoot + '/auth/get_me', requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              console.log(JSON.stringify(result));
+              if (result.user !== undefined && result.user !== null) {
+                setMe(result.user);
+              }
+            })
+            .catch((error) => console.log('error', error));
+    
+          let query = window.location.search;
+          let params = {};
+          if (query !== undefined && query !== null) {
+            if (query.length > 1) {
+              query = query.substr(1);
+            }
+            let querySep = query.split('&');
+            querySep.forEach((part) => {
+              let keyValue = part.split('=');
+              params[keyValue[0]] = keyValue[1];
+            })
           }
-        })
-        .catch((error) => console.log('error', error));
-
-      let query = window.location.search;
-      let params = {};
-      if (query !== undefined && query !== null) {
-        if (query.length > 1) {
-          query = query.substr(1);
-        }
-        let querySep = query.split('&');
-        querySep.forEach((part) => {
-          let keyValue = part.split('=');
-          params[keyValue[0]] = keyValue[1];
-        })
-      }
-
-      validateToken(token, (result) => {
-        if (result) {
-          animatePageChange();
-          if (
-            window.location.pathname === '/' ||
-            window.location.pathname === ''
-          ) {
-            gotoPage('/app/home', {tab_index: 0});
-          } else {
-            gotoPage(window.location.pathname, params);
+    
+          validateToken(token, (result) => {
+            if (result) {
+              animatePageChange();
+              if (
+                window.location.pathname === '/' ||
+                window.location.pathname === ''
+              ) {
+                gotoPage('/app/home', {tab_index: 0});
+              } else {
+                gotoPage(window.location.pathname, params);
+              }
+            } else {
+              animatePageChange();
+              gotoPage('/app/auth', {});
+            }
+          })
+          
+          setTimeout(() => {
+            setInTheGame(true)
+          }, 1000)
+    
+          var audio = new Audio(StartupSound);
+          audio.play();
+      },
+      () => {
+        isOnline = false;
+        let query = window.location.search;
+        let params = {};
+        if (query !== undefined && query !== null) {
+          if (query.length > 1) {
+            query = query.substr(1);
           }
+          let querySep = query.split('&');
+          querySep.forEach((part) => {
+            let keyValue = part.split('=');
+            params[keyValue[0]] = keyValue[1];
+          })
+        }        
+        animatePageChange();
+        if (
+          window.location.pathname === '/' ||
+          window.location.pathname === ''
+        ) {
+          gotoPage('/app/home', {tab_index: 0});
         } else {
-          animatePageChange();
-          gotoPage('/app/auth', {});
+          gotoPage(window.location.pathname, params);
         }
-      })
-      
-      setTimeout(() => {
-        setInTheGame(true)
-      }, 1000)
-
-      var audio = new Audio(StartupSound);
-      audio.play();
-    }, [])
+      });
+    }, []);
 
     return (
       <div
