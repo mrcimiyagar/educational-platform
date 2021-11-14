@@ -456,7 +456,7 @@ export default function ChatEmbedded(props) {
       right = undefined
       top = 16
     }
-  } else if (isMobile() || isTablet()) {
+  } else if (isMobile() || isTablet()) { 
     if (isInRoom()) {
       width = '100%'
       height = '100%'
