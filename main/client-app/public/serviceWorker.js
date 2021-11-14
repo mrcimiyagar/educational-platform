@@ -11,17 +11,41 @@ self.addEventListener("push", e => {
   });
 });
 
-self.addEventListener('fetch', (e) => {
-  e.respondWith((async () => {
-    const r = await caches.match(e.request);
-    console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
-    if (r) { return r; }
-    const response = await fetch(e.request);
-    const cache = await caches.open(cacheName);
-    console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
-    cache.put(e.request, response.clone());
-    return response;
-  })());
+self.addEventListener('fetch', function(event) {
+  // We will cache all POST requests to matching URLs
+  if(event.request.method === "POST"){
+      event.respondWith(
+          // First try to fetch the request from the server
+      fetch(event.request.clone())
+          // If it works, put the response into IndexedDB
+          .then(function(response) {
+              // Compute a unique key for the POST request
+              var key = event.request.url.href.toString();
+              // Create a cache entry
+              var entry = {
+                  key: key,
+                  response: response.json(),
+                  timestamp: Date.now()
+              };
+
+              db.putIfNotExists(key, entry)
+                .then(function (res) {})
+                .catch(function (err) {})
+
+              // Return the (fresh) response
+              return response;
+          })
+          .catch(function() {
+              // If it does not work, return the cached response. If the cache does not
+              // contain a response for our request, it will give us a 503-response
+              var key = request.url.href.toString();
+              var cachedResponse = /* query IndexedDB using the key */;
+              let res = cachedResponse.response;
+              
+              return response;
+          })
+      );
+  }
 });
 
 self.addEventListener('activate', (e) => {

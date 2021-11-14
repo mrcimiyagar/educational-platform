@@ -58,7 +58,9 @@ export default function NotifsList() {
           .then(response => response.json())
           .then(result => {
               console.log(JSON.stringify(result));
-              setNotifs(result.notifications);
+              if (result.notifications !== undefined) {
+                setNotifs(result.notifications);
+              }
           })
           .catch(error => console.log('error', error));
   }, [])

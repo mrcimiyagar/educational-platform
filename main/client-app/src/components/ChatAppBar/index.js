@@ -72,10 +72,12 @@ export default function ChatAppBar(props) {
   let [tl, setTl] = React.useState('');
 
   useEffect(() => {
-    socket.off('chat-typing');
-    socket.on('chat-typing', typingList => {
-      setTl(typingList);
-    })
+    if (socket !== undefined) {
+      socket.off('chat-typing');
+      socket.on('chat-typing', typingList => {
+        setTl(typingList);
+      });
+    }
   }, [])
 
   return (

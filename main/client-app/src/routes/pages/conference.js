@@ -24,7 +24,7 @@ import "react-table/react-table.css";
 import {
   Button
 } from "reactstrap";
-import { gotoPage, isDesktop, roomId, setRoomId } from '../../App';
+import { gotoPage, isDesktop, isOnline, roomId, setRoomId } from '../../App';
 import BottomSheet from '../../components/BottomSheet';
 import DivSize2 from "../../components/DivSize/DivSize2";
 import RoomTreeMenu from '../../components/RoomTreeMenu';
@@ -245,9 +245,14 @@ class ConferencePage extends Component {
           FetchMe(() => {
             reloadNavbarState();
             reloadNavbar();
-            ConnectToIo(token, () => {
+            if (isOnline) {
+              ConnectToIo(token, () => {
+                this.onSocketAuth();
+              }, true);
+            }
+            else {
               this.onSocketAuth();
-            }, true);
+            }
           });
         }
       }

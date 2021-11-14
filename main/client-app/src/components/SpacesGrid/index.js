@@ -65,7 +65,9 @@ export default function SpacesGrid(props) {
           .then(response => response.json())
           .then(result => {
               console.log(JSON.stringify(result));
-              setSpaces(result.spaces);
+              if (result.spaces !== undefined) {
+                setSpaces(result.spaces);
+              }
           })
           .catch(error => console.log('error', error));
   }, [])

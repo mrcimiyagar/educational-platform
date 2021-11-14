@@ -33,6 +33,7 @@ import {
   isDesktop,
   isInRoom,
   isMobile,
+  isOnline,
   isTablet,
   setRoomId,
 } from '../../App'
@@ -175,7 +176,7 @@ export default function HomePage(props) {
           setRoom(result.room)
           setToken(localStorage.getItem('token'))
 
-          ConnectToIo(token, () => {})
+          if (isOnline) ConnectToIo(token, () => {})
 
           socket.off('membership-updated')
           socket.on('membership-updated', (mem) => {})

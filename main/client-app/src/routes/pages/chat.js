@@ -13,7 +13,7 @@ import Picker from 'emoji-picker-react'
 import React, { useEffect } from 'react'
 import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
-import { cacheMessage, fetchMessagesOfRoom, gotoPage, inTheGame, popPage, registerDialogOpen, setDialogOpen, setInTheGame } from '../../App'
+import { cacheMessage, fetchMessagesOfRoom, gotoPage, inTheGame, isOnline, popPage, registerDialogOpen, setDialogOpen, setInTheGame } from '../../App'
 import ChatAppBar from '../../components/ChatAppBar'
 import { colors, me, setToken, token } from '../../util/settings'
 import { ConnectToIo, leaveRoom, serverRoot, socket, useForceUpdate } from '../../util/Utils'
@@ -102,7 +102,7 @@ export default function Chat(props) {
         console.log(JSON.stringify(result))
         setRoom(result.room)
         setToken(localStorage.getItem('token'))
-        ConnectToIo(token, () => {})
+        if (isOnline) ConnectToIo(token, () => {});
         window.scrollTo(0, 0)
         store.dispatch(changeConferenceMode(true))
       })

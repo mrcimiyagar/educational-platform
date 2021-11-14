@@ -19,8 +19,6 @@ function MessengerPage(props) {
 
   document.documentElement.style.overflow = 'auto';
 
-  ConnectToIo()
-
   return (
     <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0}}>
       <HomeAppbar selectedChatId={props.room_id} selectedUserId={props.user_id} tabIndex={props.tab_index}/>

@@ -33,6 +33,7 @@ import {
   isDesktop,
   isInRoom,
   isMobile,
+  isOnline,
   isTablet,
   setInTheGame,
   setRoomId,
@@ -181,7 +182,7 @@ export default function RoomPage(props) {
         console.log(JSON.stringify(result))
         setRoom(result.room)
         setToken(localStorage.getItem('token'))
-        ConnectToIo(token, () => {})
+        if (isOnline) ConnectToIo(token, () => {})
         socket.off('membership-updated')
         socket.on('membership-updated', (mem) => {})
         socket.off('view-updated')

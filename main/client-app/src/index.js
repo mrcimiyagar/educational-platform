@@ -122,16 +122,13 @@ let loading = (
 export let display2, setDisplay2;
 export function ifServerOnline(ifOnline, ifOffline)
 {
-    var img = document.body.appendChild(document.createElement("img"));
-    img.onload = function()
-    {
-        ifOnline && ifOnline.constructor == Function && ifOnline();
-    };
-    img.onerror = function()
-    {
-        ifOffline && ifOffline.constructor == Function && ifOffline();
-    };
-    img.src = 'https://kaspersoft.cloud/file/download_user_avatar?userId=admin';
+  fetch('https://kaspersoft.cloud', {mode: 'no-cors'})
+    .then(r => {
+      ifOnline();
+    })
+    .catch(e=>{
+      ifOffline();
+    });
 }
 
 let AppContainer = (props) => {
