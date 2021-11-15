@@ -113,16 +113,9 @@ export default function ScreenMedia(props) {
         props.shownUsers['me'] = true;
         props.forceUpdate();
         if (callback) callback(stream);
-      },
-      function () {
-        /* user denied access to a/v */
-        console.log('Access denied for video/video')
-        alert(
-          'You chose not to provide access to the camera/microphone, demo will not work.',
-        )
-        if (errorback) errorback()
-      },
-    )
+      }).catch(() => {
+        console.log('access not granted.');
+      })
   }
 
 startScreen = () => {
