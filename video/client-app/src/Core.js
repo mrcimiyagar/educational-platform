@@ -515,7 +515,7 @@ function App() {
             <Fab
               id="audioButton"
               color={'primary'}
-              style={{ position: 'absolute', left: 16, bottom: 48 + 56 + 16 }}
+              style={{ position: 'absolute', left: 16, bottom: isDesktop() ? (48 + 64 + 56 + 16) : 48 + 56 + 16 }}
               onClick={() => {
                 if (audio) {
                   endAudio()
@@ -532,7 +532,7 @@ function App() {
             <Fab
               id="endCallButton"
               color={'secondary'}
-              style={{ position: 'absolute', left: 16, bottom: 48 }}
+              style={{ position: 'absolute', left: 16, bottom: isDesktop() ? (48 + 64) : 48 }}
               onClick={() => {
                 instantConnectionFlag = false
                 setConnected(false)
@@ -559,7 +559,7 @@ function App() {
               style={{
                 position: 'absolute',
                 left: 16 + 56 + 16 + 72,
-                bottom: 48,
+                bottom: isDesktop() ? (48 + 64) : 48,
               }}
               onClick={() => {
                 if (video) {
@@ -577,7 +577,7 @@ function App() {
             <Fab
               id="screenButton"
               color={'primary'}
-              style={{ position: 'absolute', left: 16 + 56 + 16, bottom: 48 }}
+              style={{ position: 'absolute', left: 16 + 56 + 16, bottom: isDesktop() ? (48 + 64) : 48 }}
               onClick={() => {
                 if (screen) {
                   endScreen()
@@ -597,7 +597,7 @@ function App() {
               style={{
                 position: 'absolute',
                 left: 16 + 56 + 16 + 56 + 16 + 56 + 16,
-                bottom: 48,
+                bottom: isDesktop() ? (48 + 64) : 48,
               }}
               onClick={() => {
                 window.parent.postMessage(
