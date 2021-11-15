@@ -5,7 +5,6 @@ import React, { useEffect } from "react";
 import { pathConfig } from '../..';
 import { gotoPage } from "../../App";
 import CloudIcon from '../../images/logo.png';
-import Wallpaper from '../../images/roomWallpaper.png'
 import WhiteColorTextField from '../../components/WhiteColorTextField';
 import {
   ColorBase,
@@ -30,6 +29,7 @@ import { addMessageToList, replaceMessageInTheList } from './chat'
 import { addMessageToList2, replaceMessageInTheList2 } from '../../components/ChatEmbeddedInMessenger'
 import { addMessageToList3, replaceMessageInTheList3 } from '../../components/ChatEmbedded'
 import { addNewChat, setLastMessage, updateChat } from '../../components/HomeMain'
+import Wallpaper from '../../images/chat-wallpaper.jpg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,17 +51,20 @@ function Authentication(props) {
     }, 2000)
   }, [])
   return (
-    <div style={{height: '100%', overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
-      <img src={Wallpaper} style={{position: 'fixed', width: '100%', height: '100%', objectFit: 'cover'}}/>
+    <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
+      <img style={{width: '100%', height: '100%', objectFit: 'cover', position: 'fixed'}} src={Wallpaper}/>
       {register ? 
-        <div style={{borderRadius: 32, height: 'auto', paddingLeft: 32, paddingRight: 32, paddingtop: 16, paddingBottom: 16, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', textAlign: 'center', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+        <div style={{borderRadius: 32, height: 'auto', paddingLeft: 32, paddingRight: 32, paddingtop: 16, paddingBottom: 16,
+          backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', textAlign: 'center', justifyContent: 'center',
+          alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', top: '50%', width: '100%', maxWidth: 340,
+          transform: 'translate(-50%, -50%)', left: '50%'}}>
           <div style={{width: '100%', height: 'auto'}}>
-            <img src={CloudIcon} style={{width: 150, height: 150, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
+            <img src={CloudIcon} style={{width: 100, height: 100, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
             <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#000', marginTop: 24, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
           </div>
           <WhiteColorTextField className={classes.root} id="registerUsername" label="نام کاربری" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
-          <WhiteColorTextField className={classes.root} id="registerPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
-          <WhiteColorTextField className={classes.root} id="registerConfirmPass" label="تکرار رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
+          <WhiteColorTextField className={classes.root} type="password" id="registerPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
+          <WhiteColorTextField className={classes.root} type="password" id="registerConfirmPass" label="تکرار رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
           <WhiteColorTextField className={classes.root} id="registerFirstName" label="نام" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
           <WhiteColorTextField className={classes.root} id="registerLastName" label="نام خانوادگی" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
           <div style={{width: 'auto', marginTop: 48}}>
@@ -110,13 +113,13 @@ function Authentication(props) {
             </Fab>
           </div>
         </div> :
-        <div style={{borderRadius: 32, textAlign: 'center', paddingLeft: 32, paddingRight: 32, paddingtop: 32, paddingBottom: 32, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+        <div style={{borderRadius: 32, width: '100%', maxWidth: 340, textAlign: 'center', paddingLeft: 32, paddingRight: 32, paddingtop: 32, paddingBottom: 32, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
           <div style={{width: '100%', height: 'auto'}}>
-            <img src={CloudIcon} style={{width: 150, height: 150, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
+            <img src={CloudIcon} style={{width: 100, height: 100, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
             <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#000', marginTop: 24, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
           </div>
           <WhiteColorTextField className={classes.root} id="loginUsername" label="نام کاربری" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff'}} />
-          <WhiteColorTextField className={classes.root} id="loginPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
+          <WhiteColorTextField className={classes.root} type="password" id="loginPassword" label="رمز عبور" variant="filled" style={{marginTop: 24, width: '100%', color: '#fff' }} />
           <div style={{width: 'auto', marginTop: 48}}>
             <Fab id={'loginBtn'} color={'primary'} variant="extended" style={{marginLeft: 24}} onClick={() => {
               let requestOptions = {

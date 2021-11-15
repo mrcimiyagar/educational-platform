@@ -11,7 +11,8 @@ import {
 import DescriptionIcon from '@material-ui/icons/Description'
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions'
 import SendIcon from '@material-ui/icons/Send'
-import Picker from 'emoji-picker-react'
+import 'emoji-mart/css/emoji-mart.css';
+import { Picker } from 'emoji-mart';
 import React, { useEffect } from 'react'
 import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
@@ -580,27 +581,32 @@ export default function ChatEmbeddedInMessenger(props) {
           </IconButton>
           <br />
         </div>
-        <Picker
-          pickerStyle={{
-            width: isDesktop()
-              ? isInRoom()
+        {
+            showEmojiPad ?
+              <Picker
+                set={'apple'}
+                style={{
+                  width: isDesktop()
+              ? isInRoom() || histPage === '/app/settings'
                 ? 450
-                : 'calc(100% - 800px - 96px - 48px)'
+                : 'calc(100% - 658px - 96px)'
               : 'calc(100% - 450px)',
-            height: showEmojiPad ? 356 : 0,
+            height: 416,
             position: 'fixed',
             left: isDesktop()
-              ? isInRoom()
+              ? isInRoom() || histPage === '/app/settings'
                 ? 'calc(100% - 450px)'
-                : (96 + 16)
+                : 96
               : 0,
             bottom: 0,
             zIndex: 5000,
-          }}
-          onEmojiClick={(event, emojiObject) => {
-            document.getElementById('chatText').value += emojiObject.emoji
-          }}
-        />
+                }}
+                onSelect={currentEmoji => {
+                  document.getElementById('chatText').value += currentEmoji.native;
+                }}
+              /> :
+              null
+          }
       </div>
       <div
         style={{
@@ -608,7 +614,7 @@ export default function ChatEmbeddedInMessenger(props) {
           direction: 'ltr',
           width: isDesktop() ? 'calc(100% - 48px)' : '100%',
           height: showEmojiPad
-            ? 'calc(100% - 300px - 56px)'
+            ? 'calc(100% - 416px - 56px)'
             : isTablet()
             ? 'calc(100% - 64px - 72px)'
             : isDesktop() &&

@@ -1,29 +1,30 @@
-import { css } from '@emotion/css'
-import { Avatar, Fab, Typography } from '@material-ui/core'
-import Dialog from '@material-ui/core/Dialog'
-import IconButton from '@material-ui/core/IconButton'
-import InputBase from '@material-ui/core/InputBase'
-import Slide from '@material-ui/core/Slide'
-import { makeStyles } from '@material-ui/core/styles'
-import { ArrowDownward, DoneAll, PlayArrowTwoTone } from '@material-ui/icons'
-import DescriptionIcon from '@material-ui/icons/Description'
-import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions'
-import SendIcon from '@material-ui/icons/Send'
-import Picker from 'emoji-picker-react'
-import React, { useEffect } from 'react'
-import Viewer from 'react-viewer'
-import { useFilePicker } from 'use-file-picker'
-import { cacheMessage, fetchMessagesOfRoom, gotoPage, inTheGame, isOnline, popPage, registerDialogOpen, setDialogOpen, setInTheGame } from '../../App'
-import ChatAppBar from '../../components/ChatAppBar'
-import { colors, me, setToken, token } from '../../util/settings'
-import { ConnectToIo, leaveRoom, serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { css } from '@emotion/css';
+import { Avatar, Fab, Typography } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import IconButton from '@material-ui/core/IconButton';
+import InputBase from '@material-ui/core/InputBase';
+import Slide from '@material-ui/core/Slide';
+import { makeStyles } from '@material-ui/core/styles';
+import { ArrowDownward, DoneAll, PlayArrowTwoTone } from '@material-ui/icons';
+import DescriptionIcon from '@material-ui/icons/Description';
+import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
+import SendIcon from '@material-ui/icons/Send';
+import 'emoji-mart/css/emoji-mart.css';
+import { Picker } from 'emoji-mart';
+import React, { useEffect } from 'react';
+import Viewer from 'react-viewer';
+import { useFilePicker } from 'use-file-picker';
+import { cacheMessage, fetchMessagesOfRoom, gotoPage, inTheGame, isOnline, popPage, registerDialogOpen, setDialogOpen, setInTheGame } from '../../App';
+import ChatAppBar from '../../components/ChatAppBar';
+import { colors, me, setToken, token } from '../../util/settings';
+import { ConnectToIo, leaveRoom, serverRoot, socket, useForceUpdate } from '../../util/Utils';
 import ChatWallpaper from '../../images/chat-wallpaper.jpg';
 import { setLastMessage, updateChat } from '../../components/HomeMain';
 import $ from 'jquery';
 import MessageItem from '../../components/MessageItem';
-import { resetMessages2 } from '../../components/ChatEmbeddedInMessenger'
-import { resetMessages3 } from '../../components/ChatEmbedded'
-import store, { changeConferenceMode } from '../../redux/main'
+import { resetMessages2 } from '../../components/ChatEmbeddedInMessenger';
+import { resetMessages3 } from '../../components/ChatEmbedded';
+import store, { changeConferenceMode } from '../../redux/main';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />
@@ -538,7 +539,7 @@ export default function Chat(props) {
         >
           <div
             className={classes.root}
-            style={{ height: 56, bottom: inTheGame ? (showEmojiPad ? 300 : 0) : -72, transition: 'bottom .5s'  }}
+            style={{ height: 56, bottom: inTheGame ? (showEmojiPad ? 416 : 0) : -72, transition: 'bottom .5s'  }}
           >
             <IconButton
               className={classes.iconButton}
@@ -639,21 +640,27 @@ export default function Chat(props) {
             </IconButton>
             <br />
           </div>
-          <Picker
-            pickerStyle={{
-              width: '100%',
-              height: showEmojiPad ? 300 : 0,
-              marginTop: 40,
-            }}
-            onEmojiClick={(event, emojiObject) => {
-              document.getElementById('chatText').value += emojiObject.emoji
-            }}
-          />
+          {
+            showEmojiPad ?
+              <Picker
+                set={'apple'}
+                style={{
+                  width: '100%',
+                  height: 416,
+                  marginTop: 40,
+                }}
+                onSelect={currentEmoji => {
+                  document.getElementById('chatText').value += currentEmoji.native;
+                }}
+              /> :
+              null
+          }
+          
         </div>
         <div
           style={{
             width: '100%',
-            height: showEmojiPad ? 'calc(100% - 300px)' : '100%',
+            height: showEmojiPad ? 'calc(100% - 416px)' : '100%',
           }}
         >
           <div

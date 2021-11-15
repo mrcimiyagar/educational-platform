@@ -66,6 +66,7 @@ class WhiteColorTextField extends React.Component {
     const { classes } = this.props
     return (
       <TextField
+        type={this.props.type}
         id={this.props.id}
         className={classes.textField}
         onChange={this.props.onChange}
