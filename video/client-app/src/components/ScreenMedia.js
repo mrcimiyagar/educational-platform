@@ -80,12 +80,12 @@ export default function ScreenMedia(props) {
   let userId = props.userId;
   let roomId = props.roomId;
 
-  function setup_local_media(constraints, callback, errorback) {
+  function setup_local_media(constraints, callback) {
     /* Ask user for permission to use the computers microphone and/or camera,
      * attach it to an <video> or <video> tag if they give us access. */
     console.log('Requesting access to local video / video inputs')
   
-    if (constraints.video === undefined) {
+    if (constraints === undefined) {
       let stream = produceEmptyStream();
       local_media_stream = stream;
       props.updateData('me');
@@ -113,7 +113,8 @@ export default function ScreenMedia(props) {
         props.shownUsers['me'] = true;
         props.forceUpdate();
         if (callback) callback(stream);
-      }).catch(() => {
+      }).catch((ex) => {
+        console.log(ex);
         console.log('access not granted.');
       })
   }
@@ -124,7 +125,7 @@ startScreen = () => {
       track.stop()
     })
   }
-  setup_local_media({ video: { width: 480, height: 480 } }, function (
+  setup_local_media({}, function (
     stream,
   ) {
     let elem = document.getElementById('me_screen');
