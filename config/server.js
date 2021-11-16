@@ -10,14 +10,14 @@ app.get('*', (req, res) => {
     res.send({
         mainBackend: 'https://backend.kaspersoft.cloud',
         mainFrontend: 'https://kaspersoft.cloud',
-        confClient: 'http://localhost:1013',
+        confClient: 'https://confclient.kaspersoft.cloud',
         audioPlayer: 'https://audioplayer.kaspersoft.cloud',
         waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
         whiteBoard: 'https://whiteboard.kaspersoft.cloud',
         sharedNotes: 'https://sharednotes.kaspersoft.cloud',
         videoConfVideo: 'https://confvideo.kaspersoft.cloud',
         videoConfAudio: 'https://confaudio.kaspersoft.cloud',
-        videoConfScreen: 'http://localhost:1012',
+        videoConfScreen: 'https://confscreen.kaspersoft.cloud',
         taskBoard: 'https://taskboard.kaspersoft.cloud',
         mainWebsocket: 'wss://kaspersoft.cloud'
     });

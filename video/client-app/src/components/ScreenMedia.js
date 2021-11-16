@@ -175,7 +175,7 @@ endScreen = () => {
   
     signaling_socket.on('connect', function () {
       console.log('Connected to signaling server')
-      setup_local_media({}, function (stream) {
+      setup_local_media(undefined, function (stream) {
         /* once the user has given us access to their
          * microphone/camcorder, join the channel and start peering up */
         join_chat_channel(roomId, userId, { 'whatever-you-want-here': 'stuff' })
