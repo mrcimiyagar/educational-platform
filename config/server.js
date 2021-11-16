@@ -17,7 +17,7 @@ app.get('*', (req, res) => {
         sharedNotes: 'https://sharednotes.kaspersoft.cloud',
         videoConfVideo: 'https://confvideo.kaspersoft.cloud',
         videoConfAudio: 'https://confaudio.kaspersoft.cloud',
-        videoConfScreen: 'https://confscreen.kaspersoft.cloud',
+        videoConfScreen: 'http://localhost:1012',
         taskBoard: 'https://taskboard.kaspersoft.cloud',
         mainWebsocket: 'wss://kaspersoft.cloud'
     });
