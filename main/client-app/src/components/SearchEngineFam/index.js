@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 const actions = [
   { icon: <Home />, name: 'خانه' },
-  { icon: <LocationCityIcon />, name: 'شهر' },
   { icon: <ExploreIcon />, name: 'گردش' },
   { icon: <StoreMallDirectoryIcon />, name: 'فروشگاه' },
   { icon: <AccountBalanceIcon />, name: '+روم' },
@@ -70,12 +69,12 @@ export default function Jumper(props) {
           window.location.pathname === '/app/searchengine'
             ? 0
             : isInMessenger() && isDesktop()
-            ? -12
+            ? -12 - 56
             : window.location.pathname === '/app/home'
             ? (isMobile() || isTablet())
-              ? 60
-              : 60
-            : 60,
+              ? 4
+              : 4
+            : 4,
       }}
     >
       <ThemeProvider theme={theme}>
@@ -112,21 +111,14 @@ export default function Jumper(props) {
                       }, 500);
                     }
                   } else if (index === 1) {
-                    if (histPage !== '/app/room') {
-                      setInTheGame(false);
-                      setTimeout(() => {
-                        gotoPage('/app/room', {room_id: homeRoomId, tab_index: 0});
-                      }, 500);
-                    }
-                  } else if (index === 2) {
                     if (histPage !== '/app/searchengine') {
                       gotoPage('/app/searchengine');
                     }
-                  } else if (index === 3) {
+                  } else if (index === 2) {
                     if (histPage !== '/app/store') {
                       gotoPage('/app/store');
                     }
-                  } else if (index === 4) {
+                  } else if (index === 3) {
                     if (histPage !== '/app/createroom') {
                       gotoPage('/app/createroom');
                     }

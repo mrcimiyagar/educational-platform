@@ -188,9 +188,7 @@ export default function HomeAppbar(props) {
       })
       .catch((error) => console.log('error', error))
 
-      setTimeout(() => {
-        setInTheGame(true);
-      }, 1000);
+      setInTheGame(true);
   }, [])
 
   return (

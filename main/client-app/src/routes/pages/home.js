@@ -160,69 +160,60 @@ export default function HomePage(props) {
   setRoomId(homeRoomId)
 
   let loadData = (callback) => {
-    let c = () => {
-      let requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          token: token,
-        },
-        body: JSON.stringify({
-          roomId: homeRoomId,
-        }),
-        redirect: 'follow',
-      }
-      fetch(serverRoot + '/room/get_room', requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(JSON.stringify(result))
-          setRoom(result.room)
-          cacheRoom(result.room);
-          setToken(localStorage.getItem('token'))
 
-          if (isOnline) ConnectToIo(token, () => {})
-
-          socket.off('membership-updated')
-          socket.on('membership-updated', (mem) => {})
-          socket.off('view-updated')
-          socket.on('view-updated', (v) => {})
-          let requestOptions2 = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              token: token,
-            },
-            body: JSON.stringify({
-              roomId: homeRoomId,
-            }),
-            redirect: 'follow',
-          }
-          fetch(serverRoot + '/room/enter_room', requestOptions2)
-            .then((response) => response.json())
-            .then((result) => {
-              console.log(JSON.stringify(result))
-              setMembership(result.membership)
-              cacheMembership(result.membership);
-              forceUpdate()
-
-              callback()
-            })
-            .catch((error) => console.log('error', error))
-
-          window.scrollTo(0, 0);
-
-          store.dispatch(changeConferenceMode(true));
-        })
-        .catch((error) => console.log('error', error))
-    };
-    if (isOnline) {
-      leaveRoom(c);
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: homeRoomId,
+      }),
+      redirect: 'follow',
     }
-    else {
-      setRoom(fetchRoom(homeRoomId));
-      setMembership(fetchMembership(homeRoomId));
-      callback();
+    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions);
+    getRoomPromise.then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        setRoom(result.room)
+        cacheRoom(result.room);
+        setToken(localStorage.getItem('token'))
+
+        if (isOnline) ConnectToIo(token, () => {})
+
+        socket.off('membership-updated')
+        socket.on('membership-updated', (mem) => {})
+        socket.off('view-updated')
+        socket.on('view-updated', (v) => {})
+      })
+      .catch((error) => console.log('error', error));
+    
+    let requestOptions2 = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: homeRoomId,
+      }),
+      redirect: 'follow',
     }
+    let enterRoomPromise = fetch(serverRoot + '/room/enter_room', requestOptions2);
+
+    enterRoomPromise.then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        setMembership(result.membership)
+        cacheMembership(result.membership);
+        forceUpdate()
+
+        callback()
+      })
+      .catch((error) => console.log('error', error))
+    
+      Promise.all([getRoomPromise, enterRoomPromise]).then(() => callback());
   }
 
   useEffect(() => {

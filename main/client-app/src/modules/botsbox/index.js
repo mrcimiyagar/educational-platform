@@ -415,7 +415,6 @@ export default function BotsBox(props) {
           direction="right"
           in={inTheGame}
           mountOnEnter
-          {...{ timeout: 500 }}
         >
       <Fab
         size={'medium'}

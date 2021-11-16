@@ -74,38 +74,6 @@ export let notifyMeOnAccessChangeNavbar = (callback) => {
 }
 export let reloadConf = undefined
 
-const data = {
-  lanes: [
-    {
-      id: 'lane1',
-      title: 'Planned Tasks',
-      label: '2/2',
-      cards: [
-        {
-          id: 'Card1',
-          title: 'Write Blog',
-          description: 'Can AI make memes',
-          label: '30 mins',
-          draggable: false,
-        },
-        {
-          id: 'Card2',
-          title: 'Pay Rent',
-          description: 'Transfer via NEFT',
-          label: '5 mins',
-          metadata: { sha: 'be312a1' },
-        },
-      ],
-    },
-    {
-      id: 'lane2',
-      title: 'Completed',
-      label: '0/0',
-      cards: [],
-    },
-  ],
-}
-
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
   root: {
@@ -127,6 +95,9 @@ let roomId = undefined;
 
 export default function RoomPage(props) {
 
+  const urlSearchParams = new URLSearchParams(window.location.search)
+  props = Object.fromEntries(urlSearchParams.entries())
+
   const useStyles = makeStyles({
     root: {
       width: '100%',
@@ -138,6 +109,7 @@ export default function RoomPage(props) {
       backgroundColor: '#fff',
     },
     tab: {
+      color: '#fff',
       minWidth: isDesktop() || isTablet() ? 100 : undefined,
       maxWidth: isDesktop() || isTablet() ? 100 : undefined,
       width: isDesktop() || isTablet() ? 100 : undefined,
@@ -249,9 +221,6 @@ export default function RoomPage(props) {
   }
 
   setInTheGame(true)
-
-  const urlSearchParams = new URLSearchParams(window.location.search)
-  props = Object.fromEntries(urlSearchParams.entries())
 
   useEffect(() => {
     roomId = props.room_id
@@ -528,7 +497,7 @@ export default function RoomPage(props) {
                 width: isDesktop() ? 550 : '100%',
                 height: 144,
                 borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
-                backgroundColor: colors.primaryLight,
+                backgroundColor: colors.primaryMedium,
                 backdropFilter: 'blur(10px)',
                 position: 'fixed',
                 left: isDesktop() && isInRoom() ? 'calc(50% - 225px)' : '50%',
