@@ -433,6 +433,7 @@ function App() {
         flexwrap: 'wrap',
       }}
     >
+      <DesktopDetector/>
       <div>
         {result.map((key) => {
             if (myUserId === key) return null
@@ -444,7 +445,6 @@ function App() {
               );
         })}
       </div>
-      <DesktopDetector/>
         <video
           id="screenMax"
           autoPlay
@@ -453,7 +453,7 @@ function App() {
             transform: 'translateX(-50%)',
             objectFit: 'cover',
             top: 80,
-            left: window.innerWidth / 2 - 225 + 'px',
+            left: window.innerWidth / 2 - (window.innerWidth > 1400 ? 225 : 0) + 32 + 'px',
             width: shownScreens[presenterBackup] === true ? window.innerWidth - 176 - 450 + 'px' : (window.innerWidth / 2 - 225) + 'px',
             height: 'auto',
           }}
@@ -510,7 +510,7 @@ function App() {
             <Fab
               id="audioButton"
               color={'primary'}
-              style={{ position: 'absolute', left: 16, bottom: isDesktop() ? (48 + 64 + 56 + 16) : 48 + 56 + 16 }}
+              style={{ position: 'absolute', left: window.innerWidth <= 1400 ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104 + 56 + 16) : 48 + 56 + 16 }}
               onClick={() => {
                 if (audio) {
                   endAudio()
@@ -527,7 +527,7 @@ function App() {
             <Fab
               id="endCallButton"
               color={'secondary'}
-              style={{ position: 'absolute', left: 16, bottom: isDesktop() ? (48 + 64) : 48 }}
+              style={{ position: 'absolute', left: window.innerWidth <= 1400 ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
               onClick={() => {
                 instantConnectionFlag = false
                 setConnected(false)
@@ -553,8 +553,8 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: 16 + 56 + 16 + 72,
-                bottom: isDesktop() ? (48 + 64) : 48,
+                left: (window.innerWidth > 1400 ? (32 + 56) : 0) + 16 + 72,
+                bottom: window.innerWidth <= 1400 ? (48 + 104) : 48,
               }}
               onClick={() => {
                 if (video) {
@@ -569,30 +569,33 @@ function App() {
             >
               {video ? <VideocamIcon /> : <VideocamOff />}
             </Fab>
-            <Fab
-              id="screenButton"
-              color={'primary'}
-              style={{ position: 'absolute', left: 16 + 56 + 16, bottom: isDesktop() ? (48 + 64) : 48 }}
-              onClick={() => {
-                if (screen) {
-                  endScreen()
-                  setScreen(false)
-                } else {
-                  startScreen()
-                  setScreen(true)
-                }
-                forceUpdate()
-              }}
-            >
-              {screen ? <DesktopWindowsIcon /> : <DesktopAccessDisabledIcon />}
-            </Fab>
+            {window.innerWidth > 1400 ?
+              <Fab
+                id="screenButton"
+                color={'primary'}
+                style={{ position: 'absolute', left: 32 + 56 + 16, bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
+                onClick={() => {
+                  if (screen) {
+                    endScreen();
+                    setScreen(false);
+                  } else {
+                    startScreen();
+                    setScreen(true);
+                  }
+                  forceUpdate();
+                }}
+              >
+                {screen ? <DesktopWindowsIcon /> : <DesktopAccessDisabledIcon />}
+              </Fab> :
+              null
+            }
             <Fab
               id="listButton"
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: 16 + 56 + 16 + 56 + 16 + 56 + 16,
-                bottom: isDesktop() ? (48 + 64) : 48,
+                left: (window.innerWidth > 1400 ? (32 + 56) : 0) + 16 + 56 + 16 + 56 + 16,
+                bottom: window.innerWidth <= 1400 ? (48 + 104) : 48,
               }}
               onClick={() => {
                 window.parent.postMessage(
@@ -635,13 +638,13 @@ function App() {
           <Fab
             id="callButton"
             color={'secondary'}
-            style={{ position: 'absolute', left: isDesktop() ? 16 : 0, bottom: isDesktop() ? 48 : 60 }}
+            style={{ position: 'absolute', left: window.innerWidth <= 1400 ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
             onClick={() => {
               instantConnectionFlag = true
               setConnected(true)
             }}
           >
-            <CallIcon style={{ fill: '#fff' }} />
+            <CallIcon style={{ fill: '#333' }} />
           </Fab>
         </ThemeProvider>
       ) : null}

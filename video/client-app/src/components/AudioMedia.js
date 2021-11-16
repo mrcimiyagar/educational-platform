@@ -152,6 +152,7 @@ startAudio = () => {
 }
 
 endAudio = () => {
+  try {
   if (local_media_stream !== null && local_media_stream !== undefined) {
     local_media_stream.getAudioTracks().forEach((track) => {
       track.stop()
@@ -161,6 +162,8 @@ endAudio = () => {
   props.updateData('me');
   props.forceUpdate();
   signaling_socket.emit('hideMe');
+}
+catch(ex) {console.log(ex);}
 }
 
   function initInner(audioServerWebsocket) {

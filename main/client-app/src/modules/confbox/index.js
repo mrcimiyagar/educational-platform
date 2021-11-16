@@ -56,8 +56,8 @@ export function ConfBox(props) {
           allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera; fullscreen; display-capture'}
           style={{position: (props.webcamOn && props.currentRoomNav !== 2) ? 'absolute' : undefined, 
           right: (props.webcamOn && props.currentRoomNav !== 2) ? 0 : undefined, top: 0, 
-          width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : (isDesktop() && isInRoom()) ? 'calc(100% - 16px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64,
-          marginBottom: 32, marginLeft: 16}} frameBorder="0"></iframe>
+          width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64,
+          marginBottom: 32}} frameBorder="0"></iframe>
       </div>
     );
 }
