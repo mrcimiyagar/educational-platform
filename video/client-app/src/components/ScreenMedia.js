@@ -113,10 +113,7 @@ export default function ScreenMedia(props) {
         props.shownUsers['me'] = true;
         props.forceUpdate();
         if (callback) callback(stream);
-      }).catch((ex) => {
-        console.log(ex);
-        console.log('access not granted.');
-      })
+      });
   }
 
 startScreen = () => {
