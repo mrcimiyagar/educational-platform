@@ -247,10 +247,6 @@ function App() {
                 onClick={props.onClick}
               />
             </div>
-            <Audio
-              id={props.id}
-              stream={as !== undefined ? as.value : undefined}
-            />
           </Card>
         )
       } else {
@@ -280,10 +276,6 @@ function App() {
                 onClick={props.onClick}
               />
             </div>
-            <Audio
-              id={props.id}
-              stream={as !== undefined ? as.value : undefined}
-            />
           </Card>
         )
       }
@@ -315,10 +307,6 @@ function App() {
                 onClick={props.onClick}
               />
             </div>
-            <Audio
-              id={props.id}
-              stream={as !== undefined ? as.value : undefined}
-            />
           </Card>
         )
       } else {
@@ -354,10 +342,6 @@ function App() {
                 onClick={props.onClick}
               />
             </div>
-            <Audio
-              id={props.id}
-              stream={as !== undefined ? as.value : undefined}
-            />
           </Card>
         )
       }
@@ -449,6 +433,17 @@ function App() {
         flexwrap: 'wrap',
       }}
     >
+      <div>
+        {result.map((key) => {
+            if (myUserId === key) return null
+            return (
+                <Audio
+                  id={key}
+                  stream={audios[key + '_audio']}
+                />
+              );
+        })}
+      </div>
       <DesktopDetector/>
         <video
           id="screenMax"

@@ -245,7 +245,7 @@ endAudio = () => {
         console.log('onAddStream', event);
         let foundTag = undefined;
         Object.entries(props.data).forEach(([id, stream]) => {
-          if (id.startsWith(config.userId + '_audio_')) {
+          if (id.startsWith(config.userId + '_audio')) {
             foundTag = id;
           }
         })
@@ -253,7 +253,7 @@ endAudio = () => {
           props.data[foundTag] = undefined;
         }
         props.updateData(config.userId);
-        props.data[config.userId + '_audio_'] = event.stream;
+        props.data[config.userId + '_audio'] = event.stream;
         props.forceUpdate();
       }
   
