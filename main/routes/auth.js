@@ -94,8 +94,8 @@ router.post('/login', jsonParser, async function (req, res) {
         userId: user.id,
     }});
     let home = await sw.Space.findOne({where: {id: account.homeSpaceId}});
-    let room = await sw.Room.findOne({where: {id: home.mainRoomId}});
-    res.send({status: 'success', user: user, account: account, session: session, space: home, room: room});
+    let room = home === null ? undefined : await sw.Room.findOne({where: {id: home.mainRoomId}});
+    res.send({status: 'success', user: user, account: account, session: session, space: home === null ? undefined : home, room: room});
 });
 
 router.post('/get_user', jsonParser, async function (req, res) {
