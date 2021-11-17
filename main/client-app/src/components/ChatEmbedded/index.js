@@ -234,9 +234,7 @@ export default function ChatEmbedded(props) {
         forceUpdate();
       })
       .catch((error) => console.log('error', error))
-
-    return () => {leaveRoom(() => {});}
-  }, [])
+  }, [props.roomId]);
 
   useEffect(() => {
     let scroller = document.getElementById('scroller')
