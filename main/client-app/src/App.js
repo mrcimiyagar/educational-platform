@@ -412,6 +412,9 @@ export let fetchChats = async () => {
   })
   data = data.docs
   data.forEach((chat) => {
+    if (chat.lastMessage === undefined) {
+      chat.lastMessage = {time: 0};
+    }
     chat.lastMessage.time = Number(chat.lastMessage.time)
   })
   function compare(a, b) {
