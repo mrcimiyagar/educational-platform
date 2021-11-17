@@ -417,7 +417,9 @@ router.post('/create_room', jsonParser, async function (req, res) {
         messageType: 'text',
         User: await sw.User.findOne({ where: { id: session.userId } }),
       }
-      sockets[req.body.participentId].emit('message-added', { msgCopy })
+      if (sockets[req.body.participentId] !== undefined) {
+        sockets[req.body.participentId].emit('message-added', { msgCopy })
+      }
 
       res.send({ status: 'success', room: room })
     },
