@@ -385,7 +385,10 @@ router.post('/create_room', jsonParser, async function (req, res) {
         roomCopy.participent = await sw.User.findOne({
           where: { id: session.userId },
         })
-        sockets[req.body.participentId].emit('chat-created', { room: roomCopy })
+        if (sockets[req.body.participentId] !== undefined)
+        {
+          sockets[req.body.participentId].emit('chat-created', { room: roomCopy })
+        }
       } else {
         if (
           req.body.chatType === 'group' ||
