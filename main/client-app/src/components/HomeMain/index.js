@@ -26,7 +26,7 @@ import {
 import ChatEmbedded from '../../components/ChatEmbedded';
 import store from '../../redux/main';
 import { setColors, colors, token } from '../../util/settings';
-import { serverRoot, useForceUpdate } from '../../util/Utils';
+import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils';
 import AllChats from '../AllChats';
 import BotChats from '../BotChats';
 import ChannelChats from '../ChannelChats';
@@ -189,6 +189,8 @@ export default function HomeAppbar(props) {
       .catch((error) => console.log('error', error))
 
       setInTheGame(true);
+
+      return () => {leaveRoom(() => {});}
   }, [])
 
   return (

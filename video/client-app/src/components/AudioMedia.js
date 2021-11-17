@@ -368,7 +368,6 @@ catch(ex) {console.log(ex);}
     signaling_socket.on('removePeer', function (config) {
       console.log('Signaling server said to remove peer:', config)
       var peer_id = config.peer_id
-      $('#videoconf' + peer_id).remove()
       // if (document.getElementById('videoconf' + userId).childElementCount === 0) {
       //   window.peer_media_elements[userId].remove()
       // }
@@ -377,10 +376,6 @@ catch(ex) {console.log(ex);}
       }
   
       delete peers[peer_id]
-      let foundItem = findValueByPrefix(props.data, config.userId + '_audio');
-      delete props.data[foundItem !== undefined ? foundItem.key : undefined];
-      props.forceUpdate();
-      props.updateData();
     })
   }
   

@@ -373,10 +373,6 @@ catch(ex) {console.log(ex);}
       }
   
       delete peers[peer_id]
-      let foundItem = findValueByPrefix(props.data, config.userId + '_screen');
-      delete props.data[foundItem !== undefined ? foundItem.key : undefined];
-      props.forceUpdate();
-      props.updateData();
     })
   }
   
