@@ -12,21 +12,8 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core'
-import { pink } from '@material-ui/core/colors'
-import { Chat, Search } from '@material-ui/icons'
-import AddIcon from '@material-ui/icons/Add'
-import AudiotrackIcon from '@material-ui/icons/Audiotrack'
-import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
-import Menu from '@material-ui/icons/Menu'
-import NotesIcon from '@material-ui/icons/Notes'
-import PhotoIcon from '@material-ui/icons/Photo'
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
-import PollIcon from '@material-ui/icons/Poll'
 import Settings from '@material-ui/icons/Settings'
-import ViewCarouselIcon from '@material-ui/icons/ViewCarousel'
 import React, { useEffect } from 'react'
-import SwipeableViews from 'react-swipeable-views'
-import { useFilePicker } from 'use-file-picker'
 import { pathConfig, setWallpaper } from '../..'
 import {
   cacheMembership,
@@ -42,19 +29,12 @@ import {
   setRoomId,
 } from '../../App'
 import ChatEmbedded from '../../components/ChatEmbedded'
-import FilesGrid from '../../components/FilesGrid/FilesGrid'
-import RoomBottombar from '../../components/RoomBottombar'
-import Jumper from '../../components/SearchEngineFam'
 import HomeIcon from '../../images/home.png'
 import PeopleIcon from '../../images/people.png'
 import BotIcon from '../../images/robot.png'
 import RoomIcon from '../../images/room.png'
-import { BoardBox } from '../../modules/boardbox/boardbox'
 import BotsBox from '../../modules/botsbox'
-import { ConfBox } from '../../modules/confbox'
-import { TaskBox } from '../../modules/taskbox/taskbox'
 import { UsersBox } from '../../modules/usersbox/usersbox'
-import store, { changeConferenceMode } from '../../redux/main'
 import { colors, setToken, theme, token } from '../../util/settings'
 import {
   ConnectToIo,
@@ -76,38 +56,6 @@ export let notifyMeOnAccessChangeNavbar = (callback) => {
   accessChangeCallbackNavbar = callback
 }
 export let reloadConf = undefined
-
-const data = {
-  lanes: [
-    {
-      id: 'lane1',
-      title: 'Planned Tasks',
-      label: '2/2',
-      cards: [
-        {
-          id: 'Card1',
-          title: 'Write Blog',
-          description: 'Can AI make memes',
-          label: '30 mins',
-          draggable: false,
-        },
-        {
-          id: 'Card2',
-          title: 'Pay Rent',
-          description: 'Transfer via NEFT',
-          label: '5 mins',
-          metadata: { sha: 'be312a1' },
-        },
-      ],
-    },
-    {
-      id: 'lane2',
-      title: 'Completed',
-      label: '0/0',
-      cards: [],
-    },
-  ],
-}
 
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
@@ -150,7 +98,6 @@ export default function HomePage(props) {
   const classes = useStyles()
   const classesAction = useStylesAction()
 
-  const [jumperOpen, setJumperOpen] = React.useState(true)
   ;[membership, setMembership] = React.useState({})
   const [loaded, setLoaded] = React.useState(false)
   const [menuOpen, setMenuOpen] = React.useState(false)

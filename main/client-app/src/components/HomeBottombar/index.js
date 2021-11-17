@@ -66,7 +66,8 @@ export default function HomeBottombar(props) {
         backgroundColor: colors.primaryMedium,
         width: isDesktop() ? 400 : '100%',
         transform: isDesktop() ? 'rotate(90deg)' : undefined,
-        position: isDesktop() ? 'fixed' : undefined,
+        position: 'fixed',
+        zIndex: 2501,
         left: isDesktop() ? (-274 + 32 + 100) : undefined,
         top: isDesktop() ? 'calc(50% - 56px)' : undefined,
         borderRadius: isDesktop() ? 32 : undefined

@@ -7,6 +7,7 @@ import Add from '@material-ui/icons/Add'
 import ArrowForwardTwoTone from '@material-ui/icons/ArrowForwardTwoTone'
 import React from 'react'
 import {
+  gotoPage,
   gotoPageWithDelay,
   isDesktop,
   popPage,
@@ -162,7 +163,7 @@ export default function CreateRoom(props) {
               .then((result) => {
                 console.log(JSON.stringify(result))
                 if (result.room !== undefined) {
-                  gotoPageWithDelay('/app/room', { room_id: result.room.id })
+                  gotoPage('/app/room', { room_id: result.room.id, tab_index: 0 })
                 }
               })
               .catch((error) => console.log('error', error))

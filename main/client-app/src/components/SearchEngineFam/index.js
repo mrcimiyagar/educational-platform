@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     height: 380,
     transform: 'translateZ(0px)',
-    position: 'fixed',
     flexGrow: 1,
   },
 }))
@@ -64,18 +63,6 @@ export default function Jumper(props) {
   return (
     <div
       className={classes.root}
-      style={{
-        bottom:
-          window.location.pathname === '/app/searchengine'
-            ? 0
-            : isInMessenger() && isDesktop()
-            ? -12 - 56
-            : window.location.pathname === '/app/home'
-            ? (isMobile() || isTablet())
-              ? 4
-              : 4
-            : 4,
-      }}
     >
       <ThemeProvider theme={theme}>
         <Slide
