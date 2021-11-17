@@ -21,13 +21,14 @@ import {
   isDesktop,
   isInMessenger,
   isInRoom,
+  isOnline,
   isTablet,
   popPage,
   routeTrigger,
   setDialogOpen,
 } from '../../App'
 import { colors, me, setToken, token } from '../../util/settings'
-import { isMobile, serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { ConnectToIo, isMobile, leaveRoom, serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
 import ChatWallpaper from '../../images/chat-wallpaper.png'
 import { setLastMessage, updateChat } from '../../components/HomeMain'
@@ -191,6 +192,51 @@ export default function ChatEmbedded(props) {
     }
   }
   addMessageToList3 = addMessageToList
+
+  useEffect(() => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.roomId,
+      }),
+      redirect: 'follow',
+    }
+    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions);
+    getRoomPromise.then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        setRoom(result.room)
+        setToken(localStorage.getItem('token'))
+        if (isOnline) ConnectToIo(token, () => {});
+        window.scrollTo(0, 0)
+      })
+      .catch((error) => console.log('error', error));
+    
+    let requestOptions2 = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.roomId,
+      }),
+      redirect: 'follow',
+    }
+    let enterRoomPromise = fetch(serverRoot + '/room/enter_room', requestOptions2);
+    enterRoomPromise.then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        forceUpdate();
+      })
+      .catch((error) => console.log('error', error))
+
+    return () => {leaveRoom(() => {});}
+  }, [])
 
   useEffect(() => {
     let scroller = document.getElementById('scroller')
