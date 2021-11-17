@@ -274,6 +274,7 @@ export default function Profile(props) {
                     gotoPage('/app/home', {
                       user_id: props.user_id,
                       room_id: result.room.id,
+                      tab_index: 0
                     })
                   }
                 })
