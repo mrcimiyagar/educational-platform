@@ -155,6 +155,7 @@ router.post('/get_chats', jsonParser, async function (req, res) {
               room.unread = roomMessagesCount - roomReadCount;
             }
             else {
+              room.lastMessage = {};
               room.unread = 0;
             }
           }
