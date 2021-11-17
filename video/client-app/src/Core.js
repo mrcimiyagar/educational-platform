@@ -479,6 +479,9 @@ function App() {
           )
           setListOpen(false)
         }}
+        ModalProps={{
+          keepMounted: true
+        }}
         style={{ position: 'relative', zIndex: 2490 }}
       >
         <div
