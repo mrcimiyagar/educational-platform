@@ -7,6 +7,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import DesktopMacIcon from '@material-ui/icons/DesktopMac';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import React, { useEffect } from 'react';
+import { pathConfig } from '../..';
 import { inTheGame, isDesktop, isInRoom } from '../../App';
 import { isConfConnected } from '../../modules/confbox';
 import { colors } from '../../util/settings';
@@ -73,6 +74,13 @@ export default function RoomBottombar(props) {
     <BottomNavigation
       value={props.currentRoomNav}
       onChange={(event, newValue) => {
+        alert('hello' + newValue);
+        if (newValue === 2) {
+          window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'intWebcam'}, pathConfig.confClient);
+        }
+        else {
+          window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'extWebcam'}, pathConfig.confClient);
+        }
         props.setCurrentRoomNav(newValue);
         blinkRoomBottomBar();
       }}
