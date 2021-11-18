@@ -74,7 +74,6 @@ export default function RoomBottombar(props) {
     <BottomNavigation
       value={props.currentRoomNav}
       onChange={(event, newValue) => {
-        alert('hello' + newValue);
         if (newValue === 2) {
           window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'intWebcam'}, pathConfig.confClient);
         }

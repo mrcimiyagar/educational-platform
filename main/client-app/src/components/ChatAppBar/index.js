@@ -152,7 +152,8 @@ export default function ChatAppBar(props) {
                   : ''
               }
               onClick={() => {
-                gotoPage('/app/userprofile', { user_id: props.user.id })
+                if (isInRoom()) return; 
+                gotoPage('/app/userprofile', { user_id: props.user.id });
               }}
             />
             <Typography
@@ -170,32 +171,38 @@ export default function ChatAppBar(props) {
               {tl.toString()}
             </Typography>
             <div className={classes.search}>
-              <IconButton
-                onClick={() => {
-                  setInTheGame(false)
-                  setTimeout(() => {
-                    gotoPage('/app/room', {
-                      room_id: props.room.id,
-                      tab_index: 2,
-                    })
-                  }, 500)
-                }}
-              >
-                <VideocamIcon style={{ fill: '#fff' }} />
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  setInTheGame(false)
-                  setTimeout(() => {
-                    gotoPage('/app/room', {
-                      room_id: props.room.id,
-                      tab_index: 2,
-                    })
-                  }, 500)
-                }}
-              >
-                <CallIcon style={{ fill: '#fff' }} />
-              </IconButton>
+              {isInRoom() ?
+                null :
+                <IconButton
+                  onClick={() => {
+                    setInTheGame(false)
+                    setTimeout(() => {
+                      gotoPage('/app/room', {
+                        room_id: props.room.id,
+                        tab_index: 2,
+                      })
+                    }, 500)
+                  }}
+                >
+                  <VideocamIcon style={{ fill: '#fff' }} />
+                </IconButton>
+              }
+              {isInRoom() ?
+                null :
+                <IconButton
+                  onClick={() => {
+                    setInTheGame(false)
+                    setTimeout(() => {
+                      gotoPage('/app/room', {
+                        room_id: props.room.id,
+                        tab_index: 2,
+                      })
+                    }, 500)
+                  }}
+                >
+                  <CallIcon style={{ fill: '#fff' }} />
+                </IconButton>
+              }
               <IconButton>
                 <MoreIcon style={{ fill: '#fff' }} />
               </IconButton>
