@@ -513,7 +513,7 @@ function App() {
         </div>
       </Drawer>
       <div style={{ width: '100%', height: 128 }}></div>
-      {connected && !(shownScreens[presenterBackup] === true &&  shownVideos[presenterBackup] === true) ? (
+      {connected && !extWebcam ? (
         <div style={{ width: '100%', height: '100%' }}>
           <ThemeProvider theme={theme}>
             <Fab
