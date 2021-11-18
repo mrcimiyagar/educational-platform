@@ -42,6 +42,9 @@ let serv = https.createServer({
   else if (req.headers.host === 'wavesurferbox.kaspersoft.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8084' }, e => {})
   }
+  else if (req.headers.host === 'conf.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:8082' }, e => {})
+  }
   else if (req.headers.host === 'whiteboard.kaspersoft.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8081' }, e => {})
   }
