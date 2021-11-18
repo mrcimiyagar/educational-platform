@@ -1081,7 +1081,13 @@ export default function RoomPage(props) {
         </div>
         <RoomBottombar
           setCurrentRoomNavBackup={(v) => {
-            props.tab_index = v
+            props.tab_index = v;
+            if (v === 2) {
+              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'intWebcam'}, pathConfig.confClient);
+            }
+            else {
+              window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'extWebcam'}, pathConfig.confClient);
+            }
           }}
           setCurrentRoomNav={(i) => {
             setOpacity(0)
