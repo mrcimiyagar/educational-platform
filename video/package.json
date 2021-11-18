@@ -3,7 +3,7 @@
   "version": "",
   "description": "About =====",
   "scripts": {
-    "start": "cd client-app && npm run build && cd .. && node server.js"
+    "build": "cd client-app && npm run build"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
