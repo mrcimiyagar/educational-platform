@@ -3,7 +3,7 @@
   "version": "",
   "description": "About =====",
   "scripts": {
-    "start": "node signaling-server"
+    "start": "cd client-app && npm run build && cd .. && node server.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",

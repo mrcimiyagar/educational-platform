@@ -99,6 +99,8 @@ function Audio(props) {
 
 let videoCache = {}
 let needUpdate = {}
+let audioCache = {}
+let audioNeedUpdate = {};
 let presenterBackup = undefined
 let instantConnectionFlag = false
 
@@ -412,16 +414,16 @@ function App() {
   }
 
   let onVideoStreamUpdate = (userId) => {
-    needUpdate[userId] = true
-    notifyWebcamActivated()
+    needUpdate[userId] = true;
+    notifyWebcamActivated();
   }
   let onAudioStreamUpdate = (userId) => {
-    needUpdate[userId] = true
-    notifyWebcamActivated()
+    audioNeedUpdate[userId] = true;
+    notifyWebcamActivated();
   }
   let onScreenStreamUpdate = (userId) => {
-    needUpdate[userId] = true
-    notifyWebcamActivated()
+    needUpdate[userId] = true;
+    notifyWebcamActivated();
   }
 
   return (
@@ -436,13 +438,17 @@ function App() {
       <DesktopDetector/>
       <div>
         {result.map((key) => {
-            if (myUserId === key) return null
-            return (
-                <Audio
-                  id={key}
-                  stream={audios[key + '_audio']}
-                />
-              );
+          if (audioNeedUpdate[key] === true || audioCache[key] === undefined) {
+            audioCache[key] = (
+              <Audio
+                id={key}
+                stream={audios[key + '_audio']}
+              />
+            )
+            delete audioCache[key]
+          }
+          if (myUserId === key) return null
+          return audioCache[key];
         })}
       </div>
         <video
@@ -454,7 +460,7 @@ function App() {
             objectFit: 'cover',
             top: 80,
             left: window.innerWidth / 2 - (window.innerWidth > 1400 ? 225 : 0) + 32 + 'px',
-            width: shownScreens[presenterBackup] === true ? window.innerWidth - 176 - 450 + 'px' : (window.innerWidth / 2 - 225) + 'px',
+            width: shownScreens[presenterBackup] === true ? (window.innerWidth - 176 - 450 + 'px') : ((window.innerWidth / 2 - 225) + 'px'),
             height: 'auto',
           }}
         ></video>
@@ -507,7 +513,7 @@ function App() {
         </div>
       </Drawer>
       <div style={{ width: '100%', height: 128 }}></div>
-      {connected ? (
+      {connected && !(shownScreens[presenterBackup] === true &&  shownVideos[presenterBackup] === true) ? (
         <div style={{ width: '100%', height: '100%' }}>
           <ThemeProvider theme={theme}>
             <Fab

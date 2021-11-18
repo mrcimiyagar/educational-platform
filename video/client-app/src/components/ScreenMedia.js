@@ -168,13 +168,13 @@ catch(ex) {console.log(ex);}
       props.forceUpdate();
     })
 
-    // signaling_socket.on('hideUser', function ({peer_id, userId}) {
-    //   console.log('hiding user screen...');
-    //   props.updateData(userId);
-    //   delete props.shownUsers[userId];
-    //   props.setShown([props.shownUsers]);
-    //   props.forceUpdate();
-    // })
+    signaling_socket.on('hideUser', function ({peer_id, userId}) {
+      console.log('hiding user screen...');
+      props.updateData(userId);
+      delete props.shownUsers[userId];
+      props.setShown([props.shownUsers]);
+      props.forceUpdate();
+    })
   
     signaling_socket.on('connect', function () {
       console.log('Connected to signaling server')
