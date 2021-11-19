@@ -75,6 +75,7 @@ export default function ChatAppBar(props) {
     if (socket !== undefined) {
       socket.off('chat-typing');
       socket.on('chat-typing', typingList => {
+        alert('hello');
         setTl(typingList);
       });
     }
