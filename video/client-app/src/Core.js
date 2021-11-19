@@ -422,6 +422,17 @@ function App() {
     notifyWebcamActivated();
   }
 
+  let theme = createTheme({
+    palette: {
+      primary: {
+        main: '#BBDEFB'
+      },
+      secondary: {
+        main: '#ff3300'
+      },
+    },
+  });
+
   return (
     <div
       style={{
