@@ -435,6 +435,7 @@ function App() {
       <div>
         {result.map((key) => {
           if (myUserId === key) return null;
+          if (shownAudios[key] === undefined) return null;
           return (
             <Audio
               id={key}
