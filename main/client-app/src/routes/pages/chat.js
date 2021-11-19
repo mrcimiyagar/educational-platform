@@ -130,7 +130,7 @@ export default function Chat(props) {
       })
       .catch((error) => console.log('error', error))
 
-    return () => {if (goingToRoom) leaveRoom(() => {});}
+    return () => {if (!goingToRoom) leaveRoom(() => {});}
   }, [])
 
   registerDialogOpen(setOpen)
