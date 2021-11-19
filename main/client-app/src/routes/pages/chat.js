@@ -68,6 +68,8 @@ let uplaodedFileId = 0
 export let addMessageToList = () => {}
 export let replaceMessageInTheList = () => {}
 
+let goingToRoom = false;
+
 export default function Chat(props) {
 
   const urlSearchParams = new URLSearchParams(window.location.search);
@@ -128,11 +130,12 @@ export default function Chat(props) {
       })
       .catch((error) => console.log('error', error))
 
-    return () => {leaveRoom(() => {});}
+    return () => {if (goingToRoom) leaveRoom(() => {});}
   }, [])
 
   registerDialogOpen(setOpen)
   const handleClose = () => {
+    goingToRoom = false;
     setInTheGame(false);
     setTimeout(() => {
       setOpen(false);
@@ -533,7 +536,7 @@ export default function Chat(props) {
           }}
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
-        <ChatAppBar handleClose={handleClose} user={user} room={room} />
+        <ChatAppBar handleClose={handleClose} user={user} room={room} handleCallClicked={() => {goingToRoom = true;}}/>
         <div
           style={{ position: 'fixed', bottom: 0, height: 'auto', zIndex: 1000 }}
         >

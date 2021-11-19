@@ -175,6 +175,7 @@ export default function ChatAppBar(props) {
                 null :
                 <IconButton
                   onClick={() => {
+                    props.handleCallClicked();
                     setInTheGame(false)
                     setTimeout(() => {
                       gotoPage('/app/room', {
@@ -191,6 +192,7 @@ export default function ChatAppBar(props) {
                 null :
                 <IconButton
                   onClick={() => {
+                    props.handleCallClicked();
                     setInTheGame(false)
                     setTimeout(() => {
                       gotoPage('/app/room', {
