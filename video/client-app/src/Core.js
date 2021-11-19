@@ -422,7 +422,7 @@ function App() {
     notifyWebcamActivated();
   }
 
-  let theme = createTheme({
+  let theme2 = createTheme({
     palette: {
       primary: {
         main: '#BBDEFB'
@@ -519,7 +519,7 @@ function App() {
       <div style={{ width: '100%', height: 128 }}></div>
       {connected && !extWebcam ? (
         <div style={{ width: '100%', height: '100%' }}>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={theme2}>
             <Fab
               id="audioButton"
               color={'primary'}
