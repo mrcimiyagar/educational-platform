@@ -248,7 +248,7 @@ class Kasperio {
                       console.log('#################################################################################');
                       console.log('#################################################################################');
                       models.Membership.findOne({
-                        where: { userId: user.id, roomId: soc.room.id },
+                        where: { userId: user.id, roomId: soc.roomId },
                       }).then((mem) => {
                         if (mem !== null) {
                           if (soc.room !== null && soc.room !== undefined) {
@@ -266,7 +266,7 @@ class Kasperio {
                                 }
 
                                 require('./server').pushTo(
-                                  'room_' + roomId,
+                                  'room_' + soc.roomId,
                                   'chat-typing',
                                   typingList,
                                 )
@@ -278,7 +278,7 @@ class Kasperio {
                               typingList.push(soc.room.typing[t].socket.user)
                             }
                             require('./server').pushTo(
-                              'room_' + soc.room.id,
+                              'room_' + soc.roomId,
                               'chat-typing',
                               typingList,
                             )
