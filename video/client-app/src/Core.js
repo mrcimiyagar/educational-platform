@@ -157,10 +157,6 @@ function App() {
     return <div />
   }
 
-  let isDesktop = () => {
-    return sizeMode === 'desktop';
-  }
-
   let updatePresenter = (presenter) => {
     if (instantConnectionFlag) {
       presenterBackup = presenter
@@ -438,17 +434,13 @@ function App() {
       <DesktopDetector/>
       <div>
         {result.map((key) => {
-          if (audioNeedUpdate[key] === true || audioCache[key] === undefined) {
-            audioCache[key] = (
-              <Audio
-                id={key}
-                stream={audios[key + '_audio']}
-              />
-            )
-            delete audioCache[key]
-          }
-          if (myUserId === key) return null
-          return audioCache[key];
+          if (myUserId === key) return null;
+          return (
+            <Audio
+              id={key}
+              stream={audios[key + '_audio']}
+            />
+          );
         })}
       </div>
         <video
