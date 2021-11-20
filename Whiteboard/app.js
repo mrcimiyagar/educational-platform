@@ -31,24 +31,20 @@ io.on('connection', (socket) => {
     socket.on('joinRoom', ({ username, room }) => {
 
         let check = rooms.includes(room);
-        if (check) {
-            const user = userJoin(socket.id, username, room);
-            socket.join(user.room);
-            console.log("New User connected!!");
-            loginMsg = '';
-            loginClass = '';
+        if (!check) rooms.push(room);
+        
+        const user = userJoin(socket.id, username, room);
+        socket.join(user.room);
+        console.log("New User connected!!");
+        loginMsg = '';
+        loginClass = '';
 
-            // Send users and room info
-            io.to(user.room).emit('roomUsers', {
-                room: user.room,
-                users: getRoomUsers(user.room),
-                status: true
-            });
-        } else {
-            io.to(`${socket.id}`).emit('wrong_Room', check);
-            loginMsg = 'You tried to login in an un-registered room';
-            loginClass = 'msg';
-        }
+        // Send users and room info
+        io.to(user.room).emit('roomUsers', {
+            room: user.room,
+            users: getRoomUsers(user.room),
+            status: true
+        });
 
     });
 
