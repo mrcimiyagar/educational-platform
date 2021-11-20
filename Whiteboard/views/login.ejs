@@ -14,7 +14,19 @@
     <meta name="keywords" content="Login Page">
 </head>
 
-<body>
+<script>
+    let handleMessage = () => {
+        window.onmessage = (e) => {
+            setTimeout(() => {
+                document.getElementById('username').value = e.data.userId;
+                document.getElementById('room').value = e.data.roomId;
+                document.getElementById('loginBtn').click();
+            }, 3000);
+        };
+    }
+</script>
+
+<body onload="handleMessage()">
     <div class="join-container" style="display: none;">
         <header class="join-header">
             <h1><i class="fas fa-brush"></i> WhiteBoard</h1>
@@ -41,8 +53,6 @@
 
     <z class=<%= rooms.class  %>><%= rooms.msg %> <a class="close" onclick="closemsg()">×</a></z>
 
-    <a class="gallery" href="/gallery">Look at the WhiteBoard Gallery</a>
-
 </body>
 
 <script>
@@ -50,11 +60,6 @@
         let msg = document.querySelector('.msg');
         msg.style.display = 'none';
     }
-    window.onmessage = (e) => {
-        document.getElementById('username').value = e.data.userId;
-        document.getElementById('room').value = e.data.roomId;
-        document.getElementById('loginBtn').click();
-    };
 </script>
 
 </html>

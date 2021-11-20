@@ -40,7 +40,7 @@ export let BoardBox = (props) => {
             </AppBar>
 
             <div className="maincontentdiv" style={{borderRadius: isDesktop() ? 24 : 0}}>
-              <iframe allowTransparency={true} name="board-frame" src={pathConfig.whiteBoard}
+              <iframe allowTransparency={true} name="board-frame" src={'http://localhost:8081/draw?username=34706a17-9af9-438f-9128-a0ceeecb7761-1635965619430&room=Server'}
                 onLoad={() => window.frames['board-frame'].postMessage({sender: 'main', userId: me.id, roomId: props.roomId}, pathConfig.whiteBoard)}
                 frameborder="0" style={{border: 0, backgroundColor: 'transparent', background: 'transparent',
                 borderRadius: isDesktop() ? 24 : 0, width: '100%', height: (isDesktop() && isInRoom()) ? 'calc(100% - 32px)' : 'calc(100% - 48px)', position: 'absolute', left: 0, 
