@@ -417,11 +417,13 @@ function outputUsers(users, status) {
     let n = Object.keys(users).length;
 
     //Joined
-    if (status) {
-        let join = joinSound.play();
-    } else {  // Left
-        let leave = leaveSound.play();
-    }
+    try {
+        if (status) {
+            let join = joinSound.play();
+        } else {  // Left
+            let leave = leaveSound.play();
+        }
+    } catch(ex) {}
 
     $('#numb').html(n);
     dbc.innerHTML = '';
