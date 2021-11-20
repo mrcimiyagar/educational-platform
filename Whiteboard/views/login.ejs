@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <div class="join-container">
+    <div class="join-container" style="display: none;">
         <header class="join-header">
             <h1><i class="fas fa-brush"></i> WhiteBoard</h1>
         </header>
@@ -50,6 +50,11 @@
         let msg = document.querySelector('.msg');
         msg.style.display = 'none';
     }
+    window.onmessage = (e) => {
+        document.getElementById('username').value = e.data.userId;
+        document.getElementById('room').value = e.data.roomId;
+        document.getElementById('loginBtn').click();
+    };
 </script>
 
 </html>
