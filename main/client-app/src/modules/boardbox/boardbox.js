@@ -4,17 +4,26 @@ import Chat from "@material-ui/icons/Chat";
 import Menu from "@material-ui/icons/Menu";
 import PollIcon from '@material-ui/icons/Poll';
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
-import React from "react";
+import React, { useEffect } from "react";
 import { pathConfig } from "../..";
 import { gotoPage, isDesktop, isInRoom } from "../../App";
 import { colors, me } from "../../util/settings";
+import { useForceUpdate } from "../../util/Utils";
 import './style.css';
 
 export let BoardBox = (props) => {
+    let forceUpdate = useForceUpdate();
     let roomId = props.roomId + '';
     while (roomId.length < 22) {
       roomId = '0' + roomId;
     }
+    useEffect(() => {
+      window.addEventListener('message', e => {
+        if (e.data.sender === 'whiteboard') {
+          forceUpdate();
+        }
+      })
+    }, [])
     return (
       <div style={{backgroundColor: 'transparent', background: 'transparent', height: isDesktop() ? (isInRoom() ? 'calc(100% - 32px)' : '100%') : 'calc(100% - 72px)', marginTop: isDesktop() ? 16 : 64, display: props.style.display, width: (isDesktop() && isInRoom()) ? 'calc(100% - 144px)' : '100%', marginLeft: (isDesktop() && isInRoom()) ? 16 : 0, marginRight: (isDesktop() && isInRoom()) ? 16 : 0, display: props.style.display}}>
           <div style={{position: 'relative', height: '100%', width: '100%'}}>
