@@ -198,7 +198,7 @@ class Kasperio {
                                 typingList.push(soc.room.typing[t].socket.user)
                               }
                               require('./server').pushTo(
-                                'room_' + soc.room.id,
+                                'room_' + soc.roomId,
                                 'chat-typing',
                                 typingList,
                               )
@@ -210,7 +210,7 @@ class Kasperio {
                             typingList.push(soc.room.typing[t].socket.user)
                           }
                           require('./server').pushTo(
-                            'room_' + soc.room.id,
+                            'room_' + soc.roomId,
                             'chat-typing',
                             typingList,
                           )
@@ -242,11 +242,6 @@ class Kasperio {
                       sockets[user.id] = soc
                     }
                     soc.on('chat-typing', () => {
-                      console.log('#################################################################################');
-                      console.log('#################################################################################');
-                      console.log('#################################################################################');
-                      console.log('#################################################################################');
-                      console.log('#################################################################################');
                       models.Membership.findOne({
                         where: { userId: user.id, roomId: soc.roomId },
                       }).then((mem) => {

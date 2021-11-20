@@ -610,6 +610,9 @@ export default function ChatEmbedded(props) {
             className={classes.input}
             style={{ flex: 1 }}
             placeholder="پیام خود را بنویسید"
+            onChange={() => {
+              socket.emit('chat-typing');
+            }}
           />
           <IconButton
             color="primary"

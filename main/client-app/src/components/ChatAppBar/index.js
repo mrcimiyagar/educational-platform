@@ -19,7 +19,7 @@ import {
   setInTheGame,
 } from '../../App'
 import { setCurrentRoomNavBackup } from '../../routes/pages/room'
-import { colors, token } from '../../util/settings'
+import { colors, token, me } from '../../util/settings'
 import { serverRoot, socket } from '../../util/Utils'
 import HomeToolbar from '../HomeToolbar'
 
@@ -75,8 +75,18 @@ export default function ChatAppBar(props) {
     if (socket !== undefined) {
       socket.off('chat-typing');
       socket.on('chat-typing', typingList => {
-        alert('hello');
-        setTl(typingList);
+        typingList = typingList.filter((u) => {
+          if (u.id === me.id) {
+            return false;
+          }
+          return true;
+        })
+        if (typingList.length === 0) {
+          setTl('');
+        }
+        else {
+          setTl('در حال نوشتن...');
+        }
       });
     }
   }, [])
@@ -168,7 +178,7 @@ export default function ChatAppBar(props) {
                 : ''}
             </Typography>
             <br/>
-            <Typography>
+            <Typography style={{color: '#fff', marginRight: 16}}>
               {tl.toString()}
             </Typography>
             <div className={classes.search}>
