@@ -9,7 +9,7 @@ app.use(cors())
 app.get('*', (req, res) => {
     res.send({
         mainBackend: 'https://backend.kaspersoft.cloud',
-        mainFrontend: 'http://localhost:2002',
+        mainFrontend: 'https://kaspersoft.cloud',
         confClient: 'https://conf.kaspersoft.cloud',
         audioPlayer: 'https://audioplayer.kaspersoft.cloud',
         waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
