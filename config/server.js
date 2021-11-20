@@ -13,7 +13,7 @@ app.get('*', (req, res) => {
         confClient: 'https://conf.kaspersoft.cloud',
         audioPlayer: 'https://audioplayer.kaspersoft.cloud',
         waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
-        whiteBoard: 'https://whiteboard.kaspersoft.cloud',
+        whiteBoard: 'http://localhost:8081',
         sharedNotes: 'https://sharednotes.kaspersoft.cloud',
         videoConfVideo: 'https://confvideo.kaspersoft.cloud',
         videoConfAudio: 'https://confaudio.kaspersoft.cloud',
