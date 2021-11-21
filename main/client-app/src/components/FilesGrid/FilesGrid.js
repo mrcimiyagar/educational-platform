@@ -131,6 +131,8 @@ export default function FilesGrid(props) {
           {props.files.map((file, index) => {
             return (
               <ImageListItem key={file.id} cols={1}>
+                <a id={'downloadLink' + file.id} href={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`} 
+                  download style={{display: 'none'}}></a>
                 <div
                   style={{
                     backgroundColor: 'transparent',
@@ -167,6 +169,9 @@ export default function FilesGrid(props) {
                               props.usedBy === 'presents'
                             ) {
                               props.setCurrentPresent(file.present)
+                            }
+                            else {
+                              document.getElementById('downloadLink' + file.id).click();
                             }
                           }}
                           style={{ width: '100%', height: '100%', objectFit: 'contain' }}
