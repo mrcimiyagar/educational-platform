@@ -16,13 +16,7 @@
 
 </head>
 
-<script>
-    handleReload = () => {
-        window.parent.postMessage({sender: 'whiteboard'}, 'https://kaspersoft.cloud');
-    }
-</script>
-
-<body onload="handleReload()">
+<body>
     <span class="top">
         <p>Hello <%= Qs.username%>!!</p>
         <h1 id="header"></h1>
