@@ -16,8 +16,8 @@ var canvas = this.__canvas = new fabric.Canvas('c', {
     imageSmoothingEnabled: false
 });
 canvas.backgroundColor = "#ffffff";
-canvas.setWidth(500);
-canvas.setHeight(500);
+canvas.setWidth(1440);
+canvas.setHeight(600);
 // Not working...
 canvas.hoverCursor = 'default';
 
