@@ -36,6 +36,7 @@ router.post('/upload_present', jsonParser, async function (req, res) {
         roomId: roomId,
         isPreview: true,
         isPresent: false,
+        type: 'photo'
       })
       let file = await sw.File.create({
         extension: ext,
@@ -44,6 +45,7 @@ router.post('/upload_present', jsonParser, async function (req, res) {
         previewFileId: preview.id,
         isPreview: false,
         isPresent: true,
+        type: 'document'
       })
       let present = await sw.Present.create({
         fileId: file.id,
