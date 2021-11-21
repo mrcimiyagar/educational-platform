@@ -173,13 +173,13 @@ export default function FilesGrid(props) {
                           key={index}
                           alt="Thumbnail"
                           src={
-                            props.fileType === 'photo' ||
+                            (props.fileType === 'photo' ||
                             props.fileType === 'video' ||
-                            props.fileType === 'document'
+                            props.fileType === 'document')
                               ? file.local
                                 ? file.src
                                 : serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.previewFileId}`
+                                  `/file/download_file_thumbnail?token=${token}&roomId=${props.roomId}&fileId=${file.id}`
                               : covers[index]
                           }
                         />
