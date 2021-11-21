@@ -196,11 +196,11 @@ function start() {
     drawingModeEl.onclick = function () {
         canvas.isDrawingMode = !canvas.isDrawingMode;
         if (canvas.isDrawingMode) {
-            drawingModeEl.innerHTML = 'Cancel drawing mode';
+            drawingModeEl.className = 'fas fa-mouse-pointer';
             drawingOptionsEl.style.display = '';
         }
         else {
-            drawingModeEl.innerHTML = 'Enter drawing mode';
+            drawingModeEl.className = 'fas fa-paint-brush';
             drawingOptionsEl.style.display = 'none';
         }
     };

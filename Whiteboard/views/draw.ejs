@@ -21,61 +21,37 @@
         <h1 id="header"></h1>
     </span>
 
-    <span id="icons">
-        <i class="far fa-moon" id="clear this" onclick="changeClr()"></i>
-        <i class="fas fa-undo-alt" onclick="undo()"></i>
-        <i class="fas fa-redo-alt" onclick="undo()"></i>
-        <i class="fas fa-expand-alt" onclick="resize()"></i>
-    </span>
-    <!-- 
-    <span id="clr">
-        <label class="select">Select the color of the brush</label>
-        <input type="color" value="#000000" class="clrpicker">
-    </span> -->
-    <span id="clr">
-        <label for="drawing-color">Brush color:</label>
-        <input type="color" value="#000000" id="drawing-color" class="clrpicker">
-    </span>
-    <label class="select">Enter the size of the brush</label>
-    <!-- <span class="info">5</span><input type="range" value="30" min="5" max="30" id="drop"> -->
-    <select id="drop" value="5">
-        <option value="5" selected>5</option>
-        <option value="10">10</option>
-        <option value="15">15</option>
-        <option value="20">20</option>
-        <option value="25">25</option>
-        <option value="25">35</option>
-    </select>
-
-    <div style="display: inline-block; margin-left: 10px">
-        <button id="drawing-mode" class="btn btn-info">Cancel drawing mode</button>
-
+    <span id="icons" style="display: flex;">
+        <button class="far fa-moon" style="width: 56px; height: 56px;" id="clear this" onclick="changeClr()"></button>
+        <button class="fas fa-undo-alt" style="width: 56px; height: 56px;" onclick="undo()"></button>
+        <button class="fas fa-redo-alt" style="width: 56px; height: 56px;" onclick="undo()"></button>
+        <button class="fas fa-expand-alt" style="width: 56px; height: 56px;" onclick="resize()"></button>
+        <button class="fas fa-mouse-pointer" id="drawing-mode" style="width: 56px; height: 56px;"></button>
         <div id="drawing-mode-options">
-            <label for="drawing-mode-selector">Mode:</label>
+            <label for="drawing-mode-selector">حالت</label>
             <select id="drawing-mode-selector">
                 <option>Pencil</option>
                 <option>Circle</option>
                 <option>Spray</option>
                 <option>Pattern</option>
-
                 <option>hline</option>
                 <option>vline</option>
                 <option>square</option>
                 <option>diamond</option>
                 <option>texture</option>
             </select>
-
-            <label for="drawing-shadow-color">Shadow color:</label>
-            <input type="color" value="#000000" id="drawing-shadow-color">
-
-            <label for="drawing-shadow-width">Shadow width:</label>
-            <span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-width">
-
-            <label for="drawing-shadow-offset">Shadow offset:</label>
-            <span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-offset">
         </div>
+    </span>
+    <!-- 
+    <span id="clr">
+        <label class="select">Select the color of the brush</label>
+        <input type="color" value="#000000" class="clrpicker">
+    </span> -->
+    
 
-        <span id="side">
+    <div style="display: inline-block; margin-left: 10px">
+
+        <span id="side" style="display: none;">
             <div class="dropdown">
                 <button class="dropbtn">View member accessing this Board <i class="fas fa-caret-down"></i></button>
                 <div class="dropdown-content">
@@ -89,6 +65,39 @@
         <canvas id="c"
             style="border: 1px solid rgb(170, 170, 170); position: absolute; width: 500px; height: 500px; left: 0px; top: 0px; touch-action: none; user-select: none;"
             class="lower-canvas"></canvas>
+    </div>
+
+    <div style="position: absolute; right: 32px; top: 128px; direction: rtl;">
+        <div style="color: black;">مداد</div>
+        <label for="drawing-color" style="color: black;">رنگ</label>
+        <input type="color" value="#000000" id="drawing-color" class="clrpicker">
+        <br/>
+        <label class="select" style="color: black;">پهنا</label>
+        <select id="drop" value="5">
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+            <option value="25">35</option>
+        </select>
+    </div>
+
+    <div style="position: absolute; right: 32px; top: 256px; direction: rtl;">
+        <div style="color: black;">سایه</div>
+        
+        <label for="drawing-shadow-color" style="color: black;">رنگ</label>
+        <input type="color" value="#000000" id="drawing-shadow-color">
+
+        <br/>
+
+        <label for="drawing-shadow-width" style="color: black;">پهنا</label>
+        <span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-width">
+
+        <br/>
+
+        <label for="drawing-shadow-offset" style="color: black;">فاصله</label>
+        <span class="info">0</span><input type="range" value="0" min="0" max="50" id="drawing-shadow-offset">
     </div>
 
     <!-- <canvas id="canvas"></canvas> -->
