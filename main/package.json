@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
+    "startStatic": "node staticServer.js",
     "pwa": "create-pwa --icon=\"/home/keyhan/Desktop/marlik-colab/client-app/public/logo512.png\" --launch=\"/home/keyhan/Desktop/marlik-colab/client-app/public/logo512.png\""
   },
   "author": "",
