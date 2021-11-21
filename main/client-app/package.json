@@ -1,8 +1,8 @@
 {
-  "name": "sky-cloud",
-  "homepage": "./",
+  "name": "skydime",
+  "homepage": "https://kaspersoft.cloud/",
   "version": "1.0.1",
-  "description": "به ابر آسمان خوش آمدید",
+  "description": "به بعد آسمان خوش آمدید",
   "main": "public/electron.js",
   "private": true,
   "dependencies": {

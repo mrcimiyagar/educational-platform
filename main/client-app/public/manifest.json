@@ -1,6 +1,6 @@
 {
-  "short_name": "sky-cloud",
-  "name": "sky-cloud",
+  "short_name": "SkyDime",
+  "name": "SkyDime",
   "icons": [
     {
       "src": "favicon.ico",
@@ -26,6 +26,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#922c88",
+  "theme_color": "#1976D2",
   "background_color": "#ffffff"
 }
