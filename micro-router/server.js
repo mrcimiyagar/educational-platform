@@ -10,7 +10,7 @@ let serv = https.createServer({
   key: fs.readFileSync('server.key')
 }, function(req, res) {
   if (req.headers.host === 'kaspersoft.cloud') {
-    proxy.web(req, res, { target: 'http://localhost:2002' }, e => {})
+    proxy.web(req, res, { target: 'http://localhost:2001' }, e => {})
   }
   else if (req.headers.host === 'code.kaspersoft.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8100' }, e => {})
