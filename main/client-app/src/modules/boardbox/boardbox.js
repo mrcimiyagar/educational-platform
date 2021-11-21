@@ -4,26 +4,17 @@ import Chat from "@material-ui/icons/Chat";
 import Menu from "@material-ui/icons/Menu";
 import PollIcon from '@material-ui/icons/Poll';
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
-import React, { useEffect } from "react";
+import React from "react";
 import { pathConfig } from "../..";
 import { gotoPage, isDesktop, isInRoom } from "../../App";
 import { colors, me } from "../../util/settings";
-import { useForceUpdate } from "../../util/Utils";
 import './style.css';
 
 export let BoardBox = (props) => {
-    let forceUpdate = useForceUpdate();
     let roomId = props.roomId + '';
     while (roomId.length < 22) {
       roomId = '0' + roomId;
     }
-    useEffect(() => {
-      window.addEventListener('message', e => {
-        if (e.data.sender === 'whiteboard') {
-          forceUpdate();
-        }
-      })
-    }, [])
     return (
       <div style={{backgroundColor: 'transparent', background: 'transparent', height: isDesktop() ? (isInRoom() ? 'calc(100% - 32px)' : '100%') : 'calc(100% - 72px)', marginTop: isDesktop() ? 16 : 64, display: props.style.display, width: (isDesktop() && isInRoom()) ? 'calc(100% - 144px)' : '100%', marginLeft: (isDesktop() && isInRoom()) ? 16 : 0, marginRight: (isDesktop() && isInRoom()) ? 16 : 0, display: props.style.display}}>
           <div style={{position: 'relative', height: '100%', width: '100%'}}>
@@ -49,7 +40,7 @@ export let BoardBox = (props) => {
             </AppBar>
 
             <div className="maincontentdiv" style={{borderRadius: isDesktop() ? 24 : 0}}>
-              <iframe allowTransparency={true} name="board-frame" src={'http://localhost:8081/draw?username=34706a17-9af9-438f-9128-a0ceeecb7761-1635965619430&room=Server'}
+              <iframe allowTransparency={true} name="board-frame" src={pathConfig.whiteBoard + `/draw?username=${me.id}&room=${props.roomId}`}
                 frameborder="0" style={{border: 0, backgroundColor: 'transparent', background: 'transparent',
                 borderRadius: isDesktop() ? 24 : 0, width: '100%', height: (isDesktop() && isInRoom()) ? 'calc(100% - 32px)' : 'calc(100% - 48px)', position: 'absolute', left: 0, 
                 top: (isDesktop() && isInRoom()) ? 64 : -16, bottom: 0, right: 0}}></iframe>
