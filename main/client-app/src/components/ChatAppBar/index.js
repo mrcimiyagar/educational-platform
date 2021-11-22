@@ -132,7 +132,7 @@ export default function ChatAppBar(props) {
               marginTop: isDesktop() || isTablet() ? -8 : 0,
             }}
           >
-            {isMobile() ? (
+            {(isMobile() || (isTablet() && isInRoom())) ? (
               <IconButton
                 style={{ marginRight: -16 }}
                 onClick={() => props.handleClose()}
