@@ -535,6 +535,7 @@ let InnerApp = (props) => {
         <Route path="/app/audioplayer" component={AudioPlayer} />
         <Route path="/app/settings" component={SettingsPage} />
         <Route path="/app/videoplayer" component={VideoPlayer} />
+        <Route path="/app/spaces_list" component={SpacesListPage} />
       </Switch>
     </main>
   )
