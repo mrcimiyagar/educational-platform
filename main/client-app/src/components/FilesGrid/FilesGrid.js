@@ -193,10 +193,8 @@ export default function FilesGrid(props) {
                         <IconButton
                           onClick={() => {
                             gotoPage('/app/videoplayer', {
-                              src: file.local
-                                ? file.src
-                                : serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`,
+                              fileId: file.id,
+                              roomId: props.roomId
                             })
                           }}
                           style={{

@@ -1,5 +1,4 @@
 
-importScripts('https://unpkg.com/dexie@latest/dist/dexie.js');
 
 console.log("Service Worker Loaded...");
 
@@ -10,7 +9,13 @@ self.addEventListener("push", e => {
   console.log("Push Recieved...");
   self.registration.showNotification(data.title, {
     body: data.body,
-    Icon: '/logo512.png'
+    Icon: '/logo512.png',
+    actions: [
+      {
+        action: 'openChat',
+        title: 'نمایش گفتگو'
+      }
+    ]
   });
 });
 
