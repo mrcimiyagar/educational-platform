@@ -626,7 +626,7 @@ function App() {
             updateData={onVideoStreamUpdate}
             forceUpdate={forceUpdate}
             userId={myUserId}
-            roomId={roomid}
+            roomId={roomId}
           />
           <AudioMedia
             shownUsers={shownAudios}
@@ -634,7 +634,7 @@ function App() {
             updateData={onAudioStreamUpdate}
             forceUpdate={forceUpdate}
             userId={myUserId}
-            roomId={roomid}
+            roomId={roomId}
           />
           <ScreenMedia
             shownUsers={shownScreens}
@@ -642,7 +642,7 @@ function App() {
             updateData={onScreenStreamUpdate}
             forceUpdate={forceUpdate}
             userId={myUserId}
-            roomId={roomid}
+            roomId={roomId}
           />
         </div>
       ) : !connected ? (
