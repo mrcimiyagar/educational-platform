@@ -383,8 +383,7 @@ function App() {
     }
   }
 
-  var result = Object.keys(videos).concat(Object.keys(audios)).unique()
-  result = result.concat(Object.keys(screens)).unique()
+  var result = Object.keys(shownVideos).concat(Object.keys(shownScreens)).unique();
   let tempResult = []
   result.forEach((item) => {
     let keyParts = item.split('_')
@@ -444,7 +443,7 @@ function App() {
     >
       <DesktopDetector/>
       <div>
-        {result.map((key) => {
+        {Object.keys(shownAudios).map((key) => {
           if (myUserId === key) return null;
           if (shownAudios[key] === undefined) return null;
           return (
