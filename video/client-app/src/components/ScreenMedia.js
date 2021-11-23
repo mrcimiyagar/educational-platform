@@ -239,7 +239,7 @@ catch(ex) {console.log(ex);}
         console.log('onAddStream', event);
         let foundTag = undefined;
         Object.entries(props.data).forEach(([id, stream]) => {
-          if (id.startsWith(config.userId + '_screen_')) {
+          if (id.startsWith(config.userId + '_screen')) {
             foundTag = id;
           }
         })
@@ -247,7 +247,7 @@ catch(ex) {console.log(ex);}
           props.data[foundTag] = undefined;
         }
         props.updateData(config.userId);
-        props.data[config.userId + '_screen_'] = event.stream;
+        props.data[config.userId + '_screen'] = event.stream;
         props.forceUpdate();
       }
   
