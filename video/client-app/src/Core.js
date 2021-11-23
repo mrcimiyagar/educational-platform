@@ -68,7 +68,7 @@ function Video(props) {
       controls={false}
       muted
       id={props.id + '_video'}
-      style={{ width: '100%', height: '100%' }}
+      style={{ backgroundColor: props.stream === undefined ? 'black' : undefined, width: '100%', height: '100%' }}
       onClick={props.onClick}
     />
   )
@@ -84,7 +84,7 @@ function Screen(props) {
       controls={false}
       muted
       id={props.id + '_screen'}
-      style={{ width: '100%', height: '100%' }}
+      style={{ backgroundColor: props.stream === undefined ? 'black' : undefined, width: '100%', height: '100%' }}
       onClick={props.onClick}
     />
   )
@@ -383,7 +383,7 @@ function App() {
     }
   }
 
-  var result = Object.keys(shownVideos).concat(Object.keys(shownScreens)).unique();
+  var result = Object.keys(videos).concat(Object.keys(screens)).unique();
   let tempResult = []
   result.forEach((item) => {
     let keyParts = item.split('_')
@@ -442,18 +442,6 @@ function App() {
       }}
     >
       <DesktopDetector/>
-      <div>
-        {Object.keys(shownAudios).map((key) => {
-          if (myUserId === key) return null;
-          if (shownAudios[key] === undefined) return null;
-          return (
-            <Audio
-              id={key}
-              stream={audios[key + '_audio']}
-            />
-          );
-        })}
-      </div>
         <video
           id="screenMax"
           autoPlay
@@ -518,6 +506,18 @@ function App() {
       <div style={{ width: '100%', height: 128 }}></div>
       {connected && !extWebcam ? (
         <div style={{ width: '100%', height: '100%' }}>
+          <div>
+            {Object.keys(shownAudios).map((key) => {
+              if (myUserId === key) return null;
+              if (shownAudios[key] === undefined) return null;
+              return (
+                <Audio
+                  id={key}
+                  stream={audios[key + '_audio']}
+                />
+              );
+            })}
+          </div>
           <ThemeProvider theme={theme2}>
             <Fab
               id="audioButton"
