@@ -21,10 +21,6 @@
     "test": "nightwatch tests"
   },
   "main": "./server/server.js",
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/lovasoa/whitebophir.git"
-  },
   "devDependencies": {
     "geckodriver": "^2.0.4",
     "nightwatch": "^1.6.4"
