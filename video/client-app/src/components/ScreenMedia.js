@@ -172,7 +172,7 @@ catch(ex) {console.log(ex);}
       console.log('hiding user screen...');
       props.updateData(userId);
       delete props.shownUsers[userId];
-      props.setShown([props.shownUsers]);
+      delete props.data[userId];
       props.forceUpdate();
     })
   
