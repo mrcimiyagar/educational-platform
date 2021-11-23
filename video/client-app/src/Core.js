@@ -68,7 +68,7 @@ function Video(props) {
       controls={false}
       muted
       id={props.id + '_video'}
-      style={{ backgroundColor: props.stream === undefined ? 'black' : undefined, width: '100%', height: '100%' }}
+      style={{ backgroundColor: props.disabled === true ? 'black' : undefined, width: '100%', height: '100%' }}
       onClick={props.onClick}
     />
   )
@@ -84,7 +84,7 @@ function Screen(props) {
       controls={false}
       muted
       id={props.id + '_screen'}
-      style={{ backgroundColor: props.stream === undefined ? 'black' : undefined, width: '100%', height: '100%' }}
+      style={{ backgroundColor: props.disabled === true ? 'black' : undefined, width: '100%', height: '100%' }}
       onClick={props.onClick}
     />
   )
@@ -262,6 +262,7 @@ function App() {
             >
               <Video
                 id={props.id}
+                disabled={true}
                 stream={vs !== undefined ? vs.value : undefined}
                 onClick={props.onClick}
               />
@@ -294,11 +295,12 @@ function App() {
             <div
               style={{
                 width: 256 + 128,
-                height: (256 + 128) / 2,
+                height: (256 + 128) / 2
               }}
             >
               <Screen
                 id={props.id}
+                disabled={true}
                 stream={ss !== undefined ? ss.value : undefined}
                 onClick={props.onClick}
               />
@@ -315,11 +317,12 @@ function App() {
             <div
               style={{
                 width: (256 + 128) / 2,
-                height: (256 + 128) / 2,
+                height: (256 + 128) / 2
               }}
             >
               <Video
                 id={props.id}
+                disabled={true}
                 stream={vs !== undefined ? vs.value : undefined}
                 onClick={props.onClick}
               />
@@ -327,11 +330,12 @@ function App() {
             <div
               style={{
                 width: 256 + 128,
-                height: (256 + 128) / 2,
+                height: (256 + 128) / 2
               }}
             >
               <Screen
                 id={props.id}
+                disabled={true}
                 stream={ss !== undefined ? ss.value : undefined}
                 onClick={props.onClick}
               />
@@ -622,7 +626,7 @@ function App() {
             updateData={onVideoStreamUpdate}
             forceUpdate={forceUpdate}
             userId={myUserId}
-            roomId={1}
+            roomId={roomid}
           />
           <AudioMedia
             shownUsers={shownAudios}
@@ -630,7 +634,7 @@ function App() {
             updateData={onAudioStreamUpdate}
             forceUpdate={forceUpdate}
             userId={myUserId}
-            roomId={1}
+            roomId={roomid}
           />
           <ScreenMedia
             shownUsers={shownScreens}
@@ -638,7 +642,7 @@ function App() {
             updateData={onScreenStreamUpdate}
             forceUpdate={forceUpdate}
             userId={myUserId}
-            roomId={1}
+            roomId={roomid}
           />
         </div>
       ) : !connected ? (
