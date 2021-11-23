@@ -257,8 +257,7 @@ function App() {
             <div
               style={{
                 width: (256 + 128) / 2,
-                height: (256 + 128) / 2,
-                display: 'none',
+                height: (256 + 128) / 2
               }}
             >
               <Video
@@ -296,7 +295,6 @@ function App() {
               style={{
                 width: 256 + 128,
                 height: (256 + 128) / 2,
-                display: 'none',
               }}
             >
               <Screen
@@ -318,7 +316,6 @@ function App() {
               style={{
                 width: (256 + 128) / 2,
                 height: (256 + 128) / 2,
-                display: 'none',
               }}
             >
               <Video
@@ -331,7 +328,6 @@ function App() {
               style={{
                 width: 256 + 128,
                 height: (256 + 128) / 2,
-                display: 'none',
               }}
             >
               <Screen
