@@ -432,6 +432,8 @@ function App() {
     },
   });
 
+  alert(roomId);
+
   return (
     <div
       style={{
