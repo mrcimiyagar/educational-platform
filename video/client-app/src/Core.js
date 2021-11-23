@@ -556,6 +556,7 @@ function App() {
                 endScreen()
                 setScreen(false)
                 forceUpdate()
+                window.parent.postMessage({sender: 'conf', action: 'reload'}, pathConfig.mainFrontend);
               }}
             >
               <CallEndIcon />

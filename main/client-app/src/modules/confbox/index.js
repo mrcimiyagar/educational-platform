@@ -19,8 +19,17 @@ export function ConfBox(props) {
     let forceUpdate = useForceUpdate();
     updateConfBox = forceUpdate;
     let [connected, setConnected] = React.useState(false);
-    isConfConnected = connected;
     let [uniqueKey, setUniqueKey] = React.useState(Math.random());
+
+    window.addEventListener('message', (e) => {
+      if (e.data.sender === 'conf') {
+        if (e.data.action === 'reload') {
+          setUniqueKey(Math.random());
+          forceUpdate();
+        }
+      }
+    });
+
     return (
       <div key={uniqueKey} style={{width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : '100%', height: (props.webcamOn && props.currentRoomNav !== 2) ? 300 : '100vh'
       , position: (props.webcamOn && props.currentRoomNav !== 2) ? 'fixed' : 'relative', direction: 'ltr', display: props.style.display}}>
@@ -51,7 +60,7 @@ export function ConfBox(props) {
           </Toolbar>
         </AppBar>
         
-        <iframe scrolling="no"
+        <iframe scrolling="no" key={uniqueKey}
           onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', me: me, roomId: props.roomId}, pathConfig.confClient)}}
           allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera; fullscreen; display-capture'}
           style={{position: (props.webcamOn && props.currentRoomNav !== 2) ? 'absolute' : undefined, 
