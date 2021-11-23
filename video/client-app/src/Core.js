@@ -384,6 +384,7 @@ function App() {
   }
 
   var result = Object.keys(videos).concat(Object.keys(screens)).unique();
+  alert(JSON.stringify(result));
   let tempResult = []
   result.forEach((item) => {
     let keyParts = item.split('_')
