@@ -161,6 +161,7 @@ export default function VideoMedia(props) {
 
 endVideo = () => {
   try {
+    signaling_socket.emit('hideMe');
   if (local_media_stream !== null && local_media_stream !== undefined) {
     local_media_stream.getVideoTracks().forEach((track) => {
       track.stop()
@@ -171,7 +172,6 @@ endVideo = () => {
   props.updateData('me');
   props.updateData(userId);
   props.forceUpdate();
-  signaling_socket.emit('hideMe');
 
 }
 catch(ex) {console.log(ex);}

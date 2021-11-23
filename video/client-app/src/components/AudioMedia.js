@@ -153,6 +153,7 @@ startAudio = () => {
 
 endAudio = () => {
   try {
+    signaling_socket.emit('hideMe');
   if (local_media_stream !== null && local_media_stream !== undefined) {
     local_media_stream.getAudioTracks().forEach((track) => {
       track.stop()
@@ -161,7 +162,6 @@ endAudio = () => {
   delete props.shownUsers['me'];
   props.updateData('me');
   props.forceUpdate();
-  signaling_socket.emit('hideMe');
 }
 catch(ex) {console.log(ex);}
 }
