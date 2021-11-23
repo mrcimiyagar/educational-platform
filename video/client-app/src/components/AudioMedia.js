@@ -180,10 +180,9 @@ catch(ex) {console.log(ex);}
 
     signaling_socket.on('hideUser', function ({peer_id, userId}) {
       console.log('hiding user audio...');
-      console.log('hiding user video...');
       props.updateData(userId);
       delete props.shownUsers[userId];
-      delete props.data[userId];
+      delete props.data[userId + '_audio'];
       props.forceUpdate();
     })
 

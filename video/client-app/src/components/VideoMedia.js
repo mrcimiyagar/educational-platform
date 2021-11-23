@@ -201,7 +201,7 @@ catch(ex) {console.log(ex);}
       console.log('hiding user video...');
       props.updateData(userId);
       delete props.shownUsers[userId];
-      delete props.data[userId];
+      delete props.data[userId + '_video'];
       props.forceUpdate();
     })
 
