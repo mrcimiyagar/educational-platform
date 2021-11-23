@@ -60,6 +60,9 @@ serv.on('upgrade', function (req, socket, head) {
   if (req.headers.host === 'kaspersoft.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:2001' }, e => {})
   }
+  else if (req.headers.host === 'whiteboard.kaspersoft.cloud') {
+    proxy.ws(req, socket, { target: 'ws://localhost:8081' }, e => {})
+  }
   else if (req.headers.host === 'code.kaspersoft.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:8100' }, e => {})
   }
