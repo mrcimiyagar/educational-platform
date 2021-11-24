@@ -232,7 +232,7 @@ function App() {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: props.id
+          userId: props.id === 'me' ? myUserId : props.id
         }),
         redirect: 'follow',
       };
