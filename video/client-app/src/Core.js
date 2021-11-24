@@ -58,6 +58,10 @@ Array.prototype.unique = function () {
   return a
 }
 
+function getRandomColor() {
+  return `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`;
+}
+
 function Video(props) {
   useEffect(() => {
     document.getElementById(props.id + '_video').srcObject = props.stream
@@ -73,10 +77,11 @@ function Video(props) {
         style={{ backgroundColor: props.disabled === true ? 'black' : undefined, width: '100%', height: '100%' }}
         onClick={props.onClick}
       />
-      <div style={{width: 80, height: 80, position: 'absolute', left: '50%',
+      <div style={{position: 'absolute', left: '50%',
         top: '50%', transform: 'translate(-50%, -50%)',
-        backgroundColor: '#fff', borderRadius: 40}}>
-        {props.name}
+        backgroundColor: getRandomColor(), borderRadius: 40,
+        padding: 32, fontSize: 20}}>
+        {props.name.charAt(0)}
       </div>
     </div>
   )
@@ -97,10 +102,11 @@ function Screen(props) {
         style={{ backgroundColor: props.disabled === true ? 'black' : undefined, width: '100%', height: '100%' }}
         onClick={props.onClick}
       />
-      <div style={{width: 80, height: 80, position: 'absolute', left: '50%',
+      <div style={{position: 'absolute', left: '50%',
         top: '50%', transform: 'translate(-50%, -50%)',
-        backgroundColor: '#fff', borderRadius: 40}}>
-        {props.name}
+        backgroundColor: getRandomColor(), borderRadius: 40,
+        padding: 32, fontSize: 20}}>
+        {props.name.charAt(0)}
       </div>
     </div>
   )
