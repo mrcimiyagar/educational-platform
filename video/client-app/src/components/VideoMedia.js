@@ -70,6 +70,7 @@ function produceEmptyStream() {
 var signaling_socket = null /* our socket.io connection to our webserver */
 var local_media_stream = null /* our own microphone / webcam */
 var peers = {} /* keep track of our peer connections, indexed by peer_id (aka socket.io id) */
+let names = {};
 
 export let endVideo;
 export let startVideo;

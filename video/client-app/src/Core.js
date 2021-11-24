@@ -223,6 +223,27 @@ function App() {
     let ss = findValueByPrefix(screens, props.id + '_screen')
     let as = findValueByPrefix(audios, props.id + '_audio')
 
+    let [title, setTitle] = React.useState('');
+
+    useEffect(() => {
+      let requestOptions2 = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: props.id
+        }),
+        redirect: 'follow',
+      };
+      fetch(pathConfig.mainBackend, requestOptions2)
+        .then((response) => response.json())
+        .then((result) => {
+          let user = result.user;
+          setTitle(user.firstName + ' ' + user.lastName);
+        });
+    })
+
     if (shownScreens[props.id] === true) {
       if (shownVideos[props.id] === true) {
         return (
@@ -245,6 +266,8 @@ function App() {
                 onClick={props.onClick}
               />
             </div>
+            <br/>
+            {title}
           </Card>
         )
       } else {
@@ -274,6 +297,8 @@ function App() {
                 onClick={props.onClick}
               />
             </div>
+            <br/>
+            {title}
           </Card>
         )
       }
@@ -305,6 +330,8 @@ function App() {
                 onClick={props.onClick}
               />
             </div>
+            <br/>
+            {title}
           </Card>
         )
       } else {
@@ -340,6 +367,8 @@ function App() {
                 onClick={props.onClick}
               />
             </div>
+            <br/>
+            {title}
           </Card>
         )
       }
