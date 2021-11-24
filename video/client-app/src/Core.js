@@ -286,9 +286,10 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ display: 'flex', height: (256 + 128) / 2 + 32 }}
+            style={{ height: (256 + 128) / 2 + 32 }}
             onClick={props.onClick}
           >
+            <div style={{ display: 'flex' }}>
             <div style={{ width: (256 + 128) / 2, height: (256 + 128) / 2 }}>
               <Video
                 name={title}
@@ -305,6 +306,7 @@ function App() {
                 onClick={props.onClick}
               />
             </div>
+            </div>
             <br/>
             <div>
               {title}
@@ -315,9 +317,10 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ display: 'flex', height: (256 + 128) / 2 + 32 }}
+            style={{ height: (256 + 128) / 2 + 32 }}
             onClick={props.onClick}
           >
+          <div style={{ display: 'flex' }}>
             <div
               style={{
                 width: (256 + 128) / 2,
@@ -339,6 +342,7 @@ function App() {
                 stream={ss !== undefined ? ss.value : undefined}
                 onClick={props.onClick}
               />
+            </div>
             </div>
             <br/>
             <div>
@@ -352,9 +356,10 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ display: 'flex', height: (256 + 128) / 2 + 32 }}
+            style={{ height: (256 + 128) / 2 + 32 }}
             onClick={props.onClick}
           >
+          <div style={{ display: 'flex' }}>
             <div style={{ width: (256 + 128) / 2, height: (256 + 128) / 2 }}>
               <Video
                 name={title}
@@ -377,6 +382,7 @@ function App() {
                 onClick={props.onClick}
               />
             </div>
+            </div>
             <br/>
             <div>
               {title}
@@ -387,9 +393,10 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ display: 'flex', height: (256 + 128) / 2 + 32 }}
+            style={{ height: (256 + 128) / 2 + 32 }}
             onClick={props.onClick}
           >
+          <div style={{ display: 'flex' }}>
             <div
               style={{
                 width: (256 + 128) / 2,
@@ -417,6 +424,7 @@ function App() {
                 stream={ss !== undefined ? ss.value : undefined}
                 onClick={props.onClick}
               />
+            </div>
             </div>
             <br/>
             <div>
