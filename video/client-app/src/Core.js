@@ -236,7 +236,7 @@ function App() {
         }),
         redirect: 'follow',
       };
-      fetch(pathConfig.mainBackend, requestOptions2)
+      fetch(pathConfig.mainBackend + '/get_user', requestOptions2)
         .then((response) => response.json())
         .then((result) => {
           let user = result.user;
