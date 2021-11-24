@@ -227,7 +227,7 @@ function App() {
 
     useEffect(() => {
       let requestOptions2 = {
-        method: 'GET',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
