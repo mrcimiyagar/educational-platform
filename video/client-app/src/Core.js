@@ -74,15 +74,16 @@ function Video(props) {
         controls={false}
         muted
         id={props.id + '_video'}
-        style={{ backgroundColor: props.disabled === true ? 'black' : undefined, width: '100%', height: '100%' }}
+        style={{ backgroundColor: props.disabled === true ? 'white' : undefined, width: '100%', height: '100%' }}
         onClick={props.onClick}
       />
+      {props.disabled === true ?
       <div style={{position: 'absolute', left: '50%',
         top: '50%', transform: 'translate(-50%, -50%)',
         backgroundColor: getRandomColor(), borderRadius: 40,
         padding: 32, fontSize: 20}}>
         {props.name.charAt(0)}
-      </div>
+      </div> : null}
     </div>
   )
 }
@@ -99,18 +100,25 @@ function Screen(props) {
         controls={false}
         muted
         id={props.id + '_screen'}
-        style={{ backgroundColor: props.disabled === true ? 'black' : undefined, width: '100%', height: '100%' }}
+        style={{ backgroundColor: props.disabled === true ? 'white' : undefined, width: '100%', height: '100%' }}
         onClick={props.onClick}
       />
+      {props.disabled === true ?
       <div style={{position: 'absolute', left: '50%',
         top: '50%', transform: 'translate(-50%, -50%)',
         backgroundColor: getRandomColor(), borderRadius: 40,
         padding: 32, fontSize: 20}}>
         {props.name.charAt(0)}
-      </div>
+      </div> : null}
     </div>
   )
 }
+
+const useStyles = makeStyles({
+  paper: {
+    background: "#ddd"
+  }
+});
 
 function Audio(props) {
   useEffect(() => {
@@ -137,6 +145,7 @@ function App() {
       },
     },
   })
+  const classes = useStyles();
 
   let forceUpdate = useForceUpdate()
   let [videos, setVideos] = React.useState({})
@@ -538,6 +547,7 @@ function App() {
         ModalProps={{
           keepMounted: true
         }}
+        classes={{ paper: classes.paper }}
         style={{ position: 'relative', zIndex: 2490 }}
       >
         <div
