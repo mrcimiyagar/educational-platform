@@ -64,7 +64,7 @@ function Video(props) {
   }, [])
   return (
     <div
-      style={{ width: '100%', height: '100%' }}>
+      style={{ width: '100%', height: '100%', position: 'relative'}}>
       <video
         autoPlay
         controls={false}
@@ -73,7 +73,9 @@ function Video(props) {
         style={{ backgroundColor: props.disabled === true ? 'black' : undefined, width: '100%', height: '100%' }}
         onClick={props.onClick}
       />
-      <div style={{width: 80, height: 80, backgroundColor: '#fff', borderRadius: 40}}>
+      <div style={{width: 80, height: 80, position: 'absolute', left: '50%',
+        top: '50%', transform: 'translate(-50%, -50%)',
+        backgroundColor: '#fff', borderRadius: 40}}>
         {props.name}
       </div>
     </div>
@@ -86,7 +88,7 @@ function Screen(props) {
   }, [])
   return (
     <div
-      style={{ width: '100%', height: '100%' }}>
+      style={{ width: '100%', height: '100%', position: 'relative'}}>
       <video
         autoPlay
         controls={false}
@@ -95,7 +97,9 @@ function Screen(props) {
         style={{ backgroundColor: props.disabled === true ? 'black' : undefined, width: '100%', height: '100%' }}
         onClick={props.onClick}
       />
-      <div style={{width: 80, height: 80, backgroundColor: '#fff', borderRadius: 40}}>
+      <div style={{width: 80, height: 80, position: 'absolute', left: '50%',
+        top: '50%', transform: 'translate(-50%, -50%)',
+        backgroundColor: '#fff', borderRadius: 40}}>
         {props.name}
       </div>
     </div>
