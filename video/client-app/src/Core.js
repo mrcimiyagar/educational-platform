@@ -68,7 +68,7 @@ function Video(props) {
   }, [])
   return (
     <div
-      style={{ width: '100%', height: '100%', position: 'relative'}}>
+      style={{ width: '100%', height: 'calc(100% - 32px)', position: 'relative'}}>
       <video
         autoPlay
         controls={false}
@@ -97,7 +97,7 @@ function Screen(props) {
   }, [])
   return (
     <div
-      style={{ width: '100%', height: '100%', position: 'relative'}}>
+      style={{ width: '100%', height: 'calc(100% - 32px)', position: 'relative'}}>
       <video
         autoPlay
         controls={false}
