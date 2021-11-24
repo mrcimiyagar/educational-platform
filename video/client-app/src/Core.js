@@ -306,7 +306,9 @@ function App() {
               />
             </div>
             <br/>
-            {title}
+            <div>
+              {title}
+            </div>
           </Card>
         )
       } else {
@@ -339,7 +341,9 @@ function App() {
               />
             </div>
             <br/>
-            {title}
+            <div>
+              {title}
+            </div>
           </Card>
         )
       }
@@ -374,7 +378,9 @@ function App() {
               />
             </div>
             <br/>
-            {title}
+            <div>
+              {title}
+            </div>
           </Card>
         )
       } else {
@@ -413,7 +419,9 @@ function App() {
               />
             </div>
             <br/>
-            {title}
+            <div>
+              {title}
+            </div>
           </Card>
         )
       }
