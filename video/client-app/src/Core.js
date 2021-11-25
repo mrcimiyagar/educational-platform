@@ -311,7 +311,9 @@ function App() {
 
   function Audio(props) {
     useEffect(() => {
-      document.getElementById(props.id + '_audio').srcObject = props.stream
+      if (props.id !== 'me') {
+        document.getElementById(props.id + '_audio').srcObject = props.stream;
+      }
       var options = {}
       var speechEvents = hark(props.stream, options)
       speechEvents.on('speaking', function () {
@@ -379,7 +381,7 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{width: 40, height: '100%', backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
+              <div style={{width: 40, height: (256 + 128) / 2, backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
             </div>
             <br />
             <div
@@ -424,7 +426,7 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{width: 40, height: '100%', backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
+              <div style={{width: 40, height: (256 + 128) / 2, backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
             </div>
             <br />
             <div
@@ -471,7 +473,7 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{width: 40, height: '100%', backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
+              <div style={{width: 40, height: (256 + 128) / 2, backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
             </div>
             <br />
             <div
@@ -522,7 +524,7 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{width: 40, height: '100%', backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
+              <div style={{width: 40, height: (256 + 128) / 2, backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
             </div>
             <br />
             <div
