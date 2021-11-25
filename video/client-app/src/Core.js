@@ -172,6 +172,12 @@ function App() {
   let [screenOn, setScreenOn] = React.useState(false)
   let [sizeMode, setSizeMode] = React.useState(undefined);
   let [extWebcam, setExtWebcam] = React.useState(false);
+  let [screenShareSupported, setScreenShareSupported] = React.useState(false);
+
+  var DetectRTC = require('detectrtc');
+  DetectRTC.load(function() {
+    setScreenShareSupported(DetectRTC.isScreenCapturingSupported);
+  });
 
   let DesktopDetector = () => {
     ;[sizeMode, setSizeMode] = React.useState(
@@ -540,7 +546,7 @@ function App() {
             transform: 'translateX(-50%)',
             objectFit: 'cover',
             top: 80,
-            left: window.innerWidth / 2 - (window.innerWidth > 1400 ? 225 : 0) + 32 + 'px',
+            left: window.innerWidth / 2 - (screenShareSupported ? 225 : 0) + 32 + 'px',
             width: shownScreens[presenterBackup] === true ? (window.innerWidth - 176 - 450 + 'px') : ((window.innerWidth / 2 - 225) + 'px'),
             height: 'auto',
           }}
@@ -657,7 +663,7 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: (window.innerWidth > 1400 ? (32 + 56) : 0) + 16 + 72,
+                left: (screenShareSupported ? (32 + 56) : 0) + 16 + 72,
                 bottom: window.innerWidth <= 1400 ? (48 + 104) : 48,
               }}
               onClick={() => {
@@ -673,7 +679,7 @@ function App() {
             >
               {video ? <VideocamIcon /> : <VideocamOff />}
             </Fab>
-            {window.innerWidth > 1400 ?
+            {screenShareSupported ?
               <Fab
                 id="screenButton"
                 color={'primary'}
@@ -698,7 +704,7 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: (window.innerWidth > 1400 ? (32 + 56) : 0) + 16 + 56 + 16 + 56 + 16,
+                left: (screenShareSupported ? (32 + 56) : 0) + 16 + 56 + 16 + 56 + 16,
                 bottom: window.innerWidth <= 1400 ? (48 + 104) : 48,
               }}
               onClick={() => {
