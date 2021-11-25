@@ -18,7 +18,13 @@ import ScreenMedia, {
   initScreen,
   startScreen,
 } from './components/ScreenMedia'
-import { Fab, ThemeProvider, createTheme, Drawer, makeStyles } from '@material-ui/core'
+import {
+  Fab,
+  ThemeProvider,
+  createTheme,
+  Drawer,
+  makeStyles,
+} from '@material-ui/core'
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows'
 import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled'
 import {
@@ -32,7 +38,8 @@ import CallIcon from '@material-ui/icons/Call'
 import CallEndIcon from '@material-ui/icons/CallEnd'
 import VideocamIcon from '@material-ui/icons/Videocam'
 import { Card } from '@material-ui/core'
-import MenuIcon from '@material-ui/icons/Menu';
+import MenuIcon from '@material-ui/icons/Menu'
+import hark from 'hark'
 
 function useForceUpdate() {
   const [value, setValue] = React.useState(0) // integer state
@@ -62,7 +69,9 @@ Array.prototype.unique = function () {
 }
 
 function getRandomColor() {
-  return `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`;
+  return `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
+    Math.random() * 255,
+  )}, ${Math.floor(Math.random() * 255)}, 0.5)`
 }
 
 function Video(props) {
@@ -70,26 +79,47 @@ function Video(props) {
     document.getElementById(props.id + '_video').srcObject = props.stream
   }, [])
   return (
-    <div
-      style={{ width: '100%', height: '100%', position: 'relative'}}>
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <video
         autoPlay
         controls={false}
         muted
         id={props.id + '_video'}
-        style={{ backgroundColor: props.disabled === true ? 'white' : undefined, width: '100%', height: '100%' }}
+        style={{
+          backgroundColor: props.disabled === true ? 'white' : undefined,
+          width: '100%',
+          height: '100%',
+        }}
         onClick={props.onClick}
       />
-      {props.disabled === true ?
-      <div style={{width: '100%', height: '100%', position: 'absolute', left: '50%',
-      top: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white'}}>
-      <div style={{position: 'absolute', left: '50%',
-        top: '50%', transform: 'translate(-50%, -50%)',
-        backgroundColor: getRandomColor(), borderRadius: 40,
-        padding: 32, fontSize: 20}}>
-        {props.name.charAt(0)}
-      </div>
-      </div> : null}
+      {props.disabled === true ? (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: getRandomColor(),
+              borderRadius: 40,
+              padding: 32,
+              fontSize: 20,
+            }}
+          >
+            {props.name.charAt(0)}
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -99,47 +129,61 @@ function Screen(props) {
     document.getElementById(props.id + '_screen').srcObject = props.stream
   }, [])
   return (
-    <div
-      style={{ width: '100%', height: '100%', position: 'relative'}}>
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <video
         autoPlay
         controls={false}
         muted
         id={props.id + '_screen'}
-        style={{ backgroundColor: props.disabled === true ? 'white' : undefined, width: '100%', height: '100%' }}
+        style={{
+          backgroundColor: props.disabled === true ? 'white' : undefined,
+          width: '100%',
+          height: '100%',
+        }}
         onClick={props.onClick}
       />
-      {props.disabled === true ?
-      <div style={{width: '100%', height: '100%', position: 'absolute', left: '50%',
-      top: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white'}}>
-      <div style={{position: 'absolute', left: '50%',
-        top: '50%', transform: 'translate(-50%, -50%)',
-        backgroundColor: getRandomColor(), borderRadius: 40,
-        padding: 32, fontSize: 20}}>
-        {props.name.charAt(0)}
-      </div>
-      </div> : null}
+      {props.disabled === true ? (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: getRandomColor(),
+              borderRadius: 40,
+              padding: 32,
+              fontSize: 20,
+            }}
+          >
+            {props.name.charAt(0)}
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
 
 const useStyles = makeStyles({
   paper: {
-    background: "#ddd"
-  }
-});
-
-function Audio(props) {
-  useEffect(() => {
-    document.getElementById(props.id + '_audio').srcObject = props.stream
-  }, [])
-  return <audio autoPlay id={props.id + '_audio'} />
-}
+    background: '#ddd',
+  },
+})
 
 let videoCache = {}
 let needUpdate = {}
 let audioCache = {}
-let audioNeedUpdate = {};
+let audioNeedUpdate = {}
 let presenterBackup = undefined
 let instantConnectionFlag = false
 
@@ -154,33 +198,34 @@ function App() {
       },
     },
   })
-  const classes = useStyles();
+  const classes = useStyles()
 
-  let forceUpdate = useForceUpdate()
-  let [videos, setVideos] = React.useState({})
-  let [audios, setAudios] = React.useState({})
-  let [screens, setScreens] = React.useState({})
-  let [video, setVideo] = React.useState(false)
-  let [audio, setAudio] = React.useState(false)
-  let [screen, setScreen] = React.useState(false)
-  let [connected, setConnected] = React.useState(false)
-  let [pathConfig, setPathConfig] = React.useState(undefined)
-  let [me, setMe] = React.useState(undefined)
-  let [roomId, setRoomId] = React.useState(undefined)
-  let [shownVideos, setShownVideos] = React.useState({})
-  let [shownAudios, setShownAudios] = React.useState({})
-  let [shownScreens, setShownScreens] = React.useState({})
-  let [myUserId, setMyUserId] = React.useState(undefined)
-  let [listOpen, setListOpen] = React.useState(false)
-  let [screenOn, setScreenOn] = React.useState(false)
+  let forceUpdate = useForceUpdate();
+  let [videos, setVideos] = React.useState({});
+  let [audios, setAudios] = React.useState({});
+  let [screens, setScreens] = React.useState({});
+  let [video, setVideo] = React.useState(false);
+  let [audio, setAudio] = React.useState(false);
+  let [screen, setScreen] = React.useState(false);
+  let [connected, setConnected] = React.useState(false);
+  let [pathConfig, setPathConfig] = React.useState(undefined);
+  let [me, setMe] = React.useState(undefined);
+  let [roomId, setRoomId] = React.useState(undefined);
+  let [shownVideos, setShownVideos] = React.useState({});
+  let [shownAudios, setShownAudios] = React.useState({});
+  let [shownScreens, setShownScreens] = React.useState({});
+  let [myUserId, setMyUserId] = React.useState(undefined);
+  let [listOpen, setListOpen] = React.useState(false);
+  let [screenOn, setScreenOn] = React.useState(false);
   let [sizeMode, setSizeMode] = React.useState(undefined);
   let [extWebcam, setExtWebcam] = React.useState(false);
   let [screenShareSupported, setScreenShareSupported] = React.useState(false);
+  let [speakers, setSpeakers] = React.useState({});
 
-  var DetectRTC = require('detectrtc');
-  DetectRTC.load(function() {
-    setScreenShareSupported(DetectRTC.isScreenCapturingSupported);
-  });
+  var DetectRTC = require('detectrtc')
+  DetectRTC.load(function () {
+    setScreenShareSupported(DetectRTC.isScreenCapturingSupported)
+  })
 
   let DesktopDetector = () => {
     ;[sizeMode, setSizeMode] = React.useState(
@@ -198,7 +243,7 @@ function App() {
           ? 'tablet'
           : 'mobile',
       )
-      forceUpdate();
+      forceUpdate()
     }
     return <div />
   }
@@ -264,30 +309,45 @@ function App() {
     }
   }
 
+  function Audio(props) {
+    useEffect(() => {
+      document.getElementById(props.id + '_audio').srcObject = props.stream
+      var options = {}
+      var speechEvents = hark(props.stream, options)
+      speechEvents.on('speaking', function () {
+        speakers[props.id] = true;
+      })
+      speechEvents.on('stopped_speaking', function () {
+        delete speakers[props.id];
+      })
+    }, [])
+    return <audio autoPlay id={props.id + '_audio'} />
+  }
+
   function MediaBox(props) {
     let vs = findValueByPrefix(videos, props.id + '_video')
     let ss = findValueByPrefix(screens, props.id + '_screen')
     let as = findValueByPrefix(audios, props.id + '_audio')
 
-    let [title, setTitle] = React.useState('');
+    let [title, setTitle] = React.useState('')
 
     useEffect(() => {
       let requestOptions2 = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: props.id === 'me' ? myUserId : props.id
+          userId: props.id === 'me' ? myUserId : props.id,
         }),
         redirect: 'follow',
-      };
+      }
       fetch(pathConfig.mainBackend + '/auth/get_user', requestOptions2)
         .then((response) => response.json())
         .then((result) => {
-          let user = result.user;
-          setTitle(user.firstName + ' ' + user.lastName);
-        });
+          let user = result.user
+          setTitle(user.firstName + ' ' + user.lastName)
+        })
     })
 
     if (shownScreens[props.id] === true) {
@@ -299,25 +359,33 @@ function App() {
             onClick={props.onClick}
           >
             <div style={{ display: 'flex' }}>
-            <div style={{ width: (256 + 128) / 2, height: (256 + 128) / 2 }}>
-              <Video
-                name={title}
-                id={props.id}
-                stream={vs !== undefined ? vs.value : undefined}
-                onClick={props.onClick}
-              />
+              <div style={{ width: (256 + 128) / 2, height: (256 + 128) / 2 }}>
+                <Video
+                  name={title}
+                  id={props.id}
+                  stream={vs !== undefined ? vs.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div style={{ width: 256 + 128, height: (256 + 128) / 2 }}>
+                <Screen
+                  name={title}
+                  id={props.id}
+                  stream={ss !== undefined ? ss.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div style={{width: 40, height: '100%', backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
             </div>
-            <div style={{ width: 256 + 128, height: (256 + 128) / 2 }}>
-              <Screen
-                name={title}
-                id={props.id}
-                stream={ss !== undefined ? ss.value : undefined}
-                onClick={props.onClick}
-              />
-            </div>
-            </div>
-            <br/>
-            <div style={{paddingLeft: 16, paddingRight: 16, paddingBottom: 8, width: '100%'}}>
+            <br />
+            <div
+              style={{
+                paddingLeft: 16,
+                paddingRight: 16,
+                paddingBottom: 8,
+                width: '100%',
+              }}
+            >
               {title}
             </div>
           </Card>
@@ -329,32 +397,40 @@ function App() {
             style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
             onClick={props.onClick}
           >
-          <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex' }}>
+              <div
+                style={{
+                  width: (256 + 128) / 2,
+                  height: (256 + 128) / 2,
+                }}
+              >
+                <Video
+                  name={title}
+                  id={props.id}
+                  disabled={true}
+                  stream={vs !== undefined ? vs.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div style={{ width: 256 + 128, height: (256 + 128) / 2 }}>
+                <Screen
+                  name={title}
+                  id={props.id}
+                  stream={ss !== undefined ? ss.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div style={{width: 40, height: '100%', backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
+            </div>
+            <br />
             <div
               style={{
-                width: (256 + 128) / 2,
-                height: (256 + 128) / 2
+                paddingLeft: 16,
+                paddingRight: 16,
+                paddingBottom: 8,
+                width: '100%',
               }}
             >
-              <Video
-                name={title}
-                id={props.id}
-                disabled={true}
-                stream={vs !== undefined ? vs.value : undefined}
-                onClick={props.onClick}
-              />
-            </div>
-            <div style={{ width: 256 + 128, height: (256 + 128) / 2 }}>
-              <Screen
-                name={title}
-                id={props.id}
-                stream={ss !== undefined ? ss.value : undefined}
-                onClick={props.onClick}
-              />
-            </div>
-            </div>
-            <br/>
-            <div style={{paddingLeft: 16, paddingRight: 16, paddingBottom: 8, width: '100%'}}>
               {title}
             </div>
           </Card>
@@ -368,32 +444,40 @@ function App() {
             style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
             onClick={props.onClick}
           >
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: (256 + 128) / 2, height: (256 + 128) / 2 }}>
-              <Video
-                name={title}
-                id={props.id}
-                stream={vs !== undefined ? vs.value : undefined}
-                onClick={props.onClick}
-              />
+            <div style={{ display: 'flex' }}>
+              <div style={{ width: (256 + 128) / 2, height: (256 + 128) / 2 }}>
+                <Video
+                  name={title}
+                  id={props.id}
+                  stream={vs !== undefined ? vs.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div
+                style={{
+                  width: 256 + 128,
+                  height: (256 + 128) / 2,
+                }}
+              >
+                <Screen
+                  name={title}
+                  id={props.id}
+                  disabled={true}
+                  stream={ss !== undefined ? ss.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div style={{width: 40, height: '100%', backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
             </div>
+            <br />
             <div
               style={{
-                width: 256 + 128,
-                height: (256 + 128) / 2
+                paddingLeft: 16,
+                paddingRight: 16,
+                paddingBottom: 8,
+                width: '100%',
               }}
             >
-              <Screen
-                name={title}
-                id={props.id}
-                disabled={true}
-                stream={ss !== undefined ? ss.value : undefined}
-                onClick={props.onClick}
-              />
-            </div>
-            </div>
-            <br/>
-            <div style={{paddingLeft: 16, paddingRight: 16, paddingBottom: 8, width: '100%'}}>
               {title}
             </div>
           </Card>
@@ -405,38 +489,46 @@ function App() {
             style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
             onClick={props.onClick}
           >
-          <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex' }}>
+              <div
+                style={{
+                  width: (256 + 128) / 2,
+                  height: (256 + 128) / 2,
+                }}
+              >
+                <Video
+                  name={title}
+                  id={props.id}
+                  disabled={true}
+                  stream={vs !== undefined ? vs.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div
+                style={{
+                  width: 256 + 128,
+                  height: (256 + 128) / 2,
+                }}
+              >
+                <Screen
+                  name={title}
+                  id={props.id}
+                  disabled={true}
+                  stream={ss !== undefined ? ss.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div style={{width: 40, height: '100%', backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
+            </div>
+            <br />
             <div
               style={{
-                width: (256 + 128) / 2,
-                height: (256 + 128) / 2
+                paddingLeft: 16,
+                paddingRight: 16,
+                paddingBottom: 8,
+                width: '100%',
               }}
             >
-              <Video
-                name={title}
-                id={props.id}
-                disabled={true}
-                stream={vs !== undefined ? vs.value : undefined}
-                onClick={props.onClick}
-              />
-            </div>
-            <div
-              style={{
-                width: 256 + 128,
-                height: (256 + 128) / 2
-              }}
-            >
-              <Screen
-                name={title}
-                id={props.id}
-                disabled={true}
-                stream={ss !== undefined ? ss.value : undefined}
-                onClick={props.onClick}
-              />
-            </div>
-            </div>
-            <br/>
-            <div style={{paddingLeft: 16, paddingRight: 16, paddingBottom: 8, width: '100%'}}>
               {title}
             </div>
           </Card>
@@ -473,16 +565,14 @@ function App() {
       setMe(e.data.me)
       setRoomId(e.data.roomId)
       setMyUserId(e.data.me.id)
-    }
-    else if (e.data.action === 'extWebcam') {
-      setExtWebcam(true);
-    }
-    else if (e.data.action === 'intWebcam') {
-      setExtWebcam(false);
+    } else if (e.data.action === 'extWebcam') {
+      setExtWebcam(true)
+    } else if (e.data.action === 'intWebcam') {
+      setExtWebcam(false)
     }
   }
 
-  var result = Object.keys(videos).concat(Object.keys(screens)).unique();
+  var result = Object.keys(videos).concat(Object.keys(screens)).unique()
   let tempResult = []
   result.forEach((item) => {
     let keyParts = item.split('_')
@@ -508,28 +598,28 @@ function App() {
   }
 
   let onVideoStreamUpdate = (userId) => {
-    needUpdate[userId] = true;
-    notifyWebcamActivated();
+    needUpdate[userId] = true
+    notifyWebcamActivated()
   }
   let onAudioStreamUpdate = (userId) => {
-    audioNeedUpdate[userId] = true;
-    notifyWebcamActivated();
+    audioNeedUpdate[userId] = true
+    notifyWebcamActivated()
   }
   let onScreenStreamUpdate = (userId) => {
-    needUpdate[userId] = true;
-    notifyWebcamActivated();
+    needUpdate[userId] = true
+    notifyWebcamActivated()
   }
 
   let theme2 = createTheme({
     palette: {
       primary: {
-        main: '#BBDEFB'
+        main: '#BBDEFB',
       },
       secondary: {
-        main: '#ff3300'
+        main: '#ff3300',
       },
     },
-  });
+  })
 
   return (
     <div
@@ -540,32 +630,39 @@ function App() {
         flexwrap: 'wrap',
       }}
     >
-      <DesktopDetector/>
-        <video
-          id="screenMax"
-          autoPlay
-          style={{
-            position: 'absolute',
-            transform: 'translateX(-50%)',
-            objectFit: 'cover',
-            top: 80,
-            left: window.innerWidth / 2 - (screenShareSupported ? 225 : 0) + 32 + 'px',
-            width: shownScreens[presenterBackup] === true ? (window.innerWidth - 176 - 450 + 'px') : ((window.innerWidth / 2 - 225) + 'px'),
-            height: 'auto',
-          }}
-        ></video>
-        <video
-          autoPlay
-          id="screenMax2"
-          style={{
-            objectFit: 'cover',
-            position: 'absolute',
-            right: 0,
-            top: 0,
-            width: 450,
-            height: 300,
-          }}
-        ></video>
+      <DesktopDetector />
+      <video
+        id="screenMax"
+        autoPlay
+        style={{
+          position: 'absolute',
+          transform: 'translateX(-50%)',
+          objectFit: 'cover',
+          top: 80,
+          left:
+            window.innerWidth / 2 -
+            (screenShareSupported ? 225 : 0) +
+            32 +
+            'px',
+          width:
+            shownScreens[presenterBackup] === true
+              ? window.innerWidth - 176 - 450 + 'px'
+              : window.innerWidth / 2 - 225 + 'px',
+          height: 'auto',
+        }}
+      ></video>
+      <video
+        autoPlay
+        id="screenMax2"
+        style={{
+          objectFit: 'cover',
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          width: 450,
+          height: 300,
+        }}
+      ></video>
       <Drawer
         open={listOpen}
         onClose={() => {
@@ -576,7 +673,7 @@ function App() {
           setListOpen(false)
         }}
         ModalProps={{
-          keepMounted: true
+          keepMounted: true,
         }}
         classes={{ paper: classes.paper }}
         style={{ position: 'relative', zIndex: 2490 }}
@@ -604,25 +701,25 @@ function App() {
         </div>
       </Drawer>
       <div style={{ width: '100%', height: 128 }}></div>
+      <div>
+        {Object.keys(shownAudios).map((key) => {
+          if (myUserId === key) return null
+          if (shownAudios[key] === undefined) return null
+          return <Audio id={key} stream={audios[key + '_audio']} />
+        })}
+      </div>
       {connected && !extWebcam ? (
         <div style={{ width: '100%', height: '100%' }}>
-          <div>
-            {Object.keys(shownAudios).map((key) => {
-              if (myUserId === key) return null;
-              if (shownAudios[key] === undefined) return null;
-              return (
-                <Audio
-                  id={key}
-                  stream={audios[key + '_audio']}
-                />
-              );
-            })}
-          </div>
           <ThemeProvider theme={theme2}>
             <Fab
               id="audioButton"
               color={'primary'}
-              style={{ position: 'absolute', left: window.innerWidth <= 1400 ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104 + 56 + 16) : 48 + 56 + 16 }}
+              style={{
+                position: 'absolute',
+                left: window.innerWidth <= 1400 ? 16 : 32,
+                bottom:
+                  window.innerWidth <= 1400 ? 48 + 104 + 56 + 16 : 48 + 56 + 16,
+              }}
               onClick={() => {
                 if (audio) {
                   endAudio()
@@ -639,7 +736,11 @@ function App() {
             <Fab
               id="endCallButton"
               color={'secondary'}
-              style={{ position: 'absolute', left: window.innerWidth <= 1400 ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
+              style={{
+                position: 'absolute',
+                left: window.innerWidth <= 1400 ? 16 : 32,
+                bottom: window.innerWidth <= 1400 ? 48 + 104 : 48,
+              }}
               onClick={() => {
                 instantConnectionFlag = false
                 setConnected(false)
@@ -651,22 +752,22 @@ function App() {
                 document.getElementById('screenMax').srcObject = undefined
                 document.getElementById('screenMax2').srcObject = undefined
                 endAudio()
-                destructAudioNet();
+                destructAudioNet()
                 endVideo()
-                destructVideoNet();
+                destructVideoNet()
                 endScreen()
-                destructScreenNet();
-                setVideos({});
-                setAudios({});
-                setScreens({});
-                setVideo(false);
-                setAudio(false);
-                setScreen(false);
-                setShownVideos({});
-                setShownAudios({});
-                setShownScreens({});
-                setListOpen(false);
-                setExtWebcam(false);
+                destructScreenNet()
+                setVideos({})
+                setAudios({})
+                setScreens({})
+                setVideo(false)
+                setAudio(false)
+                setScreen(false)
+                setShownVideos({})
+                setShownAudios({})
+                setShownScreens({})
+                setListOpen(false)
+                setExtWebcam(false)
                 forceUpdate()
               }}
             >
@@ -677,8 +778,11 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: (screenShareSupported ? (32 + 56) : 0) + (window.innerWidth <= 1400 ? 0 : 16) + 72,
-                bottom: window.innerWidth <= 1400 ? (48 + 104) : 48,
+                left:
+                  (screenShareSupported ? 32 + 56 : 0) +
+                  (window.innerWidth <= 1400 ? 0 : 16) +
+                  72,
+                bottom: window.innerWidth <= 1400 ? 48 + 104 : 48,
               }}
               onClick={() => {
                 if (video) {
@@ -693,33 +797,46 @@ function App() {
             >
               {video ? <VideocamIcon /> : <VideocamOff />}
             </Fab>
-            {screenShareSupported ?
+            {screenShareSupported ? (
               <Fab
                 id="screenButton"
                 color={'primary'}
-                style={{ position: 'absolute', left: 32 + 56 + (window.innerWidth <= 1400 ? 0 : 16), bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
+                style={{
+                  position: 'absolute',
+                  left: 32 + 56 + (window.innerWidth <= 1400 ? 0 : 16),
+                  bottom: window.innerWidth <= 1400 ? 48 + 104 : 48,
+                }}
                 onClick={() => {
                   if (screen) {
-                    endScreen();
-                    setScreen(false);
+                    endScreen()
+                    setScreen(false)
                   } else {
-                    startScreen();
-                    setScreen(true);
+                    startScreen()
+                    setScreen(true)
                   }
-                  forceUpdate();
+                  forceUpdate()
                 }}
               >
-                {screen ? <DesktopWindowsIcon /> : <DesktopAccessDisabledIcon />}
-              </Fab> :
-              null
-            }
+                {screen ? (
+                  <DesktopWindowsIcon />
+                ) : (
+                  <DesktopAccessDisabledIcon />
+                )}
+              </Fab>
+            ) : null}
             <Fab
               id="listButton"
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: (screenShareSupported ? (32 + 56) : 0) + (window.innerWidth <= 1400 ? 0 : 16) + 56 + 16 + 56 + 16,
-                bottom: window.innerWidth <= 1400 ? (48 + 104) : 48,
+                left:
+                  (screenShareSupported ? 32 + 56 : 0) +
+                  (window.innerWidth <= 1400 ? 0 : 16) +
+                  56 +
+                  16 +
+                  56 +
+                  16,
+                bottom: window.innerWidth <= 1400 ? 48 + 104 : 48,
               }}
               onClick={() => {
                 window.parent.postMessage(
@@ -762,7 +879,11 @@ function App() {
           <Fab
             id="callButton"
             color={'secondary'}
-            style={{ position: 'absolute', left: window.innerWidth <= 1400 ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
+            style={{
+              position: 'absolute',
+              left: window.innerWidth <= 1400 ? 16 : 32,
+              bottom: window.innerWidth <= 1400 ? 48 + 104 : 48,
+            }}
             onClick={() => {
               instantConnectionFlag = true
               setConnected(true)
