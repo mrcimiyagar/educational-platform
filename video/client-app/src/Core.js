@@ -24,11 +24,13 @@ import {
   createTheme,
   Drawer,
   makeStyles,
+  IconButton,
 } from '@material-ui/core'
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows'
 import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled'
 import {
   ArrowForward,
+  Close,
   Mic,
   MicOff,
   Notes,
@@ -692,6 +694,9 @@ function App() {
           className="participents"
           style={{ width: window.innerWidth + 'px', minWidth: 300, maxWidth: 500, height: 128, flexwrap: 'nowrap' }}
         >
+          <IconButton onClick={() => setListOpen(false)} style={{padding: 16}}>
+            <Close/>
+          </IconButton>
           {result.map((key) => {
             if (needUpdate[key] === true || videoCache[key] === undefined) {
               videoCache[key] = (
