@@ -316,9 +316,7 @@ function App() {
       }
       if (props.stream !== undefined) {
         var options = {}
-        alert('attaching...');
         var speechEvents = hark(props.stream, options)
-        alert('attached.');
         speechEvents.on('speaking', function () {
           alert('speaking...');
           speakers[props.id] = true;
