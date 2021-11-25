@@ -690,7 +690,7 @@ function App() {
         <div
           id="participents"
           className="participents"
-          style={{ width: 'auto', minWidth: 300, height: 128, flexwrap: 'nowrap' }}
+          style={{ width: '100%', minWidth: 300, maxWidth: 500, height: 128, flexwrap: 'nowrap' }}
         >
           {result.map((key) => {
             if (needUpdate[key] === true || videoCache[key] === undefined) {

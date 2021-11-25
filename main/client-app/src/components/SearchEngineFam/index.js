@@ -31,7 +31,7 @@ export let notifyUrlChanged = undefined
 const useStyles = makeStyles((theme) => ({
   root: {
     height: 380,
-    transform: 'translateZ(0px)',
+    transform: `translateY(${isDesktop() ? -48 : -56}px) translateZ(0px)`,
     flexGrow: 1,
   },
 }))
@@ -111,8 +111,10 @@ export default function Jumper(props) {
                       gotoPage('/app/createroom');
                     }
                   } else if (index === 4) {
-                    localStorage.clear();
-                    gotoPage('/app/auth');
+                    if (window.confirm('خروج از حساب ؟')) {
+                      localStorage.clear();
+                      gotoPage('/app/auth');
+                    }
                   }
                 }}
               />
