@@ -71,7 +71,7 @@ function Video(props) {
   }, [])
   return (
     <div
-      style={{ width: '100%', height: 'calc(100% - 32px)', position: 'relative'}}>
+      style={{ width: '100%', height: '100%', position: 'relative'}}>
       <video
         autoPlay
         controls={false}
@@ -100,7 +100,7 @@ function Screen(props) {
   }, [])
   return (
     <div
-      style={{ width: '100%', height: 'calc(100% - 32px)', position: 'relative'}}>
+      style={{ width: '100%', height: '100%', position: 'relative'}}>
       <video
         autoPlay
         controls={false}
@@ -295,7 +295,7 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex' }}>
@@ -317,7 +317,7 @@ function App() {
             </div>
             </div>
             <br/>
-            <div>
+            <div style={{paddingLeft: 16, paddingRight: 16, paddingBottom: 8, width: '100%'}}>
               {title}
             </div>
           </Card>
@@ -326,7 +326,7 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
             onClick={props.onClick}
           >
           <div style={{ display: 'flex' }}>
@@ -354,7 +354,7 @@ function App() {
             </div>
             </div>
             <br/>
-            <div>
+            <div style={{paddingLeft: 16, paddingRight: 16, paddingBottom: 8, width: '100%'}}>
               {title}
             </div>
           </Card>
@@ -365,7 +365,7 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
             onClick={props.onClick}
           >
           <div style={{ display: 'flex' }}>
@@ -393,7 +393,7 @@ function App() {
             </div>
             </div>
             <br/>
-            <div>
+            <div style={{paddingLeft: 16, paddingRight: 16, paddingBottom: 8, width: '100%'}}>
               {title}
             </div>
           </Card>
@@ -402,7 +402,7 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
             onClick={props.onClick}
           >
           <div style={{ display: 'flex' }}>
@@ -436,7 +436,7 @@ function App() {
             </div>
             </div>
             <br/>
-            <div>
+            <div style={{paddingLeft: 16, paddingRight: 16, paddingBottom: 8, width: '100%'}}>
               {title}
             </div>
           </Card>
