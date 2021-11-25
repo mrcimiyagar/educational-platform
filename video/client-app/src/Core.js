@@ -316,9 +316,13 @@ function App() {
       var speechEvents = hark(props.stream, options)
       speechEvents.on('speaking', function () {
         speakers[props.id] = true;
+        setSpeakers(speakers);
+        forceUpdate();
       })
       speechEvents.on('stopped_speaking', function () {
         delete speakers[props.id];
+        setSpeakers(speakers);
+        forceUpdate();
       })
     }, [])
     return <audio autoPlay id={props.id + '_audio'} />
