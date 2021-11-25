@@ -367,7 +367,7 @@ function App() {
             style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300 }}
             onClick={props.onClick}
           >
-            <div style={{ display: 'flex', width: 'calc(100% - 40px)' }}>
+            <div style={{ display: 'flex', width: '100%' }}>
               <div style={{ width: '33%', height: (256 + 128) / 2 }}>
                 <Video
                   name={title}
@@ -406,7 +406,7 @@ function App() {
             style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300}}
             onClick={props.onClick}
           >
-            <div style={{ display: 'flex', width: 'calc(100% - 40px)' }}>
+            <div style={{ display: 'flex', width: '100%' }}>
               <div
                 style={{
                   width: '33%',
@@ -453,7 +453,7 @@ function App() {
             style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300 }}
             onClick={props.onClick}
           >
-            <div style={{ display: 'flex', width: 'calc(100% - 40px)' }}>
+            <div style={{ display: 'flex', width: '100%' }}>
               <div style={{ width: '33%', height: (256 + 128) / 2 }}>
                 <Video
                   name={title}
@@ -498,7 +498,7 @@ function App() {
             style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300 }}
             onClick={props.onClick}
           >
-            <div style={{ display: 'flex', width: 'calc(100% - 40px)' }}>
+            <div style={{ display: 'flex', width: '100%' }}>
               <div
                 style={{
                   width: '33%',
@@ -683,6 +683,7 @@ function App() {
         }}
         ModalProps={{
           keepMounted: true,
+          width: '100%'
         }}
         classes={{ paper: classes.paper }}
         style={{ position: 'relative', zIndex: 2490 }}
