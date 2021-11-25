@@ -373,7 +373,7 @@ export default function ChatEmbeddedInMessenger(props) {
           request.open(
             'POST',
             serverRoot +
-              `/file/upload_file?token=${token}&roomId=${props.roomId}&extension=${dataUrl.name.substr(dataUrl.name.lastIndexOf('.'))}&isPresent=false`,
+              `/file/upload_file?token=${token}&roomId=${props.roomId}&extension=${(dataUrl.name.lastIndexOf('.') + 1) >= 0 ? dataUrl.name.substr(dataUrl.name.lastIndexOf('.') + 1) : ''}&isPresent=false`,
           )
           let f = { progress: 0, name: file.name, size: file.size, local: true }
           request.upload.addEventListener('progress', function (e) {
