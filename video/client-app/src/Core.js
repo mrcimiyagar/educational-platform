@@ -682,8 +682,7 @@ function App() {
           setListOpen(false)
         }}
         ModalProps={{
-          keepMounted: true,
-          width: '100%'
+          keepMounted: true
         }}
         classes={{ paper: classes.paper }}
         style={{ position: 'relative', zIndex: 2490 }}
@@ -691,7 +690,7 @@ function App() {
         <div
           id="participents"
           className="participents"
-          style={{ width: '100%', minWidth: 300, maxWidth: 500, height: 128, flexwrap: 'nowrap' }}
+          style={{ width: window.innerWidth + 'px', minWidth: 300, maxWidth: 500, height: 128, flexwrap: 'nowrap' }}
         >
           {result.map((key) => {
             if (needUpdate[key] === true || videoCache[key] === undefined) {
