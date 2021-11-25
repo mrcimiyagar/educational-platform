@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react'
 import VideoMedia, {
+  destructVideoNet,
   endVideo,
   initVideo,
   setPresenter,
   startVideo,
 } from './components/VideoMedia'
 import AudioMedia, {
+  destructAudioNet,
   endAudio,
   initAudio,
   startAudio,
 } from './components/AudioMedia'
 import ScreenMedia, {
+  destructScreenNet,
   endScreen,
   initScreen,
   startScreen,
@@ -648,8 +651,11 @@ function App() {
                 document.getElementById('screenMax').srcObject = undefined
                 document.getElementById('screenMax2').srcObject = undefined
                 endAudio()
+                destructAudioNet();
                 endVideo()
+                destructVideoNet();
                 endScreen()
+                destructScreenNet();
                 setVideos({});
                 setAudios({});
                 setScreens({});

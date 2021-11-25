@@ -67,13 +67,30 @@ function produceEmptyStream() {
   return ms
 }
 
-var signaling_socket = null /* our socket.io connection to our webserver */
-var local_media_stream = null /* our own microphone / webcam */
-var peers = {} /* keep track of our peer connections, indexed by peer_id (aka socket.io id) */
+var signaling_socket = null
+var local_media_stream = null
+var peers = {}
 
 export let endScreen;
 export let startScreen;
 export let initScreen;
+export let destructScreenNet = () => {
+  try {
+    for (let peer_id in peers) {
+      peers[peer_id].close()
+    }
+  } catch(ex) {}
+  peers = {}
+  try {
+    signaling_socket.close();
+  } catch(ex) {}
+  try {
+    local_media_stream.getVideoTracks().forEach((track) => {
+      track.stop()
+    })
+  } catch(ex) {}
+  local_media_stream = null;
+};
 
 export default function ScreenMedia(props) {
 
@@ -186,17 +203,10 @@ catch(ex) {console.log(ex);}
     })
     signaling_socket.on('disconnect', function () {
       console.log('Disconnected from signaling server')
-      /* Tear down all of our peer connections and remove all the
-       * media divs when we disconnect */
-      for (let peer_id in window.peer_media_elements) {
-        window.peer_media_elements[userId].remove()
-      }
       for (let peer_id in peers) {
         peers[peer_id].close()
       }
-  
       peers = {}
-      window.peer_media_elements = {}
     })
   
     /**

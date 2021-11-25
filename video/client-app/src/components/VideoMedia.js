@@ -75,6 +75,23 @@ let names = {};
 export let endVideo;
 export let startVideo;
 export let initVideo;
+export let destructVideoNet = () => {
+  try {
+    for (let peer_id in peers) {
+      peers[peer_id].close()
+    }
+  } catch(ex) {}
+  peers = {}
+  try {
+    signaling_socket.close();
+  } catch(ex) {}
+  try {
+    local_media_stream.getVideoTracks().forEach((track) => {
+      track.stop()
+    })
+  } catch(ex) {}
+  local_media_stream = null;
+};
 export let setPresenter = (presenter) => {
   signaling_socket.emit('setPresenter', presenter);
 }

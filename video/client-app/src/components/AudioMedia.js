@@ -74,6 +74,23 @@ var peers = {} /* keep track of our peer connections, indexed by peer_id (aka so
 export let endAudio;
 export let startAudio;
 export let initAudio;
+export let destructAudioNet = () => {
+  try {
+    for (let peer_id in peers) {
+      peers[peer_id].close()
+    }
+  } catch(ex) {}
+  peers = {}
+  try {
+    signaling_socket.close();
+  } catch(ex) {}
+  try {
+    local_media_stream.getVideoTracks().forEach((track) => {
+      track.stop()
+    })
+  } catch(ex) {}
+  local_media_stream = null;
+};
 
 export default function AudioMedia(props) {
 
