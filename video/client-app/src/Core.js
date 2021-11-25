@@ -391,7 +391,7 @@ function App() {
               style={{
                 paddingLeft: 16,
                 paddingRight: 16,
-                paddingBottom: 8,
+                transform: 'translateY(-16px)',
                 width: '100%',
               }}
             >
@@ -436,7 +436,7 @@ function App() {
               style={{
                 paddingLeft: 16,
                 paddingRight: 16,
-                paddingBottom: 8,
+                transform: 'translateY(-16px)',
                 width: '100%',
               }}
             >
@@ -483,7 +483,7 @@ function App() {
               style={{
                 paddingLeft: 16,
                 paddingRight: 16,
-                paddingBottom: 8,
+                transform: 'translateY(-16px)',
                 width: '100%',
               }}
             >
@@ -534,7 +534,7 @@ function App() {
               style={{
                 paddingLeft: 16,
                 paddingRight: 16,
-                paddingBottom: 8,
+                transform: 'translateY(-16px)',
                 width: '100%',
               }}
             >
