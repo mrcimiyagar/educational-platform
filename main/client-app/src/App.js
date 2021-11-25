@@ -68,6 +68,7 @@ import GenerateLink from './routes/pages/generateLink';
 import GenerateInvitation from './routes/pages/invitationsList';
 import ConfigGuestAccount from './routes/pages/configGuestAccount';
 import SpacesListPage from './routes/pages/spacesList';
+import Sidebar from './containers/Sidebar';
 const PouchDB = require('pouchdb').default
 
 export let histPage = undefined
@@ -744,7 +745,8 @@ if (window.innerWidth > 900) {
         }}
       >
         <ColorBase/>
-        <DesktopDetector />
+        <DesktopDetector/>
+        <Sidebar/>
         <div
           style={{
             width: '100%',
@@ -884,6 +886,7 @@ if (window.innerWidth > 900) {
         >
           <ColorBase/>
           <DesktopDetector />
+          <Sidebar/>
           <HistController histPage={histPage} />
           <Switch>
             <Route path="/app">

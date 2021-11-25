@@ -16,6 +16,7 @@ import { NotificationManager } from '../../components/ReactNotifications'
 import { colors, token } from '../../util/settings'
 import { room, serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import './style.css'
+import {setPermissionState, togglePermissions} from '../../containers/Sidebar';
 
 export let reloadUsersList = undefined
 
@@ -264,7 +265,8 @@ export let UsersBox = (props) => {
                             console.log(JSON.stringify(result))
                             if (result.status === 'success') {
                               if (result.isAccessible) {
-                                // TODO: connect permission panel
+                                setPermissionState(props.roomId, user.id);
+                                togglePermissions();
                               } else {
                                 createNotification(
                                   'error',
