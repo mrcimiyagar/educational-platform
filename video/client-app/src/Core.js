@@ -318,16 +318,16 @@ function App() {
         var options = {}
         var speechEvents = hark(props.stream, options)
         speechEvents.on('speaking', function () {
-          alert('speaking...');
-          speakers[props.id] = true;
-          setSpeakers(speakers);
-          forceUpdate();
+          let elem = document.getElementById('audio_state_' + props.id);
+          if (elem !== null) {
+            elem.style.backgroundColor = '#00ccff';
+          }
         })
         speechEvents.on('stopped_speaking', function () {
-          alert('stopped speaking...');
-          delete speakers[props.id];
-          setSpeakers(speakers);
-          forceUpdate();
+          let elem = document.getElementById('audio_state_' + props.id);
+          if (elem !== null) {
+            elem.style.backgroundColor = 'white';
+          }
         })
       }
     }, [])
@@ -337,7 +337,6 @@ function App() {
   function MediaBox(props) {
     let vs = findValueByPrefix(videos, props.id + '_video')
     let ss = findValueByPrefix(screens, props.id + '_screen')
-    let as = findValueByPrefix(audios, props.id + '_audio')
 
     let [title, setTitle] = React.useState('')
 
@@ -385,7 +384,7 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{width: 40, height: (256 + 128) / 2, backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
+              <div id={'audio_state_' + props.id} style={{width: 40, height: (256 + 128) / 2, backgroundColor: 'white'}}/>
             </div>
             <br />
             <div
@@ -430,7 +429,7 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{width: 40, height: (256 + 128) / 2, backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
+              <div id={'audio_state_' + props.id} style={{width: 40, height: (256 + 128) / 2, backgroundColor: 'white'}}/>
             </div>
             <br />
             <div
@@ -477,7 +476,7 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{width: 40, height: (256 + 128) / 2, backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
+              <div id={'audio_state_' + props.id} style={{width: 40, height: (256 + 128) / 2, backgroundColor: 'white'}}/>
             </div>
             <br />
             <div
@@ -528,7 +527,7 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{width: 40, height: (256 + 128) / 2, backgroundColor: speakers[props.id] === true ? 'green' : 'white'}}/>
+              <div id={'audio_state_' + props.id} style={{width: 40, height: (256 + 128) / 2, backgroundColor: 'white'}}/>
             </div>
             <br />
             <div
