@@ -364,7 +364,7 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%' }}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex', width: '100%' }}>
@@ -403,7 +403,7 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300}}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%'}}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex', width: '100%' }}>
@@ -450,7 +450,7 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%'}}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex', width: '100%' }}>
@@ -495,7 +495,7 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%' }}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex', width: '100%' }}>
