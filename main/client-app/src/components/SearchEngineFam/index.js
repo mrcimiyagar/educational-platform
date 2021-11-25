@@ -4,7 +4,7 @@ import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import { Home } from '@material-ui/icons'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import ExploreIcon from '@material-ui/icons/Explore'
-import LocationCityIcon from '@material-ui/icons/LocationCity'
+import ExitToApp from '@material-ui/icons/ExitToApp'
 import NavigationIcon from '@material-ui/icons/Navigation'
 import StoreMallDirectoryIcon from '@material-ui/icons/StoreMallDirectory'
 import SpeedDial from '@material-ui/lab/SpeedDial'
@@ -41,6 +41,7 @@ const actions = [
   { icon: <ExploreIcon />, name: 'گردش' },
   { icon: <StoreMallDirectoryIcon />, name: 'فروشگاه' },
   { icon: <AccountBalanceIcon />, name: '+روم' },
+  { icon: <ExitToApp/>, name: 'خروج'},
 ]
 
 export default function Jumper(props) {
@@ -109,6 +110,9 @@ export default function Jumper(props) {
                     if (histPage !== '/app/createroom') {
                       gotoPage('/app/createroom');
                     }
+                  } else if (index === 4) {
+                    localStorage.clear();
+                    gotoPage('/app/auth');
                   }
                 }}
               />

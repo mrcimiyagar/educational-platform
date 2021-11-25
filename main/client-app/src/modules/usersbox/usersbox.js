@@ -202,6 +202,42 @@ export let UsersBox = (props) => {
     }
   }, [])
 
+  let permsOnClick = (user) => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.roomId,
+        targetUserId: user.id,
+      }),
+      redirect: 'follow',
+    }
+    fetch(
+      serverRoot + '/room/is_permissions_accessible',
+      requestOptions,
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        if (result.status === 'success') {
+          if (result.isAccessible) {
+            setPermissionState(props.roomId, user.id);
+            togglePermissions();
+          } else {
+            createNotification(
+              'error',
+              'عدم دسترسی',
+              'دسترسی به منبع مورد نظر مجاز نمی باشد',
+            )()
+          }
+        }
+      })
+      .catch((error) => console.log('error', error));
+  }
+
   return (
     <div style={{ width: '100%', height: 'calc(100% - 32px)', marginTop: 32 }}>
       <div>
@@ -240,44 +276,11 @@ export let UsersBox = (props) => {
                     <Avatar
                       style={{ width: 24, height: 24 }}
                       alt={user.firstName + ' ' + user.lastName}
+                      onClick={() => permsOnClick(user)}
                     />
                     <div
                       style={{ marginRight: 16, marginTop: -2 }}
-                      onClick={() => {
-                        let requestOptions = {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                            token: token,
-                          },
-                          body: JSON.stringify({
-                            roomId: props.roomId,
-                            targetUserId: user.id,
-                          }),
-                          redirect: 'follow',
-                        }
-                        fetch(
-                          serverRoot + '/room/is_permissions_accessible',
-                          requestOptions,
-                        )
-                          .then((response) => response.json())
-                          .then((result) => {
-                            console.log(JSON.stringify(result))
-                            if (result.status === 'success') {
-                              if (result.isAccessible) {
-                                setPermissionState(props.roomId, user.id);
-                                togglePermissions();
-                              } else {
-                                createNotification(
-                                  'error',
-                                  'عدم دسترسی',
-                                  'دسترسی به منبع مورد نظر مجاز نمی باشد',
-                                )()
-                              }
-                            }
-                          })
-                          .catch((error) => console.log('error', error))
-                      }}
+                      onClick={() => permsOnClick(user)}
                     >
                       <p
                         style={{

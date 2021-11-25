@@ -364,11 +364,11 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300 }}
             onClick={props.onClick}
           >
-            <div style={{ display: 'flex' }}>
-              <div style={{ width: (256 + 128) / 2, height: (256 + 128) / 2 }}>
+            <div style={{ display: 'flex', width: 'calc(100% - 40px)' }}>
+              <div style={{ width: '33%', height: (256 + 128) / 2 }}>
                 <Video
                   name={title}
                   id={props.id}
@@ -376,7 +376,7 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{ width: 256 + 128, height: (256 + 128) / 2 }}>
+              <div style={{ width: '66%', height: (256 + 128) / 2 }}>
                 <Screen
                   name={title}
                   id={props.id}
@@ -403,13 +403,13 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300}}
             onClick={props.onClick}
           >
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', width: 'calc(100% - 40px)' }}>
               <div
                 style={{
-                  width: (256 + 128) / 2,
+                  width: '33%',
                   height: (256 + 128) / 2,
                 }}
               >
@@ -421,7 +421,7 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{ width: 256 + 128, height: (256 + 128) / 2 }}>
+              <div style={{ width: '66%', height: (256 + 128) / 2 }}>
                 <Screen
                   name={title}
                   id={props.id}
@@ -450,11 +450,11 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300 }}
             onClick={props.onClick}
           >
-            <div style={{ display: 'flex' }}>
-              <div style={{ width: (256 + 128) / 2, height: (256 + 128) / 2 }}>
+            <div style={{ display: 'flex', width: 'calc(100% - 40px)' }}>
+              <div style={{ width: '33%', height: (256 + 128) / 2 }}>
                 <Video
                   name={title}
                   id={props.id}
@@ -464,7 +464,7 @@ function App() {
               </div>
               <div
                 style={{
-                  width: 256 + 128,
+                  width: '66%',
                   height: (256 + 128) / 2,
                 }}
               >
@@ -495,13 +495,13 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16 }}
+            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%', maxWidth: 300 }}
             onClick={props.onClick}
           >
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', width: 'calc(100% - 40px)' }}>
               <div
                 style={{
-                  width: (256 + 128) / 2,
+                  width: '33%',
                   height: (256 + 128) / 2,
                 }}
               >
@@ -515,7 +515,7 @@ function App() {
               </div>
               <div
                 style={{
-                  width: 256 + 128,
+                  width: '66%',
                   height: (256 + 128) / 2,
                 }}
               >
@@ -690,7 +690,7 @@ function App() {
         <div
           id="participents"
           className="participents"
-          style={{ width: '100%', height: 128, flexwrap: 'nowrap' }}
+          style={{ width: 'auto', minWidth: 300, height: 128, flexwrap: 'nowrap' }}
         >
           {result.map((key) => {
             if (needUpdate[key] === true || videoCache[key] === undefined) {
