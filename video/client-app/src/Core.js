@@ -619,7 +619,7 @@ function App() {
             <Fab
               id="audioButton"
               color={'primary'}
-              style={{ position: 'absolute', left: window.innerWidth <= 1400 ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104 + 56 + 16) : 48 + 56 + 16 }}
+              style={{ position: 'absolute', left: !screenShareSupported ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104 + 56 + 16) : 48 + 56 + 16 }}
               onClick={() => {
                 if (audio) {
                   endAudio()
@@ -636,7 +636,7 @@ function App() {
             <Fab
               id="endCallButton"
               color={'secondary'}
-              style={{ position: 'absolute', left: window.innerWidth <= 1400 ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
+              style={{ position: 'absolute', left: !screenShareSupported ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
               onClick={() => {
                 instantConnectionFlag = false
                 setConnected(false)
