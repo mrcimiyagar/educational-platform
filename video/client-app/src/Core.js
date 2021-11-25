@@ -316,13 +316,17 @@ function App() {
       }
       if (props.stream !== undefined) {
         var options = {}
+        alert('attaching...');
         var speechEvents = hark(props.stream, options)
+        alert('attached.');
         speechEvents.on('speaking', function () {
+          alert('speaking...');
           speakers[props.id] = true;
           setSpeakers(speakers);
           forceUpdate();
         })
         speechEvents.on('stopped_speaking', function () {
+          alert('stopped speaking...');
           delete speakers[props.id];
           setSpeakers(speakers);
           forceUpdate();
