@@ -646,14 +646,22 @@ function App() {
                 )
                 setScreenOn(false)
                 document.getElementById('screenMax').srcObject = undefined
+                document.getElementById('screenMax2').srcObject = undefined
                 endAudio()
-                setAudio(false)
                 endVideo()
-                setVideo(false)
                 endScreen()
-                setScreen(false)
+                setVideos({});
+                setAudios({});
+                setScreens({});
+                setVideo(false);
+                setAudio(false);
+                setScreen(false);
+                setShownVideos({});
+                setShownAudios({});
+                setShownScreens({});
+                setListOpen(false);
+                setExtWebcam(false);
                 forceUpdate()
-                window.parent.postMessage({sender: 'conf', action: 'reload'}, pathConfig.mainFrontend);
               }}
             >
               <CallEndIcon />
@@ -663,7 +671,7 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: (screenShareSupported ? (32 + 56) : 0) + (window.innerWidth <= 1400 ? 16 : 0) + 72,
+                left: (screenShareSupported ? (32 + 56) : 0) + (window.innerWidth <= 1400 ? 0 : 16) + 72,
                 bottom: window.innerWidth <= 1400 ? (48 + 104) : 48,
               }}
               onClick={() => {
@@ -683,7 +691,7 @@ function App() {
               <Fab
                 id="screenButton"
                 color={'primary'}
-                style={{ position: 'absolute', left: 32 + 56 + (window.innerWidth <= 1400 ? 16 : 0), bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
+                style={{ position: 'absolute', left: 32 + 56 + (window.innerWidth <= 1400 ? 0 : 16), bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
                 onClick={() => {
                   if (screen) {
                     endScreen();
@@ -704,7 +712,7 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: (screenShareSupported ? (32 + 56) : 0) + (window.innerWidth <= 1400 ? 16 : 0) + 56 + 16 + 56 + 16,
+                left: (screenShareSupported ? (32 + 56) : 0) + (window.innerWidth <= 1400 ? 0 : 16) + 56 + 16 + 56 + 16,
                 bottom: window.innerWidth <= 1400 ? (48 + 104) : 48,
               }}
               onClick={() => {
