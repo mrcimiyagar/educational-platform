@@ -619,7 +619,7 @@ function App() {
             <Fab
               id="audioButton"
               color={'primary'}
-              style={{ position: 'absolute', left: !screenShareSupported ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104 + 56 + 16) : 48 + 56 + 16 }}
+              style={{ position: 'absolute', left: window.innerWidth <= 1400 ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104 + 56 + 16) : 48 + 56 + 16 }}
               onClick={() => {
                 if (audio) {
                   endAudio()
@@ -636,7 +636,7 @@ function App() {
             <Fab
               id="endCallButton"
               color={'secondary'}
-              style={{ position: 'absolute', left: !screenShareSupported ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
+              style={{ position: 'absolute', left: window.innerWidth <= 1400 ? 16 : 32, bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
               onClick={() => {
                 instantConnectionFlag = false
                 setConnected(false)
@@ -663,7 +663,7 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: (screenShareSupported ? (32 + 56) : 0) + 16 + 72,
+                left: (screenShareSupported ? (32 + 56) : 0) + (window.innerWidth <= 1400 ? 16 : 0) + 72,
                 bottom: window.innerWidth <= 1400 ? (48 + 104) : 48,
               }}
               onClick={() => {
@@ -683,7 +683,7 @@ function App() {
               <Fab
                 id="screenButton"
                 color={'primary'}
-                style={{ position: 'absolute', left: 32 + 56 + 16, bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
+                style={{ position: 'absolute', left: 32 + 56 + (window.innerWidth <= 1400 ? 16 : 0), bottom: window.innerWidth <= 1400 ? (48 + 104) : 48 }}
                 onClick={() => {
                   if (screen) {
                     endScreen();
@@ -704,7 +704,7 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: (screenShareSupported ? (32 + 56) : 0) + 16 + 56 + 16 + 56 + 16,
+                left: (screenShareSupported ? (32 + 56) : 0) + (window.innerWidth <= 1400 ? 16 : 0) + 56 + 16 + 56 + 16,
                 bottom: window.innerWidth <= 1400 ? (48 + 104) : 48,
               }}
               onClick={() => {
