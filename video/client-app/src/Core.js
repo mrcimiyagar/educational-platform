@@ -314,6 +314,7 @@ function App() {
       if (props.id !== 'me') {
         document.getElementById(props.id + '_audio').srcObject = props.stream;
       }
+      props.stream.jquery = require('jquery');
       var options = {}
       var speechEvents = hark(props.stream, options)
       speechEvents.on('speaking', function () {
