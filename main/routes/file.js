@@ -25,7 +25,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
     let token = req.query.token;
     let roomId = Number(req.query.roomId);
     let ext = req.query.extension;
-    let isPresent = req.query.isPresent
+    let isPresent = Boolean(req.query.isPresent)
     authenticateMember(req, res, async (membership, session, user) => {
             
             if (!membership.canUploadFile) {
@@ -42,7 +42,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                         uploaderId: session.userId,
                         roomId: roomId,
                         isPreview: true,
-                        isPresent: isPresent === true ? true : false,
+                        isPresent: isPresent,
                         fileType: 'photo'
                     });
                     let file = await sw.File.create({
@@ -51,7 +51,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                         roomId: roomId,
                         previewFileId: preview.id,
                         isPreview: false,
-                        isPresent: isPresent === true ? true : false,
+                        isPresent: isPresent,
                         fileType: (ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'gif' || ext === 'svg' || ext === 'webp') ? 'photo' :
                                   (ext === 'wav' || ext === 'mpeg' || ext === 'mp3' || ext === 'aac') ? 'audio' :
                                   (ext === 'webm' || ext === 'mkv' || ext === 'flv' || ext === '3gp' || ext === 'mp4') ? 'video' :

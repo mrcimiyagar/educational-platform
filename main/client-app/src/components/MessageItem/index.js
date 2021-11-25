@@ -53,14 +53,14 @@ export default function MessageItem(props) {
                   position: 'absolute',
                   right: 16,
                   fontWeight: 'bold',
-                  fontSize: 20,
+                  fontSize: 15,
                   wordWrap: "break-word"
                 }}
               >
                 {message['User.firstName']}
               </Typography>
               <br />
-              <div style={{ marginTop: 8 }}>
+              <div >
                 {message.messageType === 'text' ? (
                   message.text
                 ) : message.messageType === 'audio' ? (
@@ -88,7 +88,7 @@ export default function MessageItem(props) {
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
-                    <video
+                    <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
                           src:
@@ -96,11 +96,10 @@ export default function MessageItem(props) {
                             `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
                         })
                       }}
-                      controls={false}
                       style={{ width: 200 }}
                       src={
                         serverRoot +
-                        `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
                       }
                     />
                   </div>
@@ -173,14 +172,14 @@ export default function MessageItem(props) {
                   position: 'absolute',
                   right: 16,
                   fontWeight: 'bold',
-                  fontSize: 20,
+                  fontSize: 15,
                   wordWrap: "break-word"
                 }}
               >
                 {message['User.firstName']}
               </Typography>
               <br />
-              <div style={{ marginTop: 8 }}>
+              <div >
                 {message.messageType === 'text' ? (
                   message.text
                 ) : message.messageType === 'audio' ? (
@@ -208,7 +207,7 @@ export default function MessageItem(props) {
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
-                    <video
+                    <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
                           src:
@@ -216,11 +215,10 @@ export default function MessageItem(props) {
                             `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
                         })
                       }}
-                      controls={false}
                       style={{ width: 200 }}
                       src={
                         serverRoot +
-                        `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
                       }
                     />
                   </div>
@@ -310,14 +308,14 @@ export default function MessageItem(props) {
                   position: 'absolute',
                   left: 16,
                   fontWeight: 'bold',
-                  fontSize: 20,
+                  fontSize: 15,
                   wordWrap: "break-word"
                 }}
               >
                 {message['User.firstName']}
               </Typography>
               <br />
-              <div style={{ marginTop: 8 }}>
+              <div >
                 {message.messageType === 'text' ? (
                   message.text
                 ) : message.messageType === 'audio' ? (
@@ -345,7 +343,7 @@ export default function MessageItem(props) {
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
-                    <video
+                    <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
                           src:
@@ -357,7 +355,7 @@ export default function MessageItem(props) {
                       style={{ width: 200 }}
                       src={
                         serverRoot +
-                        `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
                       }
                     />
                   </div>
@@ -428,14 +426,14 @@ export default function MessageItem(props) {
                   position: 'absolute',
                   left: 16,
                   fontWeight: 'bold',
-                  fontSize: 20,
+                  fontSize: 15,
                   wordWrap: "break-word"
                 }}
               >
                 {message['User.firstName']}
               </Typography>
               <br />
-              <div style={{ marginTop: 8 }}>
+              <div >
                 {message.messageType === 'text' ? (
                   message.text
                 ) : message.messageType === 'audio' ? (
@@ -463,7 +461,7 @@ export default function MessageItem(props) {
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
-                    <video
+                    <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
                           src:
@@ -475,7 +473,7 @@ export default function MessageItem(props) {
                       style={{ width: 200 }}
                       src={
                         serverRoot +
-                        `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
                       }
                     />
                   </div>
