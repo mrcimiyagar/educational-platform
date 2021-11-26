@@ -1,75 +1,104 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>wavesurfer-box</title>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>wavesurfer-box</title>
 
-  <script src="https://unpkg.com/wavesurfer.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-</head>
-<body>
-
+    <script src="https://unpkg.com/wavesurfer.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
     <style>
-        .btn {
-  background-color: DodgerBlue;
-  border: none;
-  color: white;
-  width: 48px;
-  height: 48px;
-  padding: 12px 16px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 50% 50% 50% 50%;
-}
+      .btn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+        width: 48px;
+        height: 48px;
+        padding: 12px 16px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 50% 50% 50% 50%;
+      }
 
-/* Darker background on mouse-over */
-.btn:hover {
-  background-color: RoyalBlue;
-}
+      /* Darker background on mouse-over */
+      .btn:hover {
+        background-color: RoyalBlue;
+      }
     </style>
-    
-    <div style='display: flex; flex-wrap: nowrap;'>
-        <button id='playPauseButton' onclick="wavesurferToggle()" class="btn"><i id='playPauseContent' class="fa fa-play"></i></button>
-        <div style='width: calc(100% - 56px); margin-left: 56px;'>
-            <div id='waveform' />
-        </div>
+
+    <div style="display: flex; flex-wrap: nowrap;">
+      <button id="playPauseButton" onclick="wavesurferToggle()" class="btn">
+        <i id="playPauseContent" class="fa fa-play"></i>
+      </button>
+      <div style="width: calc(100% - 56px); margin-left: 56px;">
+        <div id="waveform" />
+      </div>
     </div>
 
     <script>
-        let wavesurfer = WaveSurfer.create({
-            container: document.querySelector('#waveform'),
-            backend: 'MediaElement',
-            height: 48,
-            barWidth: 2,
-            barHeight: 1, // the height of the wave
-            barGap: null // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
-        });
-        window.wavesurfer = wavesurfer
-        window.addEventListener('message', e => {
-            console.log(e.data)
-            if (e.data.sender === 'main') {
-                wavesurfer.load(e.data.src);
+      let wavesurfer = WaveSurfer.create({
+        container: document.querySelector('#waveform'),
+        backend: 'MediaElement',
+        height: 48,
+        barWidth: 2,
+        barHeight: 1, // the height of the wave
+        barGap: null, // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
+      })
+      window.wavesurfer = wavesurfer
+      window.addEventListener('message', (e) => {
+        console.log(e.data)
+        if (e.data.sender === 'main') {
+          let requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              token: e.data.token,
+            },
+            body: JSON.stringify({
+              fileId: e.data.fileId,
+            }),
+            redirect: 'follow',
+          }
+          fetch(serverRoot + '/file/download_audio_preview', requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              console.log(JSON.stringify(result))
+              if (result !== undefined) {
+                wavesurfer.song = e.data.src
+                wavesurfer.backend.peaks = result.data
+                wavesurfer.drawBuffer()
+                wavesurfer.loaded = false
+                wavesurfer.on('play', function () {
+                  if (!wavesurfer.loaded) {
+                    wavesurfer.load(wavesurfer.song, wavesurfer.backend.peaks)
+                  }
+                })
                 wavesurfer.on('ready', function () {
-                    window.wavesurferToggle = () => {
-                        let playPauseContent = document.getElementById('playPauseContent')                 
-                        if (wavesurfer.isPlaying()) {
-                            wavesurfer.pause();
-                            playPauseContent.className = 'fa fa-play'
-                        }
-                        else {
-                            wavesurfer.play();
-                            playPauseContent.className = 'fa fa-pause'
-                        }
+                  window.wavesurferToggle = () => {
+                    let playPauseContent = document.getElementById(
+                      'playPauseContent',
+                    )
+                    if (wavesurfer.isPlaying()) {
+                      wavesurfer.pause()
+                      playPauseContent.className = 'fa fa-play'
+                    } else {
+                      wavesurfer.play()
+                      playPauseContent.className = 'fa fa-pause'
                     }
+                  }
                 });
-            }
-        })
-        
+              }
+            })
+            .catch((error) => console.log('error', error))
+        }
+      })
     </script>
-
-</body>
+  </body>
 </html>

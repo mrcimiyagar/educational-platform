@@ -128,12 +128,12 @@ router.post('/upload_file', jsonParser, async function (req, res) {
 });
 
 router.get('/download_audio_preview', jsonParser, async function (req, res) {
-    if (req.query.fileId === undefined) {
+    if (req.body.fileId === undefined) {
         res.sendStatus(404);
         return
     }
     authenticateMember(req, res, async (membership, session, user) => {
-        sw.File.findOne({where: {roomId: membership.roomId, id: req.query.fileId}}).then(async file => {
+        sw.File.findOne({where: {roomId: membership.roomId, id: req.body.fileId}}).then(async file => {
             res.sendFile(rootPath + '/files/' + file.previewFileId + '.json')
         })
     })
