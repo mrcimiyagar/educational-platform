@@ -61,7 +61,11 @@
               wavesurfer.pause()
               playPauseContent.className = 'fa fa-play'
             } else {
-              wavesurfer.play()
+              if (!wavesurfer.loaded) {
+                wavesurfer.load(wavesurfer.song, wavesurfer.backend.peaks)
+              } else {
+                wavesurfer.play()
+              }
               playPauseContent.className = 'fa fa-pause'
             }
           }
@@ -88,21 +92,16 @@
                 wavesurfer.song = e.data.src
                 wavesurfer.backend.peaks = result.data
                 for (let i = 0; i < result.data.length; i++) {
-                  result.data[i] = result.data[i] / 100;
+                  result.data[i] = result.data[i] / 100
                 }
                 wavesurfer.drawBuffer()
                 wavesurfer.loaded = false
-                wavesurfer.on('play', function () {
+                wavesurfer.on('ready', function () {
                   if (!wavesurfer.loaded) {
-                    wavesurfer.load(wavesurfer.song, wavesurfer.backend.peaks)
+                    wavesurfer.loaded = true
+                    wavesurfer.play()
                   }
                 })
-                wavesurfer.on("ready", function () {
-                  if(!wavesurfer.loaded) {
-                    wavesurfer.loaded = true;
-                    wavesurfer.play();
-                  }
-                });
               }
             })
             .catch((error) => console.log('error', error))
