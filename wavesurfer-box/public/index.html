@@ -5,25 +5,17 @@
     <title>wavesurfer-box</title>
 
     <script src="https://unpkg.com/wavesurfer.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
   </head>
   <body style="background-color: transparent;">
+    <audio id="sound" controls="controls">
+      <source id="soundSrc" src="" type="audio/mp3"></source>
+    </audio>
     <style>
-      #loading_flag {
-  position: absolute;
-  display: block;
-  top: 10%;
-  left: 10%;
-  width: auto;
-  padding: 20px;
-  background-color: rgb(153, 255, 255);
-  text-align: center;
-  font-family: Verdana, Geneva, sans-serif;
-  height: auto;
-}
       .btn {
         background-color: DodgerBlue;
         border: none;
@@ -58,17 +50,8 @@
     </div>
 
     <script>
-      function UpdateLoadingFlag(Percentage) {
-        if (document.getElementById('loading_flag')) {
-          document.getElementById('loading_flag').innerText =
-            'Loading ' + Percentage + '%'
-          if (Percentage >= 100) {
-            document.getElementById('loading_flag').style.display = 'none'
-          } else {
-            document.getElementById('loading_flag').style.display = 'block'
-          }
-        }
-      }
+
+      var mediaElt = document.getElementById('sound');
 
       let wavesurfer = WaveSurfer.create({
         container: '#waveform',
@@ -79,14 +62,6 @@
         barWidth: 2,
         barHeight: 1,
         barGap: null,
-      })
-
-      wavesurfer.on('loading', function (X, evt) {
-        UpdateLoadingFlag(X)
-      })
-
-      wavesurfer.on('ready', function () {
-        console.log('ready fired')
       })
 
       window.wavesurfer = wavesurfer
@@ -100,7 +75,8 @@
               playPauseContent.className = 'fa fa-play'
             } else {
               if (!wavesurfer.loaded) {
-                wavesurfer.load(wavesurfer.song, wavesurfer.backend.peaks)
+                $("#soundSrc").attr("src", wavesurfer.song);
+                wavesurfer.load(mediaElt, wavesurfer.backend.peaks)
               } else {
                 wavesurfer.play()
               }
