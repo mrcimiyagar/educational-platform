@@ -55,6 +55,16 @@
       window.addEventListener('message', (e) => {
         console.log(e.data)
         if (e.data.sender === 'main') {
+          window.wavesurferToggle = () => {
+            let playPauseContent = document.getElementById('playPauseContent')
+            if (wavesurfer.isPlaying()) {
+              wavesurfer.pause()
+              playPauseContent.className = 'fa fa-play'
+            } else {
+              wavesurfer.play()
+              playPauseContent.className = 'fa fa-pause'
+            }
+          }
           let requestOptions = {
             method: 'POST',
             headers: {
@@ -63,17 +73,23 @@
             },
             body: JSON.stringify({
               fileId: e.data.fileId,
-              roomId: e.data.roomId
+              roomId: e.data.roomId,
             }),
             redirect: 'follow',
           }
-          fetch(e.data.serverRoot + '/file/download_audio_preview', requestOptions)
+          fetch(
+            e.data.serverRoot + '/file/download_audio_preview',
+            requestOptions,
+          )
             .then((response) => response.json())
             .then((result) => {
               console.log(JSON.stringify(result))
               if (result !== undefined) {
                 wavesurfer.song = e.data.src
                 wavesurfer.backend.peaks = result.data
+                for (let i = 0; i < result.data.length; i++) {
+                  result.data[i] = result.data[i] / 100;
+                }
                 wavesurfer.drawBuffer()
                 wavesurfer.loaded = false
                 wavesurfer.on('play', function () {
@@ -81,20 +97,6 @@
                     wavesurfer.load(wavesurfer.song, wavesurfer.backend.peaks)
                   }
                 })
-                wavesurfer.on('ready', function () {
-                  window.wavesurferToggle = () => {
-                    let playPauseContent = document.getElementById(
-                      'playPauseContent',
-                    )
-                    if (wavesurfer.isPlaying()) {
-                      wavesurfer.pause()
-                      playPauseContent.className = 'fa fa-play'
-                    } else {
-                      wavesurfer.play()
-                      playPauseContent.className = 'fa fa-pause'
-                    }
-                  }
-                });
               }
             })
             .catch((error) => console.log('error', error))
