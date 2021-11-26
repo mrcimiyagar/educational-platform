@@ -74,7 +74,7 @@
             } else {
               if (!wavesurfer.loaded) {
                 $("#soundSrc").attr("src", wavesurfer.song);
-                wavesurfer.load(mediaElt)
+                wavesurfer.load(mediaElt, wavesurfer.backend.peaks)
               } else {
                 wavesurfer.play()
               }
