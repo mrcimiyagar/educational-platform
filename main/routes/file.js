@@ -7,7 +7,7 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const { rootPath, parentPath } = require('../tools');
 const path = require('path');
-const { exec } = require('child_process');
+const { exec } = require("child_process");
 const { authenticateMember } = require('../users');
 const { fromPath } = require('pdf2pic');
 const genThumbnail = require('simple-thumbnail')
@@ -101,6 +101,24 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                         require("../server").pushTo('room_' + membership.roomId, 'file-added', file);
                         res.send({status: 'success', file: file});
                     }
+                    else if (ext === 'wav' || ext === 'mp3' || ext === 'mpeg' || ext === 'aac') {
+                        fs.copyFileSync(rootPath + '/files/' + file.id, rootPath + '/temp/' + file.id + '.' + ext);
+                        exec(`audiowaveform -i ${rootPath + '/temp/' + file.id + '.' + ext} -o ${rootPath + '/files/' + preview.id + '.json'} -b 8 -z 256`, (error, stdout, stderr) => {
+                            if (error) {
+                                console.log(`error: ${error.message}`);
+                                res.send({status: 'success', file: file});
+                                return;
+                            }
+                            if (stderr) {
+                                console.log(`stderr: ${stderr}`);
+                                res.send({status: 'success', file: file});
+                                return;
+                            }
+                            console.log(`stdout: ${stdout}`);
+                            require("../server").pushTo('room_' + membership.roomId, 'file-added', file);
+                            res.send({status: 'success', file: file});
+                        });
+                    }
                     else {
                         require("../server").pushTo('room_' + membership.roomId, 'file-added', file);
                         res.send({status: 'success', file: file});
@@ -108,6 +126,18 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                 });
     });
 });
+
+router.get('/download_audio_preview', jsonParser, async function (req, res) {
+    if (req.query.fileId === undefined) {
+        res.sendStatus(404);
+        return
+    }
+    authenticateMember(req, res, async (membership, session, user) => {
+        sw.File.findOne({where: {roomId: membership.roomId, id: req.query.fileId}}).then(async file => {
+            res.sendFile(rootPath + '/files/' + file.previewFileId + '.json')
+        })
+    })
+})
 
 router.get('/download_file_thumbnail', jsonParser, async function (req, res) {
     if (req.query.fileId === undefined) {
