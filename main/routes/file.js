@@ -127,7 +127,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
     });
 });
 
-router.get('/download_audio_preview', jsonParser, async function (req, res) {
+router.post('/download_audio_preview', jsonParser, async function (req, res) {
     if (req.body.fileId === undefined) {
         res.sendStatus(404);
         return
