@@ -12,9 +12,7 @@
     />
   </head>
   <body style="background-color: transparent;">
-    <audio id="sound" controls="controls">
-      <source id="soundSrc" src="" type="audio/mp3"></source>
-    </audio>
+    <audio id="sound" src="https://backend.kaspersoft.cloud/file/download_file?token=GUMjjUBrnAvPeGRtCWOrCAAfT2O2J5eyzpmynrgLShwdA6nlqtfEO1tZXwiPYs3m&roomId=18&fileId=74" controls="controls"/>
     <style>
       .btn {
         background-color: DodgerBlue;
@@ -76,7 +74,7 @@
             } else {
               if (!wavesurfer.loaded) {
                 $("#soundSrc").attr("src", wavesurfer.song);
-                wavesurfer.load(mediaElt, wavesurfer.backend.peaks)
+                wavesurfer.load(mediaElt)
               } else {
                 wavesurfer.play()
               }
