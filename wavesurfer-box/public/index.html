@@ -73,12 +73,12 @@
               playPauseContent.className = 'fa fa-play'
             } else {
               if (!wavesurfer.loaded) {
-                $("#soundSrc").attr("src", wavesurfer.song);
-                wavesurfer.load(mediaElt, wavesurfer.backend.peaks)
+                $("#sound").attr("src", wavesurfer.song);
+                wavesurfer.load(mediaElt, wavesurfer.backend.peaks);
               } else {
-                wavesurfer.play()
+                wavesurfer.play();
               }
-              playPauseContent.className = 'fa fa-pause'
+              playPauseContent.className = 'fa fa-pause';
             }
           }
           let requestOptions = {
