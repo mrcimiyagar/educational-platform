@@ -66,6 +66,7 @@ export default function MessageItem(props) {
                 ) : message.messageType === 'audio' ? (
                   <WaveSurferBox
                     fileId={message.fileId}
+                    roomId={message.roomId}
                     src={
                       serverRoot +
                       `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
@@ -185,6 +186,7 @@ export default function MessageItem(props) {
                 ) : message.messageType === 'audio' ? (
                   <WaveSurferBox
                     fileId={message.fileId}
+                    roomId={message.roomId}
                     src={
                       serverRoot +
                       `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
@@ -321,6 +323,7 @@ export default function MessageItem(props) {
                 ) : message.messageType === 'audio' ? (
                   <WaveSurferBox
                     fileId={message.fileId}
+                    roomId={message.roomId}
                     src={
                       serverRoot +
                       `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
@@ -439,6 +442,7 @@ export default function MessageItem(props) {
                 ) : message.messageType === 'audio' ? (
                   <WaveSurferBox
                     fileId={message.fileId}
+                    roomId={message.roomId}
                     src={
                       serverRoot +
                       `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
