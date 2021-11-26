@@ -5,7 +5,7 @@ import { serverRoot } from "../../util/Utils";
 
 export function WaveSurferBox(props) {
   return (
-    <iframe 
+    <iframe
         onLoad={() => {window.frames['wavesurfer-' + props.fileId].postMessage({sender: 'main', serverRoot: serverRoot, src: props.src, token: token, fileId: props.fileId, roomId: props.roomId}, pathConfig.waveSurferBox)}}
         id={'wavesurfer-' + props.fileId}
         name={'wavesurfer-' + props.fileId}
