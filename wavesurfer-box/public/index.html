@@ -97,6 +97,12 @@
                     wavesurfer.load(wavesurfer.song, wavesurfer.backend.peaks)
                   }
                 })
+                wavesurfer.on("ready", function () {
+                  if(!wavesurfer.loaded) {
+                    wavesurfer.loaded = true;
+                    wavesurfer.play();
+                  }
+                });
               }
             })
             .catch((error) => console.log('error', error))
