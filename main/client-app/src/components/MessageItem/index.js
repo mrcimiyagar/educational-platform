@@ -38,13 +38,16 @@ export default function MessageItem(props) {
                 width: 'auto',
                 minWidth: 150,
                 maxWidth: 300,
-                padding: 16,
+                paddingTop: 8,
+                paddingBottom: 4,
+                paddingRight: 16,
+                paddingLeft: 16,
                 backgroundColor: '#1a8a98',
                 color: '#fff',
                 borderRadius: '16px 16px 0px 16px',
                 position: 'absolute',
+                marginTop: 8,
                 right: 48,
-                marginTop: 16,
                 background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
               }}
             >
@@ -62,7 +65,10 @@ export default function MessageItem(props) {
               <br />
               <div >
                 {message.messageType === 'text' ? (
-                  message.text
+                  
+                  <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
+                    {message.text}
+                  </div>
                 ) : message.messageType === 'audio' ? (
                   <WaveSurferBox
                     fileId={message.fileId}
@@ -105,7 +111,9 @@ export default function MessageItem(props) {
                     />
                   </div>
                 ) : (
-                  message.text
+                  <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
+                    {message.text}
+                  </div>
                 )}
                 {message.messageType === 'video' ? (
                   <IconButton
@@ -137,7 +145,7 @@ export default function MessageItem(props) {
                   bottom: 8,
                   fontSize: 12,
                   color: '#fff',
-                  display: 'flex',
+                  display: 'flex'
                 }}
               >
                 <DoneAll id={'message-seen-' + message.id} style={{ display: message.seen > 0 ? 'block' : 'none', width: 16, height: 16, marginRight: 12 }} />
@@ -160,11 +168,14 @@ export default function MessageItem(props) {
                 width: 'auto',
                 minWidth: 150,
                 maxWidth: 300,
-                padding: 16,
+                paddingTop: 8,
+                paddingBottom: 4,
+                paddingRight: 16,
+                paddingLeft: 16,
+                marginTop: 8,
                 backgroundColor: '#1a8a98',
                 color: '#fff',
                 borderRadius: '16px 16px 0px 16px',
-                marginTop: 16,
                 background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
               }}
             >
@@ -182,7 +193,10 @@ export default function MessageItem(props) {
               <br />
               <div >
                 {message.messageType === 'text' ? (
-                  message.text
+                  
+                  <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
+                    {message.text}
+                  </div>
                 ) : message.messageType === 'audio' ? (
                   <WaveSurferBox
                     fileId={message.fileId}
@@ -225,7 +239,10 @@ export default function MessageItem(props) {
                     />
                   </div>
                 ) : (
-                  message.text
+                  
+                  <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
+                    {message.text}
+                  </div>
                 )}
                 {message.messageType === 'video' ? (
                   <IconButton
@@ -258,6 +275,7 @@ export default function MessageItem(props) {
                   fontSize: 12,
                   color: '#fff',
                   display: 'flex',
+                  transform: 'translateY(-8px)'
                 }}
               >
                 {dateTime.toLocaleDateString('fa-IR').toString() +
@@ -295,13 +313,16 @@ export default function MessageItem(props) {
                 width: 'auto',
                 minWidth: 150,
                 maxWidth: 300,
-                padding: 16,
+                paddingTop: 8,
+                paddingBottom: 4,
+                paddingRight: 16,
+                paddingLeft: 16,
                 backgroundColor: '#1a8a98',
                 color: '#fff',
                 borderRadius: '16px 16px 16px 0px',
                 position: 'absolute',
+                marginTop: 8,
                 left: 48,
-                marginTop: 16,
                 background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
               }}
             >
@@ -319,7 +340,10 @@ export default function MessageItem(props) {
               <br />
               <div >
                 {message.messageType === 'text' ? (
-                  message.text
+                  
+                  <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
+                    {message.text}
+                  </div>
                 ) : message.messageType === 'audio' ? (
                   <WaveSurferBox
                     fileId={message.fileId}
@@ -363,7 +387,10 @@ export default function MessageItem(props) {
                     />
                   </div>
                 ) : (
-                  message.text
+                  
+                  <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
+                    {message.text}
+                  </div>
                 )}
                 {message.messageType === 'video' ? (
                   <IconButton
@@ -395,6 +422,7 @@ export default function MessageItem(props) {
                   bottom: 8,
                   fontSize: 12,
                   color: '#fff',
+                  transform: 'translateY(-8px)'
                 }}
               >
                 {dateTime.toLocaleDateString('fa-IR').toString() +
@@ -415,10 +443,13 @@ export default function MessageItem(props) {
                 width: 'auto',
                 minWidth: 150,
                 maxWidth: 300,
-                padding: 16,
+                paddingTop: 8,
+                paddingBottom: 4,
+                paddingRight: 16,
+                paddingLeft: 16,
                 color: 'transparent',
                 marginLeft: 16,
-                marginTop: 16,
+                marginTop: 8,
                 color: '#fff',
                 left: 0,
                 background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
@@ -438,7 +469,10 @@ export default function MessageItem(props) {
               <br />
               <div >
                 {message.messageType === 'text' ? (
-                  message.text
+                  
+                  <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
+                    {message.text}
+                  </div>
                 ) : message.messageType === 'audio' ? (
                   <WaveSurferBox
                     fileId={message.fileId}
@@ -482,7 +516,10 @@ export default function MessageItem(props) {
                     />
                   </div>
                 ) : (
-                  message.text
+                  
+                  <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
+                    {message.text}
+                  </div>
                 )}
                 {message.messageType === 'video' ? (
                   <IconButton
@@ -511,9 +548,9 @@ export default function MessageItem(props) {
                 style={{
                   position: 'absolute',
                   right: 12,
-                  bottom: 8,
                   fontSize: 12,
                   color: '#fff',
+                  transform: 'translateY(-8px)'
                 }}
               >
                 {dateTime.toLocaleDateString('fa-IR').toString() +

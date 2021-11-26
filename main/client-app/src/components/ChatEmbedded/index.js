@@ -353,6 +353,16 @@ export default function ChatEmbedded(props) {
   })
 
   useEffect(() => {
+    var textAreaField = document.getElementById('chatText')
+    textAreaField.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey) {
+        e.preventDefault();
+        document.getElementById('sendBtn').click()
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     if (
       !loading &&
       pickingFile &&
@@ -606,6 +616,7 @@ export default function ChatEmbedded(props) {
             <EmojiEmotionsIcon />
           </IconButton>
           <InputBase
+            multiline
             id={'chatText'}
             className={classes.input}
             style={{ flex: 1 }}
@@ -615,6 +626,7 @@ export default function ChatEmbedded(props) {
             }}
           />
           <IconButton
+            id={'sendBtn'}
             color="primary"
             className={classes.iconButton}
             style={{ transform: 'rotate(180deg)' }}

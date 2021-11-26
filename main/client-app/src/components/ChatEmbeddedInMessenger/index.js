@@ -278,6 +278,16 @@ export default function ChatEmbeddedInMessenger(props) {
     width: '100%',
   })
 
+  useEffect(() => {
+    var textAreaField = document.getElementById('chatText')
+    textAreaField.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey) {
+        e.preventDefault();
+        document.getElementById('sendBtn').click()
+      }
+    });
+  }, []);
+
   let replaceMessageInTheList = (msg) => {
     if (msg.roomId === props.roomId) {
       let lastMsg = (
@@ -565,6 +575,7 @@ export default function ChatEmbeddedInMessenger(props) {
             <EmojiEmotionsIcon />
           </IconButton>
           <InputBase
+            multiline
             id={'chatText'}
             className={classes.input}
             style={{ flex: 1 }}
@@ -574,6 +585,7 @@ export default function ChatEmbeddedInMessenger(props) {
             }}
           />
           <IconButton
+            id={'sendBtn'}
             color="primary"
             className={classes.iconButton}
             style={{ transform: 'rotate(180deg)' }}

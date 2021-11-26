@@ -1,30 +1,46 @@
-import { css } from '@emotion/css';
-import { Avatar, Fab, Typography } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
-import Slide from '@material-ui/core/Slide';
-import { makeStyles } from '@material-ui/core/styles';
-import { ArrowDownward, DoneAll, PlayArrowTwoTone } from '@material-ui/icons';
-import DescriptionIcon from '@material-ui/icons/Description';
-import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
-import SendIcon from '@material-ui/icons/Send';
-import 'emoji-mart/css/emoji-mart.css';
-import { Picker } from 'emoji-mart';
-import React, { useEffect } from 'react';
-import Viewer from 'react-viewer';
-import { useFilePicker } from 'use-file-picker';
-import { cacheMessage, fetchMessagesOfRoom, gotoPage, inTheGame, isOnline, popPage, registerDialogOpen, setDialogOpen, setInTheGame } from '../../App';
-import ChatAppBar from '../../components/ChatAppBar';
-import { colors, me, setToken, token } from '../../util/settings';
-import { ConnectToIo, leaveRoom, serverRoot, socket, useForceUpdate } from '../../util/Utils';
-import ChatWallpaper from '../../images/chat-wallpaper.jpg';
-import { setLastMessage, updateChat } from '../../components/HomeMain';
-import $ from 'jquery';
-import MessageItem from '../../components/MessageItem';
-import { resetMessages2 } from '../../components/ChatEmbeddedInMessenger';
-import { resetMessages3 } from '../../components/ChatEmbedded';
-import store, { changeConferenceMode } from '../../redux/main';
+import { css } from '@emotion/css'
+import { Avatar, Fab, Typography } from '@material-ui/core'
+import Dialog from '@material-ui/core/Dialog'
+import IconButton from '@material-ui/core/IconButton'
+import InputBase from '@material-ui/core/InputBase'
+import Slide from '@material-ui/core/Slide'
+import { makeStyles } from '@material-ui/core/styles'
+import { ArrowDownward, DoneAll, PlayArrowTwoTone } from '@material-ui/icons'
+import DescriptionIcon from '@material-ui/icons/Description'
+import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions'
+import SendIcon from '@material-ui/icons/Send'
+import 'emoji-mart/css/emoji-mart.css'
+import { Picker } from 'emoji-mart'
+import React, { useEffect } from 'react'
+import Viewer from 'react-viewer'
+import { useFilePicker } from 'use-file-picker'
+import {
+  cacheMessage,
+  fetchMessagesOfRoom,
+  gotoPage,
+  inTheGame,
+  isOnline,
+  popPage,
+  registerDialogOpen,
+  setDialogOpen,
+  setInTheGame,
+} from '../../App'
+import ChatAppBar from '../../components/ChatAppBar'
+import { colors, me, setToken, token } from '../../util/settings'
+import {
+  ConnectToIo,
+  leaveRoom,
+  serverRoot,
+  socket,
+  useForceUpdate,
+} from '../../util/Utils'
+import ChatWallpaper from '../../images/chat-wallpaper.jpg'
+import { setLastMessage, updateChat } from '../../components/HomeMain'
+import $ from 'jquery'
+import MessageItem from '../../components/MessageItem'
+import { resetMessages2 } from '../../components/ChatEmbeddedInMessenger'
+import { resetMessages3 } from '../../components/ChatEmbedded'
+import store, { changeConferenceMode } from '../../redux/main'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />
@@ -58,9 +74,9 @@ const useStyles = makeStyles((theme) => ({
 
 let messagesArr = []
 export let resetMessages = () => {
-  messagesArr = [];
-  resetMessages2();
-  resetMessages3();
+  messagesArr = []
+  resetMessages2()
+  resetMessages3()
 }
 
 let uplaodedFileId = 0
@@ -68,12 +84,11 @@ let uplaodedFileId = 0
 export let addMessageToList = () => {}
 export let replaceMessageInTheList = () => {}
 
-let goingToRoom = false;
+let goingToRoom = false
 
 export default function Chat(props) {
-
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  props = Object.fromEntries(urlSearchParams.entries());
+  const urlSearchParams = new URLSearchParams(window.location.search)
+  props = Object.fromEntries(urlSearchParams.entries())
 
   document.documentElement.style.overflowY = 'hidden'
 
@@ -85,7 +100,7 @@ export default function Chat(props) {
   let [room, setRoom] = React.useState(undefined)
   const [open, setOpen] = React.useState(true)
   const [showEmojiPad, setShowEmojiPad] = React.useState(false)
-  let [pickingFile, setPickingFile] = React.useState(false);
+  let [pickingFile, setPickingFile] = React.useState(false)
 
   useEffect(() => {
     let requestOptions = {
@@ -99,18 +114,19 @@ export default function Chat(props) {
       }),
       redirect: 'follow',
     }
-    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions);
-    getRoomPromise.then((response) => response.json())
+    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions)
+    getRoomPromise
+      .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
         setRoom(result.room)
         setToken(localStorage.getItem('token'))
-        if (isOnline) ConnectToIo(token, () => {});
+        if (isOnline) ConnectToIo(token, () => {})
         window.scrollTo(0, 0)
         store.dispatch(changeConferenceMode(true))
       })
-      .catch((error) => console.log('error', error));
-    
+      .catch((error) => console.log('error', error))
+
     let requestOptions2 = {
       method: 'POST',
       headers: {
@@ -122,27 +138,33 @@ export default function Chat(props) {
       }),
       redirect: 'follow',
     }
-    let enterRoomPromise = fetch(serverRoot + '/room/enter_room', requestOptions2);
-    enterRoomPromise.then((response) => response.json())
+    let enterRoomPromise = fetch(
+      serverRoot + '/room/enter_room',
+      requestOptions2,
+    )
+    enterRoomPromise
+      .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
-        forceUpdate();
+        forceUpdate()
       })
       .catch((error) => console.log('error', error))
 
-    return () => {leaveRoom(() => {});}
+    return () => {
+      leaveRoom(() => {})
+    }
   }, [])
 
   registerDialogOpen(setOpen)
   const handleClose = () => {
-    goingToRoom = false;
-    setInTheGame(false);
+    goingToRoom = false
+    setInTheGame(false)
     setTimeout(() => {
-      setOpen(false);
+      setOpen(false)
       setTimeout(() => {
-        popPage();
-      }, 250);
-    }, 500);
+        popPage()
+      }, 250)
+    }, 500)
   }
   let classes = useStyles()
   const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
@@ -152,8 +174,8 @@ export default function Chat(props) {
   let [showScrollDown, setShowScrollDown] = React.useState(false)
 
   useEffect(() => {
-    fetchMessagesOfRoom(props.roomId).then(data => {
-      let index = 0;
+    fetchMessagesOfRoom(props.roomId).then((data) => {
+      let index = 0
       data.forEach((message) => {
         messagesArr.push(
           <MessageItem
@@ -163,12 +185,12 @@ export default function Chat(props) {
             setPhotoViewerVisible={setPhotoViewerVisible}
             setCurrentPhotoSrc={setCurrentPhotoSrc}
           />,
-        );
-        index++;
-      });
+        )
+        index++
+      })
       forceUpdate()
       setScrollTrigger(!scrollTrigger)
-    });
+    })
   }, [props.roomId, props.userId])
 
   useEffect(() => {
@@ -178,18 +200,17 @@ export default function Chat(props) {
 
   replaceMessageInTheList = (msg) => {
     if (msg.roomId === props.room_id) {
-      let messageSeen = document.getElementById('message-seen-' + msg.id);
-      let messageNotSeen = document.getElementById('message-not-seen-' + msg.id);
+      let messageSeen = document.getElementById('message-seen-' + msg.id)
+      let messageNotSeen = document.getElementById('message-not-seen-' + msg.id)
       if (messageSeen !== null && messageNotSeen !== null) {
         if (msg.seen > 0) {
-          messageSeen.style.display = 'block';
-          messageNotSeen.style.display = 'none';
+          messageSeen.style.display = 'block'
+          messageNotSeen.style.display = 'none'
+        } else {
+          messageSeen.style.display = 'none'
+          messageNotSeen.style.display = 'block'
         }
-        else {
-          messageSeen.style.display = 'none';
-          messageNotSeen.style.display = 'block';
-        }
-        forceUpdate();
+        forceUpdate()
       }
     }
   }
@@ -219,7 +240,7 @@ export default function Chat(props) {
         messagesArr.push(lastMsg)
         forceUpdate()
         if (isAtEnd) {
-          setScrollTrigger(!scrollTrigger);
+          setScrollTrigger(!scrollTrigger)
         }
         let requestOptions3 = {
           method: 'POST',
@@ -316,62 +337,62 @@ export default function Chat(props) {
       .catch((error) => console.log('error', error))
     setTimeout(() => {
       let requestOptions3 = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            token: token,
-          },
-          body: JSON.stringify({
-            roomId: props.room_id,
-          }),
-          redirect: 'follow',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify({
+          roomId: props.room_id,
+        }),
+        redirect: 'follow',
       }
       fetch(serverRoot + '/chat/get_messages', requestOptions3)
         .then((response) => response.json())
         .then((result) => {
-            console.log(JSON.stringify(result))
-            if (result.messages !== undefined) {
-              messagesArr = []
-              let index = 0;
-              result.messages.forEach((message) => {
-                cacheMessage(message);
-                messagesArr.push(
-                  <MessageItem
-                    index={index}
-                    key={'message-' + message.id}
-                    message={message}
-                    setPhotoViewerVisible={setPhotoViewerVisible}
-                    setCurrentPhotoSrc={setCurrentPhotoSrc}
-                  />,
-                );
-                index++;
-              });
-              forceUpdate()
-              setScrollTrigger(!scrollTrigger)
-    
-              let requestOptions3 = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  token: token,
-                },
-                body: JSON.stringify({
-                  roomId: props.room_id,
-                }),
-                redirect: 'follow',
-              }
-              fetch(serverRoot + '/chat/get_chat', requestOptions3)
-                .then((response) => response.json())
-                .then((result) => {
-                  updateChat(result.room);
-                });
+          console.log(JSON.stringify(result))
+          if (result.messages !== undefined) {
+            messagesArr = []
+            let index = 0
+            result.messages.forEach((message) => {
+              cacheMessage(message)
+              messagesArr.push(
+                <MessageItem
+                  index={index}
+                  key={'message-' + message.id}
+                  message={message}
+                  setPhotoViewerVisible={setPhotoViewerVisible}
+                  setCurrentPhotoSrc={setCurrentPhotoSrc}
+                />,
+              )
+              index++
+            })
+            forceUpdate()
+            setScrollTrigger(!scrollTrigger)
+
+            let requestOptions3 = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                token: token,
+              },
+              body: JSON.stringify({
+                roomId: props.room_id,
+              }),
+              redirect: 'follow',
             }
+            fetch(serverRoot + '/chat/get_chat', requestOptions3)
+              .then((response) => response.json())
+              .then((result) => {
+                updateChat(result.room)
+              })
+          }
         })
-        .catch((error) => console.log('error', error));
-    });
+        .catch((error) => console.log('error', error))
+    })
     setTimeout(() => {
-      setInTheGame(true);
-    }, 1000);
+      setInTheGame(true)
+    }, 1000)
   }, [])
 
   const ROOT_CSS = css({
@@ -380,10 +401,20 @@ export default function Chat(props) {
   })
 
   useEffect(() => {
+    var textAreaField = document.getElementById('chatText')
+    textAreaField.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey) {
+        e.preventDefault();
+        document.getElementById('sendBtn').click()
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     if (!loading && pickingFile) {
       setPickingFile(false)
       let dataUrl = filesContent[0]
-      alert(dataUrl.name);
+      alert(dataUrl.name)
       fetch(dataUrl.content)
         .then((res) => res.blob())
         .then((file) => {
@@ -393,7 +424,13 @@ export default function Chat(props) {
           request.open(
             'POST',
             serverRoot +
-              `/file/upload_file?token=${token}&roomId=${props.room_id}&extension=${(dataUrl.name.lastIndexOf('.') + 1) >= 0 ? dataUrl.name.substr(dataUrl.name.lastIndexOf('.') + 1) : ''}&isPresent=false`,
+              `/file/upload_file?token=${token}&roomId=${
+                props.room_id
+              }&extension=${
+                dataUrl.name.lastIndexOf('.') + 1 >= 0
+                  ? dataUrl.name.substr(dataUrl.name.lastIndexOf('.') + 1)
+                  : ''
+              }&isPresent=false`,
           )
           let f = { progress: 0, name: file.name, size: file.size, local: true }
           request.upload.addEventListener('progress', function (e) {
@@ -472,15 +509,19 @@ export default function Chat(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
-                    cacheMessage(result.message);
-                    let msgEl = document.getElementById('message-' + msg.id);
-                    let msgSeenEl = document.getElementById('message-seen-' + msg.id);
-                    let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);
-                    msgEl.id = 'message-' + result.message.id;
-                    msgSeenEl.id = 'message-seen-' + result.message.id;
-                    msgNotSeenEl.id = 'message-not-seen-' + result.message.id;
-                    msg.id = result.message.id;
-                    forceUpdate();
+                    cacheMessage(result.message)
+                    let msgEl = document.getElementById('message-' + msg.id)
+                    let msgSeenEl = document.getElementById(
+                      'message-seen-' + msg.id,
+                    )
+                    let msgNotSeenEl = document.getElementById(
+                      'message-not-seen-' + msg.id,
+                    )
+                    msgEl.id = 'message-' + result.message.id
+                    msgSeenEl.id = 'message-seen-' + result.message.id
+                    msgNotSeenEl.id = 'message-not-seen-' + result.message.id
+                    msg.id = result.message.id
+                    forceUpdate()
                   }
                 })
                 .catch((error) => console.log('error', error))
@@ -536,13 +577,24 @@ export default function Chat(props) {
           }}
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
-        <ChatAppBar handleClose={handleClose} user={user} room={room} handleCallClicked={() => {goingToRoom = true;}}/>
+        <ChatAppBar
+          handleClose={handleClose}
+          user={user}
+          room={room}
+          handleCallClicked={() => {
+            goingToRoom = true
+          }}
+        />
         <div
           style={{ position: 'fixed', bottom: 0, height: 'auto', zIndex: 1000 }}
         >
           <div
             className={classes.root}
-            style={{ height: 56, bottom: inTheGame ? (showEmojiPad ? 416 : 0) : -72, transition: 'bottom .5s'  }}
+            style={{
+              height: 56,
+              bottom: inTheGame ? (showEmojiPad ? 416 : 0) : -72,
+              transition: 'bottom .5s',
+            }}
           >
             <IconButton
               className={classes.iconButton}
@@ -581,14 +633,16 @@ export default function Chat(props) {
               <EmojiEmotionsIcon />
             </IconButton>
             <InputBase
+              multiline
               id={'chatText'}
               className={classes.input}
               placeholder="پیام خود را بنویسید"
               onChange={() => {
-                socket.emit('chat-typing');
+                socket.emit('chat-typing')
               }}
             />
             <IconButton
+              id={'sendBtn'}
               color="primary"
               className={classes.iconButton}
               style={{ transform: 'rotate(180deg)' }}
@@ -623,15 +677,20 @@ export default function Chat(props) {
                     .then((result) => {
                       console.log(JSON.stringify(result))
                       if (result.message !== undefined) {
-                        cacheMessage(result.message);
-                        let msgEl = document.getElementById('message-' + msg.id);
-                        let msgSeenEl = document.getElementById('message-seen-' + msg.id);
-                        let msgNotSeenEl = document.getElementById('message-not-seen-' + msg.id);
-                        msgEl.id = 'message-' + result.message.id;
-                        msgSeenEl.id = 'message-seen-' + result.message.id;
-                        msgNotSeenEl.id = 'message-not-seen-' + result.message.id;
-                        msg.id = result.message.id;
-                        forceUpdate();
+                        cacheMessage(result.message)
+                        let msgEl = document.getElementById('message-' + msg.id)
+                        let msgSeenEl = document.getElementById(
+                          'message-seen-' + msg.id,
+                        )
+                        let msgNotSeenEl = document.getElementById(
+                          'message-not-seen-' + msg.id,
+                        )
+                        msgEl.id = 'message-' + result.message.id
+                        msgSeenEl.id = 'message-seen-' + result.message.id
+                        msgNotSeenEl.id =
+                          'message-not-seen-' + result.message.id
+                        msg.id = result.message.id
+                        forceUpdate()
                       }
                     })
                     .catch((error) => console.log('error', error))
@@ -643,22 +702,19 @@ export default function Chat(props) {
             </IconButton>
             <br />
           </div>
-          {
-            showEmojiPad ?
-              <Picker
-                set={'apple'}
-                style={{
-                  width: '100%',
-                  height: 416,
-                  marginTop: 40,
-                }}
-                onSelect={currentEmoji => {
-                  document.getElementById('chatText').value += currentEmoji.native;
-                }}
-              /> :
-              null
-          }
-          
+          {showEmojiPad ? (
+            <Picker
+              set={'apple'}
+              style={{
+                width: '100%',
+                height: 416,
+                marginTop: 40,
+              }}
+              onSelect={(currentEmoji) => {
+                document.getElementById('chatText').value += currentEmoji.native
+              }}
+            />
+          ) : null}
         </div>
         <div
           style={{
