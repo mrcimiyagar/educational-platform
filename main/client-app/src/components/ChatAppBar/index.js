@@ -73,6 +73,14 @@ export default function ChatAppBar(props) {
 
   useEffect(() => {
     if (socket !== undefined) {
+      socket.off('uploading');
+      socket.off('uploading', () => {
+        setTl('در حال آپلود...');
+      });
+      socket.off('uploading_done');
+      socket.off('uploading_done', () => {
+        setTl('');
+      });
       socket.off('chat-typing');
       socket.on('chat-typing', typingList => {
         typingList = typingList.filter((u) => {

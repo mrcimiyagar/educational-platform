@@ -22,12 +22,13 @@ function getFilesizeInBytes(filename) {
 }
 
 router.post('/upload_file', jsonParser, async function (req, res) {
+
     let token = req.query.token;
     let roomId = Number(req.query.roomId);
     let ext = req.query.extension;
     let isPresent = Boolean(req.query.isPresent)
     authenticateMember(req, res, async (membership, session, user) => {
-            
+            require("../server").pushTo('room_' + membership.roomId, 'uploading', {});
             if (!membership.canUploadFile) {
                 res.send({status: 'error', errorCode: 'e0005', message: 'access denied.'});
                 return;
@@ -60,6 +61,9 @@ router.post('/upload_file', jsonParser, async function (req, res) {
                     let oldPath = files.file.path;
                     let newPath = rootPath + '/files/' + file.id;
                     fs.copyFileSync(oldPath, newPath);
+
+                    require("../server").pushTo('room_' + membership.roomId, 'uploading_done', {});
+
                     if (ext === 'pdf') {
                         let previewFactoryPath = rootPath + '/temp/' + file.id + '.pdf';
                         fs.copyFileSync(oldPath, previewFactoryPath);
