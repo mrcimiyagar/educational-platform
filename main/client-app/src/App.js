@@ -542,7 +542,27 @@ let InnerApp = (props) => {
   )
 }
 
+const rand = () => {
+  return Math.random().toString(36).substr(2);
+};
+
+const randId = () => {
+  return rand() + rand();
+};
+
 export let inTheGame, setInTheGame;
+export let uploadingFiles, setUploadingFiles;
+export let markFileAsUploading = (roomId, file) => {
+  if (uploadingFiles[roomId] === undefined) uploadingFiles[roomId] = {};
+  let id = randId();
+  file.message.id = 'message_' + id;
+  uploadingFiles[roomId][id] = file;
+  return id;
+}
+export let markFileAsUploaded = (roomId, id) => {
+  if (uploadingFiles[roomId] === undefined) uploadingFiles[roomId] = {};
+  delete uploadingFiles[roomId][id];
+}
 
 let MainAppContainer;
 
@@ -559,6 +579,7 @@ if (window.innerWidth > 900) {
     let [hp, setHp] = React.useState();
     let [opacity, setOpacity] = React.useState(0);
     ;[routeTrigger, setRouteTrigger] = React.useState(false);
+    ;[uploadingFiles, setUploadingFiles] = React.useState({});
     setHistPage = setHp;
     histPage = hp;
     animatePageChange = () => {

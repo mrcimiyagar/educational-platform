@@ -73,28 +73,33 @@ export default function MessageItem(props) {
                   <WaveSurferBox
                     fileId={message.fileId}
                     roomId={message.roomId}
-                    src={
+                    src={message.fileUrl === undefined ?
                       serverRoot +
-                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                      message.fileUrl
                     }
                   />
                 ) : message.messageType === 'photo' ? (
                   <img
                     onClick={() => {
-                      props.setCurrentPhotoSrc(
+                      props.setCurrentPhotoSrc(message.fileUrl === undefined ?
                         serverRoot +
-                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                          message.fileUrl
                       )
                       props.setPhotoViewerVisible(true)
                     }}
                     style={{ width: 200 }}
                     src={
+                      message.fileUrl === undefined ?
                       serverRoot +
-                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                      message.fileUrl
                     }
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
+                    {message.fileUrl === undefined ?
                     <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
@@ -108,7 +113,19 @@ export default function MessageItem(props) {
                         serverRoot +
                         `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
                       }
+                    /> :
+                    <video
+                      onClick={() => {
+                        gotoPage('/app/videoplayer', {
+                          src: message.fileUrl
+                        })
+                      }}
+                      style={{ width: 200 }}
+                      src={
+                        message.fileUrl
+                      }
                     />
+                    }
                   </div>
                 ) : (
                   <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
@@ -201,28 +218,33 @@ export default function MessageItem(props) {
                   <WaveSurferBox
                     fileId={message.fileId}
                     roomId={message.roomId}
-                    src={
+                    src={message.fileUrl === undefined ?
                       serverRoot +
-                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                      message.fileUrl
                     }
                   />
                 ) : message.messageType === 'photo' ? (
                   <img
                     onClick={() => {
-                      props.setCurrentPhotoSrc(
+                      props.setCurrentPhotoSrc(message.fileUrl === undefined ?
                         serverRoot +
-                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                          message.fileUrl
                       )
                       props.setPhotoViewerVisible(true)
                     }}
                     style={{ width: 200 }}
                     src={
+                      message.fileUrl === undefined ?
                       serverRoot +
-                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                      message.fileUrl
                     }
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
+                    {message.fileUrl === undefined ?
                     <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
@@ -236,10 +258,21 @@ export default function MessageItem(props) {
                         serverRoot +
                         `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
                       }
+                    /> :
+                    <video
+                      onClick={() => {
+                        gotoPage('/app/videoplayer', {
+                          src: message.fileUrl
+                        })
+                      }}
+                      style={{ width: 200 }}
+                      src={
+                        message.fileUrl
+                      }
                     />
+                    }
                   </div>
                 ) : (
-                  
                   <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
                     {message.text}
                   </div>
@@ -274,10 +307,11 @@ export default function MessageItem(props) {
                   bottom: 8,
                   fontSize: 12,
                   color: '#fff',
-                  display: 'flex',
-                  transform: 'translateY(-8px)'
+                  display: 'flex'
                 }}
               >
+                <DoneAll id={'message-seen-' + message.id} style={{ display: message.seen > 0 ? 'block' : 'none', width: 16, height: 16, marginRight: 12 }} />
+                <Done id={'message-not-seen-' + message.id} style={{ display: message.seen > 0 ? 'none' : 'block', width: 16, height: 16, marginRight: 12 }} />
                 {dateTime.toLocaleDateString('fa-IR').toString() +
                   ' ' +
                   dateTime.getHours() +
@@ -348,28 +382,33 @@ export default function MessageItem(props) {
                   <WaveSurferBox
                     fileId={message.fileId}
                     roomId={message.roomId}
-                    src={
+                    src={message.fileUrl === undefined ?
                       serverRoot +
-                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                      message.fileUrl
                     }
                   />
                 ) : message.messageType === 'photo' ? (
                   <img
                     onClick={() => {
-                      props.setCurrentPhotoSrc(
+                      props.setCurrentPhotoSrc(message.fileUrl === undefined ?
                         serverRoot +
-                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                          message.fileUrl
                       )
                       props.setPhotoViewerVisible(true)
                     }}
                     style={{ width: 200 }}
                     src={
+                      message.fileUrl === undefined ?
                       serverRoot +
-                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                      message.fileUrl
                     }
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
+                    {message.fileUrl === undefined ?
                     <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
@@ -378,16 +417,26 @@ export default function MessageItem(props) {
                             `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
                         })
                       }}
-                      controls={false}
                       style={{ width: 200 }}
                       src={
                         serverRoot +
                         `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
                       }
+                    /> :
+                    <video
+                      onClick={() => {
+                        gotoPage('/app/videoplayer', {
+                          src: message.fileUrl
+                        })
+                      }}
+                      style={{ width: 200 }}
+                      src={
+                        message.fileUrl
+                      }
                     />
+                    }
                   </div>
                 ) : (
-                  
                   <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
                     {message.text}
                   </div>
@@ -477,28 +526,33 @@ export default function MessageItem(props) {
                   <WaveSurferBox
                     fileId={message.fileId}
                     roomId={message.roomId}
-                    src={
+                    src={message.fileUrl === undefined ?
                       serverRoot +
-                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                      message.fileUrl
                     }
                   />
                 ) : message.messageType === 'photo' ? (
                   <img
                     onClick={() => {
-                      props.setCurrentPhotoSrc(
+                      props.setCurrentPhotoSrc(message.fileUrl === undefined ?
                         serverRoot +
-                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                          message.fileUrl
                       )
                       props.setPhotoViewerVisible(true)
                     }}
                     style={{ width: 200 }}
                     src={
+                      message.fileUrl === undefined ?
                       serverRoot +
-                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+                      `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                      message.fileUrl
                     }
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
+                    {message.fileUrl === undefined ?
                     <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
@@ -507,16 +561,26 @@ export default function MessageItem(props) {
                             `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
                         })
                       }}
-                      controls={false}
                       style={{ width: 200 }}
                       src={
                         serverRoot +
                         `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
                       }
+                    /> :
+                    <video
+                      onClick={() => {
+                        gotoPage('/app/videoplayer', {
+                          src: message.fileUrl
+                        })
+                      }}
+                      style={{ width: 200 }}
+                      src={
+                        message.fileUrl
+                      }
                     />
+                    }
                   </div>
                 ) : (
-                  
                   <div style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}>
                     {message.text}
                   </div>

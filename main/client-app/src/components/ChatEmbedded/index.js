@@ -7,8 +7,8 @@ import { ArrowDownward, PlayArrowTwoTone } from '@material-ui/icons'
 import DescriptionIcon from '@material-ui/icons/Description'
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions'
 import SendIcon from '@material-ui/icons/Send'
-import 'emoji-mart/css/emoji-mart.css';
-import { Picker } from 'emoji-mart';
+import 'emoji-mart/css/emoji-mart.css'
+import { Picker } from 'emoji-mart'
 import React, { useEffect } from 'react'
 import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
@@ -23,12 +23,22 @@ import {
   isInRoom,
   isOnline,
   isTablet,
+  markFileAsUploaded,
+  markFileAsUploading,
   popPage,
   routeTrigger,
   setDialogOpen,
+  uploadingFiles,
 } from '../../App'
 import { colors, me, setToken, token } from '../../util/settings'
-import { ConnectToIo, isMobile, leaveRoom, serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import {
+  ConnectToIo,
+  isMobile,
+  leaveRoom,
+  serverRoot,
+  socket,
+  useForceUpdate,
+} from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
 import ChatWallpaper from '../../images/chat-wallpaper.png'
 import { setLastMessage, updateChat } from '../../components/HomeMain'
@@ -80,23 +90,23 @@ export let updateChatEmbedded = undefined
 export default function ChatEmbedded(props) {
   document.documentElement.style.overflowY = 'hidden'
 
-  let forceUpdate = useForceUpdate();
-  updateChatEmbedded = forceUpdate;
-  let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false);
-  let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('');
-  let [user, setUser] = React.useState(undefined);
-  let [room, setRoom] = React.useState(undefined);
-  const [showEmojiPad, setShowEmojiPad] = React.useState(false);
-  let [pickingFile, setPickingFile] = React.useState(false);
-  let classes = useStyles();
+  let forceUpdate = useForceUpdate()
+  updateChatEmbedded = forceUpdate
+  let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false)
+  let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('')
+  let [user, setUser] = React.useState(undefined)
+  let [room, setRoom] = React.useState(undefined)
+  const [showEmojiPad, setShowEmojiPad] = React.useState(false)
+  let [pickingFile, setPickingFile] = React.useState(false)
+  let classes = useStyles()
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
     readAs: 'DataURL',
-  });
-  let [scrollTrigger, setScrollTrigger] = React.useState(false);
-  let [showScrollDown, setShowScrollDown] = React.useState(false);
+  })
+  let [scrollTrigger, setScrollTrigger] = React.useState(false)
+  let [showScrollDown, setShowScrollDown] = React.useState(false)
 
   useEffect(() => {
-    fetchMessagesOfRoom(props.roomId).then(data => {
+    fetchMessagesOfRoom(props.roomId).then((data) => {
       data.forEach((message) => {
         messagesArr.push(
           <MessageItem
@@ -104,12 +114,12 @@ export default function ChatEmbedded(props) {
             message={message}
             setPhotoViewerVisible={setPhotoViewerVisible}
             setCurrentPhotoSrc={setCurrentPhotoSrc}
-          />
-        );
-      });
+          />,
+        )
+      })
       forceUpdate()
       setScrollTrigger(!scrollTrigger)
-    });
+    })
   }, [props.roomId, props.userId])
 
   useEffect(() => {
@@ -205,17 +215,18 @@ export default function ChatEmbedded(props) {
       }),
       redirect: 'follow',
     }
-    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions);
-    getRoomPromise.then((response) => response.json())
+    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions)
+    getRoomPromise
+      .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
         setRoom(result.room)
         setToken(localStorage.getItem('token'))
-        if (isOnline) ConnectToIo(token, () => {});
+        if (isOnline) ConnectToIo(token, () => {})
         window.scrollTo(0, 0)
       })
-      .catch((error) => console.log('error', error));
-    
+      .catch((error) => console.log('error', error))
+
     let requestOptions2 = {
       method: 'POST',
       headers: {
@@ -227,14 +238,18 @@ export default function ChatEmbedded(props) {
       }),
       redirect: 'follow',
     }
-    let enterRoomPromise = fetch(serverRoot + '/room/enter_room', requestOptions2);
-    enterRoomPromise.then((response) => response.json())
+    let enterRoomPromise = fetch(
+      serverRoot + '/room/enter_room',
+      requestOptions2,
+    )
+    enterRoomPromise
+      .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
-        forceUpdate();
+        forceUpdate()
       })
       .catch((error) => console.log('error', error))
-  }, [props.roomId]);
+  }, [props.roomId])
 
   useEffect(() => {
     let scroller = document.getElementById('scroller')
@@ -290,8 +305,8 @@ export default function ChatEmbedded(props) {
         }
       })
       .catch((error) => console.log('error', error))
-    
-    const requestedRoomId = props.roomId;
+
+    const requestedRoomId = props.roomId
 
     let requestOptions3 = {
       method: 'POST',
@@ -312,17 +327,29 @@ export default function ChatEmbedded(props) {
           if (requestedRoomId === props.roomId) {
             messagesArr = []
             result.messages.forEach((message) => {
-              cacheMessage(message);
+              cacheMessage(message)
               messagesArr.push(
                 <MessageItem
                   key={'message-' + message.id}
                   message={message}
                   setPhotoViewerVisible={setPhotoViewerVisible}
                   setCurrentPhotoSrc={setCurrentPhotoSrc}
-                />
-              );
-            });
-            forceUpdate();
+                />,
+              )
+            })
+            if (uploadingFiles[props.roomId] !== undefined) {
+              Object.values(uploadingFiles[props.roomId]).forEach((file) => {
+                messagesArr.push(
+                  <MessageItem
+                    key={'message-' + file.message.id}
+                    message={file.message}
+                    setPhotoViewerVisible={setPhotoViewerVisible}
+                    setCurrentPhotoSrc={setCurrentPhotoSrc}
+                  />,
+                )
+              })
+            }
+            forceUpdate()
           }
           setScrollTrigger(!scrollTrigger)
 
@@ -356,11 +383,11 @@ export default function ChatEmbedded(props) {
     var textAreaField = document.getElementById('chatText')
     textAreaField.addEventListener('keydown', function (e) {
       if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey) {
-        e.preventDefault();
+        e.preventDefault()
         document.getElementById('sendBtn').click()
       }
-    });
-  }, []);
+    })
+  }, [])
 
   useEffect(() => {
     if (
@@ -374,13 +401,53 @@ export default function ChatEmbedded(props) {
       fetch(dataUrl.content)
         .then((res) => res.blob())
         .then((file) => {
+          let msg = {
+            time: Date.now(),
+            authorId: me.id,
+            roomId: props.roomId,
+            text: document.getElementById('chatText').value,
+            messageType:
+              dataUrl.name.endsWith('.svg') ||
+              dataUrl.name.endsWith('.png') ||
+              dataUrl.name.endsWith('.jpg') ||
+              dataUrl.name.endsWith('.jpeg') ||
+              dataUrl.name.endsWith('.gif')
+                ? 'photo'
+                : dataUrl.name.endsWith('.wav') ||
+                  dataUrl.name.endsWith('.mp3') ||
+                  dataUrl.name.endsWith('.mpeg') ||
+                  dataUrl.name.endsWith('.aac')
+                ? 'audio'
+                : dataUrl.name.endsWith('.webm') ||
+                  dataUrl.name.endsWith('.mkv') ||
+                  dataUrl.name.endsWith('.flv') ||
+                  dataUrl.name.endsWith('.3gp') ||
+                  dataUrl.name.endsWith('.mp4')
+                ? 'video'
+                : undefined,
+            fileUrl: URL.createObjectURL(file),
+            User: me,
+          }
+          const id = markFileAsUploading(props.roomId, {
+            message: msg,
+            file: file,
+            dataUrl: dataUrl,
+          })
+          addMessageToList(msg)
+          setLastMessage(msg)
           let data = new FormData()
           data.append('file', file)
           let request = new XMLHttpRequest()
           request.open(
             'POST',
             serverRoot +
-              `/file/upload_file?token=${token}&roomId=${props.roomId}&extension=${(dataUrl.name.lastIndexOf('.') + 1) >= 0 ? dataUrl.name.substr(dataUrl.name.lastIndexOf('.') + 1) : ''}&isPresent=false`,
+              `/file/upload_file?token=${token}&roomId=${
+                props.roomId
+              }&extension=${
+                dataUrl.name.lastIndexOf('.') + 1 >= 0
+                  ? dataUrl.name.substr(dataUrl.name.lastIndexOf('.') + 1)
+                  : ''
+              }&isPresent=false`,
           )
           let f = { progress: 0, name: file.name, size: file.size, local: true }
           request.upload.addEventListener('progress', function (e) {
@@ -393,34 +460,7 @@ export default function ChatEmbedded(props) {
           })
           request.onreadystatechange = function () {
             if (request.readyState === XMLHttpRequest.DONE) {
-              let msg = {
-                id: 'message_' + Date.now(),
-                time: Date.now(),
-                authorId: me.id,
-                roomId: props.roomId,
-                text: document.getElementById('chatText').value,
-                messageType:
-                  dataUrl.name.endsWith('.svg') ||
-                  dataUrl.name.endsWith('.png') ||
-                  dataUrl.name.endsWith('.jpg') ||
-                  dataUrl.name.endsWith('.jpeg') ||
-                  dataUrl.name.endsWith('.gif')
-                    ? 'photo'
-                    : dataUrl.name.endsWith('.wav') ||
-                      dataUrl.name.endsWith('.mp3') ||
-                      dataUrl.name.endsWith('.mpeg') ||
-                      dataUrl.name.endsWith('.aac')
-                    ? 'audio'
-                    : dataUrl.name.endsWith('.webm') ||
-                      dataUrl.name.endsWith('.mkv') ||
-                      dataUrl.name.endsWith('.flv') ||
-                      dataUrl.name.endsWith('.3gp') ||
-                      dataUrl.name.endsWith('.mp4')
-                    ? 'video'
-                    : undefined,
-                fileId: JSON.parse(request.responseText).file.id,
-                User: me,
-              }
+              markFileAsUploaded(props.roomId, id)
               addMessageToList(msg)
               setLastMessage(msg)
               let requestOptions = {
@@ -459,7 +499,7 @@ export default function ChatEmbedded(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
-                    cacheMessage(result.message);
+                    cacheMessage(result.message)
                     let msgEl = document.getElementById('message-' + msg.id)
                     let msgSeenEl = document.getElementById(
                       'message-seen-' + msg.id,
@@ -500,10 +540,10 @@ export default function ChatEmbedded(props) {
   if (isDesktop()) {
     if (isInRoom()) {
       width = 450
-      height = props.webcamOn ? 'calc(100% - 300px)' : 'calc(100% + 16px)';
+      height = props.webcamOn ? 'calc(100% - 300px)' : 'calc(100% + 16px)'
       left = 'calc(100% - 450px)'
       right = 0
-      top = 0;
+      top = 0
     } else if (isInMessenger()) {
       width = '100٪'
       height = '100%'
@@ -511,7 +551,7 @@ export default function ChatEmbedded(props) {
       right = undefined
       top = 16
     }
-  } else if (isMobile() || isTablet()) { 
+  } else if (isMobile() || isTablet()) {
     if (isInRoom()) {
       width = '100%'
       height = '100%'
@@ -528,233 +568,232 @@ export default function ChatEmbedded(props) {
   }
 
   return (
-    <div style={{width: 450, height: '100%'}}>
-    <div
-      style={{
-        display:
-          props.roomId === undefined || props.roomId === 0 ? 'none' : 'block',
-        width: width,
-        height: height,
-        position: 'absolute',
-        top: top,
-        left: left,
-        right: right,
-        bottom: isDesktop() ? 16 : 0,
-      }}
-    >
+    <div style={{ width: 450, height: '100%' }}>
       <div
         style={{
-          width: '100%',
-          height: '100%',
+          display:
+            props.roomId === undefined || props.roomId === 0 ? 'none' : 'block',
+          width: width,
+          height: height,
           position: 'absolute',
-          backgroundImage: `url(${ChatWallpaper})`,
-          top: isDesktop() ? 16 : 0,
-          left: isDesktop() ? 96 : 0,
-          right: isDesktop()
-            ? isInRoom() || histPage === '/app/settings'
-              ? 0
-              : 16
-            : 0,
-          bottom: isDesktop() ? -16 : 0,
-          backdropFilter: 'blur(10px)',
-          borderRadius: '0 0 0 24px',
+          top: top,
+          left: left,
+          right: right,
+          bottom: isDesktop() ? 16 : 0,
         }}
-      />
-      <Viewer
-        zIndex={99999}
-        style={{ position: 'fixed', left: 0, top: 0 }}
-        visible={photoViewerVisible}
-        onClose={() => {
-          setPhotoViewerVisible(false)
-        }}
-        images={[{ src: currentPhotoSrc, alt: '' }]}
-      />
-      <ChatAppBar user={user} room={room} webcamOn={props.webcamOn} />
-      <div style={{ width: '100%', height: 'auto', zIndex: 1000 }}>
+      >
         <div
-          className={classes.root}
           style={{
-            height: 56,
-            bottom: showEmojiPad ? 352 + 56 : isDesktop() ? 48 : 88,
-            transform: 'translateX(-128px)',
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            backgroundImage: `url(${ChatWallpaper})`,
+            top: isDesktop() ? 16 : 0,
+            left: isDesktop() ? 96 : 0,
+            right: isDesktop()
+              ? isInRoom() || histPage === '/app/settings'
+                ? 0
+                : 16
+              : 0,
+            bottom: isDesktop() ? -16 : 0,
+            backdropFilter: 'blur(10px)',
+            borderRadius: '0 0 0 24px',
           }}
-        >
-          <IconButton
-            className={classes.iconButton}
-            onClick={() => {
-              setPickingFile(true)
-              openFileSelector()
+        />
+        <Viewer
+          zIndex={99999}
+          style={{ position: 'fixed', left: 0, top: 0 }}
+          visible={photoViewerVisible}
+          onClose={() => {
+            setPhotoViewerVisible(false)
+          }}
+          images={[{ src: currentPhotoSrc, alt: '' }]}
+        />
+        <ChatAppBar user={user} room={room} webcamOn={props.webcamOn} />
+        <div style={{ width: '100%', height: 'auto', zIndex: 1000 }}>
+          <div
+            className={classes.root}
+            style={{
+              height: 56,
+              bottom: showEmojiPad ? 352 + 56 : isDesktop() ? 48 : 88,
+              transform: 'translateX(-128px)',
             }}
           >
-            <DescriptionIcon />
-          </IconButton>
-          <IconButton
-            className={classes.iconButton}
-            onClick={() => {
-              if (showEmojiPad) {
-                setShowEmojiPad(!showEmojiPad)
-                window.onpopstate = function (event) {
-                  if (setDialogOpen !== null) {
-                    setDialogOpen(false)
-                  }
-                  setTimeout(popPage, 250)
-                }
-              } else {
-                setShowEmojiPad(!showEmojiPad)
-                window.onpopstate = function (event) {
-                  setShowEmojiPad(false)
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => {
+                setPickingFile(true)
+                openFileSelector()
+              }}
+            >
+              <DescriptionIcon />
+            </IconButton>
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => {
+                if (showEmojiPad) {
+                  setShowEmojiPad(!showEmojiPad)
                   window.onpopstate = function (event) {
                     if (setDialogOpen !== null) {
                       setDialogOpen(false)
                     }
                     setTimeout(popPage, 250)
                   }
+                } else {
+                  setShowEmojiPad(!showEmojiPad)
+                  window.onpopstate = function (event) {
+                    setShowEmojiPad(false)
+                    window.onpopstate = function (event) {
+                      if (setDialogOpen !== null) {
+                        setDialogOpen(false)
+                      }
+                      setTimeout(popPage, 250)
+                    }
+                  }
                 }
-              }
-            }}
-          >
-            <EmojiEmotionsIcon />
-          </IconButton>
-          <InputBase
-            multiline
-            id={'chatText'}
-            className={classes.input}
-            style={{ flex: 1 }}
-            placeholder="پیام خود را بنویسید"
-            onChange={() => {
-              socket.emit('chat-typing');
-            }}
-          />
-          <IconButton
-            id={'sendBtn'}
-            color="primary"
-            className={classes.iconButton}
-            style={{ transform: 'rotate(180deg)' }}
-            onClick={() => {
-              if (document.getElementById('chatText').value !== '') {
-                let msg = {
-                  id: 'message_' + Date.now(),
-                  time: Date.now(),
-                  authorId: me.id,
-                  roomId: props.roomId,
-                  text: document.getElementById('chatText').value,
-                  messageType: 'text',
-                  User: me,
-                }
-                addMessageToList(msg)
-                setLastMessage(msg)
-                let requestOptions = {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    token: token,
-                  },
-                  body: JSON.stringify({
+              }}
+            >
+              <EmojiEmotionsIcon />
+            </IconButton>
+            <InputBase
+              multiline
+              id={'chatText'}
+              className={classes.input}
+              style={{ flex: 1 }}
+              placeholder="پیام خود را بنویسید"
+              onChange={() => {
+                socket.emit('chat-typing')
+              }}
+            />
+            <IconButton
+              id={'sendBtn'}
+              color="primary"
+              className={classes.iconButton}
+              style={{ transform: 'rotate(180deg)' }}
+              onClick={() => {
+                if (document.getElementById('chatText').value !== '') {
+                  let msg = {
+                    id: 'message_' + Date.now(),
+                    time: Date.now(),
+                    authorId: me.id,
                     roomId: props.roomId,
                     text: document.getElementById('chatText').value,
                     messageType: 'text',
-                    fileId: null,
-                  }),
-                  redirect: 'follow',
+                    User: me,
+                  }
+                  addMessageToList(msg)
+                  setLastMessage(msg)
+                  let requestOptions = {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      token: token,
+                    },
+                    body: JSON.stringify({
+                      roomId: props.roomId,
+                      text: document.getElementById('chatText').value,
+                      messageType: 'text',
+                      fileId: null,
+                    }),
+                    redirect: 'follow',
+                  }
+                  fetch(serverRoot + '/chat/create_message', requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                      console.log(JSON.stringify(result))
+                      if (result.message !== undefined) {
+                        cacheMessage(result.message)
+                        let msgEl = document.getElementById('message-' + msg.id)
+                        let msgSeenEl = document.getElementById(
+                          'message-seen-' + msg.id,
+                        )
+                        let msgNotSeenEl = document.getElementById(
+                          'message-not-seen-' + msg.id,
+                        )
+                        msgEl.id = 'message-' + result.message.id
+                        msgSeenEl.id = 'message-seen-' + result.message.id
+                        msgNotSeenEl.id =
+                          'message-not-seen-' + result.message.id
+                        msg.id = result.message.id
+                        forceUpdate()
+                      }
+                    })
+                    .catch((error) => console.log('error', error))
+                  document.getElementById('chatText').value = ''
                 }
-                fetch(serverRoot + '/chat/create_message', requestOptions)
-                  .then((response) => response.json())
-                  .then((result) => {
-                    console.log(JSON.stringify(result))
-                    if (result.message !== undefined) {
-                      cacheMessage(result.message);
-                      let msgEl = document.getElementById('message-' + msg.id)
-                      let msgSeenEl = document.getElementById(
-                        'message-seen-' + msg.id,
-                      )
-                      let msgNotSeenEl = document.getElementById(
-                        'message-not-seen-' + msg.id,
-                      )
-                      msgEl.id = 'message-' + result.message.id
-                      msgSeenEl.id = 'message-seen-' + result.message.id
-                      msgNotSeenEl.id = 'message-not-seen-' + result.message.id
-                      msg.id = result.message.id
-                      forceUpdate()
-                    }
-                  })
-                  .catch((error) => console.log('error', error))
-                document.getElementById('chatText').value = ''
-              }
+              }}
+            >
+              <SendIcon style={{ fill: colors.primaryMedium }} />
+            </IconButton>
+            <br />
+          </div>
+          {showEmojiPad ? (
+            <Picker
+              set={'apple'}
+              style={{
+                width: isDesktop()
+                  ? isInRoom() || histPage === '/app/settings'
+                    ? 450
+                    : 'calc(100% - 658px - 96px)'
+                  : 'calc(100% - 450px)',
+                height: 416,
+                position: 'fixed',
+                left: isDesktop()
+                  ? isInRoom() || histPage === '/app/settings'
+                    ? 'calc(100% - 450px)'
+                    : 96
+                  : 0,
+                bottom: 0,
+                zIndex: 5000,
+              }}
+              onSelect={(currentEmoji) => {
+                document.getElementById('chatText').value += currentEmoji.native
+              }}
+            />
+          ) : null}
+        </div>
+        <div
+          style={{
+            direction: 'ltr',
+            width: isDesktop() ? 'calc(100% - 48px)' : '100%',
+            height: showEmojiPad
+              ? 'calc(100% - 416px - 56px)'
+              : isTablet()
+              ? 'calc(100% - 64px - 72px)'
+              : isDesktop() && (isInRoom() || histPage === '/app/settings')
+              ? 'calc(100% - 96px)'
+              : 'calc(100% - 64px)',
+            marginTop: 0,
+            marginLeft: isDesktop() ? 32 : 0,
+            marginRight: 16,
+            position: 'relative',
+          }}
+        >
+          <div
+            style={{ width: '100%', height: '100%', overflow: 'auto' }}
+            id={'scroller'}
+          >
+            <div style={{ height: 64 }} />
+            <div id={'messagesContainer'}>{messagesArr}</div>
+            <div style={{ width: '100%', height: 80 }} />
+          </div>
+          <Fab
+            color={'secondary'}
+            style={{
+              display: showScrollDown ? 'block' : 'none',
+              position: 'fixed',
+              left: isInMessenger() ? 24 + 16 : undefined,
+              right: isInRoom() ? 450 - 56 - 16 : undefined,
+              bottom: isInMessenger() ? 72 + 16 : 72 + 32 + 16,
+            }}
+            onClick={() => {
+              setScrollTrigger(!scrollTrigger)
             }}
           >
-            <SendIcon style={{fill: colors.primaryMedium}} />
-          </IconButton>
-          <br />
+            <ArrowDownward />
+          </Fab>
         </div>
-        {
-            showEmojiPad ?
-              <Picker
-                set={'apple'}
-                style={{
-                  width: isDesktop()
-              ? isInRoom() || histPage === '/app/settings'
-                ? 450
-                : 'calc(100% - 658px - 96px)'
-              : 'calc(100% - 450px)',
-            height: 416,
-            position: 'fixed',
-            left: isDesktop()
-              ? isInRoom() || histPage === '/app/settings'
-                ? 'calc(100% - 450px)'
-                : 96
-              : 0,
-            bottom: 0,
-            zIndex: 5000,
-                }}
-                onSelect={currentEmoji => {
-                  document.getElementById('chatText').value += currentEmoji.native;
-                }}
-              /> :
-              null
-          }
       </div>
-      <div
-        style={{
-          direction: 'ltr',
-          width: isDesktop() ? 'calc(100% - 48px)' : '100%',
-          height: showEmojiPad
-            ? 'calc(100% - 416px - 56px)'
-            : isTablet()
-            ? 'calc(100% - 64px - 72px)'
-            : isDesktop() && (isInRoom() || histPage === '/app/settings')
-            ? 'calc(100% - 96px)'
-            : 'calc(100% - 64px)',
-          marginTop: 0,
-          marginLeft: isDesktop() ? 32 : 0,
-          marginRight: 16,
-          position: 'relative',
-        }}
-      >
-        <div
-          style={{ width: '100%', height: '100%', overflow: 'auto' }}
-          id={'scroller'}
-        >
-          <div style={{ height: 64 }} />
-          <div id={'messagesContainer'}>{messagesArr}</div>
-          <div style={{ width: '100%', height: 80 }} />
-        </div>
-        <Fab
-          color={'secondary'}
-          style={{
-            display: showScrollDown ? 'block' : 'none',
-            position: 'fixed',
-            left: isInMessenger() ? 24 + 16 : undefined,
-            right: isInRoom() ? 450 - 56 - 16 : undefined,
-            bottom: isInMessenger() ? 72 + 16 : 72 + 32 + 16,
-          }}
-          onClick={() => {
-            setScrollTrigger(!scrollTrigger)
-          }}
-        >
-          <ArrowDownward />
-        </Fab>
-      </div>
-    </div>
     </div>
   )
 }

@@ -45,7 +45,7 @@ export default function VideoPlayer(props) {
             <ArrowForwardTwoTone style={{fill: '#fff'}}/>
           </IconButton>
           <video id={'video-player'} controls={true} style={{width: '100%', height: '100%', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}} 
-            src={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${props.fileId}`}/>
+            src={props.src}/>
         </div>
       </Dialog>
     )
