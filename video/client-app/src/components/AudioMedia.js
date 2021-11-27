@@ -291,19 +291,6 @@ catch(ex) {console.log(ex);}
         peer_connection.createOffer(
           function (local_description) {
             console.log('Local offer description is: ', local_description)
-            local_description = BandwidthHandler.setOpusAttributes(
-              local_description,
-              {
-                stereo: 0, // to disable stereo (to force mono audio)
-                'sprop-stereo': 1,
-                maxaveragebitrate: 500 * 1024 * 8, // 500 kbits
-                maxplaybackrate: 500 * 1024 * 8, // 500 kbits
-                cbr: 0, // disable cbr
-                useinbandfec: 1, // use inband fec
-                usedtx: 1, // use dtx
-                maxptime: 3,
-              },
-            )
             peer_connection.setLocalDescription(
               local_description,
               function () {
