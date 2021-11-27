@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import $ from 'jquery';
-import io from 'socket.io-client';
+import React, { useEffect } from 'react'
+import $ from 'jquery'
+import io from 'socket.io-client'
 import { BandwidthHandler } from '../utils/BandwidthHandler'
 
 var USE_AUDIO = true
@@ -71,67 +71,66 @@ var signaling_socket = null /* our socket.io connection to our webserver */
 var local_media_stream = null /* our own microphone / webcam */
 var peers = {} /* keep track of our peer connections, indexed by peer_id (aka socket.io id) */
 
-export let endAudio;
-export let startAudio;
-export let initAudio;
+export let endAudio
+export let startAudio
+export let initAudio
 export let destructAudioNet = () => {
   try {
     for (let peer_id in peers) {
       peers[peer_id].close()
     }
-  } catch(ex) {}
+  } catch (ex) {}
   peers = {}
   try {
-    signaling_socket.close();
-  } catch(ex) {}
+    signaling_socket.close()
+  } catch (ex) {}
   try {
     local_media_stream.getVideoTracks().forEach((track) => {
       track.stop()
     })
-  } catch(ex) {}
-  local_media_stream = null;
-};
+  } catch (ex) {}
+  local_media_stream = null
+}
 
 export default function AudioMedia(props) {
-
-  let userId = props.userId;
-  let roomId = props.roomId;
+  let userId = props.userId
+  let roomId = props.roomId
 
   function setup_local_media(constraints, callback, errorback) {
     /* Ask user for permission to use the computers microphone and/or camera,
      * attach it to an <audio> or <audio> tag if they give us access. */
     console.log('Requesting access to local audio / audio inputs')
-  
+
     if (constraints.audio === undefined) {
-      let stream = produceEmptyStream();
-      local_media_stream = stream;
-      props.updateData('me');
-      props.data['me_audio'] = stream;
-      props.forceUpdate();
-      if (callback) callback(stream);
-      return;
+      let stream = produceEmptyStream()
+      local_media_stream = stream
+      props.updateData('me')
+      props.data['me_audio'] = stream
+      props.forceUpdate()
+      if (callback) callback(stream)
+      return
     }
-  
+
     navigator.getUserMedia(
       constraints,
       function (stream) {
         /* user accepted access to a/v */
         console.log('Access granted to audio/audio')
-        local_media_stream = stream;
-        let foundTag = undefined;
+        local_media_stream = stream
+        let foundTag = undefined
         Object.entries(props.data).forEach(([id, stream]) => {
           if (id.startsWith('me_audio')) {
-            foundTag = id;
+            foundTag = id
           }
         })
         if (foundTag !== undefined) {
-          props.data[foundTag] = undefined;
+          props.data[foundTag] = undefined
         }
-        props.updateData('me');
-        props.data['me_audio'] = stream;
-        props.shownUsers['me'] = true;
-        props.forceUpdate();
-        if (callback) callback(stream);
+        props.updateData('me')
+        props.data['me_audio'] = stream
+        props.shownUsers['me'] = true
+        props.forceUpdate()
+        if (callback) callback(stream)
       },
       function () {
         /* user denied access to a/v */
@@ -144,64 +143,70 @@ export default function AudioMedia(props) {
     )
   }
 
-startAudio = () => {
-  if (local_media_stream !== null && local_media_stream !== undefined) {
-    local_media_stream.getAudioTracks().forEach((track) => {
-      track.stop()
-    })
-  }
-  setup_local_media({ audio: true }, function (
-    stream,
-  ) {
-    //document.getElementById('me_audio').srcObject = stream;
-    stream = stream.pipeThrough(new window.CompressionStream('gzip'));
-    let audioTrack = stream.getAudioTracks()[0]
-    for (let id in peers) {
-      if (peers[id] === undefined) continue
-      let pc = peers[id]
-      var sender = pc.getSenders().find(function (s) {
-        return s.track.kind == audioTrack.kind
+  startAudio = () => {
+    if (local_media_stream !== null && local_media_stream !== undefined) {
+      local_media_stream.getAudioTracks().forEach((track) => {
+        track.stop()
       })
-      console.log('found sender:', sender)
-      sender.replaceTrack(audioTrack)
     }
-    signaling_socket.emit('showMe');
-  })
-}
-
-endAudio = () => {
-  try {
-    signaling_socket.emit('hideMe');
-  if (local_media_stream !== null && local_media_stream !== undefined) {
-    local_media_stream.getAudioTracks().forEach((track) => {
-      track.stop()
-    })
+    setup_local_media(
+      {
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100,
+        },
+      },
+      function (stream) {
+        //document.getElementById('me_audio').srcObject = stream;
+        let audioTrack = stream.getAudioTracks()[0]
+        for (let id in peers) {
+          if (peers[id] === undefined) continue
+          let pc = peers[id]
+          var sender = pc.getSenders().find(function (s) {
+            return s.track.kind == audioTrack.kind
+          })
+          console.log('found sender:', sender)
+          sender.replaceTrack(audioTrack)
+        }
+        signaling_socket.emit('showMe')
+      },
+    )
   }
-  delete props.shownUsers['me'];
-  props.updateData('me');
-  props.forceUpdate();
-}
-catch(ex) {console.log(ex);}
-}
+
+  endAudio = () => {
+    try {
+      signaling_socket.emit('hideMe')
+      if (local_media_stream !== null && local_media_stream !== undefined) {
+        local_media_stream.getAudioTracks().forEach((track) => {
+          track.stop()
+        })
+      }
+      delete props.shownUsers['me']
+      props.updateData('me')
+      props.forceUpdate()
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
 
   function initInner(audioServerWebsocket) {
-
     console.log('Connecting to signaling server')
     signaling_socket = io(audioServerWebsocket, { query: `userId=${userId}` })
-  
-    signaling_socket.on('showUser', function ({peer_id, userId}) {
-      console.log('showing user audio...');
-      props.updateData(userId);
-      props.shownUsers[userId] = true;
-      props.forceUpdate();
+
+    signaling_socket.on('showUser', function ({ peer_id, userId }) {
+      console.log('showing user audio...')
+      props.updateData(userId)
+      props.shownUsers[userId] = true
+      props.forceUpdate()
     })
 
-    signaling_socket.on('hideUser', function ({peer_id, userId}) {
-      console.log('hiding user audio...');
-      props.updateData(userId);
-      delete props.shownUsers[userId];
+    signaling_socket.on('hideUser', function ({ peer_id, userId }) {
+      console.log('hiding user audio...')
+      props.updateData(userId)
+      delete props.shownUsers[userId]
       //delete props.data[userId + '_audio'];
-      props.forceUpdate();
+      props.forceUpdate()
     })
 
     signaling_socket.on('connect', function () {
@@ -222,11 +227,11 @@ catch(ex) {console.log(ex);}
       for (let peer_id in peers) {
         peers[peer_id].close()
       }
-  
+
       peers = {}
       window.peer_media_elements = {}
     })
-  
+
     /**
      * When we join a group, our signaling server will send out 'addPeer' events to each pair
      * of users in the group (creating a fully-connected graph of users, ie if there are 6 people
@@ -251,7 +256,7 @@ catch(ex) {console.log(ex);}
       )
       peer_connection.userId = config.userId
       peers[peer_id] = peer_connection
-  
+
       peer_connection.onicecandidate = function (event) {
         if (event.candidate) {
           signaling_socket.emit('relayICECandidate', {
@@ -263,26 +268,25 @@ catch(ex) {console.log(ex);}
           })
         }
       }
-      peer_connection.onaddstream = function (event) { 
-        event.stream = event.stream.pipeThrough(new window.DecompressionStream('gzip'));
-        console.log('onAddStream', event);
-        let foundTag = undefined;
+      peer_connection.onaddstream = function (event) {
+        console.log('onAddStream', event)
+        let foundTag = undefined
         Object.entries(props.data).forEach(([id, stream]) => {
           if (id.startsWith(config.userId + '_audio')) {
-            foundTag = id;
+            foundTag = id
           }
         })
         if (foundTag !== undefined) {
-          props.data[foundTag] = undefined;
+          props.data[foundTag] = undefined
         }
-        props.updateData(config.userId);
-        props.data[config.userId + '_audio'] = event.stream;
-        props.forceUpdate();
+        props.updateData(config.userId)
+        props.data[config.userId + '_audio'] = event.stream
+        props.forceUpdate()
       }
-  
+
       /* Add our local stream */
       peer_connection.addStream(local_media_stream)
-  
+
       /* Only one side of the peer connection should create the
        * offer, the signaling server picks one to be the offerer.
        * The other user will get a 'sessionDescription' event and will
@@ -313,7 +317,7 @@ catch(ex) {console.log(ex);}
         )
       }
     })
-  
+
     /**
      * Peers exchange session descriptions which contains information
      * about their video / video settings and that sort of stuff. First
@@ -326,7 +330,7 @@ catch(ex) {console.log(ex);}
       var peer = peers[peer_id]
       var remote_description = config.session_description
       console.log(config.session_description)
-  
+
       var desc = new RTCSessionDescription(remote_description)
       var stuff = peer.setRemoteDescription(
         desc,
@@ -364,7 +368,7 @@ catch(ex) {console.log(ex);}
       )
       console.log('Description Object: ', desc)
     })
-  
+
     /**
      * The offerer will send a number of ICE Candidate blobs to the answerer so they
      * can begin trying to find the best path to one another on the net.
@@ -374,7 +378,7 @@ catch(ex) {console.log(ex);}
       var ice_candidate = config.ice_candidate
       peer.addIceCandidate(new RTCIceCandidate(ice_candidate))
     })
-  
+
     /**
      * When a user leaves a channel (or is disconnected from the
      * signaling server) everyone will recieve a 'removePeer' message
@@ -394,26 +398,26 @@ catch(ex) {console.log(ex);}
       if (peer_id in peers) {
         peers[peer_id].close()
       }
-  
+
       delete peers[peer_id]
     })
   }
-  
-  initAudio = () => {
-        let requestOptions = {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          redirect: 'follow',
-        }
-        fetch('https://config.kaspersoft.cloud', requestOptions)
-          .then((response) => response.json())
-          .then((result) => {
-            pathConfig = result
-            initInner(pathConfig.videoConfAudio)
-          })
-  };
 
-  return <div/>;
+  initAudio = () => {
+    let requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      redirect: 'follow',
+    }
+    fetch('https://config.kaspersoft.cloud', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        pathConfig = result
+        initInner(pathConfig.videoConfAudio)
+      })
+  }
+
+  return <div />
 }

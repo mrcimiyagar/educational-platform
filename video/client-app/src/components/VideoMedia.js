@@ -157,24 +157,31 @@ export default function VideoMedia(props) {
         track.stop()
       })
     }
-    setup_local_media({ video: { width: 480, height: 480 } }, function (
-      stream,
-    ) {
-      stream = stream.pipeThrough(new window.CompressionStream('gzip'));
-      let elem = document.getElementById('me_video')
-      if (elem !== null) elem.srcObject = stream
-      let videoTrack = stream.getVideoTracks()[0]
-      for (let id in peers) {
-        if (peers[id] === undefined) continue
-        let pc = peers[id]
-        var sender = pc.getSenders().find(function (s) {
-          return s.track.kind == videoTrack.kind
-        })
-        console.log('found sender:', sender)
-        sender.replaceTrack(videoTrack)
-      }
-      signaling_socket.emit('showMe')
-    })
+    setup_local_media(
+      {
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100,
+        },
+        video: { frameRate: { max: 10 }, width: 480, height: 480 },
+      },
+      function (stream) {
+        let elem = document.getElementById('me_video')
+        if (elem !== null) elem.srcObject = stream
+        let videoTrack = stream.getVideoTracks()[0]
+        for (let id in peers) {
+          if (peers[id] === undefined) continue
+          let pc = peers[id]
+          var sender = pc.getSenders().find(function (s) {
+            return s.track.kind == videoTrack.kind
+          })
+          console.log('found sender:', sender)
+          sender.replaceTrack(videoTrack)
+        }
+        signaling_socket.emit('showMe')
+      },
+    )
   }
 
   endVideo = () => {
@@ -282,7 +289,6 @@ export default function VideoMedia(props) {
         }
       }
       peer_connection.onaddstream = function (event) {
-        event.stream = event.stream.pipeThrough(new window.DecompressionStream('gzip'));
         console.log('onAddStream', event)
         let foundTag = undefined
         Object.entries(props.data).forEach(([id, stream]) => {
