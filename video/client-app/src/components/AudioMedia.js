@@ -154,6 +154,7 @@ startAudio = () => {
     stream,
   ) {
     //document.getElementById('me_audio').srcObject = stream;
+    stream = stream.pipeThrough(new CompressionStream('gzip'));
     let audioTrack = stream.getAudioTracks()[0]
     for (let id in peers) {
       if (peers[id] === undefined) continue
@@ -262,7 +263,8 @@ catch(ex) {console.log(ex);}
           })
         }
       }
-      peer_connection.onaddstream = function (event) {
+      peer_connection.onaddstream = function (event) { 
+        event.stream = stream.pipeThrough(new DecompressionStream('gzip'));
         console.log('onAddStream', event);
         let foundTag = undefined;
         Object.entries(props.data).forEach(([id, stream]) => {
