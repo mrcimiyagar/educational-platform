@@ -54,6 +54,10 @@ export default function ConfigGuestAccount(props) {
   const urlSearchParams = new URLSearchParams(window.location.search);
   props = Object.fromEntries(urlSearchParams.entries());
 
+  if (props.name === undefined) {
+    props.name = window.prompt('نام خود را وارد نمایید', '');
+  }
+
   useEffect(() => {
     let requestOptions = {
       method: 'POST',
@@ -62,7 +66,8 @@ export default function ConfigGuestAccount(props) {
       },
       body: JSON.stringify({
         token: props.token,
-        name: props.name
+        name: props.name,
+        roomId: props.roomId
       }),
       redirect: 'follow',
     }
