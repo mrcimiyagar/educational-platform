@@ -20,10 +20,13 @@ import {
   gotoPage,
   inTheGame,
   isOnline,
+  markFileAsUploaded,
+  markFileAsUploading,
   popPage,
   registerDialogOpen,
   setDialogOpen,
   setInTheGame,
+  uploadingFiles,
 } from '../../App'
 import ChatAppBar from '../../components/ChatAppBar'
 import { colors, me, setToken, token } from '../../util/settings'
@@ -366,9 +369,21 @@ export default function Chat(props) {
                 />,
               )
               index++
-            })
-            forceUpdate()
-            setScrollTrigger(!scrollTrigger)
+            });
+            if (uploadingFiles[props.roomId] !== undefined) {
+              Object.values(uploadingFiles[props.roomId]).forEach((file) => {
+                messagesArr.push(
+                  <MessageItem
+                    key={'message-' + file.message.id}
+                    message={file.message}
+                    setPhotoViewerVisible={setPhotoViewerVisible}
+                    setCurrentPhotoSrc={setCurrentPhotoSrc}
+                  />,
+                )
+              })
+            }
+            forceUpdate();
+            setScrollTrigger(!scrollTrigger);
 
             let requestOptions3 = {
               method: 'POST',
@@ -418,6 +433,36 @@ export default function Chat(props) {
       fetch(dataUrl.content)
         .then((res) => res.blob())
         .then((file) => {
+          let msg = {
+            time: Date.now(),
+            authorId: me.id,
+            roomId: props.room_id,
+            text: document.getElementById('chatText').value,
+            messageType:
+              dataUrl.name.endsWith('.svg') ||
+              dataUrl.name.endsWith('.png') ||
+              dataUrl.name.endsWith('.jpg') ||
+              dataUrl.name.endsWith('.jpeg') ||
+              dataUrl.name.endsWith('.gif')
+                ? 'photo'
+                : dataUrl.name.endsWith('.wav') ||
+                  dataUrl.name.endsWith('.mp3') ||
+                  dataUrl.name.endsWith('.mpeg') ||
+                  dataUrl.name.endsWith('.aac')
+                ? 'audio'
+                : dataUrl.name.endsWith('.webm') ||
+                  dataUrl.name.endsWith('.mkv') ||
+                  dataUrl.name.endsWith('.flv') ||
+                  dataUrl.name.endsWith('.3gp') ||
+                  dataUrl.name.endsWith('.mp4')
+                ? 'video'
+                : undefined,
+            fileUrl: URL.createObjectURL(file),
+            User: me,
+          };
+          const id = markFileAsUploading(props.roomId, {message: msg, file: file, dataUrl: dataUrl});
+          addMessageToList(msg);
+          setLastMessage(msg);
           let data = new FormData()
           data.append('file', file)
           let request = new XMLHttpRequest()
@@ -443,36 +488,7 @@ export default function Chat(props) {
           })
           request.onreadystatechange = function () {
             if (request.readyState == XMLHttpRequest.DONE) {
-              let msg = {
-                id: 'message_' + Date.now(),
-                time: Date.now(),
-                authorId: me.id,
-                roomId: props.room_id,
-                text: document.getElementById('chatText').value,
-                messageType:
-                  dataUrl.name.endsWith('.svg') ||
-                  dataUrl.name.endsWith('.png') ||
-                  dataUrl.name.endsWith('.jpg') ||
-                  dataUrl.name.endsWith('.jpeg') ||
-                  dataUrl.name.endsWith('.gif')
-                    ? 'photo'
-                    : dataUrl.name.endsWith('.wav') ||
-                      dataUrl.name.endsWith('.mp3') ||
-                      dataUrl.name.endsWith('.mpeg') ||
-                      dataUrl.name.endsWith('.aac')
-                    ? 'audio'
-                    : dataUrl.name.endsWith('.webm') ||
-                      dataUrl.name.endsWith('.mkv') ||
-                      dataUrl.name.endsWith('.flv') ||
-                      dataUrl.name.endsWith('.3gp') ||
-                      dataUrl.name.endsWith('.mp4')
-                    ? 'video'
-                    : undefined,
-                fileId: JSON.parse(request.responseText).file.id,
-                User: me,
-              }
-              addMessageToList(msg)
-              setLastMessage(msg)
+              markFileAsUploaded(props.roomId, id);
               let requestOptions = {
                 method: 'POST',
                 headers: {
