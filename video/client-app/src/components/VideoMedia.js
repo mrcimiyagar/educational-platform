@@ -159,11 +159,6 @@ export default function VideoMedia(props) {
     }
     setup_local_media(
       {
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          sampleRate: 44100,
-        },
         video: { frameRate: { max: 10 }, width: 480, height: 480 },
       },
       function (stream) {
