@@ -369,7 +369,7 @@ export default function Chat(props) {
                 />,
               )
               index++
-            });
+            })
             if (uploadingFiles[props.roomId] !== undefined) {
               Object.values(uploadingFiles[props.roomId]).forEach((file) => {
                 messagesArr.push(
@@ -382,8 +382,8 @@ export default function Chat(props) {
                 )
               })
             }
-            forceUpdate();
-            setScrollTrigger(!scrollTrigger);
+            forceUpdate()
+            setScrollTrigger(!scrollTrigger)
 
             let requestOptions3 = {
               method: 'POST',
@@ -415,15 +415,25 @@ export default function Chat(props) {
     width: '100%',
   })
 
+  let checkChatText = () => {
+    if (document.getElementById('chatText') !== null) {
+      var textAreaField = document.getElementById('chatText')
+      textAreaField.addEventListener('keydown', function (e) {
+        if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey) {
+          e.preventDefault()
+          document.getElementById('sendBtn').click()
+        }
+      })
+    } else {
+      setTimeout(() => {
+        checkChatText()
+      }, 500)
+    }
+  }
+
   useEffect(() => {
-    var textAreaField = document.getElementById('chatText')
-    textAreaField.addEventListener('keydown', function (e) {
-      if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey) {
-        e.preventDefault();
-        document.getElementById('sendBtn').click()
-      }
-    });
-  }, []);
+    checkChatText();
+  }, [])
 
   useEffect(() => {
     if (!loading && pickingFile) {
@@ -459,10 +469,14 @@ export default function Chat(props) {
                 : undefined,
             fileUrl: URL.createObjectURL(file),
             User: me,
-          };
-          const id = markFileAsUploading(props.roomId, {message: msg, file: file, dataUrl: dataUrl});
-          addMessageToList(msg);
-          setLastMessage(msg);
+          }
+          const id = markFileAsUploading(props.roomId, {
+            message: msg,
+            file: file,
+            dataUrl: dataUrl,
+          })
+          addMessageToList(msg)
+          setLastMessage(msg)
           let data = new FormData()
           data.append('file', file)
           let request = new XMLHttpRequest()
@@ -488,7 +502,7 @@ export default function Chat(props) {
           })
           request.onreadystatechange = function () {
             if (request.readyState == XMLHttpRequest.DONE) {
-              markFileAsUploaded(props.roomId, id);
+              markFileAsUploaded(props.roomId, id)
               let requestOptions = {
                 method: 'POST',
                 headers: {
