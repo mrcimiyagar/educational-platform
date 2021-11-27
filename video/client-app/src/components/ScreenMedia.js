@@ -142,7 +142,7 @@ startScreen = () => {
   setup_local_media({}, function (
     stream,
   ) {
-    stream = stream.pipeThrough(new CompressionStream('gzip'));
+    stream = stream.pipeThrough(new window.CompressionStream('gzip'));
     let elem = document.getElementById('me_screen');
     if (elem !== null) elem.srcObject = stream;
     let videoTrack = stream.getVideoTracks()[0]
@@ -247,7 +247,7 @@ catch(ex) {console.log(ex);}
         }
       }
       peer_connection.onaddstream = function (event) {
-        event.stream = stream.pipeThrough(new DecompressionStream('gzip'));
+        event.stream = event.stream.pipeThrough(new window.DecompressionStream('gzip'));
         console.log('onAddStream', event);
         let foundTag = undefined;
         Object.entries(props.data).forEach(([id, stream]) => {

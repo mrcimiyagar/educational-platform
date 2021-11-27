@@ -160,7 +160,7 @@ export default function VideoMedia(props) {
     setup_local_media({ video: { width: 480, height: 480 } }, function (
       stream,
     ) {
-      stream = stream.pipeThrough(new CompressionStream('gzip'));
+      stream = stream.pipeThrough(new window.CompressionStream('gzip'));
       let elem = document.getElementById('me_video')
       if (elem !== null) elem.srcObject = stream
       let videoTrack = stream.getVideoTracks()[0]
@@ -282,7 +282,7 @@ export default function VideoMedia(props) {
         }
       }
       peer_connection.onaddstream = function (event) {
-        event.stream = stream.pipeThrough(new DecompressionStream('gzip'));
+        event.stream = event.stream.pipeThrough(new window.DecompressionStream('gzip'));
         console.log('onAddStream', event)
         let foundTag = undefined
         Object.entries(props.data).forEach(([id, stream]) => {
