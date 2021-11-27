@@ -54,11 +54,10 @@ export default function ConfigGuestAccount(props) {
   const urlSearchParams = new URLSearchParams(window.location.search);
   props = Object.fromEntries(urlSearchParams.entries());
 
-  if (props.name === undefined) {
-    props.name = window.prompt('نام خود را وارد نمایید', '');
-  }
-
   useEffect(() => {
+    if (props.name === undefined) {
+      props.name = window.prompt('نام خود را وارد نمایید', '');
+    }
     let requestOptions = {
       method: 'POST',
       headers: {
