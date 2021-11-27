@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import $ from 'jquery';
 import io from 'socket.io-client';
-import { findValueByPrefix } from '../utils/utils';
+import { BandwidthHandler } from '../utils/BandwidthHandler'
 
 var USE_AUDIO = true
 var USE_VIDEO = true
