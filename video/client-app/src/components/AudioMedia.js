@@ -199,7 +199,7 @@ catch(ex) {console.log(ex);}
       console.log('hiding user audio...');
       props.updateData(userId);
       delete props.shownUsers[userId];
-      delete props.data[userId + '_audio'];
+      //delete props.data[userId + '_audio'];
       props.forceUpdate();
     })
 

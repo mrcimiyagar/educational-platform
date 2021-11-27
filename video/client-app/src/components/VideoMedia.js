@@ -217,7 +217,7 @@ export default function VideoMedia(props) {
       console.log('hiding user video...')
       props.updateData(userId)
       delete props.shownUsers[userId]
-      delete props.data[userId + '_video']
+      //delete props.data[userId + '_video']
       props.forceUpdate()
     })
 
