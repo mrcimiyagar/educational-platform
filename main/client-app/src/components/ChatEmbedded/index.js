@@ -500,8 +500,6 @@ export default function ChatEmbedded(props) {
           request.onreadystatechange = function () {
             if (request.readyState === XMLHttpRequest.DONE) {
               markFileAsUploaded(props.roomId, id)
-              addMessageToList(msg)
-              setLastMessage(msg)
               let requestOptions = {
                 method: 'POST',
                 headers: {

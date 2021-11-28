@@ -188,7 +188,11 @@ if (window.innerWidth > 900) {
         '',
         '',
         series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
-      )
+      );
+      setTimeout(() => {
+        setInTheGame(true);
+        forceUpdate();
+      }, 250);
       if (notifyUrlChanged !== undefined) notifyUrlChanged()
     }
   }
@@ -276,6 +280,10 @@ if (window.innerWidth > 900) {
         )
       }
     }
+    setTimeout(() => {
+      setInTheGame(true);
+      forceUpdate();
+    }, 250);
     
     if (notifyUrlChanged !== undefined) notifyUrlChanged()
   }

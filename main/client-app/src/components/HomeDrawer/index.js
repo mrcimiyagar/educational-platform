@@ -83,7 +83,7 @@ function HomeDrawer(props) {
               key={text}
               onClick={() => {
                 if (index === 0) {
-                  gotoPage('/app/home')
+                  gotoPage('/app/home', {tab_index: 0})
                 } else if (index === 1) {
                   
                 } else if (index === 2) {
