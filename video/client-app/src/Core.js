@@ -224,31 +224,38 @@ function App() {
   let [screenShareSupported, setScreenShareSupported] = React.useState(false);
   let [speakers, setSpeakers] = React.useState({});
 
-  var DetectRTC = require('detectrtc')
-  DetectRTC.load(function () {
-    setScreenShareSupported(DetectRTC.isScreenCapturingSupported)
-  })
-
   let DesktopDetector = () => {
-    ;[sizeMode, setSizeMode] = React.useState(
-      window.innerWidth > 1400
-        ? 'desktop'
-        : window.innerWidth > 900
-        ? 'tablet'
-        : 'mobile',
-    )
+    useEffect(() => {
+      setTimeout(() => {
+        setSizeMode(
+          window.innerWidth > 1400
+            ? 'desktop'
+            : window.innerWidth > 900
+            ? 'tablet'
+            : 'mobile'
+        );
+      }, 2500);
+    }, []);
     window.onresize = () => {
       setSizeMode(
         window.innerWidth > 1400
           ? 'desktop'
           : window.innerWidth > 900
           ? 'tablet'
-          : 'mobile',
-      )
-      forceUpdate()
+          : 'mobile'
+      );
     }
     return <div />
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      var DetectRTC = require('detectrtc');
+      DetectRTC.load(function () {
+        setScreenShareSupported(DetectRTC.isScreenCapturingSupported);
+      });
+    }, 2500);
+  }, []);
 
   let updatePresenter = (presenter) => {
     if (instantConnectionFlag) {
@@ -630,7 +637,7 @@ function App() {
         main: '#ff3300',
       },
     },
-  })
+  });
 
   return (
     <div
@@ -647,18 +654,17 @@ function App() {
         autoPlay
         style={{
           position: 'absolute',
-          transform: 'translateX(-50%)',
+          transform: sizeMode === 'mobile' ? undefined : 'translateX(-50%)',
           objectFit: 'cover',
           top: 80,
           left:
-            window.innerWidth / 2 -
-            (screenShareSupported ? 225 : 0) +
-            32 +
-            'px',
+            sizeMode === 'mobile' ? 0 :
+              (window.innerWidth / 2 - ((sizeMode === 'desktop' || (sizeMode === 'tablet' && shownScreens[presenterBackup] === true && shownVideos[presenterBackup] === true)) ? 225 : (sizeMode === 'mobile') ? 112 : 0) + 32 + 'px'),
           width:
-            shownScreens[presenterBackup] === true
-              ? window.innerWidth - 176 - 450 + 'px'
-              : window.innerWidth / 2 - 225 + 'px',
+            sizeMode === 'mobile' ? '100%' :
+              (shownScreens[presenterBackup] === true)
+                ? (window.innerWidth - 176 - (sizeMode === 'desktop' ? 450 : (shownVideos[presenterBackup] === true ? 350 : 0)) + 'px')
+                : (window.innerWidth / 2 - (sizeMode === 'desktop' ? 225 : 0) + 'px'),
           height: 'auto',
         }}
       ></video>
@@ -669,7 +675,7 @@ function App() {
           objectFit: 'cover',
           position: 'absolute',
           right: 0,
-          top: 0,
+          top: sizeMode === 'mobile' ? (window.innerWidth * 4 / 5 - 0 + 'px') : 0,
           width: 450,
           height: 300,
         }}
