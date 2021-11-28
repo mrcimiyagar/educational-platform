@@ -27,6 +27,8 @@ export default function Profile(props) {
 
   const urlSearchParams = new URLSearchParams(window.location.search);
   props = Object.fromEntries(urlSearchParams.entries());
+
+  let [user, setUser] = React.useState({});
   
   document.documentElement.style.overflowY = 'hidden'
 
@@ -40,6 +42,23 @@ export default function Profile(props) {
 
   useEffect(() => {
     setInTheGame(true);
+
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      redirect: 'follow',
+      body: JSON.stringify({
+        userId: props.user_id
+      })
+    }
+    fetch(serverRoot + '/auth/get_user', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result));
+        setUser(result.user);
+      })
   }, [])
 
   if (isDesktop() || isTablet()) {
@@ -141,7 +160,7 @@ export default function Profile(props) {
                 paddingRight: 12
               }}
             >
-              کیهان محمدی
+              {user.firstName + ' ' + user.lastName}
             </div>
 
             <div
@@ -315,7 +334,7 @@ export default function Profile(props) {
                   marginTop: -4,
                 }}
               >
-                10
+                0
               </div>
               <div
                 style={{
@@ -352,7 +371,7 @@ export default function Profile(props) {
                   marginTop: -4,
                 }}
               >
-                25
+                0
               </div>
               <div
                 style={{
@@ -380,32 +399,7 @@ export default function Profile(props) {
               alignText: 'right',
             }}
           >
-            لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و
-            بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح
-            گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و
-            ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا
-            از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد.
-            معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و
-            بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند
-            که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد
-            چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته
-            شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت
-            حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن
-            می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را
-            صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند. لورم
-            ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و
-            بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح
-            گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و
-            ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا
-            از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد.
-            معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و
-            بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند
-            که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد
-            چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته
-            شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت
-            حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن
-            می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را
-            صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.
+            
           </div>
         </div>
       </Dialog>
@@ -436,7 +430,7 @@ export default function Profile(props) {
           style={{
             position: isMobile() ? 'absolute' : undefined,
             left: isMobile() ? 0 : undefined,
-            top: isMobile() ? 0 : undefined,
+            top: isMobile() ? -350 : undefined,
             right: isMobile() ? 0 : undefined,
             bottom: isMobile() ? 0 : undefined,
             direction: 'ltr',
@@ -447,11 +441,11 @@ export default function Profile(props) {
             <div
               class="part"
               style={{
-                width: '400%',
+                width: '325%',
                 height: '150%',
                 marginLeft: '-35%',
                 marginRight: '-95%',
-                marginTop: '-125%',
+                marginTop: '-75%',
                 transform: 'rotate(-27.5deg)',
               }}
             >
@@ -479,7 +473,7 @@ export default function Profile(props) {
                 width: 112,
                 height: 112,
                 position: 'absolute',
-                marginTop: -228,
+                marginTop: -176,
                 right: 32,
               }}
             >
@@ -494,7 +488,7 @@ export default function Profile(props) {
                 position: 'absolute',
                 width: '100%',
                 right: 32,
-                marginTop: -518,
+                marginTop: -470,
               }}
             >
               <div style={{ width: '100%' }}>
@@ -526,6 +520,9 @@ export default function Profile(props) {
                     position: 'absolute',
                     left: 84,
                   }}
+                  onClick={() => {
+                    gotoPage('/app/spaces_list', {room_id: props.room_id, user_id: props.user_id});
+                  }}
                 >
                   <GroupAddIcon style={{ fill: '#fff' }} />
                 </IconButton>
@@ -542,7 +539,7 @@ export default function Profile(props) {
                   fontSize: 22,
                 }}
               >
-                کیهان محمدی
+              {user.firstName + ' ' + user.lastName}
               </div>
             </div>
             <div
@@ -552,7 +549,7 @@ export default function Profile(props) {
                 height: 40,
                 right: 32,
                 marginTop: 32,
-                marginTop: -432,
+                marginTop: -390,
                 display: 'flex',
                 flexWrap: 'wrap',
                 direction: 'rtl',
@@ -634,7 +631,7 @@ export default function Profile(props) {
           </div>
           <Fab
             color={'secondary'}
-            style={{ position: 'absolute', left: 32, marginTop: -276 }}
+            style={{ position: 'absolute', left: 32, marginTop: -232 }}
             onClick={() => {
               let requestOptions = {
                 method: 'POST',
@@ -670,7 +667,7 @@ export default function Profile(props) {
               position: 'absolute',
               width: '100%',
               right: 200,
-              marginTop: -200,
+              marginTop: -144,
               display: 'flex',
               direction: 'rtl',
             }}
@@ -697,7 +694,7 @@ export default function Profile(props) {
                   marginTop: -4,
                 }}
               >
-                10
+                0
               </div>
               <div
                 style={{
@@ -734,7 +731,7 @@ export default function Profile(props) {
                   marginTop: -4,
                 }}
               >
-                25
+                0
               </div>
               <div
                 style={{
@@ -762,32 +759,7 @@ export default function Profile(props) {
               alignText: 'right',
             }}
           >
-            لورم ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و
-            بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح
-            گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و
-            ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا
-            از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد.
-            معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و
-            بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند
-            که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد
-            چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته
-            شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت
-            حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن
-            می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را
-            صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند. لورم
-            ایپسوم یا طرح‌نما (به انگلیسی: Lorem ipsum) به متنی آزمایشی و
-            بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح
-            گرافیک از این متن به عنوان عنصری از ترکیب بندی برای پر کردن صفحه و
-            ارایه اولیه شکل ظاهری و کلی طرح سفارش گرفته شده استفاده می نماید، تا
-            از نظر گرافیکی نشانگر چگونگی نوع و اندازه فونت و ظاهر متن باشد.
-            معمولا طراحان گرافیک برای صفحه‌آرایی، نخست از متن‌های آزمایشی و
-            بی‌معنی استفاده می‌کنند تا صرفا به مشتری یا صاحب کار خود نشان دهند
-            که صفحه طراحی یا صفحه بندی شده بعد از اینکه متن در آن قرار گیرد
-            چگونه به نظر می‌رسد و قلم‌ها و اندازه‌بندی‌ها چگونه در نظر گرفته
-            شده‌است. از آنجایی که طراحان عموما نویسنده متن نیستند و وظیفه رعایت
-            حق تکثیر متون را ندارند و در همان حال کار آنها به نوعی وابسته به متن
-            می‌باشد آنها با استفاده از محتویات ساختگی، صفحه گرافیکی خود را
-            صفحه‌آرایی می‌کنند تا مرحله طراحی و صفحه‌بندی را به پایان برند.
+           
           </div>
         </div>
       </Dialog>

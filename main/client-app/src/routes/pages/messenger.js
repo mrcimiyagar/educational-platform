@@ -1,5 +1,5 @@
 import "chartjs-plugin-datalabels";
-import React from "react";
+import React, { useEffect } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-circular-progressbar/dist/styles.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
@@ -14,8 +14,8 @@ export let reloadRoomsList = undefined;
 
 function MessengerPage(props) {
   
-  const urlSearchParams = new URLSearchParams(window.location.search)
-  props = Object.fromEntries(urlSearchParams.entries())
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  props = Object.fromEntries(urlSearchParams.entries());
 
   document.documentElement.style.overflow = 'auto';
 

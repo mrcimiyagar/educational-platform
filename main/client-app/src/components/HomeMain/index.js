@@ -95,6 +95,8 @@ export let setLastMessage = () => {}
 export let addNewChat = () => {}
 export let updateChat = () => {}
 
+let tabIndexBackup = 0;
+
 export default function HomeAppbar(props) {
   updateHome = useForceUpdate()
   const classes = useStyles()
@@ -191,13 +193,17 @@ export default function HomeAppbar(props) {
       setInTheGame(true);
 
       return () => {leaveRoom(() => {});}
-  }, [])
+  }, []);
+
+  if (props.tabIndex !== undefined) {
+    tabIndexBackup = props.tabIndex;
+  }
 
   return (
     <div className={classes.root}>
-      {props.tabIndex === '4' ?
+      {tabIndexBackup === '4' ?
         <HomePage/>
-      : props.tabIndex === '0' ? 
+      : tabIndexBackup === '0' ? 
         <HomeMessenger
           chats={chats}
           value={value}
@@ -207,11 +213,11 @@ export default function HomeAppbar(props) {
           setSelectedRoomId={setSelectedRoomId}
           setSelectedUserId={setSelectedUserId}
           setDrawerOpen={setDrawerOpen}/>
-        : props.tabIndex === '1' ? (
+        : tabIndexBackup === '1' ? (
         <SpacesGrid setDrawerOpen={setDrawerOpen} />
-      ) : props.tabIndex === '2' ? (
+      ) : tabIndexBackup === '2' ? (
         <HomeNotifs setDrawerOpen={setDrawerOpen} />
-      ) : props.tabIndex === '3' ? (
+      ) : tabIndexBackup === '3' ? (
         <HomeSettings setDrawerOpen={setDrawerOpen} />
       ) : null}
       <div
@@ -228,7 +234,7 @@ export default function HomeAppbar(props) {
           setOpen={setJumperOpen}
         />
       </div>
-      <HomeBottombar inTheGame={inTheGame} tabIndex={props.tabIndex}/>
+      <HomeBottombar inTheGame={inTheGame} tabIndex={tabIndexBackup}/>
       <HomeDrawer
         open={drawerOpen}
         setOpen={setDrawerOpen}

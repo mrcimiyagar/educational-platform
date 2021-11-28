@@ -128,7 +128,7 @@ export let popPage
 export let gotoPage
 export let gotoPageWithDelay
 
-if (window.innerWidth > 900) {
+//if (window.innerWidth > 900) {
   gotoPage = (p, params) => {
     series.push(p)
     paramsSeries.push(params)
@@ -196,7 +196,7 @@ if (window.innerWidth > 900) {
       if (notifyUrlChanged !== undefined) notifyUrlChanged()
     }
   }
-} else {
+/*} else {
   gotoPage = (p, params) => {
     series.push(p)
     paramsSeries.push(params)
@@ -287,7 +287,7 @@ if (window.innerWidth > 900) {
     
     if (notifyUrlChanged !== undefined) notifyUrlChanged()
   }
-}
+}*/
 
 function HistController() {
   const history = useHistory()
@@ -576,7 +576,7 @@ let MainAppContainer;
 
 export let isOnline = true;
 
-if (window.innerWidth > 900) {
+//if (window.innerWidth > 900) {
   MainAppContainer = (props) => {
     console.warn = () => {};
     ;[inTheGame, setInTheGame] = React.useState(false);
@@ -793,7 +793,7 @@ if (window.innerWidth > 900) {
       </div>
     );
   }
-} else {
+/*} else {
   MainAppContainer = (props) => {
     console.warn = () => {};
     ;[inTheGame, setInTheGame] = React.useState(false);
@@ -926,6 +926,6 @@ if (window.innerWidth > 900) {
       </BrowserRouter>
     );
   }
-}
+}*/
 
 export default MainAppContainer;
