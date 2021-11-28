@@ -446,7 +446,7 @@ export default function Chat(props) {
           this.value =
             content.substring(0, caret) +
             '\n' +
-            content.substring(caret, content.length - 1)
+            content.substring(caret)
           e.stopPropagation()
         } else if (e.keyCode == 13) {
           e.preventDefault()
