@@ -23,15 +23,17 @@ export default function VideoPlayer(props) {
 
   return (
     <Dialog
-            onTouchStart={(e) => {e.stopPropagation();}}
-            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+      onTouchStart={(e) => {e.stopPropagation();}}
+      fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <div style={{width: '100%', height: '100%'}}>
           <IconButton style={{position: 'fixed', right: 12, top: 24}} onClick={() => {setOpen(false); setTimeout(popPage, 250)}}>
             <ArrowForwardTwoTone style={{fill: '#fff'}}/>
           </IconButton>
-          <video id={'video-player'} controls={true} style={{width: '100%', maxWidth: 600, height: 'auto', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}} 
-            src={props.src}/>
+          <video id={'video-player'} controls={true} style={{width: '100%', maxWidth: 900, height: 'auto', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}} 
+            src={props.src !== undefined ? props.src : 
+              serverRoot +
+              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${props.fileId}`}/>
         </div>
-      </Dialog>
-    )
+    </Dialog>
+  )
 }

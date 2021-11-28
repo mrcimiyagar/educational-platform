@@ -103,9 +103,8 @@ export default function MessageItem(props) {
                     <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
-                          src:
-                            serverRoot +
-                            `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                          roomId: message.roomId,
+                          fileId: message.fileId
                         })
                       }}
                       style={{ width: 200 }}
@@ -136,9 +135,8 @@ export default function MessageItem(props) {
                   <IconButton
                     onClick={() => {
                       gotoPage('/app/videoplayer', {
-                        src:
-                          serverRoot +
-                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                        roomId: message.roomId,
+                        fileId: message.fileId
                       })
                     }}
                     style={{
@@ -248,9 +246,8 @@ export default function MessageItem(props) {
                     <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
-                          src:
-                            serverRoot +
-                            `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                          roomId: message.roomId,
+                          fileId: message.fileId
                         })
                       }}
                       style={{ width: 200 }}
@@ -281,9 +278,8 @@ export default function MessageItem(props) {
                   <IconButton
                     onClick={() => {
                       gotoPage('/app/videoplayer', {
-                        src:
-                          serverRoot +
-                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                        roomId: message.roomId,
+                        fileId: message.fileId
                       })
                     }}
                     style={{
@@ -412,9 +408,8 @@ export default function MessageItem(props) {
                     <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
-                          src:
-                            serverRoot +
-                            `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                          roomId: message.roomId,
+                          fileId: message.fileId
                         })
                       }}
                       style={{ width: 200 }}
@@ -445,9 +440,8 @@ export default function MessageItem(props) {
                   <IconButton
                     onClick={() => {
                       gotoPage('/app/videoplayer', {
-                        src:
-                          serverRoot +
-                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                        roomId: message.roomId,
+                        fileId: message.fileId
                       })
                     }}
                     style={{
@@ -556,9 +550,8 @@ export default function MessageItem(props) {
                     <img
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
-                          src:
-                            serverRoot +
-                            `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                          roomId: message.roomId,
+                          fileId: message.fileId
                         })
                       }}
                       style={{ width: 200 }}
@@ -589,9 +582,8 @@ export default function MessageItem(props) {
                   <IconButton
                     onClick={() => {
                       gotoPage('/app/videoplayer', {
-                        src:
-                          serverRoot +
-                          `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`,
+                        roomId: message.roomId,
+                        fileId: message.fileId
                       })
                     }}
                     style={{
