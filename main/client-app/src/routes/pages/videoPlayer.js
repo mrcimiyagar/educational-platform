@@ -1,5 +1,5 @@
 import { Dialog, IconButton, Slide } from '@material-ui/core';
-import { ArrowForwardTwoTone } from '@material-ui/icons';
+import { ArrowForwardTwoTone, Close } from '@material-ui/icons';
 import React, { useEffect } from 'react';
 import { popPage, registerDialogOpen } from '../../App';
 import { token } from '../../util/settings';
@@ -26,6 +26,9 @@ export default function VideoPlayer(props) {
       onTouchStart={(e) => {e.stopPropagation();}}
       fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <div style={{width: '100%', height: '100%'}}>
+          <IconButton onClick={handleClose}>
+            <Close />
+          </IconButton>
           <IconButton style={{position: 'fixed', right: 12, top: 24}} onClick={() => {setOpen(false); setTimeout(popPage, 250)}}>
             <ArrowForwardTwoTone style={{fill: '#fff'}}/>
           </IconButton>

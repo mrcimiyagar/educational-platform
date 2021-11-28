@@ -415,11 +415,40 @@ export default function Chat(props) {
     width: '100%',
   })
 
+  function getCaret(el) {
+    if (el.selectionStart) {
+      return el.selectionStart
+    } else if (document.selection) {
+      el.focus()
+
+      var r = document.selection.createRange()
+      if (r == null) {
+        return 0
+      }
+
+      var re = el.createTextRange(),
+        rc = re.duplicate()
+      re.moveToBookmark(r.getBookmark())
+      rc.setEndPoint('EndToStart', re)
+
+      return rc.text.length
+    }
+    return 0
+  }
+
   let checkChatText = () => {
     if (document.getElementById('chatText') !== null) {
       var textAreaField = document.getElementById('chatText')
-      textAreaField.addEventListener('keydown', function (e) {
-        if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey) {
+      textAreaField.addEventListener('keyup', function (e) {
+        if (e.keyCode == 13 && e.ctrlKey) {
+          var content = this.value
+          var caret = getCaret(this)
+          this.value =
+            content.substring(0, caret) +
+            '\n' +
+            content.substring(caret, content.length - 1)
+          e.stopPropagation()
+        } else if (e.keyCode == 13) {
           e.preventDefault()
           document.getElementById('sendBtn').click()
         }
@@ -432,7 +461,7 @@ export default function Chat(props) {
   }
 
   useEffect(() => {
-    checkChatText();
+    checkChatText()
   }, [])
 
   useEffect(() => {
