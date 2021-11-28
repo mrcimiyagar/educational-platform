@@ -101,23 +101,6 @@ export default function ChatEmbeddedInMessenger(props) {
   let [showScrollDown, setShowScrollDown] = React.useState(false)
 
   useEffect(() => {
-    fetchMessagesOfRoom(props.roomId).then(data => {
-      data.forEach((message) => {
-        messagesArr.push(
-          <MessageItem
-            key={'message-' + message.id}
-            message={message}
-            setPhotoViewerVisible={setPhotoViewerVisible}
-            setCurrentPhotoSrc={setCurrentPhotoSrc}
-          />,
-        );
-      });
-      forceUpdate()
-      setScrollTrigger(!scrollTrigger)
-    });
-  }, [props.roomId, props.userId])
-
-  useEffect(() => {
     let scroller = document.getElementById('scroller')
     scroller.scrollTo(0, scroller.scrollHeight)
   }, [scrollTrigger])
@@ -222,70 +205,85 @@ export default function ChatEmbeddedInMessenger(props) {
     
     const requestedRoomId = props.roomId;
 
-    let requestOptions3 = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: props.roomId,
-      }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/chat/get_messages', requestOptions3)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result))
-        if (result.messages !== undefined) {
-          if (requestedRoomId === props.roomId) {
-            messagesArr = []
-            result.messages.forEach((message) => {
-              cacheMessage(message);
-              messagesArr.push(
-                <MessageItem
-                  key={'message-' + message.id}
-                  message={message}
-                  setPhotoViewerVisible={setPhotoViewerVisible}
-                  setCurrentPhotoSrc={setCurrentPhotoSrc}
-                />
-              );
-            });
-            if (uploadingFiles[props.roomId] !== undefined) {
-              Object.values(uploadingFiles[props.roomId]).forEach((file) => {
+    fetchMessagesOfRoom(props.roomId).then(data => {
+      data.forEach((message) => {
+        messagesArr.push(
+          <MessageItem
+            key={'message-' + message.id}
+            message={message}
+            setPhotoViewerVisible={setPhotoViewerVisible}
+            setCurrentPhotoSrc={setCurrentPhotoSrc}
+          />,
+        );
+      });
+      setScrollTrigger(!scrollTrigger)
+      forceUpdate()
+
+      let requestOptions3 = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify({
+          roomId: props.roomId,
+        }),
+        redirect: 'follow',
+      }
+      fetch(serverRoot + '/chat/get_messages', requestOptions3)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(JSON.stringify(result))
+          if (result.messages !== undefined) {
+            if (requestedRoomId === props.roomId) {
+              messagesArr = []
+              result.messages.forEach((message) => {
+                cacheMessage(message);
                 messagesArr.push(
                   <MessageItem
-                    key={'message-' + file.message.id}
-                    message={file.message}
+                    key={'message-' + message.id}
+                    message={message}
                     setPhotoViewerVisible={setPhotoViewerVisible}
                     setCurrentPhotoSrc={setCurrentPhotoSrc}
-                  />,
-                )
-              })
+                  />
+                );
+              });
+              if (uploadingFiles[props.roomId] !== undefined) {
+                Object.values(uploadingFiles[props.roomId]).forEach((file) => {
+                  messagesArr.push(
+                    <MessageItem
+                      key={'message-' + file.message.id}
+                      message={file.message}
+                      setPhotoViewerVisible={setPhotoViewerVisible}
+                      setCurrentPhotoSrc={setCurrentPhotoSrc}
+                    />,
+                  )
+                })
+              }
             }
+            setScrollTrigger(!scrollTrigger)
             forceUpdate();
+  
+            let requestOptions3 = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                token: token,
+              },
+              body: JSON.stringify({
+                roomId: props.roomId,
+              }),
+              redirect: 'follow',
+            }
+            fetch(serverRoot + '/chat/get_chat', requestOptions3)
+              .then((response) => response.json())
+              .then((result) => {
+                updateChat(result.room);
+              });
           }
-          setScrollTrigger(!scrollTrigger)
-
-          let requestOptions3 = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              token: token,
-            },
-            body: JSON.stringify({
-              roomId: props.roomId,
-            }),
-            redirect: 'follow',
-          }
-          fetch(serverRoot + '/chat/get_chat', requestOptions3)
-            .then((response) => response.json())
-            .then((result) => {
-              updateChat(result.room);
-            });
-        }
-      })
-      .catch((error) => console.log('error', error))
+        })
+        .catch((error) => console.log('error', error))
+    });
   }, [props.roomId, props.userId])
 
   const ROOT_CSS = css({

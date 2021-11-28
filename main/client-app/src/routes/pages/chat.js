@@ -177,26 +177,6 @@ export default function Chat(props) {
   let [showScrollDown, setShowScrollDown] = React.useState(false)
 
   useEffect(() => {
-    fetchMessagesOfRoom(props.roomId).then((data) => {
-      let index = 0
-      data.forEach((message) => {
-        messagesArr.push(
-          <MessageItem
-            index={index}
-            key={'message-' + message.id}
-            message={message}
-            setPhotoViewerVisible={setPhotoViewerVisible}
-            setCurrentPhotoSrc={setCurrentPhotoSrc}
-          />,
-        )
-        index++
-      })
-      forceUpdate()
-      setScrollTrigger(!scrollTrigger)
-    })
-  }, [props.roomId, props.userId])
-
-  useEffect(() => {
     let scroller = document.getElementById('chatScroller')
     if (scroller !== null) scroller.scrollTo(0, scroller.scrollHeight)
   }, [scrollTrigger])
@@ -338,77 +318,95 @@ export default function Chat(props) {
         }
       })
       .catch((error) => console.log('error', error))
-    setTimeout(() => {
-      let requestOptions3 = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          token: token,
-        },
-        body: JSON.stringify({
-          roomId: props.room_id,
-        }),
-        redirect: 'follow',
-      }
-      fetch(serverRoot + '/chat/get_messages', requestOptions3)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(JSON.stringify(result))
-          if (result.messages !== undefined) {
-            messagesArr = []
-            let index = 0
-            result.messages.forEach((message) => {
-              cacheMessage(message)
-              messagesArr.push(
-                <MessageItem
-                  index={index}
-                  key={'message-' + message.id}
-                  message={message}
-                  setPhotoViewerVisible={setPhotoViewerVisible}
-                  setCurrentPhotoSrc={setCurrentPhotoSrc}
-                />,
-              )
-              index++
-            })
-            if (uploadingFiles[props.roomId] !== undefined) {
-              Object.values(uploadingFiles[props.roomId]).forEach((file) => {
-                messagesArr.push(
-                  <MessageItem
-                    key={'message-' + file.message.id}
-                    message={file.message}
-                    setPhotoViewerVisible={setPhotoViewerVisible}
-                    setCurrentPhotoSrc={setCurrentPhotoSrc}
-                  />,
-                )
-              })
-            }
-            forceUpdate()
-            setScrollTrigger(!scrollTrigger)
-
-            let requestOptions3 = {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                token: token,
-              },
-              body: JSON.stringify({
-                roomId: props.room_id,
-              }),
-              redirect: 'follow',
-            }
-            fetch(serverRoot + '/chat/get_chat', requestOptions3)
-              .then((response) => response.json())
-              .then((result) => {
-                updateChat(result.room)
-              })
-          }
+      fetchMessagesOfRoom(props.roomId).then((data) => {
+        let index = 0
+        data.forEach((message) => {
+          messagesArr.push(
+            <MessageItem
+              index={index}
+              key={'message-' + message.id}
+              message={message}
+              setPhotoViewerVisible={setPhotoViewerVisible}
+              setCurrentPhotoSrc={setCurrentPhotoSrc}
+            />,
+          )
+          index++
         })
-        .catch((error) => console.log('error', error))
-    })
+        setScrollTrigger(!scrollTrigger);
+        forceUpdate();
+
+        setTimeout(() => {
+          let requestOptions3 = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              token: token,
+            },
+            body: JSON.stringify({
+              roomId: props.room_id,
+            }),
+            redirect: 'follow',
+          }
+          fetch(serverRoot + '/chat/get_messages', requestOptions3)
+            .then((response) => response.json())
+            .then((result) => {
+              console.log(JSON.stringify(result))
+              if (result.messages !== undefined) {
+                messagesArr = []
+                let index = 0
+                result.messages.forEach((message) => {
+                  cacheMessage(message)
+                  messagesArr.push(
+                    <MessageItem
+                      index={index}
+                      key={'message-' + message.id}
+                      message={message}
+                      setPhotoViewerVisible={setPhotoViewerVisible}
+                      setCurrentPhotoSrc={setCurrentPhotoSrc}
+                    />,
+                  )
+                  index++
+                })
+                if (uploadingFiles[props.roomId] !== undefined) {
+                  Object.values(uploadingFiles[props.roomId]).forEach((file) => {
+                    messagesArr.push(
+                      <MessageItem
+                        key={'message-' + file.message.id}
+                        message={file.message}
+                        setPhotoViewerVisible={setPhotoViewerVisible}
+                        setCurrentPhotoSrc={setCurrentPhotoSrc}
+                      />,
+                    )
+                  })
+                }
+                setScrollTrigger(!scrollTrigger)
+                forceUpdate()
+    
+                let requestOptions3 = {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    token: token,
+                  },
+                  body: JSON.stringify({
+                    roomId: props.room_id,
+                  }),
+                  redirect: 'follow',
+                }
+                fetch(serverRoot + '/chat/get_chat', requestOptions3)
+                  .then((response) => response.json())
+                  .then((result) => {
+                    updateChat(result.room)
+                  })
+              }
+            })
+            .catch((error) => console.log('error', error))
+        })
+      })
     setTimeout(() => {
       setInTheGame(true)
     }, 1000)
-  }, [])
+  }, [props.roomId, props.userId])
 
   const ROOT_CSS = css({
     height: '100%',
