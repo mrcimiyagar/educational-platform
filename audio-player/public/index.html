@@ -196,6 +196,8 @@
                   })
                   $('#sound').attr('src', wavesurfer.song);
                   wavesurfer.load(mediaElt, wavesurfer.backend.peaks);
+
+                  window.wavesurferToggle();
                 }
               })
               .catch((error) => console.log('error', error))
