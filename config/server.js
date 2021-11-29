@@ -10,7 +10,7 @@ app.get('*', (req, res) => {
     res.send({
         mainBackend: 'https://backend.kaspersoft.cloud',
         mainFrontend: 'https://kaspersoft.cloud',
-        confClient: 'http://localhost:8082',
+        confClient: 'https://conf.kaspersoft.cloud',
         audioPlayer: 'https://audioplayer.kaspersoft.cloud',
         waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
         whiteBoard: 'https://whiteboard.kaspersoft.cloud',

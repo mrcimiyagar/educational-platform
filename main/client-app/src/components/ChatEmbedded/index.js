@@ -639,7 +639,7 @@ export default function ChatEmbedded(props) {
           }}
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
-        <ChatAppBar user={user} room={room} webcamOn={props.webcamOn} />
+        <ChatAppBar user={user} room={room} webcamOn={props.webcamOn} viewCallback={props.viewCallback}/>
         <div style={{ width: '100%', height: 'auto', zIndex: 1000 }}>
           <div
             className={classes.root}

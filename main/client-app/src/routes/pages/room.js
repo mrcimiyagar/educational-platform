@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import { pink } from '@material-ui/core/colors'
-import { Chat, Search } from '@material-ui/icons'
+import { Attachment, Chat, Search } from '@material-ui/icons'
 import AddIcon from '@material-ui/icons/Add'
 import AudiotrackIcon from '@material-ui/icons/Audiotrack'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
@@ -134,6 +134,7 @@ export default function RoomPage(props) {
   const [menuMode, setMenuMode] = React.useState(0);
   const [opacity, setOpacity] = React.useState(1);
   let [webcamOn, setWebcamOn] = React.useState(false);
+  let [messengerView, setMessengerView] = React.useState(true);
 
   let loadData = (callback) => {
 
@@ -428,10 +429,11 @@ export default function RoomPage(props) {
             position: 'fixed',
             right: 0,
             top: webcamOn ? 300 : 0,
-            zIndex: 2491
+            zIndex: 2491,
+            display: messengerView ? 'block' : 'none'
           }}
         >
-          <ChatEmbedded roomId={props.room_id} webcamOn={webcamOn} />
+          <ChatEmbedded roomId={props.room_id} webcamOn={webcamOn} viewCallback={() => setMessengerView(!messengerView)} />
         </div>
         <div
           style={{
@@ -693,7 +695,7 @@ export default function RoomPage(props) {
         <div
           style={{
             position: 'fixed',
-            right: isInRoom() ? 450 + 32 : 16,
+            right: isInRoom() ? messengerView ? (450 + 32) : (16 + 56 + 24) : 16,
             bottom: isDesktop() ? -16 : 0,
             transform: 'translateY(+48px)',
             zIndex: 99999,
@@ -701,6 +703,12 @@ export default function RoomPage(props) {
         >
           <Jumper open={jumperOpen} setOpen={setJumperOpen} />
         </div>
+        {messengerView ?
+          null :
+          <Fab color={'primary'} style={{position: 'fixed', right: 24, bottom: 12}} onClick={() => setMessengerView(!messengerView)}>
+            <Attachment/>
+          </Fab>
+        }
         <RoomBottombar
           setCurrentRoomNavBackup={(v) => {
             props.tab_index = v
