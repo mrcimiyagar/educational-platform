@@ -16,7 +16,7 @@ export let AudioBox = (props) => {
       }
     })
     return (
-      <div style={{backgroundColor: isDesktop() ? 'rgba(255, 255, 255, 0.5)' : undefined, borderRadius: isDesktop() ? 24 : undefined, height: isDesktop() ? 650 : 'calc(100% - 72px)', width: isDesktop() ? 500 : 'calc(100% + 32px)', 
+      <div style={{backgroundColor: isDesktop() ? 'rgba(255, 255, 255, 0.5)' : undefined, backdropFilter: 'blur(10px)', borderRadius: isDesktop() ? 24 : undefined, height: isDesktop() ? 650 : 'calc(100% - 72px)', width: isDesktop() ? 500 : 'calc(100% + 32px)', 
           marginLeft: isDesktop() ? undefined : -16, marginRight: isDesktop() ? undefined : -16}}>
           <div style={{position: 'relative', height: '100%'}}>
             <AppBar position={'static'} style={{width: isDesktop() ? 500 : '100%', height: 64,
