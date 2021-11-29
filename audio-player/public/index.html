@@ -37,6 +37,8 @@
         background-color: RoyalBlue;
       }
     </style>
+    
+    <audio style="display: none;" id="sound" src="" controls="controls"></audio>
 
     <img
       id="albumArt"
@@ -92,6 +94,9 @@
         console.log(e.data)
         if (e.data.sender === 'main') {
           if (e.data.action === 'config') {
+
+            var mediaElt = document.getElementById('sound');
+
             let wavesurfer = WaveSurfer.create({
               container: document.querySelector('#waveform'),
               ...(e.data.isDesktop && { waveColor: '#fff' }),
@@ -145,7 +150,12 @@
                 wavesurfer.pause()
                 playPauseContent.className = 'fa fa-play'
               } else {
-                wavesurfer.play()
+                if (!wavesurfer.loaded) {
+                  $('#sound').attr('src', wavesurfer.song);
+                  wavesurfer.load(mediaElt, wavesurfer.backend.peaks);
+                } else {
+                  wavesurfer.play();
+                }
                 playPauseContent.className = 'fa fa-pause'
               }
             }
@@ -191,6 +201,7 @@
                       wavesurfer.seekTo(0)
                     }
                   })
+                  wavesurfer.load(mediaElt, wavesurfer.backend.peaks);
                 }
               })
               .catch((error) => console.log('error', error))
@@ -215,8 +226,7 @@
               onError: function (error) {
                 console.log(error)
               },
-            });
-            wavesurfer.load(e.data.src)
+            })
           }
         }
       })
