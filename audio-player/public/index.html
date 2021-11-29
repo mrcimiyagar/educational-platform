@@ -5,6 +5,7 @@
     <title>wavesurfer-box</title>
 
     <script src="https://unpkg.com/wavesurfer.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="/jsmediatags.min.js"></script>
     <script
       src="https://kit.fontawesome.com/5774b788f3.js"
@@ -188,8 +189,10 @@
                   wavesurfer.drawBuffer()
                   wavesurfer.loaded = false
                   wavesurfer.on('ready', function () {
+                    if (!wavesurfer.loaded) {
                       wavesurfer.loaded = true
                       wavesurfer.play()
+                    }
                   })
                   wavesurfer.on('finish', function () {
                     if (window.loop) {
