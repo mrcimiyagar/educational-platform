@@ -84,8 +84,9 @@ export default function FilesGrid(props) {
               tags = tag
               var picture = tags.tags.picture // create reference to track art
               var base64String = ''
+              if (picture === undefined) picture = {data: '', format: ''};
               for (var i = 0; i < picture.data.length; i++) {
-                base64String += String.fromCharCode(picture.data[i])
+                base64String += String.fromCharCode(picture.data[i]);
               }
               var imageUri =
                 'data:' +
@@ -127,12 +128,23 @@ export default function FilesGrid(props) {
           }}
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
-        <ImageList rowHeight={window.innerWidth / (cols + 1)} className={classes.imageList} cols={cols}>
+        <ImageList
+          rowHeight={window.innerWidth / (cols + 1)}
+          className={classes.imageList}
+          cols={cols}
+        >
           {props.files.map((file, index) => {
             return (
               <ImageListItem key={file.id} cols={1}>
-                <a id={'downloadLink' + file.id} href={serverRoot + `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`} 
-                  download style={{display: 'none'}}></a>
+                <a
+                  id={'downloadLink' + file.id}
+                  href={
+                    serverRoot +
+                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`
+                  }
+                  download
+                  style={{ display: 'none' }}
+                ></a>
                 <div
                   style={{
                     backgroundColor: 'transparent',
@@ -169,18 +181,23 @@ export default function FilesGrid(props) {
                               props.usedBy === 'presents'
                             ) {
                               props.setCurrentPresent(file.present)
-                            }
-                            else {
-                              document.getElementById('downloadLink' + file.id).click();
+                            } else {
+                              document
+                                .getElementById('downloadLink' + file.id)
+                                .click()
                             }
                           }}
-                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
+                          }}
                           key={index}
                           alt="Thumbnail"
                           src={
-                            (props.fileType === 'photo' ||
+                            props.fileType === 'photo' ||
                             props.fileType === 'video' ||
-                            props.fileType === 'document')
+                            props.fileType === 'document'
                               ? file.local
                                 ? file.src
                                 : serverRoot +
@@ -194,7 +211,7 @@ export default function FilesGrid(props) {
                           onClick={() => {
                             gotoPage('/app/videoplayer', {
                               fileId: file.id,
-                              roomId: props.roomId
+                              roomId: props.roomId,
                             })
                           }}
                           style={{
