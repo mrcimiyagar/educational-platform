@@ -3,7 +3,7 @@ import { ArrowForward } from "@material-ui/icons";
 import React from "react";
 import { pathConfig } from "../..";
 import { isDesktop } from "../../App";
-import { token } from "../../util/settings";
+import { colors, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
 
 export let AudioBox = (props) => {
@@ -20,9 +20,8 @@ export let AudioBox = (props) => {
           marginLeft: isDesktop() ? undefined : -16, marginRight: isDesktop() ? undefined : -16}}>
           <div style={{position: 'relative', height: '100%'}}>
             <AppBar position={'static'} style={{width: isDesktop() ? 500 : '100%', height: 64,
-              backgroundColor: 'rgba(21, 96, 233, 0.65)',
-              borderRadius: isDesktop() ? '24px 24px 0 0' : undefined,
-              backdropFilter: 'blur(10px)'}}>
+              backgroundColor: colors.primaryMedium,
+              borderRadius: isDesktop() ? '24px 24px 0 0' : undefined}}>
               <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                 <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>مدیا پلیر</Typography>
                 <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
