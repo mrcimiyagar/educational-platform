@@ -30,7 +30,9 @@ import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows'
 import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled'
 import {
   ArrowForward,
+  Attachment,
   Close,
+  LinkOff,
   Mic,
   MicOff,
   Notes,
@@ -222,7 +224,7 @@ function App() {
   let [sizeMode, setSizeMode] = React.useState(undefined);
   let [extWebcam, setExtWebcam] = React.useState(false);
   let [screenShareSupported, setScreenShareSupported] = React.useState(false);
-  let [speakers, setSpeakers] = React.useState({});
+  let [pinList, setPinList] = React.useState(false);
 
   let DesktopDetector = () => {
     useEffect(() => {
@@ -681,6 +683,7 @@ function App() {
         }}
       ></video>
       <Drawer
+        variant={pinList ? "permanent" : 'temporary'}
         open={listOpen}
         onClose={() => {
           window.parent.postMessage(
@@ -702,6 +705,11 @@ function App() {
         >
           <IconButton onClick={() => setListOpen(false)} style={{padding: 16}}>
             <Close/>
+          </IconButton>
+          <IconButton onClick={() => setPinList(!pinList)} style={{padding: 16}}>
+            {
+              pinList ? <Attachment/> : <LinkOff/>
+            }
           </IconButton>
           {result.map((key) => {
             if (needUpdate[key] === true || videoCache[key] === undefined) {
