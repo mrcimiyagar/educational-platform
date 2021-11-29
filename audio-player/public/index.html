@@ -1,148 +1,225 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>wavesurfer-box</title>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>wavesurfer-box</title>
 
-  <script src="https://unpkg.com/wavesurfer.js"></script>
-  <script src="/jsmediatags.min.js"></script>
-  <script src="https://kit.fontawesome.com/5774b788f3.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-</head>
-<body>
-
+    <script src="https://unpkg.com/wavesurfer.js"></script>
+    <script src="/jsmediatags.min.js"></script>
+    <script
+      src="https://kit.fontawesome.com/5774b788f3.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
     <style>
-        .btn {
-  background-color: DodgerBlue;
-  width: 56px;
-  height: 56px;
-  border-radius: 100%;
-  background: DodgerBlue;
-  border: none;
-  outline: none;
-  color: #FFF;
-  margin: 8px;
-  font-size: 24px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
+      .btn {
+        background-color: DodgerBlue;
+        width: 56px;
+        height: 56px;
+        border-radius: 100%;
+        background: DodgerBlue;
+        border: none;
+        outline: none;
+        color: #fff;
+        margin: 8px;
+        font-size: 24px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
 
-/* Darker background on mouse-over */
-.btn:hover {
-  background-color: RoyalBlue;
-}
+      /* Darker background on mouse-over */
+      .btn:hover {
+        background-color: RoyalBlue;
+      }
     </style>
-    
-    <img id="albumArt" style="width: 256px; height: 256px; border-radius: 50%; position: absolute; top: 64px; left: calc(50% - 128px);"/>
-    <div style="position: absolute; top: calc(64px + 256px + 48px); left: 32px; right: 32px;">
-        <div id='waveform' />
+
+    <img
+      id="albumArt"
+      style="
+        width: 256px;
+        height: 256px;
+        border-radius: 50%;
+        position: absolute;
+        top: 64px;
+        left: calc(50% - 128px);
+      "
+    />
+    <div
+      style="
+        position: absolute;
+        top: calc(64px + 256px + 48px);
+        left: 32px;
+        right: 32px;
+      "
+    >
+      <div id="waveform" />
     </div>
-    <div style='display: flex; flex-wrap: nowrap; position: absolute; top: 112px; left: calc(50% - 180px);'>
-        <button id='shuffleButton' onclick="toggleShuffle()" class="btn"><i class="fas fa-random" id="shuffleSign"></i></button>
-        <button id='backwardButton' onclick="backward()" class="btn"><i class="fa fa-backward"></i></button>
-        <button id='playPauseButton' onclick="wavesurferToggle()" class="btn"><i id='playPauseContent' class="fa fa-play"></i></button>
-        <button id='forwardButton' onclick="forward()" class="btn"><i class="fa fa-forward"></i></button>
-        <button id='loopButton' onclick="toggleLoop()" class="btn"><i class="fas fa-undo-alt" id="loopSign"></i></button>
+    <div
+      style="
+        display: flex;
+        flex-wrap: nowrap;
+        position: absolute;
+        top: 112px;
+        left: calc(50% - 180px);
+      "
+    >
+      <button id="shuffleButton" onclick="toggleShuffle()" class="btn">
+        <i class="fas fa-random" id="shuffleSign"></i>
+      </button>
+      <button id="backwardButton" onclick="backward()" class="btn">
+        <i class="fa fa-backward"></i>
+      </button>
+      <button id="playPauseButton" onclick="wavesurferToggle()" class="btn">
+        <i id="playPauseContent" class="fa fa-play"></i>
+      </button>
+      <button id="forwardButton" onclick="forward()" class="btn">
+        <i class="fa fa-forward"></i>
+      </button>
+      <button id="loopButton" onclick="toggleLoop()" class="btn">
+        <i class="fas fa-undo-alt" id="loopSign"></i>
+      </button>
     </div>
 
     <script>
+      window.loop = false
+      window.shuffle = false
+      window.addEventListener('message', (e) => {
+        console.log(e.data)
+        if (e.data.sender === 'main') {
+          if (e.data.action === 'config') {
+            let wavesurfer = WaveSurfer.create({
+              container: document.querySelector('#waveform'),
+              ...(e.data.isDesktop && { waveColor: '#fff' }),
+              height: 88,
+              barWidth: 2,
+              barHeight: 1, // the height of the wave
+              barGap: null, // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
+            })
+            window.wavesurfer = wavesurfer
 
-        window.loop = false
-        window.shuffle = false
-        window.addEventListener('message', e => {
-            console.log(e.data)
-            if (e.data.sender === 'main') {
-                if (e.data.action === 'config') {
-        let wavesurfer = WaveSurfer.create({
-            container: document.querySelector('#waveform'),
-            ...(e.data.isDesktop && {waveColor: '#fff'}),
-            height: 88,
-            barWidth: 2,
-            barHeight: 1, // the height of the wave
-            barGap: null // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
-        });
-        window.wavesurfer = wavesurfer
+            window.forward = () => {
+              if (wavesurfer.getCurrentTime() + 10 < wavesurfer.getDuration()) {
+                wavesurfer.play(wavesurfer.getCurrentTime() + 10)
+                let playPauseContent = document.getElementById(
+                  'playPauseContent',
+                )
+                playPauseContent.className = 'fa fa-pause'
+              }
+            }
+            window.backward = () => {
+              if (wavesurfer.getCurrentTime() - 10 > 0) {
+                wavesurfer.play(wavesurfer.getCurrentTime() - 10)
+                let playPauseContent = document.getElementById(
+                  'playPauseContent',
+                )
+                playPauseContent.className = 'fa fa-pause'
+              }
+            }
+            window.toggleLoop = () => {
+              window.loop = !window.loop
+              let loopSign = document.getElementById('loopSign')
+              if (window.loop) {
+                loopSign.style.color = 'yellow'
+              } else {
+                loopSign.style.color = 'white'
+              }
+            }
+            window.toggleShuffle = () => {
+              window.shuffle = !window.shuffle
+              let shuffleSign = document.getElementById('shuffleSign')
+              if (window.shuffle) {
+                shuffleSign.style.color = 'yellow'
+              } else {
+                shuffleSign.style.color = 'white'
+              }
+            }
 
-        var tags = {};
-        window.jsmediatags.read(e.data.src, {
-            onSuccess: function(tag) {
-                tags = tag;
-                var picture = tags.tags.picture; // create reference to track art
-                var base64String = "";
-                for (var i = 0; i < picture.data.length; i++) {
-                    base64String += String.fromCharCode(picture.data[i]);
+            window.wavesurferToggle = () => {
+              let playPauseContent = document.getElementById('playPauseContent')
+              if (wavesurfer.isPlaying()) {
+                wavesurfer.pause()
+                playPauseContent.className = 'fa fa-play'
+              } else {
+                wavesurfer.play()
+                playPauseContent.className = 'fa fa-pause'
+              }
+            }
+
+            let requestOptions = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                token: e.data.token,
+              },
+              body: JSON.stringify({
+                fileId: e.data.fileId,
+                roomId: e.data.roomId,
+              }),
+              redirect: 'follow',
+            }
+            fetch(
+              e.data.serverRoot + '/file/download_audio_preview',
+              requestOptions,
+            )
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(JSON.stringify(result))
+                if (result !== undefined) {
+                  wavesurfer.song = e.data.src
+                  wavesurfer.backend.peaks = result.data
+                  for (let i = 0; i < result.data.length; i++) {
+                    result.data[i] = result.data[i] / 100
+                  }
+                  wavesurfer.drawBuffer()
+                  wavesurfer.loaded = false
+                  wavesurfer.on('ready', function () {
+                    if (!wavesurfer.loaded) {
+                      wavesurfer.loaded = true
+                      wavesurfer.play()
+                    }
+                  })
+                  wavesurfer.on('finish', function () {
+                    if (window.loop) {
+                      wavesurfer.play(0)
+                    } else {
+                      playPauseContent.className = 'fa fa-play'
+                      wavesurfer.seekTo(0)
+                    }
+                  })
                 }
-                var imageUri = "data:" + picture.format + ";base64," + window.btoa(base64String);
+              })
+              .catch((error) => console.log('error', error))
+
+            var tags = {}
+            window.jsmediatags.read(e.data.src, {
+              onSuccess: function (tag) {
+                tags = tag
+                var picture = tags.tags.picture // create reference to track art
+                var base64String = ''
+                for (var i = 0; i < picture.data.length; i++) {
+                  base64String += String.fromCharCode(picture.data[i])
+                }
+                var imageUri =
+                  'data:' +
+                  picture.format +
+                  ';base64,' +
+                  window.btoa(base64String)
                 let albumArt = document.getElementById('albumArt')
                 albumArt.src = imageUri
-            }, 
-            onError: function(error) {
-                console.log(error);
-            }
-        }); 
-                    wavesurfer.load(e.data.src);
-                    wavesurfer.on('finish', function () {
-                        if (window.loop) {
-                            wavesurfer.play(0)
-                        }
-                        else {
-                            playPauseContent.className = 'fa fa-play'
-                            wavesurfer.seekTo(0)
-                        }
-                    });
-                    wavesurfer.on('ready', function () {
-                        window.wavesurferToggle = () => {
-                            let playPauseContent = document.getElementById('playPauseContent')
-                            if (wavesurfer.isPlaying()) {
-                                wavesurfer.pause();
-                                playPauseContent.className = 'fa fa-play'
-                            }
-                            else {
-                                wavesurfer.play();
-                                playPauseContent.className = 'fa fa-pause'
-                            }
-                        }
-                        window.forward = () => {
-                            if (wavesurfer.getCurrentTime() + 10 < wavesurfer.getDuration()) {
-                                wavesurfer.play(wavesurfer.getCurrentTime() + 10)
-                                let playPauseContent = document.getElementById('playPauseContent')
-                                playPauseContent.className = 'fa fa-pause'
-                            }
-                        }
-                        window.backward = () => {
-                            if (wavesurfer.getCurrentTime() - 10 > 0) {
-                                wavesurfer.play(wavesurfer.getCurrentTime() - 10)
-                                let playPauseContent = document.getElementById('playPauseContent')
-                                playPauseContent.className = 'fa fa-pause'
-                            }
-                        }
-                        window.toggleLoop = () => {
-                            window.loop = !window.loop
-                            let loopSign = document.getElementById('loopSign')
-                            if (window.loop) {
-                                loopSign.style.color = 'yellow'
-                            }
-                            else {
-                                loopSign.style.color = 'white'
-                            }
-                        }
-                        window.toggleShuffle = () => {
-                            window.shuffle = !window.shuffle
-                            let shuffleSign = document.getElementById('shuffleSign')
-                            if (window.shuffle) {
-                                shuffleSign.style.color = 'yellow'
-                            }
-                            else {
-                                shuffleSign.style.color = 'white'
-                            }
-                        }
-                    });
-                }
-            }
-        })
-        
+              },
+              onError: function (error) {
+                console.log(error)
+              },
+            });
+            wavesurfer.load(e.data.src)
+          }
+        }
+      })
     </script>
-
-</body>
+  </body>
 </html>

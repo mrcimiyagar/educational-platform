@@ -213,6 +213,7 @@ export default function FilesGrid(props) {
                           onClick={() => {
                             gotoPage('/app/audioplayer', {
                               room_id: props.roomId,
+                              file_id: file.id,
                               src: file.local
                                 ? file.src
                                 : serverRoot +

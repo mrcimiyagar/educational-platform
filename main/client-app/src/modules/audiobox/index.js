@@ -3,6 +3,8 @@ import { ArrowForward } from "@material-ui/icons";
 import React from "react";
 import { pathConfig } from "../..";
 import { isDesktop } from "../../App";
+import { token } from "../../util/settings";
+import { serverRoot } from "../../util/Utils";
 
 export let AudioBox = (props) => {
     window.addEventListener('message', e => {
@@ -28,7 +30,7 @@ export let AudioBox = (props) => {
             </AppBar>
             
             <iframe allowTransparency={true} name="audio-player-frame" id={'audio-player-frame'} src={pathConfig.audioPlayer}
-              onLoad={() => {window.frames['audio-player-frame'].postMessage({sender: 'main', action: 'config', src: props.src, isDesktop: isDesktop()}, pathConfig.audioPlayer)}}
+              onLoad={() => {window.frames['audio-player-frame'].postMessage({sender: 'main', action: 'config', src: props.src, fileId: props.fileId, roomId: props.roomId, serverRoot: serverRoot, token: token, isDesktop: isDesktop()}, pathConfig.audioPlayer)}}
               style={{width: '100%', height: 'calc(100% - 64px)', position: 'absolute', left: 0, top: 64, bottom: 0, right: 0}} frameBorder="0"></iframe>
           </div>
       </div>);
