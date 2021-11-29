@@ -23,7 +23,7 @@ export let AudioBox = (props) => {
               backgroundColor: colors.primaryMedium,
               borderRadius: isDesktop() ? '24px 24px 0 0' : undefined}}>
               <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
-                <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>مدیا پلیر</Typography>
+                <Typography variant={'h6'} style={{color: '#fff', position: 'absolute', right: 16 + 32 + 16}}>مدیا پلیر</Typography>
                 <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
               </Toolbar>
             </AppBar>
