@@ -151,8 +151,7 @@
                 wavesurfer.pause()
                 playPauseContent.className = 'fa fa-play'
               } else {
-                wavesurfer.play();
-                playPauseContent.className = 'fa fa-pause'
+                  document.getElementById('playPauseButton').click();
               }
             }
 
@@ -184,11 +183,8 @@
                   wavesurfer.drawBuffer()
                   wavesurfer.loaded = false
                   wavesurfer.on('ready', function () {
-                      alert('test');
-                    if (!wavesurfer.loaded) {
-                      wavesurfer.loaded = true
-                      wavesurfer.play()
-                    }
+                    wavesurfer.loaded = true
+                  d ocument.getElementById('playPauseButton').click();
                   })
                   wavesurfer.on('finish', function () {
                     if (window.loop) {
