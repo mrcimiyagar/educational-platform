@@ -534,17 +534,13 @@ export default function ChatEmbedded(props) {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
                     cacheMessage(result.message)
-                    let msgEl = document.getElementById('message-' + msg.id)
-                    let msgSeenEl = document.getElementById(
-                      'message-seen-' + msg.id,
-                    )
-                    let msgNotSeenEl = document.getElementById(
-                      'message-not-seen-' + msg.id,
-                    )
-                    msgEl.id = 'message-' + result.message.id
-                    msgSeenEl.id = 'message-seen-' + result.message.id
-                    msgNotSeenEl.id = 'message-not-seen-' + result.message.id
-                    msg.id = result.message.id
+                    for (let i = 0; i < messagesArr.length; i++) {
+                      if (messagesArr[i].key === ('message_' + msg.id)) {
+                        messagesArr.splice(i, 1);
+                      }
+                    }
+                    addMessageToList(result.message);
+                    setLastMessage(result.message);
                     forceUpdate()
                   }
                 })
