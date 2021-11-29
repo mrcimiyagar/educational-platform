@@ -662,7 +662,7 @@ function App() {
           left:
             (pinList ? (window.innerWidth > 500 ? 500 : window.innerWidth) : 0) +
               (sizeMode === 'mobile' ? 0 :
-                (window.innerWidth / 2 - ((sizeMode === 'desktop' || (sizeMode === 'tablet' && shownScreens[presenterBackup] === true && shownVideos[presenterBackup] === true)) ? 225 : (sizeMode === 'mobile') ? 112 : 0) + 32 + 'px')),
+                (window.innerWidth / 2 - ((sizeMode === 'desktop' || (sizeMode === 'tablet' && shownScreens[presenterBackup] === true && shownVideos[presenterBackup] === true)) ? 225 : (sizeMode === 'mobile') ? 112 : 0) + 32)) + 'px',
           width:
             sizeMode === 'mobile' ? '100%' :
               (shownScreens[presenterBackup] === true)
