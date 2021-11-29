@@ -184,11 +184,7 @@
                   wavesurfer.drawBuffer()
                   wavesurfer.loaded = false
                   wavesurfer.on('ready', function () {
-                      alert('test');
-                    if (!wavesurfer.loaded) {
-                      wavesurfer.loaded = true
-                      wavesurfer.play()
-                    }
+                    wavesurfer.play()
                   })
                   wavesurfer.on('finish', function () {
                     if (window.loop) {
