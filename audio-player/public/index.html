@@ -152,7 +152,6 @@
                 playPauseContent.className = 'fa fa-play'
               } else {
                 if (!wavesurfer.loaded) {
-                  $('#sound').attr('src', wavesurfer.song);
                 } else {
                   wavesurfer.play();
                 }
@@ -202,6 +201,7 @@
                       wavesurfer.seekTo(0)
                     }
                   })
+                  $('#sound').attr('src', wavesurfer.song);
                   wavesurfer.load(mediaElt, wavesurfer.backend.peaks);
                 }
               })
