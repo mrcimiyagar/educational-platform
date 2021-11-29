@@ -208,20 +208,20 @@ export default function Chat(props) {
         ) {
           isAtEnd = true
         }
-        msg['User.id'] = msg.User.id
-        msg['User.username'] = msg.User.username
-        msg['User.firstName'] = msg.User.firstName
+        msg['User.id'] = msg.User.id;
+        msg['User.username'] = msg.User.username;
+        msg['User.firstName'] = msg.User.firstName;
         let lastMsg = (
           <MessageItem
             index={1}
-            key={'message-' + msg.id}
+            key={'message_' + msg.id}
             message={msg}
             setPhotoViewerVisible={setPhotoViewerVisible}
             setCurrentPhotoSrc={setCurrentPhotoSrc}
           />
         )
         messagesArr.push(lastMsg)
-        forceUpdate()
+        forceUpdate();
         if (isAtEnd) {
           setScrollTrigger(!scrollTrigger)
         }
@@ -466,7 +466,6 @@ export default function Chat(props) {
     if (!loading && pickingFile) {
       setPickingFile(false)
       let dataUrl = filesContent[0]
-      alert(dataUrl.name)
       fetch(dataUrl.content)
         .then((res) => res.blob())
         .then((file) => {
@@ -567,8 +566,8 @@ export default function Chat(props) {
                   console.log(JSON.stringify(result))
                   if (result.message !== undefined) {
                     cacheMessage(result.message);
-                    for (let i = 0; i < messagesArr; i++) {
-                      if (messagesArr[i].key === 'message_' + msg.id) {
+                    for (let i = 0; i < messagesArr.length; i++) {
+                      if (messagesArr[i].key === ('message_' + msg.id)) {
                         messagesArr.splice(i, 1);
                       }
                     }

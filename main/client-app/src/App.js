@@ -563,7 +563,7 @@ export let uploadingFiles, setUploadingFiles;
 export let markFileAsUploading = (roomId, file) => {
   if (uploadingFiles[roomId] === undefined) uploadingFiles[roomId] = {};
   let id = randId();
-  file.message.id = 'message_' + id;
+  file.message.id = id;
   uploadingFiles[roomId][id] = file;
   return id;
 }
