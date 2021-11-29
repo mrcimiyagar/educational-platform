@@ -99,7 +99,7 @@
 
             let wavesurfer = WaveSurfer.create({
               container: document.querySelector('#waveform'),
-              ...(e.data.isDesktop && { waveColor: '#333' }),
+              ...(e.data.isDesktop && { waveColor: '#777' }),
               height: 88,
               barWidth: 2,
               barHeight: 1, // the height of the wave
@@ -188,10 +188,8 @@
                   wavesurfer.drawBuffer()
                   wavesurfer.loaded = false
                   wavesurfer.on('ready', function () {
-                    if (!wavesurfer.loaded) {
                       wavesurfer.loaded = true
                       wavesurfer.play()
-                    }
                   })
                   wavesurfer.on('finish', function () {
                     if (window.loop) {
