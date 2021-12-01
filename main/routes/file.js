@@ -170,35 +170,41 @@ router.post('/upload_file', jsonParser, async function (req, res) {
           rootPath + '/files/' + file.id,
           rootPath + '/temp/' + file.id + '.' + ext,
         )
-        if (ext === 'aac') {
-            var audioConverter = require('audio-converter');
-            await audioConverter(rootPath + '/temp/' + file.id + '.' + ext, rootPath + '/temp/' + file.id + '.' + 'mp3', {progressBar: true});
-            console.log('Done!')
+        let calculatingGraph = () => {
+            exec(
+                `audiowaveform -i ${rootPath + '/temp/' + file.id + '.' + ext} -o ${
+                  rootPath + '/files/' + preview.id + '.json'
+                } -b 8 -z 256`,
+                (error, stdout, stderr) => {
+                  if (error) {
+                    console.log(`error: ${error.message}`)
+                    res.send({ status: 'success', file: file })
+                    return
+                  }
+                  if (stderr) {
+                    console.log(`stderr: ${stderr}`)
+                    res.send({ status: 'success', file: file })
+                    return
+                  }
+                  console.log(`stdout: ${stdout}`)
+                  require('../server').pushTo(
+                    'room_' + membership.roomId,
+                    'file-added',
+                    file,
+                  )
+                  res.send({ status: 'success', file: file })
+                },
+              )
         }
-        exec(
-          `audiowaveform -i ${rootPath + '/temp/' + file.id + '.' + ext} -o ${
-            rootPath + '/files/' + preview.id + '.json'
-          } -b 8 -z 256`,
-          (error, stdout, stderr) => {
-            if (error) {
-              console.log(`error: ${error.message}`)
-              res.send({ status: 'success', file: file })
-              return
-            }
-            if (stderr) {
-              console.log(`stderr: ${stderr}`)
-              res.send({ status: 'success', file: file })
-              return
-            }
-            console.log(`stdout: ${stdout}`)
-            require('../server').pushTo(
-              'room_' + membership.roomId,
-              'file-added',
-              file,
-            )
-            res.send({ status: 'success', file: file })
-          },
-        )
+        if (ext === 'aac') {
+            exec(`ffmpeg -i ${rootPath + '/temp/' + file.id + '.' + ext} -vn -ar 44100 -ac 2 -b:a 192k ${rootPath + '/temp/' + file.id + '.' + 'mp3'}`,
+                (error, stdout, stderr) => {
+                    calculatingGraph();
+                });
+        }
+        else {
+            calculatingGraph();
+        }
       } else {
         require('../server').pushTo(
           'room_' + membership.roomId,
