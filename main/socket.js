@@ -101,6 +101,11 @@ function heartbeat() {
 
 let disconnectWebsocket = (user) => {
   let roomId = sockets[user.id].roomId
+  console.log('********************************************************************');
+  for (let i = 0; i < 1000; i++) {
+    console.log(roomId);
+  }
+  console.log('********************************************************************');
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, user.id)
     if (room !== null) {

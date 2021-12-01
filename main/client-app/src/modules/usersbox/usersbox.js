@@ -163,6 +163,7 @@ export let UsersBox = (props) => {
     })
     socket.off('user-exited')
     socket.on('user-exited', ({ rooms, users }) => {
+      alert('hello')
       users.forEach((u) => {
         if (video[u.id] === undefined) {
           video[u.id] = false;
