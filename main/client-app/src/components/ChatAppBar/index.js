@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import { ArrowForward, Attachment } from '@material-ui/icons'
+import { ArrowForward, Attachment, Visibility, VisibilityOff } from '@material-ui/icons'
 import CallIcon from '@material-ui/icons/Call'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import VideocamIcon from '@material-ui/icons/Videocam'
@@ -197,7 +197,7 @@ export default function ChatAppBar(props) {
                     props.viewCallback();
                   }}
                 >
-                  <Attachment style={{ fill: '#fff' }} />
+                  <VisibilityOff style={{ fill: '#fff' }} />
                 </IconButton>
               }
               {isInRoom() ?

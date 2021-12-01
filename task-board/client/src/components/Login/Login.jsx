@@ -52,8 +52,8 @@ const Login = React.memo(
     const wasSubmitting = usePrevious(isSubmitting);
 
     const [data, handleFieldChange, setData] = useForm(() => ({
-      emailOrUsername: '',
-      password: '',
+      emailOrUsername: 'demo@demo.demo',
+      password: 'demo',
       ...defaultData,
     }));
 

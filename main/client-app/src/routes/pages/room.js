@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import { pink } from '@material-ui/core/colors'
-import { Attachment, Chat, Search } from '@material-ui/icons'
+import { Attachment, Chat, Search, Visibility } from '@material-ui/icons'
 import AddIcon from '@material-ui/icons/Add'
 import AudiotrackIcon from '@material-ui/icons/Audiotrack'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
@@ -706,7 +706,7 @@ export default function RoomPage(props) {
         {messengerView ?
           null :
           <Fab color={'primary'} style={{position: 'fixed', right: 24, bottom: 12}} onClick={() => setMessengerView(!messengerView)}>
-            <Attachment/>
+            <Visibility />
           </Fab>
         }
         <RoomBottombar
