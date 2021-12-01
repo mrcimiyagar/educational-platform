@@ -86,9 +86,10 @@ export let addMessageToList3 = () => {}
 export let replaceMessageInTheList3 = () => {}
 
 export let updateChatEmbedded = undefined
+let lastLoadCount = 25;
 
 export default function ChatEmbedded(props) {
-  document.documentElement.style.overflowY = 'hidden'
+  document.documentElement.style.overflowY = 'hidden';
 
   let forceUpdate = useForceUpdate()
   updateChatEmbedded = forceUpdate
@@ -105,9 +106,13 @@ export default function ChatEmbedded(props) {
   let [scrollTrigger, setScrollTrigger] = React.useState(false)
   let [showScrollDown, setShowScrollDown] = React.useState(false)
 
+  let scrollToBottom = () => {
+    let scroller = document.getElementById('scroller');
+    scroller.scrollTo(0, scroller.scrollHeight);
+  }
+
   useEffect(() => {
-    let scroller = document.getElementById('scroller')
-    scroller.scrollTo(0, scroller.scrollHeight)
+    scrollToBottom();
   }, [scrollTrigger])
 
   let replaceMessageInTheList = (msg) => {
@@ -237,6 +242,73 @@ export default function ChatEmbedded(props) {
   useEffect(() => {
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {
+      if ($('#scroller').scrollTop() === 0) {
+        if (lastLoadCount < 25) return;
+        let requestOptions3 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: props.room_id,
+            offset: messagesArr.length
+          }),
+          redirect: 'follow',
+        }
+        fetch(serverRoot + '/chat/get_messages', requestOptions3)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result));
+            let topMessageBeforeUpdate = messagesArr.length > 0 ? messagesArr[0].key : 0
+            if (result.messages !== undefined) {
+              lastLoadCount = result.messages.length;
+              let index = 0
+              result.messages.reverse();
+              result.messages.forEach((message) => {
+                cacheMessage(message)
+                messagesArr.unshift(
+                  <MessageItem
+                    index={index}
+                    key={'message-' + message.id}
+                    message={message}
+                    setPhotoViewerVisible={setPhotoViewerVisible}
+                    setCurrentPhotoSrc={setCurrentPhotoSrc}
+                  />,
+                )
+                index++
+              })
+              
+              forceUpdate()
+
+              setTimeout(() => {
+                let topMessage = document.getElementById(topMessageBeforeUpdate);
+                if (topMessage !== null) {
+                  topMessage.scrollIntoView();
+                  scroller.scrollTop = scroller.scrollTop - topMessage.offsetHeight;
+                }
+              });
+  
+              let requestOptions3 = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  token: token,
+                },
+                body: JSON.stringify({
+                  roomId: props.room_id,
+                }),
+                redirect: 'follow',
+              }
+              fetch(serverRoot + '/chat/get_chat', requestOptions3)
+                .then((response) => response.json())
+                .then((result) => {
+                  updateChat(result.room)
+                })
+            }
+          })
+          .catch((error) => console.log('error', error))
+      }
       if (
         scroller.scrollTop + $('#scroller').innerHeight() >=
         scroller.scrollHeight
@@ -346,8 +418,12 @@ export default function ChatEmbedded(props) {
                 })
               }
             }
-            setScrollTrigger(!scrollTrigger)
-            forceUpdate()
+            
+            forceUpdate();
+
+            setTimeout(() => {
+              scrollToBottom();
+            });
   
             let requestOptions3 = {
               method: 'POST',
@@ -370,11 +446,6 @@ export default function ChatEmbedded(props) {
         .catch((error) => console.log('error', error))
     })
   }, [props.roomId, props.userId])
-
-  const ROOT_CSS = css({
-    height: '100%',
-    width: '100%',
-  })
 
   function getCaret(el) {
     if (el.selectionStart) {

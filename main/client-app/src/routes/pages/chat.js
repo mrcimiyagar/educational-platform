@@ -105,7 +105,6 @@ export default function Chat(props) {
   const [open, setOpen] = React.useState(true)
   const [showEmojiPad, setShowEmojiPad] = React.useState(false)
   let [pickingFile, setPickingFile] = React.useState(false)
-  let [allMesssagesLoaded, setAllMessagesLoaded] = React.useState(false);
 
   useEffect(() => {
 
@@ -262,7 +261,6 @@ export default function Chat(props) {
     scroller.onscroll = () => {
       if ($('#chatScroller').scrollTop() === 0) {
         if (lastLoadCount < 25) return;
-        alert(allMesssagesLoaded);
         let requestOptions3 = {
           method: 'POST',
           headers: {
@@ -281,9 +279,9 @@ export default function Chat(props) {
             console.log(JSON.stringify(result));
             let topMessageBeforeUpdate = messagesArr.length > 0 ? messagesArr[0].key : 0
             if (result.messages !== undefined) {
-              alert(result.messages.length);
               lastLoadCount = result.messages.length;
               let index = 0
+              result.messages.reverse();
               result.messages.forEach((message) => {
                 cacheMessage(message)
                 messagesArr.unshift(
@@ -431,7 +429,6 @@ export default function Chat(props) {
             .then((result) => {
               console.log(JSON.stringify(result))
               if (result.messages !== undefined) {
-                setAllMessagesLoaded(result.messages.length < 25);
                 messagesArr = []
                 let index = 0
                 result.messages.forEach((message) => {
