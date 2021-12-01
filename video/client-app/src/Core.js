@@ -225,6 +225,7 @@ function App() {
   let [extWebcam, setExtWebcam] = React.useState(false);
   let [screenShareSupported, setScreenShareSupported] = React.useState(false);
   let [pinList, setPinList] = React.useState(false);
+  let [webcamSize, setWebcamSize] = React.useState('big');
 
   let DesktopDetector = () => {
     useEffect(() => {
@@ -683,8 +684,20 @@ function App() {
           position: 'absolute',
           right: 0,
           top: sizeMode === 'mobile' ? (window.innerWidth * 4 / 5 - 0 + 'px') : 0,
-          width: 450,
-          height: 300,
+          width: webcamSize === 'big' ? 450 : webcamSize === 'medium' ? 270 : 150,
+          height: webcamSize === 'big' ? 300 : webcamSize === 'medium' ? 180 : 100,
+        }}
+        onClick={() => {
+          if (webcamSize === 'big') {
+            setWebcamSize('medium');
+          }
+          else if (webcamSize === 'medium') {
+            setWebcamSize('small');
+          }
+          else if (webcamSize === 'small') {
+            setWebcamSize('big');
+          }
+          forceUpdate();
         }}
       ></video>
       <Drawer
