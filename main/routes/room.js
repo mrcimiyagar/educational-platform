@@ -596,7 +596,7 @@ router.post('/get_spaces', jsonParser, async function (req, res) {
 })
 
 router.post('/enter_room', jsonParser, async function (req, res) {
-  
+
   authenticateMember(req, res, async (membership, session, user) => {
 
     let s = sockets[user.id]
@@ -610,7 +610,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
     require('../server').pushTo(
       'room_' + membership.roomId,
       'user-exited',
-      { rooms: rooms, users: getRoomUsers(roomId) },
+      { rooms: [], users: getRoomUsers(roomId) },
     );
 
     sockets[user.id].join('room_' + membership.roomId)
@@ -620,7 +620,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
     require('../server').pushTo(
       'room_' + membership.roomId,
       'user-entered',
-      { rooms: rooms, users: getRoomUsers(membership.roomId) },
+      { rooms: [], users: getRoomUsers(membership.roomId) },
     )
 
     res.send({ status: 'success', membership: membership })
