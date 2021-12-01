@@ -678,18 +678,10 @@ router.post('/exit_room', jsonParser, async function (req, res) {
               let room = rooms[i]
               room.users = getRoomUsers(room.id)
             }
-            if (membership === null || membership === undefined) {
-              res.send({
-                status: 'error',
-                errorCode: 'e0005',
-                message: 'membership does not exist.',
-              })
-              return
-            }
             require('../server').pushTo(
               'room_' + membership.roomId,
               'user-exited',
-              { rooms: rooms, users: getRoomUsers(membership.roomId) },
+              { rooms: rooms, users: getRoomUsers(roomId) },
             )
           },
         )
