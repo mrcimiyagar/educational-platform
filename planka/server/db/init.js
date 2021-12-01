@@ -8,8 +8,10 @@ const knex = require('knex')(config); // eslint-disable-line import/order
 
     if (!isExists) {
       await knex.migrate.latest();
-      await knex.seed.run();
     }
+
+    await knex.seed.run();
+    
   } catch (error) {
     process.exitCode = 1;
 

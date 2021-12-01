@@ -109,4 +109,9 @@ router.post('/get_me', jsonParser, async function (req, res) {
     })
 });
 
+router.post('/get_users', jsonParser, async function (req, res) {
+    let users = await sw.User.findAll({raw: true});
+    res.send({status: 'success', users: users});
+});
+
 module.exports = router;

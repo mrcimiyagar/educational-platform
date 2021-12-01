@@ -14,10 +14,5 @@
   "_generatedWith": {
     "sails": "1.1.0",
     "sails-generate": "1.16.4"
-  },
-  "cors": {
-    "allRoutes": true,
-    "allowOrigins": "*",
-    "allowCredentials": false
   }
 }

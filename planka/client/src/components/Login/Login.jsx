@@ -1,16 +1,13 @@
-import isEmail from 'validator/lib/isEmail';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { Form, Grid, Header, Message } from 'semantic-ui-react';
-import { useDidUpdate, usePrevious, useToggle } from '../../lib/hooks';
-import { Input } from '../../lib/custom-ui';
-
+import { usePrevious } from '../../lib/hooks';
 import { useForm } from '../../hooks';
-import { isUsername } from '../../utils/validator';
-
 import styles from './Login.module.scss';
+
+let loaded = false;
 
 const createMessage = (error) => {
   if (!error) {
@@ -51,17 +48,15 @@ const Login = React.memo(
     const [t] = useTranslation();
     const wasSubmitting = usePrevious(isSubmitting);
 
-    const [data, handleFieldChange, setData] = useForm(() => ({
-      emailOrUsername: 'demo@demo.demo',
-      password: 'demo',
+    const [data, setData] = useForm(() => ({
+      emailOrUsername: '',
+      password: '',
       ...defaultData,
     }));
 
     const message = useMemo(() => createMessage(error), [error]);
-    const [focusPasswordFieldState, focusPasswordField] = useToggle();
 
     const emailOrUsernameField = useRef(null);
-    const passwordField = useRef(null);
 
     const handleSubmit = useCallback(() => {
       const cleanData = {
@@ -69,22 +64,11 @@ const Login = React.memo(
         emailOrUsername: data.emailOrUsername.trim(),
       };
 
-      if (!isEmail(cleanData.emailOrUsername) && !isUsername(cleanData.emailOrUsername)) {
-        emailOrUsernameField.current.select();
-        return;
-      }
-
-      if (!cleanData.password) {
-        passwordField.current.focus();
-        return;
-      }
+      cleanData.emailOrUsername = 'demo@demo.demo';
+      cleanData.password = 'demo';
 
       onAuthenticate(cleanData);
     }, [onAuthenticate, data]);
-
-    useEffect(() => {
-      emailOrUsernameField.current.select();
-    }, []);
 
     useEffect(() => {
       if (wasSubmitting && !isSubmitting && error) {
@@ -98,17 +82,17 @@ const Login = React.memo(
               ...prevData,
               password: '',
             }));
-            focusPasswordField();
 
             break;
           default:
         }
       }
-    }, [isSubmitting, wasSubmitting, error, setData, focusPasswordField]);
+    }, [isSubmitting, wasSubmitting, error, setData]);
 
-    useDidUpdate(() => {
-      passwordField.current.focus();
-    }, [focusPasswordFieldState]);
+    if (!loaded) {
+      loaded = true;
+      handleSubmit();
+    }
 
     return (
       <div className={classNames(styles.wrapper, styles.fullHeight)}>
@@ -117,12 +101,7 @@ const Login = React.memo(
             <Grid verticalAlign="middle" className={styles.fullHeightPaddingFix}>
               <Grid.Column>
                 <div className={styles.loginWrapper}>
-                  <Header
-                    as="h1"
-                    textAlign="center"
-                    content={t('common.logInToPlanka')}
-                    className={styles.formTitle}
-                  />
+                  <Header as="h1" textAlign="center" content="" className={styles.formTitle} />
                   <div>
                     {message && (
                       <Message
@@ -136,63 +115,22 @@ const Login = React.memo(
                       />
                     )}
                     <Form size="large" onSubmit={handleSubmit}>
-                      <div className={styles.inputWrapper}>
-                        <div className={styles.inputLabel}>{t('common.emailOrUsername')}</div>
-                        <Input
-                          fluid
-                          ref={emailOrUsernameField}
-                          name="emailOrUsername"
-                          value={data.emailOrUsername}
-                          readOnly={isSubmitting}
-                          className={styles.input}
-                          onChange={handleFieldChange}
-                        />
-                      </div>
-                      <div className={styles.inputWrapper}>
-                        <div className={styles.inputLabel}>{t('common.password')}</div>
-                        <Input.Password
-                          fluid
-                          ref={passwordField}
-                          name="password"
-                          value={data.password}
-                          readOnly={isSubmitting}
-                          className={styles.input}
-                          onChange={handleFieldChange}
-                        />
-                      </div>
                       <Form.Button
                         primary
                         size="large"
                         icon="right arrow"
                         labelPosition="right"
-                        content={t('action.logIn')}
+                        content=""
                         floated="right"
                         loading={isSubmitting}
                         disabled={isSubmitting}
+                        style={{ display: 'none' }}
                       />
                     </Form>
                   </div>
                 </div>
               </Grid.Column>
             </Grid>
-          </Grid.Column>
-          <Grid.Column
-            widescreen={12}
-            largeScreen={11}
-            computer={10}
-            only="computer"
-            className={classNames(styles.cover, styles.fullHeight)}
-          >
-            <div className={styles.descriptionWrapperOverlay} />
-            <div className={styles.descriptionWrapper}>
-              <Header inverted as="h1" content="Planka" className={styles.descriptionTitle} />
-              <Header
-                inverted
-                as="h2"
-                content={t('common.projectManagement')}
-                className={styles.descriptionSubtitle}
-              />
-            </div>
           </Grid.Column>
         </Grid>
       </div>
