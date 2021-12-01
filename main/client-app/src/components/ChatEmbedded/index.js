@@ -175,6 +175,7 @@ export default function ChatEmbedded(props) {
           },
           body: JSON.stringify({
             roomId: props.roomId,
+            offset: 0
           }),
           redirect: 'follow',
         }
@@ -251,7 +252,7 @@ export default function ChatEmbedded(props) {
             token: token,
           },
           body: JSON.stringify({
-            roomId: props.room_id,
+            roomId: props.roomId,
             offset: messagesArr.length
           }),
           redirect: 'follow',
@@ -384,6 +385,7 @@ export default function ChatEmbedded(props) {
         },
         body: JSON.stringify({
           roomId: props.roomId,
+          offset: 0
         }),
         redirect: 'follow',
       }

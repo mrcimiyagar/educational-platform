@@ -155,6 +155,7 @@ export default function ChatEmbeddedInMessenger(props) {
   }, [props.roomId]);
 
   useEffect(() => {
+    lastLoadCount = 25;
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {
       if ($('#scroller').scrollTop() === 0) {
@@ -166,7 +167,7 @@ export default function ChatEmbeddedInMessenger(props) {
             token: token,
           },
           body: JSON.stringify({
-            roomId: props.room_id,
+            roomId: props.roomId,
             offset: messagesArr.length
           }),
           redirect: 'follow',
@@ -210,7 +211,7 @@ export default function ChatEmbeddedInMessenger(props) {
                   token: token,
                 },
                 body: JSON.stringify({
-                  roomId: props.room_id,
+                  roomId: props.roomId,
                 }),
                 redirect: 'follow',
               }
@@ -477,6 +478,7 @@ export default function ChatEmbeddedInMessenger(props) {
           },
           body: JSON.stringify({
             roomId: props.roomId,
+            offset: 0
           }),
           redirect: 'follow',
         }
