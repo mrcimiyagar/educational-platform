@@ -99,7 +99,7 @@ function heartbeat() {
   this.isAlive = true
 }
 
-let disconnectWebsocket = (user) => {
+let disconnectWebsocket = (session, user) => {
   let roomId = sockets[user.id].roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, user.id)
@@ -112,7 +112,7 @@ let disconnectWebsocket = (user) => {
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
-            where: { roomId: room.id, userId: session.userId },
+            where: { roomId: room.id, userId: session === null ? user.id : session.userId },
           })
           require('./server').pushTo(
             'room_' + sockets[user.id].roomId,
@@ -203,7 +203,7 @@ class Kasperio {
                         }
                       })
                       ws.on('close', ({}) => {
-                        disconnectWebsocket(user)
+                        disconnectWebsocket(session, user)
                       })
                       soc.emit('auth-success', {})
                     }
@@ -268,7 +268,7 @@ class Kasperio {
                       })
                     })
                     ws.on('close', ({}) => {
-                      disconnectWebsocket(user)
+                      disconnectWebsocket(session, user)
                     })
                     soc.emit('auth-success', {})
                   }
