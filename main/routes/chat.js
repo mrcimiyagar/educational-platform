@@ -309,10 +309,10 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     breakPoint = Math.min(
       breakPoint,
       messages.length > 10 ? messages.length - 10 : 0,
-    )
-    let result = []
+    );
+    let result = [];
     for (let i = breakPoint; i < messages.length; i++) {
-      let message = messages[i]
+      let message = messages[i];
       if (session.userId !== message.authorId) {
         if (
           (await sw.MessageSeen.findOne({
@@ -323,26 +323,34 @@ router.post('/get_messages', jsonParser, async function (req, res) {
             userId: session.userId,
             messageId: message.id,
             roomId: message.roomId,
-          })
+          });
         }
       }
       message.seen = await sw.MessageSeen.count({
         where: { messageId: message.id },
         distinct: true,
         col: 'userId',
-      })
-      result.push(message)
+      });
+      result.push(message);
     }
-    messages = result
+    messages = result;
     let members = await sw.Membership.findAll({
       raw: true,
       where: { roomId: membership.roomId },
-    })
+    });
     members.forEach((member) => {
       if (sockets[member.userId] !== undefined)
-        sockets[member.userId].emit('message-seen', { messages })
-    })
-    res.send({ status: 'success', messages: messages })
+        sockets[member.userId].emit('message-seen', { messages });
+    });
+    let fetchedMessages = await sw.Message.findAll({
+      raw: true,
+      limit: 25,
+      offset: req.body.offset,
+      include: [{ all: true }],
+      where: { roomId: membership.roomId },
+      order: [['createdAt', 'DESC']],
+    });
+    res.send({ status: 'success', messages: fetchedMessages });
   })
 })
 

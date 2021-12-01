@@ -650,6 +650,9 @@ function App() {
         flexwrap: 'wrap',
       }}
     >
+      <label>
+        test  
+      </label>
       <DesktopDetector />
       <video
         id="screenMax"
@@ -925,6 +928,23 @@ function App() {
       ) : null}
     </div>
   )
+}
+
+export let TestComp = (props) => {
+  if (props.testData === 1) {
+    return (
+      <div>
+        hello
+      </div>
+    );
+  }
+  else {
+    return (
+      <div>
+        bye
+      </div>
+    );
+  }
 }
 
 export default App

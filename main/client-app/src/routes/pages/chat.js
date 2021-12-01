@@ -233,6 +233,7 @@ export default function Chat(props) {
           },
           body: JSON.stringify({
             roomId: props.room_id,
+            offset: 0
           }),
           redirect: 'follow',
         }
@@ -250,6 +251,74 @@ export default function Chat(props) {
 
   let attachScrollListener = (scroller) => {
     scroller.onscroll = () => {
+      if (scroller.scrollHeight <= 100) {
+        let requestOptions3 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: props.room_id,
+            offset: messagesArr.length
+          }),
+          redirect: 'follow',
+        }
+        fetch(serverRoot + '/chat/get_messages', requestOptions3)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result))
+            if (result.messages !== undefined) {
+              messagesArr = []
+              let index = 0
+              result.messages.forEach((message) => {
+                cacheMessage(message)
+                messagesArr.push(
+                  <MessageItem
+                    index={index}
+                    key={'message-' + message.id}
+                    message={message}
+                    setPhotoViewerVisible={setPhotoViewerVisible}
+                    setCurrentPhotoSrc={setCurrentPhotoSrc}
+                  />,
+                )
+                index++
+              })
+              if (uploadingFiles[props.roomId] !== undefined) {
+                Object.values(uploadingFiles[props.roomId]).forEach((file) => {
+                  messagesArr.push(
+                    <MessageItem
+                      key={'message-' + file.message.id}
+                      message={file.message}
+                      setPhotoViewerVisible={setPhotoViewerVisible}
+                      setCurrentPhotoSrc={setCurrentPhotoSrc}
+                    />,
+                  )
+                })
+              }
+              setScrollTrigger(!scrollTrigger)
+              forceUpdate()
+  
+              let requestOptions3 = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  token: token,
+                },
+                body: JSON.stringify({
+                  roomId: props.room_id,
+                }),
+                redirect: 'follow',
+              }
+              fetch(serverRoot + '/chat/get_chat', requestOptions3)
+                .then((response) => response.json())
+                .then((result) => {
+                  updateChat(result.room)
+                })
+            }
+          })
+          .catch((error) => console.log('error', error))
+      }
       if (
         scroller.scrollTop + $('#chatScroller').innerHeight() >=
         scroller.scrollHeight
@@ -344,6 +413,7 @@ export default function Chat(props) {
             },
             body: JSON.stringify({
               roomId: props.room_id,
+              offset: 0
             }),
             redirect: 'follow',
           }
