@@ -199,6 +199,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
         if (ext === 'aac') {
             exec(`ffmpeg -i ${rootPath + '/temp/' + file.id + '.' + ext} -vn -ar 44100 -ac 2 -b:a 192k ${rootPath + '/temp/' + file.id + '.' + 'mp3'}`,
                 (error, stdout, stderr) => {
+                    exy = 'mp3';
                     calculatingGraph();
                 });
         }
