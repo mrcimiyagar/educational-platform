@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const fetch = require('node-fetch');
 
 exports.seed = async (knex) => {
   const date = new Date().toUTCString();
