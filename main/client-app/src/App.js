@@ -48,6 +48,7 @@ import {
 } from './util/settings';
 import {
   ConnectToIo,
+  leaveRoom,
   serverRoot,
   socket,
   useForceUpdate,
@@ -578,6 +579,10 @@ export let isOnline = true;
 
 //if (window.innerWidth > 900) {
   MainAppContainer = (props) => {
+    
+    window.onunload = () => leaveRoom(() => {});
+    window.onbeforeunload = () => leaveRoom(() => {});
+
     console.warn = () => {};
     ;[inTheGame, setInTheGame] = React.useState(false);
     setToken(localStorage.getItem('token'));

@@ -114,24 +114,10 @@ let disconnectWebsocket = (user) => {
           let mem = await models.Membership.findOne({
             where: { roomId: room.id, userId: session.userId },
           })
-          if (membership === null || membership === undefined) {
-            if (
-              guestAccsByUserId[session.userId] === undefined ||
-              guestAccsByUserId[session.userId] === null
-            ) {
-              res.send({
-                status: 'error',
-                errorCode: 'e0005',
-                message: 'membership does not exist.',
-              })
-              return
-            }
-            mem = guestAccsByUserId[session.userId]
-          }
           require('./server').pushTo(
             'room_' + sockets[user.id].roomId,
             'user-exited',
-            { rooms: rooms, users: getRoomUsers(mem.roomId) },
+            { rooms: rooms, users: getRoomUsers(roomId) },
           )
         },
       )
