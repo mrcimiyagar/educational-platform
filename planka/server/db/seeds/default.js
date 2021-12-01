@@ -6,12 +6,11 @@ exports.seed = async (knex) => {
   let requestOptions = {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      token: token,
+      'Content-Type': 'application/json'
     },
     redirect: 'follow',
   }
-  let result = await (await fetch(serverRoot + '/auth/get_users', requestOptions)).json();
+  let result = await (await fetch('https://kaspersoft.cloud/auth/get_users', requestOptions)).json();
 
   return knex('user_account').insert(result.users.map(user => ({
     email: user.username,
