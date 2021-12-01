@@ -535,7 +535,7 @@ export default function ChatEmbedded(props) {
                   if (result.message !== undefined) {
                     cacheMessage(result.message)
                     for (let i = 0; i < messagesArr.length; i++) {
-                      if (messagesArr[i].key === ('message_' + msg.id)) {
+                      if (messagesArr[i].key === ('message-' + msg.id)) {
                         messagesArr.splice(i, 1);
                       }
                     }
@@ -703,7 +703,7 @@ export default function ChatEmbedded(props) {
               onClick={() => {
                 if (document.getElementById('chatText').value !== '') {
                   let msg = {
-                    id: 'message_' + Date.now(),
+                    id: 'message-' + Date.now(),
                     time: Date.now(),
                     authorId: me.id,
                     roomId: props.roomId,

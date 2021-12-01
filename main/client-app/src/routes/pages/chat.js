@@ -88,12 +88,13 @@ export let addMessageToList = () => {}
 export let replaceMessageInTheList = () => {}
 
 let goingToRoom = false
+let lastLoadCount = 25;
 
 export default function Chat(props) {
   const urlSearchParams = new URLSearchParams(window.location.search)
   props = Object.fromEntries(urlSearchParams.entries())
 
-  document.documentElement.style.overflowY = 'hidden'
+  document.documentElement.style.overflowY = 'hidden';
 
   let forceUpdate = useForceUpdate()
   let [messages, setMessages] = React.useState([])
@@ -104,8 +105,12 @@ export default function Chat(props) {
   const [open, setOpen] = React.useState(true)
   const [showEmojiPad, setShowEmojiPad] = React.useState(false)
   let [pickingFile, setPickingFile] = React.useState(false)
+  let [allMesssagesLoaded, setAllMessagesLoaded] = React.useState(false);
 
   useEffect(() => {
+
+    lastLoadCount = 25;
+
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -173,12 +178,16 @@ export default function Chat(props) {
   const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
     readAs: 'DataURL',
   })
-  let [scrollTrigger, setScrollTrigger] = React.useState(false)
-  let [showScrollDown, setShowScrollDown] = React.useState(false)
+  let [scrollTrigger, setScrollTrigger] = React.useState(false);
+  let [showScrollDown, setShowScrollDown] = React.useState(false);
 
-  useEffect(() => {
+  let scrollToBottom = () => {
     let scroller = document.getElementById('chatScroller')
     if (scroller !== null) scroller.scrollTo(0, scroller.scrollHeight)
+  }
+
+  useEffect(() => {
+    scrollToBottom();
   }, [scrollTrigger])
 
   replaceMessageInTheList = (msg) => {
@@ -214,7 +223,7 @@ export default function Chat(props) {
         let lastMsg = (
           <MessageItem
             index={1}
-            key={'message_' + msg.id}
+            key={'message-' + msg.id}
             message={msg}
             setPhotoViewerVisible={setPhotoViewerVisible}
             setCurrentPhotoSrc={setCurrentPhotoSrc}
@@ -251,7 +260,9 @@ export default function Chat(props) {
 
   let attachScrollListener = (scroller) => {
     scroller.onscroll = () => {
-      if (scroller.scrollHeight <= 100) {
+      if ($('#chatScroller').scrollTop() === 0) {
+        if (lastLoadCount < 25) return;
+        alert(allMesssagesLoaded);
         let requestOptions3 = {
           method: 'POST',
           headers: {
@@ -267,13 +278,15 @@ export default function Chat(props) {
         fetch(serverRoot + '/chat/get_messages', requestOptions3)
           .then((response) => response.json())
           .then((result) => {
-            console.log(JSON.stringify(result))
+            console.log(JSON.stringify(result));
+            let topMessageBeforeUpdate = messagesArr.length > 0 ? messagesArr[0].key : 0
             if (result.messages !== undefined) {
-              messagesArr = []
+              alert(result.messages.length);
+              lastLoadCount = result.messages.length;
               let index = 0
               result.messages.forEach((message) => {
                 cacheMessage(message)
-                messagesArr.push(
+                messagesArr.unshift(
                   <MessageItem
                     index={index}
                     key={'message-' + message.id}
@@ -284,20 +297,16 @@ export default function Chat(props) {
                 )
                 index++
               })
-              if (uploadingFiles[props.roomId] !== undefined) {
-                Object.values(uploadingFiles[props.roomId]).forEach((file) => {
-                  messagesArr.push(
-                    <MessageItem
-                      key={'message-' + file.message.id}
-                      message={file.message}
-                      setPhotoViewerVisible={setPhotoViewerVisible}
-                      setCurrentPhotoSrc={setCurrentPhotoSrc}
-                    />,
-                  )
-                })
-              }
               setScrollTrigger(!scrollTrigger)
               forceUpdate()
+
+              setTimeout(() => {
+                let topMessage = document.getElementById(topMessageBeforeUpdate);
+                if (topMessage !== null) {
+                  topMessage.scrollIntoView();
+                  scroller.scrollTop = scroller.scrollTop - topMessage.offsetHeight;
+                }
+              });
   
               let requestOptions3 = {
                 method: 'POST',
@@ -422,6 +431,7 @@ export default function Chat(props) {
             .then((result) => {
               console.log(JSON.stringify(result))
               if (result.messages !== undefined) {
+                setAllMessagesLoaded(result.messages.length < 25);
                 messagesArr = []
                 let index = 0
                 result.messages.forEach((message) => {
@@ -449,8 +459,11 @@ export default function Chat(props) {
                     )
                   })
                 }
-                setScrollTrigger(!scrollTrigger)
                 forceUpdate()
+
+                setTimeout(() => {
+                  scrollToBottom();
+                });
     
                 let requestOptions3 = {
                   method: 'POST',
@@ -637,7 +650,7 @@ export default function Chat(props) {
                   if (result.message !== undefined) {
                     cacheMessage(result.message);
                     for (let i = 0; i < messagesArr.length; i++) {
-                      if (messagesArr[i].key === ('message_' + msg.id)) {
+                      if (messagesArr[i].key === ('message-' + msg.id)) {
                         messagesArr.splice(i, 1);
                       }
                     }
@@ -771,7 +784,7 @@ export default function Chat(props) {
               onClick={() => {
                 if (document.getElementById('chatText').value !== '') {
                   let msg = {
-                    id: 'message_' + Date.now(),
+                    id: 'message-' + Date.now(),
                     time: Date.now(),
                     authorId: me.id,
                     roomId: props.room_id,

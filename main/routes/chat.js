@@ -350,6 +350,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
       where: { roomId: membership.roomId },
       order: [['createdAt', 'DESC']],
     });
+    fetchedMessages.reverse();
     res.send({ status: 'success', messages: fetchedMessages });
   })
 })
