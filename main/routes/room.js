@@ -636,7 +636,7 @@ router.post('/exit_room', jsonParser, async function (req, res) {
     sockets[user.id].roomId = 0
     removeUser(roomId, user.id)
     if (roomId !== undefined) {
-      sw.Room.findOne({ where: { id: req.body.roomId } }).then((room) => {
+      sw.Room.findOne({ where: { id: roomId } }).then((room) => {
         sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
           async (rooms) => {
             for (let i = 0; i < rooms.length; i++) {
@@ -644,7 +644,7 @@ router.post('/exit_room', jsonParser, async function (req, res) {
               room.users = getRoomUsers(room.id)
             }
             require('../server').pushTo(
-              'room_' + membership.roomId,
+              'room_' + roomId,
               'user-exited',
               { rooms: rooms, users: getRoomUsers(roomId) },
             )
