@@ -142,9 +142,6 @@ class Kasperio {
       clearInterval(interval)
     })
     wss.on('connection', (ws) => {
-      ws.on('close', ({}) => {
-        disconnectWebsocket(user);
-      })
       ws.isAlive = true
       ws.on('pong', heartbeat)
       try {
@@ -204,6 +201,9 @@ class Kasperio {
                             typingList,
                           )
                         }
+                      })
+                      ws.on('close', ({}) => {
+                        disconnectWebsocket(user)
                       })
                       soc.emit('auth-success', {})
                     }
@@ -266,6 +266,9 @@ class Kasperio {
                           }
                         }
                       })
+                    })
+                    ws.on('close', ({}) => {
+                      disconnectWebsocket(user)
                     })
                     soc.emit('auth-success', {})
                   }
