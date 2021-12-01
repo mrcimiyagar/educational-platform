@@ -8,7 +8,7 @@ import React, { useEffect } from "react";
 import Board, { createTranslate } from 'react-trello';
 import { gotoPage, isDesktop, isInRoom } from "../../App";
 import { pathConfig } from "../../index";
-import { colors, token } from "../../util/settings";
+import { colors, me, token } from "../../util/settings";
 import { serverRoot, useForceUpdate } from "../../util/Utils";
 import './style.css';
 
@@ -53,6 +53,7 @@ export let TaskBox = (props) => {
         </Toolbar>
       </AppBar>
       <iframe allowTransparency={true}
+        onLoad={() => window.frames['task-board-frame'].postMessage({sender: 'main', action: 'init', username: me.username, password: 'demo'}, pathConfig.taskBoard)}
         id ={'task-board-frame'} name="task-board-frame" src={pathConfig.taskBoard}
         style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
         marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>

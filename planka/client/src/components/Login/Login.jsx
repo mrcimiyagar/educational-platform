@@ -42,6 +42,9 @@ const createMessage = (error) => {
   }
 };
 
+let username;
+let password;
+
 const Login = React.memo(
   ({ defaultData, isSubmitting, error, onAuthenticate, onMessageDismiss }) => {
     const [t] = useTranslation();
@@ -64,6 +67,9 @@ const Login = React.memo(
         ...data,
         emailOrUsername: data.emailOrUsername.trim(),
       };
+
+      cleanData.emailOrUsername = username;
+      cleanData.password = password;
 
       onAuthenticate(cleanData);
     }, [onAuthenticate, data]);
@@ -95,6 +101,16 @@ const Login = React.memo(
     useDidUpdate(() => {
       passwordField.current.focus();
     }, [focusPasswordFieldState]);
+
+    window.onmessage = (e) => {
+      if (e.data.sender === 'main') {
+        if (e.data.action === 'init') {
+          username = e.data.username;
+          password = e.data.password;
+          handleSubmit();
+        }
+      }
+    };
 
     return (
       <div className={classNames(styles.wrapper, styles.fullHeight)}>
