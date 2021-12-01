@@ -549,6 +549,7 @@ export default function Chat(props) {
       fetch(dataUrl.content)
         .then((res) => res.blob())
         .then((file) => {
+          alert(dataUrl.name);
           let msg = {
             time: Date.now(),
             authorId: me.id,

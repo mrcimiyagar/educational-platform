@@ -241,6 +241,7 @@ export default function ChatEmbedded(props) {
   }, [props.roomId])
 
   useEffect(() => {
+    lastLoadCount = 25;
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {
       if ($('#scroller').scrollTop() === 0) {
@@ -297,7 +298,7 @@ export default function ChatEmbedded(props) {
                   token: token,
                 },
                 body: JSON.stringify({
-                  roomId: props.room_id,
+                  roomId: props.roomId,
                 }),
                 redirect: 'follow',
               }
