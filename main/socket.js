@@ -101,11 +101,6 @@ function heartbeat() {
 
 let disconnectWebsocket = (user) => {
   let roomId = sockets[user.id].roomId
-  console.log('********************************************************************');
-  for (let i = 0; i < 1000; i++) {
-    console.log(roomId);
-  }
-  console.log('********************************************************************');
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, user.id)
     if (room !== null) {
@@ -147,6 +142,9 @@ class Kasperio {
       clearInterval(interval)
     })
     wss.on('connection', (ws) => {
+      ws.on('close', ({}) => {
+        disconnectWebsocket(user);
+      })
       ws.isAlive = true
       ws.on('pong', heartbeat)
       try {
@@ -206,9 +204,6 @@ class Kasperio {
                             typingList,
                           )
                         }
-                      })
-                      ws.on('close', ({}) => {
-                        disconnectWebsocket(user)
                       })
                       soc.emit('auth-success', {})
                     }
@@ -271,9 +266,6 @@ class Kasperio {
                           }
                         }
                       })
-                    })
-                    ws.on('disconnect', ({}) => {
-                      disconnectWebsocket(user)
                     })
                     soc.emit('auth-success', {})
                   }
