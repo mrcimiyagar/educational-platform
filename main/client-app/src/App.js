@@ -144,7 +144,7 @@ export let gotoPageWithDelay
       query = query.substr(0, query.length - 1)
     }
 
-    window.history.replaceState('', '', p + (query.length > 0 ? '?' : '') + query)
+    window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
     if (notifyUrlChanged !== undefined) notifyUrlChanged()
     forceUpdate()
   }
@@ -185,11 +185,12 @@ export let gotoPageWithDelay
         query = query.substr(0, query.length - 1)
       }
 
-      window.history.pushState(
+/*      window.history.replaceState(
         '',
         '',
         series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
       );
+*/    window.history.back();
       setTimeout(() => {
         setInTheGame(true);
         forceUpdate();
