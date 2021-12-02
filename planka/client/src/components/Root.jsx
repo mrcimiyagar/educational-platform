@@ -15,7 +15,6 @@ import '../lib/custom-ui/styles.css';
 import '../styles.module.scss';
 
 const Root = ({ store, history }) => {
-  localStorage.removeItem('accessToken');
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
@@ -25,6 +24,7 @@ const Root = ({ store, history }) => {
           <Route exact path={Paths.PROJECTS} component={CoreWrapperContainer} />
           <Route exact path={Paths.BOARDS} component={CoreWrapperContainer} />
           <Route exact path={Paths.CARDS} component={CoreWrapperContainer} />
+          <Route exact path="/" component={LoginContainer} />
           <Route path="*" component={NotFound} />
         </Switch>
       </ConnectedRouter>

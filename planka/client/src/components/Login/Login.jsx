@@ -47,6 +47,8 @@ let password;
 
 const Login = React.memo(
   ({ defaultData, isSubmitting, error, onAuthenticate, onMessageDismiss }) => {
+    localStorage.removeItem('accessToken');
+
     const [t] = useTranslation();
     const wasSubmitting = usePrevious(isSubmitting);
 
