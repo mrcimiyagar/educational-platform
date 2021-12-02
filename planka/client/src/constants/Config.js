@@ -1,6 +1,4 @@
-const SERVER_BASE_URL =
-  process.env.REACT_APP_SERVER_BASE_URL ||
-  (process.env.NODE_ENV === 'production' ? '' : 'https://taskboardbackend.kaspersoft.cloud');
+const SERVER_BASE_URL = 'https://taskboardbackend.kaspersoft.cloud';
 
 const POSITION_GAP = 65535;
 
