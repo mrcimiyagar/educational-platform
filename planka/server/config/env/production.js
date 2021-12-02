@@ -255,7 +255,7 @@ module.exports = {
      *
      */
 
-    cache: 365.25 * 24 * 60 * 60 * 1000, // One year
+    cache: 1, // One year
 
     /**
      *
