@@ -58,8 +58,10 @@ sails.lift(rc('sails'));
 const config = require('./knexfile');
 const express = require('express');
 const knex = require('knex')(config); // eslint-disable-line import/order
-
+let bcrypt = require('bcrypt');
 let app = express();
+let http = require('http');
+let server = http.createServer(app);
 app.use('/registeruser', (req, res) => {
   let users = [];
   users.push({
@@ -73,4 +75,6 @@ app.use('/registeruser', (req, res) => {
     updatedAt: date,
   });
   knex('user_account').insert(users);
+  res.send('done !');
 });
+server.listen(1338);
