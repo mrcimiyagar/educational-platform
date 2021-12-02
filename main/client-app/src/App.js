@@ -204,6 +204,7 @@ export let gotoPageWithDelay
         '',
         series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
       );
+
       setTimeout(() => {
         setInTheGame(true);
         forceUpdate();
@@ -303,20 +304,6 @@ export let gotoPageWithDelay
     if (notifyUrlChanged !== undefined) notifyUrlChanged()
   }
 }*/
-
-function HistController() {
-  const history = useHistory()
-
-  useEffect(() => {
-    history.push(histPage)
-  }, [histPage])
-
-  useEffect(() => {
-    history.goBack()
-  }, [popTrigger])
-
-  return <div />
-}
 
 let DesktopDetector = () => {
   ;[sizeMode, setSizeMode] = React.useState(
@@ -620,7 +607,8 @@ export let isOnline = true;
         setWallpaper({ type: 'color', color: colors.accentDark });
       }
     }, [histPage]);
-    window.onpopstate = function (event) {
+    window.onpopstate = function (e) {
+      e.preventDefault();
       if (setDialogOpen !== null) {
         setDialogOpen(false);
       }
