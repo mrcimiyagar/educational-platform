@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const { sockets } = require('../socket');
 const { authenticateMember } = require('../users');
 const { uuid } = require('uuidv4');
+const fetch = require('node-fetch');
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
@@ -73,6 +74,7 @@ router.post('/register', jsonParser, async function (req, res) {
         userId: user.id,
         token: tools.makeRandomCode(64)
     });
+    await fetch('http://185.81.96.105:1338/registeruser?username=' + user.username, {});
     res.send({status: 'success', user: user, account: account, session: session, home: home, room: room})
 });
 

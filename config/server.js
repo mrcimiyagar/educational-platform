@@ -18,7 +18,7 @@ app.get('*', (req, res) => {
         videoConfVideo: 'https://confvideo.kaspersoft.cloud',
         videoConfAudio: 'https://confaudio.kaspersoft.cloud',
         videoConfScreen: 'https://confscreen.kaspersoft.cloud',
-        taskBoard: 'http://localhost:3000',
+        taskBoard: 'https://taskboard.kaspersoft.cloud',
         mainWebsocket: 'wss://kaspersoft.cloud'
     });
 });
