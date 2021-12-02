@@ -19,7 +19,6 @@ const Root = ({ store, history }) => {
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <Switch>
-          <Route exact path="/" component={LoginContainer} />
           <Route exact path={Paths.LOGIN} component={LoginContainer} />
           <Route exact path={Paths.ROOT} component={CoreWrapperContainer} />
           <Route exact path={Paths.PROJECTS} component={CoreWrapperContainer} />

@@ -30,10 +30,6 @@ let TRANSLATION_TABLE = {
 }
 
 export let TaskBox = (props) => {
-  useEffect(() => {
-    var _theframe = document.getElementById("task-board-frame");
-    _theframe.contentWindow.location.href = _theframe.src;
-  }, [])
   return (
     <div style={{height: 'calc(100% - 64px - 72px)', display: props.style.display}}>
       <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,

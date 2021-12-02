@@ -54,3 +54,23 @@ try {
 
 // Start server
 sails.lift(rc('sails'));
+
+const config = require('./knexfile');
+const express = require('express');
+const knex = require('knex')(config); // eslint-disable-line import/order
+
+let app = express();
+app.use('/registeruser', (req, res) => {
+  let users = [];
+  users.push({
+    email: req.query.username,
+    password: bcrypt.hashSync(req.query.username, 10),
+    isAdmin: false,
+    name: req.query.username,
+    username: req.query.username,
+    subscribeToOwnCards: false,
+    createdAt: date,
+    updatedAt: date,
+  });
+  knex('user_account').insert(users);
+});
