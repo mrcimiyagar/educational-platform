@@ -13,10 +13,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../lib/custom-ui/styles.css';
 
 import '../styles.module.scss';
-import coreSaga from '../sagas/core';
 
 const Root = ({ store, history }) => {
-  coreSaga();
+  localStorage.removeItem('accessToken');
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>

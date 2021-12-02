@@ -55,6 +55,7 @@
     }
   },
   "dependencies": {
+    "@redux-saga/core": "^1.1.3",
     "classnames": "^2.2.6",
     "connected-react-router": "^6.8.0",
     "date-fns": "^2.23.0",
