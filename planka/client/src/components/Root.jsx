@@ -13,21 +13,25 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../lib/custom-ui/styles.css';
 
 import '../styles.module.scss';
+import coreSaga from '../sagas/core';
 
-const Root = ({ store, history }) => (
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <Switch>
-        <Route exact path={Paths.LOGIN} component={LoginContainer} />
-        <Route exact path={Paths.ROOT} component={CoreWrapperContainer} />
-        <Route exact path={Paths.PROJECTS} component={CoreWrapperContainer} />
-        <Route exact path={Paths.BOARDS} component={CoreWrapperContainer} />
-        <Route exact path={Paths.CARDS} component={CoreWrapperContainer} />
-        <Route path="*" component={NotFound} />
-      </Switch>
-    </ConnectedRouter>
-  </Provider>
-);
+const Root = ({ store, history }) => {
+  coreSaga();
+  return (
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <Switch>
+          <Route exact path={Paths.LOGIN} component={LoginContainer} />
+          <Route exact path={Paths.ROOT} component={CoreWrapperContainer} />
+          <Route exact path={Paths.PROJECTS} component={CoreWrapperContainer} />
+          <Route exact path={Paths.BOARDS} component={CoreWrapperContainer} />
+          <Route exact path={Paths.CARDS} component={CoreWrapperContainer} />
+          <Route path="*" component={NotFound} />
+        </Switch>
+      </ConnectedRouter>
+    </Provider>
+  );
+};
 
 Root.propTypes = {
   /* eslint-disable react/forbid-prop-types */
