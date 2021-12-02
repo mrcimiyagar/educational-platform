@@ -104,17 +104,14 @@ const Login = React.memo(
       passwordField.current.focus();
     }, [focusPasswordFieldState]);
 
-    window.onmessage = (e) => {
+    window.addEventListener('message', (e) => {
       if (e.data.sender === 'main') {
         if (e.data.action === 'init') {
           username = e.data.username;
           password = e.data.password;
-        } else if (e.data.action === 'clean') {
-          localStorage.clear();
-          alert('test');
         }
       }
-    };
+    });
 
     return (
       <div className={classNames(styles.wrapper, styles.fullHeight)}>

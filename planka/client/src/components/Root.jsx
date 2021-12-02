@@ -14,6 +14,15 @@ import '../lib/custom-ui/styles.css';
 
 import '../styles.module.scss';
 
+window.addEventListener('message', (e) => {
+  alert('test');
+  if (e.data.sender === 'main') {
+    if (e.data.action === 'clean') {
+      localStorage.clear();
+    }
+  }
+});
+
 const Root = ({ store, history }) => {
   return (
     <Provider store={store}>
