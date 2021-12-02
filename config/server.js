@@ -9,7 +9,7 @@ app.use(cors())
 app.get('*', (req, res) => {
     res.send({
         mainBackend: 'https://backend.kaspersoft.cloud',
-        mainFrontend: 'https://kaspersoft.cloud',
+        mainFrontend: 'http://localhost:2002',
         confClient: 'https://conf.kaspersoft.cloud',
         audioPlayer: 'https://audioplayer.kaspersoft.cloud',
         waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
@@ -18,7 +18,7 @@ app.get('*', (req, res) => {
         videoConfVideo: 'https://confvideo.kaspersoft.cloud',
         videoConfAudio: 'https://confaudio.kaspersoft.cloud',
         videoConfScreen: 'https://confscreen.kaspersoft.cloud',
-        taskBoard: 'https://taskboard.kaspersoft.cloud',
+        taskBoard: 'http://localhost:3000',
         mainWebsocket: 'wss://kaspersoft.cloud'
     });
 });
