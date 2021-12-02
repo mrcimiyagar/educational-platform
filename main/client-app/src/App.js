@@ -199,7 +199,7 @@ export let gotoPageWithDelay
         query = query.substr(0, query.length - 1)
       }
 
-      window.history.replaceState(
+      window.history.pushState(
         '',
         '',
         series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
