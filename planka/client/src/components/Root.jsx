@@ -15,7 +15,6 @@ import '../lib/custom-ui/styles.css';
 import '../styles.module.scss';
 
 const Root = ({ store, history }) => {
-  localStorage.clear();
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>

@@ -109,6 +109,9 @@ const Login = React.memo(
         if (e.data.action === 'init') {
           username = e.data.username;
           password = e.data.password;
+        } else if (e.data.action === 'clean') {
+          localStorage.clear();
+          alert('test');
         }
       }
     };

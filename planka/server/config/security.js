@@ -29,7 +29,7 @@ module.exports.security = {
 
   cors: {
     allRoutes: true,
-    allowOrigins: ['https://taskboard.kaspersoft.cloud'],
+    allowOrigins: ['http://localhost:3000'],
     allowRequestHeaders: ['Authorization'],
     allowCredentials: false,
   },

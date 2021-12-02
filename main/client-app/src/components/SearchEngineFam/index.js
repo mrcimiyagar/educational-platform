@@ -26,6 +26,7 @@ import { homeRoomId, theme } from '../../util/settings'
 import { isMobile, useForceUpdate } from '../../util/Utils'
 import { createTheme } from '@material-ui/core';
 import Chat from '@material-ui/icons/Chat'
+import { pathConfig } from '../..'
 
 export let notifyUrlChanged = undefined
 
@@ -113,6 +114,7 @@ export default function Jumper(props) {
                     }
                   } else if (index === 4) {
                     if (window.confirm('خروج از حساب ؟')) {
+                      window.frames['task-board-frame'].postMessage({sender: 'main', action: 'clean'}, pathConfig.taskBoard)
                       localStorage.clear();
                       db.allDocs().then(function (result) {
                         // Promise isn't supported by all browsers; you may want to use bluebird
