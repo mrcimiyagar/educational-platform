@@ -144,7 +144,7 @@ export let gotoPageWithDelay
       query = query.substr(0, query.length - 1)
     }
 
-    window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
+    window.history.replaceState('', '', p + (query.length > 0 ? '?' : '') + query)
     if (notifyUrlChanged !== undefined) notifyUrlChanged()
     forceUpdate()
   }
