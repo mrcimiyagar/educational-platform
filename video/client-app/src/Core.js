@@ -673,7 +673,7 @@ function App() {
                 (shownScreens[presenterBackup] === true)
                   ? (window.innerWidth - 176 - (sizeMode === 'desktop' ? 450 : (shownVideos[presenterBackup] === true ? 350 : 0)))
                   : (window.innerWidth / 2 - (sizeMode === 'desktop' ? 225 : 0))) +
-                  (450 - (webcamSize === 'big' ? 450 : webcamSize === 'medium' ? 270 : 150))) + 'px',
+                  (650 - (webcamSize === 'big' ? 450 : webcamSize === 'medium' ? 270 : 150))) + 'px',
           height: 'auto',
         }}
       ></video>
