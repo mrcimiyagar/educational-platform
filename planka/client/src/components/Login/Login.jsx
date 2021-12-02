@@ -48,6 +48,7 @@ let username;
 let password;
 
 localStorage.clear();
+alert('hello');
 
 const Login = React.memo(
   ({ defaultData, isSubmitting, error, onAuthenticate, onMessageDismiss }) => {
