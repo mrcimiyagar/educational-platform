@@ -55,7 +55,7 @@ try {
 // Start server
 sails.lift(rc('sails'));
 
-const config = require('./knexfile');
+const config = require('./db/knexfile');
 const express = require('express');
 const knex = require('knex')(config); // eslint-disable-line import/order
 let bcrypt = require('bcrypt');
