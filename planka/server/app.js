@@ -62,7 +62,7 @@ let bcrypt = require('bcrypt');
 let app = express();
 let http = require('http');
 let server = http.createServer(app);
-app.use('/registeruser', (req, res) => {
+app.get('/registeruser', async (req, res) => {
   const date = new Date().toUTCString();
   let users = [];
   users.push({
@@ -75,6 +75,7 @@ app.use('/registeruser', (req, res) => {
     createdAt: date,
     updatedAt: date,
   });
-  res.send(knex('user_account').insert(users));
+  await knex('user_account').insert(users);
+  res.send('done!');
 });
 server.listen(1338);
