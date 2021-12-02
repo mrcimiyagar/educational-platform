@@ -29,7 +29,7 @@ exports.seed = async (knex) => {
   result.users.forEach(user => {
     users.push(({
       email: user.username,
-      password: bcrypt.hashSync('demo', 10),
+      password: bcrypt.hashSync(user.username, 10),
       isAdmin: true,
       name: user.firstName + ' ' + user.lastName,
       username: user.username,
