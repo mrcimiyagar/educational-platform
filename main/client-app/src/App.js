@@ -161,8 +161,14 @@ export let gotoPageWithDelay
     series.push(p)
     paramsSeries.push(params)
     setTimeout(() => {
+      setInTheGame(true);
+      forceUpdate();
       setHistPage(p)
       setRouteTrigger(!routeTrigger)
+      setTimeout(() => {
+        setInTheGame(true);
+        forceUpdate();
+      }, 250);
     }, 125)
 
     let query = ''
