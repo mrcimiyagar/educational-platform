@@ -24,7 +24,7 @@
     "server:start": "npm start --prefix server",
     "server:start:prod": "npm run start:prod --prefix server",
     "server:test": "npm test --prefix server",
-    "start": "concurrently -n server,client \"npm run server:start\" \"npm run client:start\"",
+    "start": "concurrently -n server,client \"npm run server:start\" \"npm run client:build\"",
     "test": "npm run server:test && npm run client:test"
   },
   "husky": {
