@@ -131,6 +131,10 @@ export let gotoPageWithDelay
 
 //if (window.innerWidth > 900) {
   gotoPage = (p, params) => {
+    
+    setInTheGame(false);
+    forceUpdate();
+
     series.push(p)
     paramsSeries.push(params)
     setHistPage(p)
