@@ -47,9 +47,6 @@ const createMessage = (error) => {
 let username;
 let password;
 
-localStorage.clear();
-alert('hello');
-
 const Login = React.memo(
   ({ defaultData, isSubmitting, error, onAuthenticate, onMessageDismiss }) => {
     const [t] = useTranslation();
@@ -112,7 +109,6 @@ const Login = React.memo(
         if (e.data.action === 'init') {
           username = e.data.username;
           password = e.data.password;
-          handleSubmit();
         }
       }
     };
