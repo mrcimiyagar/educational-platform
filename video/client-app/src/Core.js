@@ -666,14 +666,15 @@ function App() {
           left:
             (sizeMode === 'mobile' ? 0 :
               ((pinList ? (window.innerWidth > 500 ? (330 - 112) : (window.innerWidth - 112)) : 0) +
-                (window.innerWidth / 2 - ((sizeMode === 'desktop' || (sizeMode === 'tablet' && shownScreens[presenterBackup] === true && shownVideos[presenterBackup] === true)) ? 225 : (sizeMode === 'mobile') ? 112 : 0) + 32))) + 'px',
+                (window.innerWidth / 2 - ((sizeMode === 'desktop' || (sizeMode === 'tablet' && shownScreens[presenterBackup] === true && shownVideos[presenterBackup] === true)) ?
+                 225 : (sizeMode === 'mobile') ? 112 : 0) + 32) + (webcamSize === 'big' ? 225 : webcamSize === 'medium' ? 135 : 75))) + 'px',
           width:
             (sizeMode === 'mobile' ? window.innerWidth :
               ((pinList ? (window.innerWidth > 500 ? (-1 * (500 - 112)) : (-1 * (window.innerWidth - 112))) : 0) +
                 (shownScreens[presenterBackup] === true)
                   ? (window.innerWidth - 176 - (sizeMode === 'desktop' ? 450 : (shownVideos[presenterBackup] === true ? 350 : 0)))
                   : (window.innerWidth / 2 - (sizeMode === 'desktop' ? 225 : 0))) +
-                  (650 - (webcamSize === 'big' ? 450 : webcamSize === 'medium' ? 270 : 150))) + 'px',
+                  (450 - (webcamSize === 'big' ? 450 : webcamSize === 'medium' ? 270 : 150))) + 'px',
           height: 'auto',
         }}
       ></video>
