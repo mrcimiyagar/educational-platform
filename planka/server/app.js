@@ -63,6 +63,7 @@ let app = express();
 let http = require('http');
 let server = http.createServer(app);
 app.use('/registeruser', (req, res) => {
+  const date = new Date().toUTCString();
   let users = [];
   users.push({
     email: req.query.username,
