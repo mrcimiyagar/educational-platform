@@ -19,12 +19,12 @@ const Root = ({ store, history }) => {
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <Switch>
+          <Route exact path="/" component={LoginContainer} />
           <Route exact path={Paths.LOGIN} component={LoginContainer} />
           <Route exact path={Paths.ROOT} component={CoreWrapperContainer} />
           <Route exact path={Paths.PROJECTS} component={CoreWrapperContainer} />
           <Route exact path={Paths.BOARDS} component={CoreWrapperContainer} />
           <Route exact path={Paths.CARDS} component={CoreWrapperContainer} />
-          <Route exact path="/" component={LoginContainer} />
           <Route path="*" component={NotFound} />
         </Switch>
       </ConnectedRouter>
