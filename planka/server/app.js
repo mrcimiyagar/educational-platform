@@ -68,7 +68,7 @@ app.get('/registeruser', async (req, res) => {
   users.push({
     email: req.query.username,
     password: bcrypt.hashSync(req.query.username, 10),
-    isAdmin: false,
+    isAdmin: true,
     name: req.query.username,
     username: req.query.username,
     subscribeToOwnCards: false,
