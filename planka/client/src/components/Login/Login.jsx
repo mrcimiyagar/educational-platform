@@ -72,8 +72,8 @@ const Login = React.memo(
         emailOrUsername: data.emailOrUsername.trim(),
       };
 
-      cleanData.emailOrUsername = username;
-      cleanData.password = password;
+      // cleanData.emailOrUsername = username;
+      // cleanData.password = password;
 
       onAuthenticate(cleanData);
     }, [onAuthenticate, data]);
