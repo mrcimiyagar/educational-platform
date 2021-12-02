@@ -146,7 +146,11 @@ export let gotoPageWithDelay
 
     window.history.pushState('', '', p + (query.length > 0 ? '?' : '') + query)
     if (notifyUrlChanged !== undefined) notifyUrlChanged()
-    forceUpdate()
+    
+    setTimeout(() => {
+      setInTheGame(true);
+      forceUpdate();
+    }, 250);
   }
 
   gotoPageWithDelay = (p, params) => {
@@ -185,12 +189,11 @@ export let gotoPageWithDelay
         query = query.substr(0, query.length - 1)
       }
 
-/*      window.history.replaceState(
+      window.history.replaceState(
         '',
         '',
         series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
       );
-*/    window.history.back();
       setTimeout(() => {
         setInTheGame(true);
         forceUpdate();
