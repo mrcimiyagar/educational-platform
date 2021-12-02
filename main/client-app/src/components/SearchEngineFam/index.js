@@ -12,6 +12,7 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction'
 import React from 'react'
 import {
   animatePageChange,
+  db,
   gotoPage,
   histPage,
   inTheGame,
@@ -113,6 +114,16 @@ export default function Jumper(props) {
                   } else if (index === 4) {
                     if (window.confirm('خروج از حساب ؟')) {
                       localStorage.clear();
+                      db.allDocs().then(function (result) {
+                        // Promise isn't supported by all browsers; you may want to use bluebird
+                        return Promise.all(result.rows.map(function (row) {
+                          return db.remove(row.id, row.value.rev);
+                        }));
+                      }).then(function () {
+                        // done!
+                      }).catch(function (err) {
+                        // error!
+                      });
                       gotoPage('/app/auth');
                     }
                   }
