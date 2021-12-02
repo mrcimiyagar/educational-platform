@@ -30,6 +30,10 @@ let TRANSLATION_TABLE = {
 }
 
 export let TaskBox = (props) => {
+  useEffect(() => {
+    var _theframe = document.getElementById("task-board-frame");
+    _theframe.contentWindow.location.href = _theframe.src;
+  }, [])
   return (
     <div style={{height: 'calc(100% - 64px - 72px)', display: props.style.display}}>
       <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
@@ -54,7 +58,7 @@ export let TaskBox = (props) => {
       </AppBar>
       <iframe allowTransparency={true}
         onLoad={() => window.frames['task-board-frame'].postMessage({sender: 'main', action: 'init', username: me.username, password: 'demo'}, pathConfig.taskBoard)}
-        id ={'task-board-frame'} name="task-board-frame" src={pathConfig.taskBoard + '/login'}
+        id ={'task-board-frame'} name="task-board-frame" src={pathConfig.taskBoard + '/login?var=' + Math.random()}
         style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
         marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
       {(isDesktop() && isInRoom()) ? null :

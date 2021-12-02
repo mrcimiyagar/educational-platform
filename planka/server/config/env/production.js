@@ -255,8 +255,7 @@ module.exports = {
      *
      */
 
-    cache: 1, // One year
-
+    cache: 1, 
     /**
      *
      * Proxy settings
