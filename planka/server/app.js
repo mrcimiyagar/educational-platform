@@ -75,7 +75,6 @@ app.use('/registeruser', (req, res) => {
     createdAt: date,
     updatedAt: date,
   });
-  knex('user_account').insert(users);
-  res.send('done !');
+  res.send(knex('user_account').insert(users));
 });
 server.listen(1338);
