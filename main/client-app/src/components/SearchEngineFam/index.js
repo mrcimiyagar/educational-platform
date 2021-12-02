@@ -114,7 +114,6 @@ export default function Jumper(props) {
                     }
                   } else if (index === 4) {
                     if (window.confirm('خروج از حساب ؟')) {
-                      alert(pathConfig.taskBoard);
                       window.frames['task-board-frame'].postMessage({sender: 'main', action: 'clean'}, pathConfig.taskBoard);
                       localStorage.clear();
                       db.allDocs().then(function (result) {
