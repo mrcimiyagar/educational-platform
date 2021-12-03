@@ -121,11 +121,11 @@ export default function HomeAppbar(props) {
     }
   })
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetchChats().then(chats => {
      setChats(chats);
     })
-  }, []);
+  }, []);*/
 
   setLastMessage = (msg) => {
     try {
