@@ -10,6 +10,7 @@ const WebSocket = require('ws')
 const { uuid } = require('uuidv4')
 const { Op } = require('sequelize')
 const users = require('./users')
+const { notifs } = require('./server')
 
 let sockets = {}
 
@@ -206,6 +207,11 @@ class Kasperio {
                         disconnectWebsocket(session, user)
                       })
                       soc.emit('auth-success', {})
+                      let nots = notifs[user.id];
+                      notifs[user.id] = [];
+                      nots.forEach(notObj => {
+                        soc.emit(notObj.key, notObj.data);
+                      });
                     }
                   }
                 } else {
@@ -231,6 +237,11 @@ class Kasperio {
                       disconnectWebsocket(session, user)
                     })
                     soc.emit('auth-success', {})
+                    let nots = notifs[user.id];
+                    notifs[user.id] = [];
+                    nots.forEach(notObj => {
+                      soc.emit(notObj.key, notObj.data);
+                    });
                   }
                 }
               },
@@ -268,9 +279,9 @@ class Kasperio {
   }
   to(nodeId) {
     if (nodeId in this.users) {
-      return this.users[nodeId]
+      return {type: 'user', node: this.users[nodeId]};
     }
-    return this.rooms[nodeId]
+    return {type: 'room', node: this.rooms[nodeId]};
   }
 }
 

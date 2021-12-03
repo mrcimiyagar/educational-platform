@@ -61,6 +61,7 @@ app.post("/subscribe", jsonParser, async (req, res) => {
 server.listen(2001);
 
 let kasperio = socket.setup(server);
+let notifs = {};
 
 models.setup().then(() => {
     mongo.setup((s, a) => {
@@ -139,12 +140,29 @@ models.setup().then(() => {
         });
 
         module.exports = {
+            'notifs': notifs,
             'pushTo': (nodeId, key, data) => {
                 let d = JSON.stringify(data);
                 if (d.length > 50) d = d.substr(0, 50);
                 console.log(`sending packet to ${nodeId} - ${key} - ${d}`);
                 let node = kasperio.to(nodeId);
-                if (node === null || node === undefined) return;
+                if (node === null || node === undefined) {
+                    if (node.type === 'user') {
+                        if (notifs[nodeId] === undefined) {
+                            notifs[nodeId] = [];
+                        }
+                        notifs[nodeId].push({key, data});
+                    }
+                    else if (node.type === 'room') {
+                        node.node.members.forEach(m => {
+                            if (notifs[m.userId] === undefined) {
+                                notifs[m.userId] = [];
+                            }
+                            notifs[m.userId].push({key, data});
+                        });
+                    }
+                    return;
+                }
                 node.emit(key, data);
             },
             'Survey': s,
