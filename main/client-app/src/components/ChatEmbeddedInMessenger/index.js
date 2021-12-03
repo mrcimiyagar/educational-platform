@@ -294,7 +294,7 @@ export default function ChatEmbeddedInMessenger(props) {
     const requestedRoomId = props.roomId;
 
     fetchMessagesOfRoom(props.roomId).then(data => {
-      data.forEach((message) => {
+      /*data.forEach((message) => {
         messagesArr.push(
           <MessageItem
             key={'message-' + message.id}
@@ -305,7 +305,7 @@ export default function ChatEmbeddedInMessenger(props) {
         );
       });
             
-      forceUpdate();
+      forceUpdate();*/
       setScrollTAnywayrigger(!scrollTAnywayrigger);
       forceUpdate();
 

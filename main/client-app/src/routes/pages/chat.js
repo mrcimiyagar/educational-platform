@@ -430,7 +430,7 @@ export default function Chat(props) {
       })
       .catch((error) => console.log('error', error))
       fetchMessagesOfRoom(props.room_id).then((data) => {
-        let index = 0
+        /*let index = 0
         data.forEach((message) => {
           messagesArr.push(
             <MessageItem
@@ -444,7 +444,7 @@ export default function Chat(props) {
           index++
         })
             
-        forceUpdate();
+        forceUpdate();*/
         setScrollTAnywayrigger(!scrollTAnywayrigger);
         forceUpdate();
 
