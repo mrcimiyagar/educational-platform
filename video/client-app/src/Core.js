@@ -767,8 +767,8 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left:(sizeMode === 'mobile' || sizemode === 'tablet') ? 16 : 32,
-                bottom: (sizeMode === 'mobile' || sizemode === 'tablet') ? (48 + 104 + 56 + 16 + 56 + 16) : (48 + 56 + 16 + 56 + 16),
+                left:(sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
+                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? (48 + 104 + 56 + 16 + 56 + 16) : (48 + 56 + 16 + 56 + 16),
               }}
               onClick={() => {
                 window.parent.postMessage(
@@ -785,8 +785,8 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: (sizeMode === 'mobile' || sizemode === 'tablet') ? 16 : 32,
-                bottom: (sizeMode === 'mobile' || sizemode === 'tablet') ? 48 + 104 + 56 + 16 : 48 + 56 + 16,
+                left: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
+                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 48 + 104 + 56 + 16 : 48 + 56 + 16,
               }}
               onClick={() => {
                 if (audio) {
