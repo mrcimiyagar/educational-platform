@@ -147,27 +147,6 @@ models.setup().then(() => {
                 if (d.length > 50) d = d.substr(0, 50);
                 console.log(`sending packet to ${nodeId} - ${key} - ${d}`);
                 let node = kasperio.to(nodeId);
-                if (node.node === null || node.node === undefined) {
-                    for (let i = 0 ; i < 100; i++) {
-                        console.log('////////////////////////////////////////////////////////////////////////////////////');
-                    }
-                    if (node.type === 'user') {
-                        if (notifs[nodeId] === undefined) {
-                            notifs[nodeId] = [];
-                        }
-                        notifs[nodeId].push({key, data});
-                    }
-                    else if (node.type === 'room') {
-                        let us = getRoomUsers(Number(nodeId.toString().substr(nodeId.toString().indexOf('_') + 1)));
-                        us.forEach(u => {
-                            if (notifs[u.id] === undefined) {
-                                notifs[u.id] = [];
-                            }
-                            notifs[u.id].push({key, data});
-                        });
-                    }
-                    return;
-                }
                 node.node.emit(key, data);
             },
             'Survey': s,

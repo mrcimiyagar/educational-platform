@@ -11,7 +11,8 @@ const { uuid } = require('uuidv4')
 const { Op } = require('sequelize')
 const users = require('./users')
 
-let sockets = {}
+let sockets = {};
+let notifs = {};
 
 class Room {
   constructor(eventsRef, id) {
@@ -86,9 +87,15 @@ class Socket {
     this.events[event] = func
   }
   emit(event, args) {
-    let packet = JSON.stringify({ event: event, body: args })
-    if (this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(packet)
+    if (this.ws === undefined) {
+      if (notifs[this.userId] === undefined) notifs[this.userId] = [];
+      notifs[this.userId].push({key: event, data: args});
+    }
+    else {
+      let packet = JSON.stringify({ event: event, body: args })
+      if (this.ws.readyState === WebSocket.OPEN) {
+        this.ws.send(packet)
+      }
     }
   }
 }
@@ -109,7 +116,8 @@ let disconnectWebsocket = (session, user) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
             removeUser(room.id, user.id)
-            delete kasperioInstance.users[session === null ? user.id : session.userId];
+            sockets[user.id].ws = undefined;
+            //delete kasperioInstance.users[session === null ? user.id : session.userId];
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
@@ -207,7 +215,6 @@ class Kasperio {
                         disconnectWebsocket(session, user)
                       })
                       soc.emit('auth-success', {})
-                      const { notifs } = require('./server')
                       let nots = notifs[user.id];
                       if (nots !== undefined) {
                         notifs[user.id] = [];
@@ -240,7 +247,6 @@ class Kasperio {
                       disconnectWebsocket(session, user)
                     })
                     soc.emit('auth-success', {})
-                    const { notifs } = require('./server')
                     let nots = notifs[user.id];
                     if (nots !== undefined) {
                       notifs[user.id] = [];
