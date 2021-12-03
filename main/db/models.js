@@ -48,18 +48,18 @@ module.exports = {
             port: 5432,
             host: 'localhost'
         };
-        /*try {
+        try {
             await pgTools.dropdb(config, dbName);
-        } catch (e) {console.log(e);}*/
-        /*try {
+        } catch (e) {console.log(e);}
+        try {
             await pgTools.dropdb(config, dbName2);
-        } catch (e) {console.log(e);}*/
-        /*try {
+        } catch (e) {console.log(e);}
+        try {
             await pgTools.createdb(config, dbName);
-        } catch (e) {console.log(e);}*/
-        /*try {
+        } catch (e) {console.log(e);}
+        try {
             await pgTools.createdb(config, dbName2);
-        } catch (e) {console.log(e);}*/
+        } catch (e) {console.log(e);}
         prepareSequelizeInstance();
         await prepareUserModel();
         await prepareAccountModel();
