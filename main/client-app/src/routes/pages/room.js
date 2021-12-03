@@ -371,6 +371,7 @@ export default function RoomPage(props) {
           })
         }
         let wall = JSON.parse(result.wallpaper)
+        if (wall === undefined || wall === null) return;
         if (wall.type === 'photo') {
           setWallpaper({
             type: 'photo',
