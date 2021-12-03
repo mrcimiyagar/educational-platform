@@ -147,6 +147,37 @@ class Kasperio {
       try {
         let soc = new Socket(this.rooms, this.events, ws)
         console.log('new client connected.')
+        soc.on('chat-typing', () => {
+          if (soc.room !== null && soc.room !== undefined) {
+            if (soc.user.id in soc.room.typing) {
+              clearTimeout(soc.room.typing[soc.user.id].timeout)
+            }
+            soc.room.typing[soc.user.id] = {
+              timeout: setTimeout(() => {
+                delete soc.room.typing[soc.user.id]
+                let typingList = []
+                for (let t in soc.room.typing) {
+                  typingList.push(soc.room.typing[t].socket.user)
+                }
+                require('./server').pushTo(
+                  'room_' + soc.roomId,
+                  'chat-typing',
+                  typingList,
+                )
+              }, 2000),
+              socket: soc,
+            }
+            let typingList = []
+            for (let t in soc.room.typing) {
+              typingList.push(soc.room.typing[t].socket.user)
+            }
+            require('./server').pushTo(
+              'room_' + soc.roomId,
+              'chat-typing',
+              typingList,
+            )
+          }
+        })
         this.users[soc.id] = soc
         let that = this
         soc.on('auth', ({ token }) => {
@@ -171,37 +202,6 @@ class Kasperio {
                         soc.user = user
                         sockets[user.id] = soc
                       }
-                      soc.on('chat-typing', () => {
-                        if (soc.room !== null && soc.room !== undefined) {
-                          if (soc.user.id in soc.room.typing) {
-                            clearTimeout(soc.room.typing[soc.user.id].timeout)
-                          }
-                          soc.room.typing[soc.user.id] = {
-                            timeout: setTimeout(() => {
-                              delete soc.room.typing[soc.user.id]
-                              let typingList = []
-                              for (let t in soc.room.typing) {
-                                typingList.push(soc.room.typing[t].socket.user)
-                              }
-                              require('./server').pushTo(
-                                'room_' + soc.roomId,
-                                'chat-typing',
-                                typingList,
-                              )
-                            }, 2000),
-                            socket: soc,
-                          }
-                          let typingList = []
-                          for (let t in soc.room.typing) {
-                            typingList.push(soc.room.typing[t].socket.user)
-                          }
-                          require('./server').pushTo(
-                            'room_' + soc.roomId,
-                            'chat-typing',
-                            typingList,
-                          )
-                        }
-                      })
                       ws.on('close', ({}) => {
                         disconnectWebsocket(session, user)
                       })
@@ -227,46 +227,6 @@ class Kasperio {
                       soc.user = user
                       sockets[user.id] = soc
                     }
-                    soc.on('chat-typing', () => {
-                      models.Membership.findOne({
-                        where: { userId: user.id, roomId: soc.roomId },
-                      }).then((mem) => {
-                        if (mem !== null) {
-                          if (soc.room !== null && soc.room !== undefined) {
-                            if (soc.user.id in soc.room.typing) {
-                              clearTimeout(soc.room.typing[soc.user.id].timeout)
-                            }
-                            soc.room.typing[soc.user.id] = {
-                              timeout: setTimeout(() => {
-                                delete soc.room.typing[soc.user.id]
-                                let typingList = []
-                                for (let t in soc.room.typing) {
-                                  typingList.push(
-                                    soc.room.typing[t].socket.user,
-                                  )
-                                }
-
-                                require('./server').pushTo(
-                                  'room_' + soc.roomId,
-                                  'chat-typing',
-                                  typingList,
-                                )
-                              }, 2000),
-                              socket: soc,
-                            }
-                            let typingList = []
-                            for (let t in soc.room.typing) {
-                              typingList.push(soc.room.typing[t].socket.user)
-                            }
-                            require('./server').pushTo(
-                              'room_' + soc.roomId,
-                              'chat-typing',
-                              typingList,
-                            )
-                          }
-                        }
-                      })
-                    })
                     ws.on('close', ({}) => {
                       disconnectWebsocket(session, user)
                     })
