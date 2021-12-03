@@ -147,6 +147,7 @@ models.setup().then(() => {
                 if (d.length > 50) d = d.substr(0, 50);
                 console.log(`sending packet to ${nodeId} - ${key} - ${d}`);
                 let node = kasperio.to(nodeId);
+                if (node.node === undefined || node.node === null) return;
                 node.node.emit(key, data);
             },
             'Survey': s,
