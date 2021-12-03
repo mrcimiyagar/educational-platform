@@ -168,7 +168,7 @@ models.setup().then(() => {
                     }
                     return;
                 }
-                node.emit(key, data);
+                node.node.emit(key, data);
             },
             'Survey': s,
             'Answer': a
