@@ -22,11 +22,8 @@ class Room {
     this.typing = {}
   }
   emit(event, args) {
-    let packet = JSON.stringify({ event: event, body: args })
     this.members.forEach((socket) => {
-      if (socket.ws.readyState === WebSocket.OPEN) {
-        socket.ws.send(packet)
-      }
+      socket.emit(event, args);
     })
   }
 }
