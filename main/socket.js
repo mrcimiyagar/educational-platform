@@ -209,10 +209,12 @@ class Kasperio {
                       soc.emit('auth-success', {})
                       const { notifs } = require('./server')
                       let nots = notifs[user.id];
-                      notifs[user.id] = [];
-                      nots.forEach(notObj => {
-                        soc.emit(notObj.key, notObj.data);
-                      });
+                      if (nots !== undefined) {
+                        notifs[user.id] = [];
+                        nots.forEach(notObj => {
+                          soc.emit(notObj.key, notObj.data);
+                        });
+                      }
                     }
                   }
                 } else {
@@ -240,10 +242,12 @@ class Kasperio {
                     soc.emit('auth-success', {})
                     const { notifs } = require('./server')
                     let nots = notifs[user.id];
-                    notifs[user.id] = [];
-                    nots.forEach(notObj => {
-                      soc.emit(notObj.key, notObj.data);
-                    });
+                    if (nots !== undefined) {
+                      notifs[user.id] = [];
+                      nots.forEach(notObj => {
+                        soc.emit(notObj.key, notObj.data);
+                      });
+                    }
                   }
                 }
               },
