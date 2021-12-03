@@ -445,8 +445,7 @@ export default function ChatEmbedded(props) {
             
             let c = () => {
               if (document.getElementById(lastId) !== null) {
-                setScrollAnywayrTrigger(!scrollAnywayrTrigger);
-                forceUpdate();
+                scrollToBottom();
               }
               else {
                 setTimeout(() => {

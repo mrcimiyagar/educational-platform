@@ -147,7 +147,7 @@ models.setup().then(() => {
                 if (d.length > 50) d = d.substr(0, 50);
                 console.log(`sending packet to ${nodeId} - ${key} - ${d}`);
                 let node = kasperio.to(nodeId);
-                if (node === null || node === undefined) {
+                if (node.node === null || node.node === undefined) {
                     if (node.type === 'user') {
                         if (notifs[nodeId] === undefined) {
                             notifs[nodeId] = [];
