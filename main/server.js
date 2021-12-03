@@ -140,6 +140,7 @@ models.setup().then(() => {
         });
 
         module.exports = {
+            'kasperioInstance': kasperio,
             'notifs': notifs,
             'pushTo': (nodeId, key, data) => {
                 let d = JSON.stringify(data);

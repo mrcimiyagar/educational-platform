@@ -110,6 +110,7 @@ let disconnectWebsocket = (session, user) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
             removeUser(room.id, user.id)
+            delete kasperioInstance.users[session === null ? user.id : session.userId];
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
