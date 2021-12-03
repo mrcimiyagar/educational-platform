@@ -151,7 +151,7 @@ function Authentication(props) {
                   document.getElementById('loginPassword').value = '';
                   setConfig(result.account);
                   setOpacity(0)
-                  window.history.replaceState(pathConfig.mainFrontend);
+                  window.location.href = pathConfig.mainFrontend;
                 }
                 else {
                   alert(result.message)
