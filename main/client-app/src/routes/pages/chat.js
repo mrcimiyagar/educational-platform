@@ -179,7 +179,7 @@ export default function Chat(props) {
     readAs: 'DataURL',
   })
   let [scrollTrigger, setScrollTrigger] = React.useState(false);
-  let [scrollTAnywayrigger, setScrollTAnywayrigger] = React.useState(false);
+  let [scrollAnywayrTrigger, setScrollAnywayrTrigger] = React.useState(false);
   let [showScrollDown, setShowScrollDown] = React.useState(false);
 
   let callback = () => {
@@ -222,7 +222,7 @@ export default function Chat(props) {
 
   useEffect(() => {
     scrollToBottom();
-  }, [scrollTAnywayrigger]);
+  }, [scrollAnywayrTrigger]);
   replaceMessageInTheList = (msg) => {
     if (msg.roomId === props.room_id) {
       let messageSeen = document.getElementById('message-seen-' + msg.id)
@@ -445,7 +445,7 @@ export default function Chat(props) {
         })
             
         forceUpdate();*/
-        setScrollTAnywayrigger(!scrollTAnywayrigger);
+        setScrollAnywayrTrigger(!scrollAnywayrTrigger);
         forceUpdate();
 
         setTimeout(() => {
@@ -466,6 +466,7 @@ export default function Chat(props) {
             .then((result) => {
               console.log(JSON.stringify(result))
               if (result.messages !== undefined) {
+                let lastId = 0;
                 messagesArr = []
                 let index = 0
                 result.messages.forEach((message) => {
@@ -479,6 +480,7 @@ export default function Chat(props) {
                       setCurrentPhotoSrc={setCurrentPhotoSrc}
                     />,
                   )
+                  lastId = 'message-' + message.id;
                   index++
                 })
                 if (uploadingFiles[props.room_id] !== undefined) {
@@ -491,12 +493,24 @@ export default function Chat(props) {
                         setCurrentPhotoSrc={setCurrentPhotoSrc}
                       />,
                     )
+                    lastId = 'message-' + file.message.id;
                   })
                 }
             
                 forceUpdate();
-                setScrollTAnywayrigger(!scrollTAnywayrigger);
-                forceUpdate();
+                
+                let c = () => {
+                  if (document.getElementById(lastId) !== null) {
+                    scrollToBottom();
+                  }
+                  else {
+                    setTimeout(() => {
+                      c();
+                    }, 250);
+                  }
+                }
+    
+                c();
     
                 let requestOptions3 = {
                   method: 'POST',
