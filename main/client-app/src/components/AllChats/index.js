@@ -16,6 +16,8 @@ import { resetMessages } from '../../routes/pages/chat'
 import { colors, token } from '../../util/settings'
 import { isMobile, leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils'
 import {inTheGame} from '../../App';
+import { resetMessages3 } from '../ChatEmbedded'
+import { resetMessages2 } from '../ChatEmbeddedInMessenger'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +49,8 @@ export default function AllChats(props) {
               onClick={() => {
                 if (isMobile()) props.setInTheGame(false);
                 resetMessages();
+                resetMessages2();
+                resetMessages3();
                 if (isDesktop() || isTablet()) {
                   props.setSelectedRoomId(chat.id)
                   props.setSelectedUserId(chat.participent.id)

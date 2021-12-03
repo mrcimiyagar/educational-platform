@@ -41,8 +41,6 @@ import ChatWallpaper from '../../images/chat-wallpaper.jpg'
 import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery'
 import MessageItem from '../../components/MessageItem'
-import { resetMessages2 } from '../../components/ChatEmbeddedInMessenger'
-import { resetMessages3 } from '../../components/ChatEmbedded'
 import store, { changeConferenceMode } from '../../redux/main'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -78,8 +76,7 @@ const useStyles = makeStyles((theme) => ({
 let messagesArr = []
 export let resetMessages = () => {
   messagesArr = []
-  resetMessages2()
-  resetMessages3()
+  messagesDict = {};
 }
 
 let uplaodedFileId = 0
@@ -89,6 +86,8 @@ export let replaceMessageInTheList = () => {}
 
 let goingToRoom = false
 let lastLoadCount = 25;
+let messagesDict = {};
+let scrollReady3 = false;
 
 export default function Chat(props) {
   const urlSearchParams = new URLSearchParams(window.location.search)
@@ -110,6 +109,10 @@ export default function Chat(props) {
   useEffect(() => {
 
     lastLoadCount = 25;
+    messagesArr = [];
+    messagesDict = {};
+    scrollReady3 = false;
+    scrollToBottom();
 
     let requestOptions = {
       method: 'POST',
@@ -292,6 +295,10 @@ export default function Chat(props) {
   let attachScrollListener = (scroller) => {
     scroller.onscroll = () => {
       if ($('#chatScroller').scrollTop() === 0) {
+        if (!scrollReady3) {
+          scrollReady3 = true;
+          return;
+        }
         if (lastLoadCount < 25) return;
         let requestOptions3 = {
           method: 'POST',
@@ -315,6 +322,8 @@ export default function Chat(props) {
               let index = 0
               result.messages.reverse();
               result.messages.forEach((message) => {
+                if (messagesDict[message.id] === undefined) {
+                  messagesDict[message.id] = true;
                 cacheMessage(message)
                 messagesArr.unshift(
                   <MessageItem
@@ -326,6 +335,7 @@ export default function Chat(props) {
                   />,
                 )
                 index++
+                }
               })
 
               forceUpdate();
@@ -445,8 +455,8 @@ export default function Chat(props) {
         })
             
         forceUpdate();*/
-        setScrollAnywayrTrigger(!scrollAnywayrTrigger);
-        forceUpdate();
+        
+        scrollToBottom();
 
         setTimeout(() => {
           let requestOptions3 = {
@@ -470,6 +480,8 @@ export default function Chat(props) {
                 messagesArr = []
                 let index = 0
                 result.messages.forEach((message) => {
+                  if (messagesDict[message.id] === undefined) {
+                    messagesDict[message.id] = true;
                   cacheMessage(message)
                   messagesArr.push(
                     <MessageItem
@@ -482,6 +494,7 @@ export default function Chat(props) {
                   )
                   lastId = 'message-' + message.id;
                   index++
+                  }
                 })
                 if (uploadingFiles[props.room_id] !== undefined) {
                   Object.values(uploadingFiles[props.room_id]).forEach((file) => {
@@ -501,7 +514,9 @@ export default function Chat(props) {
                 
                 let c = () => {
                   if (document.getElementById(lastId) !== null) {
-                    scrollToBottom();
+                    setTimeout(() => {
+                      scrollToBottom();
+                    });
                   }
                   else {
                     setTimeout(() => {
@@ -893,7 +908,7 @@ export default function Chat(props) {
               bottom: 72 + 16,
             }}
             onClick={() => {
-              setScrollTrigger(!scrollTrigger)
+              scrollToBottom();
             }}
           >
             <ArrowDownward />

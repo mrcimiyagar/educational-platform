@@ -72,6 +72,12 @@ import SpacesListPage from './routes/pages/spacesList';
 import Sidebar from './containers/Sidebar';
 const PouchDB = require('pouchdb').default
 
+export let currentRoomId = 0;
+export let setCurrentRoomId = (rId) => {
+  currentRoomId = rId;
+};
+
+
 export let histPage = undefined
 let setHistPage = undefined
 export let routeTrigger = undefined

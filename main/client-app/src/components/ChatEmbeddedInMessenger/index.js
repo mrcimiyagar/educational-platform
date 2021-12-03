@@ -18,6 +18,7 @@ import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
 import {
   cacheMessage,
+  currentRoomId,
   fetchMessagesOfRoom,
   gotoPage,
   histPage,
@@ -30,6 +31,7 @@ import {
   markFileAsUploading,
   popPage,
   routeTrigger,
+  setCurrentRoomId,
   setDialogOpen,
   uploadingFiles,
 } from '../../App'
@@ -77,12 +79,15 @@ export let updateChatEmbedded = undefined
 let messagesArr = []
 export let resetMessages2 = () => {
   messagesArr = []
+  messagesDict = {};
 }
 
 export let addMessageToList2 = () => {}
 export let replaceMessageInTheList2 = () => {}
 
 let lastLoadCount = 25;
+let messagesDict = {};
+let scrollReady = false;
 
 export default function ChatEmbeddedInMessenger(props) {
 
@@ -124,6 +129,10 @@ export default function ChatEmbeddedInMessenger(props) {
   }, [scrollAnywayrTrigger]);
 
   useEffect(() => {
+    messagesArr = [];
+    messagesDict = {};
+    scrollReady = false;
+    scrollToBottom();
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -171,6 +180,10 @@ export default function ChatEmbeddedInMessenger(props) {
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {
       if ($('#scroller').scrollTop() === 0) {
+        if (!scrollReady) {
+          scrollReady = true;
+          return;
+        }
         if (lastLoadCount < 25) return;
         let requestOptions3 = {
           method: 'POST',
@@ -192,20 +205,26 @@ export default function ChatEmbeddedInMessenger(props) {
             if (result.messages !== undefined) {
               lastLoadCount = result.messages.length;
               let index = 0
+
+            if (currentRoomId === props.roomId) {
               result.messages.reverse();
               result.messages.forEach((message) => {
-                cacheMessage(message)
-                messagesArr.unshift(
-                  <MessageItem
-                    index={index}
-                    key={'message-' + message.id}
-                    message={message}
-                    setPhotoViewerVisible={setPhotoViewerVisible}
-                    setCurrentPhotoSrc={setCurrentPhotoSrc}
-                  />,
-                )
-                index++
+                if (messagesDict[message.id] === undefined) {
+                  messagesDict[message.id] = true;
+                  cacheMessage(message)
+                  messagesArr.unshift(
+                    <MessageItem
+                      index={index}
+                      key={'message-' + message.id}
+                      message={message}
+                      setPhotoViewerVisible={setPhotoViewerVisible}
+                      setCurrentPhotoSrc={setCurrentPhotoSrc}
+                    />,
+                  )
+                  index++;
+                }
               })
+            }
               forceUpdate();
 
               setTimeout(() => {
@@ -291,7 +310,7 @@ export default function ChatEmbeddedInMessenger(props) {
       })
       .catch((error) => console.log('error', error))
     
-    const requestedRoomId = props.roomId;
+    setCurrentRoomId(props.roomId);
 
     fetchMessagesOfRoom(props.roomId).then(data => {
       /*data.forEach((message) => {
@@ -306,8 +325,8 @@ export default function ChatEmbeddedInMessenger(props) {
       });
             
       forceUpdate();*/
-      setScrollAnywayrTrigger(!scrollAnywayrTrigger);
-      forceUpdate();
+      
+      scrollToBottom();
 
       let requestOptions3 = {
         method: 'POST',
@@ -326,19 +345,21 @@ export default function ChatEmbeddedInMessenger(props) {
           console.log(JSON.stringify(result))
           if (result.messages !== undefined) {
             let lastId = 0;
-            if (requestedRoomId === props.roomId) {
-              messagesArr = []
+            if (currentRoomId === props.roomId) {
               result.messages.forEach((message) => {
-                cacheMessage(message);
-                messagesArr.push(
-                  <MessageItem
-                    key={'message-' + message.id}
-                    message={message}
-                    setPhotoViewerVisible={setPhotoViewerVisible}
-                    setCurrentPhotoSrc={setCurrentPhotoSrc}
-                  />
-                );
-                lastId = 'message-' + message.id;
+                if (messagesDict[message.id] === undefined) {
+                  messagesDict[message.id] = true;
+                  cacheMessage(message);
+                  messagesArr.push(
+                    <MessageItem
+                      key={'message-' + message.id}
+                      message={message}
+                      setPhotoViewerVisible={setPhotoViewerVisible}
+                      setCurrentPhotoSrc={setCurrentPhotoSrc}
+                    />
+                  );
+                  lastId = 'message-' + message.id;
+                }
               });
               if (uploadingFiles[props.roomId] !== undefined) {
                 Object.values(uploadingFiles[props.roomId]).forEach((file) => {
@@ -359,7 +380,9 @@ export default function ChatEmbeddedInMessenger(props) {
             
             let c = () => {
               if (document.getElementById(lastId) !== null) {
-                scrollToBottom();
+                setTimeout(() => {
+                  scrollToBottom();
+                });
               }
               else {
                 setTimeout(() => {
@@ -848,7 +871,9 @@ export default function ChatEmbeddedInMessenger(props) {
           id={'scroller'}
         >
           <div style={{ height: 64 }} />
-          <div id={'messagesContainer'}>{messagesArr}</div>
+          <div id={'messagesContainer'}>
+              {messagesArr}
+          </div>
           <div style={{ width: '100%', height: 80 }} />
         </div>
         <Fab
@@ -860,7 +885,7 @@ export default function ChatEmbeddedInMessenger(props) {
             bottom: 48 + 16,
           }}
           onClick={() => {
-            setScrollTrigger(!scrollTrigger)
+            scrollToBottom();
           }}
         >
           <ArrowDownward />

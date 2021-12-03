@@ -15,7 +15,6 @@ export default function MessageItem(props) {
     return (
       <div key={message.id} id={'message-' + message.id}>
         {message.authorId === me.id ? (
-          <Grow in={inTheGame} {...{ timeout: (props.index + 1) * 500 }} transitionDuration={1000}>
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar
               src={
@@ -320,9 +319,7 @@ export default function MessageItem(props) {
               </div>
             </div>
           </div>
-          </Grow>
         ) : (
-          <Grow in={inTheGame} {...{ timeout: (props.index + 1) * 500 }} transitionDuration={1000}>
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar
               src={
@@ -623,7 +620,6 @@ export default function MessageItem(props) {
               </div>
             </div>
           </div>
-          </Grow>
         )}
       </div>
     )

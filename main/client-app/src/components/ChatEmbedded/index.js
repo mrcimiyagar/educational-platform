@@ -14,6 +14,7 @@ import Viewer from 'react-viewer'
 import { useFilePicker } from 'use-file-picker'
 import {
   cacheMessage,
+  currentRoomId,
   db,
   fetchMessagesOfRoom,
   gotoPage,
@@ -27,6 +28,7 @@ import {
   markFileAsUploading,
   popPage,
   routeTrigger,
+  setCurrentRoomId,
   setDialogOpen,
   uploadingFiles,
 } from '../../App'
@@ -80,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
 let messagesArr = []
 export let resetMessages3 = () => {
   messagesArr = []
+  messagesDict = {};
 }
 
 export let addMessageToList3 = () => {}
@@ -87,6 +90,8 @@ export let replaceMessageInTheList3 = () => {}
 
 export let updateChatEmbedded = undefined
 let lastLoadCount = 25;
+let messagesDict = {};
+let scrollReady2 = false;
 
 export default function ChatEmbedded(props) {
   document.documentElement.style.overflowY = 'hidden';
@@ -203,6 +208,10 @@ export default function ChatEmbedded(props) {
   addMessageToList3 = addMessageToList
 
   useEffect(() => {
+    messagesArr = [];
+    messagesDict = {};
+    scrollReady2 = false;
+    scrollToBottom();
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -255,6 +264,10 @@ export default function ChatEmbedded(props) {
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {
       if ($('#scroller').scrollTop() === 0) {
+        if (!scrollReady2) {
+          scrollReady2 = true;
+          return;
+        }
         if (lastLoadCount < 25) return;
         let requestOptions3 = {
           method: 'POST',
@@ -276,8 +289,11 @@ export default function ChatEmbedded(props) {
             if (result.messages !== undefined) {
               lastLoadCount = result.messages.length;
               let index = 0
+            if (currentRoomId === props.roomId) {
               result.messages.reverse();
               result.messages.forEach((message) => {
+                if (messagesDict[message.id] === undefined) {
+                  messagesDict[message.id] = true;
                 cacheMessage(message)
                 messagesArr.unshift(
                   <MessageItem
@@ -289,7 +305,9 @@ export default function ChatEmbedded(props) {
                   />,
                 )
                 index++
+                }
               })
+            }
               
               forceUpdate();
 
@@ -376,7 +394,7 @@ export default function ChatEmbedded(props) {
       })
       .catch((error) => console.log('error', error))
 
-    const requestedRoomId = props.roomId
+    setCurrentRoomId(props.roomId);
 
     fetchMessagesOfRoom(props.roomId).then((data) => {
       /*data.forEach((message) => {
@@ -391,8 +409,8 @@ export default function ChatEmbedded(props) {
       })
             
       forceUpdate();*/
-      setScrollAnywayrTrigger(!scrollAnywayrTrigger);
-      forceUpdate();
+      
+      scrollToBottom();
       
       let requestOptions3 = {
         method: 'POST',
@@ -412,9 +430,10 @@ export default function ChatEmbedded(props) {
           console.log(JSON.stringify(result))
           if (result.messages !== undefined) {
             let lastId = 0;
-            if (requestedRoomId === props.roomId) {
-              messagesArr = []
+            if (currentRoomId === props.roomId) {
               result.messages.forEach((message) => {
+                if (messagesDict[message.id] === undefined) {
+                  messagesDict[message.id] = true;
                 cacheMessage(message)
                 messagesArr.push(
                   <MessageItem
@@ -425,6 +444,7 @@ export default function ChatEmbedded(props) {
                   />,
                 )
                 lastId = 'message-' + message.id;
+                }
               })
               if (uploadingFiles[props.roomId] !== undefined) {
                 Object.values(uploadingFiles[props.roomId]).forEach((file) => {
@@ -445,7 +465,9 @@ export default function ChatEmbedded(props) {
             
             let c = () => {
               if (document.getElementById(lastId) !== null) {
-                scrollToBottom();
+                setTimeout(() => {
+                  scrollToBottom();
+                });
               }
               else {
                 setTimeout(() => {
@@ -906,7 +928,9 @@ export default function ChatEmbedded(props) {
             id={'scroller'}
           >
             <div style={{ height: 64 }} />
-            <div id={'messagesContainer'}>{messagesArr}</div>
+            <div id={'messagesContainer'}>
+                {messagesArr}
+            </div>
             <div style={{ width: '100%', height: 80 }} />
           </div>
           <Fab
@@ -919,7 +943,7 @@ export default function ChatEmbedded(props) {
               bottom: isInMessenger() ? 72 + 16 : 72 + 32 + 16,
             }}
             onClick={() => {
-              setScrollTrigger(!scrollTrigger)
+              scrollToBottom();
             }}
           >
             <ArrowDownward />
