@@ -270,6 +270,10 @@ router.post('/delete_message', jsonParser, async function (req, res) {
 
 router.post('/get_messages', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
+    if (membership === undefined) {
+      res.send({ status: 'error', errorCode: 'e0005' });
+      return;
+    }
     let messages = await sw.Message.findAll({
       raw: true,
       limit: 100,
