@@ -85,13 +85,13 @@ class Socket {
   }
   emit(event, args) {
     if (this.ws === undefined) {
-      if (notifs[this.userId] === undefined) notifs[this.userId] = [];
-      notifs[this.userId].push({key: event, data: args});
+      if (notifs[this.user.id] === undefined) notifs[this.user.id] = [];
+      notifs[this.user.id].push({key: event, data: args});
     }
     else {
-      let packet = JSON.stringify({ event: event, body: args })
+      let packet = JSON.stringify({ event: event, body: args });
       if (this.ws.readyState === WebSocket.OPEN) {
-        this.ws.send(packet)
+        this.ws.send(packet);
       }
     }
   }
