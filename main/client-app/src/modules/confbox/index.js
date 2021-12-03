@@ -1,11 +1,11 @@
-import { AppBar, createTheme, Fab, IconButton, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
-import { ArrowForward, Mic, MicOff, Notes, VideocamOff } from "@material-ui/icons";
+import { AppBar, createTheme, Fab, IconButton, Slide, ThemeProvider, Toolbar, Typography } from "@material-ui/core";
+import { ArrowForward, Chat, Mic, MicOff, Notes, VideocamOff } from "@material-ui/icons";
 import Menu from "@material-ui/icons/Menu";
 import PollIcon from '@material-ui/icons/Poll';
 import Search from "@material-ui/icons/Search";
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
 import React, { useEffect } from "react";
-import { gotoPage, isDesktop, isInRoom } from '../../App';
+import { gotoPage, inTheGame, isDesktop, isInRoom, isMobile, isTablet } from '../../App';
 import store, { switchConf } from "../../redux/main";
 import { colors, me } from '../../util/settings';
 import { useForceUpdate } from "../../util/Utils";
@@ -47,6 +47,26 @@ export function ConfBox(props) {
             </IconButton>
           </Toolbar>
         </AppBar>
+
+      {(isDesktop() && isInRoom()) ? null :
+      <Slide
+          direction="right"
+          in={inTheGame}
+          mountOnEnter
+        >
+      <Fab
+        color={'secondary'}
+        style={{
+          position: 'fixed',
+          bottom: (isInRoom() && (isMobile() || isTablet())) ? (72 + 12) : 12,
+          right: 16 + 72,
+          zIndex: 4,
+        }}
+        onClick={() => gotoPage('/app/chat', {room_id: props.roomId, user_id: props.userId})}
+      >
+        <Chat />
+      </Fab>
+      </Slide>}
         
         <iframe scrolling="no"
           onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', me: me, roomId: props.roomId}, pathConfig.confClient)}}

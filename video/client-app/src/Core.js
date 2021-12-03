@@ -651,9 +651,6 @@ function App() {
         flexwrap: 'wrap',
       }}
     >
-      <label>
-        test  
-      </label>
       <DesktopDetector />
       <video
         id="screenMax"
@@ -710,7 +707,7 @@ function App() {
             { sender: 'conf', action: 'showBottomBar' },
             pathConfig.mainFrontend,
           )
-          setListOpen(false)
+          setListOpen(false);
         }}
         ModalProps={{
           keepMounted: true
@@ -723,7 +720,13 @@ function App() {
           className="participents"
           style={{ width: window.innerWidth + 'px', minWidth: 300, maxWidth: 500, height: 128, flexwrap: 'nowrap' }}
         >
-          <IconButton onClick={() => setListOpen(false)} style={{padding: 16}}>
+          <IconButton onClick={() => {
+            window.parent.postMessage(
+              { sender: 'conf', action: 'showBottomBar' },
+              pathConfig.mainFrontend,
+            )
+            setListOpen(false);
+          }} style={{padding: 16}}>
             <Close/>
           </IconButton>
           <IconButton onClick={() => setPinList(!pinList)} style={{padding: 16}}>
@@ -760,13 +763,30 @@ function App() {
         <div style={{ width: '100%', height: '100%' }}>
           <ThemeProvider theme={theme2}>
             <Fab
+              id="listButton"
+              color={'primary'}
+              style={{
+                position: 'absolute',
+                left:(sizeMode === 'mobile' || sizemode === 'tablet') ? 16 : 32,
+                bottom: (sizeMode === 'mobile' || sizemode === 'tablet') ? (48 + 104 + 56 + 16 + 56 + 16) : (48 + 56 + 16 + 56 + 16),
+              }}
+              onClick={() => {
+                window.parent.postMessage(
+                  { sender: 'conf', action: 'hideBottomBar' },
+                  pathConfig.mainFrontend,
+                )
+                setListOpen(true)
+              }}
+            >
+              <MenuIcon />
+            </Fab>
+            <Fab
               id="audioButton"
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: window.innerWidth <= 1400 ? 16 : 32,
-                bottom:
-                  window.innerWidth <= 1400 ? 48 + 104 + 56 + 16 : 48 + 56 + 16,
+                left: (sizeMode === 'mobile' || sizemode === 'tablet') ? 16 : 32,
+                bottom: (sizeMode === 'mobile' || sizemode === 'tablet') ? 48 + 104 + 56 + 16 : 48 + 56 + 16,
               }}
               onClick={() => {
                 if (audio) {
@@ -872,30 +892,6 @@ function App() {
                 )}
               </Fab>
             ) : null}
-            <Fab
-              id="listButton"
-              color={'primary'}
-              style={{
-                position: 'absolute',
-                left:
-                  (screenShareSupported ? 32 + 56 : 0) +
-                  (window.innerWidth <= 1400 ? 0 : 16) +
-                  56 +
-                  16 +
-                  56 +
-                  16,
-                bottom: window.innerWidth <= 1400 ? 48 + 104 : 48,
-              }}
-              onClick={() => {
-                window.parent.postMessage(
-                  { sender: 'conf', action: 'hideBottomBar' },
-                  pathConfig.mainFrontend,
-                )
-                setListOpen(true)
-              }}
-            >
-              <MenuIcon />
-            </Fab>
           </ThemeProvider>
           <VideoMedia
             shownUsers={shownVideos}
@@ -928,9 +924,9 @@ function App() {
             id="callButton"
             color={'secondary'}
             style={{
-              position: 'absolute',
+              position: 'fixed',
               left: window.innerWidth <= 1400 ? 16 : 32,
-              bottom: window.innerWidth <= 1400 ? 48 + 104 : 48,
+              bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? (48 + 104) : 48,
             }}
             onClick={() => {
               instantConnectionFlag = true

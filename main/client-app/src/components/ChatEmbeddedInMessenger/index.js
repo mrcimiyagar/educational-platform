@@ -101,6 +101,7 @@ export default function ChatEmbeddedInMessenger(props) {
     readAs: 'DataURL',
   })
   let [scrollTrigger, setScrollTrigger] = React.useState(false)
+  let [scrollTAnywayrigger, setScrollTAnywayrigger] = React.useState(false)
   let [showScrollDown, setShowScrollDown] = React.useState(false)
 
   let scrollToBottom = () => {
@@ -108,8 +109,19 @@ export default function ChatEmbeddedInMessenger(props) {
     scroller.scrollTo(0, scroller.scrollHeight);
   }
   useEffect(() => {
+    let isAtEnd = false
+    let scroller = document.getElementById('scroller')
+    if (scroller.scrollTop + $('#scroller').innerHeight() >= (scroller.scrollHeight - 300)) {
+      isAtEnd = true
+    }
+    if (isAtEnd) {
+      scrollToBottom();
+    }
+  }, [scrollTrigger]);
+
+  useEffect(() => {
     scrollToBottom();
-  }, [scrollTrigger])
+  }, [scrollTAnywayrigger]);
 
   useEffect(() => {
     let requestOptions = {
@@ -234,6 +246,8 @@ export default function ChatEmbeddedInMessenger(props) {
       }
     }
 
+    if (props.userId === undefined) setUser(undefined);
+    else {
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -254,6 +268,7 @@ export default function ChatEmbeddedInMessenger(props) {
         }
       })
       .catch((error) => console.log('error', error))
+    }
 
     let requestOptions2 = {
       method: 'POST',
@@ -289,8 +304,10 @@ export default function ChatEmbeddedInMessenger(props) {
           />,
         );
       });
-      setScrollTrigger(!scrollTrigger)
-      forceUpdate()
+            
+      forceUpdate();
+      setScrollTAnywayrigger(!scrollTAnywayrigger);
+      forceUpdate();
 
       let requestOptions3 = {
         method: 'POST',
@@ -336,10 +353,8 @@ export default function ChatEmbeddedInMessenger(props) {
             }
             
             forceUpdate();
-
-            setTimeout(() => {
-              scrollToBottom();
-            });
+            setScrollTAnywayrigger(!scrollTAnywayrigger);
+            forceUpdate();
 
             let requestOptions3 = {
               method: 'POST',
@@ -465,11 +480,9 @@ export default function ChatEmbeddedInMessenger(props) {
             setCurrentPhotoSrc={setCurrentPhotoSrc}
           />
         )
-        messagesArr.push(lastMsg)
-        forceUpdate()
-        if (isAtEnd) {
-          scrollToBottom();
-        }
+        messagesArr.push(lastMsg);
+        setScrollTrigger(!scrollTrigger);
+        forceUpdate();
         let requestOptions3 = {
           method: 'POST',
           headers: {

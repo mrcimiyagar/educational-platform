@@ -59,7 +59,7 @@ export let TaskBox = (props) => {
         marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
       {(isDesktop() && isInRoom()) ? null :
       <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16, bottom: 72 + 16}} onClick={() => {
-          gotoPage('/app/chat', {roomId: props.roomId})
+          gotoPage('/app/chat', {room_id: props.roomId, user_id: props.userId})
       }}><Chat/></Fab>}
     </div>
   )

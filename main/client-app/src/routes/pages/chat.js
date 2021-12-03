@@ -106,6 +106,7 @@ export default function Chat(props) {
   const [showEmojiPad, setShowEmojiPad] = React.useState(false)
   let [pickingFile, setPickingFile] = React.useState(false)
 
+
   useEffect(() => {
 
     lastLoadCount = 25;
@@ -178,17 +179,50 @@ export default function Chat(props) {
     readAs: 'DataURL',
   })
   let [scrollTrigger, setScrollTrigger] = React.useState(false);
+  let [scrollTAnywayrigger, setScrollTAnywayrigger] = React.useState(false);
   let [showScrollDown, setShowScrollDown] = React.useState(false);
 
+  let callback = () => {
+    let scroller = document.getElementById('chatScroller');
+    if (scroller === null) {
+      setTimeout(() => {
+        callback();  
+      }, 500);
+    }
+    else {
+      scroller.scrollTo(0, scroller.scrollHeight);
+    }
+  };
+
   let scrollToBottom = () => {
-    let scroller = document.getElementById('chatScroller')
-    if (scroller !== null) scroller.scrollTo(0, scroller.scrollHeight)
+    callback();
   }
+
+  let callback2 = () => {
+    let isAtEnd = false
+    let scroller = document.getElementById('chatScroller')
+    if (scroller !== null) {
+      if (scroller.scrollTop + $('#chatScroller').innerHeight() >= (scroller.scrollHeight - 300)) {
+        isAtEnd = true
+      }
+      if (isAtEnd) {
+        scrollToBottom();
+      }
+    }
+    else {
+      setTimeout(() => {
+        callback2();
+      }, 500);
+    }
+  };
+
+  useEffect(() => {
+    callback2();
+  }, [scrollTrigger]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [scrollTrigger])
-
+  }, [scrollTAnywayrigger]);
   replaceMessageInTheList = (msg) => {
     if (msg.roomId === props.room_id) {
       let messageSeen = document.getElementById('message-seen-' + msg.id)
@@ -228,11 +262,9 @@ export default function Chat(props) {
             setCurrentPhotoSrc={setCurrentPhotoSrc}
           />
         )
-        messagesArr.push(lastMsg)
+        messagesArr.push(lastMsg);
+        setScrollTrigger(!scrollTrigger);
         forceUpdate();
-        if (isAtEnd) {
-          setScrollTrigger(!scrollTrigger)
-        }
         let requestOptions3 = {
           method: 'POST',
           headers: {
@@ -295,8 +327,8 @@ export default function Chat(props) {
                 )
                 index++
               })
-              setScrollTrigger(!scrollTrigger)
-              forceUpdate()
+
+              forceUpdate();
 
               setTimeout(() => {
                 let topMessage = document.getElementById(topMessageBeforeUpdate);
@@ -353,6 +385,8 @@ export default function Chat(props) {
   }, [])
 
   useEffect(() => {
+    if (props.user_id === undefined) setUser(undefined);
+    else {
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -373,6 +407,7 @@ export default function Chat(props) {
         }
       })
       .catch((error) => console.log('error', error))
+    }
     let requestOptions2 = {
       method: 'POST',
       headers: {
@@ -394,7 +429,7 @@ export default function Chat(props) {
         }
       })
       .catch((error) => console.log('error', error))
-      fetchMessagesOfRoom(props.roomId).then((data) => {
+      fetchMessagesOfRoom(props.room_id).then((data) => {
         let index = 0
         data.forEach((message) => {
           messagesArr.push(
@@ -408,7 +443,9 @@ export default function Chat(props) {
           )
           index++
         })
-        setScrollTrigger(!scrollTrigger);
+            
+        forceUpdate();
+        setScrollTAnywayrigger(!scrollTAnywayrigger);
         forceUpdate();
 
         setTimeout(() => {
@@ -444,8 +481,8 @@ export default function Chat(props) {
                   )
                   index++
                 })
-                if (uploadingFiles[props.roomId] !== undefined) {
-                  Object.values(uploadingFiles[props.roomId]).forEach((file) => {
+                if (uploadingFiles[props.room_id] !== undefined) {
+                  Object.values(uploadingFiles[props.room_id]).forEach((file) => {
                     messagesArr.push(
                       <MessageItem
                         key={'message-' + file.message.id}
@@ -456,11 +493,10 @@ export default function Chat(props) {
                     )
                   })
                 }
-                forceUpdate()
-
-                setTimeout(() => {
-                  scrollToBottom();
-                });
+            
+                forceUpdate();
+                setScrollTAnywayrigger(!scrollTAnywayrigger);
+                forceUpdate();
     
                 let requestOptions3 = {
                   method: 'POST',
@@ -486,7 +522,7 @@ export default function Chat(props) {
     setTimeout(() => {
       setInTheGame(true)
     }, 1000)
-  }, [props.roomId, props.userId])
+  }, [props.user_id, props.room_id])
 
   const ROOT_CSS = css({
     height: '100%',
@@ -514,34 +550,6 @@ export default function Chat(props) {
     return 0
   }
 
-  let checkChatText = () => {
-    if (document.getElementById('chatText') !== null) {
-      var textAreaField = document.getElementById('chatText')
-      textAreaField.addEventListener('keyup', function (e) {
-        if (e.keyCode == 13 && e.ctrlKey) {
-          var content = this.value
-          var caret = getCaret(this)
-          this.value =
-            content.substring(0, caret) +
-            '\n' +
-            content.substring(caret)
-          e.stopPropagation()
-        } else if (e.keyCode == 13) {
-          e.preventDefault()
-          document.getElementById('sendBtn').click()
-        }
-      })
-    } else {
-      setTimeout(() => {
-        checkChatText()
-      }, 500)
-    }
-  }
-
-  useEffect(() => {
-    checkChatText()
-  }, [])
-
   useEffect(() => {
     if (!loading && pickingFile) {
       setPickingFile(false)
@@ -549,7 +557,6 @@ export default function Chat(props) {
       fetch(dataUrl.content)
         .then((res) => res.blob())
         .then((file) => {
-          alert(dataUrl.name);
           let msg = {
             time: Date.now(),
             authorId: me.id,
@@ -577,7 +584,7 @@ export default function Chat(props) {
             fileUrl: URL.createObjectURL(file),
             User: me,
           }
-          const id = markFileAsUploading(props.roomId, {
+          const id = markFileAsUploading(props.room_id, {
             message: msg,
             file: file,
             dataUrl: dataUrl,
@@ -609,7 +616,7 @@ export default function Chat(props) {
           })
           request.onreadystatechange = function () {
             if (request.readyState == XMLHttpRequest.DONE) {
-              markFileAsUploaded(props.roomId, id)
+              markFileAsUploaded(props.room_id, id)
               let requestOptions = {
                 method: 'POST',
                 headers: {

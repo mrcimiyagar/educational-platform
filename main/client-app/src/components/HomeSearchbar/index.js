@@ -41,6 +41,9 @@ export default function HomeSearchbar(props) {
       <InputBase
         className={classes.input}
         placeholder="جستجو در آسمان"
+        onChange={(e) => {
+          props.onSearch(e.target.value);
+        }}
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
         <SearchIcon />

@@ -7,10 +7,11 @@ import {
   ThemeProvider,
 } from '@material-ui/core'
 import { pink } from '@material-ui/core/colors'
+import { Chat } from '@material-ui/icons'
 import Add from '@material-ui/icons/Add'
 import Edit from '@material-ui/icons/Edit'
 import React, { useEffect } from 'react'
-import { inTheGame, isDesktop, isInRoom, isMobile, isOnline, isTablet } from '../../App'
+import { gotoPage, inTheGame, isDesktop, isInRoom, isMobile, isOnline, isTablet } from '../../App'
 import BotContainer from '../../components/BotContainer'
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar'
 import HomeToolbar from '../../components/HomeToolbar'
@@ -393,6 +394,25 @@ export default function BotsBox(props) {
         </div>
       </div>
       <ThemeProvider theme={theme}>
+      {(isDesktop() && isInRoom()) ? null :
+      <Slide
+          direction="right"
+          in={inTheGame}
+          mountOnEnter
+        >
+      <Fab
+        color={'secondary'}
+        style={{
+          position: 'fixed',
+          bottom: (isInRoom() && (isMobile() || isTablet())) ? (72 + 12) : 12,
+          right: 16 + 72,
+          zIndex: 4,
+        }}
+        onClick={() => gotoPage('/app/chat', {room_id: props.roomId, user_id: props.userId})}
+      >
+        <Chat />
+      </Fab>
+      </Slide>}
       <Slide
           direction="right"
           in={inTheGame}

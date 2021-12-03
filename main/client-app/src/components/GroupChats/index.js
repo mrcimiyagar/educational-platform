@@ -63,7 +63,8 @@ export default function GroupChats(props) {
                   if (isMobile()) props.setInTheGame(false)
                   resetMessages()
                   if (isDesktop() || isTablet()) {
-                    props.setSelectedRoomId(chat.id)
+                    props.setSelectedRoomId(chat.id);
+                    props.setSelectedUserId(undefined);
                   } else {
                     gotoPage('/app/chat', { room_id: chat.id })
                   }

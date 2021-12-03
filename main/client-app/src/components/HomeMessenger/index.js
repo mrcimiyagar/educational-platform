@@ -109,7 +109,7 @@ export default function HomeMessenger(props) {
               }}
             >
               <Toolbar style={{ marginTop: 16 }}>
-                <HomeSearchbar setDrawerOpen={props.setDrawerOpen} />
+                <HomeSearchbar setDrawerOpen={props.setDrawerOpen} onSearch={props.onSearch} />
               </Toolbar>
               <Tabs
                 variant="fullWidth"
@@ -212,6 +212,7 @@ export default function HomeMessenger(props) {
                 <GroupChats
                   setInTheGame={setInTheGame}
                   setSelectedRoomId={props.setSelectedRoomId}
+                  setSelectedUserId={props.setSelectedUserId}
                   chats={props.chats.filter((c) => c.chatType === 'group')}
                 />
                 <div style={{ width: '100%', height: 100 }} />
@@ -235,6 +236,7 @@ export default function HomeMessenger(props) {
                 <ChannelChats
                   setInTheGame={setInTheGame}
                   setSelectedRoomId={props.setSelectedRoomId}
+                  setSelectedUserId={props.setSelectedUserId}
                   chats={props.chats.filter((c) => c.chatType === 'channel')}
                 />
                 <div style={{ width: '100%', height: 100 }} />
@@ -258,6 +260,7 @@ export default function HomeMessenger(props) {
                 <BotChats
                   setInTheGame={setInTheGame}
                   setSelectedRoomId={props.setSelectedRoomId}
+                  setSelectedUserId={props.setSelectedUserId}
                   chats={props.chats.filter((c) => c.chatType === 'bot')}
                 />
                 <div style={{ width: '100%', height: 100 }} />

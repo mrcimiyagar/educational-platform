@@ -104,6 +104,7 @@ export default function ChatEmbedded(props) {
     readAs: 'DataURL',
   })
   let [scrollTrigger, setScrollTrigger] = React.useState(false)
+  let [scrollTAnywayrigger, setScrollTAnywayrigger] = React.useState(false)
   let [showScrollDown, setShowScrollDown] = React.useState(false)
 
   let scrollToBottom = () => {
@@ -112,8 +113,19 @@ export default function ChatEmbedded(props) {
   }
 
   useEffect(() => {
+    let isAtEnd = false
+    let scroller = document.getElementById('scroller')
+    if (scroller.scrollTop + $('#scroller').innerHeight() >= (scroller.scrollHeight - 300)) {
+      isAtEnd = true
+    }
+    if (isAtEnd) {
+      scrollToBottom();
+    }
+  }, [scrollTrigger]);
+
+  useEffect(() => {
     scrollToBottom();
-  }, [scrollTrigger])
+  }, [scrollTAnywayrigger]);
 
   let replaceMessageInTheList = (msg) => {
     if (msg.roomId === props.roomId) {
@@ -162,11 +174,9 @@ export default function ChatEmbedded(props) {
             setCurrentPhotoSrc={setCurrentPhotoSrc}
           />
         )
-        messagesArr.push(lastMsg)
-        forceUpdate()
-        if (isAtEnd) {
-          setScrollTrigger(!scrollTrigger)
-        }
+        messagesArr.push(lastMsg);
+        setScrollTrigger(!scrollTrigger);
+        forceUpdate();
         let requestOptions3 = {
           method: 'POST',
           headers: {
@@ -281,7 +291,7 @@ export default function ChatEmbedded(props) {
                 index++
               })
               
-              forceUpdate()
+              forceUpdate();
 
               setTimeout(() => {
                 let topMessage = document.getElementById(topMessageBeforeUpdate);
@@ -321,6 +331,8 @@ export default function ChatEmbedded(props) {
       }
     }
 
+    if (props.userId === undefined) setUser(undefined);
+    else {
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -341,6 +353,7 @@ export default function ChatEmbedded(props) {
         }
       })
       .catch((error) => console.log('error', error))
+    }
 
     let requestOptions2 = {
       method: 'POST',
@@ -376,8 +389,11 @@ export default function ChatEmbedded(props) {
           />,
         )
       })
-      setScrollTrigger(!scrollTrigger)
-      forceUpdate()
+            
+      forceUpdate();
+      setScrollTAnywayrigger(!scrollTAnywayrigger);
+      forceUpdate();
+      
       let requestOptions3 = {
         method: 'POST',
         headers: {
@@ -423,10 +439,8 @@ export default function ChatEmbedded(props) {
             }
             
             forceUpdate();
-
-            setTimeout(() => {
-              scrollToBottom();
-            });
+            setScrollTAnywayrigger(!scrollTAnywayrigger);
+            forceUpdate();
   
             let requestOptions3 = {
               method: 'POST',

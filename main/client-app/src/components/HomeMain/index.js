@@ -96,6 +96,7 @@ export let addNewChat = () => {}
 export let updateChat = () => {}
 
 let tabIndexBackup = 0;
+let searchText = '';
 
 export default function HomeAppbar(props) {
   updateHome = useForceUpdate()
@@ -107,6 +108,18 @@ export default function HomeAppbar(props) {
   const [value, setValue] = React.useState(3)
   let [chats, setChats] = React.useState([])
   let [drawerOpen, setDrawerOpen] = React.useState(false)
+  let searchFilltered = chats.filter(chat => {
+    if (chat.title !== undefined && chat.title !== null && chat.title.includes(searchText)) {
+      return true;
+    }
+    else if (chat.participent !== undefined && chat.participent !== null &&
+      (chat.participent.firstName + ' ' + chat.participent.lastName).includes(searchText)) {
+        return true;
+    }
+    else {
+      return false;
+    }
+  })
 
   useEffect(() => {
     fetchChats().then(chats => {
@@ -205,7 +218,11 @@ export default function HomeAppbar(props) {
         <HomePage/>
       : tabIndexBackup === '0' ? 
         <HomeMessenger
-          chats={chats}
+          chats={searchFilltered}
+          onSearch={(text) => {
+            searchText = text;
+            updateHome();
+          }}
           value={value}
           handleChange={handleChange}
           selectedUserId={selectedUserId}

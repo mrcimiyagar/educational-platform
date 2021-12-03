@@ -55,7 +55,7 @@ export default function ConfigGuestAccount(props) {
   props = Object.fromEntries(urlSearchParams.entries());
 
   useEffect(() => {
-    if (props.name === undefined) {
+    while (props.name === undefined || props.name === null || props.name.length === 0) {
       props.name = window.prompt('نام خود را وارد نمایید', '');
     }
     let requestOptions = {
