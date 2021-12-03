@@ -60,8 +60,8 @@ app.post("/subscribe", jsonParser, async (req, res) => {
 
 server.listen(2001);
 
-let kasperio = socket.setup(server);
 let notifs = {};
+let kasperio = socket.setup(server);
 
 models.setup().then(() => {
     mongo.setup((s, a) => {
