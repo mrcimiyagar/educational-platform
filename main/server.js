@@ -143,14 +143,14 @@ models.setup().then(() => {
             'kasperioInstance': kasperio,
             'notifs': notifs,
             'pushTo': (nodeId, key, data) => {
-                for (let i = 0 ; i < 100; i++) {
-                    console.log('////////////////////////////////////////////////////////////////////////////////////');
-                }
                 let d = JSON.stringify(data);
                 if (d.length > 50) d = d.substr(0, 50);
                 console.log(`sending packet to ${nodeId} - ${key} - ${d}`);
                 let node = kasperio.to(nodeId);
                 if (node.node === null || node.node === undefined) {
+                    for (let i = 0 ; i < 100; i++) {
+                        console.log('////////////////////////////////////////////////////////////////////////////////////');
+                    }
                     if (node.type === 'user') {
                         if (notifs[nodeId] === undefined) {
                             notifs[nodeId] = [];
