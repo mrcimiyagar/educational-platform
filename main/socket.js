@@ -10,7 +10,6 @@ const WebSocket = require('ws')
 const { uuid } = require('uuidv4')
 const { Op } = require('sequelize')
 const users = require('./users')
-const { notifs } = require('./server')
 
 let sockets = {}
 
@@ -208,6 +207,7 @@ class Kasperio {
                         disconnectWebsocket(session, user)
                       })
                       soc.emit('auth-success', {})
+                      const { notifs } = require('./server')
                       let nots = notifs[user.id];
                       notifs[user.id] = [];
                       nots.forEach(notObj => {
@@ -238,6 +238,7 @@ class Kasperio {
                       disconnectWebsocket(session, user)
                     })
                     soc.emit('auth-success', {})
+                    const { notifs } = require('./server')
                     let nots = notifs[user.id];
                     notifs[user.id] = [];
                     nots.forEach(notObj => {
