@@ -145,52 +145,13 @@ function Authentication(props) {
                   localStorage.setItem('token', result.session.token);
                   localStorage.setItem('homeSpaceId', result.space.id);
                   localStorage.setItem('homeRoomId', result.room.id);
-                  ConnectToIo(localStorage.getItem('token'), () => {
-                    socket.off('message-added')
-                    socket.on('message-added', ({ msgCopy }) => {
-                      if (me.id !== msgCopy.authorId) {
-                        addMessageToList(msgCopy)
-                        addMessageToList2(msgCopy)
-                        addMessageToList3(msgCopy)
-                        setLastMessage(msgCopy)
-                        let requestOptions3 = {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                            token: token,
-                          },
-                          body: JSON.stringify({
-                            roomId: msgCopy.roomId,
-                          }),
-                          redirect: 'follow',
-                        }
-                        fetch(serverRoot + '/chat/get_chat', requestOptions3)
-                          .then((response) => response.json())
-                          .then((result) => {
-                            updateChat(result.room);
-                          });
-                      }
-                    })
-                    socket.off('chat-created')
-                    socket.on('chat-created', ({ room }) => {
-                      addNewChat(room)
-                    })
-                    socket.off('message-seen')
-                    socket.on('message-seen', ({ messages }) => {
-                      messages.forEach(msg => replaceMessageInTheList(msg));
-                      messages.forEach(msg => replaceMessageInTheList2(msg));
-                      messages.forEach(msg => replaceMessageInTheList3(msg));
-                    })
-                  })
                   localStorage.setItem('username', document.getElementById('loginUsername').value);
                   localStorage.setItem('password', document.getElementById('loginPassword').value);                  
                   document.getElementById('loginUsername').value = '';
                   document.getElementById('loginPassword').value = '';
                   setConfig(result.account);
                   setOpacity(0)
-                  setTimeout(() => {
-                    gotoPage('/app/home', {tab_index: 0});
-                  }, 1000)
+                  window.history.replaceState(pathConfig.mainFrontend);
                 }
                 else {
                   alert(result.message)
