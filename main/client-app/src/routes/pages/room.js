@@ -97,6 +97,8 @@ export default function RoomPage(props) {
 
   const urlSearchParams = new URLSearchParams(window.location.search)
   props = Object.fromEntries(urlSearchParams.entries())
+  
+  roomId = props.room_id
 
   const useStyles = makeStyles({
     root: {
