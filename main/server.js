@@ -28,7 +28,7 @@ const mongo = require("./db/mongo");
 const cors = require('cors');
 const sw = require('./db/models');
 const bodyParser = require('body-parser');
-const { authenticateMember, usersSubscriptions } = require('./users');
+const { authenticateMember, usersSubscriptions, getRoomUsers } = require('./users');
 const expressStaticGzip = require('express-static-gzip');
 const webpush = require('web-push');
 const { dirname } = require('path');
@@ -158,11 +158,12 @@ models.setup().then(() => {
                         notifs[nodeId].push({key, data});
                     }
                     else if (node.type === 'room') {
-                        node.node.members.forEach(m => {
-                            if (notifs[m.userId] === undefined) {
-                                notifs[m.userId] = [];
+                        let us = getRoomUsers(Number(nodeId.toString().substr(nodeId.toString().indexOf('_') + 1)));
+                        us.forEach(u => {
+                            if (notifs[u.id] === undefined) {
+                                notifs[u.id] = [];
                             }
-                            notifs[m.userId].push({key, data});
+                            notifs[u.id].push({key, data});
                         });
                     }
                     return;
