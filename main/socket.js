@@ -2,13 +2,8 @@ const models = require('./db/models')
 const {
   removeUser,
   getRoomUsers,
-  addUser,
   getGuestUser,
-  guestAccsByUserId,
 } = require('./users')
-const WebSocket = require('ws')
-const { uuid } = require('uuidv4')
-const { Op } = require('sequelize')
 
 let sockets = {};
 let notifs = {};
@@ -23,7 +18,7 @@ let disconnectWebsocket = (session, user) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
             removeUser(room.id, user.id)
-            sockets[user.id].ws = undefined;
+            delete sockets[user.id];
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
@@ -98,7 +93,7 @@ module.exports = {
                     soc.user = user
                     sockets[user.id] = soc
                     that.users[soc.id] = soc
-                    ws.on('close', ({}) => {
+                    soc.on('disconnect', ({}) => {
                       disconnectWebsocket(session, user)
                     })
                     soc.emit('auth-success', {})
@@ -122,7 +117,7 @@ module.exports = {
                   sockets[user.id] = soc
                   that.users[soc.id] = soc
 
-                  ws.on('close', ({}) => {
+                  soc.on('disconnect', ({}) => {
                     disconnectWebsocket(session, user)
                   })
                   soc.emit('auth-success', {})
@@ -141,7 +136,7 @@ module.exports = {
           console.error(ex)
         }
       })
-      ws.on('message', (data) => {
+      soc.on('message', (data) => {
         console.log(data.substr(0, 20))
         try {
           let packet = JSON.parse(data)
