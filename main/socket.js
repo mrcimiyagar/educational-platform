@@ -69,7 +69,7 @@ module.exports = {
       }
     }
   };
-      socket.on('user-reconnected', function (token) {
+      soc.on('user-reconnected', function (token) {
         models.Session.findOne({ where: { token: token } }).then(
           async function (session) {
             if (session == null) {
