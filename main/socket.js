@@ -151,7 +151,7 @@ class Kasperio {
       ws.isAlive = true
       ws.on('pong', heartbeat)
       try {
-        let soc = new Socket(this.rooms, this.events, ws)
+        const soc = new Socket(this.rooms, this.events, ws)
         console.log('new client connected.')
         soc.on('chat-typing', () => {
           if (soc.room !== null && soc.room !== undefined) {
@@ -203,9 +203,9 @@ class Kasperio {
                         disconnectWebsocket(session, user)
                       })
                       soc.emit('auth-success', {})
-                      let nots = notifs[user.id];
+                      let nots = notifs[soc.user.id];
                       if (nots !== undefined) {
-                        notifs[user.id] = [];
+                        notifs[soc.user.id] = [];
                         nots.forEach(notObj => {
                           soc.emit(notObj.key, notObj.data);
                         });
@@ -222,13 +222,14 @@ class Kasperio {
                     soc.user = user
                     sockets[user.id] = soc
                     that.users[soc.id] = soc
+
                     ws.on('close', ({}) => {
                       disconnectWebsocket(session, user)
                     })
                     soc.emit('auth-success', {})
-                    let nots = notifs[user.id];
+                    let nots = notifs[soc.user.id];
                     if (nots !== undefined) {
-                      notifs[user.id] = [];
+                      notifs[soc.user.id] = [];
                       nots.forEach(notObj => {
                         soc.emit(notObj.key, notObj.data);
                       });
