@@ -46,8 +46,11 @@ let that = {
 
 module.exports = {
   setup: (server) => {
-    const { Server } = require("socket.io");
-    const io = new Server(server);
+    const io = require("socket.io")(server, {
+      cors: {
+        origin: '*',
+      }
+    });
     io.on('connection', (soc) => {
       console.log('a user connected');
       soc.on('chat-typing', () => {
