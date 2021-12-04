@@ -139,8 +139,6 @@ models.setup().then(() => {
         });
 
         module.exports = {
-            'kasperioInstance': kasperio,
-            'notifs': notifs,
             'pushTo': (nodeId, key, data) => {
                 let d = JSON.stringify(data);
                 if (d.length > 50) d = d.substr(0, 50);
