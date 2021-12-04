@@ -77,7 +77,7 @@ module.exports = {
             roomId = req.query.roomId;
         }
         sw.Session.findOne({where: {token: token}}).then(async function (session) {
-            if (session === null) {
+            if (session === null || session === undefined) {
                 if (token in guestAccsOutOfRoom) {
                     let a = guestAccsOutOfRoom[token];
                     if (a.roomId === roomId)
@@ -99,7 +99,7 @@ module.exports = {
                 return;
             }
             sw.Membership.findOne({where: {roomId: roomId, userId: session.userId}}).then(membership => {
-                if (membership === null) {
+                if (membership === null || membership === undefined) {
                     res.send({status: 'error', errorCode: 'e0007', message: 'membership does not exist.'});
                     return;
                 }
@@ -115,7 +115,7 @@ module.exports = {
             token = req.query.token;
         }
         sw.Session.findOne({where: {token: token}}).then(async function (session) {
-            if (session === null) {
+            if (session === null || session === undefined) {
                 if (token in guestAccsOutOfRoom) {
                     let a = guestAccsOutOfRoom[token];
                     if (a.roomId === roomId)
@@ -137,7 +137,7 @@ module.exports = {
                 return;
             }
             sw.Membership.findOne({where: {roomId: roomId, userId: session.userId}}).then(membership => {
-                if (membership === null) {
+                if (membership === null || membership === undefined) {
                     res.send({status: 'error', errorCode: 'e0007', message: 'membership does not exist.'});
                     return;
                 }
