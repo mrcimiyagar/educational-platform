@@ -3,6 +3,7 @@ import { pathConfig } from "..";
 import { changeSendButtonState } from '../modules/chatbox/chatbox';
 import store, { changeConferenceMode } from "../redux/main";
 import { setMe, token } from "./settings";
+import io from 'socket.io-client';
 
 export let websocketPath = undefined
 export let serverRoot = undefined
@@ -51,104 +52,6 @@ export function leaveRoom(callback) {
         }
       })
       .catch(error => console.log('error', error));
-}
-
-let events = {};
-
-let setupSocketReconnection = (ws, t, events) => {
-  ws.onerror = (err) => {
-    console.error('Websocket encountered error: ', err.message, 'Closing Websocket');
-    ws.close();
-  }
-  ws.onclose = () => {
-    console.log('Websocket Disconnected');
-    if (changeSendButtonState) {
-      changeSendButtonState(false);
-    }
-    setTimeout(function() {
-      console.log('Websocket Reconnecting...'); 
-      ws = new WebSocket(pathConfig.mainWebsocket);
-      ws.onopen = () => {
-        console.log('WebSocket Client Connected');
-        for (let key in eventsBackup) {
-          if (eventsBackup[key] !== undefined) {
-            events[key] = eventsBackup[key];
-          }
-        }
-        if (changeSendButtonState) {
-          changeSendButtonState(true);
-        }
-        ws.send(JSON.stringify({event: 'auth', body: {token: t !== undefined ? t : localStorage.getItem('token')}}));
-      }
-      ws.onmessage = (message) => {
-        console.log(message.data);
-        let packet = JSON.parse(message.data);
-        if (packet.event in events) {
-          events[packet.event](packet.body);
-        }
-      };
-      setupSocketReconnection(ws, t, events);
-    }, 500);
-  };
-}
-
-let eventsBackup = {};
-
-export class Kasperio {
-  events = {};
-  constructor(onConnect, t, onSocketAuth) {
-    this.ws = new WebSocket(pathConfig.mainWebsocket);
-    this.ws.onopen = () => {
-      console.log('WebSocket Client Connected');
-      for (let key in eventsBackup) {
-        if (eventsBackup[key] !== undefined) {
-          this.events[key] = eventsBackup[key];
-        }
-      }
-      if (changeSendButtonState) {
-        changeSendButtonState(true);
-      }
-      onConnect();
-    }
-    this.ws.onmessage = (message) => {
-      console.log(message.data);
-      let packet = JSON.parse(message.data);
-      if (packet.event in events) {
-        events[packet.event](packet.body);
-      }
-    };
-    setupSocketReconnection(this.ws, t, this.events);
-    window.onoffline = () => {
-      console.log('Websocket Disconnected');
-      this.disconnect();
-    }
-    window.ononline = () => {
-      socket = null;
-      ConnectToIo(t, onSocketAuth);
-    }
-  }
-  off(event) {
-    if (event in events) {
-      delete events[event];
-      delete eventsBackup[event];
-    }
-  }
-  on(event, func) {
-    if (event in events) {
-      delete events[event];
-      delete eventsBackup[event];
-    }
-    events[event] = func;
-    eventsBackup[event] = func;
-  }
-  emit(event, args) {
-    let packet = JSON.stringify({event: event, body: args});
-    this.ws.send(packet);
-  }
-  disconnect() {
-    this.ws.close();
-    this.ws = null;
-  }
 }
 
 export let config;
@@ -263,14 +166,15 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
       return;
     }
   }
-  socket = new Kasperio(() => {
+  socket = io(pathConfig.mainBackend);
+  socket.on('connect', () => {
     socket.on('auth-success', () => {
       if (onSocketAuth !== undefined) {
         onSocketAuth();
       }
     });
     socket.emit('auth', {token: t !== undefined ? t : localStorage.getItem('token')}, () => {});
-  }, t, onSocketAuth);
+  });
 }
 
 export function validateToken(t, callback) {

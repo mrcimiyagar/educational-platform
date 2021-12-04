@@ -9,99 +9,9 @@ const {
 const WebSocket = require('ws')
 const { uuid } = require('uuidv4')
 const { Op } = require('sequelize')
-const users = require('./users')
 
 let sockets = {};
 let notifs = {};
-
-class Room {
-  constructor(eventsRef, id) {
-    this.eventsRef = eventsRef
-    this.id = id
-    this.members = []
-    this.typing = {}
-  }
-  emit(event, args) {
-    this.members.forEach((socket) => {
-      socket.emit(event, args);
-    })
-  }
-}
-
-class Socket {
-  constructor(roomsRef, eventsRef, ws) {
-    this.id = uuid()
-    this.roomsRef = roomsRef
-    this.eventsRef = eventsRef
-    this.events = {}
-    this.ws = ws
-  }
-  join(roomId) {
-    if (roomId in this.roomsRef) {
-      let joint = false
-      for (let i = 0; i < this.roomsRef[roomId].members.length; i++) {
-        if (this.roomsRef[roomId].members[i].id === this.id) {
-          joint = true
-          break
-        }
-      }
-      if (!joint) {
-        this.roomsRef[roomId].members.push(this)
-        this.room = this.roomsRef[roomId]
-      }
-    } else {
-      let room = new Room(this.eventsRef, roomId)
-      room.members.push(this)
-      this.roomsRef[roomId] = room
-      this.room = room
-    }
-    this.roomId = roomId
-  }
-  leave() {
-    if (this.roomId !== undefined && this.roomId > 0) {
-      for (let i = 0; i < this.room.members.length; i++) {
-        if (this.room.members[i].id === this.id) {
-          this.room.members.splice(i, 1)
-          break
-        }
-      }
-      if (this.room.members === 0) {
-        delete this.roomsRef[this.roomId]
-      }
-      this.roomId = 0
-      this.room = null
-    }
-  }
-  off(event) {
-    if (event in this.events) {
-      delete this.events[event]
-    }
-  }
-  on(event, func) {
-    if (event in this.events) {
-      delete this.events[event]
-    }
-    this.events[event] = func
-  }
-  emit(event, args) {
-    if (this.ws === undefined) {
-      if (notifs[this.user.id] === undefined) notifs[this.user.id] = [];
-      notifs[this.user.id].push({key: event, data: args});
-    }
-    else {
-      let packet = JSON.stringify({ event: event, body: args });
-      if (this.ws.readyState === WebSocket.OPEN) {
-        this.ws.send(packet);
-      }
-    }
-  }
-}
-
-function noop() {}
-
-function heartbeat() {
-  this.isAlive = true
-}
 
 let disconnectWebsocket = (session, user) => {
   let roomId = sockets[user.id].roomId
@@ -114,7 +24,6 @@ let disconnectWebsocket = (session, user) => {
             let room = rooms[i]
             removeUser(room.id, user.id)
             sockets[user.id].ws = undefined;
-            //delete kasperioInstance.users[session === null ? user.id : session.userId];
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
@@ -131,98 +40,61 @@ let disconnectWebsocket = (session, user) => {
   })
 }
 
-class Kasperio {
-  constructor(server) {
-    this.events = {}
-    this.rooms = {}
-    this.users = {}
-    const wss = new WebSocket.Server({ server })
-    const interval = setInterval(function ping() {
-      wss.clients.forEach(function each(ws) {
-        if (ws.isAlive === false) return ws.terminate()
-        ws.isAlive = false
-        ws.ping(noop)
-      })
-    }, 5000)
-    wss.on('close', function close() {
-      clearInterval(interval)
-    })
-    wss.on('connection', (ws) => {
-      ws.isAlive = true
-      ws.on('pong', heartbeat)
-      try {
-        const soc = new Socket(this.rooms, this.events, ws)
-        console.log('new client connected.')
-        soc.on('chat-typing', () => {
-          if (soc.room !== null && soc.room !== undefined) {
-            if (soc.user.id in soc.room.typing) {
-              clearTimeout(soc.room.typing[soc.user.id].timeout)
-            }
-            soc.room.typing[soc.user.id] = {
-              timeout: setTimeout(() => {
-                delete soc.room.typing[soc.user.id]
-                let typingList = []
-                for (let t in soc.room.typing) {
-                  typingList.push(soc.room.typing[t].socket.user)
-                }
-                require('./server').pushTo(
-                  'room_' + soc.roomId,
-                  'chat-typing',
-                  typingList,
-                )
-              }, 2000),
-              socket: soc,
-            }
-            let typingList = []
-            for (let t in soc.room.typing) {
-              typingList.push(soc.room.typing[t].socket.user)
-            }
-            require('./server').pushTo(
-              'room_' + soc.roomId,
-              'chat-typing',
-              typingList,
-            )
+let that = {
+  users: {}
+}
+
+module.exports = {
+  setup: (server) => {
+    const { Server } = require("socket.io");
+    const io = new Server(server);
+    io.on('connection', (soc) => {
+      console.log('a user connected');
+      soc.on('chat-typing', () => {
+        if (soc.room !== null && soc.room !== undefined) {
+          if (soc.user.id in soc.room.typing) {
+            clearTimeout(soc.room.typing[soc.user.id].timeout)
           }
-        })
-        this.users[soc.id] = soc
-        let that = this
-        soc.on('auth', ({ token }) => {
-          console.log('authenticating client...')
-          try {
-            models.Session.findOne({ where: { token: token } }).then(
-              async function (session) {
-                if (session == null) {
-                  let acc = getGuestUser(token)
-                  if (acc !== null) {
-                    let user = acc.user
-                    if (user !== null) {
-                      soc.user = user
-                      sockets[user.id] = soc
-                      that.users[soc.id] = soc
-                      ws.on('close', ({}) => {
-                        disconnectWebsocket(session, user)
-                      })
-                      soc.emit('auth-success', {})
-                      let nots = notifs[soc.user.id];
-                      if (nots !== undefined) {
-                        notifs[soc.user.id] = [];
-                        nots.forEach(notObj => {
-                          soc.emit(notObj.key, notObj.data);
-                        });
-                      }
-                    }
-                  }
-                } else {
-                  session.socketId = soc.id
-                  await session.save()
-                  let user = await models.User.findOne({
-                    where: { id: session.userId },
-                  })
+          soc.room.typing[soc.user.id] = {
+            timeout: setTimeout(() => {
+              delete soc.room.typing[soc.user.id]
+              let typingList = []
+              for (let t in soc.room.typing) {
+                typingList.push(soc.room.typing[t].socket.user)
+              }
+              require('./server').pushTo(
+                'room_' + soc.roomId,
+                'chat-typing',
+                typingList,
+              )
+            }, 2000),
+            socket: soc,
+          }
+          let typingList = []
+          for (let t in soc.room.typing) {
+            typingList.push(soc.room.typing[t].socket.user)
+          }
+          require('./server').pushTo(
+            'room_' + soc.roomId,
+            'chat-typing',
+            typingList,
+          )
+        }
+      })
+      that.users[soc.id] = soc
+      soc.on('auth', ({ token }) => {
+        console.log('authenticating client...')
+        try {
+          models.Session.findOne({ where: { token: token } }).then(
+            async function (session) {
+              if (session == null) {
+                let acc = getGuestUser(token)
+                if (acc !== null) {
+                  let user = acc.user
                   if (user !== null) {
                     soc.user = user
                     sockets[user.id] = soc
                     that.users[soc.id] = soc
-
                     ws.on('close', ({}) => {
                       disconnectWebsocket(session, user)
                     })
@@ -236,50 +108,49 @@ class Kasperio {
                     }
                   }
                 }
-              },
-            )
-          } catch (ex) {
-            console.error(ex)
-          }
-        })
-        ws.on('message', (data) => {
-          console.log(data.substr(0, 20))
-          try {
-            let packet = JSON.parse(data)
-            if (packet.event in soc.events) {
-              soc.events[packet.event](packet.body)
-            }
-          } catch (ex) {
-            console.error(ex)
-          }
-        })
-      } catch (ex) {
-        console.error(ex)
-      }
-    })
-  }
-  off(event) {
-    if (event in this.events) {
-      delete this.events[event]
-    }
-  }
-  on(event, func) {
-    if (event in this.events) {
-      delete this.events[event]
-    }
-    this.events[event] = func
-  }
-  to(nodeId) {
-    if (nodeId in this.users) {
-      return {type: 'user', node: this.users[nodeId]};
-    }
-    return {type: 'room', node: this.rooms[nodeId]};
-  }
-}
+              } else {
+                session.socketId = soc.id
+                await session.save()
+                let user = await models.User.findOne({
+                  where: { id: session.userId },
+                })
+                if (user !== null) {
+                  soc.user = user
+                  sockets[user.id] = soc
+                  that.users[soc.id] = soc
 
-module.exports = {
-  setup: (server) => {
-    return new Kasperio(server)
+                  ws.on('close', ({}) => {
+                    disconnectWebsocket(session, user)
+                  })
+                  soc.emit('auth-success', {})
+                  let nots = notifs[soc.user.id];
+                  if (nots !== undefined) {
+                    notifs[soc.user.id] = [];
+                    nots.forEach(notObj => {
+                      soc.emit(notObj.key, notObj.data);
+                    });
+                  }
+                }
+              }
+            },
+          )
+        } catch (ex) {
+          console.error(ex)
+        }
+      })
+      ws.on('message', (data) => {
+        console.log(data.substr(0, 20))
+        try {
+          let packet = JSON.parse(data)
+          if (packet.event in soc.events) {
+            soc.events[packet.event](packet.body)
+          }
+        } catch (ex) {
+          console.error(ex)
+        }
+      })
+    });
+    return io;
   },
   sockets: sockets,
 }

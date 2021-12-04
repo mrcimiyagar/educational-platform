@@ -60,8 +60,7 @@ app.post("/subscribe", jsonParser, async (req, res) => {
 
 server.listen(2001);
 
-let notifs = {};
-let kasperio = socket.setup(server);
+let ioInstance = socket.setup(server);
 
 models.setup().then(() => {
     mongo.setup((s, a) => {
@@ -146,9 +145,7 @@ models.setup().then(() => {
                 let d = JSON.stringify(data);
                 if (d.length > 50) d = d.substr(0, 50);
                 console.log(`sending packet to ${nodeId} - ${key} - ${d}`);
-                let node = kasperio.to(nodeId);
-                if (node.node === undefined || node.node === null) return;
-                node.node.emit(key, data);
+                io.to(nodeId).emit(key, data);
             },
             'Survey': s,
             'Answer': a

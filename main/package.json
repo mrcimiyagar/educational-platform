@@ -49,7 +49,7 @@
     "sequelize": "^6.3.5",
     "shelljs": "^0.8.4",
     "simple-thumbnail": "^1.6.5",
-    "socket.io": "^3.1.1",
+    "socket.io": "^4.4.0",
     "underscore": "1.5.x",
     "uuidv4": "^6.2.7",
     "wavesurfer.js": "^5.2.0",
