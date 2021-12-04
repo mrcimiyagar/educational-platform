@@ -75,7 +75,6 @@ const useStyles = makeStyles((theme) => ({
 
 let messagesArr = []
 export let resetMessages = () => {
-  messagesArr = []
   messagesDict = {};
 }
 
@@ -87,7 +86,6 @@ export let replaceMessageInTheList = () => {}
 let goingToRoom = false
 let lastLoadCount = 25;
 let messagesDict = {};
-let scrollReady3 = false;
 
 export default function Chat(props) {
   const urlSearchParams = new URLSearchParams(window.location.search)
@@ -111,7 +109,6 @@ export default function Chat(props) {
     lastLoadCount = 25;
     messagesArr = [];
     messagesDict = {};
-    scrollReady3 = false;
     scrollToBottom();
 
     let requestOptions = {
@@ -295,10 +292,6 @@ export default function Chat(props) {
   let attachScrollListener = (scroller) => {
     scroller.onscroll = () => {
       if ($('#chatScroller').scrollTop() === 0) {
-        if (!scrollReady3) {
-          scrollReady3 = true;
-          return;
-        }
         if (lastLoadCount < 25) return;
         let requestOptions3 = {
           method: 'POST',
