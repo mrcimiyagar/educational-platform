@@ -87,11 +87,18 @@ let setupSocketReconnection = (ws, t) => {
   };
 }
 
+let eventsBackup = {};
+
 export class Kasperio {
   constructor(onConnect, t) {
     this.ws = new WebSocket(pathConfig.mainWebsocket);
     this.ws.onopen = () => {
       console.log('WebSocket Client Connected');
+      for (let key in eventsBackup) {
+        if (eventsBackup[key] !== undefined) {
+          this.events[key] = eventsBackup[key];
+        }
+      }
       if (changeSendButtonState) {
         changeSendButtonState(true);
       }
@@ -117,13 +124,16 @@ export class Kasperio {
   off(event) {
     if (event in events) {
       delete events[event];
+      delete eventsBackup[event];
     }
   }
   on(event, func) {
     if (event in events) {
       delete events[event];
+      delete eventsBackup[event];
     }
     events[event] = func;
+    eventsBackup[event] = func;
   }
   emit(event, args) {
     let packet = JSON.stringify({event: event, body: args});
