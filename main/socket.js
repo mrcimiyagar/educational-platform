@@ -50,6 +50,20 @@ module.exports = {
       }
     });
     io.on('connection', (soc) => {
+      var emit = socket.emit;
+  soc.emit = function() {
+    if (soc.user !== null && soc.user !== undefined) {
+      if (netState[soc.user.id] === true) {
+        emit.apply(socket, arguments);   
+      }
+      else {
+        if (notifs[soc.user.id] === undefined) {
+          notifs[soc.user.id] = [];
+        }
+        notifs[soc.user.id].push()
+      }
+    }
+  };
       console.log('a user connected');
       soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
