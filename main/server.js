@@ -143,7 +143,7 @@ models.setup().then(() => {
                 let d = JSON.stringify(data);
                 if (d.length > 50) d = d.substr(0, 50);
                 console.log(`sending packet to ${nodeId} - ${key} - ${d}`);
-                io.to(nodeId).emit(key, data);
+                ioInstance.to(nodeId).emit(key, data);
             },
             'Survey': s,
             'Answer': a
