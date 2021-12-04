@@ -104,6 +104,12 @@ export class Kasperio {
         events[packet.event](packet.body);
       }
     };
+    window.onoffline = () => {
+      this.disconnect();
+    }
+    window.ononline = () => {
+      this.ws = new WebSocket(pathConfig.mainWebsocket);
+    }
     setupSocketReconnection(this.ws, t);
   }
   off(event) {

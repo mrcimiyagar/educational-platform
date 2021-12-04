@@ -77,7 +77,6 @@ export let setCurrentRoomId = (rId) => {
   currentRoomId = rId;
 };
 
-
 export let histPage = undefined
 let setHistPage = undefined
 export let routeTrigger = undefined
