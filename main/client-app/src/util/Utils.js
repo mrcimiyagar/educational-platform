@@ -55,7 +55,7 @@ export function leaveRoom(callback) {
 
 let events = {};
 
-let setupSocketReconnection = (ws, t) => {
+let setupSocketReconnection = (ws, t, events) => {
   ws.onerror = (err) => {
     console.error('Websocket encountered error: ', err.message, 'Closing Websocket');
     ws.close();
@@ -67,9 +67,14 @@ let setupSocketReconnection = (ws, t) => {
     }
     setTimeout(function() {
       console.log('Websocket Reconnecting...'); 
-      ws = new WebSocket(websocketPath);
+      ws = new WebSocket(pathConfig.mainWebsocket);
       ws.onopen = () => {
         console.log('WebSocket Client Connected');
+        for (let key in eventsBackup) {
+          if (eventsBackup[key] !== undefined) {
+            events[key] = eventsBackup[key];
+          }
+        }
         if (changeSendButtonState) {
           changeSendButtonState(true);
         }
@@ -82,7 +87,7 @@ let setupSocketReconnection = (ws, t) => {
           events[packet.event](packet.body);
         }
       };
-      setupSocketReconnection(ws, t);
+      setupSocketReconnection(ws, t, events);
     }, 500);
   };
 }
@@ -90,7 +95,8 @@ let setupSocketReconnection = (ws, t) => {
 let eventsBackup = {};
 
 export class Kasperio {
-  constructor(onConnect, t) {
+  events = {};
+  constructor(onConnect, t, onSocketAuth) {
     this.ws = new WebSocket(pathConfig.mainWebsocket);
     this.ws.onopen = () => {
       console.log('WebSocket Client Connected');
@@ -111,15 +117,15 @@ export class Kasperio {
         events[packet.event](packet.body);
       }
     };
+    setupSocketReconnection(this.ws, t, this.events);
     window.onoffline = () => {
       console.log('Websocket Disconnected');
       this.disconnect();
     }
     window.ononline = () => {
       socket = null;
-      ConnectToIo();
+      ConnectToIo(t, onSocketAuth);
     }
-    setupSocketReconnection(this.ws, t);
   }
   off(event) {
     if (event in events) {
@@ -141,6 +147,7 @@ export class Kasperio {
   }
   disconnect() {
     this.ws.close();
+    this.ws = null;
   }
 }
 
@@ -263,7 +270,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
       }
     });
     socket.emit('auth', {token: t !== undefined ? t : localStorage.getItem('token')}, () => {});
-  }, t);
+  }, t, onSocketAuth);
 }
 
 export function validateToken(t, callback) {
