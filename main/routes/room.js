@@ -599,6 +599,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
 
   authenticateMember(req, res, async (membership, session, user) => {
 
+    let sockets = require('../socket').sockets;
     let s = sockets[user.id]
     if (s === undefined) return
     let roomId = s.roomId

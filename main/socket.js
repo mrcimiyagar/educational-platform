@@ -42,6 +42,7 @@ let that = {
 }
 
 module.exports = {
+  sockets: sockets,
   notifs: notifs,
   setup: (server) => {
     const io = require("socket.io")(server, {
@@ -60,7 +61,8 @@ module.exports = {
         if (notifs[soc.user.id] === undefined) {
           notifs[soc.user.id] = [];
         }
-        notifs[soc.user.id].push()
+        console.log(JSON.stringify(arguments));
+        notifs[soc.user.id].push(arguments)
       }
     }
   };
