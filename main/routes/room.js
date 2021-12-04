@@ -608,10 +608,15 @@ router.post('/enter_room', jsonParser, async function (req, res) {
     removeUser(roomId, user.id)
 
     require('../server').pushTo(
-      'room_' + membership.roomId,
+      'room_' + roomId,
       'user-exited',
       { rooms: [], users: getRoomUsers(roomId) },
     );
+
+    if (membership === null || membership === undefined) {
+      res.send({ status: 'success' });
+      return;
+    }
 
     sockets[user.id].join('room_' + membership.roomId)
     sockets[user.id].roomId = membership.roomId
