@@ -196,18 +196,9 @@ class Kasperio {
                   if (acc !== null) {
                     let user = acc.user
                     if (user !== null) {
-                      if (
-                        sockets[user.id] !== undefined &&
-                        sockets[user.id] !== null
-                      ) {
-                        sockets[user.id].ws = soc.ws
-                        sockets[user.id].id = soc.id
-                        soc = sockets[user.id]
-                        that.users[soc.id] = soc
-                      } else {
-                        soc.user = user
-                        sockets[user.id] = soc
-                      }
+                      soc.user = user
+                      sockets[user.id] = soc
+                      that.users[soc.id] = soc
                       ws.on('close', ({}) => {
                         disconnectWebsocket(session, user)
                       })
@@ -228,18 +219,9 @@ class Kasperio {
                     where: { id: session.userId },
                   })
                   if (user !== null) {
-                    if (
-                      sockets[user.id] !== undefined &&
-                      sockets[user.id] !== null
-                    ) {
-                      sockets[user.id].ws = soc.ws
-                      sockets[user.id].id = soc.id
-                      soc = sockets[user.id]
-                      that.users[soc.id] = soc
-                    } else {
-                      soc.user = user
-                      sockets[user.id] = soc
-                    }
+                    soc.user = user
+                    sockets[user.id] = soc
+                    that.users[soc.id] = soc
                     ws.on('close', ({}) => {
                       disconnectWebsocket(session, user)
                     })

@@ -105,10 +105,12 @@ export class Kasperio {
       }
     };
     window.onoffline = () => {
+      console.log('Websocket Disconnected');
       this.disconnect();
     }
     window.ononline = () => {
-      this.ws = new WebSocket(pathConfig.mainWebsocket);
+      socket = null;
+      ConnectToIo();
     }
     setupSocketReconnection(this.ws, t);
   }
