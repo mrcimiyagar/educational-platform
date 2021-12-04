@@ -14,13 +14,13 @@ let disconnectWebsocket = (session, user) => {
   netState[session === null ? user.id : session.userId] = false;
   let roomId = sockets[user.id].roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
-    removeUser(roomId, user.id)
+    //removeUser(roomId, user.id)
     if (room !== null) {
       models.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
         async (rooms) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
-            removeUser(room.id, user.id)
+            //removeUser(room.id, user.id)
             tempDisconnected[session === null ? user.id : session.userId] = sockets[session === null ? user.id : session.userId];
             delete sockets[session === null ? user.id : session.userId];
             room.users = getRoomUsers(room.id)
@@ -81,10 +81,6 @@ module.exports = {
                   soc.user = user
                   sockets[user.id] = soc
                   that.users[soc.id] = soc
-                  soc.on('disconnect', ({}) => {
-                    disconnectWebsocket(session, user)
-                  })
-                  soc.emit('auth-success', {})
                   let nots = notifs[soc.user.id];
                   if (nots !== undefined) {
                     notifs[soc.user.id] = [];
@@ -105,11 +101,6 @@ module.exports = {
                 soc.user = user
                 sockets[user.id] = soc
                 that.users[soc.id] = soc
-
-                soc.on('disconnect', ({}) => {
-                  disconnectWebsocket(session, user)
-                })
-                soc.emit('auth-success', {})
                 let nots = notifs[soc.user.id];
                 if (nots !== undefined) {
                   notifs[soc.user.id] = [];
