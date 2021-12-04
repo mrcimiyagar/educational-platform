@@ -8,6 +8,7 @@ const {
 let sockets = {};
 let notifs = {};
 let netState = {};
+let tempDisconnected = {};
 
 let disconnectWebsocket = (session, user) => {
   netState[session === null ? user.id : session.userId] = false;
@@ -20,7 +21,8 @@ let disconnectWebsocket = (session, user) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
             removeUser(room.id, user.id)
-            //delete sockets[user.id];
+            tempDisconnected[session === null ? user.id : session.userId] = sockets[session === null ? user.id : session.userId];
+            delete sockets[session === null ? user.id : session.userId];
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
@@ -51,6 +53,7 @@ module.exports = {
       }
     });
     io.on('connection', (soc) => {
+      console.log('a user connected');
       var emit = soc.emit;
   soc.emit = function() {
     if (soc.user !== null && soc.user !== undefined) {
@@ -66,7 +69,59 @@ module.exports = {
       }
     }
   };
-      console.log('a user connected');
+      socket.on('user-reconnected', function (token) {
+        models.Session.findOne({ where: { token: token } }).then(
+          async function (session) {
+            if (session == null) {
+              let acc = getGuestUser(token)
+              if (acc !== null) {
+                let user = acc.user
+                if (user !== null) {
+                  netState[user.id] = true;
+                  soc.user = user
+                  sockets[user.id] = soc
+                  that.users[soc.id] = soc
+                  soc.on('disconnect', ({}) => {
+                    disconnectWebsocket(session, user)
+                  })
+                  soc.emit('auth-success', {})
+                  let nots = notifs[soc.user.id];
+                  if (nots !== undefined) {
+                    notifs[soc.user.id] = [];
+                    nots.forEach(notObj => {
+                      soc.emit(notObj.key, notObj.data);
+                    });
+                  }
+                }
+              }
+            } else {
+              session.socketId = soc.id
+              await session.save()
+              let user = await models.User.findOne({
+                where: { id: session.userId },
+              })
+              if (user !== null) {
+                netState[user.id] = true;
+                soc.user = user
+                sockets[user.id] = soc
+                that.users[soc.id] = soc
+
+                soc.on('disconnect', ({}) => {
+                  disconnectWebsocket(session, user)
+                })
+                soc.emit('auth-success', {})
+                let nots = notifs[soc.user.id];
+                if (nots !== undefined) {
+                  notifs[soc.user.id] = [];
+                  nots.forEach(notObj => {
+                    soc.emit(notObj.key, notObj.data);
+                  });
+                }
+              }
+            }
+          },
+        )
+   });
       soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
           if (soc.user.id in soc.room.typing) {
@@ -171,5 +226,4 @@ module.exports = {
     });
     return io;
   },
-  sockets: sockets,
 }

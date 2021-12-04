@@ -175,6 +175,10 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
     });
     socket.emit('auth', {token: t !== undefined ? t : localStorage.getItem('token')}, () => {});
   });
+  socket.on('reconnect', function () {
+    console.log('you have been reconnected');
+    socket.emit('user-reconnected', token);
+});
 }
 
 export function validateToken(t, callback) {
