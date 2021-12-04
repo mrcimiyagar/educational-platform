@@ -50,7 +50,7 @@ module.exports = {
       }
     });
     io.on('connection', (soc) => {
-      var emit = socket.emit;
+      var emit = soc.emit;
   soc.emit = function() {
     if (soc.user !== null && soc.user !== undefined) {
       if (netState[soc.user.id] === true) {
