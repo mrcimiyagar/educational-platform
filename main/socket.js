@@ -7,8 +7,10 @@ const {
 
 let sockets = {};
 let notifs = {};
+let netState = {};
 
 let disconnectWebsocket = (session, user) => {
+  netState[session === null ? user.id : session.userId] = false;
   let roomId = sockets[user.id].roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, user.id)
@@ -40,6 +42,7 @@ let that = {
 }
 
 module.exports = {
+  notifs: notifs,
   setup: (server) => {
     const io = require("socket.io")(server, {
       cors: {
@@ -90,6 +93,7 @@ module.exports = {
                 if (acc !== null) {
                   let user = acc.user
                   if (user !== null) {
+                    netState[user.id] = true;
                     soc.user = user
                     sockets[user.id] = soc
                     that.users[soc.id] = soc
@@ -113,6 +117,7 @@ module.exports = {
                   where: { id: session.userId },
                 })
                 if (user !== null) {
+                  netState[user.id] = true;
                   soc.user = user
                   sockets[user.id] = soc
                   that.users[soc.id] = soc
