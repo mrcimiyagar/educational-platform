@@ -54,7 +54,7 @@ module.exports = {
   soc.emit = function() {
     if (soc.user !== null && soc.user !== undefined) {
       if (netState[soc.user.id] === true) {
-        emit.apply(socket, arguments);   
+        emit.apply(soc, arguments);   
       }
       else {
         if (notifs[soc.user.id] === undefined) {
