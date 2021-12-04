@@ -90,6 +90,8 @@ export let replaceMessageInTheList3 = () => {}
 export let updateChatEmbedded = undefined
 let lastLoadCount = 25;
 let messagesDict = {};
+let scrollReady2 = false;
+
 export default function ChatEmbedded(props) {
   document.documentElement.style.overflowY = 'hidden';
 
@@ -207,6 +209,7 @@ export default function ChatEmbedded(props) {
   useEffect(() => {
     messagesArr = [];
     messagesDict = {};
+    scrollReady2 = false;
     scrollToBottom();
     let requestOptions = {
       method: 'POST',
@@ -260,6 +263,10 @@ export default function ChatEmbedded(props) {
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {
       if ($('#scroller').scrollTop() === 0) {
+        if (!scrollReady2) {
+          scrollReady2 = true;
+          return;
+        }
         if (lastLoadCount < 25) return;
         let requestOptions3 = {
           method: 'POST',

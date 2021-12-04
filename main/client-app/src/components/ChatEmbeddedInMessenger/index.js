@@ -86,6 +86,7 @@ export let replaceMessageInTheList2 = () => {}
 
 let lastLoadCount = 25;
 let messagesDict = {};
+let scrollReady = true;
 
 export default function ChatEmbeddedInMessenger(props) {
 
@@ -129,6 +130,7 @@ export default function ChatEmbeddedInMessenger(props) {
   useEffect(() => {
     messagesArr = [];
     messagesDict = {};
+    scrollReady = false;
     scrollToBottom();
     let requestOptions = {
       method: 'POST',
@@ -177,6 +179,10 @@ export default function ChatEmbeddedInMessenger(props) {
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {
       if ($('#scroller').scrollTop() === 0) {
+        if (!scrollReady) {
+          scrollReady = true;
+          return;
+        }
         if (lastLoadCount < 25) return;
         let requestOptions3 = {
           method: 'POST',
