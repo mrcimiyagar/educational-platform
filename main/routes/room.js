@@ -620,7 +620,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
     );
 
     sockets[user.id].join('room_' + membership.roomId)
-    metadata[userToSocketMap[membership.userId]].roomId = membership.roomId
+    metadata[userToSocketMap[membership.userId].id].roomId = membership.roomId
     addUser(membership.roomId, user)
 
     require('../server').pushTo(
