@@ -1,3 +1,4 @@
+const { roomId } = require('./client-app/src/App')
 const models = require('./db/models')
 const users = require('./users')
 const { removeUser, getRoomUsers, getGuestUser, addUser } = require('./users')
@@ -36,8 +37,11 @@ let disconnectWebsocket = (socket) => {
 let that = {
   users: {},
 }
+let userToSocketMap = {};
 
 module.exports = {
+  userToSocketMap: userToSocketMap,
+  metadata: that,
   sockets: sockets,
   notifs: notifs,
   setup: (server) => {
@@ -45,7 +49,7 @@ module.exports = {
     io.on('connection', (soc) => {
       console.log('a user connected')
       soc.on('user-reconnected', () => {
-        addUser(soc.roomId, soc.user);
+        addUser(that.users[soc.id].roomId, that.users[soc.id].user);
         netState[soc.user.id] = true;
       });
       soc.on('chat-typing', () => {
@@ -79,7 +83,6 @@ module.exports = {
           )
         }
       })
-      that.users[soc.id] = soc
       soc.on('auth', ({ token }) => {
         console.log('authenticating client...')
         try {
@@ -90,11 +93,10 @@ module.exports = {
                 if (acc !== null) {
                   let user = acc.user
                   if (user !== null) {
+                    userToSocketMap[user.id] = soc;
+                    that.users[soc.id] = {socket: soc, user: user};
                     netState[user.id] = true
-                    soc.user = user
-                    soc.userId = user.id
                     sockets[user.id] = soc
-                    that.users[soc.id] = soc
                     soc.on('disconnect', ({}) => {
                       disconnectWebsocket(soc)
                     })
@@ -115,11 +117,10 @@ module.exports = {
                   where: { id: session.userId },
                 })
                 if (user !== null) {
+                  userToSocketMap[user.id] = soc;
+                  that.users[soc.id] = {socket: soc, user: user};
                   netState[user.id] = true
-                  soc.user = user
-                  soc.userId = user.id
                   sockets[user.id] = soc
-                  that.users[soc.id] = soc
                   soc.on('disconnect', ({}) => {
                     disconnectWebsocket(soc)
                   })
