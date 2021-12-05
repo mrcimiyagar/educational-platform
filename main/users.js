@@ -40,7 +40,9 @@ module.exports = {
         let arr = [];
         let dict = users[roomId];
         for (let key in dict) {
-            arr.push( dict[key] );
+            if (dict[key] !== undefined) {
+                arr.push( dict[key] );
+            }
         }
         return arr;
     },
