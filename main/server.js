@@ -150,7 +150,7 @@ models.setup().then(() => {
                         sockets[user.id].emit(key, data);
                     }
                     else {
-                        if (notifs[userId] === undefined) notifs[userId] = [];
+                        if (notifs[user.id] === undefined) notifs[user.id] = [];
                         notifs[user.id].push({key: key, data: data});
                     }
                 });
