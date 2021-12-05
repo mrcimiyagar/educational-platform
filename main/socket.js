@@ -22,8 +22,6 @@ let disconnectWebsocket = (session, user) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
             removeUser(room.id, user.id)
-            tempDisconnected[session === null ? user.id : session.userId] = sockets[session === null ? user.id : session.userId];
-            sockets[session === null ? user.id : session.userId] = undefined;
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
@@ -34,6 +32,8 @@ let disconnectWebsocket = (session, user) => {
             'user-exited',
             { rooms: rooms, users: getRoomUsers(roomId) },
           )
+          tempDisconnected[session === null ? user.id : session.userId] = sockets[session === null ? user.id : session.userId];
+          sockets[session === null ? user.id : session.userId] = undefined;
         },
       )
     }
