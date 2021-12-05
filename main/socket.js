@@ -45,12 +45,13 @@ module.exports = {
     const io = require('socket.io')(server, { cors: { origin: '*' } })
     io.on('connection', (soc) => {
       console.log('a user connected')
+      const socketId = soc.id;
       soc.on('user-reconnected', () => {
         var util = require('util');
         console.log(util.inspect(metadata));
-        console.log(soc.id);
-        addUser(metadata[soc.id].roomId, metadata[soc.id].user);
-        netState[metadata[soc.id].user.id] = true;
+        console.log(socketId.id);
+        addUser(metadata[socketId].roomId, metadata[socketId].user);
+        netState[metadata[socketId].user.id] = true;
       });
       soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
