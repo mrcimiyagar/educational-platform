@@ -33,7 +33,7 @@ let disconnectWebsocket = (socket) => {
   })
 }
 
-let metadata = {}
+let metadata = {};
 let userToSocketMap = {};
 
 module.exports = {
@@ -46,6 +46,7 @@ module.exports = {
     io.on('connection', (soc) => {
       console.log('a user connected')
       soc.on('user-reconnected', () => {
+        console.log(JSON.stringify(metadata));
         addUser(metadata[soc.id].roomId, metadata[soc.id].user);
         netState[metadata[soc.id].user.id] = true;
       });
