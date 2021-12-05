@@ -4,6 +4,7 @@ import { changeSendButtonState } from '../modules/chatbox/chatbox';
 import store, { changeConferenceMode } from "../redux/main";
 import { setMe, token } from "./settings";
 import io from 'socket.io-client';
+import { currentRoomId } from "../App";
 
 export let websocketPath = undefined
 export let serverRoot = undefined
@@ -173,12 +174,29 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
         onSocketAuth();
       }
     });
-    socket.emit('auth', {token: t !== undefined ? t : localStorage.getItem('token')}, () => {});
+    socket.emit('auth', {token: t !== undefined ? t : localStorage.getItem('token')});
   });
   socket.io.on("reconnect", () => {
     console.log('you have been reconnected');
     socket.emit('user-reconnected');
-});
+  });
+  socket.on('reconnection-done', () => {
+    let requestOptions2 = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: currentRoomId,
+      }),
+      redirect: 'follow',
+    }
+    let enterRoomPromise = fetch(
+      serverRoot + '/room/enter_room',
+      requestOptions2,
+    )
+  })
 }
 
 export function validateToken(t, callback) {
