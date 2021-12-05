@@ -103,7 +103,6 @@ module.exports = {
                   if (user !== null) {
                     netState[user.id] = true
                     soc.user = user
-                    soc.emit('hello', {user: soc.user});
                     soc.userId = user.id
                     sockets[user.id] = soc
                     that.users[soc.id] = soc
@@ -129,7 +128,6 @@ module.exports = {
                 if (user !== null) {
                   netState[user.id] = true
                   soc.user = user
-                  soc.emit('hello', {user: soc.user});
                   soc.userId = user.id
                   sockets[user.id] = soc
                   that.users[soc.id] = soc
@@ -146,6 +144,7 @@ module.exports = {
                   }
                 }
               }
+              soc.emit('hello', {user: soc.user});
             },
           )
         } catch (ex) {
