@@ -83,7 +83,6 @@ module.exports = {
                   sockets[user.id] = s;
                   netState[user.id] = true;
                   soc.user = user
-                  sockets[user.id] = soc
                   that.users[soc.id] = soc
                   let nots = notifs[soc.user.id];
                   if (nots !== undefined) {
@@ -106,7 +105,6 @@ module.exports = {
                 sockets[user.id] = s;
                 netState[user.id] = true;
                 soc.user = user
-                sockets[user.id] = soc
                 that.users[soc.id] = soc
                 let nots = notifs[soc.user.id];
                 if (nots !== undefined) {
