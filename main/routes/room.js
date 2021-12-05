@@ -1,5 +1,5 @@
-const sockets = require('../socket').sockets
-const sw = require('../db/models')
+const {sockets, userToSocketMap} = require('../socket');
+const sw = require('../db/models');
 const {
   addUser,
   getRoomUsers,
@@ -9,9 +9,8 @@ const {
   removeUser,
   guestAccs,
   generateInvite,
-  resolveInvite,
-  authenticateMemberWithRoomId,
-} = require('../users')
+  resolveInvite
+} = require('../users');
 const tools = require('../tools')
 const express = require('express')
 const bodyParser = require('body-parser')
