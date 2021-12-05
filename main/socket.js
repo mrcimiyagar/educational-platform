@@ -45,18 +45,8 @@ module.exports = {
     io.on('connection', (soc) => {
       console.log('a user connected')
       soc.on('user-reconnected', () => {
-        let user = users[soc.roomId][soc.userId];
-        addUser(soc.roomId, user);
-        netState[soc.userId] = true;
-        sockets[soc.userId] = soc;
-        that.users[soc.id] = soc;
-        let nots = notifs[soc.userId];
-        if (nots !== undefined) {
-          notifs[soc.userId] = [];
-          nots.forEach((notObj) => {
-            soc.emit(notObj.key, notObj.data);
-          });
-        }
+        addUser(soc.roomId, soc.user);
+        netState[soc.user.id] = true;
       });
       soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
