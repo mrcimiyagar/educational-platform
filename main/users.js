@@ -48,9 +48,9 @@ module.exports = {
         if (users[roomId] === undefined) {
             return
         }
-        let user = users[roomId][userId]
-        delete users[roomId][userId]
-        return user
+        let user = users[roomId][userId];
+        users[roomId][userId] = undefined;
+        return user;
     },
     addUser: (roomId, user) => {
         if (user === undefined) return
