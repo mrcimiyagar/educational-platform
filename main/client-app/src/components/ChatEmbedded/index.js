@@ -36,7 +36,6 @@ import { colors, me, setToken, token } from '../../util/settings'
 import {
   ConnectToIo,
   isMobile,
-  leaveRoom,
   serverRoot,
   socket,
   useForceUpdate,

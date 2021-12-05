@@ -16,7 +16,6 @@ import { resetMessages } from '../../routes/pages/chat'
 import { colors, token } from '../../util/settings'
 import {
   isMobile,
-  leaveRoom,
   serverRoot,
   useForceUpdate,
 } from '../../util/Utils'

@@ -36,7 +36,7 @@ import {
   uploadingFiles,
 } from '../../App'
 import { colors, me, setToken, token } from '../../util/settings'
-import { ConnectToIo, isMobile, leaveRoom, serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { ConnectToIo, serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
 import ChatWallpaper from '../../images/chat-wallpaper.png'
 import { setLastMessage, updateChat } from '../../components/HomeMain'

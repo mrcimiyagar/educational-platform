@@ -38,7 +38,6 @@ import { UsersBox } from '../../modules/usersbox/usersbox'
 import { colors, setToken, theme, token } from '../../util/settings'
 import {
   ConnectToIo,
-  leaveRoom,
   serverRoot,
   setRoom,
   socket,

@@ -4,8 +4,6 @@ import { Button, Card, CardTitle, Form, Input, Label, Row } from "reactstrap";
 import { gotoPage } from '../../App';
 import { Colxx } from "../../components/CustomBootstrap";
 import { setPhone } from "../../util/settings";
-import { leaveRoom } from "../../util/Utils";
-
 
 class Register extends Component {
   constructor(props) {
@@ -17,7 +15,6 @@ class Register extends Component {
 
   componentDidMount() {
     document.body.classList.add("background");
-    leaveRoom();
   }
   componentWillUnmount() {
     document.body.classList.remove("background");

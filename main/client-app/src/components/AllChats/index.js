@@ -14,7 +14,7 @@ import { gotoPage, isDesktop, isTablet } from '../../App'
 import EmptySign from '../../components/EmptySign'
 import { resetMessages } from '../../routes/pages/chat'
 import { colors, token } from '../../util/settings'
-import { isMobile, leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils'
+import { isMobile, serverRoot } from '../../util/Utils'
 import {inTheGame} from '../../App';
 import { resetMessages3 } from '../ChatEmbedded'
 import { resetMessages2 } from '../ChatEmbeddedInMessenger'

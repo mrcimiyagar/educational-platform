@@ -2,8 +2,6 @@ import React, { Component, Fragment } from "react";
 import { NavLink } from "react-router-dom";
 import { Button, Card, CardTitle, Row } from "reactstrap";
 import { Colxx } from "../../components/CustomBootstrap";
-import { leaveRoom } from '../../util/Utils';
-
 
 class Error404 extends Component {
   constructor(props) {
@@ -12,7 +10,6 @@ class Error404 extends Component {
 
   componentDidMount() {
     document.body.classList.add("background");
-    leaveRoom();
   }
   componentWillUnmount() {
     document.body.classList.remove("background");
