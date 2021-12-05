@@ -6,10 +6,9 @@ let sockets = {}
 let notifs = {}
 let netState = {}
 
-let disconnectWebsocket = (userId) => {
+let disconnectWebsocket = (socket) => {
   netState[userId] = false
   let roomId = sockets[userId].roomId
-  sockets[userId].emit('hello', {user: sockets[userId].user});
   sockets[userId] = undefined
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, userId)
@@ -47,7 +46,6 @@ module.exports = {
     io.on('connection', (soc) => {
       console.log('a user connected')
       soc.on('user-reconnected', () => {
-        soc.emit('hello', {user: soc.user});
         let user = users[soc.roomId][soc.userId];
         addUser(soc.roomId, user);
         netState[soc.userId] = true;
@@ -105,6 +103,7 @@ module.exports = {
                   if (user !== null) {
                     netState[user.id] = true
                     soc.user = user
+                    soc.emit('hello', {user: soc.user});
                     soc.userId = user.id
                     sockets[user.id] = soc
                     that.users[soc.id] = soc
@@ -130,6 +129,7 @@ module.exports = {
                 if (user !== null) {
                   netState[user.id] = true
                   soc.user = user
+                  soc.emit('hello', {user: soc.user});
                   soc.userId = user.id
                   sockets[user.id] = soc
                   that.users[soc.id] = soc
