@@ -7,21 +7,20 @@ let notifs = {}
 let netState = {}
 
 let disconnectWebsocket = (socket) => {
-  netState[userId] = false
-  let roomId = sockets[userId].roomId
-  sockets[userId] = undefined
+  netState[socket.user.id] = false
+  let roomId = socket.roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
-    removeUser(roomId, userId)
+    removeUser(roomId, socket.user.id)
     if (room !== null) {
       models.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
         async (rooms) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
-            removeUser(room.id, userId)
+            removeUser(room.id, socket.user.id)
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
-            where: { roomId: room.id, userId: userId },
+            where: { roomId: room.id, userId: socket.user.id },
           })
           require('./server').pushTo(
             'room_' + roomId,
@@ -107,7 +106,7 @@ module.exports = {
                     sockets[user.id] = soc
                     that.users[soc.id] = soc
                     soc.on('disconnect', ({}) => {
-                      disconnectWebsocket(soc.userId)
+                      disconnectWebsocket(soc)
                     })
                     soc.emit('auth-success', {})
                     let nots = notifs[soc.userId]
@@ -132,7 +131,7 @@ module.exports = {
                   sockets[user.id] = soc
                   that.users[soc.id] = soc
                   soc.on('disconnect', ({}) => {
-                    disconnectWebsocket(soc.userId)
+                    disconnectWebsocket(soc)
                   })
                   soc.emit('auth-success', {})
                   let nots = notifs[soc.userId]
@@ -144,7 +143,6 @@ module.exports = {
                   }
                 }
               }
-              soc.emit('hello', {user: soc.user});
             },
           )
         } catch (ex) {
