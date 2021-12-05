@@ -5,12 +5,10 @@ const { removeUser, getRoomUsers, getGuestUser, addUser } = require('./users')
 let sockets = {}
 let notifs = {}
 let netState = {}
-let tempDisconnected = {}
 
 let disconnectWebsocket = (userId) => {
   netState[userId] = false
   let roomId = sockets[userId].roomId
-  tempDisconnected[userId] = sockets[userId]
   sockets[userId] = undefined
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, userId)
@@ -48,9 +46,8 @@ module.exports = {
     io.on('connection', (soc) => {
       console.log('a user connected')
       soc.on('user-reconnected', () => {
-        let s = tempDisconnected[soc.userId]
         let user = users[soc.userId];
-        addUser(s.roomId, user)
+        addUser(soc.roomId, user)
         netState[soc.userId] = true
         sockets[soc.userId] = s
         that.users[soc.id] = soc
