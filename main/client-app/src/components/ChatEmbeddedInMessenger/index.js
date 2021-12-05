@@ -79,6 +79,7 @@ export let updateChatEmbedded = undefined
 let messagesArr = []
 export let resetMessages2 = () => {
   messagesDict = {};
+  scrollReady = false;
 }
 
 export let addMessageToList2 = () => {}
@@ -130,7 +131,6 @@ export default function ChatEmbeddedInMessenger(props) {
   useEffect(() => {
     messagesArr = [];
     messagesDict = {};
-    scrollReady = false;
     scrollToBottom();
     let requestOptions = {
       method: 'POST',

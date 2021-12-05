@@ -82,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
 let messagesArr = []
 export let resetMessages3 = () => {
   messagesDict = {};
+  scrollReady2 = false;
 }
 
 export let addMessageToList3 = () => {}
@@ -209,7 +210,6 @@ export default function ChatEmbedded(props) {
   useEffect(() => {
     messagesArr = [];
     messagesDict = {};
-    scrollReady2 = false;
     scrollToBottom();
     let requestOptions = {
       method: 'POST',

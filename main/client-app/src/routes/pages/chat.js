@@ -76,6 +76,7 @@ const useStyles = makeStyles((theme) => ({
 let messagesArr = []
 export let resetMessages = () => {
   messagesDict = {};
+  scrollReady3 = false;
 }
 
 let uplaodedFileId = 0
@@ -110,7 +111,6 @@ export default function Chat(props) {
     lastLoadCount = 25;
     messagesArr = [];
     messagesDict = {};
-    scrollReady3 = false;
     scrollToBottom();
 
     let requestOptions = {
