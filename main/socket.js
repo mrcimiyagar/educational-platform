@@ -48,6 +48,7 @@ module.exports = {
       soc.on('user-reconnected', () => {
         var util = require('util');
         console.log(util.inspect(metadata));
+        console.log(soc.id);
         addUser(metadata[soc.id].roomId, metadata[soc.id].user);
         netState[metadata[soc.id].user.id] = true;
       });
