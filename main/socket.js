@@ -9,6 +9,7 @@ let netState = {}
 let disconnectWebsocket = (userId) => {
   netState[userId] = false
   let roomId = sockets[userId].roomId
+  sockets[userId].emit('hello', {user: sockets[userId].user});
   sockets[userId] = undefined
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, userId)
