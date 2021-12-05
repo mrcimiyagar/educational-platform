@@ -9,8 +9,9 @@ import RoomWallpaper from './images/desktop-wallpaper.jpg'
 import ChatWallpaper from './images/chat-wallpaper.jpg'
 import ProfileHeader from './images/profile-header.jpeg'
 import store from './redux/main'
-import { setup } from './util/Utils'
-import './notifSystem';
+import { setup, socket } from './util/Utils'
+import './notifSystem'
+import { Alert, Snackbar } from '@mui/material'
 
 export let pathConfig = {}
 
@@ -71,7 +72,7 @@ let PreLoading = (props) => {
       >
         <img
           src={CloudIcon}
-          style={{ width: 112, height: 112, marginTop: -24,  }}
+          style={{ width: 112, height: 112, marginTop: -24 }}
         />
         <Typography
           variant={'h5'}
@@ -119,32 +120,46 @@ let loading = (
   </div>
 )
 
-export let display2, setDisplay2;
-export function ifServerOnline(ifOnline, ifOffline)
-{
-  fetch('https://kaspersoft.cloud', {mode: 'no-cors'})
-    .then(r => {
-      ifOnline();
+export let display2, setDisplay2
+export function ifServerOnline(ifOnline, ifOffline) {
+  fetch('https://kaspersoft.cloud', { mode: 'no-cors' })
+    .then((r) => {
+      ifOnline()
     })
-    .catch(e=>{
-      ifOffline();
-    });
+    .catch((e) => {
+      ifOffline()
+    })
 }
 
 let AppContainer = (props) => {
-  ;[wallpaper, setWall] = React.useState({});
+  ;[wallpaper, setWall] = React.useState({})
   setWallpaper = (w) => {
-    setWall(w);
+    setWall(w)
   }
+  let [disconnectionAlert, setDisconnectAlert] = React.useState(false);
   let [opacity, setOpacity] = React.useState(0);
   let [display, setDisplay] = React.useState('block');
   ;[display2, setDisplay2] = React.useState('block');
-  
+
+  let handleDisconnectionClose = () => {
+    setDisconnectAlert(false);
+  }
+
   useEffect(() => {
-    [ChatWallpaper, RoomWallpaper, DesktopWallpaper, ProfileHeader].forEach((picture) => {
-      const img = new Image();
-      img.src = picture;
-    });
+    setInterval(() => {
+      if (socket !== undefined && socket !== null && socket.connected) {
+        setDisconnectAlert(false);
+      }
+      else {
+        setDisconnectAlert(true);
+      }
+    }, 1000);
+    ;[ChatWallpaper, RoomWallpaper, DesktopWallpaper, ProfileHeader].forEach(
+      (picture) => {
+        const img = new Image()
+        img.src = picture
+      },
+    )
     ifServerOnline(
       () => {
         let requestOptions = {
@@ -155,15 +170,15 @@ let AppContainer = (props) => {
           redirect: 'follow',
         }
         fetch('https://config.kaspersoft.cloud', requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          pathConfig = result;
-          setup()
-          loaded = true
-          setTimeout(() => {
-            setDisplay('none')
-          }, 1000)
-        });
+          .then((response) => response.json())
+          .then((result) => {
+            pathConfig = result
+            setup()
+            loaded = true
+            setTimeout(() => {
+              setDisplay('none')
+            }, 1000)
+          })
       },
       () => {
         pathConfig = {
@@ -178,15 +193,15 @@ let AppContainer = (props) => {
           videoConfAudio: 'https://confaudio.kaspersoft.cloud',
           videoConfScreen: 'https://confscreen.kaspersoft.cloud',
           taskBoard: 'https://taskboard.kaspersoft.cloud',
-          mainWebsocket: 'wss://kaspersoft.cloud'
-        };
-        setup();
-        loaded = true;
+          mainWebsocket: 'wss://kaspersoft.cloud',
+        }
+        setup()
+        loaded = true
         setTimeout(() => {
-          setDisplay('none');
-        }, 1000);
-      }
-    );
+          setDisplay('none')
+        }, 1000)
+      },
+    )
   }, [])
 
   if (!loaded) {
@@ -280,6 +295,11 @@ let AppContainer = (props) => {
       <Suspense fallback={loading}>
         <MainApp />
       </Suspense>
+      <Snackbar open={disconnectionAlert} autoHideDuration={1000 * 60 * 60 * 24 * 365} onClose={handleDisconnectionClose}>
+        <Alert onClose={handleDisconnectionClose} severity="info" sx={{ width: '100%' }}>
+          در حال اتصال
+        </Alert>
+      </Snackbar>
       <div
         style={{
           display: display,

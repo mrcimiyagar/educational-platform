@@ -3,7 +3,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const { User } = require('../db/models')
 const { authenticateMember, usersSubscriptions, getRoomUsers } = require('../users')
-const { sockets } = require('../socket')
 const Sequelize = require('sequelize')
 const { pushNotification } = require('../server')
 const webpush = require('web-push');
@@ -224,9 +223,7 @@ router.post('/create_message', jsonParser, async function (req, res) {
     users.forEach((user) => {
       if (user.id !== session.userId) {
         pushNotification(user.id, 'پیام جدید از ' + user.firstName, msgCopy.text);
-        if (sockets[user.id] !== undefined) {
-          sockets[user.id].emit('message-added', { msgCopy });
-        }
+        require('../server').signlePushTo(user.id, 'message-added', { msgCopy });
       }
     })
     res.send({ status: 'success', message: msgCopy })
@@ -343,8 +340,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
       where: { roomId: membership.roomId },
     });
     members.forEach((member) => {
-      if (sockets[member.userId] !== undefined)
-        sockets[member.userId].emit('message-seen', { messages });
+      require('../server').signlePushTo(member.userId, 'message-seen', { messages });
     });
     let fetchedMessages = await sw.Message.findAll({
       raw: true,

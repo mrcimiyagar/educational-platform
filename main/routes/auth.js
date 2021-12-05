@@ -3,7 +3,6 @@ const express = require('express');
 const tools = require('../tools');
 const Sequelize = require('sequelize');
 const bodyParser = require('body-parser');
-const { sockets } = require('../socket');
 const { authenticateMember } = require('../users');
 const { uuid } = require('uuidv4');
 const fetch = require('node-fetch');

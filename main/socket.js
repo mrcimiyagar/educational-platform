@@ -41,6 +41,7 @@ module.exports = {
   metadata: metadata,
   sockets: sockets,
   notifs: notifs,
+  netState: netState,
   setup: (server) => {
     const io = require('socket.io')(server, { cors: { origin: '*' } })
     io.on('connection', (soc) => {
@@ -60,6 +61,13 @@ module.exports = {
                     metadata[user.id] = {socket: soc, user: user};
                     netState[user.id] = true
                     sockets[user.id] = soc
+                    let nots = notifs[user.id]
+                    if (nots !== undefined) {
+                      notifs[user.id] = []
+                      nots.forEach((notObj) => {
+                        soc.emit(notObj.key, notObj.data)
+                      })
+                    }
                   }
                 }
               } else {
@@ -74,6 +82,13 @@ module.exports = {
                   metadata[user.id] = {socket: soc, user: user};
                   netState[user.id] = true
                   sockets[user.id] = soc
+                  let nots = notifs[user.id]
+                    if (nots !== undefined) {
+                      notifs[user.id] = []
+                      nots.forEach((notObj) => {
+                        soc.emit(notObj.key, notObj.data)
+                      })
+                    }
                 }
               }
             },

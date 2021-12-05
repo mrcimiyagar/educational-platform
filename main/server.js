@@ -32,6 +32,7 @@ const { authenticateMember, usersSubscriptions, getRoomUsers } = require('./user
 const expressStaticGzip = require('express-static-gzip');
 const webpush = require('web-push');
 const { dirname } = require('path');
+const { sockets, netState, notifs } = require('./socket');
 
 let jsonParser = bodyParser.json();
 
@@ -143,7 +144,26 @@ models.setup().then(() => {
                 let d = JSON.stringify(data);
                 if (d.length > 50) d = d.substr(0, 50);
                 console.log(`sending packet to ${nodeId} - ${key} - ${d}`);
-                ioInstance.to(nodeId).emit(key, data);
+                let users = getRoomUsers(Number(nodeId.substr('room_'.length)));
+                users.forEach(user => {
+                    if (sockets[user.id] !== undefined && netState[user.id] === true) {
+                        sockets[user.id].emit(key, data);
+                    }
+                    else {
+                        notifs[user.id].push({key: key, data: data});
+                    }
+                });
+            },
+            'signlePushTo': (userId, key, data) => {
+                let d = JSON.stringify(data);
+                if (d.length > 50) d = d.substr(0, 50);
+                console.log(`sending packet to ${userId} - ${key} - ${d}`);
+                if (sockets[userId] !== undefined && netState[userId] === true) {
+                    sockets[userId].emit(key, data);
+                }
+                else {
+                    notifs[userId].push({key: key, data: data});
+                }
             },
             'Survey': s,
             'Answer': a

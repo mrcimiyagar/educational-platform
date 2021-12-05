@@ -1,5 +1,5 @@
-const {sockets, userToSocketMap, metadata} = require('../socket');
-const sw = require('../db/models');
+const { sockets, metadata } = require('../socket')
+const sw = require('../db/models')
 const {
   addUser,
   getRoomUsers,
@@ -9,8 +9,8 @@ const {
   removeUser,
   guestAccs,
   generateInvite,
-  resolveInvite
-} = require('../users');
+  resolveInvite,
+} = require('../users')
 const tools = require('../tools')
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -76,10 +76,11 @@ router.post('/update_permissions', jsonParser, async function (req, res) {
                     for (const [key, mem] of Object.entries(members)) {
                       if (mem.userId !== temp.userId) {
                         mem.canActInVideo = false
-                        try {
-                          if (sockets[mem.userId])
-                            sockets[mem.userId].emit('membership-updated', mem)
-                        } catch (ex) {}
+                        require('../server').signlePushTo(
+                          mem.userId,
+                          'membership-updated',
+                          mem,
+                        )
                       }
                     }
                     sw.Membership.findAll({
@@ -89,25 +90,22 @@ router.post('/update_permissions', jsonParser, async function (req, res) {
                         if (mem.userId !== temp.userId) {
                           mem.canActInVideo = false
                           mem.save()
-                          try {
-                            if (sockets[mem.userId])
-                              sockets[mem.userId].emit(
-                                'membership-updated',
-                                mem,
-                              )
-                          } catch (ex) {}
+                          require('../server').signlePushTo(
+                            mem.userId,
+                            'membership-updated',
+                            mem,
+                          )
                         }
                       })
                     })
                   }
                 }
                 setTimeout(() => {
-                  if (sockets[req.body.targetUserId]) {
-                    sockets[req.body.targetUserId].emit(
-                      'membership-updated',
-                      temp,
-                    )
-                  }
+                  require('../server').signlePushTo(
+                    req.body.targetUserId,
+                    'membership-updated',
+                    temp,
+                  )
                 }, 5000)
                 res.send({ status: 'success', permissions: temp })
                 return
@@ -134,10 +132,11 @@ router.post('/update_permissions', jsonParser, async function (req, res) {
                 for (const [key, mem] of Object.entries(members)) {
                   if (mem.userId !== targetMem.userId) {
                     mem.canActInVideo = false
-                    try {
-                      if (sockets[mem.userId])
-                        sockets[mem.userId].emit('membership-updated', mem)
-                    } catch (ex) {}
+                    require('../server').signlePushTo(
+                      mem.userId,
+                      'membership-updated',
+                      mem,
+                    )
                   }
                 }
                 sw.Membership.findAll({
@@ -147,10 +146,11 @@ router.post('/update_permissions', jsonParser, async function (req, res) {
                     if (mem.userId !== targetMem.userId) {
                       mem.canActInVideo = false
                       mem.save()
-                      try {
-                        if (sockets[mem.userId])
-                          sockets[mem.userId].emit('membership-updated', mem)
-                      } catch (ex) {}
+                      require('../server').signlePushTo(
+                        mem.userId,
+                        'membership-updated',
+                        mem,
+                      )
                     }
                   })
                 })
@@ -158,12 +158,11 @@ router.post('/update_permissions', jsonParser, async function (req, res) {
             }
 
             setTimeout(() => {
-              if (sockets[req.body.targetUserId]) {
-                sockets[req.body.targetUserId].emit(
-                  'membership-updated',
-                  targetMem,
-                )
-              }
+              require('../server').signlePushTo(
+                req.body.targetUserId,
+                'membership-updated',
+                targetMem,
+              )
             }, 1000)
 
             res.send({ status: 'success', permissions: targetMem })
@@ -384,10 +383,11 @@ router.post('/create_room', jsonParser, async function (req, res) {
         roomCopy.participent = await sw.User.findOne({
           where: { id: session.userId },
         })
-        if (sockets[req.body.participentId] !== undefined)
-        {
-          sockets[req.body.participentId].emit('chat-created', { room: roomCopy })
-        }
+        require('../server').signlePushTo(
+          req.body.participentId,
+          'chat-created',
+          { room: roomCopy },
+        )
       } else {
         if (
           req.body.chatType === 'group' ||
@@ -416,9 +416,11 @@ router.post('/create_room', jsonParser, async function (req, res) {
         messageType: 'text',
         User: await sw.User.findOne({ where: { id: session.userId } }),
       }
-      if (sockets[req.body.participentId] !== undefined) {
-        sockets[req.body.participentId].emit('message-added', { msgCopy })
-      }
+      require('../server').signlePushTo(
+        req.body.participentId,
+        'message-added',
+        { msgCopy },
+      )
 
       res.send({ status: 'success', room: room })
     },
@@ -595,15 +597,12 @@ router.post('/get_spaces', jsonParser, async function (req, res) {
 })
 
 router.post('/enter_room', jsonParser, async function (req, res) {
-
   authenticateMember(req, res, async (membership, session, user) => {
-
     if (membership === null || membership === undefined) {
-      res.send({ status: 'success' });
-      return;
+      res.send({ status: 'success' })
+      return
     }
 
-    let sockets = require('../socket').sockets;
     let s = sockets[user.id]
     if (s === undefined) return
     let roomId = s.roomId
@@ -612,21 +611,19 @@ router.post('/enter_room', jsonParser, async function (req, res) {
     sockets[user.id].roomId = 0
     removeUser(roomId, user.id)
 
-    require('../server').pushTo(
-      'room_' + roomId,
-      'user-exited',
-      { rooms: [], users: getRoomUsers(roomId) },
-    );
+    require('../server').pushTo('room_' + roomId, 'user-exited', {
+      rooms: [],
+      users: getRoomUsers(roomId),
+    })
 
     sockets[user.id].join('room_' + membership.roomId)
     metadata[membership.userId].roomId = membership.roomId
     addUser(membership.roomId, user)
 
-    require('../server').pushTo(
-      'room_' + membership.roomId,
-      'user-entered',
-      { rooms: [], users: getRoomUsers(membership.roomId) },
-    )
+    require('../server').pushTo('room_' + membership.roomId, 'user-entered', {
+      rooms: [],
+      users: getRoomUsers(membership.roomId),
+    })
 
     res.send({ status: 'success', membership: membership })
   })
@@ -648,11 +645,10 @@ router.post('/exit_room', jsonParser, async function (req, res) {
               let room = rooms[i]
               room.users = getRoomUsers(room.id)
             }
-            require('../server').pushTo(
-              'room_' + roomId,
-              'user-exited',
-              { rooms: rooms, users: getRoomUsers(roomId) },
-            )
+            require('../server').pushTo('room_' + roomId, 'user-exited', {
+              rooms: rooms,
+              users: getRoomUsers(roomId),
+            })
           },
         )
       })
@@ -671,56 +667,50 @@ router.post('/invite_to_room', jsonParser, async function (req, res) {
       })
       return
     }
-    sw.User.findOne({ where: { id: req.body.userId } }).then(
-      async (user) => {
-        if (user === null) {
-          res.send({
-            status: 'error',
-            errorCode: 'e0005',
-            message: 'account does not exist.',
-          })
-          return
-        }
-        sw.Invite.findOne({
-          where: { userId: user.id, roomId: membership.roomId },
-        }).then(async (invite) => {
-          if (invite !== null) {
-            sw.Room.findOne({ where: { id: membership.roomId } }).then(
-              async (room) => {
-                if (sockets[user.id]) {
-                  sockets[user.id].emit('user-invited', {
-                    invite,
-                    user,
-                    room,
-                  });
-                }
-                res.send({ status: 'success', invite: invite });
-              },
-            )
-            return;
-          }
-          invite = await sw.Invite.create({
-            userId: user.id,
-            roomId: membership.roomId,
-            title: req.body.title,
-            text: req.body.text,
-            inviteType: 'webinar',
-          })
+    sw.User.findOne({ where: { id: req.body.userId } }).then(async (user) => {
+      if (user === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'account does not exist.',
+        })
+        return
+      }
+      sw.Invite.findOne({
+        where: { userId: user.id, roomId: membership.roomId },
+      }).then(async (invite) => {
+        if (invite !== null) {
           sw.Room.findOne({ where: { id: membership.roomId } }).then(
             async (room) => {
-              if (sockets[user.id]) {
-                sockets[user.id].emit('user-invited', {
-                  invite,
-                  user,
-                  room,
-                });
-              }
-              res.send({ status: 'success', invite: invite });
+              require('../server').signlePushTo(user.id, 'user-invited', {
+                invite,
+                user,
+                room,
+              })
+              res.send({ status: 'success', invite: invite })
             },
           )
+          return
+        }
+        invite = await sw.Invite.create({
+          userId: user.id,
+          roomId: membership.roomId,
+          title: req.body.title,
+          text: req.body.text,
+          inviteType: 'webinar',
         })
-      },
-    )
+        sw.Room.findOne({ where: { id: membership.roomId } }).then(
+          async (room) => {
+            require('../server').signlePushTo(user.id, 'user-invited', {
+              invite,
+              user,
+              room,
+            })
+            res.send({ status: 'success', invite: invite })
+          },
+        )
+      })
+    })
   })
 })
 
@@ -880,7 +870,11 @@ router.post('/use_invitation', jsonParser, async function (req, res) {
     }
     addUser(invite.valid ? invite.roomId : req.body.roomId, user)
     addGuestAcc(acc)
-    require('../server').pushTo('room_' + (invite.valid ? invite.roomId : req.body.roomId), 'user_joined', user)
+    require('../server').pushTo(
+      'room_' + (invite.valid ? invite.roomId : req.body.roomId),
+      'user_joined',
+      user,
+    )
     let requestOptions = {
       method: 'GET',
       headers: {
@@ -891,7 +885,11 @@ router.post('/use_invitation', jsonParser, async function (req, res) {
     fetch('https://config.kaspersoft.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        res.send({ status: 'success', token: acc.token, roomId: invite.valid ? invite.roomId : req.body.roomId})
+        res.send({
+          status: 'success',
+          token: acc.token,
+          roomId: invite.valid ? invite.roomId : req.body.roomId,
+        })
       })
   } else {
     res.send({

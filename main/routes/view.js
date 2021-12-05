@@ -1,6 +1,3 @@
-
-const sockets = require("../socket").sockets;
-
 const sw = require('../db/models');
 const express = require('express');
 const { Op } = require('sequelize')
