@@ -82,7 +82,6 @@ const useStyles = makeStyles((theme) => ({
 let messagesArr = []
 export let resetMessages3 = () => {
   messagesDict = {};
-  scrollReady2 = false;
 }
 
 export let addMessageToList3 = () => {}
@@ -208,9 +207,9 @@ export default function ChatEmbedded(props) {
   addMessageToList3 = addMessageToList
 
   useEffect(() => {
+    scrollReady2 = false;
     messagesArr = [];
     messagesDict = {};
-    scrollToBottom();
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -263,10 +262,7 @@ export default function ChatEmbedded(props) {
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {
       if ($('#scroller').scrollTop() === 0) {
-        if (!scrollReady2) {
-          scrollReady2 = true;
-          return;
-        }
+        if (!scrollReady2) return;
         if (lastLoadCount < 25) return;
         let requestOptions3 = {
           method: 'POST',
@@ -493,6 +489,8 @@ export default function ChatEmbedded(props) {
               .then((result) => {
                 updateChat(result.room)
               })
+            
+            scrollReady2 = true;
           }
         })
         .catch((error) => console.log('error', error))

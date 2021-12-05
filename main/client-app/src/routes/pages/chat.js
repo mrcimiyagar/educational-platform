@@ -76,7 +76,6 @@ const useStyles = makeStyles((theme) => ({
 let messagesArr = []
 export let resetMessages = () => {
   messagesDict = {};
-  scrollReady3 = false;
 }
 
 let uplaodedFileId = 0
@@ -107,11 +106,10 @@ export default function Chat(props) {
 
 
   useEffect(() => {
-
+    scrollReady3 = false;
     lastLoadCount = 25;
     messagesArr = [];
     messagesDict = {};
-    scrollToBottom();
 
     let requestOptions = {
       method: 'POST',
@@ -542,6 +540,8 @@ export default function Chat(props) {
                   .then((result) => {
                     updateChat(result.room)
                   })
+
+                scrollReady3 = false;
               }
             })
             .catch((error) => console.log('error', error))

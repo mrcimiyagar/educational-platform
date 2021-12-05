@@ -79,7 +79,6 @@ export let updateChatEmbedded = undefined
 let messagesArr = []
 export let resetMessages2 = () => {
   messagesDict = {};
-  scrollReady = false;
 }
 
 export let addMessageToList2 = () => {}
@@ -87,7 +86,7 @@ export let replaceMessageInTheList2 = () => {}
 
 let lastLoadCount = 25;
 let messagesDict = {};
-let scrollReady = true;
+let scrollReady = false;
 
 export default function ChatEmbeddedInMessenger(props) {
 
@@ -129,9 +128,10 @@ export default function ChatEmbeddedInMessenger(props) {
   }, [scrollAnywayrTrigger]);
 
   useEffect(() => {
+    scrollReady = false;
     messagesArr = [];
     messagesDict = {};
-    scrollToBottom();
+    lastLoadCount = 25;
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -175,14 +175,10 @@ export default function ChatEmbeddedInMessenger(props) {
   }, [props.roomId]);
 
   useEffect(() => {
-    lastLoadCount = 25;
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {
       if ($('#scroller').scrollTop() === 0) {
-        if (!scrollReady) {
-          scrollReady = true;
-          return;
-        }
+        if (!scrollReady) return;
         if (lastLoadCount < 25) return;
         let requestOptions3 = {
           method: 'POST',
@@ -224,6 +220,7 @@ export default function ChatEmbeddedInMessenger(props) {
                 }
               })
             }
+
               forceUpdate();
 
               setTimeout(() => {
@@ -408,6 +405,8 @@ export default function ChatEmbeddedInMessenger(props) {
               .then((result) => {
                 updateChat(result.room);
               });
+
+            scrollReady = true;
           }
         })
         .catch((error) => console.log('error', error))

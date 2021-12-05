@@ -3,6 +3,7 @@ const {
   removeUser,
   getRoomUsers,
   getGuestUser,
+  addUser,
 } = require('./users')
 
 let sockets = {};
@@ -14,13 +15,13 @@ let disconnectWebsocket = (session, user) => {
   netState[session === null ? user.id : session.userId] = false;
   let roomId = sockets[user.id].roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
-    //removeUser(roomId, user.id)
+    removeUser(roomId, user.id)
     if (room !== null) {
       models.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
         async (rooms) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
-            //removeUser(room.id, user.id)
+            removeUser(room.id, user.id)
             tempDisconnected[session === null ? user.id : session.userId] = sockets[session === null ? user.id : session.userId];
             delete sockets[session === null ? user.id : session.userId];
             room.users = getRoomUsers(room.id)
@@ -77,6 +78,9 @@ module.exports = {
               if (acc !== null) {
                 let user = acc.user
                 if (user !== null) {
+                  let s = tempDisconnected[user.id];
+                  addUser(s.roomId, user);
+                  delete tempDisconnected[user.id];
                   netState[user.id] = true;
                   soc.user = user
                   sockets[user.id] = soc
@@ -97,6 +101,9 @@ module.exports = {
                 where: { id: session.userId },
               })
               if (user !== null) {
+                let s = tempDisconnected[user.id];
+                addUser(s.roomId, user);
+                delete tempDisconnected[user.id];
                 netState[user.id] = true;
                 soc.user = user
                 sockets[user.id] = soc
