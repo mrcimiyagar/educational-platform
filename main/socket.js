@@ -46,7 +46,7 @@ module.exports = {
     io.on('connection', (soc) => {
       console.log('a user connected')
       soc.on('user-reconnected', () => {
-        let user = users[soc.userId];
+        let user = users[soc.roomId][soc.userId];
         soc.emit('hello', {user: user, roomId: soc.roomId});
         addUser(soc.roomId, user);
         netState[soc.userId] = true;
@@ -70,7 +70,7 @@ module.exports = {
               delete soc.room.typing[soc.userId]
               let typingList = []
               for (let t in soc.room.typing) {
-                typingList.push(users[soc.room.typing[t].socket.userId])
+                typingList.push(users[soc.roomId][soc.room.typing[t].socket.userId])
               }
               require('./server').pushTo(
                 'room_' + soc.roomId,
