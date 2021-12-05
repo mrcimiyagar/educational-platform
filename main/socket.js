@@ -7,20 +7,20 @@ let notifs = {}
 let netState = {}
 
 let disconnectWebsocket = (user) => {
-  netState[metadata[user.id].user.id] = false
+  netState[user.id] = false
   let roomId = metadata[user.id].roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
-    removeUser(roomId, metadata[user.id].user.id)
+    removeUser(roomId, user.id)
     if (room !== null) {
       models.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
         async (rooms) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
-            removeUser(room.id, metadata[user.id].user.id)
+            removeUser(room.id, user.id)
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
-            where: { roomId: room.id, userId: metadata[user.id].user.id },
+            where: { roomId: room.id, userId: user.id },
           })
           require('./server').pushTo(
             'room_' + roomId,
@@ -124,7 +124,7 @@ module.exports = {
                   let user = acc.user
                   if (user !== null) {
                     userToSocketMap[user.id] = soc;
-                    metadata[soc.id] = {socket: soc, user: user};
+                    metadata[user.id] = {socket: soc, user: user};
                     netState[user.id] = true
                     sockets[user.id] = soc
                     soc.on('disconnect', ({}) => {
@@ -148,7 +148,7 @@ module.exports = {
                 })
                 if (user !== null) {
                   userToSocketMap[user.id] = soc;
-                  metadata[soc.id] = {socket: soc, user: user};
+                  metadata[user.id] = {socket: soc, user: user};
                   netState[user.id] = true
                   sockets[user.id] = soc
                   soc.on('disconnect', ({}) => {
