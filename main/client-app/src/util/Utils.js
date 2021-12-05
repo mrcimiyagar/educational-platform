@@ -180,23 +180,6 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
     console.log('you have been reconnected');
     socket.emit('user-reconnected');
   });
-  socket.on('reconnection-done', () => {
-    let requestOptions2 = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: currentRoomId,
-      }),
-      redirect: 'follow',
-    }
-    let enterRoomPromise = fetch(
-      serverRoot + '/room/enter_room',
-      requestOptions2,
-    )
-  })
 }
 
 export function validateToken(t, callback) {
