@@ -1,4 +1,4 @@
-const {sockets, userToSocketMap} = require('../socket');
+const {sockets, userToSocketMap, metadata} = require('../socket');
 const sw = require('../db/models');
 const {
   addUser,
