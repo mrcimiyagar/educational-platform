@@ -47,6 +47,7 @@ module.exports = {
       console.log('a user connected')
       soc.on('user-reconnected', () => {
         let user = users[soc.userId];
+        soc.emit('hello', {user: user, roomId: soc.roomId});
         addUser(soc.roomId, user);
         netState[soc.userId] = true;
         sockets[soc.userId] = soc;
