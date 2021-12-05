@@ -23,7 +23,7 @@ let disconnectWebsocket = (session, user) => {
             let room = rooms[i]
             removeUser(room.id, user.id)
             tempDisconnected[session === null ? user.id : session.userId] = sockets[session === null ? user.id : session.userId];
-            delete sockets[session === null ? user.id : session.userId];
+            sockets[session === null ? user.id : session.userId] = undefined;
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
@@ -80,7 +80,7 @@ module.exports = {
                 if (user !== null) {
                   let s = tempDisconnected[user.id];
                   addUser(s.roomId, user);
-                  delete tempDisconnected[user.id];
+                  sockets[user.id] = s;
                   netState[user.id] = true;
                   soc.user = user
                   sockets[user.id] = soc
@@ -103,7 +103,7 @@ module.exports = {
               if (user !== null) {
                 let s = tempDisconnected[user.id];
                 addUser(s.roomId, user);
-                delete tempDisconnected[user.id];
+                sockets[user.id] = s;
                 netState[user.id] = true;
                 soc.user = user
                 sockets[user.id] = soc
