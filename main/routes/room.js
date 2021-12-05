@@ -599,6 +599,11 @@ router.post('/enter_room', jsonParser, async function (req, res) {
 
   authenticateMember(req, res, async (membership, session, user) => {
 
+    if (membership === null || membership === undefined) {
+      res.send({ status: 'success' });
+      return;
+    }
+
     let sockets = require('../socket').sockets;
     let s = sockets[user.id]
     if (s === undefined) return
@@ -613,11 +618,6 @@ router.post('/enter_room', jsonParser, async function (req, res) {
       'user-exited',
       { rooms: [], users: getRoomUsers(roomId) },
     );
-
-    if (membership === null || membership === undefined) {
-      res.send({ status: 'success' });
-      return;
-    }
 
     sockets[user.id].join('room_' + membership.roomId)
     sockets[user.id].roomId = membership.roomId
