@@ -176,8 +176,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
     });
     socket.emit('auth', {token: t !== undefined ? t : localStorage.getItem('token')});
   });
-  socket.on('hello', ({user, roomId}) => {
-    alert(roomId);
+  socket.on('hello', ({user}) => {
     alert(JSON.stringify(user));
   });
   socket.io.on("reconnect", () => {
