@@ -7,20 +7,20 @@ let notifs = {}
 let netState = {}
 
 let disconnectWebsocket = (socket) => {
-  netState[socket.user.id] = false
-  let roomId = socket.roomId
+  netState[metadata[socket.id].user.id] = false
+  let roomId = metadata[socket.id].roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
-    removeUser(roomId, socket.user.id)
+    removeUser(roomId, metadata[socket.id].user.id)
     if (room !== null) {
       models.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
         async (rooms) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
-            removeUser(room.id, socket.user.id)
+            removeUser(room.id, metadata[socket.id].user.id)
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
-            where: { roomId: room.id, userId: socket.user.id },
+            where: { roomId: room.id, userId: metadata[socket.id].user.id },
           })
           require('./server').pushTo(
             'room_' + roomId,
@@ -33,14 +33,12 @@ let disconnectWebsocket = (socket) => {
   })
 }
 
-let that = {
-  users: {},
-}
+let metadata = {}
 let userToSocketMap = {};
 
 module.exports = {
   userToSocketMap: userToSocketMap,
-  metadata: that,
+  metadata: metadata,
   sockets: sockets,
   notifs: notifs,
   setup: (server) => {
@@ -48,8 +46,8 @@ module.exports = {
     io.on('connection', (soc) => {
       console.log('a user connected')
       soc.on('user-reconnected', () => {
-        addUser(that.users[soc.id].roomId, that.users[soc.id].user);
-        netState[soc.user.id] = true;
+        addUser(metadata[soc.id].roomId, metadata[soc.id].user);
+        netState[metadata[soc.id].user.id] = true;
       });
       soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
@@ -93,16 +91,16 @@ module.exports = {
                   let user = acc.user
                   if (user !== null) {
                     userToSocketMap[user.id] = soc;
-                    that.users[soc.id] = {socket: soc, user: user};
+                    metadata[soc.id] = {socket: soc, user: user};
                     netState[user.id] = true
                     sockets[user.id] = soc
                     soc.on('disconnect', ({}) => {
                       disconnectWebsocket(soc)
                     })
                     soc.emit('auth-success', {})
-                    let nots = notifs[soc.userId]
+                    let nots = notifs[user.id]
                     if (nots !== undefined) {
-                      notifs[soc.user | Id] = []
+                      notifs[user.id] = []
                       nots.forEach((notObj) => {
                         soc.emit(notObj.key, notObj.data)
                       })
@@ -117,16 +115,16 @@ module.exports = {
                 })
                 if (user !== null) {
                   userToSocketMap[user.id] = soc;
-                  that.users[soc.id] = {socket: soc, user: user};
+                  metadata[soc.id] = {socket: soc, user: user};
                   netState[user.id] = true
                   sockets[user.id] = soc
                   soc.on('disconnect', ({}) => {
                     disconnectWebsocket(soc)
                   })
                   soc.emit('auth-success', {})
-                  let nots = notifs[soc.userId]
+                  let nots = notifs[user.id]
                   if (nots !== undefined) {
-                    notifs[soc.user | Id] = []
+                    notifs[user.id] = []
                     nots.forEach((notObj) => {
                       soc.emit(notObj.key, notObj.data)
                     })
