@@ -6,21 +6,21 @@ let sockets = {}
 let notifs = {}
 let netState = {}
 
-let disconnectWebsocket = (socket) => {
-  netState[metadata[socket.id].user.id] = false
-  let roomId = metadata[socket.id].roomId
+let disconnectWebsocket = (user) => {
+  netState[metadata[user.id].user.id] = false
+  let roomId = metadata[user.id].roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
-    removeUser(roomId, metadata[socket.id].user.id)
+    removeUser(roomId, metadata[user.id].user.id)
     if (room !== null) {
       models.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
         async (rooms) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
-            removeUser(room.id, metadata[socket.id].user.id)
+            removeUser(room.id, metadata[user.id].user.id)
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
-            where: { roomId: room.id, userId: metadata[socket.id].user.id },
+            where: { roomId: room.id, userId: metadata[user.id].user.id },
           })
           require('./server').pushTo(
             'room_' + roomId,
@@ -46,12 +46,41 @@ module.exports = {
     io.on('connection', (soc) => {
       console.log('a user connected')
       const socketId = soc.id;
-      soc.on('user-reconnected', () => {
-        var util = require('util');
-        console.log(util.inspect(metadata));
-        console.log(socketId.id);
-        addUser(metadata[socketId].roomId, metadata[socketId].user);
-        netState[metadata[socketId].user.id] = true;
+      soc.on('user-reconnected', (token) => {
+        try {
+          models.Session.findOne({ where: { token: token } }).then(
+            async function (session) {
+              if (session == null) {
+                let acc = getGuestUser(token)
+                if (acc !== null) {
+                  let user = acc.user
+                  if (user !== null) {
+                    addUser(metadata[user.id].roomId, user);
+                    userToSocketMap[user.id] = soc;
+                    metadata[user.id] = {socket: soc, user: user};
+                    netState[user.id] = true
+                    sockets[user.id] = soc
+                  }
+                }
+              } else {
+                session.socketId = soc.id
+                await session.save()
+                let user = await models.User.findOne({
+                  where: { id: session.userId },
+                })
+                if (user !== null) {
+                  addUser(metadata[user.id].roomId, user);
+                  userToSocketMap[user.id] = soc;
+                  metadata[user.id] = {socket: soc, user: user};
+                  netState[user.id] = true
+                  sockets[user.id] = soc
+                }
+              }
+            },
+          )
+        } catch (ex) {
+          console.error(ex)
+        }
       });
       soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
@@ -99,7 +128,7 @@ module.exports = {
                     netState[user.id] = true
                     sockets[user.id] = soc
                     soc.on('disconnect', ({}) => {
-                      disconnectWebsocket(soc)
+                      disconnectWebsocket(user)
                     })
                     soc.emit('auth-success', {})
                     let nots = notifs[user.id]
@@ -123,7 +152,7 @@ module.exports = {
                   netState[user.id] = true
                   sockets[user.id] = soc
                   soc.on('disconnect', ({}) => {
-                    disconnectWebsocket(soc)
+                    disconnectWebsocket(user)
                   })
                   soc.emit('auth-success', {})
                   let nots = notifs[user.id]
