@@ -458,7 +458,7 @@ router.post('/delete_room', jsonParser, async function (req, res) {
 
 router.post('/get_room', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
-    if (membership === null) {
+    if (membership === null || membership === undefined) {
       res.send({
         status: 'error',
         errorCode: 'e0005',

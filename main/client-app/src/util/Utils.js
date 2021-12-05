@@ -177,7 +177,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   });
   socket.io.on("reconnect", () => {
     console.log('you have been reconnected');
-    socket.emit('user-reconnected', token);
+    socket.emit('user-reconnected');
 });
 }
 

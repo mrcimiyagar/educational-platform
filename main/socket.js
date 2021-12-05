@@ -11,29 +11,29 @@ let notifs = {};
 let netState = {};
 let tempDisconnected = {};
 
-let disconnectWebsocket = (session, user) => {
-  netState[session === null ? user.id : session.userId] = false;
-  let roomId = sockets[user.id].roomId
+let disconnectWebsocket = (userId) => {
+  netState[userId] = false;
+  let roomId = sockets[userId].roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
-    removeUser(roomId, user.id)
+    removeUser(roomId, userId)
     if (room !== null) {
       models.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
         async (rooms) => {
           for (let i = 0; i < rooms.length; i++) {
             let room = rooms[i]
-            removeUser(room.id, user.id)
+            removeUser(room.id, userId)
             room.users = getRoomUsers(room.id)
           }
           let mem = await models.Membership.findOne({
-            where: { roomId: room.id, userId: session === null ? user.id : session.userId },
+            where: { roomId: room.id, userId: userId },
           })
           require('./server').pushTo(
-            'room_' + sockets[user.id].roomId,
+            'room_' + sockets[userId].roomId,
             'user-exited',
             { rooms: rooms, users: getRoomUsers(roomId) },
           )
-          tempDisconnected[session === null ? user.id : session.userId] = sockets[session === null ? user.id : session.userId];
-          sockets[session === null ? user.id : session.userId] = undefined;
+          tempDisconnected[userId] = sockets[userId];
+          sockets[userId] = undefined;
         },
       )
     }
@@ -48,76 +48,23 @@ module.exports = {
   sockets: sockets,
   notifs: notifs,
   setup: (server) => {
-    const io = require("socket.io")(server, {
-      cors: {
-        origin: '*',
-      }
-    });
+    const io = require("socket.io")(server, { cors: { origin: '*' } });
     io.on('connection', (soc) => {
       console.log('a user connected');
-      var emit = soc.emit;
-  soc.emit = function() {
-    if (soc.user !== null && soc.user !== undefined) {
-      if (netState[soc.user.id] === true) {
-        emit.apply(soc, arguments);   
-      }
-      else {
-        if (notifs[soc.user.id] === undefined) {
+      soc.on('user-reconnected', () => {
+        let s = tempDisconnected[soc.user.id];
+        addUser(s.roomId, soc.user);
+        netState[soc.user.id] = true;
+        sockets[soc.user.id] = s;
+        that.users[soc.id] = soc
+        let nots = notifs[soc.user.id];
+        if (nots !== undefined) {
           notifs[soc.user.id] = [];
+          nots.forEach(notObj => {
+            soc.emit(notObj.key, notObj.data);
+          });
         }
-        console.log(JSON.stringify(arguments));
-        notifs[soc.user.id].push(arguments)
-      }
-    }
-  };
-      soc.on('user-reconnected', function (token) {
-        models.Session.findOne({ where: { token: token } }).then(
-          async function (session) {
-            if (session == null) {
-              let acc = getGuestUser(token)
-              if (acc !== null) {
-                let user = acc.user
-                if (user !== null) {
-                  let s = tempDisconnected[user.id];
-                  addUser(s.roomId, user);
-                  sockets[user.id] = s;
-                  netState[user.id] = true;
-                  soc.user = user
-                  that.users[soc.id] = soc
-                  let nots = notifs[soc.user.id];
-                  if (nots !== undefined) {
-                    notifs[soc.user.id] = [];
-                    nots.forEach(notObj => {
-                      soc.emit(notObj.key, notObj.data);
-                    });
-                  }
-                }
-              }
-            } else {
-              session.socketId = soc.id
-              await session.save()
-              let user = await models.User.findOne({
-                where: { id: session.userId },
-              })
-              if (user !== null) {
-                let s = tempDisconnected[user.id];
-                addUser(s.roomId, user);
-                sockets[user.id] = s;
-                netState[user.id] = true;
-                soc.user = user
-                that.users[soc.id] = soc
-                let nots = notifs[soc.user.id];
-                if (nots !== undefined) {
-                  notifs[soc.user.id] = [];
-                  nots.forEach(notObj => {
-                    soc.emit(notObj.key, notObj.data);
-                  });
-                }
-              }
-            }
-          },
-        )
-   });
+      });
       soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
           if (soc.user.id in soc.room.typing) {
@@ -165,7 +112,7 @@ module.exports = {
                     sockets[user.id] = soc
                     that.users[soc.id] = soc
                     soc.on('disconnect', ({}) => {
-                      disconnectWebsocket(session, user)
+                      disconnectWebsocket(user.id)
                     })
                     soc.emit('auth-success', {})
                     let nots = notifs[soc.user.id];
@@ -190,7 +137,7 @@ module.exports = {
                   that.users[soc.id] = soc
 
                   soc.on('disconnect', ({}) => {
-                    disconnectWebsocket(session, user)
+                    disconnectWebsocket(user.id)
                   })
                   soc.emit('auth-success', {})
                   let nots = notifs[soc.user.id];
@@ -204,17 +151,6 @@ module.exports = {
               }
             },
           )
-        } catch (ex) {
-          console.error(ex)
-        }
-      })
-      soc.on('message', (data) => {
-        console.log(data.substr(0, 20))
-        try {
-          let packet = JSON.parse(data)
-          if (packet.event in soc.events) {
-            soc.events[packet.event](packet.body)
-          }
         } catch (ex) {
           console.error(ex)
         }
