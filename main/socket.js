@@ -1,4 +1,3 @@
-const { roomId } = require('./client-app/src/App')
 const models = require('./db/models')
 const users = require('./users')
 const { removeUser, getRoomUsers, getGuestUser, addUser } = require('./users')
