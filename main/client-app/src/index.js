@@ -301,7 +301,7 @@ let AppContainer = (props) => {
       <Suspense fallback={loading}>
         <MainApp />
       </Suspense>
-      <Snackbar open={disconnectionAlert && connected} autoHideDuration={1000 * 60 * 60 * 24 * 365} onClose={handleDisconnectionClose}>
+      <Snackbar open={disconnectionAlert && !connected} autoHideDuration={1000 * 60 * 60 * 24 * 365} onClose={handleDisconnectionClose}>
         <Alert onClose={handleDisconnectionClose} severity="info" sx={{ width: '100%' }}>
           در حال اتصال
         </Alert>

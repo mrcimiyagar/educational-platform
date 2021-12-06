@@ -191,10 +191,12 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
     setClientConnected(false)
   })
   socket.io.on('reconnect', () => {
-    socket.removeAllListeners('ready-to-auth')
     console.log('you have been reconnected')
+    socket.removeAllListeners('ready-to-auth')
     socket.on('ready-to-auth', () => {
-      socket.removeAllListeners('auth-success')
+      
+    })
+    socket.removeAllListeners('auth-success')
       socket.on('auth-success', () => {
         if (currentRoomId !== undefined) {
           let requestOptions2 = {
@@ -216,7 +218,6 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
       setTimeout(() => {
         socket.emit('auth', { token })
       }, 2000)
-    })
   })
 }
 
