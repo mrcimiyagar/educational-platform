@@ -139,12 +139,12 @@ models.setup().then(() => {
             res.sendFile(__dirname + '/client-app/build/index.html');
         });
 
-        setInterval(() => {
-            let users = sw.User.findAll({raw: true});
+        setInterval(async () => {
+            let users = await sw.User.findAll({raw: true});
             let userIds = users.map(u => u.id);
             userIds.forEach(uid => {
                 if (notifs[uid] !== undefined && notifs[uid].length > 0 && sockets[uid] !== undefined) {
-                    sockets[userId].emit('sync', notif.data);
+                    sockets[userId].emit('sync');
                 }
             });
         }, 5000);
