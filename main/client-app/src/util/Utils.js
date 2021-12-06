@@ -174,16 +174,14 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   socket.on('connect', () => {
     if (!onceConnected) {
       onceConnected = true
-      socket.on('ready-to-auth', () => {
-        socket.on('auth-success', () => {
-          if (onSocketAuth !== undefined) {
-            onSocketAuth()
-          }
-          setClientConnected(true)
-        })
-        socket.emit('auth', {
-          token: t !== undefined ? t : localStorage.getItem('token'),
-        })
+      socket.on('auth-success', () => {
+        if (onSocketAuth !== undefined) {
+          onSocketAuth()
+        }
+        setClientConnected(true)
+      })
+      socket.emit('auth', {
+        token: t !== undefined ? t : localStorage.getItem('token'),
       })
     }
   })
