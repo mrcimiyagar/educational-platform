@@ -132,9 +132,6 @@ module.exports = {
           console.error(ex)
         }
       })
-      setTimeout(() => {
-        soc.emit('ready-to-auth');
-      }, 2000);
     })
     return io
   },

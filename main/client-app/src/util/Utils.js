@@ -192,9 +192,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   })
   socket.io.on('reconnect', () => {
     console.log('you have been reconnected')
-    socket.removeAllListeners('ready-to-auth')
-    socket.on('ready-to-auth', () => {
-      socket.removeAllListeners('auth-success')
+    socket.removeAllListeners('auth-success')
       socket.on('auth-success', () => {
         if (currentRoomId !== undefined) {
           let requestOptions2 = {
@@ -210,13 +208,14 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
           }
           fetch(serverRoot + '/room/enter_room', requestOptions2).then(() => {
             setTimeout(() => {
-              setClientConnected(true);              
+              setClientConnected(true);
             }, 2000);
           })
         }
       })
-      socket.emit('auth', { token })
-    })
+      setTimeout(() => {
+        socket.emit('auth', { token })
+      }, 2000)
   })
 }
 
