@@ -158,7 +158,7 @@ export const addCommas = (nStr) => {
 }
 
 export let socket = undefined
-let onceConnected = false;
+let onceConnected = false
 
 export const ConnectToIo = (t, onSocketAuth, force) => {
   if (socket !== null && socket !== undefined) {
@@ -173,11 +173,28 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   socket = io(pathConfig.mainBackend)
   socket.on('connect', () => {
     if (!onceConnected) {
-      onceConnected = true;
+      onceConnected = true
       socket.on('auth-success', () => {
         if (onSocketAuth !== undefined) {
           onSocketAuth()
         }
+        socket.removeAllListeners('auth-success')
+        socket.on('auth-success', () => {
+          if (currentRoomId !== undefined) {
+            let requestOptions2 = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                token: token,
+              },
+              body: JSON.stringify({
+                roomId: currentRoomId,
+              }),
+              redirect: 'follow',
+            }
+            fetch(serverRoot + '/room/enter_room', requestOptions2)
+          }
+        });
       });
       socket.emit('auth', {
         token: t !== undefined ? t : localStorage.getItem('token'),
@@ -186,27 +203,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   })
   socket.io.on('reconnect', () => {
     console.log('you have been reconnected')
-    socket.removeAllListeners('auth-success');
-    socket.on('auth-success', () => {
-      if (currentRoomId !== undefined) {
-        let requestOptions2 = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            token: token,
-          },
-          body: JSON.stringify({
-            roomId: currentRoomId,
-          }),
-          redirect: 'follow',
-        }
-        fetch(
-          serverRoot + '/room/enter_room',
-          requestOptions2,
-        )
-      }
-    })
-    socket.emit('auth', { token });
+    socket.emit('auth', { token })
   })
 }
 
