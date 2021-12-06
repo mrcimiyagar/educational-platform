@@ -130,16 +130,22 @@ export function ifServerOnline(ifOnline, ifOffline) {
       ifOffline()
     })
 }
+export let setClientConnected = (b) => {};
 
 let AppContainer = (props) => {
   ;[wallpaper, setWall] = React.useState({})
   setWallpaper = (w) => {
     setWall(w)
   }
+  let [connected, setConnected] = React.useState(false);
   let [disconnectionAlert, setDisconnectAlert] = React.useState(false);
   let [opacity, setOpacity] = React.useState(0);
   let [display, setDisplay] = React.useState('block');
   ;[display2, setDisplay2] = React.useState('block');
+
+  setClientConnected = (b) => {
+    setConnected(b);
+  }
 
   let handleDisconnectionClose = () => {
     setDisconnectAlert(false);
@@ -295,7 +301,7 @@ let AppContainer = (props) => {
       <Suspense fallback={loading}>
         <MainApp />
       </Suspense>
-      <Snackbar open={disconnectionAlert} autoHideDuration={1000 * 60 * 60 * 24 * 365} onClose={handleDisconnectionClose}>
+      <Snackbar open={disconnectionAlert && connected} autoHideDuration={1000 * 60 * 60 * 24 * 365} onClose={handleDisconnectionClose}>
         <Alert onClose={handleDisconnectionClose} severity="info" sx={{ width: '100%' }}>
           در حال اتصال
         </Alert>

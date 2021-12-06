@@ -1,5 +1,5 @@
 import React from 'react'
-import { pathConfig } from '..'
+import { pathConfig, setClientConnected } from '..'
 import { changeSendButtonState } from '../modules/chatbox/chatbox'
 import store, { changeConferenceMode } from '../redux/main'
 import { setMe, token } from './settings'
@@ -178,17 +178,20 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
         if (onSocketAuth !== undefined) {
           onSocketAuth()
         }
+        setClientConnected(true);
       });
       socket.emit('auth', {
         token: t !== undefined ? t : localStorage.getItem('token'),
       });
     }
-  })
+  });
+  socket.on('disconnect', () => {
+    setClientConnected(false);
+  });
   socket.io.on('reconnect', () => {
     console.log('you have been reconnected')
     socket.removeAllListeners('auth-success')
     socket.on('auth-success', () => {
-      alert(currentRoomId);
       if (currentRoomId !== undefined) {
         let requestOptions2 = {
           method: 'POST',
@@ -201,11 +204,15 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
           }),
           redirect: 'follow',
         }
-        fetch(serverRoot + '/room/enter_room', requestOptions2)
+        fetch(serverRoot + '/room/enter_room', requestOptions2).then(() => {
+          setClientConnected(true);
+        });
       }
     });
-    socket.emit('auth', { token });
-  })
+    setTimeout(() => {
+      socket.emit('auth', { token });
+    }, 2000);
+  });
 }
 
 export function validateToken(t, callback) {
