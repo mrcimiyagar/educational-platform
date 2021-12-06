@@ -46,7 +46,7 @@ module.exports = {
     const io = require('socket.io')(server, { cors: { origin: '*' } })
     io.on('connection', (soc) => {
       console.log('a user connected');
-      soc.on('chat-typing', () => {
+      /*soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
           if (soc.userId in soc.room.typing) {
             clearTimeout(soc.room.typing[soc.userId].timeout)
@@ -76,7 +76,7 @@ module.exports = {
             typingList,
           )
         }
-      })
+      })*/
       soc.on('auth', ({ token }) => {
         console.log('authenticating client...')
         try {
