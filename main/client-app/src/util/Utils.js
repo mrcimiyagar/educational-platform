@@ -178,24 +178,6 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
         if (onSocketAuth !== undefined) {
           onSocketAuth()
         }
-        socket.removeAllListeners('auth-success')
-        socket.on('auth-success', () => {
-          if (currentRoomId !== undefined) {
-            alert(currentRoomId);
-            let requestOptions2 = {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                token: token,
-              },
-              body: JSON.stringify({
-                roomId: currentRoomId,
-              }),
-              redirect: 'follow',
-            }
-            fetch(serverRoot + '/room/enter_room', requestOptions2)
-          }
-        });
       });
       socket.emit('auth', {
         token: t !== undefined ? t : localStorage.getItem('token'),
@@ -204,6 +186,23 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   })
   socket.io.on('reconnect', () => {
     console.log('you have been reconnected')
+    socket.removeAllListeners('auth-success')
+    socket.on('auth-success', () => {
+      if (currentRoomId !== undefined) {
+        let requestOptions2 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: currentRoomId,
+          }),
+          redirect: 'follow',
+        }
+        fetch(serverRoot + '/room/enter_room', requestOptions2)
+      }
+    });
     setTimeout(() => {
       socket.emit('auth', { token });
     }, 2000);
