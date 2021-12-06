@@ -254,7 +254,8 @@ export default function ChatEmbedded(props) {
   };
 
   useEffect(() => {
-    socket.on('connect', () => {
+    socket.removeAllListeners('reconnect');
+    socket.on('reconnect', () => {
       setupRoom();
     });
   }, []);

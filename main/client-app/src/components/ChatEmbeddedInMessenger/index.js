@@ -177,7 +177,8 @@ export default function ChatEmbeddedInMessenger(props) {
   };
 
   useEffect(() => {
-    socket.on('connect', () => {
+    socket.removeAllListeners('reconnect');
+    socket.on('reconnect', () => {
       setupRoom();
     });
   }, []);
