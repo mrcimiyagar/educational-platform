@@ -22,11 +22,11 @@ let disconnectWebsocket = (user) => {
           let mem = await models.Membership.findOne({
             where: { roomId: room.id, userId: user.id },
           })
-          /*require('./server').pushTo(
+          require('./server').pushTo(
             'room_' + roomId,
             'user-exited',
             { rooms: rooms, users: getRoomUsers(roomId) },
-          )*/
+          )
         },
       )
     }
