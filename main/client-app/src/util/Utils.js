@@ -158,6 +158,7 @@ export const addCommas = (nStr) => {
 }
 
 export let socket = undefined
+let onceConnected = false;
 
 export const ConnectToIo = (t, onSocketAuth, force) => {
   if (socket !== null && socket !== undefined) {
@@ -171,14 +172,17 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   }
   socket = io(pathConfig.mainBackend)
   socket.on('connect', () => {
-    socket.on('auth-success', () => {
-      if (onSocketAuth !== undefined) {
-        onSocketAuth()
-      }
-    })
-    socket.emit('auth', {
-      token: t !== undefined ? t : localStorage.getItem('token'),
-    })
+    if (!onceConnected) {
+      onceConnected = true;
+      socket.on('auth-success', () => {
+        if (onSocketAuth !== undefined) {
+          onSocketAuth()
+        }
+      });
+      socket.emit('auth', {
+        token: t !== undefined ? t : localStorage.getItem('token'),
+      });
+    }
   })
   socket.io.on('reconnect', () => {
     console.log('you have been reconnected')
