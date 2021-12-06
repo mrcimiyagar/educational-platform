@@ -9,7 +9,6 @@ let netState = {}
 let disconnectWebsocket = (user) => {
   netState[user.id] = false
   let roomId = metadata[user.id].roomId
-  delete sockets[user.id];
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, user.id)
     if (room !== null) {
