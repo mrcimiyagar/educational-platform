@@ -203,7 +203,9 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   })
   socket.io.on('reconnect', () => {
     console.log('you have been reconnected')
-    socket.emit('auth', { token })
+    setTimeout(() => {
+      socket.emit('auth', { token });
+    }, 2000);
   })
 }
 
