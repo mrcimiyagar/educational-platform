@@ -24,6 +24,7 @@ import {
   markFileAsUploading,
   popPage,
   registerDialogOpen,
+  setCurrentRoomId,
   setDialogOpen,
   setInTheGame,
   uploadingFiles,
@@ -106,6 +107,7 @@ export default function Chat(props) {
 
 
   useEffect(() => {
+    setCurrentRoomId(props.room_id);
     scrollReady3 = false;
     lastLoadCount = 25;
     messagesArr = [];

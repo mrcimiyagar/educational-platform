@@ -47,7 +47,7 @@ module.exports = {
     io.on('connection', (soc) => {
       console.log('a user connected')
       const socketId = soc.id;
-      soc.on('user-reconnected', (token) => {
+      /*soc.on('user-reconnected', (token) => {
         try {
           models.Session.findOne({ where: { token: token } }).then(
             async function (session) {
@@ -97,7 +97,7 @@ module.exports = {
         } catch (ex) {
           console.error(ex)
         }
-      });
+      });*/
       soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
           if (soc.userId in soc.room.typing) {

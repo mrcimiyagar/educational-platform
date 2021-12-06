@@ -206,6 +206,7 @@ export default function ChatEmbedded(props) {
   addMessageToList3 = addMessageToList
 
   useEffect(() => {
+    setCurrentRoomId(props.roomId);
     scrollReady2 = false;
     messagesArr = [];
     messagesDict = {};

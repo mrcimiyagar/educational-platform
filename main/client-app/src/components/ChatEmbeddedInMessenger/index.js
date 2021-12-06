@@ -128,6 +128,7 @@ export default function ChatEmbeddedInMessenger(props) {
   }, [scrollAnywayrTrigger]);
 
   useEffect(() => {
+    setCurrentRoomId(props.roomId);
     scrollReady = false;
     messagesArr = [];
     messagesDict = {};
