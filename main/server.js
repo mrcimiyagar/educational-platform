@@ -142,11 +142,11 @@ models.setup().then(() => {
         module.exports = {
             'pushTo': (nodeId, key, data) => {
                 let d = JSON.stringify(data);
-                if (d.length > 50) d = d.substr(0, 50);
-                console.log(`sending packet to ${nodeId} - ${key} - ${d}`);
+                if (d.length > 100) d = d.substr(0, 100);
                 let users = getRoomUsers(Number(nodeId.substr('room_'.length)));
                 users.forEach(user => {
                     if (sockets[user.id] !== undefined && netState[user.id] === true) {
+                        console.log(`sending packet to ${user.id} - ${key} - ${d}`);
                         sockets[user.id].emit(key, data);
                     }
                     else {
@@ -157,7 +157,7 @@ models.setup().then(() => {
             },
             'signlePushTo': (userId, key, data) => {
                 let d = JSON.stringify(data);
-                if (d.length > 50) d = d.substr(0, 50);
+                if (d.length > 100) d = d.substr(0, 100);
                 console.log(`sending packet to ${userId} - ${key} - ${d}`);
                 if (sockets[userId] !== undefined && netState[userId] === true) {
                     sockets[userId].emit(key, data);
