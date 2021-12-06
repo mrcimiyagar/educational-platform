@@ -129,6 +129,10 @@ export default function ChatEmbeddedInMessenger(props) {
   }, [scrollAnywayrTrigger]);
 
   let setupRoom = () => {
+    setCurrentRoomId(props.roomId);
+    scrollReady = false;
+    messagesArr = [];
+    messagesDict = {};
     let requestOptions = {
       method: 'POST',
       headers: {

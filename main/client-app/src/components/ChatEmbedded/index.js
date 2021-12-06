@@ -206,6 +206,10 @@ export default function ChatEmbedded(props) {
   addMessageToList3 = addMessageToList
 
   let setupRoom = () => {
+    setCurrentRoomId(props.roomId);
+    scrollReady2 = false;
+    messagesArr = [];
+    messagesDict = {};
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -265,10 +269,6 @@ export default function ChatEmbedded(props) {
   }, [props.roomId]);
 
   useEffect(() => {
-    setCurrentRoomId(props.roomId);
-    scrollReady2 = false;
-    messagesArr = [];
-    messagesDict = {};
     lastLoadCount = 25;
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {
