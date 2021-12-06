@@ -145,27 +145,27 @@ models.setup().then(() => {
                 if (d.length > 100) d = d.substr(0, 100);
                 let users = getRoomUsers(Number(nodeId.substr('room_'.length)));
                 users.forEach(user => {
-                    if (sockets[user.id] !== undefined && netState[user.id] === true) {
+                    //if (sockets[user.id] !== undefined && netState[user.id] === true) {
                         console.log(`sending packet to ${user.id} - ${key} - ${d}`);
                         sockets[user.id].emit(key, data);
-                    }
-                    else {
-                        if (notifs[user.id] === undefined) notifs[user.id] = [];
-                        notifs[user.id].push({key: key, data: data});
-                    }
+                    //}
+                    //else {
+                    //    if (notifs[user.id] === undefined) notifs[user.id] = [];
+                    //    notifs[user.id].push({key: key, data: data});
+                    //}
                 });
             },
             'signlePushTo': (userId, key, data) => {
                 let d = JSON.stringify(data);
                 if (d.length > 100) d = d.substr(0, 100);
                 console.log(`sending packet to ${userId} - ${key} - ${d}`);
-                if (sockets[userId] !== undefined && netState[userId] === true) {
+                //if (sockets[userId] !== undefined && netState[userId] === true) {
                     sockets[userId].emit(key, data);
-                }
-                else {
-                    if (notifs[userId] === undefined) notifs[userId] = [];
-                    notifs[userId].push({key: key, data: data});
-                }
+                //}
+                //else {
+                //    if (notifs[userId] === undefined) notifs[userId] = [];
+                //    notifs[userId].push({key: key, data: data});
+                //}
             },
             'Survey': s,
             'Answer': a
