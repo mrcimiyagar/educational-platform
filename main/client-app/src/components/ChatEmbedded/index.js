@@ -206,10 +206,6 @@ export default function ChatEmbedded(props) {
   addMessageToList3 = addMessageToList
 
   let setupRoom = () => {
-    setCurrentRoomId(props.roomId);
-    scrollReady2 = false;
-    messagesArr = [];
-    messagesDict = {};
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -253,18 +249,21 @@ export default function ChatEmbedded(props) {
       .then((result) => {
         console.log(JSON.stringify(result))
         forceUpdate()
+        alert('entered room !');
       })
       .catch((error) => console.log('error', error))
   };
+  
+  socket.io.removeAllListeners('reconnect');
+  socket.io.on('reconnect', () => {
+    setupRoom();
+  });
 
   useEffect(() => {
-    socket.removeAllListeners('reconnect');
-    socket.on('reconnect', () => {
-      setupRoom();
-    });
-  }, []);
-
-  useEffect(() => {
+    setCurrentRoomId(props.roomId);
+    scrollReady2 = false;
+    messagesArr = [];
+    messagesDict = {};
     setupRoom();
   }, [props.roomId]);
 

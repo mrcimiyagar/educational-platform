@@ -129,10 +129,6 @@ export default function ChatEmbeddedInMessenger(props) {
   }, [scrollAnywayrTrigger]);
 
   let setupRoom = () => {
-    setCurrentRoomId(props.roomId);
-    scrollReady = false;
-    messagesArr = [];
-    messagesDict = {};
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -176,18 +172,21 @@ export default function ChatEmbeddedInMessenger(props) {
       .then((result) => {
         console.log(JSON.stringify(result))
         forceUpdate()
+        alert('entered room !');
       })
       .catch((error) => console.log('error', error))
   };
 
-  useEffect(() => {
-    socket.removeAllListeners('reconnect');
-    socket.on('reconnect', () => {
-      setupRoom();
-    });
-  }, []);
+  socket.io.removeAllListeners('reconnect');
+  socket.io.on('reconnect', () => {
+    setupRoom();
+  });
 
   useEffect(() => {
+    setCurrentRoomId(props.roomId);
+    scrollReady = false;
+    messagesArr = [];
+    messagesDict = {};
     setupRoom();
   }, [props.roomId]);
 
