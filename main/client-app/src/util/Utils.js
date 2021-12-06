@@ -188,6 +188,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
     console.log('you have been reconnected')
     socket.removeAllListeners('auth-success')
     socket.on('auth-success', () => {
+      alert(currentRoomId);
       if (currentRoomId !== undefined) {
         let requestOptions2 = {
           method: 'POST',
