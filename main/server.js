@@ -144,7 +144,7 @@ models.setup().then(() => {
             let userIds = users.map(u => u.id);
             userIds.forEach(uid => {
                 if (notifs[uid] !== undefined && notifs[uid].length > 0 && sockets[uid] !== undefined) {
-                    sockets[userId].emit('sync');
+                    sockets[uid].emit('sync');
                 }
             });
         }, 5000);
