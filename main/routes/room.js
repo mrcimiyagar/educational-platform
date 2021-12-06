@@ -605,7 +605,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
 
     let s = sockets[user.id]
     if (s === undefined) return
-    let roomId = s.roomId
+    let roomId = metadata[membership.userId].roomId
 
     sockets[user.id].leave()
     sockets[user.id].roomId = 0
@@ -616,7 +616,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
       users: getRoomUsers(roomId),
     })
 
-    sockets[user.id].join('room_' + membership.roomId)
+    s.join('room_' + membership.roomId)
     metadata[membership.userId].roomId = membership.roomId
     addUser(membership.roomId, user)
 

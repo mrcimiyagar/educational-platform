@@ -203,7 +203,9 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
         fetch(serverRoot + '/room/enter_room', requestOptions2)
       }
     });
-    socket.emit('auth', { token });
+    setTimeout(() => {
+      socket.emit('auth', { token });
+    }, 2000);
   })
 }
 
