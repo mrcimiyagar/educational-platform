@@ -95,13 +95,6 @@ module.exports = {
                       disconnectWebsocket(user)
                     })
                     soc.emit('auth-success', {})
-                    let nots = notifs[user.id]
-                    if (nots !== undefined) {
-                      notifs[user.id] = []
-                      nots.forEach((notObj) => {
-                        soc.emit(notObj.key, notObj.data)
-                      })
-                    }
                   }
                 }
               } else {
@@ -119,13 +112,6 @@ module.exports = {
                     disconnectWebsocket(user)
                   })
                   soc.emit('auth-success', {})
-                  let nots = notifs[user.id]
-                  if (nots !== undefined) {
-                    notifs[user.id] = []
-                    nots.forEach((notObj) => {
-                      soc.emit(notObj.key, notObj.data)
-                    })
-                  }
                 }
               }
             },
