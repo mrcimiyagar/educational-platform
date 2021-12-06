@@ -9,6 +9,7 @@ let netState = {}
 let disconnectWebsocket = (user) => {
   netState[user.id] = false
   let roomId = metadata[user.id].roomId
+  delete sockets[user.id];
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, user.id)
     if (room !== null) {
@@ -45,59 +46,7 @@ module.exports = {
   setup: (server) => {
     const io = require('socket.io')(server, { cors: { origin: '*' } })
     io.on('connection', (soc) => {
-      console.log('a user connected')
-      const socketId = soc.id;
-      /*soc.on('user-reconnected', (token) => {
-        try {
-          models.Session.findOne({ where: { token: token } }).then(
-            async function (session) {
-              console.log(JSON.stringify(session));
-              if (session == null) {
-                let acc = getGuestUser(token)
-                if (acc !== null) {
-                  let user = acc.user
-                  if (user !== null) {
-                    addUser(metadata[user.id].roomId, user);
-                    userToSocketMap[user.id] = soc;
-                    metadata[user.id] = {socket: soc, user: user};
-                    netState[user.id] = true
-                    sockets[user.id] = soc
-                    let nots = notifs[user.id]
-                    if (nots !== undefined) {
-                      notifs[user.id] = []
-                      nots.forEach((notObj) => {
-                        soc.emit(notObj.key, notObj.data)
-                      })
-                    }
-                  }
-                }
-              } else {
-                session.socketId = soc.id
-                await session.save()
-                let user = await models.User.findOne({
-                  where: { id: session.userId },
-                })
-                if (user !== null) {
-                  addUser(metadata[user.id].roomId, user);
-                  userToSocketMap[user.id] = soc;
-                  metadata[user.id] = {socket: soc, user: user};
-                  netState[user.id] = true
-                  sockets[user.id] = soc
-                  let nots = notifs[user.id]
-                    if (nots !== undefined) {
-                      notifs[user.id] = []
-                      nots.forEach((notObj) => {
-                        soc.emit(notObj.key, notObj.data)
-                      })
-                    }
-                }
-              }
-            },
-          )
-        } catch (ex) {
-          console.error(ex)
-        }
-      });*/
+      console.log('a user connected');
       soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
           if (soc.userId in soc.room.typing) {
