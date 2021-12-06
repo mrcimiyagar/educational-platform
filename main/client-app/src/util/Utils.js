@@ -158,7 +158,6 @@ export const addCommas = (nStr) => {
 }
 
 export let socket = undefined
-let onceConnected = false
 
 export const ConnectToIo = (t, onSocketAuth, force) => {
   if (socket !== null && socket !== undefined) {
@@ -172,48 +171,37 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   }
   socket = io(pathConfig.mainBackend)
   socket.on('connect', () => {
-    if (!onceConnected) {
-      onceConnected = true
-      socket.on('auth-success', () => {
-        if (onSocketAuth !== undefined) {
-          onSocketAuth()
+    socket.on('auth-success', () => {
+      if (onSocketAuth !== undefined) {
+        onSocketAuth()
+      }
+      if (currentRoomId !== undefined) {
+        let requestOptions2 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: currentRoomId,
+          }),
+          redirect: 'follow',
         }
+        fetch(serverRoot + '/room/enter_room', requestOptions2).then(() => {
+          setTimeout(() => {
+            setClientConnected(true)
+          }, 2000)
+        })
+      } else {
         setClientConnected(true)
-      })
-      socket.emit('auth', {
-        token: t !== undefined ? t : localStorage.getItem('token'),
-      })
-    }
+      }
+    })
+    socket.emit('auth', {
+      token: t !== undefined ? t : localStorage.getItem('token'),
+    })
   })
   socket.on('disconnect', () => {
     setClientConnected(false)
-  })
-  socket.io.on('reconnect', () => {
-    console.log('you have been reconnected')
-    socket.removeAllListeners('auth-success')
-      socket.on('auth-success', () => {
-        if (currentRoomId !== undefined) {
-          let requestOptions2 = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              token: token,
-            },
-            body: JSON.stringify({
-              roomId: currentRoomId,
-            }),
-            redirect: 'follow',
-          }
-          fetch(serverRoot + '/room/enter_room', requestOptions2).then(() => {
-            setTimeout(() => {
-              setClientConnected(true);
-            }, 2000);
-          })
-        }
-      })
-      setTimeout(() => {
-        socket.emit('auth', { token })
-      }, 2000)
   })
 }
 
