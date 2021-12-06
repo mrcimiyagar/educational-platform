@@ -18,7 +18,7 @@ import HomeToolbar from '../../components/HomeToolbar'
 import ClockHand1 from '../../images/clock-hand-1.png'
 import ClockHand2 from '../../images/clock-hand-2.png'
 import { token } from '../../util/settings'
-import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { registerEvent, serverRoot, socket, useForceUpdate } from '../../util/Utils'
 
 var lastScrollTop = 0
 
@@ -267,7 +267,7 @@ export default function BotsBox(props) {
     }, 1000);
 
     if (isOnline) {
-    socket.on('notifyWidget', ({ widgetId, ev, data }) => {
+    registerEvent('notifyWidget', ({ widgetId, ev, data }) => {
       if (ev === 'init') {
         guis[widgetId] = data
         setGuis(guis)

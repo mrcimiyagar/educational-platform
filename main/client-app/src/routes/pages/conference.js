@@ -268,8 +268,8 @@ class ConferencePage extends Component {
           }
         })
       }
-      socket.off('membership-updated')
-      socket.on('membership-updated', mem => {
+      unregisterEvent('membership-updated')
+      registerEvent('membership-updated', mem => {
         this.setState({membership: mem})
         if (accessChangeCallback !== undefined) {
           accessChangeCallback(mem)
@@ -282,8 +282,8 @@ class ConferencePage extends Component {
 
       this.updateActors()
     
-      socket.off('view-updated')
-      socket.on('view-updated', v => {
+      unregisterEvent('view-updated')
+      registerEvent('view-updated', v => {
         this.setState({view: v})
       })
   

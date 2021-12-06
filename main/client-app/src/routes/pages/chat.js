@@ -105,14 +105,7 @@ export default function Chat(props) {
   const [showEmojiPad, setShowEmojiPad] = React.useState(false)
   let [pickingFile, setPickingFile] = React.useState(false)
 
-
-  useEffect(() => {
-    setCurrentRoomId(props.room_id);
-    scrollReady3 = false;
-    lastLoadCount = 25;
-    messagesArr = [];
-    messagesDict = {};
-
+  let setupRoom = () => {
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -159,7 +152,20 @@ export default function Chat(props) {
         forceUpdate()
       })
       .catch((error) => console.log('error', error))
+  };
+  
+  socket.io.removeAllListeners('reconnect');
+  socket.io.on('reconnect', () => {
+    setupRoom();
+  });
 
+  useEffect(() => {
+    setCurrentRoomId(props.room_id);
+    scrollReady3 = false;
+    lastLoadCount = 25;
+    messagesArr = [];
+    messagesDict = {};
+    setupRoom();
     return () => {
       leaveRoom(() => {})
     }

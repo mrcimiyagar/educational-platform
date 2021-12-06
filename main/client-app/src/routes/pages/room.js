@@ -56,10 +56,12 @@ import { colors, setToken, token } from '../../util/settings'
 import {
   ConnectToIo,
   leaveRoom,
+  registerEvent,
   serverRoot,
   setRoom,
   socket,
   switchRoom,
+  unregisterEvent,
   useForceUpdate,
 } from '../../util/Utils'
 import DesktopWallpaper2 from '../../images/desktop-wallpaper.jpg'
@@ -158,10 +160,10 @@ export default function RoomPage(props) {
         setRoom(result.room)
         setToken(localStorage.getItem('token'))
         if (isOnline) ConnectToIo(token, () => {})
-        socket.off('membership-updated')
-        socket.on('membership-updated', (mem) => {})
-        socket.off('view-updated')
-        socket.on('view-updated', (v) => {})
+        unregisterEvent('membership-updated')
+        registerEvent('membership-updated', (mem) => {})
+        unregisterEvent('view-updated')
+        registerEvent('view-updated', (v) => {})
         window.scrollTo(0, 0)
         store.dispatch(changeConferenceMode(true))
       })

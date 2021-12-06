@@ -158,6 +158,15 @@ export const addCommas = (nStr) => {
 }
 
 export let socket = undefined
+let eventDict = {};
+export let registerEvent = (eventName, func) => {
+  socket.on(eventName, func);
+  eventDict[eventName] = func;
+};
+export let unregisterEvent = (eventName) => {
+  socket.removeAllListeners(eventName);
+  delete eventDict[eventName];
+}
 
 export const ConnectToIo = (t, onSocketAuth, force) => {
   if (socket !== null && socket !== undefined) {
@@ -170,8 +179,44 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
     }
   }
   socket = io(pathConfig.mainBackend)
-  socket.on('connect', () => {
-    socket.on('auth-success', () => {
+  socket.on('sync', () => {
+    let requestOptions2 = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/notifications/sync', requestOptions2)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        if (result.notifications !== undefined) {
+          result.notifications.forEach(notif => {
+            let eventFunc = eventDict[notif.key];
+            if (eventFunc !== undefined) {
+              eventFunc(notif.data);
+            }
+          });
+          let requestOptions3 = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              token: token,
+            },
+            body: JSON.stringify({
+              notifsCount: result.notifications.length
+            }),
+            redirect: 'follow',
+          }
+          fetch(serverRoot + '/notifications/recycle', requestOptions3)
+        }
+      })
+      .catch((error) => console.log('error', error))
+  });
+  registerEvent('connect', () => {
+    registerEvent('auth-success', () => {
       if (onSocketAuth !== undefined) {
         onSocketAuth()
       }
@@ -181,7 +226,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
       token: t !== undefined ? t : localStorage.getItem('token'),
     })
   })
-  socket.on('disconnect', () => {
+  registerEvent('disconnect', () => {
     setClientConnected(false)
   })
 }

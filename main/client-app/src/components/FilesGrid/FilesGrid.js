@@ -10,7 +10,7 @@ import React, { useEffect } from 'react'
 import Viewer from 'react-viewer'
 import { gotoPage, isDesktop, isInRoom } from '../../App'
 import { colors, me, token } from '../../util/settings'
-import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { registerEvent, serverRoot, socket, unregisterEvent, useForceUpdate } from '../../util/Utils'
 import Progressbar from '../Progress/Progressbar'
 
 const useStyles = makeStyles((theme) => ({
@@ -44,8 +44,8 @@ export default function FilesGrid(props) {
 
   let classes = useStyles()
 
-  socket.off('file-added')
-  socket.on('file-added', (f) => {
+  unregisterEvent('file-added')
+  registerEvent('file-added', (f) => {
     console.log(f)
     if (f.uploaderId !== me.id) {
       f.progress = 100
@@ -54,8 +54,8 @@ export default function FilesGrid(props) {
       forceUpdate()
     }
   })
-  socket.off('present-added')
-  socket.on('present-added', ({ f, p }) => {
+  unregisterEvent('present-added')
+  registerEvent('present-added', ({ f, p }) => {
     console.log(f)
     console.log(p)
     if (f.uploaderId !== me.id) {

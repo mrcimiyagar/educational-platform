@@ -14,7 +14,7 @@ import 'react-table/react-table.css'
 import { pathConfig } from '../..'
 import { NotificationManager } from '../../components/ReactNotifications'
 import { colors, token } from '../../util/settings'
-import { room, serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { registerEvent, room, serverRoot, socket, unregisterEvent, useForceUpdate } from '../../util/Utils'
 import './style.css'
 import {setPermissionState, togglePermissions} from '../../containers/Sidebar';
 
@@ -137,8 +137,8 @@ export let UsersBox = (props) => {
       }
     })
     reloadUsersList();
-    socket.off('user-entered');
-    socket.on('user-entered', ({ rooms, users }) => {
+    unregisterEvent('user-entered');
+    registerEvent('user-entered', ({ rooms, users }) => {
       users.forEach((u) => {
         if (video[u.id] === undefined) {
           video[u.id] = false;
@@ -161,8 +161,8 @@ export let UsersBox = (props) => {
         console.log(ex);
       }
     })
-    socket.off('user-exited')
-    socket.on('user-exited', ({ rooms, users }) => {
+    unregisterEvent('user-exited')
+    registerEvent('user-exited', ({ rooms, users }) => {
       alert('hello')
       users.forEach((u) => {
         if (video[u.id] === undefined) {
@@ -186,8 +186,8 @@ export let UsersBox = (props) => {
         console.log(ex);
       }
     })
-    socket.off('profile_updated');
-    socket.on('profile_updated', (user) => {})
+    unregisterEvent('profile_updated');
+    registerEvent('profile_updated', (user) => {})
 
     try {
       window.frames['conf-video-frame'].postMessage(

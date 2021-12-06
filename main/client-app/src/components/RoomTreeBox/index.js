@@ -30,7 +30,7 @@ import 'react-table/react-table.css'
 import { isDesktop } from '../../App'
 import { NotificationManager } from '../../components/ReactNotifications'
 import { me, token } from '../../util/settings'
-import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { registerEvent, serverRoot, socket, unregisterEvent, useForceUpdate } from '../../util/Utils'
 
 export let reloadUsersList = undefined
 
@@ -337,16 +337,16 @@ export let RoomTreeBox = (props) => {
   }
   useEffect(() => {
     reloadUsersList()
-    socket.off('user-entered')
-    socket.on('user-entered', ({ rooms }) => {
+    unregisterEvent('user-entered')
+    registerEvent('user-entered', ({ rooms }) => {
       processUsers(rooms)
     })
-    socket.off('user-exited')
-    socket.on('user-exited', ({ rooms }) => {
+    unregisterEvent('user-exited')
+    registerEvent('user-exited', ({ rooms }) => {
       processUsers(rooms)
     })
-    socket.off('profile_updated')
-    socket.on('profile_updated', (user) => {})
+    unregisterEvent('profile_updated')
+    registerEvent('profile_updated', (user) => {})
   }, [])
   useEffect(() => {
     if (props.room.id !== undefined) {

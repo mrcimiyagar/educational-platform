@@ -172,7 +172,6 @@ export default function ChatEmbeddedInMessenger(props) {
       .then((result) => {
         console.log(JSON.stringify(result))
         forceUpdate()
-        alert('entered room !');
       })
       .catch((error) => console.log('error', error))
   };

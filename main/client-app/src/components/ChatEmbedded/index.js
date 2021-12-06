@@ -38,6 +38,7 @@ import {
   isMobile,
   serverRoot,
   socket,
+  unregisterEvent,
   useForceUpdate,
 } from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
@@ -249,7 +250,6 @@ export default function ChatEmbedded(props) {
       .then((result) => {
         console.log(JSON.stringify(result))
         forceUpdate()
-        alert('entered room !');
       })
       .catch((error) => console.log('error', error))
   };

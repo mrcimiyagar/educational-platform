@@ -49,8 +49,10 @@ import {
 import {
   ConnectToIo,
   leaveRoom,
+  registerEvent,
   serverRoot,
   socket,
+  unregisterEvent,
   useForceUpdate,
   validateToken,
 } from './util/Utils';
@@ -649,8 +651,8 @@ export let isOnline = true;
       () => {
         isOnline = true;
         ConnectToIo(localStorage.getItem('token'), () => {
-          socket.off('message-added');
-          socket.on('message-added', ({ msgCopy }) => {
+          unregisterEvent('message-added');
+          registerEvent('message-added', ({ msgCopy }) => {
             if (me.id !== msgCopy.authorId) {
               addMessageToList(msgCopy);
               addMessageToList2(msgCopy);
@@ -674,12 +676,12 @@ export let isOnline = true;
                 });
             }
           })
-          socket.off('chat-created');
-          socket.on('chat-created', ({ room }) => {
+          unregisterEvent('chat-created');
+          registerEvent('chat-created', ({ room }) => {
             addNewChat(room);
           })
-          socket.off('message-seen');
-          socket.on('message-seen', ({ messages }) => {
+          unregisterEvent('message-seen');
+          registerEvent('message-seen', ({ messages }) => {
             messages.forEach((msg) => replaceMessageInTheList(msg));
             messages.forEach((msg) => replaceMessageInTheList2(msg));
             messages.forEach((msg) => replaceMessageInTheList3(msg));
@@ -814,8 +816,8 @@ export let isOnline = true;
     setHomeSpaceId(localStorage.getItem('homeSpaceId'));
     setHomeRoomId(localStorage.getItem('homeRoomId'));
     ConnectToIo(localStorage.getItem('token'), () => {
-      socket.off('message-added');
-      socket.on('message-added', ({ msgCopy }) => {
+      unregisterEvent('message-added');
+      registerEvent('message-added', ({ msgCopy }) => {
         if (me.id !== msgCopy.authorId) {
           addMessageToList(msgCopy);
           addMessageToList2(msgCopy);
@@ -839,12 +841,12 @@ export let isOnline = true;
             })
         }
       })
-      socket.off('chat-created');
-      socket.on('chat-created', ({ room }) => {
+      unregisterEvent('chat-created');
+      registerEvent('chat-created', ({ room }) => {
         addNewChat(room);
       })
-      socket.off('message-seen');
-      socket.on('message-seen', ({ messages }) => {
+      unregisterEvent('message-seen');
+      registerEvent('message-seen', ({ messages }) => {
         messages.forEach((msg) => replaceMessageInTheList(msg));
         messages.forEach((msg) => replaceMessageInTheList2(msg));
         messages.forEach((msg) => replaceMessageInTheList3(msg));

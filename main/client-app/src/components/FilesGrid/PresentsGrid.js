@@ -4,15 +4,15 @@ import {
     Card
 } from "reactstrap";
 import { colors, token } from "../../util/settings";
-import { humanFileSize, serverRoot, socket, useForceUpdate } from "../../util/Utils";
+import { humanFileSize, registerEvent, serverRoot, socket, unregisterEvent, useForceUpdate } from "../../util/Utils";
 import Progressbar from "../Progress/Progressbar";
 
 export default function PresentsGrid(props) {
 
     let forceUpdate = useForceUpdate();
 
-    socket.off('present-added');
-    socket.on('present-added', ({f, p}) => {
+    unregisterEvent('present-added');
+    registerEvent('present-added', ({f, p}) => {
         console.log(f);
         console.log(p);
         f.progress = 100;

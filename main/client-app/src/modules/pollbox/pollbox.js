@@ -14,7 +14,7 @@ import React, { useEffect } from 'react'
 import Poll from 'react-polls'
 import { isDesktop, isInRoom } from '../../App'
 import { colors, token } from '../../util/settings'
-import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { registerEvent, serverRoot, socket, unregisterEvent, useForceUpdate } from '../../util/Utils'
 import BlackColorTextField from '../../components/BlackColorTextField'
 
 export let togglePolling = undefined
@@ -59,8 +59,8 @@ export function PollBox(props) {
         }
       })
       .catch((error) => console.log('error', error))
-    socket.off('poll-added')
-    socket.on('poll-added', ({ poll, options }) => {
+    unregisterEvent('poll-added')
+    registerEvent('poll-added', ({ poll, options }) => {
       options.forEach((opt) => {
         opt.option = opt.caption
       })
@@ -69,7 +69,7 @@ export function PollBox(props) {
       setPolls(po)
       forceUpdate()
     })
-    socket.on('vote-added', ({ poll, options }) => {
+    registerEvent('vote-added', ({ poll, options }) => {
       let p = undefined
       for (let i = 0; i < po.length; i++) {
         if (po[i].id === poll.id) {

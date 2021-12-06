@@ -7,7 +7,7 @@ import { Button, Card } from 'reactstrap'
 import PresentsGrid from '../../components/FilesGrid/PresentsGrid'
 import { membership } from '../../routes/pages/room'
 import { colors, token } from '../../util/settings'
-import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { registerEvent, serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import { useFilePicker } from 'use-file-picker'
 import AddIcon from '@material-ui/icons/Add'
 import FilesGrid from '../../components/FilesGrid/FilesGrid'
@@ -174,7 +174,7 @@ export function PresentBox(props) {
         console.log(JSON.stringify(result))
       })
   }
-  socket.on('present-picked', (present) => {
+  registerEvent('present-picked', (present) => {
     for (let i = 0; i < presents.length; i++) {
       if (presents[i].id === present.id) {
         setCp(i)
@@ -184,7 +184,7 @@ export function PresentBox(props) {
     setPageNumber(present.pageNumber)
     forceUpdate()
   })
-  socket.on('page-switched', ({ pn, image }) => {
+  registerEvent('page-switched', ({ pn, image }) => {
     setPageNumber(pn)
     setPageData(image)
     forceUpdate()

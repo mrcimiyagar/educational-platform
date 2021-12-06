@@ -38,9 +38,11 @@ import { UsersBox } from '../../modules/usersbox/usersbox'
 import { colors, setToken, theme, token } from '../../util/settings'
 import {
   ConnectToIo,
+  registerEvent,
   serverRoot,
   setRoom,
   socket,
+  unregisterEvent,
   useForceUpdate,
 } from '../../util/Utils'
 import DesktopWallpaper2 from '../../images/desktop-wallpaper.jpg';
@@ -128,10 +130,10 @@ export default function HomePage(props) {
 
         if (isOnline) ConnectToIo(token, () => {})
 
-        socket.off('membership-updated')
-        socket.on('membership-updated', (mem) => {})
-        socket.off('view-updated')
-        socket.on('view-updated', (v) => {})
+        unregisterEvent('membership-updated')
+        registerEvent('membership-updated', (mem) => {})
+        unregisterEvent('view-updated')
+        registerEvent('view-updated', (v) => {})
       })
       .catch((error) => console.log('error', error));
     

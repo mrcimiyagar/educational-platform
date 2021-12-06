@@ -13,11 +13,8 @@ import {
     CardTitle, Input, InputGroup, InputGroupAddon
 } from "reactstrap";
 import { colors, me, token } from "../../util/settings";
-import { socket, useForceUpdate } from "../../util/Utils";
+import { registerEvent, socket, unregisterEvent, useForceUpdate } from "../../util/Utils";
 import './style.css';
-
-
-
 
 export let reloadChat = undefined;
 
@@ -115,8 +112,8 @@ export let ChatBox = (props) => {
             forceUpdate();
           })
           .catch(error => console.log('error', error));
-      socket.off('message-added');
-      socket.on('message-added', ({msg, user}) => {
+      unregisterEvent('message-added');
+      registerEvent('message-added', ({msg, user}) => {
         msg.User = user;
         messages.push(msg);
         setMessages(messages);
@@ -126,8 +123,8 @@ export let ChatBox = (props) => {
           document.title = 'پیام جدید (' + unread + ')';
         } 
       });
-      socket.off('chat-typing');
-      socket.on('chat-typing', tus => {
+      unregisterEvent('chat-typing');
+      registerEvent('chat-typing', tus => {
         for (let i = 0; i < tus.length; i++) {
           if (tus[i].id === me.id) {
             tus.splice(i, 1);

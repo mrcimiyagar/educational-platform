@@ -20,7 +20,7 @@ import {
 } from '../../App'
 import { setCurrentRoomNavBackup } from '../../routes/pages/room'
 import { colors, token, me } from '../../util/settings'
-import { serverRoot, socket } from '../../util/Utils'
+import { registerEvent, serverRoot, socket, unregisterEvent } from '../../util/Utils'
 import HomeToolbar from '../HomeToolbar'
 
 const useStyles = makeStyles((theme) => ({
@@ -73,16 +73,16 @@ export default function ChatAppBar(props) {
 
   useEffect(() => {
     if (socket !== undefined) {
-      socket.off('uploading');
-      socket.off('uploading', () => {
+      unregisterEvent('uploading');
+      unregisterEvent('uploading', () => {
         setTl('در حال آپلود...');
       });
-      socket.off('uploading_done');
-      socket.off('uploading_done', () => {
+      unregisterEvent('uploading_done');
+      unregisterEvent('uploading_done', () => {
         setTl('');
       });
-      socket.off('chat-typing');
-      socket.on('chat-typing', typingList => {
+      unregisterEvent('chat-typing');
+      registerEvent('chat-typing', typingList => {
         typingList = typingList.filter((u) => {
           if (u.id === me.id) {
             return false;
