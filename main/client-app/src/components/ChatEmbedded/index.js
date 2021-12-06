@@ -45,7 +45,7 @@ import ChatWallpaper from '../../images/chat-wallpaper.png'
 import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery'
 import MessageItem from '../MessageItem'
-import { pathConfig } from '../..'
+import { pathConfig, setClientConnected } from '../..'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -205,11 +205,7 @@ export default function ChatEmbedded(props) {
   }
   addMessageToList3 = addMessageToList
 
-  useEffect(() => {
-    setCurrentRoomId(props.roomId);
-    scrollReady2 = false;
-    messagesArr = [];
-    messagesDict = {};
+  let setupRoom = () => {
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -255,9 +251,23 @@ export default function ChatEmbedded(props) {
         forceUpdate()
       })
       .catch((error) => console.log('error', error))
-  }, [props.roomId])
+  };
 
   useEffect(() => {
+    socket.on('connect', () => {
+      setupRoom();
+    });
+  }, []);
+
+  useEffect(() => {
+    setupRoom();
+  }, [props.roomId]);
+
+  useEffect(() => {
+    setCurrentRoomId(props.roomId);
+    scrollReady2 = false;
+    messagesArr = [];
+    messagesDict = {};
     lastLoadCount = 25;
     let scroller = document.getElementById('scroller')
     scroller.onscroll = () => {

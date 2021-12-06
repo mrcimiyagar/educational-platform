@@ -175,26 +175,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
       if (onSocketAuth !== undefined) {
         onSocketAuth()
       }
-      if (currentRoomId !== undefined) {
-        let requestOptions2 = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            token: token,
-          },
-          body: JSON.stringify({
-            roomId: currentRoomId,
-          }),
-          redirect: 'follow',
-        }
-        fetch(serverRoot + '/room/enter_room', requestOptions2).then(() => {
-          setTimeout(() => {
-            setClientConnected(true)
-          }, 1500)
-        })
-      } else {
-        setClientConnected(true)
-      }
+      setClientConnected(true);
     })
     socket.emit('auth', {
       token: t !== undefined ? t : localStorage.getItem('token'),

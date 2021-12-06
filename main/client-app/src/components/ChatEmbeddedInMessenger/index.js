@@ -112,6 +112,7 @@ export default function ChatEmbeddedInMessenger(props) {
     let scroller = document.getElementById('scroller');
     scroller.scrollTo(0, scroller.scrollHeight);
   }
+
   useEffect(() => {
     let isAtEnd = false
     let scroller = document.getElementById('scroller')
@@ -127,12 +128,7 @@ export default function ChatEmbeddedInMessenger(props) {
     scrollToBottom();
   }, [scrollAnywayrTrigger]);
 
-  useEffect(() => {
-    setCurrentRoomId(props.roomId);
-    scrollReady = false;
-    messagesArr = [];
-    messagesDict = {};
-    lastLoadCount = 25;
+  let setupRoom = () => {
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -144,17 +140,18 @@ export default function ChatEmbeddedInMessenger(props) {
       }),
       redirect: 'follow',
     }
-    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions);
-    getRoomPromise.then((response) => response.json())
+    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions)
+    getRoomPromise
+      .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
         setRoom(result.room)
         setToken(localStorage.getItem('token'))
-        if (isOnline) ConnectToIo(token, () => {});
+        if (isOnline) ConnectToIo(token, () => {})
         window.scrollTo(0, 0)
       })
-      .catch((error) => console.log('error', error));
-    
+      .catch((error) => console.log('error', error))
+
     let requestOptions2 = {
       method: 'POST',
       headers: {
@@ -166,13 +163,27 @@ export default function ChatEmbeddedInMessenger(props) {
       }),
       redirect: 'follow',
     }
-    let enterRoomPromise = fetch(serverRoot + '/room/enter_room', requestOptions2);
-    enterRoomPromise.then((response) => response.json())
+    let enterRoomPromise = fetch(
+      serverRoot + '/room/enter_room',
+      requestOptions2,
+    )
+    enterRoomPromise
+      .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
-        forceUpdate();
+        forceUpdate()
       })
       .catch((error) => console.log('error', error))
+  };
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      setupRoom();
+    });
+  }, []);
+
+  useEffect(() => {
+    setupRoom();
   }, [props.roomId]);
 
   useEffect(() => {
