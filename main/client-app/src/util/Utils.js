@@ -181,6 +181,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
         socket.removeAllListeners('auth-success')
         socket.on('auth-success', () => {
           if (currentRoomId !== undefined) {
+            alert(currentRoomId);
             let requestOptions2 = {
               method: 'POST',
               headers: {
