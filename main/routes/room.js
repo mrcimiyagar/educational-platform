@@ -599,33 +599,43 @@ router.post('/get_spaces', jsonParser, async function (req, res) {
 router.post('/enter_room', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     if (membership === null || membership === undefined) {
-      res.send({ status: 'success' })
-      return
+      res.send({ status: 'success' });
+      return;
     }
 
-    let s = sockets[user.id]
-    if (s === undefined) return
-    let roomId = metadata[membership.userId].roomId
+    let s = sockets[user.id];
+    if (s === undefined) return;
+    let roomId = metadata[membership.userId].roomId;
 
-    sockets[user.id].leave()
-    sockets[user.id].roomId = 0
-    removeUser(roomId, user.id)
+    if (membership.roomId === roomId) {
+      require('../server').pushTo('room_' + membership.roomId, 'user-entered', {
+        rooms: [],
+        users: getRoomUsers(membership.roomId),
+      });
+  
+      res.send({ status: 'success', membership: membership });
+      return;
+    }
+
+    sockets[user.id].leave();
+    sockets[user.id].roomId = 0;
+    removeUser(roomId, user.id);
 
     require('../server').pushTo('room_' + roomId, 'user-exited', {
       rooms: [],
       users: getRoomUsers(roomId),
-    })
+    });
 
-    s.join('room_' + membership.roomId)
-    metadata[membership.userId].roomId = membership.roomId
-    addUser(membership.roomId, user)
+    s.join('room_' + membership.roomId);
+    metadata[membership.userId].roomId = membership.roomId;
+    addUser(membership.roomId, user);
 
     require('../server').pushTo('room_' + membership.roomId, 'user-entered', {
       rooms: [],
       users: getRoomUsers(membership.roomId),
-    })
+    });
 
-    res.send({ status: 'success', membership: membership })
+    res.send({ status: 'success', membership: membership });
   })
 })
 
