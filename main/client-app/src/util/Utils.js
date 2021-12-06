@@ -190,7 +190,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
         fetch(serverRoot + '/room/enter_room', requestOptions2).then(() => {
           setTimeout(() => {
             setClientConnected(true)
-          }, 2000)
+          }, 1500)
         })
       } else {
         setClientConnected(true)
