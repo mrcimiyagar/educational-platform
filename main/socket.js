@@ -51,6 +51,7 @@ module.exports = {
         try {
           models.Session.findOne({ where: { token: token } }).then(
             async function (session) {
+              console.log(JSON.stringify(session));
               if (session == null) {
                 let acc = getGuestUser(token)
                 if (acc !== null) {
