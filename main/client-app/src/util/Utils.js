@@ -209,13 +209,13 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
             redirect: 'follow',
           }
           fetch(serverRoot + '/room/enter_room', requestOptions2).then(() => {
-            setClientConnected(true)
+            setTimeout(() => {
+              setClientConnected(true);              
+            }, 2000);
           })
         }
       })
-      setTimeout(() => {
-        socket.emit('auth', { token })
-      }, 2000)
+      socket.emit('auth', { token })
     })
   })
 }
