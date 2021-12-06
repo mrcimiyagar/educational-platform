@@ -132,6 +132,7 @@ module.exports = {
           console.error(ex)
         }
       })
+      soc.emit('ready-to-auth');
     })
     return io
   },

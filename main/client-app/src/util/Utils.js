@@ -174,45 +174,50 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   socket.on('connect', () => {
     if (!onceConnected) {
       onceConnected = true
-      socket.on('auth-success', () => {
-        if (onSocketAuth !== undefined) {
-          onSocketAuth()
-        }
-        setClientConnected(true);
-      });
-      socket.emit('auth', {
-        token: t !== undefined ? t : localStorage.getItem('token'),
-      });
+      socket.on('ready-to-auth', () => {
+        socket.on('auth-success', () => {
+          if (onSocketAuth !== undefined) {
+            onSocketAuth()
+          }
+          setClientConnected(true)
+        })
+        socket.emit('auth', {
+          token: t !== undefined ? t : localStorage.getItem('token'),
+        })
+      })
     }
-  });
+  })
   socket.on('disconnect', () => {
-    setClientConnected(false);
-  });
+    setClientConnected(false)
+  })
   socket.io.on('reconnect', () => {
+    socket.removeAllListeners('ready-to-auth')
     console.log('you have been reconnected')
-    socket.removeAllListeners('auth-success')
-    socket.on('auth-success', () => {
-      if (currentRoomId !== undefined) {
-        let requestOptions2 = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            token: token,
-          },
-          body: JSON.stringify({
-            roomId: currentRoomId,
-          }),
-          redirect: 'follow',
+    socket.on('ready-to-auth', () => {
+      socket.removeAllListeners('auth-success')
+      socket.on('auth-success', () => {
+        if (currentRoomId !== undefined) {
+          let requestOptions2 = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              token: token,
+            },
+            body: JSON.stringify({
+              roomId: currentRoomId,
+            }),
+            redirect: 'follow',
+          }
+          fetch(serverRoot + '/room/enter_room', requestOptions2).then(() => {
+            setClientConnected(true)
+          })
         }
-        fetch(serverRoot + '/room/enter_room', requestOptions2).then(() => {
-          setClientConnected(true);
-        });
-      }
-    });
-    setTimeout(() => {
-      socket.emit('auth', { token });
-    }, 2000);
-  });
+      })
+      setTimeout(() => {
+        socket.emit('auth', { token })
+      }, 2000)
+    })
+  })
 }
 
 export function validateToken(t, callback) {
