@@ -491,7 +491,7 @@ export default function Profile(props) {
                 position: 'absolute',
                 width: '100%',
                 right: 32,
-                marginTop: -470,
+                marginTop: -412,
               }}
             >
               <div style={{ width: '100%', position: 'absolute', top: 16 }}>
