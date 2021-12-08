@@ -653,11 +653,6 @@ router.post('/enter_room', jsonParser, async function (req, res) {
       },
     )
 
-    require('../server').pushTo('room_' + roomId, 'user-exited', {
-      rooms: [],
-      users: getRoomUsers(roomId),
-    })
-
     s.join('room_' + membership.roomId)
     metadata[membership.userId].roomId = membership.roomId
     addUser(membership.roomId, user)
