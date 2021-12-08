@@ -31,7 +31,7 @@ let disconnectWebsocket = (user) => {
               raw: true,
               where: { id: memberships.map((mem) => mem.userId) },
             }).then(async (users) => {
-              require('../server').pushTo('room_' + roomId, 'user-exited', {
+              require('./server').pushTo('room_' + roomId, 'user-exited', {
                 rooms: rooms,
                 users: getRoomUsers(roomId),
                 allUsers: users,
