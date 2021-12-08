@@ -746,7 +746,8 @@ function App() {
               )
               delete needUpdate[key]
             }
-            if (myUserId === key) return null
+            if (myUserId === key) return null;
+            if (shownVideos[key] !== true && shownScreens[key] !== true) return null;
             return videoCache[key]
           })}
         </div>
@@ -926,7 +927,7 @@ function App() {
             style={{
               position: 'fixed',
               left: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
-              bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 200 : 48,
+              bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 208 : 48,
             }}
             onClick={() => {
               instantConnectionFlag = true
