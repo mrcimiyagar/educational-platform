@@ -1148,7 +1148,7 @@ router.post('/move_user', jsonParser, async function (req, res) {
             let mem = await sw.Membership.create({
               userId: req.body.userId,
               roomId: req.body.toRoomId,
-              ...tools.adminPermissions,
+              ...tools.defaultPermissions,
             })
           }
 
