@@ -151,6 +151,7 @@ export let UsersBox = (props) => {
       })
       setUsers(users)
       setAllUsers(allUsers);
+      forceUpdate();
       try {
         window.frames['conf-video-frame'].postMessage(
           { sender: 'main', action: 'getVideoPermissions' },
@@ -176,6 +177,7 @@ export let UsersBox = (props) => {
       })
       setUsers(users)
       setAllUsers(allUsers);
+      forceUpdate();
       try {
         window.frames['conf-video-frame'].postMessage(
           { sender: 'main', action: 'getVideoPermissions' },
