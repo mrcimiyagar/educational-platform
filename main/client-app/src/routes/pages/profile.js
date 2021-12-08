@@ -13,7 +13,6 @@ import {
   registerDialogOpen,
   setInTheGame,
 } from '../../App'
-import ProfileAvatar from '../../images/avatar.jpg'
 import header from '../../images/profile-header.jpeg'
 import { token } from '../../util/settings'
 import { serverRoot } from '../../util/Utils'
@@ -73,6 +72,8 @@ export default function Profile(props) {
             backdropFilter: 'blur(15px)',
             borderRadius: 24,
             boxShadow: 'none',
+            position: 'fixed',
+            zIndex: 99999
           },
         }}
         open={open}
@@ -424,7 +425,9 @@ export default function Profile(props) {
         open={open}
         onClose={handleClose}
         TransitionComponent={Transition}
-        style={{ backdropFilter: 'blur(10px)' }}
+        style={{ backdropFilter: 'blur(10px)',
+        position: 'fixed',
+        zIndex: 99999 }}
       >
         <div
           style={{
@@ -491,7 +494,7 @@ export default function Profile(props) {
                 marginTop: -470,
               }}
             >
-              <div style={{ width: '100%' }}>
+              <div style={{ width: '100%', position: 'absolute', top: 16 }}>
                 <IconButton
                   style={{
                     width: 32,
