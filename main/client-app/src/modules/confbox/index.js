@@ -21,14 +21,11 @@ export function ConfBox(props) {
     updateConfBox = forceUpdate;
     unregisterEvent('membership-updated')
     registerEvent('membership-updated', (mem) => {
-      alert('hello ' + mem.canActInVideo);
       if (mem.canActInVideo) {
-        alert('hello 0');
-        window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'enableVideoAccess'});
+        window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'enableVideoAccess'}, pathConfig.confClient);
       }
       else {
-        alert('hello 1');
-        window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'disableVideoAccess'});
+        window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'disableVideoAccess'}, pathConfig.confClient);
       }
     });
     return (
