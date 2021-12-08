@@ -369,7 +369,7 @@ function App() {
           let user = result.user
           setTitle(user.firstName + ' ' + user.lastName)
         })
-    })
+    }, [])
 
     if (shownScreens[props.id] === true) {
       if (shownVideos[props.id] === true) {
@@ -939,23 +939,6 @@ function App() {
       ) : null}
     </div>
   )
-}
-
-export let TestComp = (props) => {
-  if (props.testData === 1) {
-    return (
-      <div>
-        hello
-      </div>
-    );
-  }
-  else {
-    return (
-      <div>
-        bye
-      </div>
-    );
-  }
 }
 
 export default App
