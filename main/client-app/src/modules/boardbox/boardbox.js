@@ -46,7 +46,7 @@ export let BoardBox = (props) => {
                 top: (isDesktop() && isInRoom()) ? 64 : -16, bottom: 0, right: 0}}></iframe>
               {(props.membership !== undefined && props.membership !== null && props.membership.canUseWhiteboard) ?  
                 null : 
-                <div style={{zIndex: 3000, width: '100%', height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>
+                <div style={{width: '100%', height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>
               }
             </div>
             

@@ -446,7 +446,11 @@ export default function RoomPage(props) {
             display: messengerView ? 'block' : 'none'
           }}
         >
-          <ChatEmbedded roomId={props.room_id} webcamOn={webcamOn} viewCallback={() => setMessengerView(!messengerView)} />
+          <ChatEmbedded 
+            membership={membership}
+            roomId={props.room_id}
+            webcamOn={webcamOn} 
+            viewCallback={() => setMessengerView(!messengerView)} />
         </div>
         <div
           style={{

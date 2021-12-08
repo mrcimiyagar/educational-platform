@@ -34,8 +34,10 @@ import { colors, me, setToken, token } from '../../util/settings'
 import {
   ConnectToIo,
   leaveRoom,
+  registerEvent,
   serverRoot,
   socket,
+  unregisterEvent,
   useForceUpdate,
 } from '../../util/Utils'
 import ChatWallpaper from '../../images/chat-wallpaper.jpg'
@@ -103,7 +105,8 @@ export default function Chat(props) {
   let [room, setRoom] = React.useState(undefined)
   const [open, setOpen] = React.useState(true)
   const [showEmojiPad, setShowEmojiPad] = React.useState(false)
-  let [pickingFile, setPickingFile] = React.useState(false)
+  let [pickingFile, setPickingFile] = React.useState(false);
+  let [membership, setMembership] = React.useState({});
 
   let setupRoom = () => {
     let requestOptions = {
@@ -125,6 +128,12 @@ export default function Chat(props) {
         setRoom(result.room)
         setToken(localStorage.getItem('token'))
         if (isOnline) ConnectToIo(token, () => {})
+        unregisterEvent('membership-updated')
+        registerEvent('membership-updated', (mem) => {
+          setMembership(mem);
+        })
+        unregisterEvent('view-updated')
+        registerEvent('view-updated', (v) => {})
         window.scrollTo(0, 0)
         store.dispatch(changeConferenceMode(true))
       })
@@ -148,10 +157,11 @@ export default function Chat(props) {
     enterRoomPromise
       .then((response) => response.json())
       .then((result) => {
-        console.log(JSON.stringify(result))
-        forceUpdate()
+        console.log(JSON.stringify(result));
+        setMembership(result.membership);
+        forceUpdate();
       })
-      .catch((error) => console.log('error', error))
+      .catch((error) => console.log('error', error));
   };
   
   socket.io.removeAllListeners('reconnect');
@@ -715,7 +725,7 @@ export default function Chat(props) {
           request.send(data)
         })
     }
-  }, [loading])
+  }, [loading]);
 
   return (
     <Dialog
@@ -762,7 +772,9 @@ export default function Chat(props) {
           }}
         />
         <div
-          style={{ position: 'fixed', bottom: 0, height: 'auto', zIndex: 1000 }}
+          style={{ position: 'fixed', bottom: 0, height: 'auto', zIndex: 1000,
+            display: (membership !== undefined && membership !== null && (membership.canAddMessage === true)) ? 'block' : 'none'
+          }}
         >
           <div
             className={classes.root}

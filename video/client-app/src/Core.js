@@ -226,6 +226,7 @@ function App() {
   let [screenShareSupported, setScreenShareSupported] = React.useState(false);
   let [pinList, setPinList] = React.useState(false);
   let [webcamSize, setWebcamSize] = React.useState('big');
+  let [videoAccess, setVideoAccess] = React.useState(false);
 
   let DesktopDetector = () => {
     useEffect(() => {
@@ -583,13 +584,18 @@ function App() {
 
   window.onmessage = (e) => {
     if (e.data.action === 'init') {
-      setMe(e.data.me)
-      setRoomId(e.data.roomId)
-      setMyUserId(e.data.me.id)
+      setMe(e.data.me);
+      setRoomId(e.data.roomId);
+      setMyUserId(e.data.me.id);
+      setVideoAccess(e.data.videoAccess);
     } else if (e.data.action === 'extWebcam') {
-      setExtWebcam(true)
+      setExtWebcam(true);
     } else if (e.data.action === 'intWebcam') {
-      setExtWebcam(false)
+      setExtWebcam(false);
+    } else if (e.data.action === 'enableVideoAccess') {
+      setVideoAccess(true);
+    } else if (e.data.action === 'disableVideoAccess') {
+      setVideoAccess(false);
     }
   }
 

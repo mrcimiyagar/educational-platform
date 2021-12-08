@@ -8,9 +8,10 @@ import React, { useEffect } from "react";
 import { gotoPage, inTheGame, isDesktop, isInRoom, isMobile, isTablet } from '../../App';
 import store, { switchConf } from "../../redux/main";
 import { colors, me } from '../../util/settings';
-import { useForceUpdate } from "../../util/Utils";
+import { registerEvent, unregisterEvent, useForceUpdate } from "../../util/Utils";
 import './style.css';
 import { pathConfig } from "../..";
+import { membership } from "../../routes/pages/room";
 
 export let updateConfBox = () => {};
 export let isConfConnected = false;
@@ -18,6 +19,15 @@ export let isConfConnected = false;
 export function ConfBox(props) {
     let forceUpdate = useForceUpdate();
     updateConfBox = forceUpdate;
+    unregisterEvent('membership-updated')
+    registerEvent('membership-updated', (mem) => {
+      if (mem.canActInVideo) {
+        window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'enableVideoAccess'});
+      }
+      else {
+        window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'disableVideoAccess'});
+      }
+    });
     return (
       <div style={{width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : '100%', height: (props.webcamOn && props.currentRoomNav !== 2) ? 300 : '100vh'
       , position: (props.webcamOn && props.currentRoomNav !== 2) ? 'fixed' : 'relative', direction: 'ltr', display: props.style.display}}>
@@ -69,7 +79,7 @@ export function ConfBox(props) {
       </Slide>}
         
         <iframe scrolling="no"
-          onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', me: me, roomId: props.roomId}, pathConfig.confClient)}}
+          onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', videoAccess: membership.canActInVideo, me: me, roomId: props.roomId}, pathConfig.confClient)}}
           allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera; fullscreen; display-capture'}
           style={{position: (props.webcamOn && props.currentRoomNav !== 2) ? 'absolute' : undefined, 
           right: (props.webcamOn && props.currentRoomNav !== 2) ? 0 : undefined, top: 0, 
