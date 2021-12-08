@@ -631,7 +631,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
             }
             sw.Membership.findAll({
               raw: true,
-              where: { spaceId: roomId },
+              where: { roomId: roomId },
             }).then(async (memberships) => {
               sw.User.findAll({
                 raw: true,
@@ -672,7 +672,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
             }
             sw.Membership.findAll({
               raw: true,
-              where: { spaceId: membership.roomId },
+              where: { roomId: membership.roomId },
             }).then(async (memberships) => {
               sw.User.findAll({
                 raw: true,
@@ -717,7 +717,7 @@ router.post('/exit_room', jsonParser, async function (req, res) {
               }
               sw.Membership.findAll({
                 raw: true,
-                where: { spaceId: membership.roomId },
+                where: { roomId: membership.roomId },
               }).then(async (memberships) => {
                 sw.User.findAll({
                   raw: true,
@@ -1044,7 +1044,7 @@ router.post('/get_room_users', jsonParser, async function (req, res) {
             }
             sw.Membership.findAll({
               raw: true,
-              where: { spaceId: membership.roomId },
+              where: { roomId: membership.roomId },
             }).then(async (memberships) => {
               sw.User.findAll({
                 raw: true,
