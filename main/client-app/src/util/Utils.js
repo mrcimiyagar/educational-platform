@@ -168,6 +168,8 @@ export let unregisterEvent = (eventName) => {
   delete eventDict[eventName];
 }
 
+let timer = undefined;
+
 export const ConnectToIo = (t, onSocketAuth, force) => {
   if (socket !== null && socket !== undefined) {
     if (force) {
@@ -179,6 +181,17 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
     }
   }
   socket = io(pathConfig.mainBackend)
+  if (timer !== undefined) {
+    try {
+      clearInterval(timer);
+    }
+    catch(ex) {
+      console.log(ex);
+    }
+  }
+  setInterval(() => {
+    socket.emit('ping');
+  }, 1000);
   socket.on('sync', () => {
     let requestOptions2 = {
       method: 'POST',

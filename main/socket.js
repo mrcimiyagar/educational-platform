@@ -31,25 +31,21 @@ let disconnectWebsocket = (user) => {
               raw: true,
               where: { id: memberships.map((mem) => mem.userId) },
             }).then(async (users) => {
-              require('../server').pushTo(
-                'room_' + roomId,
-                'user-exited',
-                {
-                  rooms: rooms,
-                  users: getRoomUsers(roomId),
-                  allUsers: users,
-                },
-              )
+              require('../server').pushTo('room_' + roomId, 'user-exited', {
+                rooms: rooms,
+                users: getRoomUsers(roomId),
+                allUsers: users,
+              })
             })
-          });
+          })
         },
       )
     }
   })
 }
 
-let metadata = {};
-let userToSocketMap = {};
+let metadata = {}
+let userToSocketMap = {}
 
 module.exports = {
   userToSocketMap: userToSocketMap,
@@ -60,7 +56,7 @@ module.exports = {
   setup: (server) => {
     const io = require('socket.io')(server, { cors: { origin: '*' } })
     io.on('connection', (soc) => {
-      console.log('a user connected');
+      console.log('a user connected')
       /*soc.on('chat-typing', () => {
         if (soc.room !== null && soc.room !== undefined) {
           if (soc.userId in soc.room.typing) {
@@ -102,13 +98,24 @@ module.exports = {
                 if (acc !== null) {
                   let user = acc.user
                   if (user !== null) {
-                    userToSocketMap[user.id] = soc;
-                    metadata[user.id] = {socket: soc, user: user};
+                    userToSocketMap[user.id] = soc
+                    metadata[user.id] = { socket: soc, user: user }
                     netState[user.id] = true
                     sockets[user.id] = soc
                     soc.on('disconnect', ({}) => {
                       disconnectWebsocket(user)
-                    })
+                    });
+                    metadata[user.id].timer = setTimeout(() => {
+                      disconnectWebsocket(user);
+                    }, 3000);
+                    soc.on('ping', () => {
+                      if (metadata[user.id].timer !== undefined) {
+                        clearTimeout(metadata[user.id].timer);
+                        metadata[user.id].timer = setTimeout(() => {
+                          disconnectWebsocket(user);
+                        }, 3000);
+                      }
+                    });
                     soc.emit('auth-success', {})
                   }
                 }
@@ -119,13 +126,24 @@ module.exports = {
                   where: { id: session.userId },
                 })
                 if (user !== null) {
-                  userToSocketMap[user.id] = soc;
-                  metadata[user.id] = {socket: soc, user: user};
+                  userToSocketMap[user.id] = soc
+                  metadata[user.id] = { socket: soc, user: user }
                   netState[user.id] = true
                   sockets[user.id] = soc
                   soc.on('disconnect', ({}) => {
                     disconnectWebsocket(user)
-                  })
+                  });
+                  metadata[user.id].timer = setTimeout(() => {
+                    disconnectWebsocket(user);
+                  }, 3000);
+                  soc.on('ping', () => {
+                    if (metadata[user.id].timer !== undefined) {
+                      clearTimeout(metadata[user.id].timer);
+                      metadata[user.id].timer = setTimeout(() => {
+                        disconnectWebsocket(user);
+                      }, 3000);
+                    }
+                  });
                   soc.emit('auth-success', {})
                 }
               }
