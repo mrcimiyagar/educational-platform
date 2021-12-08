@@ -149,8 +149,8 @@ export let UsersBox = (props) => {
           audio[u.id] = false;
         }
       })
-      setUsers(users)
-      setAllUsers(allUsers);
+      if (users !== undefined) setUsers(users);
+      if (alUsers !== undefined) setAllUsers(allUsers);
       forceUpdate();
       try {
         window.frames['conf-video-frame'].postMessage(
@@ -175,8 +175,8 @@ export let UsersBox = (props) => {
           audio[u.id] = false;
         }
       })
-      setUsers(users)
-      setAllUsers(allUsers);
+      if (users !== undefined) setUsers(users);
+      if (alUsers !== undefined) setAllUsers(allUsers);
       forceUpdate();
       try {
         window.frames['conf-video-frame'].postMessage(
@@ -246,9 +246,11 @@ export let UsersBox = (props) => {
 
   let onlineDict = {};
 
-  users.forEach(u => {
-    onlineDict[u.id] = true;
-  });
+  if (users !== undefined) {
+    users.forEach(u => {
+      onlineDict[u.id] = true;
+    });
+  }
 
   return (
     <div style={{ width: '100%', height: 'calc(100% - 32px)', marginTop: 32 }}>
