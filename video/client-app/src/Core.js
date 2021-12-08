@@ -926,7 +926,7 @@ function App() {
             style={{
               position: 'fixed',
               left: window.innerWidth <= 1400 ? 16 : 32,
-              bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? (48 + 104) : 48,
+              bottom: (48 + 104),
             }}
             onClick={() => {
               instantConnectionFlag = true
