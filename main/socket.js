@@ -23,11 +23,11 @@ let disconnectWebsocket = (user) => {
             where: { roomId: room.id, userId: user.id },
           })
 
-          sw.Membership.findAll({
+          models.Membership.findAll({
             raw: true,
             where: { roomId: roomId },
           }).then(async (memberships) => {
-            sw.User.findAll({
+            models.User.findAll({
               raw: true,
               where: { id: memberships.map((mem) => mem.userId) },
             }).then(async (users) => {
@@ -107,7 +107,7 @@ module.exports = {
                     });
                     metadata[user.id].timer = setTimeout(() => {
                       disconnectWebsocket(user);
-                    }, 3000);
+                    }, 6000);
                     soc.on('ping', () => {
                       if (metadata[user.id].timer !== undefined) {
                         clearTimeout(metadata[user.id].timer);
@@ -135,7 +135,7 @@ module.exports = {
                   });
                   metadata[user.id].timer = setTimeout(() => {
                     disconnectWebsocket(user);
-                  }, 3000);
+                  }, 6000);
                   soc.on('ping', () => {
                     if (metadata[user.id].timer !== undefined) {
                       clearTimeout(metadata[user.id].timer);
