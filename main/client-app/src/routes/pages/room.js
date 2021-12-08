@@ -161,7 +161,9 @@ export default function RoomPage(props) {
         setToken(localStorage.getItem('token'))
         if (isOnline) ConnectToIo(token, () => {})
         unregisterEvent('membership-updated')
-        registerEvent('membership-updated', (mem) => {})
+        registerEvent('membership-updated', (mem) => {
+          setMembership(mem);
+        })
         unregisterEvent('view-updated')
         registerEvent('view-updated', (v) => {})
         window.scrollTo(0, 0)
@@ -487,6 +489,7 @@ export default function RoomPage(props) {
             setMenuOpen={setMenuOpen}
             membership={membership}
             roomId={props.room_id}
+            userId={props.user_id}
             style={{ display: currentRoomNav === 1 ? 'block' : 'none' }}
           />
           <TaskBox

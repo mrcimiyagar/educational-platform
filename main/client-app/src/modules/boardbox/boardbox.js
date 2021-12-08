@@ -40,7 +40,7 @@ export let BoardBox = (props) => {
             </AppBar>
 
             <div className="maincontentdiv" style={{borderRadius: isDesktop() ? 24 : 0}}>
-              <iframe allowTransparency={true} name="board-frame" src={pathConfig.whiteBoard + `/boards/${props.roomId}`}
+              <iframe name="board-frame" src={pathConfig.whiteBoard + `/boards/${props.roomId}`}
                 frameborder="0" style={{border: 0, backgroundColor: 'transparent', background: 'transparent',
                 borderRadius: isDesktop() ? 24 : 0, width: '100%', height: (isDesktop() && isInRoom()) ? 'calc(100% - 32px)' : 'calc(100% - 48px)', position: 'absolute', left: 0, 
                 top: (isDesktop() && isInRoom()) ? 64 : -16, bottom: 0, right: 0}}></iframe>

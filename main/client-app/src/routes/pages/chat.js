@@ -904,7 +904,7 @@ export default function Chat(props) {
           >
             <div style={{ height: 64 }} />
             <div id={'messagesContainer'}>{messagesArr}</div>
-            <div style={{ width: '100%', height: 80 }} />
+            <div style={{ width: '100%', height: 160 }} />
           </div>
           <Fab
             color={'secondary'}
