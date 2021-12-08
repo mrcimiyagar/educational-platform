@@ -552,7 +552,7 @@ export default function Profile(props) {
                 height: 40,
                 right: 32,
                 marginTop: 32,
-                marginTop: -390,
+                marginTop: -320,
                 display: 'flex',
                 flexWrap: 'wrap',
                 direction: 'rtl',
