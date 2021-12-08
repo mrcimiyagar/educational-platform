@@ -16,7 +16,7 @@ export let BoardBox = (props) => {
       roomId = '0' + roomId;
     }
     return (
-      <div style={{backgroundColor: 'transparent', background: 'transparent', height: isDesktop() ? (isInRoom() ? 'calc(100% - 32px)' : '100%') : 'calc(100% - 72px)', marginTop: isDesktop() ? 16 : 64, display: props.style.display, width: (isDesktop() && isInRoom()) ? 'calc(100% - 144px)' : '100%', marginLeft: (isDesktop() && isInRoom()) ? 16 : 0, marginRight: (isDesktop() && isInRoom()) ? 16 : 0, display: props.style.display}}>
+      <div style={{backgroundColor: '#fff', background: '#fff', height: isDesktop() ? (isInRoom() ? 'calc(100% - 32px)' : '100%') : 'calc(100% - 72px)', marginTop: isDesktop() ? 16 : 64, display: props.style.display, width: (isDesktop() && isInRoom()) ? 'calc(100% - 144px)' : '100%', marginLeft: (isDesktop() && isInRoom()) ? 16 : 0, marginRight: (isDesktop() && isInRoom()) ? 16 : 0, display: props.style.display}}>
           <div style={{position: 'relative', height: '100%', width: '100%'}}>
             <AppBar style={{marginRight: (isDesktop() && isInRoom()) ? 'calc(50% - 275px + 175px)' : 0, width: (isDesktop() && isInRoom()) ? 550 : '100%', height: 64,
               backgroundColor: colors.primaryMedium,
