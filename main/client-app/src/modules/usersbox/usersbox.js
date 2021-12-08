@@ -82,10 +82,12 @@ let lock = false
 let processMessage = undefined
 
 export let UsersBox = (props) => {
-  let forceUpdate = useForceUpdate()
-  let [currentHover, setCurrentHover] = React.useState(-1)
-  let [video, setVideo] = React.useState({})
-  let [audio, setAudio] = React.useState({})
+  let forceUpdate = useForceUpdate();
+  let [currentHover, setCurrentHover] = React.useState(-1);
+  let [video, setVideo] = React.useState({});
+  let [audio, setAudio] = React.useState({});
+  const [users, setUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   reloadUsersList = () => {
     let requestOptions = {
       method: 'POST',
@@ -111,10 +113,10 @@ export let UsersBox = (props) => {
           }
         })
         setUsers(result.users)
+        setAllUsers(result.allUsers);
       })
       .catch((error) => console.log('error', error))
   }
-  const [users, setUsers] = useState([]);
   useEffect(() => {
     window.addEventListener('message', (e) => {
       if (e.data.sender === 'confvideo') {
@@ -138,7 +140,7 @@ export let UsersBox = (props) => {
     })
     reloadUsersList();
     unregisterEvent('user-entered');
-    registerEvent('user-entered', ({ rooms, users }) => {
+    registerEvent('user-entered', ({ rooms, users, allUsers }) => {
       users.forEach((u) => {
         if (video[u.id] === undefined) {
           video[u.id] = false;
@@ -148,6 +150,7 @@ export let UsersBox = (props) => {
         }
       })
       setUsers(users)
+      setAllUsers(allUsers);
       try {
         window.frames['conf-video-frame'].postMessage(
           { sender: 'main', action: 'getVideoPermissions' },
@@ -162,7 +165,7 @@ export let UsersBox = (props) => {
       }
     })
     unregisterEvent('user-exited')
-    registerEvent('user-exited', ({ rooms, users }) => {
+    registerEvent('user-exited', ({ rooms, users, allUsers }) => {
       alert('hello')
       users.forEach((u) => {
         if (video[u.id] === undefined) {
@@ -173,6 +176,7 @@ export let UsersBox = (props) => {
         }
       })
       setUsers(users)
+      setAllUsers(allUsers);
       try {
         window.frames['conf-video-frame'].postMessage(
           { sender: 'main', action: 'getVideoPermissions' },
@@ -239,6 +243,12 @@ export let UsersBox = (props) => {
       .catch((error) => console.log('error', error));
   }
 
+  let onlineDict = {};
+
+  users.forEach(u => {
+    onlineDict[u.id] = true;
+  });
+
   return (
     <div style={{ width: '100%', height: 'calc(100% - 32px)', marginTop: 32 }}>
       <div>
@@ -260,7 +270,108 @@ export let UsersBox = (props) => {
             option={{ suppressScrollX: true, wheelPropagation: false }}
           >
             <div style={{ height: 'auto', marginRight: 12, paddingTop: 24 }}>
+              <div>
+                آنلاین
+              </div>
               {users.map((user, index) => {
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      direction: 'rtl',
+                      position: 'relative',
+                      width: 'calc(100% - 16px)',
+                      marginRight: 16,
+                      display: 'flex',
+                    }}
+                    onMouseEnter={() => setCurrentHover(index)}
+                    onMouseLeave={() => setCurrentHover(-1)}
+                  >
+                    <Avatar
+                      style={{ width: 24, height: 24 }}
+                      alt={user.firstName + ' ' + user.lastName}
+                      onClick={() => permsOnClick(user)}
+                    />
+                    <div
+                      style={{ marginRight: 16, marginTop: -2 }}
+                      onClick={() => permsOnClick(user)}
+                    >
+                      <p
+                        style={{
+                          color: colors.textIcons,
+                          fontSize: 13,
+                          marginTop: 4,
+                        }}
+                      >
+                        {currentHover === index
+                          ? user.firstName
+                          : user.firstName + ' ' + user.lastName}
+                      </p>
+                    </div>
+                    {props.membership.canEditVideoSound &&
+                    currentHover === index ? (
+                      <div
+                        style={{
+                          marginTop: -12,
+                          position: 'absolute',
+                          left: 0,
+                          display: 'flex',
+                          backgroundColor: colors.primary,
+                        }}
+                      >
+                        <IconButton
+                          onClick={(e) => {
+                            window.frames['conf-video-frame'].postMessage(
+                              {
+                                sender: 'main',
+                                action: 'switchVideoPermission',
+                                targetId: user.id,
+                                status: !video[user.id],
+                              },
+                              pathConfig.videoConfVideo,
+                            )
+                            video[user.id] = !video[user.id]
+                            setVideo(video)
+                            forceUpdate()
+                          }}
+                        >
+                          {video[user.id] ? (
+                            <VideocamIcon style={{ fill: colors.textIcons }} />
+                          ) : (
+                            <VideocamOff style={{ fill: colors.textIcons }} />
+                          )}
+                        </IconButton>
+                        <IconButton
+                          onClick={(e) => {
+                            window.frames['conf-video-frame'].postMessage(
+                              {
+                                sender: 'main',
+                                action: 'switchAudioPermission',
+                                targetId: user.id,
+                                status: !audio[user.id],
+                              },
+                              pathConfig.videoConfVideo,
+                            )
+                            audio[user.id] = !audio[user.id]
+                            setAudio(audio)
+                            forceUpdate()
+                          }}
+                        >
+                          {audio[user.id] ? (
+                            <MicIcon style={{ fill: colors.textIcons }} />
+                          ) : (
+                            <MicOffIcon style={{ fill: colors.textIcons }} />
+                          )}
+                        </IconButton>
+                      </div>
+                    ) : null}
+                  </div>
+                )
+              })}
+              <div>
+                آفلاین
+              </div>
+              {allUsers.filter(u => (onlineDict[u.id] !== true)).map((user, index) => {
                 return (
                   <div
                     key={index}

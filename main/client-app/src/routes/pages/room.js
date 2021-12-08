@@ -193,6 +193,12 @@ export default function RoomPage(props) {
       Promise.all([getRoomPromise, enterRoomPromise]).then(() => callback());
   }
 
+
+  socket.io.removeAllListeners('reconnect');
+  socket.io.on('reconnect', () => {
+    loadData();
+  });
+
   let loadFiles = () => {
     let requestOptions = {
       method: 'POST',

@@ -599,43 +599,102 @@ router.post('/get_spaces', jsonParser, async function (req, res) {
 router.post('/enter_room', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     if (membership === null || membership === undefined) {
-      res.send({ status: 'success' });
-      return;
+      res.send({ status: 'success' })
+      return
     }
 
-    let s = sockets[user.id];
-    if (s === undefined) return;
-    let roomId = metadata[membership.userId].roomId;
+    let s = sockets[user.id]
+    if (s === undefined) return
+    let roomId = metadata[membership.userId].roomId
 
     if (membership.roomId === roomId) {
       require('../server').pushTo('room_' + membership.roomId, 'user-entered', {
         rooms: [],
         users: getRoomUsers(membership.roomId),
-      });
-  
-      res.send({ status: 'success', membership: membership });
-      return;
+      })
+
+      res.send({ status: 'success', membership: membership })
+      return
     }
 
-    sockets[user.id].leave();
-    sockets[user.id].roomId = 0;
-    removeUser(roomId, user.id);
+    sockets[user.id].leave()
+    sockets[user.id].roomId = 0
+    removeUser(roomId, user.id)
+
+    sw.Room.findOne({ where: { spaceId: roomId } }).then(
+      async (room) => {
+        sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
+          async (rooms) => {
+            for (let i = 0; i < rooms.length; i++) {
+              let room = rooms[i]
+              room.users = getRoomUsers(room.id)
+            }
+            sw.Membership.findAll({
+              raw: true,
+              where: { spaceId: roomId },
+            }).then(async (memberships) => {
+              sw.User.findAll({
+                raw: true,
+                where: { id: memberships.map((mem) => mem.userId) },
+              }).then(async (users) => {
+                require('../server').pushTo(
+                  'room_' + roomId,
+                  'user-exited',
+                  {
+                    rooms: rooms,
+                    users: getRoomUsers(roomId),
+                    allUsers: users,
+                  },
+                )
+              })
+            })
+          },
+        )
+      },
+    )
 
     require('../server').pushTo('room_' + roomId, 'user-exited', {
       rooms: [],
       users: getRoomUsers(roomId),
-    });
+    })
 
-    s.join('room_' + membership.roomId);
-    metadata[membership.userId].roomId = membership.roomId;
-    addUser(membership.roomId, user);
+    s.join('room_' + membership.roomId)
+    metadata[membership.userId].roomId = membership.roomId
+    addUser(membership.roomId, user)
 
-    require('../server').pushTo('room_' + membership.roomId, 'user-entered', {
-      rooms: [],
-      users: getRoomUsers(membership.roomId),
-    });
+    sw.Room.findOne({ where: { spaceId: membership.roomId } }).then(
+      async (room) => {
+        sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
+          async (rooms) => {
+            for (let i = 0; i < rooms.length; i++) {
+              let room = rooms[i]
+              room.users = getRoomUsers(room.id)
+            }
+            sw.Membership.findAll({
+              raw: true,
+              where: { spaceId: membership.roomId },
+            }).then(async (memberships) => {
+              sw.User.findAll({
+                raw: true,
+                where: { id: memberships.map((mem) => mem.userId) },
+              }).then(async (users) => {
+                require('../server').pushTo(
+                  'room_' + membership.roomId,
+                  'user-entered',
+                  {
+                    rooms: rooms,
+                    users: getRoomUsers(membership.roomId),
+                    allUsers: users,
+                  },
+                )
+              })
+            })
+          },
+        )
+      },
+    )
 
-    res.send({ status: 'success', membership: membership });
+    res.send({ status: 'success', membership: membership })
   })
 })
 
@@ -648,20 +707,37 @@ router.post('/exit_room', jsonParser, async function (req, res) {
     sockets[user.id].roomId = 0
     removeUser(roomId, user.id)
     if (roomId !== undefined) {
-      sw.Room.findOne({ where: { id: roomId } }).then((room) => {
-        sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
-          async (rooms) => {
-            for (let i = 0; i < rooms.length; i++) {
-              let room = rooms[i]
-              room.users = getRoomUsers(room.id)
-            }
-            require('../server').pushTo('room_' + roomId, 'user-exited', {
-              rooms: rooms,
-              users: getRoomUsers(roomId),
-            })
-          },
-        )
-      })
+      sw.Room.findOne({ where: { spaceId: membership.roomId } }).then(
+        async (room) => {
+          sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
+            async (rooms) => {
+              for (let i = 0; i < rooms.length; i++) {
+                let room = rooms[i]
+                room.users = getRoomUsers(room.id)
+              }
+              sw.Membership.findAll({
+                raw: true,
+                where: { spaceId: membership.roomId },
+              }).then(async (memberships) => {
+                sw.User.findAll({
+                  raw: true,
+                  where: { id: memberships.map((mem) => mem.userId) },
+                }).then(async (users) => {
+                  require('../server').pushTo(
+                    'room_' + membership.roomId,
+                    'user-exited',
+                    {
+                      rooms: rooms,
+                      users: getRoomUsers(membership.roomId),
+                      allUsers: users,
+                    },
+                  )
+                })
+              })
+            },
+          )
+        },
+      )
     }
   })
   res.send({ status: 'success' })
@@ -950,25 +1026,40 @@ router.post('/leave_room', jsonParser, async function (req, res) {
 
 router.post('/get_room_users', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
-    sw.Room.findAll({ raw: true, where: { spaceId: req.body.spaceId } }).then(
-      async (rooms) => {
-        for (let i = 0; i < rooms.length; i++) {
-          let room = rooms[i]
-          room.users = getRoomUsers(room.id)
-        }
-        if (membership === null || membership === undefined) {
-          res.send({
-            status: 'error',
-            errorCode: 'e0005',
-            message: 'membership does not exist.',
-          })
-          return
-        }
-        res.send({
-          status: 'success',
-          rooms: rooms,
-          users: getRoomUsers(membership.roomId),
-        })
+    if (membership === null || membership === undefined) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'membership does not exist.',
+      })
+      return
+    }
+    sw.Room.findOne({ where: { spaceId: membership.roomId } }).then(
+      async (room) => {
+        sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
+          async (rooms) => {
+            for (let i = 0; i < rooms.length; i++) {
+              let room = rooms[i]
+              room.users = getRoomUsers(room.id)
+            }
+            sw.Membership.findAll({
+              raw: true,
+              where: { spaceId: membership.roomId },
+            }).then(async (memberships) => {
+              sw.User.findAll({
+                raw: true,
+                where: { id: memberships.map((mem) => mem.userId) },
+              }).then(async (users) => {
+                res.send({
+                  status: 'success',
+                  rooms: rooms,
+                  users: getRoomUsers(membership.roomId),
+                  allUsers: users,
+                })
+              })
+            })
+          },
+        )
       },
     )
   })
