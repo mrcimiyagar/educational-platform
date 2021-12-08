@@ -150,7 +150,7 @@ export let UsersBox = (props) => {
         }
       })
       if (users !== undefined) setUsers(users);
-      if (alUsers !== undefined) setAllUsers(allUsers);
+      if (allUsers !== undefined) setAllUsers(allUsers);
       forceUpdate();
       try {
         window.frames['conf-video-frame'].postMessage(
@@ -176,7 +176,7 @@ export let UsersBox = (props) => {
         }
       })
       if (users !== undefined) setUsers(users);
-      if (alUsers !== undefined) setAllUsers(allUsers);
+      if (allUsers !== undefined) setAllUsers(allUsers);
       forceUpdate();
       try {
         window.frames['conf-video-frame'].postMessage(
