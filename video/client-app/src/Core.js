@@ -769,7 +769,7 @@ function App() {
               style={{
                 position: 'absolute',
                 left:(sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
-                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? (48 + 104 + 56 + 16 + 56 + 16) : (48 + 56 + 16 + 56 + 16),
+                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? (208 + 56 + 16 + 56 + 16) : (48 + 56 + 16 + 56 + 16),
               }}
               onClick={() => {
                 window.parent.postMessage(
@@ -787,7 +787,7 @@ function App() {
               style={{
                 position: 'absolute',
                 left: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
-                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 48 + 104 + 56 + 16 : 48 + 56 + 16,
+                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 208 + 56 + 16 : 48 + 56 + 16,
               }}
               onClick={() => {
                 if (audio) {
@@ -807,8 +807,8 @@ function App() {
               color={'secondary'}
               style={{
                 position: 'absolute',
-                left: window.innerWidth <= 1400 ? 16 : 32,
-                bottom: window.innerWidth <= 1400 ? 48 + 104 : 48,
+                left: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
+                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 208 : 48,
               }}
               onClick={() => {
                 instantConnectionFlag = false
@@ -849,9 +849,9 @@ function App() {
                 position: 'absolute',
                 left:
                   (screenShareSupported ? 32 + 56 : 0) +
-                  (window.innerWidth <= 1400 ? 0 : 16) +
+                  ((sizeMode === 'mobile' || sizeMode === 'tablet') ? 0 : 16) +
                   72,
-                bottom: window.innerWidth <= 1400 ? 48 + 104 : 48,
+                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 208 : 48,
               }}
               onClick={() => {
                 if (video) {
@@ -872,8 +872,8 @@ function App() {
                 color={'primary'}
                 style={{
                   position: 'absolute',
-                  left: 32 + 56 + (window.innerWidth <= 1400 ? 0 : 16),
-                  bottom: window.innerWidth <= 1400 ? 48 + 104 : 48,
+                  left: 32 + 56 + ((sizeMode === 'mobile' || sizeMode === 'tablet') ? 0 : 16),
+                  bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 208 : 48,
                 }}
                 onClick={() => {
                   if (screen) {
