@@ -766,7 +766,7 @@ function App() {
           return <Audio id={key} stream={audios[key + '_audio']} />
         })}
       </div>
-      {connected && !extWebcam ? (
+      {connected && videoAccess && !extWebcam ? (
         <div style={{ width: '100%', height: '100%' }}>
           <ThemeProvider theme={theme2}>
             <Fab
@@ -925,7 +925,7 @@ function App() {
             roomId={roomId}
           />
         </div>
-      ) : !connected ? (
+      ) : !connected && videoAccess ? (
         <ThemeProvider theme={theme}>
           <Fab
             id="callButton"
