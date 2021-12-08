@@ -166,7 +166,6 @@ export let UsersBox = (props) => {
     })
     unregisterEvent('user-exited')
     registerEvent('user-exited', ({ rooms, users, allUsers }) => {
-      alert('hello')
       users.forEach((u) => {
         if (video[u.id] === undefined) {
           video[u.id] = false;

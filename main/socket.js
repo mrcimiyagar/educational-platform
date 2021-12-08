@@ -22,11 +22,26 @@ let disconnectWebsocket = (user) => {
           let mem = await models.Membership.findOne({
             where: { roomId: room.id, userId: user.id },
           })
-          require('./server').pushTo(
-            'room_' + roomId,
-            'user-exited',
-            { rooms: rooms, users: getRoomUsers(roomId) },
-          )
+
+          sw.Membership.findAll({
+            raw: true,
+            where: { roomId: roomId },
+          }).then(async (memberships) => {
+            sw.User.findAll({
+              raw: true,
+              where: { id: memberships.map((mem) => mem.userId) },
+            }).then(async (users) => {
+              require('../server').pushTo(
+                'room_' + roomId,
+                'user-exited',
+                {
+                  rooms: rooms,
+                  users: getRoomUsers(roomId),
+                  allUsers: users,
+                },
+              )
+            })
+          });
         },
       )
     }
