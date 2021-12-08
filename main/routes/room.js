@@ -562,6 +562,40 @@ router.post('/get_room_wallpaper', jsonParser, async function (req, res) {
   })
 })
 
+router.post('/get_spaces_for_invitation', jsonParser, async function (req, res) {
+  sw.Session.findOne({ where: { token: req.headers.token } }).then(
+    async function (session) {
+      if (session === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'session does not exist.',
+        })
+        return
+      }
+      sw.Membership.findAll({ where: { userId: session.userId } }).then(
+        async function (memberships) {
+          sw.Room.findAll({
+            where: { id: memberships.filter(m => m.canInviteToRoom === true).map(m => m.roomId) },
+          }).then(async function (rooms) {
+            sw.Space.findAll({
+              where: {
+                id: rooms
+                  .map((r) => r.spaceId)
+                  .filter((value, index, arr) => {
+                    return value !== null
+                  }),
+              },
+            }).then(async function (spaces) {
+              res.send({ status: 'success', spaces: spaces })
+            })
+          })
+        },
+      )
+    },
+  )
+})
+
 router.post('/get_spaces', jsonParser, async function (req, res) {
   sw.Session.findOne({ where: { token: req.headers.token } }).then(
     async function (session) {

@@ -16,6 +16,7 @@ import { isDesktop, isInRoom } from '../../App'
 import { colors, token } from '../../util/settings'
 import { registerEvent, serverRoot, socket, unregisterEvent, useForceUpdate } from '../../util/Utils'
 import BlackColorTextField from '../../components/BlackColorTextField'
+import {membership} from '../../routes/pages/room';
 
 export let togglePolling = undefined
 
@@ -27,6 +28,13 @@ export function PollBox(props) {
   let [polls, setPolls] = React.useState(po)
   let [pollQuestion, setPollQuestion] = React.useState('')
   let [pollOptions, setPollOptions] = React.useState([])
+  let [canAddPoll, setCanAddPoll] = React.useState(membership !== undefined && membership !== null && membership.canAddPoll === true);
+  
+  unregisterEvent('membership-updated')
+  registerEvent('membership-updated', (mem) => {
+    setCanAddPoll(mem.canAddPoll);
+  })
+
   useEffect(() => {
     let requestOptions = {
       method: 'POST',
@@ -195,18 +203,22 @@ export function PollBox(props) {
             }
           })}
         </div>
-        <Fab
-          color={'secondary'}
-          style={{ position: 'fixed', bottom: 16, left: 16 }}
-          onClick={() => props.setOpen(true)}
-        >
-          <Add />
-        </Fab>
+        {(canAddPoll === true) ?
+          <Fab
+            color={'secondary'}
+            style={{ position: 'fixed', bottom: 16, left: 16 }}
+            onClick={() => props.setOpen(true)}
+          >
+            <Add />
+          </Fab> :
+          null
+        }
       </div>
       <Drawer
         onClose={() => props.setOpen(false)}
         open={props.open}
         anchor={'right'}
+        style={{display: canAddPoll ? 'block' : 'none'}}
       >
         <div
           style={{

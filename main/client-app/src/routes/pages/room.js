@@ -92,14 +92,13 @@ export let membership = undefined
 let setMembership = undefined
 let pickingFile = false
 
-let attachWebcamOnMessenger = undefined;
-let roomId = undefined;
+let attachWebcamOnMessenger = undefined
+let roomId = undefined
 
 export default function RoomPage(props) {
-
   const urlSearchParams = new URLSearchParams(window.location.search)
   props = Object.fromEntries(urlSearchParams.entries())
-  
+
   roomId = props.room_id
 
   const useStyles = makeStyles({
@@ -120,28 +119,27 @@ export default function RoomPage(props) {
     },
   })
 
-  document.documentElement.style.overflow = 'auto';
+  document.documentElement.style.overflow = 'auto'
 
-  let forceUpdate = useForceUpdate();
+  let forceUpdate = useForceUpdate()
 
-  const classes = useStyles();
-  const classesAction = useStylesAction();
+  const classes = useStyles()
+  const classesAction = useStylesAction()
 
-  const [jumperOpen, setJumperOpen] = React.useState(true);
-  ;[membership, setMembership] = React.useState({});
-  const [loaded, setLoaded] = React.useState(false);
-  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [jumperOpen, setJumperOpen] = React.useState(true)
+  ;[membership, setMembership] = React.useState({})
+  const [loaded, setLoaded] = React.useState(false)
+  const [menuOpen, setMenuOpen] = React.useState(false)
   const [currentRoomNav, setCurrentRoomNav] = React.useState(
     Number(props.tab_index),
-  );
-  const [fileMode, setFileMode] = React.useState(0);
-  const [menuMode, setMenuMode] = React.useState(0);
-  const [opacity, setOpacity] = React.useState(1);
-  let [webcamOn, setWebcamOn] = React.useState(false);
-  let [messengerView, setMessengerView] = React.useState(true);
+  )
+  const [fileMode, setFileMode] = React.useState(0)
+  const [menuMode, setMenuMode] = React.useState(0)
+  const [opacity, setOpacity] = React.useState(1)
+  let [webcamOn, setWebcamOn] = React.useState(false)
+  let [messengerView, setMessengerView] = React.useState(true)
 
   let loadData = (callback) => {
-
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -153,8 +151,9 @@ export default function RoomPage(props) {
       }),
       redirect: 'follow',
     }
-    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions);
-    getRoomPromise.then((response) => response.json())
+    let getRoomPromise = fetch(serverRoot + '/room/get_room', requestOptions)
+    getRoomPromise
+      .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
         setRoom(result.room)
@@ -162,15 +161,15 @@ export default function RoomPage(props) {
         if (isOnline) ConnectToIo(token, () => {})
         unregisterEvent('membership-updated')
         registerEvent('membership-updated', (mem) => {
-          setMembership(mem);
+          setMembership(mem)
         })
         unregisterEvent('view-updated')
         registerEvent('view-updated', (v) => {})
         window.scrollTo(0, 0)
         store.dispatch(changeConferenceMode(true))
       })
-      .catch((error) => console.log('error', error));
-    
+      .catch((error) => console.log('error', error))
+
     let requestOptions2 = {
       method: 'POST',
       headers: {
@@ -182,24 +181,27 @@ export default function RoomPage(props) {
       }),
       redirect: 'follow',
     }
-    let enterRoomPromise = fetch(serverRoot + '/room/enter_room', requestOptions2);
+    let enterRoomPromise = fetch(
+      serverRoot + '/room/enter_room',
+      requestOptions2,
+    )
 
-    enterRoomPromise.then((response) => response.json())
+    enterRoomPromise
+      .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
         setMembership(result.membership)
-        forceUpdate();
+        forceUpdate()
       })
       .catch((error) => console.log('error', error))
-    
-      Promise.all([getRoomPromise, enterRoomPromise]).then(() => callback());
+
+    Promise.all([getRoomPromise, enterRoomPromise]).then(() => callback())
   }
 
-
-  socket.io.removeAllListeners('reconnect');
+  socket.io.removeAllListeners('reconnect')
   socket.io.on('reconnect', () => {
-    loadData();
-  });
+    loadData()
+  })
 
   let loadFiles = () => {
     let requestOptions = {
@@ -345,19 +347,18 @@ export default function RoomPage(props) {
 
   useEffect(() => {
     if (attachWebcamOnMessenger !== undefined) {
-      window.removeEventListener('message', attachWebcamOnMessenger);
+      window.removeEventListener('message', attachWebcamOnMessenger)
     }
     attachWebcamOnMessenger = (e) => {
       if (e.data.sender === 'conf') {
         if (e.data.action === 'attachWebcamOnMessenger') {
-          setWebcamOn(true);
-        }
-        else if (e.data.action === 'detachWebcamOnMessenger') {
-          setWebcamOn(false);
+          setWebcamOn(true)
+        } else if (e.data.action === 'detachWebcamOnMessenger') {
+          setWebcamOn(false)
         }
       }
-    };
-    window.addEventListener('message', attachWebcamOnMessenger);
+    }
+    window.addEventListener('message', attachWebcamOnMessenger)
   }, [])
 
   useEffect(() => {
@@ -383,7 +384,7 @@ export default function RoomPage(props) {
           })
         }
         let wall = JSON.parse(result.wallpaper)
-        if (wall === undefined || wall === null) return;
+        if (wall === undefined || wall === null) return
         if (wall.type === 'photo') {
           setWallpaper({
             type: 'photo',
@@ -403,10 +404,10 @@ export default function RoomPage(props) {
         }
       })
       .catch((error) => console.log('error', error))
-    
-      return () => {
-        leaveRoom(() => {});
-       };
+
+    return () => {
+      leaveRoom(() => {})
+    }
   }, [])
 
   if (!loaded) {
@@ -443,20 +444,21 @@ export default function RoomPage(props) {
             right: 0,
             top: webcamOn ? 300 : 0,
             zIndex: 2491,
-            display: messengerView ? 'block' : 'none'
+            display: messengerView ? 'block' : 'none',
           }}
         >
-          <ChatEmbedded 
+          <ChatEmbedded
             membership={membership}
             roomId={props.room_id}
-            webcamOn={webcamOn} 
-            viewCallback={() => setMessengerView(!messengerView)} />
+            webcamOn={webcamOn}
+            viewCallback={() => setMessengerView(!messengerView)}
+          />
         </div>
         <div
           style={{
             position: 'absolute',
             left: 0,
-            right: (isDesktop() && currentRoomNav !== 2 && !webcamOn) ? 450 : 0,
+            right: isDesktop() && currentRoomNav !== 2 && !webcamOn ? 450 : 0,
             top: 0,
             bottom: 0,
             opacity: opacity,
@@ -470,250 +472,260 @@ export default function RoomPage(props) {
             setMenuOpen={setMenuOpen}
             webcamOn={webcamOn}
             currentRoomNav={currentRoomNav}
-            style={{ display: (currentRoomNav === 2 || webcamOn) ? 'block' : 'none' }}
-            roomId={props.room_id}
-          />
-          <div style={{paddingRight: (webcamOn && currentRoomNav !== 2) ? 450 : 0,
-            width: '100%',
-            height: '100%'}}>
-          <BotsBox
-            openMenu={() => setMenuOpen(true)}
-            openDeck={openDeck}
-            openNotes={openNotes}
-            openPolls={openPolls}
-            setMenuOpen={setMenuOpen}
-            membership={membership}
-            roomId={props.room_id}
-            style={{ display: currentRoomNav === 0 ? 'block' : 'none' }}
-          />
-          <BoardBox
-            openDeck={openDeck}
-            openNotes={openNotes}
-            openPolls={openPolls}
-            setMenuOpen={setMenuOpen}
-            membership={membership}
-            roomId={props.room_id}
-            userId={props.user_id}
-            style={{ display: currentRoomNav === 1 ? 'block' : 'none' }}
-          />
-          <TaskBox
-            openDeck={openDeck}
-            openNotes={openNotes}
-            openPolls={openPolls}
-            setMenuOpen={setMenuOpen}
-            style={{ display: currentRoomNav === 3 ? 'block' : 'none' }}
+            style={{
+              display: currentRoomNav === 2 || webcamOn ? 'block' : 'none',
+            }}
             roomId={props.room_id}
           />
           <div
             style={{
-              display: currentRoomNav === 4 ? 'block' : 'none',
+              paddingRight: webcamOn && currentRoomNav !== 2 ? 450 : 0,
               width: '100%',
               height: '100%',
-              minHeight: '100vh',
             }}
           >
-            <AppBar
-              style={{
-                width: isDesktop() ? 550 : '100%',
-                height: 144,
-                borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
-                backgroundColor: colors.primaryMedium,
-                backdropFilter: 'blur(10px)',
-                position: 'fixed',
-                left: isDesktop() && isInRoom() ? 'calc(50% - 225px)' : '50%',
-                transform: 'translateX(-50%)',
-              }}
-            >
-              <Toolbar
-                style={{
-                  width: '100%',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                }}
-              >
-                <IconButton
-                  style={{
-                    width: 32,
-                    height: 32,
-                    position: 'absolute',
-                    left: 16,
-                  }}
-                >
-                  <Search style={{ fill: '#fff' }} />
-                </IconButton>
-                <IconButton
-                  style={{
-                    width: 32,
-                    height: 32,
-                    position: 'absolute',
-                    left: 16 + 32 + 16,
-                  }}
-                  onClick={() => {
-                    openDeck()
-                  }}
-                >
-                  <ViewCarouselIcon style={{ fill: '#fff' }} />
-                </IconButton>
-                <IconButton
-                  style={{
-                    width: 32,
-                    height: 32,
-                    position: 'absolute',
-                    left: 16 + 32 + 16 + 32 + 16,
-                  }}
-                  onClick={() => {
-                    openNotes()
-                  }}
-                >
-                  <NotesIcon style={{ fill: '#fff' }} />
-                </IconButton>
-                <IconButton
-                  style={{
-                    width: 32,
-                    height: 32,
-                    position: 'absolute',
-                    left: 16 + 32 + 16 + 32 + 16 + 32 + 16,
-                  }}
-                  onClick={() => {
-                    openPolls()
-                  }}
-                >
-                  <PollIcon style={{ fill: '#fff' }} />
-                </IconButton>
-                <Typography
-                  variant={'h6'}
-                  style={{ position: 'absolute', right: 16 + 32 + 16 }}
-                >
-                  فایل ها
-                </Typography>
-                <IconButton
-                  style={{
-                    width: 32,
-                    height: 32,
-                    position: 'absolute',
-                    right: 16,
-                  }}
-                  onClick={() => setMenuOpen(true)}
-                >
-                  <Menu style={{ fill: '#fff' }} />
-                </IconButton>
-              </Toolbar>
-              <Tabs
-                variant="fullWidth"
-                value={fileMode}
-                onChange={handleChange}
-                classes={{
-                  indicator: classes.indicator,
-                }}
-                style={{ marginTop: 8 }}
-                centered
-              >
-                <Tab
-                  classes={{ root: classes.tab }}
-                  icon={<PhotoIcon />}
-                  label="عکس ها"
-                />
-                <Tab
-                  classes={{ root: classes.tab }}
-                  icon={<AudiotrackIcon />}
-                  label="صدا ها"
-                />
-                <Tab
-                  classes={{ root: classes.tab }}
-                  icon={<PlayCircleFilledIcon />}
-                  label="ویدئو ها"
-                />
-                <Tab
-                  classes={{ root: classes.tab }}
-                  icon={<InsertDriveFileIcon />}
-                  label="سند ها"
-                />
-              </Tabs>
-            </AppBar>
+            <BotsBox
+              openMenu={() => setMenuOpen(true)}
+              openDeck={openDeck}
+              openNotes={openNotes}
+              openPolls={openPolls}
+              setMenuOpen={setMenuOpen}
+              membership={membership}
+              roomId={props.room_id}
+              style={{ display: currentRoomNav === 0 ? 'block' : 'none' }}
+            />
+            <BoardBox
+              openDeck={openDeck}
+              openNotes={openNotes}
+              openPolls={openPolls}
+              setMenuOpen={setMenuOpen}
+              membership={membership}
+              roomId={props.room_id}
+              userId={props.user_id}
+              style={{ display: currentRoomNav === 1 ? 'block' : 'none' }}
+            />
+            <TaskBox
+              openDeck={openDeck}
+              openNotes={openNotes}
+              openPolls={openPolls}
+              setMenuOpen={setMenuOpen}
+              style={{ display: currentRoomNav === 3 ? 'block' : 'none' }}
+              roomId={props.room_id}
+            />
             <div
               style={{
-                height: 'calc(100% - 64px - 72px - 48px)',
-                width: 'calc(100% - 112px)',
-                marginTop: 64 + 48,
+                display: currentRoomNav === 4 ? 'block' : 'none',
+                width: '100%',
+                height: '100%',
+                minHeight: '100vh',
               }}
             >
-              <SwipeableViews
-                axis={'x-reverse'}
-                index={fileMode}
-                onChangeIndex={handleChangeIndex}
+              <AppBar
+                style={{
+                  width: isDesktop() ? 550 : '100%',
+                  height: 144,
+                  borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
+                  backgroundColor: colors.primaryMedium,
+                  backdropFilter: 'blur(10px)',
+                  position: 'fixed',
+                  left: isDesktop() && isInRoom() ? 'calc(50% - 225px)' : '50%',
+                  transform: 'translateX(-50%)',
+                }}
               >
-                <div>
-                  <FilesGrid
-                    fileType={'photo'}
-                    files={files.filter((f) => f.fileType === 'photo')}
-                    setFiles={setFiles}
-                    roomId={props.room_id}
-                  />
-                </div>
-                <div>
-                  <FilesGrid
-                    fileType={'audio'}
-                    files={files.filter((f) => f.fileType === 'audio')}
-                    setFiles={setFiles}
-                    roomId={props.room_id}
-                  />
-                </div>
-                <div>
-                  <FilesGrid
-                    fileType={'video'}
-                    files={files.filter((f) => f.fileType === 'video')}
-                    setFiles={setFiles}
-                    roomId={props.room_id}
-                  />
-                </div>
-                <div>
-                  <FilesGrid
-                    fileType={'document'}
-                    files={files.filter((f) => f.fileType === 'document')}
-                    setFiles={setFiles}
-                    roomId={props.room_id}
-                  />
-                </div>
-              </SwipeableViews>
-              <ThemeProvider theme={theme}>
-                <Fab
-                  color="secondary"
+                <Toolbar
                   style={{
-                    position: 'fixed',
-                    bottom: isDesktop() && isInRoom() ? 48 : 72 + 16,
-                    left: isDesktop() && isInRoom() ? 16 + 16 : 16,
-                  }}
-                  onClick={() => {
-                    pickingFile = true
-                    openFileSelector()
+                    width: '100%',
+                    justifyContent: 'center',
+                    textAlign: 'center',
                   }}
                 >
-                  <AddIcon />
-                </Fab>
-                {isMobile() || isTablet() ? (
-                  <Fab
-                    color="primary"
+                  <IconButton
                     style={{
-                      position: 'fixed',
-                      bottom: 72 + 16,
-                      left: 16 + 56 + 16,
-                    }}
-                    onClick={() => {
-                      gotoPage('/app/chat', { room_id: props.room_id })
+                      width: 32,
+                      height: 32,
+                      position: 'absolute',
+                      left: 16,
                     }}
                   >
-                    <Chat />
-                  </Fab>
-                ) : null}
-              </ThemeProvider>
+                    <Search style={{ fill: '#fff' }} />
+                  </IconButton>
+                  <IconButton
+                    style={{
+                      width: 32,
+                      height: 32,
+                      position: 'absolute',
+                      left: 16 + 32 + 16,
+                    }}
+                    onClick={() => {
+                      openDeck()
+                    }}
+                  >
+                    <ViewCarouselIcon style={{ fill: '#fff' }} />
+                  </IconButton>
+                  <IconButton
+                    style={{
+                      width: 32,
+                      height: 32,
+                      position: 'absolute',
+                      left: 16 + 32 + 16 + 32 + 16,
+                    }}
+                    onClick={() => {
+                      openNotes()
+                    }}
+                  >
+                    <NotesIcon style={{ fill: '#fff' }} />
+                  </IconButton>
+                  <IconButton
+                    style={{
+                      width: 32,
+                      height: 32,
+                      position: 'absolute',
+                      left: 16 + 32 + 16 + 32 + 16 + 32 + 16,
+                    }}
+                    onClick={() => {
+                      openPolls()
+                    }}
+                  >
+                    <PollIcon style={{ fill: '#fff' }} />
+                  </IconButton>
+                  <Typography
+                    variant={'h6'}
+                    style={{ position: 'absolute', right: 16 + 32 + 16 }}
+                  >
+                    فایل ها
+                  </Typography>
+                  <IconButton
+                    style={{
+                      width: 32,
+                      height: 32,
+                      position: 'absolute',
+                      right: 16,
+                    }}
+                    onClick={() => setMenuOpen(true)}
+                  >
+                    <Menu style={{ fill: '#fff' }} />
+                  </IconButton>
+                </Toolbar>
+                <Tabs
+                  variant="fullWidth"
+                  value={fileMode}
+                  onChange={handleChange}
+                  classes={{
+                    indicator: classes.indicator,
+                  }}
+                  style={{ marginTop: 8 }}
+                  centered
+                >
+                  <Tab
+                    classes={{ root: classes.tab }}
+                    icon={<PhotoIcon />}
+                    label="عکس ها"
+                  />
+                  <Tab
+                    classes={{ root: classes.tab }}
+                    icon={<AudiotrackIcon />}
+                    label="صدا ها"
+                  />
+                  <Tab
+                    classes={{ root: classes.tab }}
+                    icon={<PlayCircleFilledIcon />}
+                    label="ویدئو ها"
+                  />
+                  <Tab
+                    classes={{ root: classes.tab }}
+                    icon={<InsertDriveFileIcon />}
+                    label="سند ها"
+                  />
+                </Tabs>
+              </AppBar>
+              <div
+                style={{
+                  height: 'calc(100% - 64px - 72px - 48px)',
+                  width: 'calc(100% - 112px)',
+                  marginTop: 64 + 48,
+                }}
+              >
+                <SwipeableViews
+                  axis={'x-reverse'}
+                  index={fileMode}
+                  onChangeIndex={handleChangeIndex}
+                >
+                  <div>
+                    <FilesGrid
+                      fileType={'photo'}
+                      files={files.filter((f) => f.fileType === 'photo')}
+                      setFiles={setFiles}
+                      roomId={props.room_id}
+                    />
+                  </div>
+                  <div>
+                    <FilesGrid
+                      fileType={'audio'}
+                      files={files.filter((f) => f.fileType === 'audio')}
+                      setFiles={setFiles}
+                      roomId={props.room_id}
+                    />
+                  </div>
+                  <div>
+                    <FilesGrid
+                      fileType={'video'}
+                      files={files.filter((f) => f.fileType === 'video')}
+                      setFiles={setFiles}
+                      roomId={props.room_id}
+                    />
+                  </div>
+                  <div>
+                    <FilesGrid
+                      fileType={'document'}
+                      files={files.filter((f) => f.fileType === 'document')}
+                      setFiles={setFiles}
+                      roomId={props.room_id}
+                    />
+                  </div>
+                </SwipeableViews>
+                <ThemeProvider theme={theme}>
+                  {membership !== undefined &&
+                  membership !== null &&
+                  membership.canUploadFile === true ? (
+                    <Fab
+                      color="secondary"
+                      style={{
+                        position: 'fixed',
+                        bottom: isDesktop() && isInRoom() ? 48 : 72 + 16,
+                        left: isDesktop() && isInRoom() ? 16 + 16 : 16,
+                      }}
+                      onClick={() => {
+                        pickingFile = true
+                        openFileSelector()
+                      }}
+                    >
+                      <AddIcon />
+                    </Fab>
+                  ) : null}
+                  {isMobile() || isTablet() ? (
+                    <Fab
+                      color="primary"
+                      style={{
+                        position: 'fixed',
+                        bottom: 72 + 16,
+                        left: 16 + 56 + 16,
+                      }}
+                      onClick={() => {
+                        gotoPage('/app/chat', { room_id: props.room_id })
+                      }}
+                    >
+                      <Chat />
+                    </Fab>
+                  ) : null}
+                </ThemeProvider>
+              </div>
             </div>
-          </div>
           </div>
         </div>
         <div
           style={{
             position: 'fixed',
-            right: isInRoom() ? messengerView ? (450 + 32) : (16 + 56 + 24) : 16,
+            right: isInRoom() ? (messengerView ? 450 + 32 : 16 + 56 + 24) : 16,
             bottom: isDesktop() ? -16 : 0,
             transform: 'translateY(+48px)',
             zIndex: 99999,
@@ -721,12 +733,15 @@ export default function RoomPage(props) {
         >
           <Jumper open={jumperOpen} setOpen={setJumperOpen} />
         </div>
-        {messengerView ?
-          null :
-          <Fab color={'primary'} style={{position: 'fixed', right: 24, bottom: 12}} onClick={() => setMessengerView(!messengerView)}>
+        {messengerView ? null : (
+          <Fab
+            color={'primary'}
+            style={{ position: 'fixed', right: 24, bottom: 12 }}
+            onClick={() => setMessengerView(!messengerView)}
+          >
             <Visibility />
           </Fab>
-        }
+        )}
         <RoomBottombar
           setCurrentRoomNavBackup={(v) => {
             props.tab_index = v
@@ -1107,7 +1122,7 @@ export default function RoomPage(props) {
         </div>
         <RoomBottombar
           setCurrentRoomNavBackup={(v) => {
-            props.tab_index = v;
+            props.tab_index = v
           }}
           setCurrentRoomNav={(i) => {
             setOpacity(0)

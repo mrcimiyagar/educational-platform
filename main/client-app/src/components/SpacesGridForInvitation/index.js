@@ -52,7 +52,7 @@ export default function SpacesGridForInvitation(props) {
       },
       redirect: 'follow'
     };
-    fetch(serverRoot + "/room/get_spaces", requestOptions)
+    fetch(serverRoot + "/room/get_spaces_for_invitation", requestOptions)
           .then(response => response.json())
           .then(result => {
               console.log(JSON.stringify(result));

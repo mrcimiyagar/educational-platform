@@ -593,10 +593,8 @@ function App() {
     } else if (e.data.action === 'intWebcam') {
       setExtWebcam(false);
     } else if (e.data.action === 'enableVideoAccess') {
-      alert('hello 2');
       setVideoAccess(true);
     } else if (e.data.action === 'disableVideoAccess') {
-      alert('hello 3');
       setVideoAccess(false);
     }
   }
