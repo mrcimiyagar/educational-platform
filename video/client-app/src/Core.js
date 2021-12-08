@@ -204,29 +204,29 @@ function App() {
   })
   const classes = useStyles()
 
-  let forceUpdate = useForceUpdate();
-  let [videos, setVideos] = React.useState({});
-  let [audios, setAudios] = React.useState({});
-  let [screens, setScreens] = React.useState({});
-  let [video, setVideo] = React.useState(false);
-  let [audio, setAudio] = React.useState(false);
-  let [screen, setScreen] = React.useState(false);
-  let [connected, setConnected] = React.useState(false);
-  let [pathConfig, setPathConfig] = React.useState(undefined);
-  let [me, setMe] = React.useState(undefined);
-  let [roomId, setRoomId] = React.useState(undefined);
-  let [shownVideos, setShownVideos] = React.useState({});
-  let [shownAudios, setShownAudios] = React.useState({});
-  let [shownScreens, setShownScreens] = React.useState({});
-  let [myUserId, setMyUserId] = React.useState(undefined);
-  let [listOpen, setListOpen] = React.useState(false);
-  let [screenOn, setScreenOn] = React.useState(false);
-  let [sizeMode, setSizeMode] = React.useState(undefined);
-  let [extWebcam, setExtWebcam] = React.useState(false);
-  let [screenShareSupported, setScreenShareSupported] = React.useState(false);
-  let [pinList, setPinList] = React.useState(false);
-  let [webcamSize, setWebcamSize] = React.useState('big');
-  let [videoAccess, setVideoAccess] = React.useState(false);
+  let forceUpdate = useForceUpdate()
+  let [videos, setVideos] = React.useState({})
+  let [audios, setAudios] = React.useState({})
+  let [screens, setScreens] = React.useState({})
+  let [video, setVideo] = React.useState(false)
+  let [audio, setAudio] = React.useState(false)
+  let [screen, setScreen] = React.useState(false)
+  let [connected, setConnected] = React.useState(false)
+  let [pathConfig, setPathConfig] = React.useState(undefined)
+  let [me, setMe] = React.useState(undefined)
+  let [roomId, setRoomId] = React.useState(undefined)
+  let [shownVideos, setShownVideos] = React.useState({})
+  let [shownAudios, setShownAudios] = React.useState({})
+  let [shownScreens, setShownScreens] = React.useState({})
+  let [myUserId, setMyUserId] = React.useState(undefined)
+  let [listOpen, setListOpen] = React.useState(false)
+  let [screenOn, setScreenOn] = React.useState(false)
+  let [sizeMode, setSizeMode] = React.useState(undefined)
+  let [extWebcam, setExtWebcam] = React.useState(false)
+  let [screenShareSupported, setScreenShareSupported] = React.useState(false)
+  let [pinList, setPinList] = React.useState(false)
+  let [webcamSize, setWebcamSize] = React.useState('big')
+  let [videoAccess, setVideoAccess] = React.useState(false)
 
   let DesktopDetector = () => {
     useEffect(() => {
@@ -236,30 +236,30 @@ function App() {
             ? 'desktop'
             : window.innerWidth > 900
             ? 'tablet'
-            : 'mobile'
-        );
-      }, 2500);
-    }, []);
+            : 'mobile',
+        )
+      }, 2500)
+    }, [])
     window.onresize = () => {
       setSizeMode(
         window.innerWidth > 1400
           ? 'desktop'
           : window.innerWidth > 900
           ? 'tablet'
-          : 'mobile'
-      );
+          : 'mobile',
+      )
     }
     return <div />
   }
 
   useEffect(() => {
     setTimeout(() => {
-      var DetectRTC = require('detectrtc');
+      var DetectRTC = require('detectrtc')
       DetectRTC.load(function () {
-        setScreenShareSupported(DetectRTC.isScreenCapturingSupported);
-      });
-    }, 2500);
-  }, []);
+        setScreenShareSupported(DetectRTC.isScreenCapturingSupported)
+      })
+    }, 2500)
+  }, [])
 
   let updatePresenter = (presenter) => {
     if (instantConnectionFlag) {
@@ -325,21 +325,21 @@ function App() {
   function Audio(props) {
     useEffect(() => {
       if (props.id !== 'me') {
-        document.getElementById(props.id + '_audio').srcObject = props.stream;
+        document.getElementById(props.id + '_audio').srcObject = props.stream
       }
       if (props.stream !== undefined) {
         var options = {}
         var speechEvents = hark(props.stream, options)
         speechEvents.on('speaking', function () {
-          let elem = document.getElementById('audio_state_' + props.id);
+          let elem = document.getElementById('audio_state_' + props.id)
           if (elem !== null) {
-            elem.style.backgroundColor = '#00ccff';
+            elem.style.backgroundColor = '#00ccff'
           }
         })
         speechEvents.on('stopped_speaking', function () {
-          let elem = document.getElementById('audio_state_' + props.id);
+          let elem = document.getElementById('audio_state_' + props.id)
           if (elem !== null) {
-            elem.style.backgroundColor = 'white';
+            elem.style.backgroundColor = 'white'
           }
         })
       }
@@ -377,7 +377,11 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%' }}
+            style={{
+              height: (256 + 128) / 2 + 32,
+              marginTop: 16,
+              width: '100%',
+            }}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex', width: '100%' }}>
@@ -397,7 +401,14 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div id={'audio_state_' + props.id} style={{width: 40, height: (256 + 128) / 2, backgroundColor: 'white'}}/>
+              <div
+                id={'audio_state_' + props.id}
+                style={{
+                  width: 40,
+                  height: (256 + 128) / 2,
+                  backgroundColor: 'white',
+                }}
+              />
             </div>
             <br />
             <div
@@ -416,7 +427,11 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%'}}
+            style={{
+              height: (256 + 128) / 2 + 32,
+              marginTop: 16,
+              width: '100%',
+            }}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex', width: '100%' }}>
@@ -442,7 +457,14 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div id={'audio_state_' + props.id} style={{width: 40, height: (256 + 128) / 2, backgroundColor: 'white'}}/>
+              <div
+                id={'audio_state_' + props.id}
+                style={{
+                  width: 40,
+                  height: (256 + 128) / 2,
+                  backgroundColor: 'white',
+                }}
+              />
             </div>
             <br />
             <div
@@ -463,7 +485,11 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%'}}
+            style={{
+              height: (256 + 128) / 2 + 32,
+              marginTop: 16,
+              width: '100%',
+            }}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex', width: '100%' }}>
@@ -489,7 +515,14 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div id={'audio_state_' + props.id} style={{width: 40, height: (256 + 128) / 2, backgroundColor: 'white'}}/>
+              <div
+                id={'audio_state_' + props.id}
+                style={{
+                  width: 40,
+                  height: (256 + 128) / 2,
+                  backgroundColor: 'white',
+                }}
+              />
             </div>
             <br />
             <div
@@ -508,7 +541,11 @@ function App() {
         return (
           <Card
             id={props.id}
-            style={{ height: (256 + 128) / 2 + 32, marginTop: 16, width: '100%' }}
+            style={{
+              height: (256 + 128) / 2 + 32,
+              marginTop: 16,
+              width: '100%',
+            }}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex', width: '100%' }}>
@@ -540,7 +577,14 @@ function App() {
                   onClick={props.onClick}
                 />
               </div>
-              <div id={'audio_state_' + props.id} style={{width: 40, height: (256 + 128) / 2, backgroundColor: 'white'}}/>
+              <div
+                id={'audio_state_' + props.id}
+                style={{
+                  width: 40,
+                  height: (256 + 128) / 2,
+                  backgroundColor: 'white',
+                }}
+              />
             </div>
             <br />
             <div
@@ -584,18 +628,45 @@ function App() {
 
   window.onmessage = (e) => {
     if (e.data.action === 'init') {
-      setMe(e.data.me);
-      setRoomId(e.data.roomId);
-      setMyUserId(e.data.me.id);
-      setVideoAccess(e.data.videoAccess);
+      setMe(e.data.me)
+      setRoomId(e.data.roomId)
+      setMyUserId(e.data.me.id)
+      setVideoAccess(e.data.videoAccess)
     } else if (e.data.action === 'extWebcam') {
-      setExtWebcam(true);
+      setExtWebcam(true)
     } else if (e.data.action === 'intWebcam') {
-      setExtWebcam(false);
+      setExtWebcam(false)
     } else if (e.data.action === 'enableVideoAccess') {
-      setVideoAccess(true);
+      setVideoAccess(true)
     } else if (e.data.action === 'disableVideoAccess') {
-      setVideoAccess(false);
+      setVideoAccess(false)
+      instantConnectionFlag = false
+      setConnected(false)
+      window.parent.postMessage(
+        { sender: 'conf', action: 'detachWebcamOnMessenger' },
+        pathConfig.mainFrontend,
+      )
+      setScreenOn(false)
+      document.getElementById('screenMax').srcObject = undefined
+      document.getElementById('screenMax2').srcObject = undefined
+      endAudio()
+      destructAudioNet()
+      endVideo()
+      destructVideoNet()
+      endScreen()
+      destructScreenNet()
+      setVideos({})
+      setAudios({})
+      setScreens({})
+      setVideo(false)
+      setAudio(false)
+      setScreen(false)
+      setShownVideos({})
+      setShownAudios({})
+      setShownScreens({})
+      setListOpen(false)
+      setExtWebcam(false)
+      forceUpdate()
     }
   }
 
@@ -646,7 +717,7 @@ function App() {
         main: '#ff3300',
       },
     },
-  });
+  })
 
   return (
     <div
@@ -667,17 +738,54 @@ function App() {
           objectFit: 'cover',
           top: 80,
           left:
-            (sizeMode === 'mobile' ? 0 :
-              ((pinList ? (window.innerWidth > 500 ? (330 - 112) : (window.innerWidth - 112)) : 0) +
-                (window.innerWidth / 2 - ((sizeMode === 'desktop' || (sizeMode === 'tablet' && shownScreens[presenterBackup] === true && shownVideos[presenterBackup] === true)) ?
-                 225 : (sizeMode === 'mobile') ? 112 : 0) + 32) + ((450 - (webcamSize === 'big' ? 450 : webcamSize === 'medium' ? 270 : 150)) / 2))) + 'px',
+            (sizeMode === 'mobile'
+              ? 0
+              : (pinList
+                  ? window.innerWidth > 500
+                    ? 330 - 112
+                    : window.innerWidth - 112
+                  : 0) +
+                (window.innerWidth / 2 -
+                  (sizeMode === 'desktop' ||
+                  (sizeMode === 'tablet' &&
+                    shownScreens[presenterBackup] === true &&
+                    shownVideos[presenterBackup] === true)
+                    ? 225
+                    : sizeMode === 'mobile'
+                    ? 112
+                    : 0) +
+                  32) +
+                (450 -
+                  (webcamSize === 'big'
+                    ? 450
+                    : webcamSize === 'medium'
+                    ? 270
+                    : 150)) /
+                  2) + 'px',
           width:
-            (sizeMode === 'mobile' ? window.innerWidth :
-              ((pinList ? (window.innerWidth > 500 ? (-1 * (500 - 112)) : (-1 * (window.innerWidth - 112))) : 0) +
+            (sizeMode === 'mobile'
+              ? window.innerWidth
+              : ((pinList
+                  ? window.innerWidth > 500
+                    ? -1 * (500 - 112)
+                    : -1 * (window.innerWidth - 112)
+                  : 0) +
                 (shownScreens[presenterBackup] === true)
-                  ? (window.innerWidth - 176 - (sizeMode === 'desktop' ? 450 : (shownVideos[presenterBackup] === true ? 350 : 0)))
-                  : (window.innerWidth / 2 - (sizeMode === 'desktop' ? 225 : 0))) +
-                  (450 - (webcamSize === 'big' ? 450 : webcamSize === 'medium' ? 270 : 150))) + 'px',
+                  ? window.innerWidth -
+                    176 -
+                    (sizeMode === 'desktop'
+                      ? 450
+                      : shownVideos[presenterBackup] === true
+                      ? 350
+                      : 0)
+                  : window.innerWidth / 2 -
+                    (sizeMode === 'desktop' ? 225 : 0)) +
+                (450 -
+                  (webcamSize === 'big'
+                    ? 450
+                    : webcamSize === 'medium'
+                    ? 270
+                    : 150))) + 'px',
           height: 'auto',
         }}
       ></video>
@@ -688,35 +796,36 @@ function App() {
           objectFit: 'cover',
           position: 'absolute',
           right: 0,
-          top: sizeMode === 'mobile' ? (window.innerWidth * 4 / 5 - 0 + 'px') : 0,
-          width: webcamSize === 'big' ? 450 : webcamSize === 'medium' ? 270 : 150,
-          height: webcamSize === 'big' ? 300 : webcamSize === 'medium' ? 180 : 100,
+          top:
+            sizeMode === 'mobile' ? (window.innerWidth * 4) / 5 - 0 + 'px' : 0,
+          width:
+            webcamSize === 'big' ? 450 : webcamSize === 'medium' ? 270 : 150,
+          height:
+            webcamSize === 'big' ? 300 : webcamSize === 'medium' ? 180 : 100,
         }}
         onClick={() => {
           if (webcamSize === 'big') {
-            setWebcamSize('medium');
+            setWebcamSize('medium')
+          } else if (webcamSize === 'medium') {
+            setWebcamSize('small')
+          } else if (webcamSize === 'small') {
+            setWebcamSize('big')
           }
-          else if (webcamSize === 'medium') {
-            setWebcamSize('small');
-          }
-          else if (webcamSize === 'small') {
-            setWebcamSize('big');
-          }
-          forceUpdate();
+          forceUpdate()
         }}
       ></video>
       <Drawer
-        variant={pinList ? "permanent" : 'temporary'}
+        variant={pinList ? 'permanent' : 'temporary'}
         open={listOpen}
         onClose={() => {
           window.parent.postMessage(
             { sender: 'conf', action: 'showBottomBar' },
             pathConfig.mainFrontend,
           )
-          setListOpen(false);
+          setListOpen(false)
         }}
         ModalProps={{
-          keepMounted: true
+          keepMounted: true,
         }}
         classes={{ paper: classes.paper }}
         style={{ position: 'relative', zIndex: 2490 }}
@@ -724,21 +833,31 @@ function App() {
         <div
           id="participents"
           className="participents"
-          style={{ width: window.innerWidth + 'px', minWidth: 300, maxWidth: 500, height: 128, flexwrap: 'nowrap' }}
+          style={{
+            width: window.innerWidth + 'px',
+            minWidth: 300,
+            maxWidth: 500,
+            height: 128,
+            flexwrap: 'nowrap',
+          }}
         >
-          <IconButton onClick={() => {
-            window.parent.postMessage(
-              { sender: 'conf', action: 'showBottomBar' },
-              pathConfig.mainFrontend,
-            )
-            setListOpen(false);
-          }} style={{padding: 16}}>
-            <Close/>
+          <IconButton
+            onClick={() => {
+              window.parent.postMessage(
+                { sender: 'conf', action: 'showBottomBar' },
+                pathConfig.mainFrontend,
+              )
+              setListOpen(false)
+            }}
+            style={{ padding: 16 }}
+          >
+            <Close />
           </IconButton>
-          <IconButton onClick={() => setPinList(!pinList)} style={{padding: 16}}>
-            {
-              pinList ? <Attachment/> : <LinkOff/>
-            }
+          <IconButton
+            onClick={() => setPinList(!pinList)}
+            style={{ padding: 16 }}
+          >
+            {pinList ? <Attachment /> : <LinkOff />}
           </IconButton>
           {result.map((key) => {
             if (needUpdate[key] === true || videoCache[key] === undefined) {
@@ -752,8 +871,9 @@ function App() {
               )
               delete needUpdate[key]
             }
-            if (myUserId === key) return null;
-            if (shownVideos[key] !== true && shownScreens[key] !== true) return null;
+            if (myUserId === key) return null
+            if (shownVideos[key] !== true && shownScreens[key] !== true)
+              return null
             return videoCache[key]
           })}
         </div>
@@ -774,8 +894,11 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left:(sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
-                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? (208 + 56 + 16 + 56 + 16) : (48 + 56 + 16 + 56 + 16),
+                left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
+                bottom:
+                  sizeMode === 'mobile' || sizeMode === 'tablet'
+                    ? 208 + 56 + 16 + 56 + 16
+                    : 48 + 56 + 16 + 56 + 16,
               }}
               onClick={() => {
                 window.parent.postMessage(
@@ -792,8 +915,11 @@ function App() {
               color={'primary'}
               style={{
                 position: 'absolute',
-                left: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
-                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 208 + 56 + 16 : 48 + 56 + 16,
+                left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
+                bottom:
+                  sizeMode === 'mobile' || sizeMode === 'tablet'
+                    ? 208 + 56 + 16
+                    : 48 + 56 + 16,
               }}
               onClick={() => {
                 if (audio) {
@@ -813,8 +939,9 @@ function App() {
               color={'secondary'}
               style={{
                 position: 'absolute',
-                left: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
-                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 208 : 48,
+                left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
+                bottom:
+                  sizeMode === 'mobile' || sizeMode === 'tablet' ? 208 : 48,
               }}
               onClick={() => {
                 instantConnectionFlag = false
@@ -855,9 +982,10 @@ function App() {
                 position: 'absolute',
                 left:
                   (screenShareSupported ? 32 + 56 : 0) +
-                  ((sizeMode === 'mobile' || sizeMode === 'tablet') ? 0 : 16) +
+                  (sizeMode === 'mobile' || sizeMode === 'tablet' ? 0 : 16) +
                   72,
-                bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 208 : 48,
+                bottom:
+                  sizeMode === 'mobile' || sizeMode === 'tablet' ? 208 : 48,
               }}
               onClick={() => {
                 if (video) {
@@ -878,8 +1006,12 @@ function App() {
                 color={'primary'}
                 style={{
                   position: 'absolute',
-                  left: 32 + 56 + ((sizeMode === 'mobile' || sizeMode === 'tablet') ? 0 : 16),
-                  bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 208 : 48,
+                  left:
+                    32 +
+                    56 +
+                    (sizeMode === 'mobile' || sizeMode === 'tablet' ? 0 : 16),
+                  bottom:
+                    sizeMode === 'mobile' || sizeMode === 'tablet' ? 208 : 48,
                 }}
                 onClick={() => {
                   if (screen) {
@@ -932,8 +1064,8 @@ function App() {
             color={'secondary'}
             style={{
               position: 'fixed',
-              left: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
-              bottom: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 208 : 48,
+              left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
+              bottom: sizeMode === 'mobile' || sizeMode === 'tablet' ? 208 : 48,
             }}
             onClick={() => {
               instantConnectionFlag = true
