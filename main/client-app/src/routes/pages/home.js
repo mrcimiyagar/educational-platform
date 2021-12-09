@@ -38,6 +38,7 @@ import { UsersBox } from '../../modules/usersbox/usersbox'
 import { colors, setToken, theme, token } from '../../util/settings'
 import {
   ConnectToIo,
+  leaveRoom,
   registerEvent,
   serverRoot,
   setRoom,
@@ -163,6 +164,11 @@ export default function HomePage(props) {
     
       Promise.all([getRoomPromise, enterRoomPromise]).then(() => callback());
   }
+  
+  socket.io.removeAllListeners('reconnect')
+  socket.io.on('reconnect', () => {
+    loadData();
+  })
 
   useEffect(() => {
     loadData(() => {
@@ -222,6 +228,10 @@ export default function HomePage(props) {
         }
       })
       .catch((error) => console.log('error', error))
+      
+      return () => {
+        leaveRoom(() => {})
+      }
   }, [])
 
   if (!loaded) {
