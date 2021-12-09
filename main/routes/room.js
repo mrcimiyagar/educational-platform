@@ -285,7 +285,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
         })
         return
       }
-      if (req.body.participentId !== null) {
+      if (req.body.participentId !== null && req.body.participentId !== undefined) {
         let p2pExistance = await sw.P2pExistance.findOne({
           where: {
             code:
