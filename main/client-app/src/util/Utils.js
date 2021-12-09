@@ -170,8 +170,17 @@ export let unregisterEvent = (eventName) => {
 
 var worker = new Worker('ping');
 worker.onmessage = function(e) {
-  if (e.data.sender === 'main' && e.data.action === 'start')
-    setInterval(() => {socket.emit('ping');}, 1000);
+  if (e.data.sender === 'main' && e.data.action === 'start') {
+    setInterval(() => {
+      if (socket !== null && socket !== undefined) {
+        try {
+          socket.emit('ping');
+        } catch(ex) {
+          console.log(ex);
+        }
+      }
+    }, 1000);
+  }
 };
 worker.onerror = function(e) {console.log(e);};
 worker.postMessage({sender: 'main', action: 'start'});
