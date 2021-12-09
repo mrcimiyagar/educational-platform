@@ -632,7 +632,7 @@ router.post('/get_spaces', jsonParser, async function (req, res) {
 
 router.post('/enter_room', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
-    if (membership === null || membership === undefined) {
+    if (membership === null || membership === undefined || membership.roomId === undefined) {
       res.send({ status: 'success' })
       return
     }

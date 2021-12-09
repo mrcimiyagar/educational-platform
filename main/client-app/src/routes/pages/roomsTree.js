@@ -134,6 +134,7 @@ export default function RoomsTree(props) {
                   .then(result => {
                     console.log(JSON.stringify(result));
                     if (result.status === 'success') {
+                      reloadUsersList();
                       let requestOptions2 = {
                         method: 'POST',
                         headers: {
@@ -145,14 +146,12 @@ export default function RoomsTree(props) {
                         }),
                         redirect: 'follow',
                       }
-                      fetch(
-                        serverRoot + '/room/enter_room',
-                        requestOptions2,
-                      ).then(() => {
-                        setTimeout(() => {
-                          reloadUsersList();
-                        }, 2000);
-                      })
+                      setTimeout(() => {
+                        fetch(
+                          serverRoot + '/room/enter_room',
+                          requestOptions2,
+                        );
+                      }, 5000);
                     }
                   })
                   .catch(error => console.log('error', error));
@@ -217,6 +216,7 @@ export default function RoomsTree(props) {
                   .then(result => {
                     console.log(JSON.stringify(result));
                     if (result.status === 'success') {
+                      reloadUsersList();
                       let requestOptions2 = {
                         method: 'POST',
                         headers: {
@@ -228,14 +228,12 @@ export default function RoomsTree(props) {
                         }),
                         redirect: 'follow',
                       }
-                      fetch(
-                        serverRoot + '/room/enter_room',
-                        requestOptions2,
-                      ).then(() => {
-                        setTimeout(() => {
-                          reloadUsersList();
-                        }, 2000);
-                      })
+                      setTimeout(() => {
+                        fetch(
+                          serverRoot + '/room/enter_room',
+                          requestOptions2,
+                        );
+                      }, 5000);
                     }
                   })
                   .catch(error => console.log('error', error));

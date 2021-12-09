@@ -276,10 +276,11 @@ export let RoomTreeBox = (props) => {
       })
       .catch((error) => console.log('error', error))
   }
+  
   useEffect(() => {
     reloadUsersList()
   }, [])
-  
+
   unregisterEvent('user-entered')
   registerEvent('user-entered', ({ rooms }) => {
     processUsers(rooms)
