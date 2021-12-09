@@ -1,4 +1,4 @@
-import { AppBar, Button, Fab, TextField, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Fab, Toolbar, Typography } from '@material-ui/core';
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import Slide from "@material-ui/core/Slide";
@@ -11,8 +11,6 @@ import { reloadUsersList, RoomTreeBox } from '../../components/RoomTreeBox';
 import { colors, token } from '../../util/settings';
 import { isMobile, serverRoot } from '../../util/Utils';
 import { membership } from './room';
-import { BottomSheet } from 'react-spring-bottom-sheet';
-import 'react-spring-bottom-sheet/dist/style.css';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -56,7 +54,6 @@ export default function RoomsTree(props) {
         setOpen(false);
         setTimeout(popPage, 250)
     };
-    const [nameOpen, setNameOpen] = React.useState(false);
     useEffect(() => {
         let requestOptions = {
             method: 'POST',
@@ -138,40 +135,7 @@ export default function RoomsTree(props) {
             }}>
               <Add/>
           </Fab>
-          <BottomSheet open={nameOpen} >
-            <TextField variant={'outlined'} label={'نام روم'} id={'createRoomTitle'} />
-            <Button variant={'outlined'} onClick={() => {
-              let roomTitle = document.getElementById('createRoomTitle');
-              if (roomTitle === null || roomTitle === '') {
-                return;
-              }
-              let requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'token': token
-                },
-                body: JSON.stringify({
-                  title: roomTitle,
-                  details: '',
-                  spaceId: room.spaceId,
-                  chatType: 'group'
-                }),
-                redirect: 'follow'
-              };
-              fetch(serverRoot + "/room/create_room", requestOptions)
-                  .then(response => response.json())
-                  .then(result => {
-                    console.log(JSON.stringify(result));
-                    if (result.status === 'success') {
-                      reloadUsersList();
-                    }
-                  })
-                  .catch(error => console.log('error', error));
-              setNameOpen(false);
-            }}>تایید</Button>
-          </BottomSheet>
-        </Dialog>
+            </Dialog>
         );
     }
     else {
@@ -205,14 +169,7 @@ export default function RoomsTree(props) {
                 </div> 
                 <Fab color={'secondary'} style={{position: 'fixed', right: 16, bottom: 24}}
             onClick={() => {
-              setNameOpen(true);
-            }}>
-              <Add/>
-          </Fab>
-          <BottomSheet open={nameOpen} >
-            <TextField variant={'outlined'} label={'نام روم'} id={'createRoomTitle'} />
-            <Button variant={'outlined'} onClick={() => {
-              let roomTitle = document.getElementById('createRoomTitle');
+              let roomTitle = prompt('نام روم را وارد نمایید')
               if (roomTitle === null || roomTitle === '') {
                 return;
               }
@@ -239,10 +196,10 @@ export default function RoomsTree(props) {
                     }
                   })
                   .catch(error => console.log('error', error));
-              setNameOpen(false);
-            }}>تایید</Button>
-          </BottomSheet>
-        </Dialog>
+            }}>
+              <Add/>
+          </Fab>
+            </Dialog>
         );
     }
 }

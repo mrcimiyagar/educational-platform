@@ -168,7 +168,13 @@ export let unregisterEvent = (eventName) => {
   delete eventDict[eventName];
 }
 
-let timer = undefined;
+var worker = new Worker('ping');
+worker.onmessage = function(e) {
+  if (e.data.sender === 'main' && e.data.action === 'start')
+    setInterval(() => {socket.emit('ping');}, 1000);
+};
+worker.onerror = function(e) {console.log(e);};
+worker.postMessage({sender: 'main', action: 'start'});
 
 export const ConnectToIo = (t, onSocketAuth, force) => {
   if (socket !== null && socket !== undefined) {
@@ -181,17 +187,6 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
     }
   }
   socket = io(pathConfig.mainBackend)
-  if (timer !== undefined) {
-    try {
-      clearInterval(timer);
-    }
-    catch(ex) {
-      console.log(ex);
-    }
-  }
-  setInterval(() => {
-    socket.emit('ping');
-  }, 1000);
   socket.on('sync', () => {
     let requestOptions2 = {
       method: 'POST',
