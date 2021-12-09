@@ -109,7 +109,7 @@ module.exports = {
                       disconnectWebsocket(user)
                     });
                     metadata[user.id].timer = setTimeout(() => {
-                      //disconnectWebsocket(user);
+                      disconnectWebsocket(user);
                     }, 6000);
                     soc.on('ping', () => {
                       if (metadata[user.id].timer !== undefined) {
@@ -138,7 +138,7 @@ module.exports = {
                     disconnectWebsocket(user)
                   });
                   metadata[user.id].timer = setTimeout(() => {
-                    //disconnectWebsocket(user);
+                    disconnectWebsocket(user);
                   }, 6000);
                   soc.on('ping', () => {
                     if (metadata[user.id].timer !== undefined) {
