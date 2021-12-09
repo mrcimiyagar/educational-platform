@@ -116,7 +116,7 @@ module.exports = {
                         clearTimeout(metadata[user.id].timer);
                       }
                       metadata[user.id].timer = setTimeout(() => {
-                        //disconnectWebsocket(user);
+                        disconnectWebsocket(user);
                       }, 3000);
                     });
                     typingEvent(user, soc);
@@ -145,7 +145,7 @@ module.exports = {
                       clearTimeout(metadata[user.id].timer);
                     }
                     metadata[user.id].timer = setTimeout(() => {
-                      //disconnectWebsocket(user);
+                      disconnectWebsocket(user);
                     }, 3000);
                   });
                   typingEvent(user, soc);
