@@ -4,7 +4,12 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import { ArrowForward, Attachment, Visibility, VisibilityOff } from '@material-ui/icons'
+import {
+  ArrowForward,
+  Attachment,
+  Visibility,
+  VisibilityOff,
+} from '@material-ui/icons'
 import CallIcon from '@material-ui/icons/Call'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import VideocamIcon from '@material-ui/icons/Videocam'
@@ -20,7 +25,12 @@ import {
 } from '../../App'
 import { setCurrentRoomNavBackup } from '../../routes/pages/room'
 import { colors, token, me } from '../../util/settings'
-import { registerEvent, serverRoot, socket, unregisterEvent } from '../../util/Utils'
+import {
+  registerEvent,
+  serverRoot,
+  socket,
+  unregisterEvent,
+} from '../../util/Utils'
 import HomeToolbar from '../HomeToolbar'
 
 const useStyles = makeStyles((theme) => ({
@@ -66,36 +76,34 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function ChatAppBar(props) {
-
   const classes = useStyles()
 
-  let [tl, setTl] = React.useState('');
+  let [tl, setTl] = React.useState('')
 
   useEffect(() => {
     if (socket !== undefined) {
-      unregisterEvent('uploading');
+      unregisterEvent('uploading')
       unregisterEvent('uploading', () => {
-        setTl('در حال آپلود...');
-      });
-      unregisterEvent('uploading_done');
+        setTl('در حال آپلود...')
+      })
+      unregisterEvent('uploading_done')
       unregisterEvent('uploading_done', () => {
-        setTl('');
-      });
-      unregisterEvent('chat-typing');
-      registerEvent('chat-typing', typingList => {
+        setTl('')
+      })
+      unregisterEvent('chat-typing')
+      registerEvent('chat-typing', (typingList) => {
         typingList = typingList.filter((u) => {
           if (u.id === me.id) {
-            return false;
+            return false
           }
-          return true;
+          return true
         })
         if (typingList.length === 0) {
-          setTl('');
+          setTl('')
+        } else {
+          setTl('در حال نوشتن...')
         }
-        else {
-          setTl('در حال نوشتن...');
-        }
-      });
+      })
     }
   }, [])
 
@@ -121,7 +129,13 @@ export default function ChatAppBar(props) {
                 ? 0
                 : '24px 0 0 0',
             position: isDesktop() || isTablet() ? 'fixed' : undefined,
-            top: isDesktop() ? (isInRoom() ? (props.webcamOn === true) ? 300 : 0 : 32) : 0,
+            top: isDesktop()
+              ? isInRoom()
+                ? props.webcamOn === true
+                  ? 300
+                  : 0
+                : 32
+              : 0,
             left: isInRoom()
               ? isDesktop()
                 ? 'calc(100% - 450px)'
@@ -140,7 +154,7 @@ export default function ChatAppBar(props) {
               marginTop: isDesktop() || isTablet() ? -8 : 0,
             }}
           >
-            {(isMobile() || (isTablet() && isInRoom())) ? (
+            {isMobile() || (isTablet() && isInRoom()) ? (
               <IconButton
                 style={{ marginRight: -16 }}
                 onClick={() => props.handleClose()}
@@ -155,53 +169,54 @@ export default function ChatAppBar(props) {
                 marginRight: isDesktop() || isTablet() ? 8 : -8,
               }}
               alt={
-                (props.user !== undefined && props.user !== null)
+                props.user !== undefined && props.user !== null
                   ? props.user.firstName + ' ' + props.user.lastName
-                  : (props.room !== undefined && props.room !== null)
+                  : props.room !== undefined && props.room !== null
                   ? props.room.title
                   : ''
               }
               src={
-                (props.room !== undefined && props.room !== null)
+                props.room !== undefined && props.room !== null
                   ? serverRoot +
                     `/file/download_room_avatar?token=${token}&roomId=${props.room.id}`
-                  : (props.user !== undefined && props.user !== null)
+                  : props.user !== undefined && props.user !== null
                   ? serverRoot +
                     `/file/download_user_avatar?token=${token}&userId=${props.user.id}`
                   : ''
               }
               onClick={() => {
-                if (isInRoom()) return; 
-                gotoPage('/app/userprofile', { user_id: props.user.id });
+                if (isInRoom()) return
+                gotoPage('/app/userprofile', {
+                  user_id: props.user !== undefined ? props.user.id : undefined,
+                  room_id: props.room !== undefined ? props.room.id : undefined,
+                })
               }}
             />
             <Typography
               variant="h6"
               style={{ fontFamily: 'mainFont', marginRight: 8, color: '#fff' }}
             >
-              {(props.user !== undefined && props.user !== null)
+              {props.user !== undefined && props.user !== null
                 ? props.user.firstName + ' ' + props.user.lastName
-                : (props.room !== undefined && props.room !== null)
+                : props.room !== undefined && props.room !== null
                 ? props.room.title
                 : ''}
             </Typography>
-            <br/>
-            <Typography style={{color: '#fff', marginRight: 16}}>
+            <br />
+            <Typography style={{ color: '#fff', marginRight: 16 }}>
               {tl.toString()}
             </Typography>
             <div className={classes.search}>
-              {props.viewCallback === undefined ?
-                null :
+              {props.viewCallback === undefined ? null : (
                 <IconButton
                   onClick={() => {
-                    props.viewCallback();
+                    props.viewCallback()
                   }}
                 >
                   <VisibilityOff style={{ fill: '#fff' }} />
                 </IconButton>
-              }
-              {isInRoom() ?
-                null :
+              )}
+              {isInRoom() ? null : (
                 <IconButton
                   onClick={() => {
                     setInTheGame(false)
@@ -215,12 +230,11 @@ export default function ChatAppBar(props) {
                 >
                   <VideocamIcon style={{ fill: '#fff' }} />
                 </IconButton>
-              }
-              {isInRoom() ?
-                null :
+              )}
+              {isInRoom() ? null : (
                 <IconButton
                   onClick={() => {
-                    props.handleCallClicked();
+                    props.handleCallClicked()
                     setInTheGame(false)
                     setTimeout(() => {
                       gotoPage('/app/room', {
@@ -232,7 +246,7 @@ export default function ChatAppBar(props) {
                 >
                   <CallIcon style={{ fill: '#fff' }} />
                 </IconButton>
-              }
+              )}
               <IconButton>
                 <MoreIcon style={{ fill: '#fff' }} />
               </IconButton>

@@ -49,6 +49,7 @@ let userToSocketMap = {}
 
 let typingEvent = (user, soc) => {
   soc.on('chat-typing', () => {
+    if (metadata[user.id].typing === undefined) metadata[user.id].typing = {};
       if (user.id in metadata[user.id].typing) {
         clearTimeout(metadata[user.id].typing[user.id].timeout)
       }

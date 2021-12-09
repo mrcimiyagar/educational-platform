@@ -9,7 +9,7 @@ import React, { useEffect } from 'react';
 import { isDesktop, isTablet, popPage, registerDialogOpen } from "../../App";
 import { reloadUsersList, RoomTreeBox } from '../../components/RoomTreeBox';
 import { colors, token } from '../../util/settings';
-import { serverRoot } from '../../util/Utils';
+import { isMobile, serverRoot } from '../../util/Utils';
 import { membership } from './room';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -38,10 +38,7 @@ const useStyles = makeStyles((theme) => ({
     divider: {
         height: 28,
         margin: 4,
-    },
-    backDrop: {
-        backdropFilter: "blur(10px)",
-      },
+    }
 }));
 
 export default function RoomsTree(props) {
@@ -77,22 +74,22 @@ export default function RoomsTree(props) {
               })
     }, [])
     document.documentElement.style.overflow = 'hidden'
-    if (isDesktop()) {
+    if (isDesktop() || isTablet()) {
         return (
             <Dialog
                 onTouchStart={(e) => {e.stopPropagation();}}
                 PaperProps={{
                     style: {
                         backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                        boxShadow: 'none'
+                        boxShadow: 'none',
+                        backdropFilter: 'blur(10px)',
+                        width: 600,
+                        height: 800,
+                        borderRadius: 32,
+                        overflow: 'hidden'
                     },
                 }}
-                BackdropProps={{
-                    classes: {
-                        root: classes.backDrop
-                    },
-                }}
-                fullScreen={isDesktop() || isTablet()} open={open} onClose={handleClose} TransitionComponent={Transition}
+                fullScreen={isMobile()} open={open} onClose={handleClose} TransitionComponent={Transition}
             >
                 <AppBar position={'fixed'} style={{position: 'fixed', width: '100%', height: 64, backgroundColor: colors.primaryMedium}}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
@@ -102,14 +99,11 @@ export default function RoomsTree(props) {
                     </Toolbar>
                 </AppBar>
                 <div style={{width: "100%", height: "100%"}}>
-                    <div style={{width: 450, position: 'absolute', left: 0, top: 64, height: '100%'}}>
+                    <div style={{width: '100%', position: 'absolute', left: 0, top: 64, height: '100%', overflowY: 'auto'}}>
                         <RoomTreeBox membership={membership} room={room}/>
                     </div>
-                    <div style={{width: 'calc(100% - 450px)', position: 'absolute', left: 450, top: 0, height: 'calc(100% - 48px)'}}>
-                        
-                    </div>
                 </div>
-                <Fab color={'secondary'} style={{position: 'fixed', left: isDesktop() ? (450 - 56 - 16) : undefined, right: isDesktop() ? undefined : 16, bottom: 24}}
+                <Fab color={'secondary'} style={{position: 'fixed', right: 16, bottom: 24}}
             onClick={() => {
               let roomTitle = prompt('نام روم را وارد نمایید')
               if (roomTitle === null || roomTitle === '') {
@@ -163,21 +157,20 @@ export default function RoomsTree(props) {
     }
     else {
         return (
-            <Dialog
-                onTouchStart={(e) => {e.stopPropagation();}}
-                PaperProps={{
-                    style: {
-                        backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                        boxShadow: 'none'
-                    },
-                }}
-                BackdropProps={{
-                    classes: {
-                        root: classes.backDrop
-                    },
-                }}
-                fullScreen={isDesktop() || isTablet()} open={open} onClose={handleClose} TransitionComponent={Transition}
-            >
+          <Dialog
+              onTouchStart={(e) => {e.stopPropagation();}}
+              PaperProps={{
+                  style: {
+                      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                      boxShadow: 'none',
+                      backdropFilter: 'blur(10px)',
+                      width: '100%',
+                      height: '100%',
+                      overflow: 'hidden'
+                  },
+              }}
+              fullScreen={isMobile()} open={open} onClose={handleClose} TransitionComponent={Transition}
+          >
                 <AppBar position={'fixed'} style={{position: 'fixed', width: '100%', height: 64, backgroundColor: colors.primaryMedium}}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
@@ -187,11 +180,11 @@ export default function RoomsTree(props) {
                 </AppBar>
                 <div style={{width: "100%", height: "100%"}}>
                      
-                    <div style={{width: '100%', position: 'absolute', left: 0, top: 64, height: '100%'}}>
+                    <div style={{width: '100%', position: 'absolute', left: 0, top: 64, height: '100%', overflowY: 'auto'}}>
                         <RoomTreeBox membership={membership} room={room}/>
                     </div>
                 </div> 
-                <Fab color={'secondary'} style={{position: 'fixed', left: isDesktop() ? (450 - 56 - 16) : undefined, right: isDesktop() ? undefined : 16, bottom: 24}}
+                <Fab color={'secondary'} style={{position: 'fixed', right: 16, bottom: 24}}
             onClick={() => {
               let roomTitle = prompt('نام روم را وارد نمایید')
               if (roomTitle === null || roomTitle === '') {

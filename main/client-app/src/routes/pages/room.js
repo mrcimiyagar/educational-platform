@@ -180,22 +180,24 @@ export default function RoomPage(props) {
         roomId: roomId,
       }),
       redirect: 'follow',
-    }
+    };
     let enterRoomPromise = fetch(
       serverRoot + '/room/enter_room',
       requestOptions2,
-    )
+    );
 
     enterRoomPromise
       .then((response) => response.json())
       .then((result) => {
-        console.log(JSON.stringify(result))
-        setMembership(result.membership)
-        forceUpdate()
+        console.log(JSON.stringify(result));
+        setMembership(result.membership);
+        forceUpdate();
       })
-      .catch((error) => console.log('error', error))
+      .catch((error) => console.log('error', error));
 
-    Promise.all([getRoomPromise, enterRoomPromise]).then(() => callback())
+    Promise.all([getRoomPromise, enterRoomPromise]).then(() => {
+      if (callback !== undefined) callback();
+    });
   }
 
   socket.io.removeAllListeners('reconnect')
