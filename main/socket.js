@@ -109,14 +109,14 @@ module.exports = {
                       disconnectWebsocket(user)
                     });
                     metadata[user.id].timer = setTimeout(() => {
-                      disconnectWebsocket(user);
+                      //disconnectWebsocket(user);
                     }, 6000);
                     soc.on('ping', () => {
                       if (metadata[user.id].timer !== undefined) {
                         clearTimeout(metadata[user.id].timer);
                       }
                       metadata[user.id].timer = setTimeout(() => {
-                        disconnectWebsocket(user);
+                        //disconnectWebsocket(user);
                       }, 3000);
                     });
                     typingEvent(user, soc);
@@ -138,14 +138,14 @@ module.exports = {
                     disconnectWebsocket(user)
                   });
                   metadata[user.id].timer = setTimeout(() => {
-                    disconnectWebsocket(user);
+                    //disconnectWebsocket(user);
                   }, 6000);
                   soc.on('ping', () => {
                     if (metadata[user.id].timer !== undefined) {
                       clearTimeout(metadata[user.id].timer);
                     }
                     metadata[user.id].timer = setTimeout(() => {
-                      disconnectWebsocket(user);
+                      //disconnectWebsocket(user);
                     }, 3000);
                   });
                   typingEvent(user, soc);
