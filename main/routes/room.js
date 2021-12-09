@@ -746,18 +746,18 @@ router.post('/exit_room', jsonParser, async function (req, res) {
               }
               sw.Membership.findAll({
                 raw: true,
-                where: { roomId: membership.roomId },
+                where: { roomId: roomId },
               }).then(async (memberships) => {
                 sw.User.findAll({
                   raw: true,
                   where: { id: memberships.map((mem) => mem.userId) },
                 }).then(async (users) => {
                   require('../server').pushTo(
-                    'room_' + membership.roomId,
+                    'room_' + roomId,
                     'user-exited',
                     {
                       rooms: rooms,
-                      users: getRoomUsers(membership.roomId),
+                      users: getRoomUsers(roomId),
                       allUsers: users,
                     },
                   )
