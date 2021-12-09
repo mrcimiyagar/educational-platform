@@ -34,65 +34,6 @@ import { registerEvent, serverRoot, socket, unregisterEvent, useForceUpdate } fr
 
 export let reloadUsersList = undefined
 
-let createNotification = (type, message, title) => {
-  let cName = ''
-  return () => {
-    switch (type) {
-      case 'primary':
-        NotificationManager.primary(
-          'This is a notification!',
-          'Primary Notification',
-          3000,
-          null,
-          null,
-          cName,
-        )
-        break
-      case 'secondary':
-        NotificationManager.secondary(
-          'This is a notification!',
-          'Secondary Notification',
-          3000,
-          null,
-          null,
-          cName,
-        )
-        break
-      case 'info':
-        NotificationManager.info('Info message', '', 3000, null, null, cName)
-        break
-      case 'success':
-        NotificationManager.success(
-          'Success message',
-          'Title here',
-          3000,
-          null,
-          null,
-          cName,
-        )
-        break
-      case 'warning':
-        NotificationManager.warning(
-          'Warning message',
-          'Close after 3000ms',
-          3000,
-          null,
-          null,
-          cName,
-        )
-        break
-      case 'error':
-        NotificationManager.error(title, message, 3000, null, null, cName)
-        break
-      default:
-        NotificationManager.info('Info message')
-        break
-    }
-  }
-}
-
-let lock = false
-
 const useTreeItemStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.text.secondary,

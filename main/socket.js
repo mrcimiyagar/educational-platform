@@ -47,6 +47,39 @@ let disconnectWebsocket = (user) => {
 let metadata = {}
 let userToSocketMap = {}
 
+let typingEvent = (user, soc) => {
+  soc.on('chat-typing', () => {
+      if (user.id in metadata[user.id].typing) {
+        clearTimeout(metadata[user.id].typing[user.id].timeout)
+      }
+      metadata[user.id].typing[user.id] = {
+        timeout: setTimeout(() => {
+          delete metadata[user.id].typing[user.id]
+          let typingList = []
+          for (let t in metadata[user.id].typing) {
+            typingList.push(users[metadata[user.id].roomId][metadata[user.id].typing[t].user.id])
+          }
+          require('./server').pushTo(
+            'room_' + metadata[user.id].roomId,
+            'chat-typing',
+            typingList,
+          )
+        }, 2000),
+        socket: soc,
+        user: user
+      }
+      let typingList = []
+      for (let t in metadata[user.id].typing) {
+        typingList.push(soc.room.typing[t].user)
+      }
+      require('./server').pushTo(
+        'room_' + metadata[user.id].roomId,
+        'chat-typing',
+        typingList,
+      )
+  });
+};
+
 module.exports = {
   userToSocketMap: userToSocketMap,
   metadata: metadata,
@@ -57,37 +90,6 @@ module.exports = {
     const io = require('socket.io')(server, { cors: { origin: '*' } })
     io.on('connection', (soc) => {
       console.log('a user connected')
-      /*soc.on('chat-typing', () => {
-        if (soc.room !== null && soc.room !== undefined) {
-          if (soc.userId in soc.room.typing) {
-            clearTimeout(soc.room.typing[soc.userId].timeout)
-          }
-          soc.room.typing[soc.userId] = {
-            timeout: setTimeout(() => {
-              delete soc.room.typing[soc.userId]
-              let typingList = []
-              for (let t in soc.room.typing) {
-                typingList.push(users[soc.roomId][soc.room.typing[t].socket.userId])
-              }
-              require('./server').pushTo(
-                'room_' + soc.roomId,
-                'chat-typing',
-                typingList,
-              )
-            }, 2000),
-            socket: soc,
-          }
-          let typingList = []
-          for (let t in soc.room.typing) {
-            typingList.push(soc.room.typing[t].socket.user)
-          }
-          require('./server').pushTo(
-            'room_' + soc.roomId,
-            'chat-typing',
-            typingList,
-          )
-        }
-      })*/
       soc.on('auth', ({ token }) => {
         console.log('authenticating client...')
         try {
@@ -111,11 +113,12 @@ module.exports = {
                     soc.on('ping', () => {
                       if (metadata[user.id].timer !== undefined) {
                         clearTimeout(metadata[user.id].timer);
-                        metadata[user.id].timer = setTimeout(() => {
-                          disconnectWebsocket(user);
-                        }, 3000);
                       }
+                      metadata[user.id].timer = setTimeout(() => {
+                        disconnectWebsocket(user);
+                      }, 3000);
                     });
+                    typingEvent(user, soc);
                     soc.emit('auth-success', {})
                   }
                 }
@@ -139,11 +142,12 @@ module.exports = {
                   soc.on('ping', () => {
                     if (metadata[user.id].timer !== undefined) {
                       clearTimeout(metadata[user.id].timer);
-                      metadata[user.id].timer = setTimeout(() => {
-                        disconnectWebsocket(user);
-                      }, 3000);
                     }
+                    metadata[user.id].timer = setTimeout(() => {
+                      disconnectWebsocket(user);
+                    }, 3000);
                   });
+                  typingEvent(user, soc);
                   soc.emit('auth-success', {})
                 }
               }

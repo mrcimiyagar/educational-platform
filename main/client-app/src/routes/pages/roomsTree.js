@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ArrowForward, Search } from '@material-ui/icons';
 import Add from '@material-ui/icons/Add';
 import React, { useEffect } from 'react';
-import { isDesktop, popPage, registerDialogOpen } from "../../App";
+import { isDesktop, isTablet, popPage, registerDialogOpen } from "../../App";
 import { reloadUsersList, RoomTreeBox } from '../../components/RoomTreeBox';
 import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
@@ -92,7 +92,7 @@ export default function RoomsTree(props) {
                         root: classes.backDrop
                     },
                 }}
-                fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}
+                fullScreen={isDesktop() || isTablet()} open={open} onClose={handleClose} TransitionComponent={Transition}
             >
                 <AppBar position={'fixed'} style={{position: 'fixed', width: '100%', height: 64, backgroundColor: colors.primaryMedium}}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
@@ -158,7 +158,7 @@ export default function RoomsTree(props) {
                         root: classes.backDrop
                     },
                 }}
-                fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}
+                fullScreen={isDesktop() || isTablet()} open={open} onClose={handleClose} TransitionComponent={Transition}
             >
                 <AppBar position={'fixed'} style={{position: 'fixed', width: '100%', height: 64, backgroundColor: 'rgba(21, 96, 233, 0.65)'}}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>

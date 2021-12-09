@@ -200,7 +200,7 @@ export default function RoomPage(props) {
 
   socket.io.removeAllListeners('reconnect')
   socket.io.on('reconnect', () => {
-    loadData()
+    loadData();
   })
 
   let loadFiles = () => {

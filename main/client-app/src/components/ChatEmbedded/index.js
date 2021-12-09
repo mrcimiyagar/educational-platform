@@ -230,6 +230,8 @@ export default function ChatEmbedded(props) {
       })
       .catch((error) => console.log('error', error))
 
+    if (isInRoom() && isDesktop()) return;
+    
     let requestOptions2 = {
       method: 'POST',
       headers: {
@@ -253,9 +255,10 @@ export default function ChatEmbedded(props) {
       })
       .catch((error) => console.log('error', error))
   };
-  
-  socket.io.removeAllListeners('reconnect');
+
+  //socket.io.removeAllListeners('reconnect');
   socket.io.on('reconnect', () => {
+    if (isInRoom() && isDesktop()) return;
     setupRoom();
   });
 
