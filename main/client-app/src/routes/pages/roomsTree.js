@@ -108,7 +108,7 @@ export default function RoomsTree(props) {
                     <div style={{width: 'calc(100% - 450px)', position: 'absolute', left: 450, top: 0, height: 'calc(100% - 48px)'}}>
                         
                     </div>
-                </div> 
+                </div>
                 <Fab color={'secondary'} style={{position: 'fixed', left: isDesktop() ? (450 - 56 - 16) : undefined, right: isDesktop() ? undefined : 16, bottom: 24}}
             onClick={() => {
               let roomTitle = prompt('نام روم را وارد نمایید')
@@ -160,7 +160,7 @@ export default function RoomsTree(props) {
                 }}
                 fullScreen={isDesktop() || isTablet()} open={open} onClose={handleClose} TransitionComponent={Transition}
             >
-                <AppBar position={'fixed'} style={{position: 'fixed', width: '100%', height: 64, backgroundColor: 'rgba(21, 96, 233, 0.65)'}}>
+                <AppBar position={'fixed'} style={{position: 'fixed', width: '100%', height: 64, backgroundColor: colors.primaryMedium}}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
                         <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>نقشه</Typography>

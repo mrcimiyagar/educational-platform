@@ -100,7 +100,10 @@ function StyledTreeItem(props) {
       onContextMenu={props.onContextMenu}
       label={
         <div className={classes.labelRoot}>
-          <LabelIcon color="inherit" className={classes.labelIcon} />
+          {LabelIcon !== undefined ?
+            <LabelIcon color="inherit" className={classes.labelIcon} /> :
+            null 
+          }
           <Typography variant="body2" className={classes.labelText}>
             {labelText}
           </Typography>
@@ -248,10 +251,15 @@ export let RoomTreeBox = (props) => {
       room.expanded = true
       room.title = room.title
       room.head = true
-      room.users.forEach((user) => {
+      let isOnlineDict = {};
+      room.users.forEach(user => {
+        isOnlineDict[user.id] = true;
+      });
+      room.allUsers.forEach((user) => {
         user.title = user.firstName
+        user.isOnline = (isOnlineDict[user.id] === true);
       })
-      room.children = room.users
+      room.children = room.allUsers
     })
     setTreeData(rooms)
   }
@@ -400,7 +408,7 @@ export let RoomTreeBox = (props) => {
                         }}
                         nodeId={'user-' + user.id}
                         labelText={user.title}
-                        labelIcon={PersonIcon}
+                        labelIcon={user.isOnline ? PersonIcon : undefined}
                         color="#1a73e8"
                         bgColor="#e8f0fe"
                       />
