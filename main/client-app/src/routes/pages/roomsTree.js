@@ -148,9 +148,7 @@ export default function RoomsTree(props) {
                       fetch(
                         serverRoot + '/room/enter_room',
                         requestOptions2,
-                      ).then(() => {
-                        reloadUsersList();
-                      })
+                      ).then(() => {})
                     }
                   })
                   .catch(error => console.log('error', error));
@@ -229,9 +227,7 @@ export default function RoomsTree(props) {
                       fetch(
                         serverRoot + '/room/enter_room',
                         requestOptions2,
-                      ).then(() => {
-                        reloadUsersList();
-                      })
+                      ).then(() => {})
                     }
                   })
                   .catch(error => console.log('error', error));

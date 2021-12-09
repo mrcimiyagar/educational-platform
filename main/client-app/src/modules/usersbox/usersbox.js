@@ -80,6 +80,7 @@ let createNotification = (type, message, title) => {
 let lock = false
 
 let processMessage = undefined
+export let usersRef = undefined;
 
 export let UsersBox = (props) => {
   let forceUpdate = useForceUpdate();
@@ -151,6 +152,7 @@ export let UsersBox = (props) => {
       })
       if (users !== undefined) setUsers(users);
       if (allUsers !== undefined) setAllUsers(allUsers);
+      usersRef = {allUsers, rooms, users};
       forceUpdate();
       try {
         window.frames['conf-video-frame'].postMessage(
@@ -177,6 +179,7 @@ export let UsersBox = (props) => {
       })
       if (users !== undefined) setUsers(users);
       if (allUsers !== undefined) setAllUsers(allUsers);
+      usersRef = {allUsers, rooms, users};
       forceUpdate();
       try {
         window.frames['conf-video-frame'].postMessage(
