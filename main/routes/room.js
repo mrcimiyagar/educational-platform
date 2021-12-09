@@ -729,14 +729,14 @@ router.post('/enter_room', jsonParser, async function (req, res) {
 
 router.post('/exit_room', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
-    let s = sockets[user.id]
-    if (s === undefined) return
-    let roomId = s.roomId
-    sockets[user.id].leave()
-    sockets[user.id].roomId = 0
-    removeUser(roomId, user.id)
+    let roomId = metadata[user.id].roomId;
+    if (sockets[user.id] !== undefined) {
+      sockets[user.id].leave();
+      sockets[user.id].roomId = 0;
+    }
+    removeUser(roomId, user.id);
     if (roomId !== undefined) {
-      sw.Room.findOne({ where: { spaceId: membership.roomId } }).then(
+      sw.Room.findOne({ where: { id: roomId } }).then(
         async (room) => {
           sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
             async (rooms) => {

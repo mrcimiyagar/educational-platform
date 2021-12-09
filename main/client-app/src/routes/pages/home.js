@@ -230,7 +230,7 @@ export default function HomePage(props) {
       .catch((error) => console.log('error', error))
       
       return () => {
-        leaveRoom(() => {})
+        leaveRoom(() => {});
       }
   }, [])
 
