@@ -642,10 +642,37 @@ router.post('/enter_room', jsonParser, async function (req, res) {
     let roomId = metadata[membership.userId].roomId
 
     if (membership.roomId === roomId) {
-      require('../server').pushTo('room_' + membership.roomId, 'user-entered', {
-        rooms: [],
-        users: getRoomUsers(membership.roomId),
-      })
+      sw.Room.findOne({ where: { spaceId: membership.roomId } }).then(
+        async (room) => {
+          sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
+            async (rooms) => {
+              for (let i = 0; i < rooms.length; i++) {
+                let room = rooms[i]
+                room.users = getRoomUsers(room.id)
+              }
+              sw.Membership.findAll({
+                raw: true,
+                where: { roomId: membership.roomId },
+              }).then(async (memberships) => {
+                sw.User.findAll({
+                  raw: true,
+                  where: { id: memberships.map((mem) => mem.userId) },
+                }).then(async (users) => {
+                  require('../server').pushTo(
+                    'room_' + membership.roomId,
+                    'user-entered',
+                    {
+                      rooms: rooms,
+                      users: getRoomUsers(membership.roomId),
+                      allUsers: users,
+                    },
+                  )
+                })
+              })
+            },
+          )
+        },
+      )
 
       res.send({ status: 'success', membership: membership })
       return

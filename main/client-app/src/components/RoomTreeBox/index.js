@@ -278,17 +278,19 @@ export let RoomTreeBox = (props) => {
   }
   useEffect(() => {
     reloadUsersList()
-    unregisterEvent('user-entered')
-    registerEvent('user-entered', ({ rooms }) => {
-      processUsers(rooms)
-    })
-    unregisterEvent('user-exited')
-    registerEvent('user-exited', ({ rooms }) => {
-      processUsers(rooms)
-    })
-    unregisterEvent('profile_updated')
-    registerEvent('profile_updated', (user) => {})
   }, [])
+  
+  unregisterEvent('user-entered')
+  registerEvent('user-entered', ({ rooms }) => {
+    processUsers(rooms)
+  })
+  unregisterEvent('user-exited')
+  registerEvent('user-exited', ({ rooms }) => {
+    processUsers(rooms)
+  })
+  unregisterEvent('profile_updated')
+  registerEvent('profile_updated', (user) => {})
+
   useEffect(() => {
     if (props.room.id !== undefined) {
       reloadUsersList()
