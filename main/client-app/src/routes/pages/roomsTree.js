@@ -124,7 +124,8 @@ export default function RoomsTree(props) {
                 body: JSON.stringify({
                   title: roomTitle,
                   details: '',
-                  spaceId: room.spaceId
+                  spaceId: room.spaceId,
+                  chatType: 'group'
                 }),
                 redirect: 'follow'
               };
@@ -133,7 +134,23 @@ export default function RoomsTree(props) {
                   .then(result => {
                     console.log(JSON.stringify(result));
                     if (result.status === 'success') {
-                      reloadUsersList()
+                      let requestOptions2 = {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          token: token,
+                        },
+                        body: JSON.stringify({
+                          roomId: room.id,
+                        }),
+                        redirect: 'follow',
+                      }
+                      fetch(
+                        serverRoot + '/room/enter_room',
+                        requestOptions2,
+                      ).then(() => {
+                        reloadUsersList();
+                      })
                     }
                   })
                   .catch(error => console.log('error', error));
@@ -188,7 +205,8 @@ export default function RoomsTree(props) {
                 body: JSON.stringify({
                   title: roomTitle,
                   details: '',
-                  spaceId: room.spaceId
+                  spaceId: room.spaceId,
+                  chatType: 'group'
                 }),
                 redirect: 'follow'
               };
@@ -197,7 +215,23 @@ export default function RoomsTree(props) {
                   .then(result => {
                     console.log(JSON.stringify(result));
                     if (result.status === 'success') {
-                      reloadUsersList()
+                      let requestOptions2 = {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          token: token,
+                        },
+                        body: JSON.stringify({
+                          roomId: room.id,
+                        }),
+                        redirect: 'follow',
+                      }
+                      fetch(
+                        serverRoot + '/room/enter_room',
+                        requestOptions2,
+                      ).then(() => {
+                        reloadUsersList();
+                      })
                     }
                   })
                   .catch(error => console.log('error', error));
