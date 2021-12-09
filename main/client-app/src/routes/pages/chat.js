@@ -568,7 +568,7 @@ export default function Chat(props) {
     setTimeout(() => {
       setInTheGame(true)
     }, 1000)
-  }, [])
+  }, [props.user_id, props.room_id])
 
   useEffect(() => {
     if (!loading && pickingFile) {

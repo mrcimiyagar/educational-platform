@@ -129,23 +129,6 @@ export default function RoomsTree(props) {
                     console.log(JSON.stringify(result));
                     if (result.status === 'success') {
                       reloadUsersList();
-                      let requestOptions2 = {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          token: token,
-                        },
-                        body: JSON.stringify({
-                          roomId: room.id,
-                        }),
-                        redirect: 'follow',
-                      }
-                      setTimeout(() => {
-                        fetch(
-                          serverRoot + '/room/enter_room',
-                          requestOptions2,
-                        );
-                      }, 5000);
                     }
                   })
                   .catch(error => console.log('error', error));
@@ -210,23 +193,6 @@ export default function RoomsTree(props) {
                     console.log(JSON.stringify(result));
                     if (result.status === 'success') {
                       reloadUsersList();
-                      let requestOptions2 = {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          token: token,
-                        },
-                        body: JSON.stringify({
-                          roomId: room.id,
-                        }),
-                        redirect: 'follow',
-                      }
-                      setTimeout(() => {
-                        fetch(
-                          serverRoot + '/room/enter_room',
-                          requestOptions2,
-                        );
-                      }, 5000);
                     }
                   })
                   .catch(error => console.log('error', error));
