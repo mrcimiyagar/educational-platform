@@ -230,7 +230,7 @@ ConfirmationDialogRaw.propTypes = {
 
 const useStyles = makeStyles({
   root: {
-    height: 264,
+    height: 'auto',
     flexGrow: 1,
     maxWidth: 400,
   },
@@ -340,7 +340,7 @@ export let RoomTreeBox = (props) => {
   }
 
   return (
-    <div style={{ width: '100%', height: '100%', marginTop: 16 }}>
+    <div style={{ width: '100%', height: 'auto', marginTop: 16 }}>
       <ConfirmationDialogRaw
         classes={{
           paper: classes.paper,
@@ -356,7 +356,7 @@ export let RoomTreeBox = (props) => {
       />
 
       <div>
-        <div style={{ height: '100%' }}>
+        <div style={{ height: 'auto' }}>
           <Menu
             id="simple-menu"
             anchorEl={anchorEl}

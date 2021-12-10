@@ -6,7 +6,7 @@ import {
   ImageListItem,
   Slide,
   Toolbar,
-  Typography,
+  Typography
 } from '@material-ui/core'
 import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
@@ -26,7 +26,7 @@ import {
   popPage,
   query,
   registerDialogOpen,
-  setQuery,
+  setQuery
 } from '../../App'
 import HomeToolbar from '../../components/HomeToolbar'
 import PhotoGrid from '../../components/PhotoGrid'
@@ -37,7 +37,7 @@ import SearchResultsUsers from '../../components/SearchResultsUsers'
 import SearchResultsVideos from '../../components/SearchResultsVideos'
 import AudioWallpaper from '../../images/audio-wallpaper.jpg'
 import EmptyIcon from '../../images/empty.png'
-import { colors, setToken, token } from '../../util/settings'
+import { colors, token } from '../../util/settings'
 import { serverRoot } from '../../util/Utils'
 
 function TabPanel(props) {

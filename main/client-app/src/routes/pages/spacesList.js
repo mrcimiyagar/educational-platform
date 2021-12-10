@@ -2,7 +2,6 @@ import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import Slide from "@material-ui/core/Slide";
-import { makeStyles } from "@material-ui/core/styles";
 import { ArrowForward, Search } from '@material-ui/icons';
 import React from 'react';
 import { isDesktop, isMobile, isTablet, popPage } from "../../App";

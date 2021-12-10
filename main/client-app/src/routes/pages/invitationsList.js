@@ -5,8 +5,8 @@ import Slide from "@material-ui/core/Slide";
 import { ArrowForward, Search } from '@material-ui/icons';
 import React, { useEffect } from 'react';
 import { isDesktop, isMobile, isTablet, popPage, setInTheGame } from "../../App";
-import { colors } from '../../util/settings';
 import InvitesBox from '../../components/InvitesBox';
+import { colors } from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

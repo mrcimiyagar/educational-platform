@@ -237,11 +237,10 @@ export default function RoomPage(props) {
       .catch((error) => console.log('error', error))
   }
 
-  setInTheGame(true)
-
   useEffect(() => {
     roomId = props.room_id
     setRoomId(roomId)
+    setInTheGame(true);
     loadData(() => {
       loadFiles()
       setLoaded(true)

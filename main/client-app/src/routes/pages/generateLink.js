@@ -11,8 +11,8 @@ import {
   popPage,
   registerDialogOpen
 } from '../../App'
-import { colors, setToken, token } from '../../util/settings'
-import { serverRoot, useForceUpdate } from '../../util/Utils'
+import { colors, token } from '../../util/settings'
+import { serverRoot } from '../../util/Utils'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />

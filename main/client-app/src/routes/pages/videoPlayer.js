@@ -1,6 +1,6 @@
 import { Dialog, IconButton, Slide } from '@material-ui/core';
 import { ArrowForwardTwoTone, Close } from '@material-ui/icons';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { popPage, registerDialogOpen } from '../../App';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';

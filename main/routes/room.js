@@ -1239,6 +1239,11 @@ router.post('/move_user', jsonParser, async function (req, res) {
               'user-exited',
               { rooms: rooms },
             )
+            require('../server').signlePushTo(
+              user.id,
+              'you-moved',
+              { roomId: toRoom.id },
+            )
             res.send({ status: 'success' })
           })
         },

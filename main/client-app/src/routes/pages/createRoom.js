@@ -7,9 +7,7 @@ import Add from '@material-ui/icons/Add'
 import ArrowForwardTwoTone from '@material-ui/icons/ArrowForwardTwoTone'
 import React from 'react'
 import {
-  gotoPage,
-  gotoPageWithDelay,
-  isDesktop,
+  gotoPage, isDesktop,
   popPage,
   registerDialogOpen
 } from '../../App'

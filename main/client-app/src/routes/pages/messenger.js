@@ -1,13 +1,10 @@
 import "chartjs-plugin-datalabels";
-import React, { useEffect } from "react";
+import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-circular-progressbar/dist/styles.css";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import "react-table/react-table.css";
 import HomeAppbar from "../../components/HomeMain";
-import { setToken } from "../../util/settings";
-import { ConnectToIo } from "../../util/Utils";
-import Chat from './chat';
 import './messenger.css';
 
 export let reloadRoomsList = undefined;

@@ -10,7 +10,7 @@ import {
   isMobile,
   isTablet,
   popPage,
-  registerDialogOpen,
+  registerDialogOpen
 } from '../../App'
 import RoomSettings from '../../components/RoomSettings'
 import { colors } from '../../util/settings'

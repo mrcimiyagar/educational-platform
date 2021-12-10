@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, Dialog, ThemeProvider } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import {
   BrowserRouter,
@@ -72,6 +72,7 @@ import GenerateInvitation from './routes/pages/invitationsList';
 import ConfigGuestAccount from './routes/pages/configGuestAccount';
 import SpacesListPage from './routes/pages/spacesList';
 import Sidebar from './containers/Sidebar';
+import BottomSheet from './components/BottomSheet';
 const PouchDB = require('pouchdb').default
 
 export let currentRoomId = 0;
@@ -582,6 +583,12 @@ export let markFileAsUploaded = (roomId, id) => {
 }
 
 let MainAppContainer;
+export let setBSO = (value) => {};
+let bottomSheetContent = [];
+export let setBottomSheetContent = (value) => {
+  bottomSheetContent = value;
+  forceUpdate();
+}
 
 export let isOnline = true;
 
@@ -601,6 +608,13 @@ export let isOnline = true;
     let [opacity, setOpacity] = React.useState(0);
     ;[routeTrigger, setRouteTrigger] = React.useState(false);
     ;[uploadingFiles, setUploadingFiles] = React.useState({});
+
+    const [bottomSheetOpen, setBottomSheetOpen] = React.useState(false);
+    setBSO = (value) => {
+      setBottomSheetOpen(value);
+      forceUpdate();
+    };
+
     setHistPage = setHp;
     histPage = hp;
     animatePageChange = () => {
@@ -651,6 +665,9 @@ export let isOnline = true;
       () => {
         isOnline = true;
         ConnectToIo(localStorage.getItem('token'), () => {
+          registerEvent('you-moved', ({roomId}) => {
+            window.location.href = pathConfig.mainFrontend + `/app/room?room_id=${roomId}&tab_index=0`;
+          });
           unregisterEvent('message-added');
           registerEvent('message-added', ({ msgCopy }) => {
             if (me.id !== msgCopy.authorId) {
@@ -804,6 +821,14 @@ export let isOnline = true;
             {D !== undefined ? <D {...dQuery} open={true} /> : null}
           </ThemeProvider>
         </div>
+        <Dialog
+          style={{ padding: 32 }}
+          open={bottomSheetOpen}
+          onClose={() => setBottomSheetOpen(false)}>
+            <div style={{margin: 32}}>
+              {bottomSheetContent}
+            </div>
+        </Dialog>
       </div>
     );
   }

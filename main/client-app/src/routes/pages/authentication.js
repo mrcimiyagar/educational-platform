@@ -1,35 +1,20 @@
-import { Fab, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Fab, makeStyles, Typography } from '@material-ui/core';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import React, { useEffect } from "react";
 import { pathConfig } from '../..';
-import { gotoPage } from "../../App";
-import CloudIcon from '../../images/logo.png';
 import WhiteColorTextField from '../../components/WhiteColorTextField';
+import Wallpaper from '../../images/chat-wallpaper.jpg';
+import CloudIcon from '../../images/logo.png';
 import {
-  ColorBase,
-  colors,
-  me,
   setHomeRoomId,
   setHomeSpaceId,
   setMe,
-  setToken,
-  theme,
-  token,
-} from '../../util/settings'
+  setToken
+} from '../../util/settings';
 import {
-  ConnectToIo,
-  serverRoot,
-  socket,
-  useForceUpdate,
-  validateToken,
-  setConfig
-} from '../../util/Utils'
-import { addMessageToList, replaceMessageInTheList } from './chat'
-import { addMessageToList2, replaceMessageInTheList2 } from '../../components/ChatEmbeddedInMessenger'
-import { addMessageToList3, replaceMessageInTheList3 } from '../../components/ChatEmbedded'
-import { addNewChat, setLastMessage, updateChat } from '../../components/HomeMain'
-import Wallpaper from '../../images/chat-wallpaper.jpg';
+  serverRoot, setConfig
+} from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {

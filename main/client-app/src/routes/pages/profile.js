@@ -11,7 +11,7 @@ import {
   isTablet,
   popPage,
   registerDialogOpen,
-  setInTheGame,
+  setInTheGame
 } from '../../App'
 import header from '../../images/profile-header.jpeg'
 import { token } from '../../util/settings'

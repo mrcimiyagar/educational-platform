@@ -42,7 +42,7 @@ import { UsersBox } from "../../modules/usersbox/usersbox";
 import { VideoBox } from "../../modules/videobox/videobox";
 import store, { changeConferenceMode, PeopleChatModes } from "../../redux/main";
 import { colors, me, setToken, token } from "../../util/settings";
-import { ConnectToIo, FetchMe, leaveRoom, roothPath, serverRoot, socket, validateToken } from "../../util/Utils";
+import { ConnectToIo, FetchMe, leaveRoom, roothPath, serverRoot, validateToken } from "../../util/Utils";
 
 
 

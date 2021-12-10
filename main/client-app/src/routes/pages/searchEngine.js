@@ -1,10 +1,7 @@
 import { Avatar, Fab } from '@material-ui/core'
-import { pink } from '@material-ui/core/colors'
 import Slide from '@material-ui/core/Slide'
 import {
-  createTheme,
-  makeStyles,
-  ThemeProvider,
+  makeStyles
 } from '@material-ui/core/styles'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import CloudIcon from '@material-ui/icons/Cloud'
@@ -14,10 +11,10 @@ import { gotoPage, popPage } from '../../App'
 import SearchEngineDrawer from '../../components/SearchEngineDrawer'
 import Jumper from '../../components/SearchEngineFam'
 import SearchEngineSearchbar from '../../components/SearchEngineSearchbar'
+import SearchWallpaper from '../../images/chat-wallpaper.png'
 import Logo from '../../images/logo.png'
 import SearchEngineIcon from '../../images/world.png'
-import { colors, setToken, theme } from '../../util/settings'
-import SearchWallpaper from '../../images/chat-wallpaper.png'
+import { setToken } from '../../util/settings'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />

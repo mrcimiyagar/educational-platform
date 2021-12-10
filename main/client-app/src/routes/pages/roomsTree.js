@@ -1,4 +1,4 @@
-import { AppBar, Fab, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Fab, Toolbar, Typography, Button, TextField } from '@material-ui/core';
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import Slide from "@material-ui/core/Slide";
@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ArrowForward, Search } from '@material-ui/icons';
 import Add from '@material-ui/icons/Add';
 import React, { useEffect } from 'react';
-import { isDesktop, isTablet, popPage, registerDialogOpen } from "../../App";
+import { isDesktop, isTablet, popPage, registerDialogOpen, setBottomSheetContent, setBSO } from "../../App";
 import { reloadUsersList, RoomTreeBox } from '../../components/RoomTreeBox';
 import { colors, token } from '../../util/settings';
 import { isMobile, serverRoot } from '../../util/Utils';
@@ -55,25 +55,63 @@ export default function RoomsTree(props) {
         setTimeout(popPage, 250)
     };
     useEffect(() => {
-        let requestOptions = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'token': token
-            },
-            body: JSON.stringify({
-              roomId: props.room_id
-            }),
-            redirect: 'follow'
-        };
-        fetch(serverRoot + "/room/get_room", requestOptions)
-              .then(response => response.json())
-              .then(result => {
-                console.log(JSON.stringify(result))
-                setRoom(result.room)
-              })
+
+      let requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'token': token
+        },
+        body: JSON.stringify({
+          roomId: props.room_id
+        }),
+        redirect: 'follow'
+    };
+    fetch(serverRoot + "/room/get_room", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            console.log(JSON.stringify(result))
+            setRoom(result.room)
+            setBottomSheetContent(
+              <>
+                <TextField id={'roomTitleTF'} variant={'outlined'} label={'نام روم'}/>
+                <Button onClick={() => {
+                let roomTitle = document.getElementById('roomTitleTF').value;
+                if (roomTitle === null || roomTitle === '') {
+                  return;
+                }
+                let requestOptions = {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'token': token
+                  },
+                  body: JSON.stringify({
+                    title: roomTitle,
+                    details: '',
+                    spaceId: result.room.spaceId,
+                    chatType: 'group'
+                  }),
+                  redirect: 'follow'
+                };
+                fetch(serverRoot + "/room/create_room", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                      console.log(JSON.stringify(result));
+                      if (result.status === 'success') {
+                        reloadUsersList();
+                        setBSO(false);
+                      }
+                    })
+                    .catch(error => console.log('error', error));
+                  }}>تایید
+                </Button>
+              </>
+            );
+          })
     }, [])
     document.documentElement.style.overflow = 'hidden'
+
     if (isDesktop() || isTablet()) {
         return (
             <Dialog
@@ -101,40 +139,13 @@ export default function RoomsTree(props) {
                 <div style={{width: "100%", height: "100%"}}>
                     <div style={{width: '100%', position: 'absolute', left: 0, top: 64, height: '100%', overflowY: 'auto'}}>
                         <RoomTreeBox membership={membership} room={room}/>
+                        <div style={{width: '100%', height: 256}} />
                     </div>
                 </div>
                 <Fab color={'secondary'} style={{position: 'fixed', right: 16, bottom: 24}}
-            onClick={() => {
-              let roomTitle = prompt('نام روم را وارد نمایید')
-              if (roomTitle === null || roomTitle === '') {
-                return;
-              }
-              let requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'token': token
-                },
-                body: JSON.stringify({
-                  title: roomTitle,
-                  details: '',
-                  spaceId: room.spaceId,
-                  chatType: 'group'
-                }),
-                redirect: 'follow'
-              };
-              fetch(serverRoot + "/room/create_room", requestOptions)
-                  .then(response => response.json())
-                  .then(result => {
-                    console.log(JSON.stringify(result));
-                    if (result.status === 'success') {
-                      reloadUsersList();
-                    }
-                  })
-                  .catch(error => console.log('error', error));
-            }}>
-              <Add/>
-          </Fab>
+                  onClick={() => setBSO(true)}>
+                    <Add/>
+                </Fab>
             </Dialog>
         );
     }

@@ -1,7 +1,6 @@
-
-import { makeStyles } from '@material-ui/core/styles';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import React from 'react';
+import { makeStyles } from '@material-ui/core/styles'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import React from 'react'
 
 const useStyles = makeStyles({
   list: {
@@ -10,26 +9,16 @@ const useStyles = makeStyles({
   fullList: {
     width: 'auto',
   },
-});
+})
 
-export default function SideMenu(props) {
-  const classes = useStyles();
-
-  const toggleDrawer = (open) => (event) => {
-    if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-    props.setDrawerOpen(open);
-  };
-
+export default function BottomSheet(props) {
   return (
-        <SwipeableDrawer
-            anchor={'bottom'}
-            open={props.drawerOpen}
-            onClose={toggleDrawer(false)}
-            onOpen={toggleDrawer(true)}
-          >
-            {props.children}
-        </SwipeableDrawer>
-  );
+    <SwipeableDrawer
+      anchor={'bottom'}
+      open={props.open}
+      onClose={() => props.setOpen(false)}
+    >
+      {props.children}
+    </SwipeableDrawer>
+  )
 }
