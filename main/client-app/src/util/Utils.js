@@ -206,7 +206,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
           result.notifications.forEach(notif => {
             let eventFunc = eventDict[notif.key];
             if (eventFunc !== undefined) {
-              eventFunc(notif.data);
+              try {eventFunc(notif.data);} catch (ex) {}
             }
           });
           let requestOptions3 = {
