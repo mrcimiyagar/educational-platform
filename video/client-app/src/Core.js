@@ -872,7 +872,7 @@ function App() {
               delete needUpdate[key]
             }
             if (myUserId === key) return null
-            if (shownVideos[key] !== true && shownScreens[key] !== true)
+            if (shownVideos[key] !== true && shownScreens[key] !== true && shownAudios[key] !== true)
               return null
             return videoCache[key]
           })}
