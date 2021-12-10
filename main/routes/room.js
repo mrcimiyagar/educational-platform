@@ -1090,7 +1090,7 @@ router.post('/get_room_users', jsonParser, async function (req, res) {
       })
       return
     }
-    sw.Room.findOne({ where: { spaceId: membership.roomId } }).then(
+    sw.Room.findOne({ where: { id: membership.roomId } }).then(
       async (room) => {
         sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
           async (rooms) => {
