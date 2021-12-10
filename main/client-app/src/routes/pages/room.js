@@ -158,9 +158,9 @@ export default function RoomPage(props) {
         console.log(JSON.stringify(result))
         setRoom(result.room)
         setToken(localStorage.getItem('token'))
-        if (isOnline) ConnectToIo(token, () => {})
         unregisterEvent('membership-updated')
         registerEvent('membership-updated', (mem) => {
+          if (mem === null || mem === undefined) return;
           setMembership(mem)
         })
         unregisterEvent('view-updated')
@@ -190,8 +190,10 @@ export default function RoomPage(props) {
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result));
-        setMembership(result.membership);
-        forceUpdate();
+        if (result.membership !== undefined) {
+          setMembership(result.membership);
+          forceUpdate();
+        }
       })
       .catch((error) => console.log('error', error));
 
