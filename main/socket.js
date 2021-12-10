@@ -46,19 +46,22 @@ let disconnectWebsocket = (user) => {
 
 let metadata = {}
 let userToSocketMap = {}
+let typing = {};
 
 let typingEvent = (user, soc) => {
   soc.on('chat-typing', () => {
-    if (metadata[user.id].typing === undefined) metadata[user.id].typing = {};
-      if (user.id in metadata[user.id].typing) {
-        clearTimeout(metadata[user.id].typing[user.id].timeout)
+    if (typing[metadata[user.id].roomId] === undefined) {
+      typing[metadata[user.id].roomId] = {users: {}};
+    }
+      if (user.id in typing[metadata[user.id].roomId]) {
+        clearTimeout(typing[metadata[user.id].roomId].users[user.id].timeout)
       }
-      metadata[user.id].typing[user.id] = {
+      typing[metadata[user.id].roomId].users[user.id] = {
         timeout: setTimeout(() => {
-          delete metadata[user.id].typing[user.id]
+          delete typing[metadata[user.id].roomId].users[user.id]
           let typingList = []
-          for (let t in metadata[user.id].typing) {
-            typingList.push(users[metadata[user.id].roomId][metadata[user.id].typing[t].user.id])
+          for (let uid in typing[metadata[user.id].roomId].users) {
+            typingList.push(users[uid]);
           }
           require('./server').pushTo(
             'room_' + metadata[user.id].roomId,
@@ -68,10 +71,10 @@ let typingEvent = (user, soc) => {
         }, 2000),
         socket: soc,
         user: user
-      }
-      let typingList = []
-      for (let t in metadata[user.id].typing) {
-        typingList.push(soc.room.typing[t].user)
+      };
+      let typingList = [];
+      for (let uid in typing[metadata[user.id].roomId].users) {
+        typingList.push(users[uid]);
       }
       require('./server').pushTo(
         'room_' + metadata[user.id].roomId,
