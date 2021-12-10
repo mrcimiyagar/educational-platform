@@ -158,7 +158,7 @@ export default function RoomPage(props) {
         console.log(JSON.stringify(result))
         setRoom(result.room)
         setToken(localStorage.getItem('token'))
-        ConnectToIo(token, () => {})
+        if (isOnline) ConnectToIo(token, () => {})
         unregisterEvent('membership-updated')
         registerEvent('membership-updated', (mem) => {
           setMembership(mem)
