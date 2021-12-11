@@ -49,7 +49,7 @@ export function ConfBox(props) {
             <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16 + 32 + 16}} onClick={() => {
               props.openPolls()
             }}><PollIcon style={{fill: '#fff'}}/></IconButton>
-            <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>سالن کنفرانس</Typography>
+            <Typography variant={'h6'} style={{color: '#fff', position: 'absolute', right: 16 + 32 + 16}}>سالن کنفرانس</Typography>
             <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => {
               props.setMenuOpen(true)
             }}>

@@ -16,7 +16,7 @@ export let BoardBox = (props) => {
       roomId = '0' + roomId;
     }
     return (
-      <div style={{backgroundColor: '#fff', background: '#fff', height: isDesktop() ? (isInRoom() ? 'calc(100% - 32px)' : '100%') : 'calc(100% - 72px)', marginTop: isDesktop() ? 16 : 64, display: props.style.display, width: (isDesktop() && isInRoom()) ? 'calc(100% - 144px)' : '100%', marginLeft: (isDesktop() && isInRoom()) ? 16 : 0, marginRight: (isDesktop() && isInRoom()) ? 16 : 0, display: props.style.display}}>
+      <div style={{backgroundColor: 'transparent', background: 'transparent', height: isDesktop() ? (isInRoom() ? 'calc(100% - 32px)' : '100%') : 'calc(100% - 72px)', marginTop: isDesktop() ? 16 : 64, display: props.style.display, width: (isDesktop() && isInRoom()) ? 'calc(100% - 144px)' : '100%', marginLeft: (isDesktop() && isInRoom()) ? 16 : 0, marginRight: (isDesktop() && isInRoom()) ? 16 : 0, display: props.style.display}}>
           <div style={{position: 'relative', height: '100%', width: '100%'}}>
             <AppBar style={{marginRight: (isDesktop() && isInRoom()) ? 'calc(50% - 275px + 175px)' : 0, width: (isDesktop() && isInRoom()) ? 550 : '100%', height: 64,
               backgroundColor: colors.primaryMedium,
@@ -34,7 +34,7 @@ export let BoardBox = (props) => {
                 <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16 + 32 + 16}} onClick={() => {
                   props.openPolls()
                 }}><PollIcon style={{fill: '#fff'}}/></IconButton>
-                <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>وایت بورد</Typography>
+                <Typography variant={'h6'} style={{color: '#fff', position: 'absolute', right: 16 + 32 + 16}}>وایت بورد</Typography>
                 <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
               </Toolbar>
             </AppBar>
