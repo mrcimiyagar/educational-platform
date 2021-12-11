@@ -3,7 +3,7 @@
   "homepage": "https://kaspersoft.cloud/",
   "version": "1.0.1",
   "description": "به بعد آسمان خوش آمدید",
-  "main": "public/electron.js",
+  "main": "index.js",
   "private": true,
   "dependencies": {
     "@agney/react-loading": "^0.1.2",
