@@ -272,7 +272,10 @@ function App() {
           pathConfig.mainFrontend,
         )
         document.getElementById('screenMax').srcObject = undefined
+        document.getElementById('screenMax').style.display = 'none';
+        
         document.getElementById('screenMax2').srcObject = undefined
+        document.getElementById('screenMax2').style.display = 'none';
       } else if (
         shownVideos[presenter] === true &&
         shownScreens[presenter] !== true
@@ -284,8 +287,11 @@ function App() {
         )
         let streamPack = findValueByPrefix(videos, presenter + '_video')
         if (streamPack !== undefined) {
-          document.getElementById('screenMax').srcObject = streamPack.value
+          document.getElementById('screenMax').srcObject = streamPack.value;
+          document.getElementById('screenMax').style.display = 'block';
+
           document.getElementById('screenMax2').srcObject = undefined
+          document.getElementById('screenMax2').style.display = 'none';
         }
       } else if (
         shownVideos[presenter] !== true &&
@@ -299,7 +305,10 @@ function App() {
         let streamPack = findValueByPrefix(screens, presenter + '_screen')
         if (streamPack !== undefined) {
           document.getElementById('screenMax').srcObject = streamPack.value
+          document.getElementById('screenMax').style.display = 'block';
+  
           document.getElementById('screenMax2').srcObject = undefined
+          document.getElementById('screenMax2').style.display = 'none';
         }
       } else if (
         shownVideos[presenter] === true &&
@@ -314,9 +323,11 @@ function App() {
         let streamPack2 = findValueByPrefix(videos, presenter + '_video')
         if (streamPack !== undefined) {
           document.getElementById('screenMax').srcObject = streamPack.value
+          document.getElementById('screenMax').style.display = 'block';
         }
         if (streamPack2 !== undefined) {
           document.getElementById('screenMax2').srcObject = streamPack2.value
+          document.getElementById('screenMax2').style.display = 'block';
         }
       }
     }
@@ -733,6 +744,7 @@ function App() {
         id="screenMax"
         autoPlay
         style={{
+          display: 'none',
           position: 'absolute',
           transform: sizeMode === 'mobile' ? undefined : 'translateX(-50%)',
           objectFit: 'cover',
@@ -793,6 +805,7 @@ function App() {
         autoPlay
         id="screenMax2"
         style={{
+          display: 'none',
           objectFit: 'cover',
           position: 'absolute',
           right: 0,

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">skydime</string>
+    <string name="title_activity_main">skydime</string>
+    <string name="package_name">io.ionic.skydime</string>
+    <string name="custom_url_scheme">io.ionic.skydime</string>
+</resources>
