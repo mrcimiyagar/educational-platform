@@ -31,7 +31,6 @@ import StoreAds from './routes/pages/storeAds';
 import StoreBot from './routes/pages/storeBot';
 import VideoPlayer from './routes/pages/videoPlayer';
 import SettingsPage from './routes/pages/settings';
-import HomePage from './routes/pages/home';
 import StartupSound from './sounds/startup.mp3';
 import {
   ColorBase,
@@ -66,13 +65,11 @@ import {
   replaceMessageInTheList3,
 } from './components/ChatEmbedded';
 import { addNewChat, setLastMessage, updateChat } from './components/HomeMain';
-import DesktopWallpaper from './images/roomWallpaper.png';
 import GenerateLink from './routes/pages/generateLink';
 import GenerateInvitation from './routes/pages/invitationsList';
 import ConfigGuestAccount from './routes/pages/configGuestAccount';
 import SpacesListPage from './routes/pages/spacesList';
 import Sidebar from './containers/Sidebar';
-import BottomSheet from './components/BottomSheet';
 const PouchDB = require('pouchdb').default
 
 export let currentRoomId = 0;

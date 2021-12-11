@@ -15,6 +15,19 @@ import { Alert, Snackbar } from '@mui/material'
 
 export let pathConfig = {}
 
+const { app, BrowserWindow } = require('electron')
+
+let win = null
+let devtools = null
+
+app.once('ready', () => {
+  win = new BrowserWindow()
+  devtools = new BrowserWindow()
+  win.loadURL('https://github.com')
+  win.webContents.setDevToolsWebContents(devtools.webContents)
+  win.webContents.openDevTools({ mode: 'detach' })
+})
+
 const MainApp = React.lazy(() => {
   return Promise.all([
     import('./App'),

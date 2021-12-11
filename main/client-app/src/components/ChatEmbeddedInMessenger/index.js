@@ -114,6 +114,13 @@ export default function ChatEmbeddedInMessenger(props) {
   }
 
   useEffect(() => {
+    socket.io.on('reconnect', () => {
+      if (isInRoom() && isDesktop()) return;
+      setupRoom();
+    });
+  }, []);
+
+  useEffect(() => {
     let isAtEnd = false
     let scroller = document.getElementById('scroller')
     if (scroller.scrollTop + $('#scroller').innerHeight() >= (scroller.scrollHeight - 300)) {
@@ -175,11 +182,6 @@ export default function ChatEmbeddedInMessenger(props) {
       })
       .catch((error) => console.log('error', error))
   };
-
-  socket.io.removeAllListeners('reconnect');
-  socket.io.on('reconnect', () => {
-    setupRoom();
-  });
 
   useEffect(() => {
     setCurrentRoomId(props.roomId);
