@@ -29,15 +29,24 @@ async function send() {
 
           // Send Push Notification
           console.log('Sending Push...')
-          if (localStorage.getItem('token') === null || localStorage.getItem('token') === undefined) return;
-          await fetch('https://backend.kaspersoft.cloud/subscribe', {
-            method: 'POST',
-            body: JSON.stringify(subscription),
-            headers: {
-              'content-type': 'application/json',
-              'token': localStorage.getItem('token')
-            },
-          })
+          if (
+            localStorage.getItem('token') === null ||
+            localStorage.getItem('token') === undefined
+          ) {
+            return;
+          }
+          try {
+            await fetch('https://backend.kaspersoft.cloud/subscribe', {
+              method: 'POST',
+              body: JSON.stringify(subscription),
+              headers: {
+                'content-type': 'application/json',
+                token: localStorage.getItem('token'),
+              },
+            })
+          } catch (ex) {
+            console.log(ex)
+          }
           console.log('Push Sent...')
         }
         if (reg.installing) {
@@ -57,7 +66,7 @@ async function send() {
             //If push subscription wasnt done yet have to do here
             console.log('sw already activated - Do watever needed here')
 
-            callback();
+            callback()
           }
           serviceWorker.addEventListener('statechange', async function (e) {
             console.log('sw statechange : ', e.target.state)
@@ -67,7 +76,7 @@ async function send() {
                 'Just now activated. now we can subscribe for push notification',
               )
 
-              callback();
+              callback()
             }
           })
         }
@@ -75,9 +84,10 @@ async function send() {
       function (err) {
         console.error('unsuccessful registration with ', err)
       },
-    ).catch(ex => {
-      console.log(ex);
-    });
+    )
+    .catch((ex) => {
+      console.log(ex)
+    })
 }
 
 function urlBase64ToUint8Array(base64String) {
