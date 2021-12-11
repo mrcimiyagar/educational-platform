@@ -1,7 +1,0 @@
-{
-    "name": "skydime",
-    "integrations": {
-      "capacitor": {}
-    },
-    "type": "react"
-}
