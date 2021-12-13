@@ -6,6 +6,11 @@ import { setMe, token } from './settings'
 import io from 'socket.io-client'
 import { currentRoomId } from '../App'
 
+import { setMembership as smRoom } from '../routes/pages/room';
+import { setMembership as smChat } from '../routes/pages/chat';
+import { setMembership as smChatE } from '../components/ChatEmbedded';
+import { setMembership as smChatM } from '../components/ChatEmbeddedInMessenger';
+
 export let websocketPath = undefined
 export let serverRoot = undefined
 
@@ -206,6 +211,12 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
           result.notifications.forEach(notif => {
             let eventFunc = eventDict[notif.key];
             if (eventFunc !== undefined) {
+              if (notif.key === 'membership-updated') {
+                smRoom(notif.data);
+                smChat(notif.data);
+                smChatE(notif.data);
+                smChatM(notif.data);
+              }
               try {eventFunc(notif.data);} catch (ex) {}
             }
           });

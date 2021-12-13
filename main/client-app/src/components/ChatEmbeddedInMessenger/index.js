@@ -36,7 +36,7 @@ import {
   uploadingFiles,
 } from '../../App'
 import { colors, me, setToken, token } from '../../util/settings'
-import { ConnectToIo, serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { ConnectToIo, registerEvent, serverRoot, socket, unregisterEvent, useForceUpdate } from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
 import ChatWallpaper from '../../images/chat-wallpaper.png'
 import { setLastMessage, updateChat } from '../../components/HomeMain'
@@ -83,6 +83,8 @@ export let resetMessages2 = () => {
 
 export let addMessageToList2 = () => {}
 export let replaceMessageInTheList2 = () => {}
+let membership = undefined;
+export let setMembership = () => {};
 
 let lastLoadCount = 25;
 let messagesDict = {};
@@ -92,21 +94,22 @@ export default function ChatEmbeddedInMessenger(props) {
 
   document.documentElement.style.overflowY = 'hidden';
 
-  let forceUpdate = useForceUpdate()
-  updateChatEmbedded = forceUpdate
-  let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false)
-  let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('')
-  let [user, setUser] = React.useState(undefined)
-  let [room, setRoom] = React.useState(undefined)
-  const [showEmojiPad, setShowEmojiPad] = React.useState(false)
-  let [pickingFile, setPickingFile] = React.useState(false)
-  let classes = useStyles()
+  let forceUpdate = useForceUpdate();
+  updateChatEmbedded = forceUpdate;
+  let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false);
+  let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('');
+  let [user, setUser] = React.useState(undefined);
+  let [room, setRoom] = React.useState(undefined);
+  const [showEmojiPad, setShowEmojiPad] = React.useState(false);
+  let [pickingFile, setPickingFile] = React.useState(false);
+  let classes = useStyles();
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
     readAs: 'DataURL',
-  })
-  let [scrollTrigger, setScrollTrigger] = React.useState(false)
-  let [scrollAnywayrTrigger, setScrollAnywayrTrigger] = React.useState(false)
-  let [showScrollDown, setShowScrollDown] = React.useState(false)
+  });
+  let [scrollTrigger, setScrollTrigger] = React.useState(false);
+  let [scrollAnywayrTrigger, setScrollAnywayrTrigger] = React.useState(false);
+  let [showScrollDown, setShowScrollDown] = React.useState(false);
+  ;[membership, setMembership] = React.useState({});
 
   let scrollToBottom = () => {
     let scroller = document.getElementById('scroller');
@@ -178,6 +181,7 @@ export default function ChatEmbeddedInMessenger(props) {
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
+        setMembership(result.membership);
         forceUpdate()
       })
       .catch((error) => console.log('error', error))

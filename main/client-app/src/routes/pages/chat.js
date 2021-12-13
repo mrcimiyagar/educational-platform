@@ -86,6 +86,9 @@ let uplaodedFileId = 0
 export let addMessageToList = () => {}
 export let replaceMessageInTheList = () => {}
 
+let membership = undefined;
+export let setMembership = () => {};
+
 let goingToRoom = false
 let lastLoadCount = 25;
 let messagesDict = {};
@@ -106,7 +109,7 @@ export default function Chat(props) {
   const [open, setOpen] = React.useState(true)
   const [showEmojiPad, setShowEmojiPad] = React.useState(false)
   let [pickingFile, setPickingFile] = React.useState(false);
-  let [membership, setMembership] = React.useState({});
+  ;[membership, setMembership] = React.useState({});
 
   let setupRoom = () => {
     let requestOptions = {
@@ -128,10 +131,6 @@ export default function Chat(props) {
         setRoom(result.room)
         setToken(localStorage.getItem('token'))
         if (isOnline) ConnectToIo(token, () => {})
-        unregisterEvent('membership-updated')
-        registerEvent('membership-updated', (mem) => {
-          setMembership(mem);
-        })
         unregisterEvent('view-updated')
         registerEvent('view-updated', (v) => {})
         window.scrollTo(0, 0)

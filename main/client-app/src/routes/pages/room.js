@@ -89,7 +89,7 @@ const useStylesAction = makeStyles({
 })
 
 export let membership = undefined
-let setMembership = undefined
+export let setMembership = () => {};
 let pickingFile = false
 
 let attachWebcamOnMessenger = undefined
@@ -157,12 +157,7 @@ export default function RoomPage(props) {
       .then((result) => {
         console.log(JSON.stringify(result))
         setRoom(result.room)
-        setToken(localStorage.getItem('token'))
-        unregisterEvent('membership-updated')
-        registerEvent('membership-updated', (mem) => {
-          if (mem === null || mem === undefined) return;
-          setMembership(mem)
-        })
+        setToken(localStorage.getItem('token'));
         unregisterEvent('view-updated')
         registerEvent('view-updated', (v) => {})
         window.scrollTo(0, 0)
@@ -413,12 +408,6 @@ export default function RoomPage(props) {
       leaveRoom(() => {});
     }
   }, []);
-  
-  unregisterEvent('membership-updated')
-  registerEvent('membership-updated', (mem) => {
-    if (mem === null || mem === undefined) return;
-    setMembership(mem)
-  })
 
   if (!loaded) {
     return <div />

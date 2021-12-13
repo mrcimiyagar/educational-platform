@@ -36,6 +36,7 @@ import { colors, me, setToken, token } from '../../util/settings'
 import {
   ConnectToIo,
   isMobile,
+  registerEvent,
   serverRoot,
   socket,
   unregisterEvent,
@@ -46,7 +47,6 @@ import ChatWallpaper from '../../images/chat-wallpaper.png'
 import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery'
 import MessageItem from '../MessageItem'
-import { pathConfig, setClientConnected } from '../..'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,6 +86,8 @@ export let resetMessages3 = () => {
 
 export let addMessageToList3 = () => {}
 export let replaceMessageInTheList3 = () => {}
+let membership = undefined;
+export let setMembership = () => {};
 
 export let updateChatEmbedded = undefined
 let lastLoadCount = 25;
@@ -93,23 +95,25 @@ let messagesDict = {};
 let scrollReady2 = false;
 
 export default function ChatEmbedded(props) {
+
   document.documentElement.style.overflowY = 'hidden';
 
-  let forceUpdate = useForceUpdate()
-  updateChatEmbedded = forceUpdate
-  let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false)
-  let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('')
-  let [user, setUser] = React.useState(undefined)
-  let [room, setRoom] = React.useState(undefined)
-  const [showEmojiPad, setShowEmojiPad] = React.useState(false)
-  let [pickingFile, setPickingFile] = React.useState(false)
-  let classes = useStyles()
+  let forceUpdate = useForceUpdate();
+  updateChatEmbedded = forceUpdate;
+  let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false);
+  let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState('');
+  let [user, setUser] = React.useState(undefined);
+  let [room, setRoom] = React.useState(undefined);
+  const [showEmojiPad, setShowEmojiPad] = React.useState(false);
+  let [pickingFile, setPickingFile] = React.useState(false);
+  let classes = useStyles();
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
     readAs: 'DataURL',
-  })
-  let [scrollTrigger, setScrollTrigger] = React.useState(false)
-  let [scrollAnywayrTrigger, setScrollAnywayrTrigger] = React.useState(false)
-  let [showScrollDown, setShowScrollDown] = React.useState(false)
+  });
+  let [scrollTrigger, setScrollTrigger] = React.useState(false);
+  let [scrollAnywayrTrigger, setScrollAnywayrTrigger] = React.useState(false);
+  let [showScrollDown, setShowScrollDown] = React.useState(false);
+  ;[membership, setMembership] = React.useState({});
 
   let scrollToBottom = () => {
     let scroller = document.getElementById('scroller');
@@ -257,6 +261,7 @@ export default function ChatEmbedded(props) {
     enterRoomPromise
       .then((response) => response.json())
       .then((result) => {
+        setMembership(result.membership);
         console.log(JSON.stringify(result))
         forceUpdate()
       })
@@ -777,7 +782,9 @@ export default function ChatEmbedded(props) {
         />
         <ChatAppBar user={user} room={room} webcamOn={props.webcamOn} viewCallback={props.viewCallback}/>
         <div style={{ width: '100%', height: 'auto', zIndex: 1000, 
-          display: (props.membership !== undefined && props.membership !== null && (props.membership.canAddMessage === true)) ? 'block' : 'none'
+          display: ((props.membership !== undefined && props.membership !== null && (props.membership.canAddMessage === true)) ||
+                   (membership !== undefined && membership !== null && (membership.canAddMessage === true)))
+           ? 'block' : 'none'
         }}>
           <div
             className={classes.root}
