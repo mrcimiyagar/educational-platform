@@ -21,8 +21,7 @@ let disconnectWebsocket = (user) => {
           }
           let mem = await models.Membership.findOne({
             where: { roomId: room.id, userId: user.id },
-          })
-
+          });
           models.Membership.findAll({
             raw: true,
             where: { roomId: roomId },
@@ -113,6 +112,7 @@ module.exports = {
                     });
                     metadata[user.id].timer = setTimeout(() => {
                       disconnectWebsocket(user);
+                      socket.disconnect();
                     }, 6000);
                     soc.on('ping', () => {
                       if (metadata[user.id].timer !== undefined) {
@@ -120,6 +120,7 @@ module.exports = {
                       }
                       metadata[user.id].timer = setTimeout(() => {
                         disconnectWebsocket(user);
+                        socket.disconnect();
                       }, 3000);
                     });
                     typingEvent(user, soc);
@@ -142,6 +143,7 @@ module.exports = {
                   });
                   metadata[user.id].timer = setTimeout(() => {
                     disconnectWebsocket(user);
+                    socket.disconnect();
                   }, 6000);
                   soc.on('ping', () => {
                     if (metadata[user.id].timer !== undefined) {
@@ -149,6 +151,7 @@ module.exports = {
                     }
                     metadata[user.id].timer = setTimeout(() => {
                       disconnectWebsocket(user);
+                      socket.disconnect();
                     }, 3000);
                   });
                   typingEvent(user, soc);

@@ -924,7 +924,7 @@ function App() {
               style={{
                 position: 'absolute',
                 left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
-                bottom: 16 + 56 + 16 + 56 + 16,
+                bottom: 24 + 56 + 16 + 56 + 16,
               }}
               onClick={() => {
                 window.parent.postMessage(
@@ -943,7 +943,7 @@ function App() {
               style={{
                 position: 'absolute',
                 left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
-                bottom: 16 + 56 + 16,
+                bottom: 24 + 56 + 16,
               }}
               onClick={() => {
                 if (audio) {
@@ -964,7 +964,7 @@ function App() {
               style={{
                 position: 'absolute',
                 left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
-                bottom: 16,
+                bottom: 24,
               }}
               onClick={() => {
                 instantConnectionFlag = false
@@ -1011,7 +1011,7 @@ function App() {
                   (screenShareSupported ? 32 + 56 : 0) +
                   (sizeMode === 'mobile' || sizeMode === 'tablet' ? 0 : 16) +
                   72,
-                bottom: 16,
+                bottom: 24,
               }}
               onClick={() => {
                 if (video) {
@@ -1037,7 +1037,7 @@ function App() {
                     32 +
                     56 +
                     (sizeMode === 'mobile' || sizeMode === 'tablet' ? 0 : 16),
-                  bottom: 16,
+                  bottom: 24,
                 }}
                 onClick={() => {
                   if (screen) {
@@ -1094,7 +1094,7 @@ function App() {
             style={{
               position: 'fixed',
               left: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
-              bottom: 16,
+              bottom: 24,
             }}
             onClick={() => {
               instantConnectionFlag = true
