@@ -112,7 +112,7 @@ module.exports = {
                     });
                     metadata[user.id].timer = setTimeout(() => {
                       disconnectWebsocket(user);
-                      socket.disconnect();
+                      soc.disconnect();
                     }, 6000);
                     soc.on('ping', () => {
                       if (metadata[user.id].timer !== undefined) {
@@ -120,7 +120,7 @@ module.exports = {
                       }
                       metadata[user.id].timer = setTimeout(() => {
                         disconnectWebsocket(user);
-                        socket.disconnect();
+                        soc.disconnect();
                       }, 3000);
                     });
                     typingEvent(user, soc);
@@ -143,7 +143,7 @@ module.exports = {
                   });
                   metadata[user.id].timer = setTimeout(() => {
                     disconnectWebsocket(user);
-                    socket.disconnect();
+                    soc.disconnect();
                   }, 6000);
                   soc.on('ping', () => {
                     if (metadata[user.id].timer !== undefined) {
@@ -151,7 +151,7 @@ module.exports = {
                     }
                     metadata[user.id].timer = setTimeout(() => {
                       disconnectWebsocket(user);
-                      socket.disconnect();
+                      soc.disconnect();
                     }, 3000);
                   });
                   typingEvent(user, soc);
