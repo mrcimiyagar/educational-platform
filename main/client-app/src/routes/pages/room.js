@@ -413,6 +413,12 @@ export default function RoomPage(props) {
       leaveRoom(() => {});
     }
   }, []);
+  
+  unregisterEvent('membership-updated')
+  registerEvent('membership-updated', (mem) => {
+    if (mem === null || mem === undefined) return;
+    setMembership(mem)
+  })
 
   if (!loaded) {
     return <div />
