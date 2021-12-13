@@ -29,9 +29,8 @@ export function ConfBox(props) {
       }
     });
     return (
-      <div style={{width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : '100%', height: (props.webcamOn && props.currentRoomNav !== 2) ? 300 : '100vh'
-      , position: (props.webcamOn && props.currentRoomNav !== 2) ? 'fixed' : 'relative', direction: 'ltr', display: props.style.display}}>
-        
+      <div style={{width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : '100%', height: '100%',
+        position: (props.webcamOn && props.currentRoomNav !== 2) ? 'fixed' : 'relative', direction: 'ltr', display: props.style.display}}>
         <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
           display: props.currentRoomNav !== 2 && props.webcamOn ? 'none' : 'block',
           borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
@@ -81,10 +80,7 @@ export function ConfBox(props) {
         <iframe scrolling="no"
           onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', videoAccess: membership.canActInVideo, me: me, roomId: props.roomId}, pathConfig.confClient)}}
           allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera; fullscreen; display-capture'}
-          style={{position: (props.webcamOn && props.currentRoomNav !== 2) ? 'absolute' : undefined, 
-          right: (props.webcamOn && props.currentRoomNav !== 2) ? 0 : undefined, top: 0, 
-          width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64,
-          marginBottom: 32}} frameBorder="0"></iframe>
+          style={{top: 0, width: '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64, marginBottom: 32}} frameBorder="0"></iframe>
       </div>
     );
 }
