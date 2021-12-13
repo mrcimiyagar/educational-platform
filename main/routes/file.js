@@ -274,9 +274,14 @@ router.get('/download_file', jsonParser, async function (req, res) {
 
 router.get('/download_user_avatar', jsonParser, async function (req, res) {
   sw.User.findOne({ where: { id: req.query.userId } }).then(async (user) => {
-    if (user.avatarId === undefined) {
-      res.sendStatus(404)
-      return
+    if (user.avatarId === undefined || user.avatarId === null) {
+      let randomAvatarId = -1 * (Math.floor(Math.random() * 10) + 1);
+      user.avatarId = randomAvatarId;
+      user.save();
+    }
+    if (user.avatarId < 0) {
+      res.sendFile(rootPath + `/files/random-avatar${(user.avatarId * -1)}.png`);
+      return;
     }
     sw.File.findOne({ where: { id: user.avatarId } }).then(async (file) => {
       if (file === null) {
