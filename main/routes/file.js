@@ -277,7 +277,8 @@ router.get('/download_user_avatar', jsonParser, async function (req, res) {
     if (user.avatarId === undefined || user.avatarId === null) {
       let randomAvatarId = -1 * (Math.floor(Math.random() * 10) + 1);
       user.avatarId = randomAvatarId;
-      user.save();
+      await user.save();
+      user = await sw.User.findOne({ where: { id: req.query.userId } });
     }
     if (user.avatarId < 0) {
       res.sendFile(rootPath + `/files/random-avatar${(user.avatarId * -1)}.png`);

@@ -265,7 +265,7 @@ export default function Profile(props) {
           >
             <Avatar
               style={{ width: '100%', height: '100%' }}
-              src={serverRoot + '/file/get_user_avatar?userId=' + user.id}
+              src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${user.id}`}
             />
           </Card>
 
@@ -482,7 +482,7 @@ export default function Profile(props) {
             >
               <Avatar
                 style={{ width: '100%', height: '100%' }}
-                src={serverRoot + '/file/get_user_avatar?userId=' + user.id}
+                src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${user.id}`}
               />
             </Card>
 
