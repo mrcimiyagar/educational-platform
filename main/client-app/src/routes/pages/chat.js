@@ -726,6 +726,7 @@ export default function Chat(props) {
           top: 0,
           left: 0,
           backgroundImage: `url(${ChatWallpaper})`,
+          transition: 'background 300ms ease-in 200ms'
         }}
       >
         <Viewer

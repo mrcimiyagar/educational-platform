@@ -225,6 +225,9 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
       })
       .catch((error) => console.log('error', error))
   });
+  registerEvent('disconnect', () => {
+    setClientConnected(false)
+  })
   registerEvent('connect', () => {
     registerEvent('auth-success', () => {
       if (onSocketAuth !== undefined) {
@@ -238,6 +241,8 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   })
   registerEvent('disconnect', () => {
     setClientConnected(false)
+    socket = null;
+    ConnectToIo(t, onSocketAuth);
   })
 }
 

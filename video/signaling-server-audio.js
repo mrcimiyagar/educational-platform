@@ -106,6 +106,8 @@ io.sockets.on('connection', function (socket) {
 
         channels[channel][socket.id] = socket;
         socket.channels[channel] = channel;
+
+        socket.emit('joined');
     });
 
     function part(channel) {

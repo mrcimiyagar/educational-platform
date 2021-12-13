@@ -753,6 +753,7 @@ export default function ChatEmbedded(props) {
             height: '100%',
             position: 'absolute',
             backgroundImage: `url(${ChatWallpaper})`,
+            transition: 'background 300ms ease-in 200ms',
             top: isDesktop() ? 16 : 0,
             left: isDesktop() ? 96 : 0,
             right: isDesktop()

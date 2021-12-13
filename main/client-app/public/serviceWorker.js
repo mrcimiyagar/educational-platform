@@ -1,4 +1,4 @@
-
+/*
 console.log("Service Worker Loaded...");
 
 let cacheName = 'js13kPWA-v1';
@@ -20,3 +20,4 @@ self.addEventListener('activate', (e) => {
     }))
   }));
 });
+*/

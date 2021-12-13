@@ -26,7 +26,10 @@ let attachMediaStream = function (element, stream) {
   console.log('DEPRECATED, attachMediaStream will soon be removed.')
   element.srcObject = stream
 }
-function join_chat_channel(channel, userId, userdata) {
+function join_chat_channel(channel, userId, userdata, loadedCallback) {
+  signaling_socket.on('joined', () => {
+    loadedCallback();
+  });
   signaling_socket.emit('join', {
     channel: channel,
     userId: userId,
@@ -200,7 +203,7 @@ export default function ScreenMedia(props) {
       setup_local_media(undefined, function (stream) {
         /* once the user has given us access to their
          * microphone/camcorder, join the channel and start peering up */
-        join_chat_channel(roomId, userId, { 'whatever-you-want-here': 'stuff' })
+        join_chat_channel(roomId, userId, { 'whatever-you-want-here': 'stuff' }, props.loadedCallback)
       })
     })
     signaling_socket.on('disconnect', function () {

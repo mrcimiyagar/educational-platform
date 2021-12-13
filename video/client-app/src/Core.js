@@ -637,6 +637,10 @@ function App() {
     }
   }, [connected])
 
+  let [audioLoaded, setAudioLoaded] = React.useState(false);
+  let [videoLoaded, setVideoLoaded] = React.useState(false);
+  let [screenLoaded, setScreenLoaded] = React.useState(false);
+
   window.onmessage = (e) => {
     if (e.data.action === 'init') {
       setMe(e.data.me)
@@ -729,6 +733,18 @@ function App() {
       },
     },
   })
+
+  let audioLoadCallback = () => {
+    setAudioLoaded(true);
+  };
+
+  let videoLoadCallback = () => {
+    setVideoLoaded(true);
+  };
+
+  let screenLoadCallback = () => {
+    setScreenLoaded(true);
+  };
 
   return (
     <div
@@ -924,6 +940,7 @@ function App() {
               <MenuIcon />
             </Fab>
             <Fab
+              disabled={!audioLoaded}
               id="audioButton"
               color={'primary'}
               style={{
@@ -972,6 +989,9 @@ function App() {
                 destructVideoNet()
                 endScreen()
                 destructScreenNet()
+                setAudioLoaded(false);
+                setVideoLoaded(false);
+                setScreenLoaded(false);
                 setVideos({})
                 setAudios({})
                 setScreens({})
@@ -989,6 +1009,7 @@ function App() {
               <CallEndIcon />
             </Fab>
             <Fab
+              disabled={!videoLoaded}
               id="camButton"
               color={'primary'}
               style={{
@@ -1015,6 +1036,7 @@ function App() {
             </Fab>
             {screenShareSupported ? (
               <Fab
+                disabled={!screenLoaded}
                 id="screenButton"
                 color={'primary'}
                 style={{
@@ -1052,6 +1074,7 @@ function App() {
             forceUpdate={forceUpdate}
             userId={myUserId}
             roomId={roomId}
+            loadedCallback={videoLoadCallback}
           />
           <AudioMedia
             shownUsers={shownAudios}
@@ -1060,6 +1083,7 @@ function App() {
             forceUpdate={forceUpdate}
             userId={myUserId}
             roomId={roomId}
+            loadedCallback={audioLoadCallback}
           />
           <ScreenMedia
             shownUsers={shownScreens}
@@ -1068,6 +1092,7 @@ function App() {
             forceUpdate={forceUpdate}
             userId={myUserId}
             roomId={roomId}
+            loadedCallback={screenLoadCallback}
           />
         </div>
       ) : !connected && videoAccess ? (

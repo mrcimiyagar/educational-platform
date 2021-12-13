@@ -704,6 +704,7 @@ export default function ChatEmbeddedInMessenger(props) {
           height: 'calc(100% - 40px)',
           position: 'absolute',
           backgroundImage: `url(${ChatWallpaper})`,
+          transition: 'background 300ms ease-in 200ms',
           top: isDesktop() ? 16 + 64 : 0,
           left: isDesktop() ? 96 : 0,
           right: isDesktop()

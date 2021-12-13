@@ -246,6 +246,49 @@ export default function RoomPage(props) {
     loadData(() => {
       loadFiles()
       setLoaded(true)
+      
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.room_id,
+      }),
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/room/get_room_wallpaper', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result))
+        if (result.wallpaper === null) {
+          setWallpaper({
+            type: 'photo',
+            photo: DesktopWallpaper2,
+          })
+        }
+        let wall = JSON.parse(result.wallpaper)
+        if (wall === undefined || wall === null) return
+        if (wall.type === 'photo') {
+          setWallpaper({
+            type: 'photo',
+            photo:
+              serverRoot +
+              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
+          })
+        } else if (wall.type === 'video') {
+          setWallpaper({
+            type: 'video',
+            video:
+              serverRoot +
+              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
+          })
+        } else if (wall.type === 'color') {
+          setWallpaper(wall)
+        }
+      })
+      .catch((error) => console.log('error', error))
     })
   }, [props.room_id])
 
@@ -362,56 +405,14 @@ export default function RoomPage(props) {
       }
     }
     window.addEventListener('message', attachWebcamOnMessenger)
-  }, [])
+  }, []);
 
   useEffect(() => {
-    let requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: props.room_id,
-      }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/room/get_room_wallpaper', requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result))
-        if (result.wallpaper === null) {
-          setWallpaper({
-            type: 'photo',
-            photo: DesktopWallpaper2,
-          })
-        }
-        let wall = JSON.parse(result.wallpaper)
-        if (wall === undefined || wall === null) return
-        if (wall.type === 'photo') {
-          setWallpaper({
-            type: 'photo',
-            photo:
-              serverRoot +
-              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
-          })
-        } else if (wall.type === 'video') {
-          setWallpaper({
-            type: 'video',
-            video:
-              serverRoot +
-              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
-          })
-        } else if (wall.type === 'color') {
-          setWallpaper(wall)
-        }
-      })
-      .catch((error) => console.log('error', error))
-
+    console.log('planting destructor...');
     return () => {
-      leaveRoom(() => {})
+      leaveRoom(() => {});
     }
-  }, [])
+  }, []);
 
   if (!loaded) {
     return <div />

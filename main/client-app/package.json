@@ -1,11 +1,12 @@
 {
   "name": "skydime",
-  "homepage": "https://kaspersoft.cloud/",
   "version": "1.0.1",
   "description": "به بعد آسمان خوش آمدید",
-  "main": "./src/index.js",
+  "main": "public/electron.js",
+  "homepage": "./",
   "private": true,
   "dependencies": {
+    "3d-react-carousal": "^4.0.2",
     "@agney/react-loading": "^0.1.2",
     "@awesome-cordova-plugins/android-permissions": "^5.37.1",
     "@awesome-cordova-plugins/status-bar": "^5.37.1",
@@ -25,7 +26,6 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "3d-react-carousal": "^4.0.2",
     "availity-reactstrap-validation": "^2.0.4",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
@@ -41,6 +41,7 @@
     "doka": "^0.1.0",
     "draft-js": "^0.10.5",
     "easyxdm": "^2.4.19-pre.2",
+    "electron-is-dev": "^2.0.0",
     "emoji-mart": "^3.0.1",
     "emoji-picker-react": "^3.4.8",
     "emotion": "^11.0.0",
@@ -169,10 +170,12 @@
     "babel-plugin-react-transform": "^3.0.0",
     "clean-webpack-plugin": "^1.0.1",
     "compress-create-react-app": "^1.0.6",
-    "concurrently": "^6.3.0",
+    "concurrently": "^6.4.0",
     "copy-webpack-plugin": "^4.6.0",
     "cross-env": "^7.0.3",
     "css-loader": "^2.1.0",
+    "electron": "^16.0.4",
+    "electron-builder": "^22.14.5",
     "file-loader": "^6.2.0",
     "friendly-errors-webpack-plugin": "^1.7.0",
     "html-loader": "^0.5.5",
@@ -196,24 +199,18 @@
     "start": "PORT=2002 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron-dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on https://kaspersoft.cloud && electron .\"",
+    "electron-pack": "electron-builder -c.extraMetadata.main=build/electron.js",
+    "preelectron-pack": "react-scripts build"
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "extends": "react-app"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

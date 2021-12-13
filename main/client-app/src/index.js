@@ -10,8 +10,9 @@ import ChatWallpaper from './images/chat-wallpaper.jpg'
 import ProfileHeader from './images/profile-header.jpeg'
 import store from './redux/main'
 import { setup, socket } from './util/Utils'
-import './notifSystem'
+//import './notifSystem'
 import { Alert, Snackbar } from '@mui/material'
+let path = require('path');
 
 export let pathConfig = {}
 
@@ -133,9 +134,18 @@ export function ifServerOnline(ifOnline, ifOffline) {
 export let setClientConnected = (b) => {};
 
 let AppContainer = (props) => {
+  useEffect(() => {
+    let imgObj = document.getElementById("wallpaperImg");
+    function fadeImg () {
+      this.style.transition = "opacity 2s";
+      this.style.opacity = "1";
+    }
+    imgObj.style.opacity = "0";
+    imgObj.addEventListener("load", fadeImg);
+  }, [])
   ;[wallpaper, setWall] = React.useState({})
   setWallpaper = (w) => {
-    setWall(w)
+    setWall(w);
   }
   let [connected, setConnected] = React.useState(false);
   let [disconnectionAlert, setDisconnectAlert] = React.useState(false);
@@ -213,11 +223,11 @@ let AppContainer = (props) => {
   if (!loaded) {
     return (
       <div style={{ width: '100%', height: '100%' }}>
-        {wallpaper === undefined ||
-        wallpaper === null ? null : wallpaper.type === 'photo' ? (
           <img
+            id={'wallpaperImg'}
             src={wallpaper.photo}
             style={{
+              display: (wallpaper !== undefined && wallpaper !== null && wallpaper.type === 'photo') ? 'block' : 'none',
               position: 'fixed',
               left: 0,
               top: 0,
@@ -226,12 +236,12 @@ let AppContainer = (props) => {
               objectFit: 'cover',
             }}
           />
-        ) : wallpaper.type === 'video' ? (
           <video
             loop
             autoPlay
             src={wallpaper.video}
             style={{
+              display: (wallpaper !== undefined && wallpaper !== null && wallpaper.type === 'video') ? 'block' : 'none',
               position: 'fixed',
               left: 0,
               top: 0,
@@ -240,9 +250,9 @@ let AppContainer = (props) => {
               objectFit: 'cover',
             }}
           />
-        ) : wallpaper.type === 'color' ? (
           <div
             style={{
+              display: (wallpaper !== undefined && wallpaper !== null && wallpaper.type === 'color') ? 'block' : 'none',
               backgroundColor: wallpaper.color,
               position: 'fixed',
               left: 0,
@@ -251,7 +261,6 @@ let AppContainer = (props) => {
               height: '100%',
             }}
           />
-        ) : null}
         <PreLoading />
       </div>
     )
