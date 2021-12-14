@@ -191,8 +191,6 @@ let audioNeedUpdate = {}
 let presenterBackup = undefined
 let instantConnectionFlag = false
 
-let contentCache = null;
-
 function App() {
   let theme = createTheme({
     palette: {
@@ -748,185 +746,6 @@ function App() {
     setScreenLoaded(true);
   };
 
-  let ConnectionContents = () => {
-    if (contentCache === null) {
-      contentCache = (
-        <div style={{ width: '100%', height: '100%' }}>
-      <ThemeProvider theme={theme2}>
-        <Fab
-          id="listButton"
-          color={'primary'}
-          style={{
-            position: 'absolute',
-            left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
-            bottom: 24 + 56 + 16 + 56 + 16,
-          }}
-          onClick={() => {
-            window.parent.postMessage(
-              { sender: 'conf', action: 'hideBottomBar' },
-              pathConfig.mainFrontend,
-            )
-            setListOpen(true)
-          }}
-        >
-          <MenuIcon />
-        </Fab>
-        <Fab
-          disabled={!audioLoaded}
-          id="audioButton"
-          color={'primary'}
-          style={{
-            position: 'absolute',
-            left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
-            bottom: 24 + 56 + 16,
-          }}
-          onClick={() => {
-            if (audio) {
-              endAudio()
-              setAudio(false)
-            } else {
-              startAudio()
-              setAudio(true)
-            }
-            forceUpdate()
-          }}
-        >
-          {audio ? <Mic /> : <MicOff />}
-        </Fab>
-        <Fab
-          id="endCallButton"
-          color={'secondary'}
-          style={{
-            position: 'absolute',
-            left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
-            bottom: 24,
-          }}
-          onClick={() => {
-            instantConnectionFlag = false
-            setConnected(false)
-            window.parent.postMessage(
-              { sender: 'conf', action: 'detachWebcamOnMessenger' },
-              pathConfig.mainFrontend,
-            )
-            setScreenOn(false)
-            document.getElementById('screenMax').srcObject = undefined
-            document.getElementById('screenMax2').srcObject = undefined
-            endAudio()
-            destructAudioNet()
-            endVideo()
-            destructVideoNet()
-            endScreen()
-            destructScreenNet()
-            contentCache = null;
-            setAudioLoaded(false);
-            setVideoLoaded(false);
-            setScreenLoaded(false);
-            setVideos({})
-            setAudios({})
-            setScreens({})
-            setVideo(false)
-            setAudio(false)
-            setScreen(false)
-            setShownVideos({})
-            setShownAudios({})
-            setShownScreens({})
-            setListOpen(false)
-            setExtWebcam(false)
-            forceUpdate()
-          }}
-        >
-          <CallEndIcon />
-        </Fab>
-        <Fab
-          disabled={!videoLoaded}
-          id="camButton"
-          color={'primary'}
-          style={{
-            position: 'absolute',
-            left:
-              (screenShareSupported ? 32 + 56 : 0) +
-              (sizeMode === 'mobile' || sizeMode === 'tablet' ? 0 : 16) +
-              72,
-            bottom: 24,
-          }}
-          onClick={() => {
-            if (video) {
-              endVideo()
-              setVideo(false)
-            } else {
-              startVideo()
-              setVideo(true)
-            }
-            forceUpdate()
-          }}
-        >
-          {video ? <VideocamIcon /> : <VideocamOff />}
-        </Fab>
-        {screenShareSupported ? (
-          <Fab
-            disabled={!screenLoaded}
-            id="screenButton"
-            color={'primary'}
-            style={{
-              position: 'absolute',
-              left:
-                32 +
-                56 +
-                (sizeMode === 'mobile' || sizeMode === 'tablet' ? 0 : 16),
-              bottom: 24,
-            }}
-            onClick={() => {
-              if (screen) {
-                endScreen()
-                setScreen(false)
-              } else {
-                startScreen()
-                setScreen(true)
-              }
-              forceUpdate()
-            }}
-          >
-            {screen ? (
-              <DesktopWindowsIcon />
-            ) : (
-              <DesktopAccessDisabledIcon />
-            )}
-          </Fab>
-        ) : null}
-      </ThemeProvider>
-      <VideoMedia
-        shownUsers={shownVideos}
-        data={videos}
-        updateData={onVideoStreamUpdate}
-        forceUpdate={forceUpdate}
-        userId={myUserId}
-        roomId={roomId}
-        loadedCallback={videoLoadCallback}
-      />
-      <AudioMedia
-        shownUsers={shownAudios}
-        data={audios}
-        updateData={onAudioStreamUpdate}
-        forceUpdate={forceUpdate}
-        userId={myUserId}
-        roomId={roomId}
-        loadedCallback={audioLoadCallback}
-      />
-      <ScreenMedia
-        shownUsers={shownScreens}
-        data={screens}
-        updateData={onScreenStreamUpdate}
-        forceUpdate={forceUpdate}
-        userId={myUserId}
-        roomId={roomId}
-        loadedCallback={screenLoadCallback}
-      />
-        </div>
-      );
-    }
-    return contentCache;
-  }
-
   return (
     <div
       style={{
@@ -1096,9 +915,178 @@ function App() {
           return <Audio id={key} stream={audios[key + '_audio']} />
         })}
       </div>
-      {connected && videoAccess && !extWebcam ? 
-        <ConnectionContents />
-      : !connected && videoAccess ? (
+      {connected && videoAccess && !extWebcam ? (
+        <div style={{ width: '100%', height: '100%' }}>
+          <ThemeProvider theme={theme2}>
+            <Fab
+              id="listButton"
+              color={'primary'}
+              style={{
+                position: 'absolute',
+                left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
+                bottom: 24 + 56 + 16 + 56 + 16,
+              }}
+              onClick={() => {
+                window.parent.postMessage(
+                  { sender: 'conf', action: 'hideBottomBar' },
+                  pathConfig.mainFrontend,
+                )
+                setListOpen(true)
+              }}
+            >
+              <MenuIcon />
+            </Fab>
+            <Fab
+              disabled={!audioLoaded}
+              id="audioButton"
+              color={'primary'}
+              style={{
+                position: 'absolute',
+                left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
+                bottom: 24 + 56 + 16,
+              }}
+              onClick={() => {
+                if (audio) {
+                  endAudio()
+                  setAudio(false)
+                } else {
+                  startAudio()
+                  setAudio(true)
+                }
+                forceUpdate()
+              }}
+            >
+              {audio ? <Mic /> : <MicOff />}
+            </Fab>
+            <Fab
+              id="endCallButton"
+              color={'secondary'}
+              style={{
+                position: 'absolute',
+                left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
+                bottom: 24,
+              }}
+              onClick={() => {
+                instantConnectionFlag = false
+                setConnected(false)
+                window.parent.postMessage(
+                  { sender: 'conf', action: 'detachWebcamOnMessenger' },
+                  pathConfig.mainFrontend,
+                )
+                setScreenOn(false)
+                document.getElementById('screenMax').srcObject = undefined
+                document.getElementById('screenMax2').srcObject = undefined
+                endAudio()
+                destructAudioNet()
+                endVideo()
+                destructVideoNet()
+                endScreen()
+                destructScreenNet()
+                setAudioLoaded(false);
+                setVideoLoaded(false);
+                setScreenLoaded(false);
+                setVideos({})
+                setAudios({})
+                setScreens({})
+                setVideo(false)
+                setAudio(false)
+                setScreen(false)
+                setShownVideos({})
+                setShownAudios({})
+                setShownScreens({})
+                setListOpen(false)
+                setExtWebcam(false)
+                forceUpdate()
+              }}
+            >
+              <CallEndIcon />
+            </Fab>
+            <Fab
+              disabled={!videoLoaded}
+              id="camButton"
+              color={'primary'}
+              style={{
+                position: 'absolute',
+                left:
+                  (screenShareSupported ? 32 + 56 : 0) +
+                  (sizeMode === 'mobile' || sizeMode === 'tablet' ? 0 : 16) +
+                  72,
+                bottom: 24,
+              }}
+              onClick={() => {
+                if (video) {
+                  endVideo()
+                  setVideo(false)
+                } else {
+                  startVideo()
+                  setVideo(true)
+                }
+                forceUpdate()
+              }}
+            >
+              {video ? <VideocamIcon /> : <VideocamOff />}
+            </Fab>
+            {screenShareSupported ? (
+              <Fab
+                disabled={!screenLoaded}
+                id="screenButton"
+                color={'primary'}
+                style={{
+                  position: 'absolute',
+                  left:
+                    32 +
+                    56 +
+                    (sizeMode === 'mobile' || sizeMode === 'tablet' ? 0 : 16),
+                  bottom: 24,
+                }}
+                onClick={() => {
+                  if (screen) {
+                    endScreen()
+                    setScreen(false)
+                  } else {
+                    startScreen()
+                    setScreen(true)
+                  }
+                  forceUpdate()
+                }}
+              >
+                {screen ? (
+                  <DesktopWindowsIcon />
+                ) : (
+                  <DesktopAccessDisabledIcon />
+                )}
+              </Fab>
+            ) : null}
+          </ThemeProvider>
+          <VideoMedia
+            shownUsers={shownVideos}
+            data={videos}
+            updateData={onVideoStreamUpdate}
+            forceUpdate={forceUpdate}
+            userId={myUserId}
+            roomId={roomId}
+            loadedCallback={videoLoadCallback}
+          />
+          <AudioMedia
+            shownUsers={shownAudios}
+            data={audios}
+            updateData={onAudioStreamUpdate}
+            forceUpdate={forceUpdate}
+            userId={myUserId}
+            roomId={roomId}
+            loadedCallback={audioLoadCallback}
+          />
+          <ScreenMedia
+            shownUsers={shownScreens}
+            data={screens}
+            updateData={onScreenStreamUpdate}
+            forceUpdate={forceUpdate}
+            userId={myUserId}
+            roomId={roomId}
+            loadedCallback={screenLoadCallback}
+          />
+        </div>
+      ) : !connected && videoAccess ? (
         <ThemeProvider theme={theme}>
           <Fab
             id="callButton"
