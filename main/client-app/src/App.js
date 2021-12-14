@@ -70,6 +70,7 @@ import GenerateInvitation from './routes/pages/invitationsList';
 import ConfigGuestAccount from './routes/pages/configGuestAccount';
 import SpacesListPage from './routes/pages/spacesList';
 import Sidebar from './containers/Sidebar';
+import { updateMessageSeen } from './components/AllChats';
 const PouchDB = require('pouchdb').default;
 
 export let boardFrame = undefined;
@@ -331,7 +332,7 @@ let DesktopDetector = () => {
         ? 'tablet'
         : 'mobile',
     )
-    //forceUpdate();
+    forceUpdate();
   }
   return <div />
 }
@@ -677,6 +678,7 @@ export let isOnline = true;
               addMessageToList2(msgCopy);
               addMessageToList3(msgCopy);
               setLastMessage(msgCopy);
+              updateMessageSeen(msgCopy);
               let requestOptions3 = {
                 method: 'POST',
                 headers: {
@@ -704,6 +706,7 @@ export let isOnline = true;
             messages.forEach((msg) => replaceMessageInTheList(msg));
             messages.forEach((msg) => replaceMessageInTheList2(msg));
             messages.forEach((msg) => replaceMessageInTheList3(msg));
+            messages.forEach((msg) => updateMessageSeen(msg));
           })
         });
           let requestOptions = {

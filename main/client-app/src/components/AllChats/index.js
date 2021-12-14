@@ -14,7 +14,7 @@ import { gotoPage, isDesktop, isTablet } from '../../App'
 import EmptySign from '../../components/EmptySign'
 import { resetMessages } from '../../routes/pages/chat'
 import { colors, me, token } from '../../util/settings'
-import { isMobile, serverRoot } from '../../util/Utils'
+import { isMobile, serverRoot, useForceUpdate } from '../../util/Utils'
 import {inTheGame} from '../../App';
 import { resetMessages3 } from '../ChatEmbedded'
 import { resetMessages2 } from '../ChatEmbeddedInMessenger'
@@ -30,8 +30,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+export let updateMessageSeen = () => {};
+
 export default function AllChats(props) {
+  let forceUpdate = useForceUpdate();
   const classes = useStyles()
+  updateMessageSeen = (msg) => {
+    props.chats.forEach(chat => {
+      if (msg.roomId === chat.id) {
+        chat.lastMessage.seenCount = 1;
+      }
+    });
+    forceUpdate();
+  };
+
   return props.chats.length > 0 ? (
     <List className={classes.root}>
       {props.chats.map((chat, index) => {
@@ -113,9 +125,10 @@ export default function AllChats(props) {
                 secondary={
                   <div style={{ width: '100%', position: 'relative' }}>
                     {chat.lastMessage.authorId === me.id ?
-                      chat.lastMessage.seenCount === 0 ?
-                        <Done style={{ fill: colors.primaryMedium, width: 16, height: 16, left: 12, position: 'absolute' }} /> :
-                        <DoneAll style={{ fill: colors.primaryMedium, width: 16, height: 16, left: 12, position: 'absolute' }} /> :
+                        <div style={{ left: 12 + 40, position: 'absolute' }}>
+                          <Done id={'message-seen-chat-' + chat.lastMessage.id} style={{ display: (chat.lastMessage.seenCount === 0 || chat.lastMessage.seenCount === undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
+                          <DoneAll id={'message-seen-chat-all-' + chat.lastMessage.id} style={{ display: (chat.lastMessage.seenCount > 0  && chat.lastMessage.seenCount !== undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
+                        </div> :
                       null
                     }
                     {chat.lastMessage === undefined ? null : chat.lastMessage

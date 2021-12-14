@@ -43,6 +43,7 @@ import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery';
 import html2canvas from 'html2canvas';
 import MessageItem from '../MessageItem';
+import { updateMessageSeen } from '../AllChats'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -680,6 +681,9 @@ export default function ChatEmbeddedInMessenger(props) {
         messagesArr.push(lastMsg);
         setScrollTrigger(!scrollTrigger);
         forceUpdate();
+        if (msg.authorId === me.id) {
+          updateMessageSeen();
+        }
         let requestOptions3 = {
           method: 'POST',
           headers: {
