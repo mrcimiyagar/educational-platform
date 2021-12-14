@@ -915,8 +915,7 @@ function App() {
           return <Audio id={key} stream={audios[key + '_audio']} />
         })}
       </div>
-      {connected && videoAccess && !extWebcam ? (
-        <div style={{ width: '100%', height: '100%' }}>
+      <div style={{ width: '100%', height: '100%', display:  (connected && videoAccess && !extWebcam) ? 'block' : 'none'}}>
           <ThemeProvider theme={theme2}>
             <Fab
               id="listButton"
@@ -1085,13 +1084,13 @@ function App() {
             roomId={roomId}
             loadedCallback={screenLoadCallback}
           />
-        </div>
-      ) : !connected && videoAccess ? (
-        <ThemeProvider theme={theme}>
+      </div>
+      <ThemeProvider theme={theme}>
           <Fab
             id="callButton"
             color={'secondary'}
             style={{
+              display: (!connected && videoAccess) ? 'block' : 'none',
               position: 'fixed',
               left: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
               bottom: 24,
@@ -1103,8 +1102,7 @@ function App() {
           >
             <CallIcon style={{ fill: '#333' }} />
           </Fab>
-        </ThemeProvider>
-      ) : null}
+      </ThemeProvider>
     </div>
   )
 }
