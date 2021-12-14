@@ -7,13 +7,13 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { Audiotrack, Photo, Videocam } from '@material-ui/icons'
+import { Audiotrack, Done, DoneAll, Photo, Videocam } from '@material-ui/icons'
 import React from 'react'
 import { Badge } from 'reactstrap'
 import { gotoPage, isDesktop, isTablet } from '../../App'
 import EmptySign from '../../components/EmptySign'
 import { resetMessages } from '../../routes/pages/chat'
-import { colors, token } from '../../util/settings'
+import { colors, me, token } from '../../util/settings'
 import { isMobile, serverRoot } from '../../util/Utils'
 import {inTheGame} from '../../App';
 import { resetMessages3 } from '../ChatEmbedded'
@@ -111,13 +111,19 @@ export default function AllChats(props) {
                   </React.Fragment>
                 }
                 secondary={
-                  <div style={{ width: '100%' }}>
+                  <div style={{ width: '100%', position: 'relative' }}>
+                    {chat.authorId === me.id ?
+                      chat.lastMessage.seenCount === 0 ?
+                        <Done style={{ fill: colors.primaryMedium, width: 16, height: 16, left: 12, position: 'absolute' }} /> :
+                        <DoneAll style={{ fill: colors.primaryMedium, width: 16, height: 16, left: 12, position: 'absolute' }} /> :
+                      null
+                    }
                     {chat.lastMessage === undefined ? null : chat.lastMessage
                         .messageType === 'photo' ? (
                       <Chip
                         style={{
                           position: 'absolute',
-                          right: 16 + 56,
+                          right: 0,
                           direction: 'ltr',
                           transform: 'translateY(8px)',
                         }}
@@ -130,7 +136,7 @@ export default function AllChats(props) {
                       <Chip
                         style={{
                           position: 'absolute',
-                          right: 16 + 56,
+                          right: 0,
                           direction: 'ltr',
                           transform: 'translateY(8px)',
                         }}
@@ -143,7 +149,7 @@ export default function AllChats(props) {
                       <Chip
                         style={{
                           position: 'absolute',
-                          right: 16 + 56,
+                          right: 0,
                           direction: 'ltr',
                           transform: 'translateY(8px)',
                         }}

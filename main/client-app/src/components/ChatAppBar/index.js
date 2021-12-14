@@ -177,13 +177,11 @@ export default function ChatAppBar(props) {
                   : ''
               }
               src={
-                props.room !== undefined && props.room !== null
-                  ? serverRoot +
-                    `/file/download_room_avatar?token=${token}&roomId=${props.room.id}`
-                  : props.user !== undefined && props.user !== null
-                  ? serverRoot +
-                    `/file/download_user_avatar?token=${token}&userId=${props.user.id}`
-                  : ''
+                props.user !== undefined && props.user !== null ?
+                  serverRoot + `/file/download_user_avatar?token=${token}&userId=${props.user.id}` :
+                  props.room !== undefined && props.room !== null ?
+                    serverRoot + `/file/download_room_avatar?token=${token}&roomId=${props.room.id}` :
+                    ''
               }
               onClick={() => {
                 if (isInRoom()) return
