@@ -923,8 +923,7 @@ function App() {
               style={{
                 position: 'absolute',
                 left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
-                bottom: 24 + 56 + 16 + 56 + 16,
-                backgroundColor: '#ff3300'
+                bottom: 24 + 56 + 16 + 56 + 16
               }}
               onClick={() => {
                 window.parent.postMessage(
@@ -965,6 +964,7 @@ function App() {
                 position: 'absolute',
                 left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
                 bottom: 24,
+                backgroundColor: '#ff3300'
               }}
               onClick={() => {
                 instantConnectionFlag = false
