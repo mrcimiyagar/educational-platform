@@ -70,7 +70,12 @@ import GenerateInvitation from './routes/pages/invitationsList';
 import ConfigGuestAccount from './routes/pages/configGuestAccount';
 import SpacesListPage from './routes/pages/spacesList';
 import Sidebar from './containers/Sidebar';
-const PouchDB = require('pouchdb').default
+const PouchDB = require('pouchdb').default;
+
+export let boardFrame = undefined;
+export let setBoardFrame = (bf) => {
+  boardFrame = bf;
+}
 
 export let currentRoomId = 0;
 export let setCurrentRoomId = (rId) => {
@@ -326,7 +331,7 @@ let DesktopDetector = () => {
         ? 'tablet'
         : 'mobile',
     )
-    forceUpdate();
+    //forceUpdate();
   }
   return <div />
 }

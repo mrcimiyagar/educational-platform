@@ -345,7 +345,7 @@ export default function BotsBox(props) {
   })
 
   return (
-    <div
+    <div id={props.id}
       style={{ width: '100%', height: '100%', display: props.style.display }}
     >
       <div

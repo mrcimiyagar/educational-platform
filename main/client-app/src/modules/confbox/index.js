@@ -29,7 +29,7 @@ export function ConfBox(props) {
       }
     });
     return (
-      <div style={{width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : '100%', height: isDesktop() ? '100%' : 'calc(100% - 128px)',
+      <div id={props.id} style={{width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : '100%', height: isDesktop() ? '100%' : 'calc(100% - 128px)',
         position: (props.webcamOn && props.currentRoomNav !== 2) ? 'fixed' : 'relative', direction: 'ltr', display: props.style.display}}>
         <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
           display: props.currentRoomNav !== 2 && props.webcamOn ? 'none' : 'block',

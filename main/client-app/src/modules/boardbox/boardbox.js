@@ -4,37 +4,26 @@ import Chat from "@material-ui/icons/Chat";
 import Menu from "@material-ui/icons/Menu";
 import PollIcon from '@material-ui/icons/Poll';
 import ViewCarousel from "@material-ui/icons/ViewCarousel";
-import React, { useEffect } from "react";
+import React from "react";
 import { pathConfig } from "../..";
-import { gotoPage, isDesktop, isInRoom } from "../../App";
+import { gotoPage, isDesktop, isInRoom, boardFrame, setBoardFrame } from "../../App";
 import { colors, me } from "../../util/settings";
 import './style.css';
 
 let cachedIframe = null;
 
 export let BoardBox = (props) => {
-    let roomId = props.roomId + '';
-    while (roomId.length < 22) {
-      roomId = '0' + roomId;
+    if (boardFrame === undefined) {
+      setBoardFrame(
+        <iframe name="board-frame" src={pathConfig.whiteBoard + `/boards/${props.roomId}`}
+          frameborder="0" style={{border: 0, backgroundColor: 'transparent', background: 'transparent',
+          borderRadius: isDesktop() ? 24 : 0, width: '100%', height: (isDesktop() && isInRoom()) ? 'calc(100% - 32px)' : 'calc(100% - 48px)', position: 'absolute', left: 0, 
+          top: (isDesktop() && isInRoom()) ? 64 : -16, bottom: 0, right: 0}}>
+        </iframe>
+      );
     }
-    useEffect(() => {
-      if (cachedIframe === null) {
-        cachedIframe = (
-          <div className="maincontentdiv" style={{borderRadius: isDesktop() ? 24 : 0}}>
-                <iframe name="board-frame" src={pathConfig.whiteBoard + `/boards/${props.roomId}`}
-                  frameborder="0" style={{border: 0, backgroundColor: 'transparent', background: 'transparent',
-                  borderRadius: isDesktop() ? 24 : 0, width: '100%', height: (isDesktop() && isInRoom()) ? 'calc(100% - 32px)' : 'calc(100% - 48px)', position: 'absolute', left: 0, 
-                  top: (isDesktop() && isInRoom()) ? 64 : -16, bottom: 0, right: 0}}></iframe>
-                {(props.membership !== undefined && props.membership !== null && props.membership.canUseWhiteboard) ?  
-                  null : 
-                  <div style={{width: '100%', height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>
-                }
-          </div>
-        );
-      }
-    }, [])
     return (
-      <div style={{backgroundColor: 'transparent', background: 'transparent', height: isDesktop() ? (isInRoom() ? 'calc(100% - 32px)' : '100%') : 'calc(100% - 72px)', marginTop: isDesktop() ? 16 : 64, display: props.style.display, width: (isDesktop() && isInRoom()) ? 'calc(100% - 144px)' : '100%', marginLeft: (isDesktop() && isInRoom()) ? 16 : 0, marginRight: (isDesktop() && isInRoom()) ? 16 : 0, display: props.style.display}}>
+      <div id={props.id} style={{backgroundColor: 'transparent', background: 'transparent', height: isDesktop() ? (isInRoom() ? 'calc(100% - 32px)' : '100%') : 'calc(100% - 72px)', marginTop: isDesktop() ? 16 : 64, display: props.style.display, width: (isDesktop() && isInRoom()) ? 'calc(100% - 144px)' : '100%', marginLeft: (isDesktop() && isInRoom()) ? 16 : 0, marginRight: (isDesktop() && isInRoom()) ? 16 : 0, display: props.style.display}}>
           <div style={{position: 'relative', height: '100%', width: '100%'}}>
             <AppBar style={{marginRight: (isDesktop() && isInRoom()) ? 'calc(50% - 275px + 175px)' : 0, width: (isDesktop() && isInRoom()) ? 550 : '100%', height: 64,
               backgroundColor: colors.primaryMedium,
@@ -57,7 +46,13 @@ export let BoardBox = (props) => {
               </Toolbar>
             </AppBar>
 
-            {cachedIframe}
+            <div className="maincontentdiv" style={{borderRadius: isDesktop() ? 24 : 0}}>
+              {boardFrame}
+              {(props.membership !== undefined && props.membership !== null && props.membership.canUseWhiteboard) ?  
+                null : 
+                <div style={{width: '100%', height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>
+              }
+            </div>
             
             {(isDesktop() && isInRoom()) ? null :
             <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16, bottom: 72 + 16}} onClick={() => {

@@ -31,7 +31,7 @@ let TRANSLATION_TABLE = {
 
 export let TaskBox = (props) => {
   return (
-    <div style={{height: 'calc(100% - 64px - 72px)', display: props.style.display}}>
+    <div id={props.id} style={{height: 'calc(100% - 64px - 72px)', display: props.style.display}}>
       <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
           borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
           backgroundColor: colors.primaryMedium,

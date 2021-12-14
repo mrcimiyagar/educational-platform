@@ -843,7 +843,7 @@ export default function ChatEmbeddedInMessenger(props) {
         left: isDesktop() ? 128 : 0,
       }}
     >
-      <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256}}></div> 
+      <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256, opacity: 0}}></div> 
       <div
         style={{
           width: '100%',

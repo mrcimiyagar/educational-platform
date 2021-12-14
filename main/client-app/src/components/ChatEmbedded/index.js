@@ -876,7 +876,7 @@ export default function ChatEmbedded(props) {
 
   return (
     <div style={{ width: 450, height: '100%' }}>
-      <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256}}></div> 
+      <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256, opacity: 0}}></div> 
       <div
         style={{
           display:

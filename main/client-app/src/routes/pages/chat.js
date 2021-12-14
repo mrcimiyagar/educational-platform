@@ -859,7 +859,7 @@ export default function Chat(props) {
       TransitionComponent={Transition}
       style={{ zIndex: 2501 }}
     >
-      <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256}}></div> 
+      <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256, opacity: 0}}></div> 
       <div
         style={{
           width: '100%',

@@ -202,6 +202,16 @@ function App() {
       },
     },
   })
+  let theme2 = createTheme({
+    palette: {
+      primary: {
+        main: '#BBDEFB',
+      },
+      secondary: {
+        main: '#ff3300',
+      },
+    },
+  })
   const classes = useStyles()
 
   let forceUpdate = useForceUpdate()
@@ -248,6 +258,7 @@ function App() {
           ? 'tablet'
           : 'mobile',
       )
+      forceUpdate();
     }
     return <div />
   }
@@ -723,17 +734,6 @@ function App() {
     notifyWebcamActivated()
   }
 
-  let theme2 = createTheme({
-    palette: {
-      primary: {
-        main: '#BBDEFB',
-      },
-      secondary: {
-        main: '#ff3300',
-      },
-    },
-  })
-
   let audioLoadCallback = () => {
     setAudioLoaded(true);
   };
@@ -924,6 +924,7 @@ function App() {
                 position: 'absolute',
                 left: sizeMode === 'mobile' || sizeMode === 'tablet' ? 16 : 32,
                 bottom: 24 + 56 + 16 + 56 + 16,
+                backgroundColor: '#ff3300'
               }}
               onClick={() => {
                 window.parent.postMessage(
