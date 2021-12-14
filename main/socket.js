@@ -52,6 +52,9 @@ let typingEvent = (user, soc) => {
     if (typing[metadata[user.id].roomId] === undefined) {
       typing[metadata[user.id].roomId] = {users: {}};
     }
+    if (typing[metadata[user.id].roomId].users === undefined) {
+      typing[metadata[user.id].roomId].users = {};
+    }
       if (user.id in typing[metadata[user.id].roomId]) {
         clearTimeout(typing[metadata[user.id].roomId].users[user.id].timeout)
       }
