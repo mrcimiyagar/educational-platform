@@ -268,12 +268,149 @@ export default function ChatEmbedded(props) {
       .catch((error) => console.log('error', error))
   };
 
+  let checkChatTextForPaste = () => {
+    if (document.getElementById('chatText') !== null) {
+      var textAreaField = document.getElementById('chatText')
+      textAreaField.onpaste = function (e) {
+        let pasteContainer = document.getElementById('pasteRedirect');
+        if (e.clipboardData.files.length > 0 && window.confirm('ارسال عکس ?')) {
+          pasteContainer.focus();
+          setTimeout(() => {
+            if (pasteContainer.children !== undefined && pasteContainer.children !== null && pasteContainer.children.length > 0 ) {
+                if (pasteContainer.children[0].tagName === 'IMG') {
+                  fetch(pasteContainer.children[0].src).then((response) => response.blob()).then(function(file) {
+                    pasteContainer.innerHTML = '';
+                    let dataUrl = {name: 'uploading_image.png'};
+                    let msg = {
+                      time: Date.now(),
+                      authorId: me.id,
+                      roomId: props.roomId,
+                      text: document.getElementById('chatText').value,
+                      messageType:
+                        dataUrl.name.endsWith('.svg') ||
+                        dataUrl.name.endsWith('.png') ||
+                        dataUrl.name.endsWith('.jpg') ||
+                        dataUrl.name.endsWith('.jpeg') ||
+                        dataUrl.name.endsWith('.gif')
+                          ? 'photo'
+                          : dataUrl.name.endsWith('.wav') ||
+                            dataUrl.name.endsWith('.mp3') ||
+                            dataUrl.name.endsWith('.mpeg') ||
+                            dataUrl.name.endsWith('.aac')
+                          ? 'audio'
+                          : dataUrl.name.endsWith('.webm') ||
+                            dataUrl.name.endsWith('.mkv') ||
+                            dataUrl.name.endsWith('.flv') ||
+                            dataUrl.name.endsWith('.3gp') ||
+                            dataUrl.name.endsWith('.mp4')
+                          ? 'video'
+                          : undefined,
+                      fileUrl: URL.createObjectURL(file),
+                      User: me,
+                    };
+                    const id = markFileAsUploading(props.roomId, {message: msg, file: file, dataUrl: dataUrl});
+                    addMessageToList(msg);
+                    setLastMessage(msg);
+                    let data = new FormData()
+                    data.append('file', file)
+                    let request = new XMLHttpRequest()
+                    request.open(
+                      'POST',
+                      serverRoot +
+                        `/file/upload_file?token=${token}&roomId=${props.roomId}&extension=${(dataUrl.name.lastIndexOf('.') + 1) >= 0 ? dataUrl.name.substr(dataUrl.name.lastIndexOf('.') + 1) : ''}&isPresent=false`,
+                    )
+                    let f = { progress: 0, name: file.name, size: file.size, local: true }
+                    request.upload.addEventListener('progress', function (e) {
+                      let percent_completed = (e.loaded * 100) / e.total
+                      f.progress = percent_completed
+                      if (percent_completed === 100) {
+                        f.local = false
+                      }
+                      forceUpdate()
+                    })
+                    request.onreadystatechange = function () {
+                      if (request.readyState === XMLHttpRequest.DONE) {
+                        markFileAsUploaded(props.roomId, id);
+                        let requestOptions = {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            token: token,
+                          },
+                          body: JSON.stringify({
+                            roomId: props.roomId,
+                            messageType:
+                              dataUrl.name.endsWith('.svg') ||
+                              dataUrl.name.endsWith('.png') ||
+                              dataUrl.name.endsWith('.jpg') ||
+                              dataUrl.name.endsWith('.jpeg') ||
+                              dataUrl.name.endsWith('.gif')
+                                ? 'photo'
+                                : dataUrl.name.endsWith('.wav') ||
+                                  dataUrl.name.endsWith('.mp3') ||
+                                  dataUrl.name.endsWith('.mpeg') ||
+                                  dataUrl.name.endsWith('.aac')
+                                ? 'audio'
+                                : dataUrl.name.endsWith('.webm') ||
+                                  dataUrl.name.endsWith('.mkv') ||
+                                  dataUrl.name.endsWith('.flv') ||
+                                  dataUrl.name.endsWith('.3gp') ||
+                                  dataUrl.name.endsWith('.mp4')
+                                ? 'video'
+                                : undefined,
+                            fileId: JSON.parse(request.responseText).file.id,
+                          }),
+                          redirect: 'follow',
+                        }
+                        fetch(serverRoot + '/chat/create_message', requestOptions)
+                          .then((response) => response.json())
+                          .then((result) => {
+                            console.log(JSON.stringify(result))
+                            if (result.message !== undefined) {
+                              cacheMessage(result.message);
+                              for (let i = 0; i < messagesArr.length; i++) {
+                                if (messagesArr[i].key === ('message-' + msg.id)) {
+                                  messagesArr.splice(i, 1);
+                                }
+                              }
+                              addMessageToList(result.message);
+                              setLastMessage(result.message);
+                              forceUpdate();
+                            }
+                          })
+                          .catch((error) => console.log('error', error))
+                        document.getElementById('chatText').value = ''
+                      }
+                    }
+                    if (FileReader) {
+                      let fr = new FileReader()
+          
+                      fr.onload = function () {
+                        f.src = fr.result
+                      }
+                      fr.readAsDataURL(file)
+                    }
+                    request.send(data)
+                  });
+                }
+            }
+          }, 0);
+        }
+      };
+    } else {
+      setTimeout(() => {
+        checkChatTextForPaste()
+      }, 500)
+    }
+  }
+
   useEffect(() => {
     setCurrentRoomId(props.roomId);
     scrollReady2 = false;
     messagesArr = [];
     messagesDict = {};
     setupRoom();
+    checkChatTextForPaste();
   }, [props.roomId]);
 
   useEffect(() => {
@@ -739,6 +876,7 @@ export default function ChatEmbedded(props) {
 
   return (
     <div style={{ width: 450, height: '100%' }}>
+      <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256}}></div> 
       <div
         style={{
           display:
