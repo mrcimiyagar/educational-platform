@@ -112,7 +112,7 @@ export default function AllChats(props) {
                 }
                 secondary={
                   <div style={{ width: '100%', position: 'relative' }}>
-                    {chat.authorId === me.id ?
+                    {chat.lastMessage.authorId === me.id ?
                       chat.lastMessage.seenCount === 0 ?
                         <Done style={{ fill: colors.primaryMedium, width: 16, height: 16, left: 12, position: 'absolute' }} /> :
                         <DoneAll style={{ fill: colors.primaryMedium, width: 16, height: 16, left: 12, position: 'absolute' }} /> :
