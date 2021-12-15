@@ -277,7 +277,8 @@ router.post('/create_message', jsonParser, async function (req, res) {
         require('../server').signlePushTo(user.id, 'chat-list-updated', { room });
       }
     });
-    let allUsers = await sw.Membership.findAll({raw: true, where: {roomId: room.id}});
+    let mems = await sw.Membership.findAll({raw: true, where: {roomId: room.id}});
+    let allUsers = await sw.User.findAll({raw: true, where: {id: mems.map(mem => mem.userId)}});
     let usersDict = {};
     allUsers.forEach(u => {usersDict[u.id] = true;});
     users.forEach(u => {
