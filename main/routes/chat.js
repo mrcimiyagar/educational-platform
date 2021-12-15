@@ -140,14 +140,11 @@ router.post('/get_chats', jsonParser, async function (req, res) {
                   authorId: { [Sequelize.Op.not]: session.userId },
                 },
               })
-              let roomLastMessageSeenCount = await sw.MessageSeen.count({
-                where: {
-                    roomId: room.id,
-                    userId: session.userId,
-                    messageId: room.lastMessage.id,
-                }
+              room.lastMessage.seen = await sw.MessageSeen.count({
+                where: { messageId: message.id },
+                distinct: true,
+                col: 'userId',
               });
-              room.lastMessage.seenCount = roomLastMessageSeenCount;
               let roomReadCount = await sw.MessageSeen.count({
                 where: {
                   roomId: room.id,
@@ -162,7 +159,7 @@ router.post('/get_chats', jsonParser, async function (req, res) {
               room.unread = roomMessagesCount - roomReadCount;
             }
             else {
-              room.lastMessage = {seenCount: 0};
+              room.lastMessage = {seen: 0};
               room.unread = 0;
             }
           }

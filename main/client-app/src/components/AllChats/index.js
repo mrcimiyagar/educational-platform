@@ -37,8 +37,8 @@ export default function AllChats(props) {
   const classes = useStyles()
   updateMessageSeen = (msg) => {
     props.chats.forEach(chat => {
-      if (msg.roomId === chat.id) {
-        chat.lastMessage.seenCount = 1;
+      if (msg.roomId === chat.id && msg.id === chat.lastMessage.id) {
+        chat.lastMessage.seen = msg.seen;
       }
     });
     forceUpdate();
@@ -126,8 +126,8 @@ export default function AllChats(props) {
                   <div style={{ width: '100%', position: 'relative' }}>
                     {chat.lastMessage.authorId === me.id ?
                         <div style={{ left: 12 + 40, position: 'absolute' }}>
-                          <Done id={'message-seen-chat-' + chat.lastMessage.id} style={{ display: (chat.lastMessage.seenCount === 0 || chat.lastMessage.seenCount === undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
-                          <DoneAll id={'message-seen-chat-all-' + chat.lastMessage.id} style={{ display: (chat.lastMessage.seenCount > 0  && chat.lastMessage.seenCount !== undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
+                          <Done id={'message-seen-chat-' + chat.lastMessage.id} style={{ display: (chat.lastMessage.seen === 0 || chat.lastMessage.seen === undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
+                          <DoneAll id={'message-seen-chat-all-' + chat.lastMessage.id} style={{ display: (chat.lastMessage.seen > 0  && chat.lastMessage.seen !== undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
                         </div> :
                       null
                     }
