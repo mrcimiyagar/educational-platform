@@ -366,7 +366,8 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     });
     fetchedMessages.reverse();
     let copies = [];
-    fetchedMessages.forEach(msg => {
+    for (let i = 0; i < fetchedMessages.length; i++) {
+      let msg = fetchedMessages[i];
       let msgCopy = {
         id: msg.id,
         authorId: msg.authorId,
@@ -384,6 +385,9 @@ router.post('/get_messages', jsonParser, async function (req, res) {
         col: 'userId',
       });
       copies.push(msgCopy);
+    }
+    fetchedMessages.forEach(msg => {
+      
     })
     res.send({ status: 'success', messages: copies });
   })
