@@ -127,7 +127,7 @@ export default function HomeAppbar(props) {
     })
   }, []);*/
 
-  setLastMessage = (msg) => {
+  setLastMessage = (msg, targetChat) => {
     try {
       if (chats.filter((c) => c.id === msg.roomId).length > 0) {
         chats.filter((c) => c.id === msg.roomId)[0].lastMessage = msg
@@ -138,6 +138,13 @@ export default function HomeAppbar(props) {
           if (a.lastMessage === undefined) return b.lastMessage.time - 0
           return b.lastMessage.time - a.lastMessage.time
         })
+        if (targetChat !== undefined) {
+          chats.forEach(chat => {
+            if (targetChat.id === chat.id) {
+              chat.lastMessage = targetChat.lastMessage;
+            }
+          });
+        }
         setChats(chats)
         updateHome()
       }

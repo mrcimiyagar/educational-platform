@@ -674,6 +674,10 @@ export let isOnline = true;
           registerEvent('you-moved', ({roomId}) => {
             window.location.href = pathConfig.mainFrontend + `/app/room?room_id=${roomId}&tab_index=0`;
           });
+          unregisterEvent('chat-list-updated');
+          registerEvent('chat-list-updated', ({ chat }) => {
+            setLastMessage(chat.lastMessage, chat);
+          });
           unregisterEvent('message-added');
           registerEvent('message-added', ({ msgCopy }) => {
             if (me.id !== msgCopy.authorId) {

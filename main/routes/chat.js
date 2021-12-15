@@ -234,10 +234,47 @@ router.post('/create_message', jsonParser, async function (req, res) {
         .sendNotification(subscription, payload)
         .catch((err) => console.error(err));
     }
+    let room = await sw.Room.findOne({where: {id: membership.roomId}});
+    let entries = await sw.Message.findAll({
+      raw: true,
+      where: { roomId: membership.roomId },
+      limit: 100,
+      order: [['createdAt', 'DESC']],
+    })
+    if (entries.length > 0) {
+      room.lastMessage = entries[0];
+      room.lastMessage.seen = await sw.MessageSeen.count({
+        where: { messageId: room.lastMessage.id },
+        distinct: true,
+        col: 'userId',
+      });
+    let roomMessagesCount = await sw.Message.count({
+      where: {
+        id: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
+        roomId: room.id,
+        authorId: { [Sequelize.Op.not]: session.userId },
+      },
+    })
+    let roomReadCount = await sw.MessageSeen.count({
+      where: {
+        roomId: room.id,
+        userId: session.userId,
+        messageId: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
+      },
+      distinct: true,
+      col: 'messageId',
+    })
+    room.unread = roomMessagesCount - roomReadCount
+  }
+  else {
+    room.lastMessage = {seen: 0};
+    room.unread = 0;
+  }
     users.forEach((user) => {
       if (user.id !== session.userId) {
         pushNotification(user.id, 'پیام جدید از ' + user.firstName, msgCopy.text);
         require('../server').signlePushTo(user.id, 'message-added', { msgCopy });
+        require('../server').signlePushTo(user.id, 'chat-list-updated', { room });
       }
     })
     res.send({ status: 'success', message: msgCopy })
