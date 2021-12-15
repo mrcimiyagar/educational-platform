@@ -142,6 +142,7 @@ export default function HomeAppbar(props) {
           chats.forEach(chat => {
             if (targetChat.id === chat.id) {
               chat.lastMessage = targetChat.lastMessage;
+              chat.unread = targetChat.unread;
             }
           });
         }

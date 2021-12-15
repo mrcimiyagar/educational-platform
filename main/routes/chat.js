@@ -243,7 +243,7 @@ router.post('/create_message', jsonParser, async function (req, res) {
     }
     let entries = await sw.Message.findAll({
       raw: true,
-      where: { roomId: membership.roomId },
+      where: { roomId: room.id },
       limit: 100,
       order: [['createdAt', 'DESC']],
     })
@@ -280,7 +280,6 @@ router.post('/create_message', jsonParser, async function (req, res) {
       if (user.id !== session.userId) {
         pushNotification(user.id, 'پیام جدید از ' + user.firstName, msgCopy.text);
         require('../server').signlePushTo(user.id, 'message-added', { msgCopy });
-        require('../server').signlePushTo(user.id, 'chat-list-updated', { room });
       }
     });
     let mems = await sw.Membership.findAll({raw: true, where: {roomId: room.id}});
