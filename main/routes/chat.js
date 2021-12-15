@@ -141,7 +141,7 @@ router.post('/get_chats', jsonParser, async function (req, res) {
                 },
               })
               room.lastMessage.seen = await sw.MessageSeen.count({
-                where: { messageId: message.id },
+                where: { messageId: room.lastMessage.id },
                 distinct: true,
                 col: 'userId',
               });
