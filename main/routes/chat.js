@@ -276,7 +276,20 @@ router.post('/create_message', jsonParser, async function (req, res) {
         require('../server').signlePushTo(user.id, 'message-added', { msgCopy });
         require('../server').signlePushTo(user.id, 'chat-list-updated', { room });
       }
-    })
+    });
+    let allUsers = await sw.Membership.findAll({raw: true, where: {roomId: room.id}});
+    let usersDict = {};
+    allUsers.forEach(u => {usersDict[u.id] = true;});
+    users.forEach(u => {
+      if (usersDict[u.id] !== true) {
+        allUsers.push(u);
+      }
+    });
+    allUsers.forEach((user) => {
+      if (user.id !== session.userId) {
+        require('../server').signlePushTo(user.id, 'chat-list-updated', { room });
+      }
+    });
     res.send({ status: 'success', message: msgCopy })
   })
 })
