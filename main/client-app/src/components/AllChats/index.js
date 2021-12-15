@@ -125,9 +125,9 @@ export default function AllChats(props) {
                 secondary={
                   <div style={{ width: '100%', position: 'relative' }}>
                     {chat.lastMessage.authorId === me.id ?
-                        <div style={{ left: 12 + 40, position: 'absolute' }}>
-                          <Done id={'message-seen-chat-' + chat.lastMessage.id} style={{ display: (chat.lastMessage.seen === 0 || chat.lastMessage.seen === undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
-                          <DoneAll id={'message-seen-chat-all-' + chat.lastMessage.id} style={{ display: (chat.lastMessage.seen > 0  && chat.lastMessage.seen !== undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
+                        <div style={{ position: 'relative' }}>
+                          <Done id={'message-seen-chat-' + chat.lastMessage.id} style={{ left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen === 0 || chat.lastMessage.seen === undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
+                          <DoneAll id={'message-seen-chat-all-' + chat.lastMessage.id} style={{ left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen > 0  && chat.lastMessage.seen !== undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
                         </div> :
                       null
                     }
@@ -137,6 +137,7 @@ export default function AllChats(props) {
                         style={{
                           position: 'absolute',
                           right: 0,
+                          top: 0,
                           direction: 'ltr',
                           transform: 'translateY(8px)',
                         }}
@@ -150,6 +151,7 @@ export default function AllChats(props) {
                         style={{
                           position: 'absolute',
                           right: 0,
+                          top: 0,
                           direction: 'ltr',
                           transform: 'translateY(8px)',
                         }}
@@ -163,6 +165,7 @@ export default function AllChats(props) {
                         style={{
                           position: 'absolute',
                           right: 0,
+                          top: 0,
                           direction: 'ltr',
                           transform: 'translateY(8px)',
                         }}
@@ -179,6 +182,9 @@ export default function AllChats(props) {
                           textAlign: 'right',
                           color: '#000',
                           fontSize: 14,
+                          top: 0,
+                          right: 0,
+                          position: 'absolute'
                         }}
                       >
                         {chat.lastMessage.text}

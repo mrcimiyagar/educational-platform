@@ -70,8 +70,12 @@ router.post('/get_chat', jsonParser, async function (req, res) {
         order: [['createdAt', 'DESC']],
       })
       if (entries.length > 0) {
-        room.lastMessage = entries[0]
-      }
+        room.lastMessage = entries[0];
+        room.lastMessage.seen = await sw.MessageSeen.count({
+          where: { messageId: room.lastMessage.id },
+          distinct: true,
+          col: 'userId',
+        });
       let roomMessagesCount = await sw.Message.count({
         where: {
           id: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
@@ -89,6 +93,11 @@ router.post('/get_chat', jsonParser, async function (req, res) {
         col: 'messageId',
       })
       room.unread = roomMessagesCount - roomReadCount
+    }
+    else {
+      room.lastMessage = {seen: 0};
+      room.unread = 0;
+    }
       res.send({ status: 'success', room: room })
     } else {
       res.send({
@@ -356,7 +365,27 @@ router.post('/get_messages', jsonParser, async function (req, res) {
       order: [['createdAt', 'DESC']],
     });
     fetchedMessages.reverse();
-    res.send({ status: 'success', messages: fetchedMessages });
+    let copies = [];
+    fetchedMessages.forEach(msg => {
+      let msgCopy = {
+        id: msg.id,
+        authorId: msg.authorId,
+        roomId: msg.roomId,
+        User: msg.User,
+        Room: msg.Room,
+        messageType: msg.messageType,
+        fileId: msg.fileId,
+        text: msg.text,
+        time: msg.time
+      }
+      msgCopy.seen = await sw.MessageSeen.count({
+        where: { messageId: msgCopy.id },
+        distinct: true,
+        col: 'userId',
+      });
+      copies.push(msgCopy);
+    })
+    res.send({ status: 'success', messages: copies });
   })
 })
 

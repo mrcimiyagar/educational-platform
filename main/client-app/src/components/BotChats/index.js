@@ -7,13 +7,13 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { Audiotrack, Photo, Videocam } from '@material-ui/icons'
+import { Audiotrack, Done, DoneAll, Photo, Videocam } from '@material-ui/icons'
 import React from 'react'
 import { Badge } from 'reactstrap'
 import { gotoPage, isDesktop, isTablet } from '../../App'
 import EmptySign from '../../components/EmptySign'
 import { resetMessages } from '../../routes/pages/chat'
-import { colors, token } from '../../util/settings'
+import { colors, me, token } from '../../util/settings'
 import {
   isMobile,
   serverRoot,
@@ -32,8 +32,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+export let updateMessageSeen2 = () => {};
+
 export default function BotChats(props) {
+  let forceUpdate = useForceUpdate();
   const classes = useStyles()
+  updateMessageSeen2 = (msg) => {
+    props.chats.forEach(chat => {
+      if (msg.roomId === chat.id && msg.id === chat.lastMessage.id) {
+        chat.lastMessage.seen = msg.seen;
+      }
+    });
+    forceUpdate();
+  };
+
   return props.chats.length > 0 ? (
     <List className={classes.root}>
       {props.chats.map((chat, index) => {
@@ -116,15 +128,23 @@ export default function BotChats(props) {
                     </React.Fragment>
                   }
                   secondary={
-                    <div style={{ width: '100%' }}>
+                    <div style={{ width: '100%', position: 'relative' }}>
+                    {chat.lastMessage.authorId === me.id ?
+                        <div style={{ position: 'relative' }}>
+                          <Done id={'message-seen-chat-' + chat.lastMessage.id} style={{ left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen === 0 || chat.lastMessage.seen === undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
+                          <DoneAll id={'message-seen-chat-all-' + chat.lastMessage.id} style={{ left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen > 0  && chat.lastMessage.seen !== undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
+                        </div> :
+                      null
+                    }
                       {chat.lastMessage === undefined ? null : chat.lastMessage
                           .messageType === 'photo' ? (
                         <Chip
                           style={{
-                            position: 'absolute',
-                            right: 16 + 56,
                             direction: 'ltr',
                             transform: 'translateY(8px)',
+                            top: 0,
+                            right: 0,
+                            position: 'absolute'
                           }}
                           icon={<Photo style={{ borderRadius: 4 }} />}
                           label="عکس"
@@ -134,10 +154,11 @@ export default function BotChats(props) {
                       ) : chat.lastMessage.messageType === 'audio' ? (
                         <Chip
                           style={{
-                            position: 'absolute',
-                            right: 16 + 56,
                             direction: 'ltr',
                             transform: 'translateY(8px)',
+                            top: 0,
+                            right: 0,
+                            position: 'absolute'
                           }}
                           icon={<Audiotrack style={{ borderRadius: 4 }} />}
                           label="صدا"
@@ -147,10 +168,11 @@ export default function BotChats(props) {
                       ) : chat.lastMessage.messageType === 'video' ? (
                         <Chip
                           style={{
-                            position: 'absolute',
-                            right: 16 + 56,
                             direction: 'ltr',
                             transform: 'translateY(8px)',
+                            top: 0,
+                            right: 0,
+                            position: 'absolute'
                           }}
                           icon={<Videocam style={{ borderRadius: 4 }} />}
                           label="ویدئو"
@@ -165,6 +187,9 @@ export default function BotChats(props) {
                             textAlign: 'right',
                             color: '#000',
                             fontSize: 14,
+                            top: 0,
+                            right: 0,
+                            position: 'absolute'
                           }}
                         >
                           {chat.lastMessage.text}

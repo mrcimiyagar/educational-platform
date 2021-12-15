@@ -71,6 +71,9 @@ import ConfigGuestAccount from './routes/pages/configGuestAccount';
 import SpacesListPage from './routes/pages/spacesList';
 import Sidebar from './containers/Sidebar';
 import { updateMessageSeen } from './components/AllChats';
+import { updateMessageSeen2 } from './components/BotChats';
+import { updateMessageSeen3 } from './components/ChannelChats';
+import { updateMessageSeen4 } from './components/GroupChats';
 const PouchDB = require('pouchdb').default;
 
 export let boardFrame = undefined;
@@ -679,6 +682,9 @@ export let isOnline = true;
               addMessageToList3(msgCopy);
               setLastMessage(msgCopy);
               updateMessageSeen(msgCopy);
+              updateMessageSeen2(msgCopy);
+              updateMessageSeen3(msgCopy);
+              updateMessageSeen4(msgCopy);
               let requestOptions3 = {
                 method: 'POST',
                 headers: {
@@ -707,6 +713,9 @@ export let isOnline = true;
             messages.forEach((msg) => replaceMessageInTheList2(msg));
             messages.forEach((msg) => replaceMessageInTheList3(msg));
             messages.forEach((msg) => updateMessageSeen(msg));
+            messages.forEach((msg) => updateMessageSeen2(msg));
+            messages.forEach((msg) => updateMessageSeen3(msg));
+            messages.forEach((msg) => updateMessageSeen4(msg));
           })
         });
           let requestOptions = {
