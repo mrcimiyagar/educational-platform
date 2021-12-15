@@ -234,7 +234,13 @@ router.post('/create_message', jsonParser, async function (req, res) {
         .sendNotification(subscription, payload)
         .catch((err) => console.error(err));
     }
-    let room = await sw.Room.findOne({where: {id: membership.roomId}});
+    let roomRaw = await sw.Room.findOne({where: {id: membership.roomId}});
+    let room = {
+      id: roomRaw.id,
+      chatType: roomRaw.chatType,
+      title: roomRaw.title,
+      spaceId: roomRaw.spaceId
+    }
     let entries = await sw.Message.findAll({
       raw: true,
       where: { roomId: membership.roomId },
