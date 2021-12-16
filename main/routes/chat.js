@@ -262,7 +262,6 @@ router.post('/create_message', jsonParser, async function (req, res) {
           authorId: { [Sequelize.Op.not]: session.userId },
         },
       });
-      require('../server').signlePushTo(session.userId, 'log', { room, roomMessagesCount, roomReadCount });
   }
   else {
     room.lastMessage = {seen: 0};
@@ -282,7 +281,8 @@ router.post('/create_message', jsonParser, async function (req, res) {
         allUsers.push(u);
       }
     });
-    allUsers.forEach((user) => {
+    for (let i = 0; i < allUsers.length; i++) {
+      let user = allUsers[i];
       if (user.id !== session.userId) {
         if (entries.length > 0) {
         let roomReadCount = await sw.MessageSeen.count({
@@ -304,7 +304,7 @@ router.post('/create_message', jsonParser, async function (req, res) {
       }
       require('../server').signlePushTo(user.id, 'chat-list-updated', { room });
       }
-    });
+    }
     res.send({ status: 'success', message: msgCopy })
   })
 })
