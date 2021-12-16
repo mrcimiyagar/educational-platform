@@ -309,7 +309,7 @@ router.post('/create_message', jsonParser, async function (req, res) {
         resultRoom.lastMessage = {seen: 0};
         resultRoom.unread = 0;
       }
-      require('../server').signlePushTo(user.id, 'chat-list-updated', { room });
+      require('../server').signlePushTo(user.id, 'chat-list-updated', { resultRoom });
       }
     }
     res.send({ status: 'success', message: msgCopy })
