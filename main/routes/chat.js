@@ -142,6 +142,11 @@ router.post('/get_chats', jsonParser, async function (req, res) {
             })
             if (entries.length > 0) {
               room.lastMessage = entries[0];
+              room.lastMessage.seen = await sw.MessageSeen.count({
+                where: { messageId: room.lastMessage.id },
+                distinct: true,
+                col: 'userId',
+              });
               let roomMessagesCount = await sw.Message.count({
                 where: {
                   id: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
@@ -149,11 +154,6 @@ router.post('/get_chats', jsonParser, async function (req, res) {
                   authorId: { [Sequelize.Op.not]: session.userId },
                 },
               })
-              room.lastMessage.seen = await sw.MessageSeen.count({
-                where: { messageId: room.lastMessage.id },
-                distinct: true,
-                col: 'userId',
-              });
               let roomReadCount = await sw.MessageSeen.count({
                 where: {
                   roomId: room.id,
@@ -254,24 +254,26 @@ router.post('/create_message', jsonParser, async function (req, res) {
         distinct: true,
         col: 'userId',
       });
-    let roomMessagesCount = await sw.Message.count({
-      where: {
-        id: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
-        roomId: room.id,
-        authorId: { [Sequelize.Op.not]: session.userId },
-      },
-    })
-    let roomReadCount = await sw.MessageSeen.count({
-      where: {
-        roomId: room.id,
-        userId: session.userId,
-        messageId: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
-      },
-      distinct: true,
-      col: 'messageId',
-    })
-    require('../server').signlePushTo(session.userId, 'log', { room, roomMessagesCount, roomReadCount });
-    room.unread = roomMessagesCount - roomReadCount
+      let roomMessagesCount = await sw.Message.count({
+        where: {
+          id: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
+          roomId: room.id,
+          authorId: { [Sequelize.Op.not]: session.userId },
+        },
+      })
+      let roomReadCount = await sw.MessageSeen.count({
+        where: {
+          roomId: room.id,
+          userId: session.userId,
+          messageId: {
+            [Sequelize.Op.gt]: entries[entries.length - 1].id,
+          },
+        },
+        distinct: true,
+        col: 'messageId',
+      })
+      room.unread = roomMessagesCount - roomReadCount;
+      require('../server').signlePushTo(session.userId, 'log', { room, roomMessagesCount, roomReadCount });
   }
   else {
     room.lastMessage = {seen: 0};
