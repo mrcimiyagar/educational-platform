@@ -7,12 +7,14 @@ import Typography from '@material-ui/core/Typography'
 import {
   ArrowForward,
   Attachment,
+  RoomRounded,
   Visibility,
   VisibilityOff,
 } from '@material-ui/icons'
 import CallIcon from '@material-ui/icons/Call'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import VideocamIcon from '@material-ui/icons/Videocam'
+import {Roofing} from '@mui/icons-material';
 import React, { useEffect } from 'react'
 import {
   gotoPage,
@@ -222,28 +224,12 @@ export default function ChatAppBar(props) {
                     setTimeout(() => {
                       gotoPage('/app/room', {
                         room_id: props.room.id,
-                        tab_index: 2,
+                        tab_index: 0,
                       })
                     }, 500)
                   }}
                 >
-                  <VideocamIcon style={{ fill: '#fff' }} />
-                </IconButton>
-              )}
-              {isInRoom() ? null : (
-                <IconButton
-                  onClick={() => {
-                    props.handleCallClicked()
-                    setInTheGame(false)
-                    setTimeout(() => {
-                      gotoPage('/app/room', {
-                        room_id: props.room.id,
-                        tab_index: 2,
-                      })
-                    }, 500)
-                  }}
-                >
-                  <CallIcon style={{ fill: '#fff' }} />
+                  <Roofing style={{ fill: '#fff' }} />
                 </IconButton>
               )}
               <IconButton>

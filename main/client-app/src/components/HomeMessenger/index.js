@@ -11,10 +11,8 @@ import RadioIcon from '@material-ui/icons/Radio';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { setWallpaper } from '../..';
+import DesktopWallpaper from '../../images/desktop-wallpaper.jpg';
 import {
-  cacheChat,
-  fetchChats,
-  histPage,
   inTheGame,
   isDesktop,
   isInMessenger,
@@ -84,8 +82,8 @@ export default function HomeMessenger(props) {
     let classes = useStyles();
     useEffect(() => {
         setWallpaper({
-          type: 'color',
-          color: colors.accentDark
+          type: 'photo',
+          photo: DesktopWallpaper
         });
     }, []);
     return <div
@@ -153,12 +151,8 @@ export default function HomeMessenger(props) {
                 : isTablet()
                 ? 'calc(100% - 168px)'
                 : 'calc(100% - 128px - 32px)',
-              backgroundColor:
-                isDesktop() || isTablet()
-                  ? 'rgba(255, 255, 255, 0.45)'
-                  : undefined,
-              backdropFilter:
-                isDesktop() || isTablet() ? 'blur(10px)' : undefined,
+              backgroundColor: 'rgba(255, 255, 255, 0.45)',
+              backdropFilter: 'blur(10px)',
               marginLeft: isMobile() ? -8 : undefined,
               marginRight: isMobile() || isDesktop() ? -8 : undefined,
               marginTop: isDesktop() ? 88 : 56,
