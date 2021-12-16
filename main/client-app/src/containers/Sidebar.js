@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Drawer, Switch} from "@material-ui/core";
+import {SwipeableDrawer, Switch} from "@material-ui/core";
 
 import {colors, me, token} from "../util/settings";
 import {Fab, FormControlLabel, FormGroup, IconButton} from "@material-ui/core";
@@ -80,10 +80,11 @@ class Sidebar extends Component {
 
   render() {
     return (
-      <Drawer
+      <SwipeableDrawer
           open={this.state.updateRoomPermissions}
           onClose={this.toggleRoomPermission}
           anchor={'right'}
+          style={{position: 'relative', zIndex: 99999}}
       >
         <div
           style={{backgroundColor: '#fff', width: 320, height: 'auto', minHeight: '100vh', direction: 'rtl'}}>
@@ -137,7 +138,7 @@ class Sidebar extends Component {
                 }
               </div>
         </div>
-      </Drawer>
+      </SwipeableDrawer>
     );
   }
 }

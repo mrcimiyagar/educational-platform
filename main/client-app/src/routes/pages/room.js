@@ -2,7 +2,7 @@ import {
   AppBar,
   Avatar,
   createTheme,
-  Drawer,
+  SwipeableDrawer,
   Fab,
   IconButton,
   makeStyles,
@@ -756,7 +756,7 @@ export default function RoomPage(props) {
           }}
           currentRoomNav={currentRoomNav}
         />
-        <Drawer
+        <SwipeableDrawer
           onClose={() => setMenuOpen(false)}
           open={menuOpen}
           anchor={'right'}
@@ -854,7 +854,7 @@ export default function RoomPage(props) {
               ) : null}
             </div>
           </div>
-        </Drawer>
+        </SwipeableDrawer>
       </div>
     )
   } else {
@@ -1134,7 +1134,7 @@ export default function RoomPage(props) {
           }}
           currentRoomNav={currentRoomNav}
         />
-        <Drawer
+        <SwipeableDrawer
           onClose={() => setMenuOpen(false)}
           open={menuOpen}
           anchor={'right'}
@@ -1232,7 +1232,7 @@ export default function RoomPage(props) {
               ) : null}
             </div>
           </div>
-        </Drawer>
+        </SwipeableDrawer>
       </div>
     )
   }

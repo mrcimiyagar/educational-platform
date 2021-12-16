@@ -2,7 +2,7 @@ import {
   AppBar,
   Avatar,
   createTheme,
-  Drawer,
+  SwipeableDrawer,
   Fab,
   IconButton,
   makeStyles,
@@ -276,10 +276,11 @@ export default function HomePage(props) {
             style={{ display: 'block' }}
           />
         </div>
-        <Drawer
+        <SwipeableDrawer
           onClose={() => setMenuOpen(false)}
           open={menuOpen}
           anchor={'right'}
+          style={{position: 'relative', zIndex: 99998}}
         >
           <div
             style={{
@@ -374,7 +375,7 @@ export default function HomePage(props) {
               ) : null}
             </div>
           </div>
-        </Drawer>
+        </SwipeableDrawer>
       </div>
     )
   } else {
@@ -410,10 +411,11 @@ export default function HomePage(props) {
             style={{ display: 'block' }}
           />
         </div>
-        <Drawer
+        <SwipeableDrawer
           onClose={() => setMenuOpen(false)}
           open={menuOpen}
           anchor={'right'}
+          style={{position: 'relative', zIndex: 99998}}
         >
           <div
             style={{
@@ -508,7 +510,7 @@ export default function HomePage(props) {
               ) : null}
             </div>
           </div>
-        </Drawer>
+        </SwipeableDrawer>
       </div>
     )
   }
