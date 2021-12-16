@@ -244,7 +244,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   })
   registerEvent('connect', () => {
     registerEvent('auth-success', () => {
-      if (onSocketAuth !== undefined) {
+      if (onSocketAuth !== undefined) { 
         onSocketAuth()
       }
       setClientConnected(true);
