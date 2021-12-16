@@ -675,8 +675,23 @@ export let isOnline = true;
             window.location.href = pathConfig.mainFrontend + `/app/room?room_id=${roomId}&tab_index=0`;
           });
           unregisterEvent('chat-list-updated');
-          registerEvent('chat-list-updated', ({ room }) => {
-            setLastMessage(room.lastMessage, room);
+          registerEvent('chat-list-updated', ({room}) => {
+            let requestOptions3 = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                token: token,
+              },
+              body: JSON.stringify({
+                roomId: room.id,
+              }),
+              redirect: 'follow',
+            };
+            fetch(serverRoot + '/chat/get_chat', requestOptions3)
+              .then((response) => response.json())
+              .then((result) => {
+                setLastMessage(result.room.lastMessage, result.room);
+              });
           });
           unregisterEvent('message-added');
           registerEvent('message-added', ({ msgCopy }) => {
