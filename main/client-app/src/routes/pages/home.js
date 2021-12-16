@@ -71,8 +71,8 @@ const useStylesAction = makeStyles({
   selected: {},
 })
 
-export let membership = undefined
-let setMembership = undefined
+export let membership = undefined;
+export let setMembership2 = undefined;
 
 export default function HomePage(props) {
 
@@ -97,10 +97,7 @@ export default function HomePage(props) {
 
   let forceUpdate = useForceUpdate()
 
-  const classes = useStyles()
-  const classesAction = useStylesAction()
-
-  ;[membership, setMembership] = React.useState({})
+  ;[membership, setMembership2] = React.useState({})
   const [loaded, setLoaded] = React.useState(false)
   const [menuOpen, setMenuOpen] = React.useState(false)
   const [menuMode, setMenuMode] = React.useState(0)
@@ -131,8 +128,6 @@ export default function HomePage(props) {
 
         if (isOnline) ConnectToIo(token, () => {})
 
-        unregisterEvent('membership-updated')
-        registerEvent('membership-updated', (mem) => {})
         unregisterEvent('view-updated')
         registerEvent('view-updated', (v) => {})
       })
@@ -154,7 +149,7 @@ export default function HomePage(props) {
     enterRoomPromise.then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
-        setMembership(result.membership)
+        setMembership2(result.membership)
         cacheMembership(result.membership);
         forceUpdate()
 
@@ -257,7 +252,7 @@ export default function HomePage(props) {
             top: 0,
           }}
         >
-          <ChatEmbedded roomId={homeRoomId} />
+          <ChatEmbedded roomId={homeRoomId} membership={membership} />
         </div>
         <div
           style={{

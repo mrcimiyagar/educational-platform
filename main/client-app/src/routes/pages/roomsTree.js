@@ -132,7 +132,7 @@ export default function RoomsTree(props) {
                 <AppBar position={'fixed'} style={{position: 'fixed', width: '100%', height: 64, backgroundColor: colors.primaryMedium}}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                        <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>نقشه</Typography>
+                        <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16, color: '#fff'}}>نقشه</Typography>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>

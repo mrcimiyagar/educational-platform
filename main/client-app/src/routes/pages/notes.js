@@ -77,7 +77,7 @@ export default function NotePage(props) {
                     borderRadius: isDesktop() ? '24px 24px 0 0' : undefined}}>
                     <Toolbar style={{marginTop: (isDesktop() || isTablet()) ? 0 : 8, width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                        <Typography variant={'h6'}>یادداشت ها</Typography>
+                        <Typography variant={'h6'} style={{color: '#fff'}}>یادداشت ها</Typography>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>

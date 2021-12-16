@@ -111,7 +111,7 @@ export default function Deck(props) {
             </IconButton>
             <Typography
               variant={'h6'}
-              style={{ position: 'absolute', right: 16 + 32 + 16 }}
+              style={{ position: 'absolute', right: 16 + 32 + 16, color: '#fff' }}
             >
               تابلو
             </Typography>

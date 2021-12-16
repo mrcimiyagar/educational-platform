@@ -87,7 +87,7 @@ function SettingsPage(props) {
             </IconButton>
             <Typography
               variant={'h6'}
-              style={{ position: 'absolute', right: 16 + 32 + 16 }}
+              style={{ color: '#fff', position: 'absolute', right: 16 + 32 + 16 }}
             >
               تنظیمات روم
             </Typography>

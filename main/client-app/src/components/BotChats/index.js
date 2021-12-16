@@ -208,6 +208,7 @@ export default function BotChats(props) {
                             height: 28,
                             position: 'absolute',
                             left: 16,
+                            top: 16,
                             transform: 'translateY(-20px)',
                             color: '#fff',
                           }}

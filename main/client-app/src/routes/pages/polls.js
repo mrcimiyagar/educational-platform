@@ -60,8 +60,7 @@ export default function PollPage(props) {
                     boxShadow: 'none',
                 },
             }}fullScreen={!isDesktop()} open={open} onClose={handleClose} TransitionComponent={Transition}>
-            <div style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.5)', backdropFilter: (!(isDesktop() && isInRoom())) ? 'blur(10px)' : undefined, ...(!isDesktop() && {position: "absolute", top: 0, left: 0}), height: (isMobile() || isTablet()) ? "100%" : 650, width: (isMobile() || isTablet()) ? "100%" : 500}}>
+            <div style={{ borderRadius: 32, ...(!isDesktop() && {position: "absolute", top: 0, left: 0}), height: (isMobile() || isTablet()) ? "100%" : 650, width: (isMobile() || isTablet()) ? "100%" : 500}}>
                 <AppBar position={'static'} style={{
                     width: '100%',
                     height: 64,
@@ -70,7 +69,7 @@ export default function PollPage(props) {
                 }}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                        <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16}}>رای گیری</Typography>
+                        <Typography variant={'h6'} style={{position: 'absolute', right: 16 + 32 + 16, color: '#fff'}}>رای گیری</Typography>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>

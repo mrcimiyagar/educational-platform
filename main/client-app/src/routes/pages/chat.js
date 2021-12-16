@@ -952,7 +952,10 @@ export default function Chat(props) {
               className={classes.iconButton}
               style={{ transform: 'rotate(180deg)' }}
               onClick={() => {
-                if (document.getElementById('chatText').value !== '') {
+                let text = document.getElementById('chatText').value;
+                text = text.replace(/\r?\n|\r/g, '');
+                text = text.trim();
+                if (text !== '') {
                   let msg = {
                     id: 'message-' + Date.now(),
                     time: Date.now(),

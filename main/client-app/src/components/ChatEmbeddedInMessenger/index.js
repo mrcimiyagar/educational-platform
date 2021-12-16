@@ -475,10 +475,8 @@ export default function ChatEmbeddedInMessenger(props) {
             content.substring(caret)
           e.stopPropagation()
         } else if (e.keyCode == 13) {
-          e.preventDefault()
-          if (document.getElementById('chatText').value !== '') {
-            document.getElementById('sendBtn').click();
-          }
+          e.preventDefault();
+          document.getElementById('sendBtn').click();
         }
       })
     } else {
@@ -941,7 +939,10 @@ export default function ChatEmbeddedInMessenger(props) {
             className={classes.iconButton}
             style={{ transform: 'rotate(180deg)' }}
             onClick={() => {
-              if (document.getElementById('chatText').value !== '') {
+              let text = document.getElementById('chatText').value;
+              text = text.replace(/\r?\n|\r/g, '');
+              text = text.trim();
+              if (text !== '') {
                 let msg = {
                   id: 'message-' + Date.now(),
                   time: Date.now(),
