@@ -83,7 +83,7 @@ export default function HomeMessenger(props) {
     useEffect(() => {
         setWallpaper({
           type: 'color',
-          color: colors.primaryMedium
+          color: colors.accentDark
         });
     }, []);
     return <div
