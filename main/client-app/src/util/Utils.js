@@ -236,6 +236,9 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
       })
       .catch((error) => console.log('error', error))
   });
+  registerEvent('log', data => {
+    alert(JSON.stringify(data));
+  });
   registerEvent('disconnect', () => {
     setClientConnected(false)
   })

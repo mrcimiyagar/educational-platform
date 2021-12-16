@@ -688,7 +688,9 @@ export default function ChatEmbedded(props) {
           e.stopPropagation()
         } else if (e.keyCode == 13) {
           e.preventDefault()
-          document.getElementById('sendBtn').click()
+          if (document.getElementById('chatText').value !== '') {
+            document.getElementById('sendBtn').click();
+          }
         }
       })
     } else {

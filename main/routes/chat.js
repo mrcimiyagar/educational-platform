@@ -270,6 +270,7 @@ router.post('/create_message', jsonParser, async function (req, res) {
       distinct: true,
       col: 'messageId',
     })
+    require('../server').signlePushTo(session.userId, 'log', { room, roomMessagesCount, roomReadCount });
     room.unread = roomMessagesCount - roomReadCount
   }
   else {
