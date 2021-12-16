@@ -82,8 +82,8 @@ export default function HomeMessenger(props) {
     let classes = useStyles();
     useEffect(() => {
         setWallpaper({
-          type: 'photo',
-          photo: DesktopWallpaper
+          type: 'color',
+          color: colors.primaryMedium
         });
     }, []);
     return <div
@@ -151,8 +151,8 @@ export default function HomeMessenger(props) {
                 : isTablet()
                 ? 'calc(100% - 168px)'
                 : 'calc(100% - 128px - 32px)',
-              backgroundColor: 'rgba(255, 255, 255, 0.45)',
-              backdropFilter: 'blur(10px)',
+              backgroundColor: !(isMobile() || isTablet()) ? 'rgba(255, 255, 255, 0.445)' : undefined,
+              backdropFilter: !(isMobile() || isTablet()) ? 'blur(10px)' : undefined,
               marginLeft: isMobile() ? -8 : undefined,
               marginRight: isMobile() || isDesktop() ? -8 : undefined,
               marginTop: isDesktop() ? 88 : 56,
