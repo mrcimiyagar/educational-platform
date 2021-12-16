@@ -283,6 +283,13 @@ router.post('/create_message', jsonParser, async function (req, res) {
     });
     for (let i = 0; i < allUsers.length; i++) {
       let user = allUsers[i];
+      let resultRoom = {
+        id: room.id,
+        spaceId: room.spaceId,
+        title: room.title,
+        chatType: room.chatType,
+        lastMessage: room.lastMessage
+      }
       if (user.id !== session.userId) {
         if (entries.length > 0) {
         let roomReadCount = await sw.MessageSeen.count({
@@ -296,11 +303,11 @@ router.post('/create_message', jsonParser, async function (req, res) {
           distinct: true,
           col: 'messageId',
         })
-        room.unread = roomMessagesCount - roomReadCount;
+        resultRoom.unread = roomMessagesCount - roomReadCount;
       }
       else {
-        room.lastMessage = {seen: 0};
-        room.unread = 0;
+        resultRoom.lastMessage = {seen: 0};
+        resultRoom.unread = 0;
       }
       require('../server').signlePushTo(user.id, 'chat-list-updated', { room });
       }
