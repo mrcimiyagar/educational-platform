@@ -157,6 +157,7 @@ router.post('/get_chats', jsonParser, async function (req, res) {
               let roomReadCount = await sw.MessageSeen.count({
                 where: {
                   roomId: room.id,
+                  userId: session.userId,
                   messageId: {
                     [Sequelize.Op.gt]: entries[entries.length - 1].id,
                   },
@@ -245,7 +246,8 @@ router.post('/create_message', jsonParser, async function (req, res) {
       where: { roomId: room.id },
       limit: 100,
       order: [['createdAt', 'DESC']],
-    })
+    });
+    let roomMessagesCount = 0;
     if (entries.length > 0) {
       room.lastMessage = entries[0];
       room.lastMessage.seen = await sw.MessageSeen.count({
@@ -253,29 +255,17 @@ router.post('/create_message', jsonParser, async function (req, res) {
         distinct: true,
         col: 'userId',
       });
-      let roomMessagesCount = await sw.Message.count({
+      roomMessagesCount = await sw.Message.count({
         where: {
           id: { [Sequelize.Op.gt]: entries[entries.length - 1].id },
           roomId: room.id,
           authorId: { [Sequelize.Op.not]: session.userId },
         },
-      })
-      let roomReadCount = await sw.MessageSeen.count({
-        where: {
-          roomId: room.id,
-          messageId: {
-            [Sequelize.Op.gt]: entries[entries.length - 1].id,
-          },
-        },
-        distinct: true,
-        col: 'messageId',
-      })
-      room.unread = roomMessagesCount - roomReadCount;
+      });
       require('../server').signlePushTo(session.userId, 'log', { room, roomMessagesCount, roomReadCount });
   }
   else {
     room.lastMessage = {seen: 0};
-    room.unread = 0;
   }
     users.forEach((user) => {
       if (user.id !== session.userId) {
@@ -294,7 +284,25 @@ router.post('/create_message', jsonParser, async function (req, res) {
     });
     allUsers.forEach((user) => {
       if (user.id !== session.userId) {
-        require('../server').signlePushTo(user.id, 'chat-list-updated', { room });
+        if (entries.length > 0) {
+        let roomReadCount = await sw.MessageSeen.count({
+          where: {
+            roomId: room.id,
+            userId: user.id,
+            messageId: {
+              [Sequelize.Op.gt]: entries[entries.length - 1].id,
+            },
+          },
+          distinct: true,
+          col: 'messageId',
+        })
+        room.unread = roomMessagesCount - roomReadCount;
+      }
+      else {
+        room.lastMessage = {seen: 0};
+        room.unread = 0;
+      }
+      require('../server').signlePushTo(user.id, 'chat-list-updated', { room });
       }
     });
     res.send({ status: 'success', message: msgCopy })
