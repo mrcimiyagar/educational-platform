@@ -157,7 +157,6 @@ router.post('/get_chats', jsonParser, async function (req, res) {
               let roomReadCount = await sw.MessageSeen.count({
                 where: {
                   roomId: room.id,
-                  userId: session.userId,
                   messageId: {
                     [Sequelize.Op.gt]: entries[entries.length - 1].id,
                   },
@@ -264,7 +263,6 @@ router.post('/create_message', jsonParser, async function (req, res) {
       let roomReadCount = await sw.MessageSeen.count({
         where: {
           roomId: room.id,
-          userId: session.userId,
           messageId: {
             [Sequelize.Op.gt]: entries[entries.length - 1].id,
           },
