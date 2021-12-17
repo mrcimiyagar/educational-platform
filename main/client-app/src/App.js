@@ -143,7 +143,6 @@ export let popPage
 export let gotoPage
 export let gotoPageWithDelay
 
-//if (window.innerWidth > 900) {
   gotoPage = (p, params) => {
     
     setInTheGame(false);
@@ -226,98 +225,6 @@ export let gotoPageWithDelay
       if (notifyUrlChanged !== undefined) notifyUrlChanged()
     }
   }
-/*} else {
-  gotoPage = (p, params) => {
-    series.push(p)
-    paramsSeries.push(params)
-
-    let query = ''
-    for (let key in params) {
-      query += key + '=' + params[key] + '&'
-    }
-    if (query.length > 0) {
-      query = query.substr(0, query.length - 1)
-    }
-
-    if (isTablet() || isDesktop()) {
-      setHistPage(p)
-    } else if (isMobile()) {
-      setHistPage(p + (query.length > 0 ? '?' : '') + query)
-    }
-
-    if (isTablet() || isDesktop()) {
-      window.history.pushState(
-        '',
-        '',
-        p + (query.length > 0 ? '?' : '') + query,
-      )
-    }
-
-    if (notifyUrlChanged !== undefined) notifyUrlChanged()
-    forceUpdate()
-  }
-
-  gotoPageWithDelay = (p, params) => {
-    series.push(p)
-    paramsSeries.push(params)
-
-    if (isTablet() || isDesktop()) {
-      setTimeout(() => {
-        setHistPage(p)
-        setRouteTrigger(!routeTrigger)
-      }, 125)
-    } else if (isMobile()) {
-      setTimeout(() => {
-        setHistPage(p + (query.length > 0 ? '?' : '') + query)
-      }, 125)
-    }
-
-    if (isTablet() || isDesktop()) {
-      window.history.pushState(
-        '',
-        '',
-        p + (query.length > 0 ? '?' : '') + query,
-      )
-    }
-
-    if (notifyUrlChanged !== undefined) notifyUrlChanged()
-    forceUpdate()
-  }
-
-  popPage = () => {
-    setPopTrigger(!popTrigger)
-    if (series.length > 1) {
-      series.pop()
-      paramsSeries.pop()
-      
-      setHistPage(series[series.length - 1])
-
-      if (isTablet() || isDesktop()) {
-
-        let params = paramsSeries[paramsSeries.length - 1]
-        let query = ''
-        for (let key in params) {
-          query += key + '=' + params[key] + '&'
-        }
-        if (query.length > 0) {
-          query = query.substr(0, query.length - 1)
-        }
-
-        window.history.pushState(
-          '',
-          '',
-          series[series.length - 1] + (query.length > 0 ? '?' : '') + query,
-        )
-      }
-    }
-    setTimeout(() => {
-      setInTheGame(true);
-      forceUpdate();
-    }, 250);
-    
-    if (notifyUrlChanged !== undefined) notifyUrlChanged()
-  }
-}*/
 
 let DesktopDetector = () => {
   ;[sizeMode, setSizeMode] = React.useState(
@@ -534,38 +441,6 @@ export let fetchMe = async () => {
   else return data[0];
 }
 
-let InnerApp = (props) => {
-  return (
-    <main>
-      <Switch>
-        <Route path="/app/auth" component={Authentication}/>
-        <Route path="/app/home" component={MessengerPage} />
-        <Route path="/app/store" component={Store}/>
-        <Route path="/app/room" component={RoomPage}/>
-        <Route path="/app/searchengine" component={SearchEngine}/>
-        <Route path="/app/chat" component={Chat}/>
-        <Route path="/app/generate_invite_link" component={GenerateLink}/>
-        <Route path="/app/generate_invitation" component={GenerateInvitation}/>
-        <Route path="/app/use_invitation" component={ConfigGuestAccount} />        
-        <Route path="/app/storebot" component={StoreBot} />
-        <Route path="/app/storeads" component={StoreAds} />
-        <Route path="/app/photoviewer" component={PhotoViewer} />
-        <Route path="/app/poll" component={PollPage} />
-        <Route path="/app/notes" component={NotePage} />
-        <Route path="/app/deck" component={DeckPage} />
-        <Route path="/app/searchengineresults" component={SearchEngineResults}/>
-        <Route path="/app/userprofile" component={Profile} />
-        <Route path="/app/createroom" component={CreateRoom} />
-        <Route path="/app/roomstree" component={RoomsTree} />
-        <Route path="/app/audioplayer" component={AudioPlayer} />
-        <Route path="/app/settings" component={SettingsPage} />
-        <Route path="/app/videoplayer" component={VideoPlayer} />
-        <Route path="/app/spaces_list" component={SpacesListPage} />
-      </Switch>
-    </main>
-  )
-}
-
 const rand = () => {
   return Math.random().toString(36).substr(2);
 };
@@ -598,7 +473,6 @@ export let setBottomSheetContent = (value) => {
 
 export let isOnline = true;
 
-//if (window.innerWidth > 900) {
   MainAppContainer = (props) => {
     
     window.onunload = () => leaveRoom(() => {});
@@ -787,7 +661,12 @@ export let isOnline = true;
               }
             } else {
               animatePageChange();
-              gotoPage('/app/auth', {});
+              if (window.location.pathname === '/app/use_invitation') {
+                gotoPage('/app/use_invitation', params);
+              }
+              else {
+                gotoPage('/app/auth', {});
+              }
             }
           })
           
@@ -865,139 +744,5 @@ export let isOnline = true;
       </div>
     );
   }
-/*} else {
-  MainAppContainer = (props) => {
-    console.warn = () => {};
-    ;[inTheGame, setInTheGame] = React.useState(false);
-
-    setToken(localStorage.getItem('token'));
-    setHomeSpaceId(localStorage.getItem('homeSpaceId'));
-    setHomeRoomId(localStorage.getItem('homeRoomId'));
-    ConnectToIo(localStorage.getItem('token'), () => {
-      unregisterEvent('message-added');
-      registerEvent('message-added', ({ msgCopy }) => {
-        if (me.id !== msgCopy.authorId) {
-          addMessageToList(msgCopy);
-          addMessageToList2(msgCopy);
-          addMessageToList3(msgCopy);
-          setLastMessage(msgCopy);
-          let requestOptions3 = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              token: token,
-            },
-            body: JSON.stringify({
-              roomId: msgCopy.roomId,
-            }),
-            redirect: 'follow',
-          }
-          fetch(serverRoot + '/chat/get_chat', requestOptions3)
-            .then((response) => response.json())
-            .then((result) => {
-              updateChat(result.room);
-            })
-        }
-      })
-      unregisterEvent('chat-created');
-      registerEvent('chat-created', ({ room }) => {
-        addNewChat(room);
-      })
-      unregisterEvent('message-seen');
-      registerEvent('message-seen', ({ messages }) => {
-        messages.forEach((msg) => replaceMessageInTheList(msg));
-        messages.forEach((msg) => replaceMessageInTheList2(msg));
-        messages.forEach((msg) => replaceMessageInTheList3(msg));
-      })
-    });
-
-    forceUpdate = useForceUpdate();
-
-    let [hp, setHp] = React.useState();
-    setHistPage = setHp;
-    histPage = hp;
-    ;[routeTrigger, setRouteTrigger] = React.useState(false);
-    ;[popTrigger, setPopTrigger] = React.useState(false);
-    let [opacity, setOpacity] = React.useState(0);
-
-    animatePageChange = () => {
-      setOpacity(0);
-      setTimeout(() => {
-        setOpacity(1);
-      }, 250)
-    };
-
-    useEffect(() => {
-      setDisplay2('none');
-      let requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          token: token,
-        },
-        redirect: 'follow',
-      };
-      fetch(serverRoot + '/auth/get_me', requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(JSON.stringify(result));
-          if (result.user !== undefined && result.user !== null) {
-            setMe(result.user);
-          }
-        })
-        .catch((error) => console.log('error', error));
-
-      validateToken(token, (result) => {
-        if (result) {
-          animatePageChange();
-          if (
-            window.location.pathname === '/' ||
-            window.location.pathname === ''
-          ) {
-            gotoPage('/app/home', {tab_index: 0});
-          } else {
-            const urlSearchParams = new URLSearchParams(window.location.search);
-            let params = Object.fromEntries(urlSearchParams.entries());
-            gotoPage(window.location.pathname, params);
-          }
-        } else {
-          animatePageChange();
-          gotoPage('/app/auth', {});
-        }
-      })
-      
-      setTimeout(() => {
-        setInTheGame(true)
-      }, 1000)
-
-      var audio = new Audio(StartupSound);
-      audio.play();
-    }, [])
-
-    return (
-      <BrowserRouter>
-        <div
-          style={{
-            width: window.innerWidth + 'px',
-            minHeight: '100vh',
-            height: '100vh',
-            maxHeight: '100vh',
-            direction: 'rtl',
-          }}
-        >
-          <ColorBase/>
-          <DesktopDetector />
-          <Sidebar/>
-          <HistController histPage={histPage} />
-          <Switch>
-            <Route path="/app">
-              <InnerApp />
-            </Route>
-          </Switch>
-        </div>
-      </BrowserRouter>
-    );
-  }
-}*/
 
 export default MainAppContainer;
