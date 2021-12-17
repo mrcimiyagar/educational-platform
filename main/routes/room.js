@@ -1112,7 +1112,7 @@ router.post('/get_room_users', jsonParser, async function (req, res) {
                 res.send({
                   status: 'success',
                   rooms: rooms,
-                  pauseds: require('../socket'.pauseds[membership.roomId]),
+                  pauseds: require('../socket').pauseds[membership.roomId],
                   users: getRoomUsers(membership.roomId),
                   allUsers: users,
                 })
