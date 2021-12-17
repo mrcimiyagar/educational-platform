@@ -663,7 +663,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
                     'user-entered',
                     {
                       rooms: rooms,
-                      pauseds: require('../socket').pauseds[membership.roomId],
+                      pauseds: Object.values(require('../socket').pauseds[roomId]).map(v => v.user),
                       users: getRoomUsers(membership.roomId),
                       allUsers: users,
                     },
@@ -704,7 +704,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
                   'user-exited',
                   {
                     rooms: rooms,
-                    pauseds: require('../socket').pauseds[membership.roomId],
+                    pauseds: Object.values(require('../socket').pauseds[roomId]).map(v => v.user),
                     users: getRoomUsers(roomId),
                     allUsers: users,
                   },
@@ -741,7 +741,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
                   'user-entered',
                   {
                     rooms: rooms,
-                    pauseds: require('../socket').pauseds[membership.roomId],
+                    pauseds: Object.values(require('../socket').pauseds[roomId]).map(v => v.user),
                     users: getRoomUsers(membership.roomId),
                     allUsers: users,
                   },
@@ -1112,7 +1112,7 @@ router.post('/get_room_users', jsonParser, async function (req, res) {
                 res.send({
                   status: 'success',
                   rooms: rooms,
-                  pauseds: require('../socket').pauseds[membership.roomId],
+                  pauseds: Object.values(require('../socket').pauseds[roomId]).map(v => v.user),
                   users: getRoomUsers(membership.roomId),
                   allUsers: users,
                 })
