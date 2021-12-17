@@ -8,6 +8,7 @@ let notifs = {}
 let netState = {}
 
 let disconnectWebsocket = (user) => {
+  if (metadata[user.id] === undefined) return;
   let roomId = metadata[user.id].roomId
   if (pauseds[roomId] === undefined) pauseds[roomId] = {};
   netState[user.id] = false;
