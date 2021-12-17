@@ -76,6 +76,15 @@ export let notifyMeOnAccessChangeNavbar = (callback) => {
 }
 export let reloadConf = undefined
 
+function isObjectEmpty(obj) {
+  for (let prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
   root: {
@@ -409,7 +418,7 @@ export default function RoomPage(props) {
     }
   }, []);
 
-  if (!loaded) {
+  if (!loaded || isObjectEmpty(membership)) {
     return <div />
   }
 

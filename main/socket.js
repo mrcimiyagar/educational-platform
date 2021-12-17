@@ -3,11 +3,13 @@ const users = require('./users')
 const { removeUser, getRoomUsers, getGuestUser, addUser } = require('./users')
 
 let sockets = {}
+let pauseds = {}
 let notifs = {}
 let netState = {}
 
 let disconnectWebsocket = (user) => {
-  netState[user.id] = false
+  if (pauseds[roomId] === undefined) pauseds[roomId] = {};
+  netState[user.id] = false;
   let roomId = metadata[user.id].roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, user.id)
@@ -32,6 +34,7 @@ let disconnectWebsocket = (user) => {
             }).then(async (users) => {
               require('./server').pushTo('room_' + roomId, 'user-exited', {
                 rooms: rooms,
+                pauseds: pauseds[roomId],
                 users: getRoomUsers(roomId),
                 allUsers: users,
               })
@@ -114,16 +117,23 @@ module.exports = {
                       disconnectWebsocket(user)
                     });
                     metadata[user.id].timer = setTimeout(() => {
-                      disconnectWebsocket(user);
-                      soc.disconnect();
+                      if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                      pauseds[metadata[user.id].roomId][user.id] = soc;
+                      disconnectWebsocket(soc);
                     }, 6000);
                     soc.on('ping', () => {
+                      if (metadata[user.id].roomId !== undefined) {
+                        soc.join('room_' + metadata[user.id].roomId);
+                        addUser(metadata[user.id].roomId, user);
+                        delete pauseds[metadata[user.id].roomId][user.id];
+                      }
                       if (metadata[user.id].timer !== undefined) {
                         clearTimeout(metadata[user.id].timer);
                       }
                       metadata[user.id].timer = setTimeout(() => {
-                        disconnectWebsocket(user);
-                        soc.disconnect();
+                        if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                        pauseds[metadata[user.id].roomId][user.id] = soc;
+                        disconnectWebsocket(soc);
                       }, 3000);
                     });
                     typingEvent(user, soc);
@@ -145,16 +155,26 @@ module.exports = {
                     disconnectWebsocket(user)
                   });
                   metadata[user.id].timer = setTimeout(() => {
-                    disconnectWebsocket(user);
-                    soc.disconnect();
+                    if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                    pauseds[metadata[user.id].roomId][user.id] = soc;
+                    disconnectWebsocket(soc);
                   }, 6000);
                   soc.on('ping', () => {
+                    if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                    if (pauseds[metadata[user.id].roomId][user.id] !== undefined) {
+                      if (metadata[user.id].roomId !== undefined) {
+                        soc.join('room_' + metadata[user.id].roomId);
+                        addUser(metadata[user.id].roomId, user);
+                        delete pauseds[metadata[user.id].roomId][user.id];
+                      }
+                    }
                     if (metadata[user.id].timer !== undefined) {
                       clearTimeout(metadata[user.id].timer);
                     }
                     metadata[user.id].timer = setTimeout(() => {
-                      disconnectWebsocket(user);
-                      soc.disconnect();
+                      if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                      pauseds[metadata[user.id].roomId][user.id] = soc;
+                      disconnectWebsocket(soc);
                     }, 3000);
                   });
                   typingEvent(user, soc);

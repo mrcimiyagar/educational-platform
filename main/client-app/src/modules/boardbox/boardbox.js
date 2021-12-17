@@ -47,7 +47,7 @@ export let BoardBox = (props) => {
             </AppBar>
 
             <div className="maincontentdiv" style={{borderRadius: isDesktop() ? 24 : 0}}>
-              {boardFrame}
+              {(props.membership !== undefined && props.membership !== null) ? boardFrame : null}
               {(props.membership !== undefined && props.membership !== null && props.membership.canUseWhiteboard) ?  
                 null : 
                 <div style={{width: '100%', height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>
@@ -55,7 +55,7 @@ export let BoardBox = (props) => {
             </div>
             
             {(isDesktop() && isInRoom()) ? null :
-            <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16, bottom: 72 + 16}} onClick={() => {
+            <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16 + 56 + 16, bottom: 72 + 16}} onClick={() => {
               gotoPage('/app/chat', {room_id: props.roomId, user_id: props.userId})
             }}><Chat/></Fab>
             }

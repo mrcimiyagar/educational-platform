@@ -89,6 +89,7 @@ export let UsersBox = (props) => {
   let [audio, setAudio] = React.useState({});
   const [users, setUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [pauseds, setPauseds] = useState([]);
   reloadUsersList = () => {
     let requestOptions = {
       method: 'POST',
@@ -113,7 +114,8 @@ export let UsersBox = (props) => {
             audio[u.id] = false
           }
         })
-        setUsers(result.users)
+        setUsers(result.users);
+        setPauseds(result.pauseds);
         setAllUsers(result.allUsers);
       })
       .catch((error) => console.log('error', error))
@@ -141,7 +143,7 @@ export let UsersBox = (props) => {
     })
     reloadUsersList();
     unregisterEvent('user-entered');
-    registerEvent('user-entered', ({ rooms, users, allUsers }) => {
+    registerEvent('user-entered', ({ rooms, users, allUsers, pauseds }) => {
       users.forEach((u) => {
         if (video[u.id] === undefined) {
           video[u.id] = false;
@@ -151,6 +153,7 @@ export let UsersBox = (props) => {
         }
       })
       if (users !== undefined) setUsers(users);
+      if (pauseds !== undefined) setPauseds(pauseds);
       if (allUsers !== undefined) setAllUsers(allUsers);
       usersRef = {allUsers, rooms, users};
       forceUpdate();
@@ -168,7 +171,7 @@ export let UsersBox = (props) => {
       }
     })
     unregisterEvent('user-exited')
-    registerEvent('user-exited', ({ rooms, users, allUsers }) => {
+    registerEvent('user-exited', ({ rooms, users, allUsers, pauseds }) => {
       users.forEach((u) => {
         if (video[u.id] === undefined) {
           video[u.id] = false;
@@ -178,6 +181,7 @@ export let UsersBox = (props) => {
         }
       })
       if (users !== undefined) setUsers(users);
+      if (pauseds !== undefined) setPauseds(pauseds);
       if (allUsers !== undefined) setAllUsers(allUsers);
       usersRef = {allUsers, rooms, users};
       forceUpdate();
@@ -280,6 +284,104 @@ export let UsersBox = (props) => {
                 آنلاین
               </div>
               {users.map((user, index) => {
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      direction: 'rtl',
+                      position: 'relative',
+                      width: 'calc(100% - 16px)',
+                      marginRight: 16,
+                      display: 'flex',
+                    }}
+                    onMouseEnter={() => setCurrentHover(index)}
+                    onMouseLeave={() => setCurrentHover(-1)}
+                  >
+                    <Avatar
+                      style={{ width: 24, height: 24 }}
+                      alt={user.firstName + ' ' + user.lastName}
+                      onClick={() => permsOnClick(user)}
+                    />
+                    <div
+                      style={{ marginRight: 16, marginTop: -2 }}
+                      onClick={() => permsOnClick(user)}
+                    >
+                      <p
+                        style={{
+                          color: colors.textIcons,
+                          fontSize: 13,
+                          marginTop: 4,
+                        }}
+                      >
+                        {currentHover === index
+                          ? user.firstName
+                          : user.firstName + ' ' + user.lastName}
+                      </p>
+                    </div>
+                    {props.membership.canEditVideoSound &&
+                    currentHover === index ? (
+                      <div
+                        style={{
+                          marginTop: -12,
+                          position: 'absolute',
+                          left: 0,
+                          display: 'flex',
+                          backgroundColor: colors.primary,
+                        }}
+                      >
+                        <IconButton
+                          onClick={(e) => {
+                            window.frames['conf-video-frame'].postMessage(
+                              {
+                                sender: 'main',
+                                action: 'switchVideoPermission',
+                                targetId: user.id,
+                                status: !video[user.id],
+                              },
+                              pathConfig.videoConfVideo,
+                            )
+                            video[user.id] = !video[user.id]
+                            setVideo(video)
+                            forceUpdate()
+                          }}
+                        >
+                          {video[user.id] ? (
+                            <VideocamIcon style={{ fill: colors.textIcons }} />
+                          ) : (
+                            <VideocamOff style={{ fill: colors.textIcons }} />
+                          )}
+                        </IconButton>
+                        <IconButton
+                          onClick={(e) => {
+                            window.frames['conf-video-frame'].postMessage(
+                              {
+                                sender: 'main',
+                                action: 'switchAudioPermission',
+                                targetId: user.id,
+                                status: !audio[user.id],
+                              },
+                              pathConfig.videoConfVideo,
+                            )
+                            audio[user.id] = !audio[user.id]
+                            setAudio(audio)
+                            forceUpdate()
+                          }}
+                        >
+                          {audio[user.id] ? (
+                            <MicIcon style={{ fill: colors.textIcons }} />
+                          ) : (
+                            <MicOffIcon style={{ fill: colors.textIcons }} />
+                          )}
+                        </IconButton>
+                      </div>
+                    ) : null}
+                  </div>
+                )
+              })}
+              <div>
+                فراری ها
+              </div>
+              {pauseds.map((user, index) => {
                 return (
                   <div
                     key={index}

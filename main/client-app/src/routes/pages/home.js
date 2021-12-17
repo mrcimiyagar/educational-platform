@@ -72,7 +72,7 @@ const useStylesAction = makeStyles({
 })
 
 export let membership = undefined;
-export let setMembership2 = undefined;
+export let setMembership2 = () => {};
 
 export default function HomePage(props) {
 

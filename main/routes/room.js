@@ -663,6 +663,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
                     'user-entered',
                     {
                       rooms: rooms,
+                      pauseds: pauseds[membership.roomId],
                       users: getRoomUsers(membership.roomId),
                       allUsers: users,
                     },
@@ -703,6 +704,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
                   'user-exited',
                   {
                     rooms: rooms,
+                    pauseds: pauseds[membership.roomId],
                     users: getRoomUsers(roomId),
                     allUsers: users,
                   },
@@ -739,6 +741,7 @@ router.post('/enter_room', jsonParser, async function (req, res) {
                   'user-entered',
                   {
                     rooms: rooms,
+                    pauseds: pauseds[membership.roomId],
                     users: getRoomUsers(membership.roomId),
                     allUsers: users,
                   },
