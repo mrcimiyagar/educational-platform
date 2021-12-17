@@ -115,7 +115,7 @@ export let UsersBox = (props) => {
           }
         })
         setUsers(result.users);
-        setPauseds(result.pauseds);
+        if (result.pauseds !== undefined) setPauseds(result.pauseds);
         setAllUsers(result.allUsers);
       })
       .catch((error) => console.log('error', error))

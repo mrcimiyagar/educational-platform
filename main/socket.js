@@ -91,6 +91,7 @@ let typingEvent = (user, soc) => {
 };
 
 module.exports = {
+  pauseds: pauseds,
   userToSocketMap: userToSocketMap,
   metadata: metadata,
   sockets: sockets,
