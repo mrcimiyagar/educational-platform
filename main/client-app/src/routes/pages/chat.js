@@ -176,7 +176,12 @@ export default function Chat(props) {
     messagesDict = {};
     setupRoom();
     return () => {
-      leaveRoom(() => {})
+      if (goingToRoom) {
+        goingToRoom = false;
+      }
+      else {
+        leaveRoom(() => {});
+      }
     }
   }, [])
 

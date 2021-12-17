@@ -680,7 +680,9 @@ router.post('/enter_room', jsonParser, async function (req, res) {
     }
 
     sockets[user.id].leave()
-    sockets[user.id].roomId = 0
+    if (metadata[membership.userId] !== undefined) {
+      metadata[membership.userId].roomId = 0
+    }
     removeUser(roomId, user.id)
 
     sw.Room.findOne({ where: { spaceId: roomId } }).then(
@@ -762,7 +764,9 @@ router.post('/exit_room', jsonParser, async function (req, res) {
     let roomId = metadata[user.id].roomId;
     if (sockets[user.id] !== undefined) {
       sockets[user.id].leave();
-      sockets[user.id].roomId = 0;
+    }
+    if (metadata[membership.userId] !== undefined) {
+      metadata[membership.userId].roomId = 0
     }
     removeUser(roomId, user.id);
     if (roomId !== undefined) {
@@ -1239,7 +1243,7 @@ router.post('/move_user', jsonParser, async function (req, res) {
               room.users = getRoomUsers(room.id)
             }
             require('../server').pushTo(
-              'room_' + sockets[user.id].roomId,
+              'room_' + metadata[membership.userId].roomId,
               'user-exited',
               { rooms: rooms },
             )

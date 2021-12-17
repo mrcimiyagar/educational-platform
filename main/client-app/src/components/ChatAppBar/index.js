@@ -220,13 +220,14 @@ export default function ChatAppBar(props) {
               {isInRoom() ? null : (
                 <IconButton
                   onClick={() => {
-                    setInTheGame(false)
+                    if (props.handleCallClicked !== undefined) props.handleCallClicked();
+                    setInTheGame(false);
                     setTimeout(() => {
                       gotoPage('/app/room', {
                         room_id: props.room.id,
                         tab_index: 0,
-                      })
-                    }, 500)
+                      });
+                    }, 500);
                   }}
                 >
                   <Roofing style={{ fill: '#fff' }} />
