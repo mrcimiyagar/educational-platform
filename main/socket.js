@@ -8,9 +8,9 @@ let notifs = {}
 let netState = {}
 
 let disconnectWebsocket = (user) => {
+  let roomId = metadata[user.id].roomId
   if (pauseds[roomId] === undefined) pauseds[roomId] = {};
   netState[user.id] = false;
-  let roomId = metadata[user.id].roomId
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, user.id)
     if (room !== null) {
