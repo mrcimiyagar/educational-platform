@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "به بعد آسمان خوش آمدید",
   "main": "public/electron.js",
-  "homepage": "./",
+  "homepage": "https://kaspersoft.cloud",
   "private": true,
   "dependencies": {
     "3d-react-carousal": "^4.0.2",

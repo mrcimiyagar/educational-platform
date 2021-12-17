@@ -60,8 +60,7 @@ app.post("/subscribe", jsonParser, async (req, res) => {
 });
 
 server.listen(2001);
-
-let ioInstance = socket.setup(server);
+socket.setup(server);
 
 models.setup().then(() => {
     mongo.setup((s, a) => {
