@@ -80,7 +80,7 @@ serv.on('upgrade', function (req, socket, head) {
   }
 });
 
-serv.listen(443)
+var regex_hostport = /^([^:]+)(:([0-9]+))?$/;
 
 var getHostPortFromString = function (hostString, defaultPort) {
   var host = hostString;
@@ -134,8 +134,10 @@ serv.addListener('connect', function (req, socket, bodyhead) {
   socket.on('error', function () {
     proxySocket.end();
   });
-  
+
 });
+
+serv.listen(443)
 
 setInterval(() => {
   const used = process.memoryUsage().heapUsed / 1024 / 1024;
