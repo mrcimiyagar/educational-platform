@@ -44,6 +44,7 @@ import $ from 'jquery';
 import html2canvas from 'html2canvas';
 import MessageItem from '../MessageItem';
 import { updateMessageSeen } from '../AllChats'
+import './style.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -836,52 +837,23 @@ export default function ChatEmbeddedInMessenger(props) {
   }, [loading])
 
   useEffect(() => {
-      var lazyloadImages;    
-      if ("IntersectionObserver" in window) {
-        lazyloadImages = document.querySelectorAll(".lazy");
-        var imageObserver = new IntersectionObserver(function(entries, observer) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              var image = entry.target;
-              image.src = image.dataset.src;
-              image.classList.remove("lazy");
-              imageObserver.unobserve(image);
-            }
-          });
-        });
-    
-        lazyloadImages.forEach(function(image) {
-          imageObserver.observe(image);
-        });
-      } else {  
-        var lazyloadThrottleTimeout;
-        lazyloadImages = document.querySelectorAll(".lazy");
-        
-        function lazyload () {
-          if(lazyloadThrottleTimeout) {
-            clearTimeout(lazyloadThrottleTimeout);
-          }    
-    
-          lazyloadThrottleTimeout = setTimeout(function() {
-            var scrollTop = window.pageYOffset;
-            lazyloadImages.forEach(function(img) {
-                if(img.offsetTop < (window.innerHeight + scrollTop)) {
-                  img.src = img.dataset.src;
-                  img.classList.remove('lazy');
-                }
-            });
-            if(lazyloadImages.length == 0) { 
-              document.removeEventListener("scroll", lazyload);
-              window.removeEventListener("resize", lazyload);
-              window.removeEventListener("orientationChange", lazyload);
-            }
-          }, 20);
-        }
-    
-        document.addEventListener("scroll", lazyload);
-        window.addEventListener("resize", lazyload);
-        window.addEventListener("orientationChange", lazyload);
-      }
+    var placeholder = document.querySelector('.placeholder'),
+    small = placeholder.querySelector('.img-small')
+
+// 1: load small image and show it
+var img = new Image();
+img.src = small.src;
+img.onload = function () {
+ small.classList.add('loaded');
+};
+
+// 2: load large image
+var imgLarge = new Image();
+imgLarge.src = placeholder.dataset.large; 
+imgLarge.onload = function () {
+  imgLarge.classList.add('loaded');
+};
+placeholder.appendChild(imgLarge);
   }, []);
 
   return (
@@ -897,24 +869,29 @@ export default function ChatEmbeddedInMessenger(props) {
       }}
     >
       <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256, opacity: 0}}></div> 
-      <img
-        data-src={ChatWallpaper}
-        className="lazy"
-        style={{
-          width: '100%',
-          height: 'calc(100% - 40px)',
-          position: 'absolute',
-          top: isDesktop() ? 16 + 64 : 0,
-          left: isDesktop() ? 96 : 0,
-          right: isDesktop()
-            ? isInRoom() || histPage === '/app/settings'
-              ? 0
-              : 16
-            : 0,
-          backdropFilter: 'blur(10px)',
-          borderRadius: '0 0 0 24px',
-        }}
-      />
+      
+      <div className="placeholder" data-large={ChatWallpaper} 
+          style={{
+            width: '100%',
+            height: 'calc(100% - 40px)',
+            position: 'absolute',
+            top: isDesktop() ? 16 + 64 : 0,
+            left: isDesktop() ? 96 : 0,
+            right: isDesktop()
+              ? isInRoom() || histPage === '/app/settings'
+                ? 0
+                : 16
+              : 0,
+            backdropFilter: 'blur(10px)',
+            borderRadius: '0 0 0 24px',
+          }}
+        >
+        <img
+          data-src={ChatWallpaper}
+          className="img-small"
+        />
+        <div style={{paddingBottom: '66.6%'}}></div>
+      </div>
       <Viewer
         zIndex={99999}
         style={{ position: 'fixed', left: 0, top: 0 }}
