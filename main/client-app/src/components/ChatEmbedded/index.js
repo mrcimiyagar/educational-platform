@@ -47,6 +47,7 @@ import ChatWallpaper from '../../images/chat-wallpaper.png'
 import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery'
 import MessageItem from '../MessageItem'
+import './style.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -836,7 +837,27 @@ export default function ChatEmbedded(props) {
           request.send(data)
         })
     }
-  }, [loading])
+  }, [loading]);
+
+  useEffect(() => {
+    var placeholder = document.querySelector('.placeholder'),
+    small = placeholder.querySelector('.img-small')
+
+// 1: load small image and show it
+var img = new Image();
+img.src = small.src;
+img.onload = function () {
+ small.classList.add('loaded');
+};
+
+// 2: load large image
+var imgLarge = new Image();
+imgLarge.src = placeholder.dataset.large; 
+imgLarge.onload = function () {
+  imgLarge.classList.add('loaded');
+};
+placeholder.appendChild(imgLarge);
+  }, []);
 
   let width = 0
   let height = 0
@@ -890,13 +911,11 @@ export default function ChatEmbedded(props) {
           bottom: isDesktop() ? 16 : 0,
         }}
       >
-        <div
+        <div className="placeholder" data-large={ChatWallpaper} 
           style={{
             width: '100%',
             height: '100%',
             position: 'absolute',
-            backgroundImage: `url(${ChatWallpaper})`,
-            transition: 'background 300ms ease-in 200ms',
             top: isDesktop() ? 16 : 0,
             left: isDesktop() ? 96 : 0,
             right: isDesktop()
@@ -908,7 +927,13 @@ export default function ChatEmbedded(props) {
             backdropFilter: 'blur(10px)',
             borderRadius: '0 0 0 24px',
           }}
+        >
+        <img
+          data-src={ChatWallpaper}
+          className="img-small"
         />
+        <div style={{paddingBottom: '66.6%'}}></div>
+      </div>
         <Viewer
           zIndex={99999}
           style={{ position: 'fixed', left: 0, top: 0 }}

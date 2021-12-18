@@ -45,6 +45,7 @@ import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery'
 import MessageItem from '../../components/MessageItem'
 import store, { changeConferenceMode } from '../../redux/main'
+import './chat.css';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />
@@ -847,6 +848,26 @@ export default function Chat(props) {
     }
   }, [loading]);
 
+  useEffect(() => {
+    var placeholder = document.querySelector('.placeholder'),
+    small = placeholder.querySelector('.img-small')
+
+// 1: load small image and show it
+var img = new Image();
+img.src = small.src;
+img.onload = function () {
+ small.classList.add('loaded');
+};
+
+// 2: load large image
+var imgLarge = new Image();
+imgLarge.src = placeholder.dataset.large; 
+imgLarge.onload = function () {
+  imgLarge.classList.add('loaded');
+};
+placeholder.appendChild(imgLarge);
+  }, []);
+
   return (
     <Dialog
       onTouchStart={(e) => {
@@ -865,15 +886,32 @@ export default function Chat(props) {
       style={{ zIndex: 2501 }}
     >
       <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256, opacity: 0}}></div> 
+      <div className="placeholder" data-large={ChatWallpaper} 
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backdropFilter: 'blur(10px)',
+            borderRadius: '0 0 0 24px',
+          }}
+        >
+        <img
+          data-src={ChatWallpaper}
+          className="img-small"
+        />
+        <div style={{paddingBottom: '66.6%'}}></div>
+      </div>
       <div
         style={{
           width: '100%',
           height: '100%',
           position: 'absolute',
           top: 0,
-          left: 0,
-          backgroundImage: `url(${ChatWallpaper})`,
-          transition: 'background 300ms ease-in 200ms'
+          left: 0
         }}
       >
         <Viewer
