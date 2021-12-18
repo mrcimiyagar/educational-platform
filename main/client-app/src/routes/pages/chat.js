@@ -854,7 +854,12 @@ export default function Chat(props) {
     var placeholder = null, small = null;
     let tryToAttachImg = () => {
       placeholder = document.querySelector('.placeholder');
-      small = placeholder.querySelector('.img-small');
+      if (placeholder !== null) {
+        small = placeholder.querySelector('.img-small');
+      }
+      else {
+        small = null;
+      }
       if (placeholder === null || small === null) {
         setTimeout(() => {
           tryToAttachImg();
