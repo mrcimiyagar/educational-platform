@@ -8,10 +8,10 @@ import DesktopWallpaper from './images/roomWallpaper.png'
 import RoomWallpaper from './images/desktop-wallpaper.jpg'
 import ChatWallpaper from './images/chat-wallpaper.jpg'
 import ProfileHeader from './images/profile-header.jpeg'
-import store from './redux/main'
-import { setup, socket } from './util/Utils'
-//import './notifSystem'
-import { Alert, Snackbar } from '@mui/material'
+import store from './redux/main';
+import { setup, socket } from './util/Utils';
+import './notifSystem';
+import { Alert, Snackbar } from '@mui/material';
 let path = require('path');
 
 export let pathConfig = {}

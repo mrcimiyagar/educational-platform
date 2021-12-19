@@ -9,7 +9,7 @@ if ('serviceWorker' in navigator) {
 // Register SW, Register Push, Send Push
 async function send() {
   // Register Service Worker
-  console.log('Registering service worker...')
+  console.log('Registering service worker...');
 
   navigator.serviceWorker
     .register('https://kaspersoft.cloud/serviceWorker.js', { scope: '/' })
@@ -17,7 +17,16 @@ async function send() {
       function (reg) {
         var serviceWorker
         let callback = async () => {
-          console.log('Service Worker Registered...')
+          console.log('Service Worker Registered...');
+
+          const data = {
+            type: 'CACHE_URLS',
+            payload: [
+                location.href,
+                ...performance.getEntriesByType('resource').map((r) => r.name)
+            ]
+          };
+          registration.installing.postMessage(data);
 
           // Register Push
           console.log('Registering Push...')

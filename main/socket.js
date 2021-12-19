@@ -98,7 +98,7 @@ module.exports = {
   notifs: notifs,
   netState: netState,
   setup: (server) => {
-    const io = require('socket.io')(server, { cors: { origin: '*' } })
+    const io = require('socket.io')(server, { cors: { origin: '*' }, secure: true })
     io.on('connection', (soc) => {
       console.log('a user connected')
       soc.on('auth', ({ token }) => {

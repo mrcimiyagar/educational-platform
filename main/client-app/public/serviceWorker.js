@@ -1,4 +1,4 @@
-/*
+
 console.log("Service Worker Loaded...");
 
 let cacheName = 'js13kPWA-v1';
@@ -20,4 +20,20 @@ self.addEventListener('activate', (e) => {
     }))
   }));
 });
-*/
+
+const KEY = cacheName;
+
+self.addEventListener('install', (event) => {
+    event.waitUntil(self.skipWaiting());
+});
+
+self.addEventListener('message', (event) => {
+    if (event.data.type === 'CACHE_URLS') {
+        event.waitUntil(
+            caches.open(KEY)
+                .then( (cache) => {
+                    return cache.addAll(event.data.payload);
+                })
+        );
+    }
+});
