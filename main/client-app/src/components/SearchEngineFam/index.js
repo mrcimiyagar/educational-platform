@@ -27,13 +27,14 @@ import { isMobile, useForceUpdate } from '../../util/Utils'
 import { createTheme } from '@material-ui/core';
 import Chat from '@material-ui/icons/Chat'
 import { pathConfig } from '../..'
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 
 export let notifyUrlChanged = undefined
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: 380,
-    transform: `translateY(${isDesktop() ? -48 : -56}px) translateZ(0px)`,
+    transform: `translateY(${isDesktop() ? (-48 + -56) : (-56 + -56)}px) translateZ(0px)`,
     flexGrow: 1,
   },
 }))
@@ -44,6 +45,7 @@ const actions = [
   { icon: <StoreMallDirectoryIcon />, name: 'فروشگاه' },
   { icon: <AccountBalanceIcon />, name: '+روم' },
   { icon: <ExitToApp/>, name: 'خروج'},
+  { icon: <SmartToyIcon/>, name: '+بات'},
 ]
 
 export default function Jumper(props) {
@@ -122,6 +124,8 @@ export default function Jumper(props) {
                       }).then(function () {}).catch(function (err) {});
                       gotoPage('/app/auth');
                     }
+                  } else if (index === 5) {
+                    gotoPage('/app/createbot');
                   }
                 }}
               />
