@@ -345,6 +345,10 @@ router.get('/download_space_avatar', jsonParser, async function (req, res) {
 
 router.get('/download_room_avatar', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
+    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5');
+    console.log(JSON.stringify(membership));
+    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5');
+    
     if (membership === null) {
       res.sendStatus(404)
       return
