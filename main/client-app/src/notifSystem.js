@@ -22,11 +22,11 @@ async function send() {
           const data = {
             type: 'CACHE_URLS',
             payload: [
-                location.href,
+                window.location.href,
                 ...performance.getEntriesByType('resource').map((r) => r.name)
             ]
           };
-          registration.installing.postMessage(data);
+          reg.installing.postMessage(data);
 
           // Register Push
           console.log('Registering Push...')

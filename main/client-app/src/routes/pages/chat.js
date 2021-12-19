@@ -315,10 +315,7 @@ export default function Chat(props) {
   let attachScrollListener = (scroller) => {
     scroller.onscroll = () => {
       if ($('#chatScroller').scrollTop() === 0) {
-        if (!scrollReady3) {
-          scrollReady3 = true;
-          return;
-        }
+        if (!scrollReady3) return;
         if (lastLoadCount < 25) return;
         let requestOptions3 = {
           method: 'POST',
@@ -706,7 +703,7 @@ export default function Chat(props) {
                     updateChat(result.room)
                   })
 
-                scrollReady3 = false;
+                scrollReady3 = true;
               }
             })
             .catch((error) => console.log('error', error))
