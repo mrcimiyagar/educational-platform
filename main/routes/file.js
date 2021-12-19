@@ -300,9 +300,14 @@ router.get('/download_user_avatar', jsonParser, async function (req, res) {
 
 router.get('/download_bot_avatar', jsonParser, async function (req, res) {
   sw.Bot.findOne({ where: { id: req.query.botId } }).then(async (bot) => {
-    if (bot.avatarId === undefined) {
-      res.sendStatus(404)
-      return
+    if (bot.avatarId === undefined || bot.avatarId === null) {
+      bot.avatarId = -1;
+      await bot.save();
+      bot = await sw.Bot.findOne({ where: { id: req.query.botId } });
+    }
+    if (bot.avatarId < 0) {
+      res.sendFile(rootPath + `/files/bot-image.png`);
+      return;
     }
     sw.File.findOne({ where: { id: bot.avatarId } }).then(async (file) => {
       if (file === null) {
@@ -345,9 +350,19 @@ router.get('/download_room_avatar', jsonParser, async function (req, res) {
       return
     }
     sw.Room.findOne({ where: { id: req.query.roomId } }).then(async (room) => {
-      if (room.avatarId === undefined) {
-        res.sendStatus(404)
-        return
+      if (room.avatarId === undefined || room.avatarId === null) {
+        room.avatarId = -1;
+        await room.save();
+        room = await sw.Room.findOne({ where: { id: req.query.roomId } });
+      }
+      if (room.avatarId < 0) {
+        if (room.chatType === 'group') {
+          res.sendFile(rootPath + `/files/group-image.png`);
+        }
+        else {
+          res.sendFile(rootPath + `/files/channel-image.png`);
+        }
+        return;
       }
       sw.File.findOne({ where: { id: room.avatarId } }).then(async (file) => {
         if (file === null) {
