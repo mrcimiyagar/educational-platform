@@ -48,7 +48,7 @@ module.exports = {
             port: 5432,
             host: 'localhost'
         };
-        /*try {
+        try {
             await pgTools.dropdb(config, dbName);
         } catch (e) {console.log(e);}
         try {
@@ -59,7 +59,7 @@ module.exports = {
         } catch (e) {console.log(e);}
         try {
             await pgTools.createdb(config, dbName2);
-        } catch (e) {console.log(e);}*/
+        } catch (e) {console.log(e);}
         prepareSequelizeInstance();
         await prepareUserModel();
         await prepareAccountModel();
@@ -313,7 +313,6 @@ async function prepareBotModel() {
         freezeTableName: true
     });
     Bot.belongsTo(StoreCategory, { foreignKey: 'caegoryId' });
-    Bot.belongsTo(File, { foreignKey: 'avatarId' });
     await Bot.sync();
     module.exports['Bot'] = Bot;
 }
@@ -496,7 +495,8 @@ async function prepareRoomModel() {
         },
         title: Sequelize.STRING,
         spaceId: Sequelize.BIGINT,
-        chatType: Sequelize.STRING
+        chatType: Sequelize.STRING,
+        avatarId: Sequelize.BIGINT
     }, {
         freezeTableName: true
     });

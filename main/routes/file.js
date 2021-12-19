@@ -350,10 +350,6 @@ router.get('/download_room_avatar', jsonParser, async function (req, res) {
       return
     }
     sw.Room.findOne({ where: { id: req.query.roomId } }).then(async (room) => {
-      console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5');
-      console.log(JSON.stringify(room));
-      console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5');
-      
       if (room.avatarId === undefined || room.avatarId === null) {
         room.avatarId = -1;
         await room.save();
