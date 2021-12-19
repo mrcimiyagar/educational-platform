@@ -359,7 +359,7 @@ router.get('/download_room_avatar', jsonParser, async function (req, res) {
         if (room.chatType === 'group') {
           res.sendFile(rootPath + `/files/group-image.png`);
         }
-        else {
+        else if (room.chatType === 'channel') {
           res.sendFile(rootPath + `/files/channel-image.png`);
         }
         return;
