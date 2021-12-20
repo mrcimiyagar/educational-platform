@@ -54,7 +54,8 @@ export default function CreateBotPage(props) {
                     </Toolbar>
                 </AppBar>
                 <div style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', width: '100%', height: isDesktop() ? 'calc(100% - 56px)' : '100%', position: 'absolute', top: 56}}>
-                    <TextField variant={'outlined'} label={'نام بات'} style={{width: 'calc(100% - 48px)', margin: 24}} />
+                    <TextField id={'botTitle'} variant={'outlined'} label={'عنوان بات'} style={{width: 'calc(100% - 48px)', marginTop: 24, marginLeft: 24, marginRight: 24}} />
+                    <TextField id={'botUsername'} variant={'outlined'} label={'نام کاربری بات'} style={{width: 'calc(100% - 48px)', marginTop: 24, marginLeft: 24, marginRight: 24}} />
                     <Fab
             color={'secondary'}
             style={{ position: 'fixed', bottom: 16, left: 16 }}
@@ -66,7 +67,8 @@ export default function CreateBotPage(props) {
                       token: token,
                     },
                     body: JSON.stringify({
-                      roomId: Number(props.room_id)
+                      username: document.getElementById('botUsername').value,
+                      title: document.getElementById('botTitle').value
                     }),
                     redirect: 'follow',
                 }

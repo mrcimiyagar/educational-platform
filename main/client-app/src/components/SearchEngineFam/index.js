@@ -126,7 +126,7 @@ export default function Jumper(props) {
                       gotoPage('/app/auth');
                     }
                   } else if (index === 5) {
-                    gotoPage('/app/createbot', {room_id: currentRoomId});
+                    gotoPage('/app/createbot');
                   }
                 }}
               />
