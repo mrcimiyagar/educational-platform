@@ -94,7 +94,6 @@ export default function Store() {
 
     registerEvent('bot-created', bot => {
       categories.forEach(cat => {
-        alert('test 2');
         if (cat.id === bot.categoryId) {
           cat.bots.push(bot);
           forceUpdate();
@@ -103,6 +102,8 @@ export default function Store() {
     });
     
     registerEvent('store-category-created', cat => {
+      cat.bots = [];
+      cat.packages = [];
       categories.push(cat);
       forceUpdate();
     });
