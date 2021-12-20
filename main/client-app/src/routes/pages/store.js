@@ -13,7 +13,7 @@ import Jumper from '../../components/SearchEngineFam';
 import StoreBottombar from '../../components/StoreBottombar';
 import StoreSearchbar from '../../components/StoreSearchbar';
 import { token } from '../../util/settings';
-import { serverRoot, useForceUpdate } from '../../util/Utils';
+import { registerEvent, serverRoot, useForceUpdate } from '../../util/Utils';
 import InboxIcon from '@mui/icons-material/Inbox';
 import CategoryIcon from '@mui/icons-material/Category';
 import { SmartToy } from '@mui/icons-material';
@@ -58,14 +58,11 @@ function TabPanel(props) {
   return (
     <div
       role="tabpanel"
-      hidden={value !== index}
       id={`nav-tabpanel-${index}`}
       aria-labelledby={`nav-tab-${index}`}
       {...other}
     >
-      <Box p={3}>
-        {children}
-      </Box>
+    {children}
     </div>
   );
 }
@@ -95,6 +92,18 @@ export default function Store() {
   };
 
   useEffect(() => {
+
+    registerEvent('bot-created', bot => {
+      for (let i = 0; i < categories.length; i++) {
+        let cat = categories[i];
+        if (cat.id === bot.categoryId) {
+          cat.bots.push(bot);
+          forceUpdate();
+          break;
+        }
+      }
+    })
+
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -162,9 +171,13 @@ export default function Store() {
       .catch(error => console.log('error', error));
   }, [])
 
+  let counter = 0;
+
+  let finalColsCount = Math.floor(window.innerWidth / 130);
+  let finalWidth = window.innerWidth / finalColsCount;
+
   return (
     <div className={classes.root}>
-      
       <HomeToolbar>
         <AppBar style={{
           backgroundColor: 'rgba(21, 96, 233, 0.65)',
@@ -186,34 +199,35 @@ export default function Store() {
           >
             {
               categories.map(cat => (
-                <Tab icon={<ExtensionIcon />} label={cat.title}/>
+                <Tab icon={<ExtensionIcon style={{fill: '#fff'}} />} label={<div style={{color: '#fff'}}>{cat.title}</div>}/>
               ))
             }
           </Tabs>
         </AppBar>
       </HomeToolbar>
-          {categories.map(cat => (
-            <TabPanel value={cat.id} index={cat.id}>
-              <ImageList rowHeight={212} className={classes.imageList} cols={2}>
-                {cat.packages.map((item) => (
-                  <ImageListItem key={'store-package-'+ item.id} cols={2} style={{position: 'relative', marginTop: 8}}>
-                    <div style={{width: '100%', height: '100%', backdropFilter: 'blur(10px)', position: 'absolute', left: 0, top: 0}}></div>
-                    <img src={item.coverUrl} alt={item.title} style={{borderRadius: 16, opacity: '0.65', width: '100%', height: '100%'}} />
-                  </ImageListItem>
-                ))}
-                {cat.bots.map((item) => (
-                  <ImageListItem key={'store-bot-'+ item.id} cols={1} onClick={() => gotoPage('/app/storebot')}>
-                    <div style={{margin: 4, borderRadius: 16, backgroundColor: 'rgba(255, 255, 255, 0.65)', backdropFilter: 'blur(10px)', position: 'relative'}}>
-                      <img src={'https://icon-library.com/images/bot-icon/bot-icon-5.jpg'} alt={item.title} style={{opacity: 0.65, borderRadius: 16, marginRight: 16, marginLeft: 16, marginTop: 16, width: 'calc(100% - 32px)', height: 128}} />
-                      <Card style={{background: 'transparent', backgroundColor: 'transparent', width: '95%', height: 56, marginRight: '2.5%' }}>
-                        <Typography style={{position: 'absolute', top: 156, left: '50%', transform: 'translateX(-50%)', borderRadius: '0 0 16px 16px'}}>{'ربات'}</Typography>
-                      </Card>
-                    </div>
-                  </ImageListItem>
-                ))}
-              </ImageList>
-            </TabPanel>
-          ))}
+      {categories.map(cat => {
+        counter++;
+        return (
+          <TabPanel style={{display: (counter - 1) === value ? 'block' : 'none'}}>
+            <ImageList rowHeight={finalWidth + 56} className={classes.imageList} cols={finalColsCount} >
+              {cat.packages.map((item) => (
+                <ImageListItem key={'store-package-'+ item.id} cols={3} style={{position: 'relative', marginTop: 8}}>
+                  <div style={{width: '100%', height: '100%', backdropFilter: 'blur(10px)', position: 'absolute', left: 0, top: 0}}></div>
+                  <img src={item.coverUrl} alt={item.title} style={{borderRadius: 16, opacity: '0.65', width: '100%', height: '100%'}} />
+                </ImageListItem>
+              ))}
+              {cat.bots.map((item) => (
+                <ImageListItem style={{width: finalWidth, height: finalWidth + 56}} key={'store-bot-'+ item.id} cols={1} onClick={() => gotoPage('/app/storebot')}>
+                  <div style={{width: finalWidth, height: finalWidth + 56, borderRadius: 16, position: 'relative'}}>
+                    <img src={'https://icon-library.com/images/bot-icon/bot-icon-5.jpg'} alt={item.title} style={{opacity: 0.65, borderRadius: 16, marginTop: 16, width: finalWidth, height: finalWidth}} />
+                    <Typography style={{position: 'absolute', top: 144, left: '50%', transform: 'translateX(-50%)', borderRadius: '0 0 16px 16px'}}>{'ربات'}</Typography>
+                  </div>
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </TabPanel>
+        );
+      })}
       <Fab color="secondary" style={{position: 'fixed', bottom: 16 + 72, left: 16}}>
         <ShoppingCartIcon />
       </Fab>

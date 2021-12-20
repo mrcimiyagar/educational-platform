@@ -150,11 +150,20 @@ models.setup().then(() => {
 
         module.exports = {
             'pushTo': (nodeId, key, data) => {
-                let users = getRoomUsers(Number(nodeId.substr('room_'.length)));
-                users.forEach(user => {
-                    if (notifs[user.id] === undefined) notifs[user.id] = [];
-                    notifs[user.id].push({key, data});
-                });
+                if (nodeId === 'aseman-bot-store') {
+                    let users = await sw.User.findAll({raw: true});
+                    let userIds = users.map(u => u.id);
+                    userIds.forEach(uid => {
+                        this.signlePushTo(uid, key, data);
+                    });
+                }
+                else {
+                    let users = getRoomUsers(Number(nodeId.substr('room_'.length)));
+                    users.forEach(user => {
+                        if (notifs[user.id] === undefined) notifs[user.id] = [];
+                        notifs[user.id].push({key, data});
+                    });
+                }
             },
             'signlePushTo': (userId, key, data) => {
                 let d = JSON.stringify(data);
