@@ -18,7 +18,7 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import CategoryIcon from '@mui/icons-material/Category';
 import { SmartToy } from '@mui/icons-material';
 import { Navigation } from '@material-ui/icons';
-import StoreFam from '../../components/SearchEngineFam';
+import StoreFam from '../../components/StoreFam';
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -83,11 +83,11 @@ module.exports = {
                 if (token in guestAccsOutOfRoom) {
                     let a = guestAccsOutOfRoom[token];
                     if (a.roomId === roomId)
-                        callback(a, {userId: a.userId}, a.user);
+                        callback(a, {userId: a.userId}, a.user, a);
                     else if (a.subroomId === roomId) {
                         let temp = {...a}
                         temp.roomId = a.subroomId
-                        callback(temp, {userId: temp.userId}, temp.user);
+                        callback(temp, {userId: temp.userId}, temp.user, a);
                     }
                     return;
                 }
@@ -96,7 +96,9 @@ module.exports = {
             }
             if (roomId === undefined) {
                 sw.User.findOne({where: {id: session.userId}}).then(async function (user) {
-                    callback(undefined, session, user);
+                    sw.Account.findOne({where: {userId: session.userId}}).then(async function (acc) {
+                        callback(undefined, session, user, acc);
+                    });
                 });
                 return;
             }
@@ -106,7 +108,9 @@ module.exports = {
                     return;
                 }
                 sw.User.findOne({where: {id: membership.userId}}).then(async function (user) {
-                    callback(membership, session, user);
+                    sw.Account.findOne({where: {userId: session.userId}}).then(async function (acc) {
+                        callback(membership, session, user, acc);
+                    });
                 });
             });
         });

@@ -1,7 +1,7 @@
 import { Slide, Zoom } from '@material-ui/core'
 import { pink } from '@material-ui/core/colors'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
-import { Home } from '@material-ui/icons'
+import { Category, Home, Inbox } from '@material-ui/icons'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import ExploreIcon from '@material-ui/icons/Explore'
 import ExitToApp from '@material-ui/icons/ExitToApp'
@@ -29,27 +29,27 @@ import { createTheme } from '@material-ui/core';
 import Chat from '@material-ui/icons/Chat'
 import { pathConfig } from '../..'
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import { SmartToy } from '@mui/icons-material'
 
 export let notifyUrlChanged = undefined
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: 380,
-    transform: `translateY(${isDesktop() ? (-48 + -56) : (-56 + -56)}px) translateZ(0px)`,
+    position: 'fixed',
     flexGrow: 1,
+    bottom: -56,
+    left: 16 + 56 + 16
   },
 }))
 
 const actions = [
-  { icon: <Home />, name: 'خانه' },
-  { icon: <ExploreIcon />, name: 'گردش' },
-  { icon: <StoreMallDirectoryIcon />, name: 'فروشگاه' },
-  { icon: <AccountBalanceIcon />, name: '+روم' },
-  { icon: <ExitToApp/>, name: 'خروج'},
-  { icon: <SmartToyIcon/>, name: '+بات'},
+  { icon: <Category/>, name: '+دسته'},
+  { icon: <Inbox/>, name: '+پکیچ'},
+  { icon: <SmartToy/>, name: '+بات'},
 ]
 
-export default function Jumper(props) {
+export default function StoreFam(props) {
   const classes = useStyles()
   let forceUpdate = useForceUpdate()
   const [open, setOpen] = React.useState(false)
@@ -70,7 +70,6 @@ export default function Jumper(props) {
     <div
       className={classes.root}
     >
-      <ThemeProvider theme={theme}>
         <Slide
           direction="left"
           in={inTheGame}
@@ -80,7 +79,7 @@ export default function Jumper(props) {
         >
           <SpeedDial
             ariaLabel=""
-            color={'secondary'}
+            color={'primary'}
             hidden={hidden}
             icon={<NavigationIcon />}
             onClose={handleClose}
@@ -94,44 +93,22 @@ export default function Jumper(props) {
                 tooltipTitle={action.name}
                 tooltipOpen
                 onClick={() => {
-                  props.setOpen(false)
-                  animatePageChange()
-                  if (index === 0) {
-                    if (histPage !== '/app/home') {
-                      setInTheGame(false);
-                      setTimeout(() => {
-                        gotoPage('/app/home', {tab_index: 0});
-                      }, 500);
-                    }
-                  } else if (index === 1) {
-                    if (histPage !== '/app/searchengine') {
-                      gotoPage('/app/searchengine');
-                    }
-                  } else if (index === 2) {
-                    if (histPage !== '/app/store') {
-                      gotoPage('/app/store');
-                    }
-                  } else if (index === 3) {
-                    if (histPage !== '/app/createroom') {
-                      gotoPage('/app/createroom');
-                    }
-                  } else if (index === 4) {
-                    if (window.confirm('خروج از حساب ؟')) {
-                      localStorage.clear();
-                      db.allDocs().then(function (result) {
-                        return Promise.all(result.rows.map(function (row) {
-                          return db.remove(row.id, row.value.rev);
-                        }));
-                      }).then(function () {}).catch(function (err) {});
-                      gotoPage('/app/auth');
-                    }
+                  handleClose();
+                  animatePageChange();
+                  if (index === 2) {
+                    gotoPage('/app/createbot');
+                  }
+                  else if (index === 1) {
+                    gotoPage('/app/createbotpackage');
+                  }
+                  else if (index === 0) {
+                    gotoPage('/app/createbotcategory');
                   }
                 }}
               />
             ))}
           </SpeedDial>
         </Slide>
-      </ThemeProvider>
     </div>
   )
 }
