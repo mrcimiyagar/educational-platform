@@ -384,17 +384,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     let copies = [];
     for (let i = 0; i < fetchedMessages.length; i++) {
       let msg = fetchedMessages[i];
-      let msgCopy = {
-        id: msg.id,
-        authorId: msg.authorId,
-        roomId: msg.roomId,
-        User: msg.User,
-        Room: msg.Room,
-        messageType: msg.messageType,
-        fileId: msg.fileId,
-        text: msg.text,
-        time: msg.time
-      }
+      let msgCopy = msg.toJSON();
       msgCopy.seen = await sw.MessageSeen.count({
         where: { messageId: msgCopy.id },
         distinct: true,
@@ -402,9 +392,6 @@ router.post('/get_messages', jsonParser, async function (req, res) {
       });
       copies.push(msgCopy);
     }
-    fetchedMessages.forEach(msg => {
-      
-    })
     res.send({ status: 'success', messages: copies });
   })
 })
