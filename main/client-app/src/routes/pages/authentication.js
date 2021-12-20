@@ -34,19 +34,23 @@ function Authentication(props) {
   let [register, setRegister] = React.useState(false)
   let classes = useStyles()
   useEffect(() => {
-    if (registeredUsername !== undefined && registeredUsername !== null && registeredUsername !== '') {
-      let loginUsername = document.getElementById('loginUsername');
-      loginUsername.value = registeredUsername;
-    }
-    if (registeredPassword !== undefined && registeredPassword !== null && registeredPassword !== '') {
-      let loginPassword = document.getElementById('loginPassword');
-      loginPassword.value = registeredPassword;
-    }
     setTimeout(() => {
       setLogoTop(100);
       setOpacity(1)
     }, 2000)
   }, [])
+  useEffect(() => {
+    setTimeout(() => {
+      if (registeredUsername !== undefined && registeredUsername !== null && registeredUsername !== '') {
+        let loginUsername = document.getElementById('loginUsername');
+        loginUsername.value = registeredUsername;
+      }
+      if (registeredPassword !== undefined && registeredPassword !== null && registeredPassword !== '') {
+        let loginPassword = document.getElementById('loginPassword');
+        loginPassword.value = registeredPassword;
+      }
+    }, 0);
+  }, [register]);
   return (
     <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
       <img style={{width: '100%', height: '100%', objectFit: 'cover', position: 'fixed'}} src={Wallpaper}/>
