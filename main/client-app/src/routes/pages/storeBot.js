@@ -137,7 +137,7 @@ export default function StoreBot() {
         <Rating name="read-only" value={2} readOnly style={{paddingLeft: 16, paddingTop: 8, paddingRight: 16, borderRadius: '0 20px 20px 0',  position: 'absolute', left: 0, height: 40}}/>
       </div>
 
-      <IconButton style={{width: 32, height: 32, margin: 16, position: 'absolute', top: 0}} onClick={() => popPage()}>
+      <IconButton style={{width: 32, height: 32, margin: 16, position: 'absolute', top: 0}} onClick={() => handleClose()}>
         <ArrowForwardIcon style={{fill: '#fff'}}/>
       </IconButton>
 

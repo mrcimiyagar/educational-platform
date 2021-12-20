@@ -219,7 +219,9 @@ router.post('/get_bots', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
     let bots = await sw.Bot.findAll({
       raw: true,
-      categoryId: req.body.categoryId,
+      where: {
+        categoryId: req.body.categoryId
+      }
     })
     res.send({ status: 'success', bots: bots })
   })
@@ -1068,15 +1070,20 @@ router.post('/get_categories', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
     let cats = await sw.StoreCategory.findAll({ raw: true });
     let result = [];
-    for (let i = 0; i < cats.length; i++) {
-      let cat = cats[i];
-      let resultCat = {
-        id: cat.id,
-        title: cat.title
+    if (req.body.loadExtra) {
+      for (let i = 0; i < cats.length; i++) {
+        let cat = cats[i];
+        let resultCat = {
+          id: cat.id,
+          title: cat.title
+        }
+        resultCat.bots = await sw.Bot.findAll({raw: true, where: {categoryId: cat.id}});
+        resultCat.packages = await sw.StorePackage.findAll({raw: true, where: {categoryId: cat.id}});
+        result.push(resultCat);
       }
-      resultCat.bots = await sw.Bot.findAll({raw: true, where: {categoryId: cat.id}});
-      resultCat.packages = await sw.StorePackage.findAll({raw: true, where: {categoryId: cat.id}});
-      result.push(resultCat);
+    }
+    else {
+      result = cats;
     }
     res.send({ status: 'success', categories: result })
   })

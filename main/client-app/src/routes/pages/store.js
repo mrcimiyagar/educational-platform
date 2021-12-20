@@ -63,11 +63,9 @@ function TabPanel(props) {
       aria-labelledby={`nav-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          {children}
-        </Box>
-      )}
+      <Box p={3}>
+        {children}
+      </Box>
     </div>
   );
 }
@@ -103,9 +101,11 @@ export default function Store() {
         'Content-Type': 'application/json',
         'token': token
       },
+      body: JSON.stringify({
+        loadExtra: true
+      }),
       redirect: 'follow'
     }
-
     fetch(serverRoot + "/bot/get_categories", requestOptions)
       .then(response => response.json())
       .then(result => {
@@ -128,9 +128,10 @@ export default function Store() {
             .then(response => response.json())
             .then(result => {
               console.log(JSON.stringify(result));
-              cat.bots = result.bots
-              setCategories(categories)
-              forceUpdate()
+              if (result.bots !== undefined) {
+                cat.bots = result.bots;
+                forceUpdate();
+              }
             })
             .catch(error => console.log('error', error));
           let requestOptions2 = {
@@ -148,9 +149,10 @@ export default function Store() {
             .then(response => response.json())
             .then(result => {
               console.log(JSON.stringify(result));
-              cat.packages = result.packages
-              setCategories(categories)
-              forceUpdate()
+              if (result.packages !== undefined) {
+                cat.packages = result.packages;
+                forceUpdate();
+              }
             })
             .catch(error => console.log('error', error));
         });
@@ -191,7 +193,7 @@ export default function Store() {
         </AppBar>
       </HomeToolbar>
           {categories.map(cat => (
-            <TabPanel value={value} index={cat}>
+            <TabPanel value={cat.id} index={cat.id}>
               <ImageList rowHeight={212} className={classes.imageList} cols={2}>
                 {cat.packages.map((item) => (
                   <ImageListItem key={'store-package-'+ item.id} cols={2} style={{position: 'relative', marginTop: 8}}>
