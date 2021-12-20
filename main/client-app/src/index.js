@@ -19,7 +19,7 @@ export let pathConfig = {}
 const MainApp = React.lazy(() => {
   return Promise.all([
     import('./App'),
-    new Promise((resolve) => setTimeout(resolve, 5000)),
+    new Promise((resolve) => setTimeout(resolve, 1000)),
   ]).then(([moduleExports]) => moduleExports)
 })
 

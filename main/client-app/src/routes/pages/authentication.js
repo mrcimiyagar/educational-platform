@@ -3,6 +3,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import React, { useEffect } from "react";
 import { pathConfig } from '../..';
+import { db } from '../../App';
 import WhiteColorTextField from '../../components/WhiteColorTextField';
 import Wallpaper from '../../images/chat-wallpaper.jpg';
 import CloudIcon from '../../images/logo.png';
@@ -123,6 +124,12 @@ function Authentication(props) {
               .then(result => {
                 console.log(JSON.stringify(result));
                 if (result.status === 'success') {
+                  localStorage.clear();
+                  db.allDocs().then(function (result) {
+                    return Promise.all(result.rows.map(function (row) {
+                      return db.remove(row.id, row.value.rev);
+                    }));
+                  }).then(function () {}).catch(function (err) {});
                   setMe(result.user);
                   setToken(result.session.token);
                   setHomeSpaceId(result.space.id);

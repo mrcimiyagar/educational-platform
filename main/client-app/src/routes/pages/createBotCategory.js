@@ -13,7 +13,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CreateBotPage(props) {
+export default function CreateBotCategoryPage(props) {
 
     const urlSearchParams = new URLSearchParams(window.location.search);
     props = Object.fromEntries(urlSearchParams.entries());
@@ -54,8 +54,7 @@ export default function CreateBotPage(props) {
                     </Toolbar>
                 </AppBar>
                 <div style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', width: '100%', height: isDesktop() ? 'calc(100% - 56px)' : '100%', position: 'absolute', top: 56}}>
-                    <TextField id={'botTitle'} variant={'outlined'} label={'عنوان بات'} style={{width: 'calc(100% - 48px)', marginTop: 24, marginLeft: 24, marginRight: 24}} />
-                    <TextField id={'botUsername'} variant={'outlined'} label={'نام کاربری بات'} style={{width: 'calc(100% - 48px)', marginTop: 24, marginLeft: 24, marginRight: 24}} />
+                    <TextField id={'botCategoryTitle'} variant={'outlined'} label={'عنوان دسته'} style={{width: 'calc(100% - 48px)', marginTop: 24, marginLeft: 24, marginRight: 24}} />
                     <Fab
             color={'secondary'}
             style={{ position: 'fixed', bottom: 16, left: 16 }}
@@ -67,12 +66,11 @@ export default function CreateBotPage(props) {
                       token: token,
                     },
                     body: JSON.stringify({
-                      username: document.getElementById('botUsername').value,
-                      title: document.getElementById('botTitle').value
+                      title: document.getElementById('botCategoryTitle').value
                     }),
                     redirect: 'follow',
                 }
-                fetch(serverRoot + '/bot/create_bot', requestOptions)
+                fetch(serverRoot + '/bot/create_category', requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
                         if (result.status === 'success') {

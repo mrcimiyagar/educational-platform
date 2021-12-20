@@ -16,6 +16,10 @@ router.post('/register', jsonParser, async function (req, res) {
         res.send({status: 'error', errorCode: 'e001', message: 'نام کاربری موجود است'})
         return
     }
+    if (req.body.firstName === undefined || req.body.firstName === null || req.body.firstName === '') {
+        res.send({status: 'error', errorCode: 'e002', message: 'نام نمی تواند خالی باشد.'})
+        return
+    }
     user = await sw.User.create({
         id: uuid() + '-' + Date.now(),
         username: req.body.username,

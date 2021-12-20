@@ -438,12 +438,9 @@ async function prepareAccountModel() {
         homeSpaceId: Sequelize.BIGINT,
         themeColor: Sequelize.STRING,
         canAddRoom: Sequelize.BOOLEAN,
-        canAddSurvey: Sequelize.BOOLEAN,
-        canRemoveSurvey: Sequelize.BOOLEAN,
-        canAddSurveyLabel: Sequelize.BOOLEAN,
-        canRemoveSurveyLabel: Sequelize.BOOLEAN,
-        canAddSurveyCat: Sequelize.BOOLEAN,
-        canRemoveSurveyCat: Sequelize.BOOLEAN,
+        canAddBot: Sequelize.BOOLEAN,
+        canModifyStoreCategory: Sequelize.BOOLEAN,
+        canModifyStorePackage: Sequelize.BOOLEAN,
     }, {
         freezeTableName: true
     });

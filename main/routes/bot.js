@@ -123,6 +123,14 @@ router.post('/set_wallpaper', jsonParser, async function (req, res) {
 
 router.post('/create_bot', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
+    if (!acc.canAddBot) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      })
+      return
+    }
     if ((await sw.Bot.findOne({where: {username: req.body.username}})) !== null) {
       res.send({
         status: 'error',
@@ -985,7 +993,7 @@ router.post('/get_ads', jsonParser, async function (req, res) {
 
 router.post('/create_category', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-    if (!acc.canModifyStoreCategories) {
+    if (!acc.canModifyStoreCategory) {
       res.send({
         status: 'error',
         errorCode: 'e0005',
@@ -1065,7 +1073,7 @@ router.post('/get_categories', jsonParser, async function (req, res) {
 
 router.post('/create_package', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-    if (!acc.canModifyStorePackages) {
+    if (!acc.canModifyStorePackage) {
       res.send({
         status: 'error',
         errorCode: 'e0005',

@@ -1,4 +1,4 @@
-import { AppBar, Box, Card, Fab, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Box, Card, Fab, Slide, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,13 +7,18 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ViewCompactIcon from '@material-ui/icons/ViewCompact';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
-import { gotoPage } from '../../App';
+import { gotoPage, inTheGame } from '../../App';
 import HomeToolbar from '../../components/HomeToolbar';
 import Jumper from '../../components/SearchEngineFam';
 import StoreBottombar from '../../components/StoreBottombar';
 import StoreSearchbar from '../../components/StoreSearchbar';
 import { token } from '../../util/settings';
 import { serverRoot, useForceUpdate } from '../../util/Utils';
+import InboxIcon from '@mui/icons-material/Inbox';
+import CategoryIcon from '@mui/icons-material/Category';
+import { SmartToy } from '@mui/icons-material';
+import { Navigation } from '@material-ui/icons';
+import StoreFam from '../../components/SearchEngineFam';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -210,12 +215,10 @@ export default function Store() {
       <Fab color="secondary" style={{position: 'fixed', bottom: 16 + 72, left: 16}}>
         <ShoppingCartIcon />
       </Fab>
-      <Fab size="medium" color="secondary" style={{position: 'fixed', bottom: 16 + 72 + 56 + 16, left: 20}} onClick={() => gotoPage('/app/storeads')}>
+      <Fab size="medium" color="primary" style={{position: 'fixed', bottom: 16 + 72 + 56 + 16, left: 20}} onClick={() => gotoPage('/app/storeads')}>
         <ViewCompactIcon />
       </Fab>
-      <div style={{position: 'fixed', right: 16, bottom: 4}}>
-        <Jumper open={jumperOpen} setOpen={setJumperOpen}/>
-      </div>
+      <StoreFam />
       <StoreBottombar/>
     </div>
   );
