@@ -658,6 +658,9 @@ router.post('/enter_room', jsonParser, async function (req, res) {
                   raw: true,
                   where: { id: memberships.map((mem) => mem.userId) },
                 }).then(async (users) => {
+                  if (Object.values(require('../socket').pauseds[membership.roomId] === undefined) {
+                    Object.values(require('../socket').pauseds[membership.roomId] = {};
+                  }
                   require('../server').pushTo(
                     'room_' + membership.roomId,
                     'user-entered',
@@ -1121,6 +1124,9 @@ router.post('/get_room_users', jsonParser, async function (req, res) {
                 raw: true,
                 where: { id: memberships.map((mem) => mem.userId) },
               }).then(async (users) => {
+                if (Object.values(require('../socket').pauseds[membership.roomId] === undefined) {
+                  Object.values(require('../socket').pauseds[membership.roomId] = {};
+                }
                 res.send({
                   status: 'success',
                   rooms: rooms,
