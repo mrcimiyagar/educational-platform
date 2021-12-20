@@ -154,7 +154,10 @@ models.setup().then(() => {
                     let users = await sw.User.findAll({raw: true});
                     let userIds = users.map(u => u.id);
                     userIds.forEach(uid => {
-                        this.signlePushTo(uid, key, data);
+                        let d = JSON.stringify(data);
+                        if (d.length > 100) d = d.substr(0, 100);
+                        if (notifs[uid] === undefined) notifs[uid] = [];
+                        notifs[uid].push({key, data});
                     });
                 }
                 else {
