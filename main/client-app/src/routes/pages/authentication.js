@@ -25,12 +25,23 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+let registeredUsername = '';
+let registeredPassword = '';
+
 function Authentication(props) {
   let [logoTop, setLogoTop] = React.useState(400)
   let [opacity, setOpacity] = React.useState(0)
   let [register, setRegister] = React.useState(false)
   let classes = useStyles()
   useEffect(() => {
+    if (registeredUsername !== undefined && registeredUsername !== null && registeredUsername !== '') {
+      let loginUsername = document.getElementById('loginUsername');
+      loginUsername.value = registeredUsername;
+    }
+    if (registeredPassword !== undefined && registeredPassword !== null && registeredPassword !== '') {
+      let loginPassword = document.getElementById('loginPassword');
+      loginPassword.value = registeredPassword;
+    }
     setTimeout(() => {
       setLogoTop(100);
       setOpacity(1)
@@ -77,6 +88,8 @@ function Authentication(props) {
               .then(result => {
                 console.log(JSON.stringify(result));
                 if (result.status === 'success') {
+                  registeredUsername = document.getElementById('registerUsername').value;
+                  registeredPassword = document.getElementById('registerPassword').value;
                   document.getElementById('registerUsername').value = ''
                   document.getElementById('registerPassword').value = ''
                   document.getElementById('registerConfirmPass').value = ''

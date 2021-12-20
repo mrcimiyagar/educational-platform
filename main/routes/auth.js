@@ -66,12 +66,9 @@ router.post('/register', jsonParser, async function (req, res) {
         themeColor: tools.lightTheme,
         homeSpaceId: home.id,
         canAddRoom: true,
-        canAddSurvey: false,
-        canRemoveSurvey: false,
-        canAddSurveyLabel: false,
-        canRemoveSurveyLabel: false,
-        canAddSurveyCat: false,
-        canRemoveSurveyCat: false,
+        canAddBot: true,
+        canModifyStorePackage: true,
+        canModifyStoreCategory: true
     });
     let session = await sw.Session.create({
         userId: user.id,
