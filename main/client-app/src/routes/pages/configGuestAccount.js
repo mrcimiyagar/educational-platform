@@ -77,7 +77,9 @@ export default function ConfigGuestAccount(props) {
         if (result.token != undefined) {
           localStorage.setItem('token', result.token);
           setToken(result.token);
-          window.location.replace(pathConfig.mainFrontend + '/app/room?room_id=' + result.roomId + '&tab_index=0');
+          setTimeout(() => {
+            window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + result.roomId + '&tab_index=0';
+          }, 0);
         }
       })
       .catch((error) => console.log('error', error));
