@@ -27,7 +27,7 @@ router.post('/register', jsonParser, async function (req, res) {
         lastName: req.body.lastName,
     });
     let home = await sw.Space.create({
-        title: req.body.title,
+        title: 'خانه',
         mainRoomId: null,
     });
     let spaceSecret = await sw.SpaceSecret.create({
@@ -35,7 +35,7 @@ router.post('/register', jsonParser, async function (req, res) {
       spaceId: home.id,
     });
     let room = await sw.Room.create({
-        title: req.body.title,
+        title: 'خانه',
         spaceId: home.id,
     });
     home.mainRoomId = room.id;
