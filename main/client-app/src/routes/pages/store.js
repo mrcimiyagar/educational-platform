@@ -74,6 +74,7 @@ TabPanel.propTypes = {
 };
 
 export let updateStore = undefined
+let categories = [];
 
 export default function Store() {
 
@@ -83,9 +84,7 @@ export default function Store() {
   let forceUpdate = useForceUpdate()
   updateStore = forceUpdate
 
-  const [jumperOpen, setJumperOpen] = React.useState(true);
   const [value, setValue] = React.useState(0)
-  const [categories, setCategories] = React.useState([])
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -94,17 +93,19 @@ export default function Store() {
   useEffect(() => {
 
     registerEvent('bot-created', bot => {
-      for (let i = 0; i < categories.length; i++) {
-        let cat = categories[i];
-        alert('test');
+      categories.forEach(cat => {
+        alert('test 2');
         if (cat.id === bot.categoryId) {
-          alert('test 2');
           cat.bots.push(bot);
           forceUpdate();
-          break;
         }
-      }
-    })
+      });
+    });
+    
+    registerEvent('store-category-created', cat => {
+      categories.push(cat);
+      forceUpdate();
+    });
 
     let requestOptions = {
       method: 'POST',
@@ -122,7 +123,7 @@ export default function Store() {
       .then(result => {
         console.log(JSON.stringify(result));
         if (result.categories !== undefined) {
-        setCategories(result.categories)
+        categories = result.categories;
         result.categories.forEach(cat => {
           let requestOptions = {
             method: 'POST',

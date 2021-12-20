@@ -952,14 +952,14 @@ router.post('/create_ad', jsonParser, async function (req, res) {
           rootPath + '/files/' + preview.id,
         )
         require('../server').pushTo(
-          'aseman-store-page' + bot.id,
+          'aseman-bot-store' + bot.id,
           'store-ad-created',
           storeAd,
         )
         res.send({ status: 'success', file: file })
       } else {
         require('../server').pushTo(
-          'aseman-store-page' + bot.id,
+          'aseman-bot-store' + bot.id,
           'store-ad-created',
           storeAd,
         )
@@ -981,7 +981,7 @@ router.post('/delete_ad', jsonParser, async function (req, res) {
       return
     }
     await ad.destroy()
-    require('../server').pushTo('aseman-store-page', 'store-ad-deleted', ad)
+    require('../server').pushTo('aseman-bot-store', 'store-ad-deleted', ad)
     res.send({ status: 'success' })
   })
 })
@@ -1007,7 +1007,7 @@ router.post('/create_category', jsonParser, async function (req, res) {
       title: req.body.title,
     })
     require('../server').pushTo(
-      'aseman-store-page',
+      'aseman-bot-store',
       'store-category-created',
       cat,
     )
@@ -1032,7 +1032,7 @@ router.post('/delete_category', jsonParser, async function (req, res) {
     })
     await cat.destroy()
     require('../server').pushTo(
-      'aseman-store-page',
+      'aseman-bot-store',
       'store-category-deleted',
       cat,
     )
@@ -1058,7 +1058,7 @@ router.post('/update_category', jsonParser, async function (req, res) {
     cat.title = req.body.title
     await cat.save()
     require('../server').pushTo(
-      'aseman-store-page',
+      'aseman-bot-store',
       'store-category-updated',
       cat,
     )
@@ -1105,7 +1105,7 @@ router.post('/create_package', jsonParser, async function (req, res) {
       categoryId: req.body.categoryId,
     })
     require('../server').pushTo(
-      'aseman-store-page',
+      'aseman-bot-store',
       'store-package-created',
       pack,
     )
@@ -1130,7 +1130,7 @@ router.post('/delete_package', jsonParser, async function (req, res) {
     })
     await pack.destroy()
     require('../server').pushTo(
-      'aseman-store-page',
+      'aseman-bot-store',
       'store-package-deleted',
       pack,
     )
@@ -1158,7 +1158,7 @@ router.post('/update_package', jsonParser, async function (req, res) {
     pack.categoryId = req.body.categoryId
     await pack.save()
     require('../server').pushTo(
-      'aseman-store-page',
+      'aseman-bot-store',
       'store-package-updated',
       pack,
     )
