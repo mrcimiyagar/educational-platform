@@ -777,7 +777,7 @@ router.post('/exit_room', jsonParser, async function (req, res) {
       if (sockets[user.id] !== undefined) {
         sockets[user.id].leave();
       }
-      if (metadata[membership.userId] !== undefined) {
+      if (membership !== null && membership !== undefined && metadata[membership.userId] !== undefined) {
         metadata[membership.userId].roomId = 0
       }
       removeUser(roomId, user.id);
