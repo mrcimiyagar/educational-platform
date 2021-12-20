@@ -149,7 +149,7 @@ models.setup().then(() => {
         }, 5000);
 
         module.exports = {
-            'pushTo': (nodeId, key, data) => {
+            'pushTo': async (nodeId, key, data) => {
                 if (nodeId === 'aseman-bot-store') {
                     let users = await sw.User.findAll({raw: true});
                     let userIds = users.map(u => u.id);
