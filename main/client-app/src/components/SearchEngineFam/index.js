@@ -12,6 +12,7 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction'
 import React from 'react'
 import {
   animatePageChange,
+  currentRoomId,
   db,
   gotoPage,
   histPage,
@@ -125,7 +126,7 @@ export default function Jumper(props) {
                       gotoPage('/app/auth');
                     }
                   } else if (index === 5) {
-                    gotoPage('/app/createbot');
+                    gotoPage('/app/createbot', {room_id: currentRoomId});
                   }
                 }}
               />

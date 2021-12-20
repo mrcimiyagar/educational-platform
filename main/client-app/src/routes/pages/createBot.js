@@ -66,14 +66,16 @@ export default function CreateBotPage(props) {
                       token: token,
                     },
                     body: JSON.stringify({
-                      roomId: Number(props.roomId)
+                      roomId: Number(props.room_id)
                     }),
                     redirect: 'follow',
                 }
                 fetch(serverRoot + '/bot/create_bot', requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        
+                        if (result.status === 'success') {
+                            handleClose();
+                        }
                     });
             }}
           >

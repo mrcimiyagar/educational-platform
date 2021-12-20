@@ -123,18 +123,18 @@ router.post('/set_wallpaper', jsonParser, async function (req, res) {
 
 router.post('/create_bot', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-    if (acc.canModifyOwnBots) {
+    if ((await sw.Bot.findOne({where: {username: req.body.username}})) !== null) {
       res.send({
         status: 'error',
         errorCode: 'e0005',
-        message: 'access denied.',
+        message: 'bot already exists.',
       })
-      return
+      return;
     }
     let bot = await sw.Bot.create({
       title: req.body.title,
       username: req.body.username,
-      avatarId: req.body.avatarId,
+      avatarId: req.body.avatarId === undefined ? null : req.body.avatarId,
       categoryId:
         req.body.categoryId === undefined ? null : req.body.categoryId,
     })
