@@ -96,7 +96,9 @@ export default function Store() {
     registerEvent('bot-created', bot => {
       for (let i = 0; i < categories.length; i++) {
         let cat = categories[i];
+        alert('test');
         if (cat.id === bot.categoryId) {
+          alert('test 2');
           cat.bots.push(bot);
           forceUpdate();
           break;
