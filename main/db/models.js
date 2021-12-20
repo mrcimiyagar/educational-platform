@@ -308,11 +308,11 @@ async function prepareBotModel() {
         username: Sequelize.STRING,
         title: Sequelize.STRING,
         avatarId: Sequelize.BIGINT,
-        caegoryId: Sequelize.BIGINT
+        categoryId: Sequelize.BIGINT
     }, {
         freezeTableName: true
     });
-    Bot.belongsTo(StoreCategory, { foreignKey: 'caegoryId' });
+    Bot.belongsTo(StoreCategory, { foreignKey: 'categoryId' });
     await Bot.sync();
     module.exports['Bot'] = Bot;
 }
