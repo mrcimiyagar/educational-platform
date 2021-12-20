@@ -33,6 +33,7 @@ let disconnectWebsocket = (user) => {
               raw: true,
               where: { id: memberships.map((mem) => mem.userId) },
             }).then(async (users) => {
+              if (pauseds[roomId] === undefined) pauseds[roomId] = {};
               require('./server').pushTo('room_' + roomId, 'user-exited', {
                 rooms: rooms,
                 pauseds: Object.values(pauseds[roomId]).map(v => v.user),
