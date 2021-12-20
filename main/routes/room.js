@@ -738,6 +738,9 @@ router.post('/enter_room', jsonParser, async function (req, res) {
                 raw: true,
                 where: { id: memberships.map((mem) => mem.userId) },
               }).then(async (users) => {
+                if (require('../socket').pauseds[membership.roomId] === undefined) {
+                  require('../socket').pauseds[membership.roomId] = {};
+                }
                 require('../server').pushTo(
                   'room_' + membership.roomId,
                   'user-entered',
