@@ -679,7 +679,9 @@ router.post('/enter_room', jsonParser, async function (req, res) {
       return
     }
 
-    sockets[user.id].leave()
+    if (sockets[user.id] !== undefined) {
+      sockets[user.id].leave();
+    }
     if (metadata[membership.userId] !== undefined) {
       metadata[membership.userId].roomId = 0
     }
@@ -701,6 +703,9 @@ router.post('/enter_room', jsonParser, async function (req, res) {
                 raw: true,
                 where: { id: memberships.map((mem) => mem.userId) },
               }).then(async (users) => {
+                if (require('../socket').pauseds[roomId] === undefined) {
+                  require('../socket').pauseds[roomId] = {};
+                }
                 require('../server').pushTo(
                   'room_' + roomId,
                   'user-exited',
