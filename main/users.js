@@ -89,6 +89,9 @@ module.exports = {
                         temp.roomId = a.subroomId
                         callback(temp, {userId: temp.userId}, temp.user, a);
                     }
+                    else {
+                        callback(a, null, {userIOd: a.userId}, a);
+                    }
                     return;
                 }
                 res.send({status: 'error', errorCode: 'e0007', message: 'session does not exist.'});
