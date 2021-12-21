@@ -55,12 +55,6 @@ export default function ConfigGuestAccount(props) {
   const urlSearchParams = new URLSearchParams(window.location.search);
   props = Object.fromEntries(urlSearchParams.entries());
 
-  useEffect(() => {
-    while (props.name === undefined || props.name === null || props.name.length === 0) {
-      props.name = window.prompt('نام خود را وارد نمایید', '');
-    }
-  }, [])
-
   function onChange(value) {
     console.log("Captcha value:", value);
     let requestOptions = {
@@ -77,6 +71,9 @@ export default function ConfigGuestAccount(props) {
       .then(response => response.json())
       .then(result => {
         if (result.status === 'success') {
+          while (props.name === undefined || props.name === null || props.name.length === 0) {
+            props.name = window.prompt('نام خود را وارد نمایید', '');
+          }
           let requestOptions = {
             method: 'POST',
             headers: {
