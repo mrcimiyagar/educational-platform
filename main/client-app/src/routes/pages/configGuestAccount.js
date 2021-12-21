@@ -59,35 +59,11 @@ export default function ConfigGuestAccount(props) {
     while (props.name === undefined || props.name === null || props.name.length === 0) {
       props.name = window.prompt('نام خود را وارد نمایید', '');
     }
-    let requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        token: props.token,
-        name: props.name,
-        roomId: props.roomId
-      }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/room/use_invitation', requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result));
-        if (result.token != undefined) {
-          localStorage.setItem('token', result.token);
-          setToken(result.token);
-          setTimeout(() => {
-            window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + result.roomId + '&tab_index=0';
-          }, 0);
-        }
-      })
-      .catch((error) => console.log('error', error));
   }, [])
 
   function onChange(value) {
     console.log("Captcha value:", value);
+
   }
 
   return (
