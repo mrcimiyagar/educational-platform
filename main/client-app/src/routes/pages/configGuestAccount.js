@@ -98,7 +98,7 @@ export default function ConfigGuestAccount(props) {
                 setToken(result.token);
                 setTimeout(() => {
                   window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + result.roomId + '&tab_index=0';
-                }, 0);
+                }, 1000);
               }
             })
             .catch((error) => console.log('error', error));
