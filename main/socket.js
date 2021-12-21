@@ -3,12 +3,14 @@ const users = require('./users')
 const { removeUser, getRoomUsers, getGuestUser, addUser } = require('./users')
 
 let sockets = {}
+let pauseds = {}
 let notifs = {}
 let netState = {}
 
 let disconnectWebsocket = (user) => {
   if (metadata[user.id] === undefined) return;
   let roomId = metadata[user.id].roomId
+  if (pauseds[roomId] === undefined) pauseds[roomId] = {};
   netState[user.id] = false;
   models.Room.findOne({ where: { id: roomId } }).then((room) => {
     removeUser(roomId, user.id)
@@ -31,8 +33,10 @@ let disconnectWebsocket = (user) => {
               raw: true,
               where: { id: memberships.map((mem) => mem.userId) },
             }).then(async (users) => {
+              if (pauseds[roomId] === undefined) pauseds[roomId] = {};
               require('./server').pushTo('room_' + roomId, 'user-exited', {
                 rooms: rooms,
+                pauseds: Object.values(pauseds[roomId]).map(v => v.user),
                 users: getRoomUsers(roomId),
                 allUsers: users,
               })
@@ -87,11 +91,7 @@ let typingEvent = (user, soc) => {
   });
 };
 
-let lastVisitedRoom = {};
-let pauseds = {};
-
 module.exports = {
-  lastVisitedRoom: lastVisitedRoom,
   pauseds: pauseds,
   userToSocketMap: userToSocketMap,
   metadata: metadata,
@@ -120,20 +120,23 @@ module.exports = {
                       disconnectWebsocket(user)
                     });
                     metadata[user.id].timer = setTimeout(() => {
+                      if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                      pauseds[metadata[user.id].roomId][user.id] = {soc, user};
                       disconnectWebsocket(soc);
                     }, 6000);
                     soc.on('ping', () => {
-                      if (lastVisitedRoom[user.id] !== undefined &&
-                          metadata[user.id] !== undefined &&
-                          metadata[user.id].roomId === undefined) {
-                        metadata[user.id].roomId = lastVisitedRoom[user.id];
+                      if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                      if (metadata[user.id].roomId !== undefined) {
                         soc.join('room_' + metadata[user.id].roomId);
                         addUser(metadata[user.id].roomId, user);
+                        delete pauseds[metadata[user.id].roomId][user.id];
                       }
                       if (metadata[user.id].timer !== undefined) {
                         clearTimeout(metadata[user.id].timer);
                       }
                       metadata[user.id].timer = setTimeout(() => {
+                        if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                        pauseds[metadata[user.id].roomId][user.id] = {soc, user};
                         disconnectWebsocket(soc);
                       }, 3000);
                     });
@@ -156,13 +159,13 @@ module.exports = {
                     disconnectWebsocket(user)
                   });
                   metadata[user.id].timer = setTimeout(() => {
+                    if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                    pauseds[metadata[user.id].roomId][user.id] = {soc, user};
                     disconnectWebsocket(soc);
                   }, 6000);
                   soc.on('ping', () => {
-                    if (lastVisitedRoom[user.id] !== undefined &&
-                        metadata[user.id] !== undefined &&
-                        metadata[user.id].roomId === undefined) {
-                      metadata[user.id].roomId = lastVisitedRoom[user.id];
+                    if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                    if (metadata[user.id].roomId !== undefined) {
                       soc.join('room_' + metadata[user.id].roomId);
                       addUser(metadata[user.id].roomId, user);
                     }
@@ -170,6 +173,8 @@ module.exports = {
                       clearTimeout(metadata[user.id].timer);
                     }
                     metadata[user.id].timer = setTimeout(() => {
+                      if (pauseds[metadata[user.id].roomId] === undefined) pauseds[metadata[user.id].roomId] = {};
+                      pauseds[metadata[user.id].roomId][user.id] = {soc, user};
                       disconnectWebsocket(soc);
                     }, 3000);
                   });
