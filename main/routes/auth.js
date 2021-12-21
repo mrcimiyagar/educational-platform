@@ -124,6 +124,7 @@ router.post('/verify_recaptcha', jsonParser, async function (req, res) {
       })
       .then(response => response.json())
       .then(result => {
+        console.log(JSON.stringify(result));
         if (result.success === true) {
             res.send({status: 'success'});
         }
