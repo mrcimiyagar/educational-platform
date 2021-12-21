@@ -90,7 +90,7 @@ module.exports = {
                         callback(temp, {userId: temp.userId}, temp.user, a);
                     }
                     else {
-                        callback(a, null, {userIOd: a.userId}, a);
+                        callback(a, null, {userId: a.userId}, a);
                     }
                     return;
                 }
