@@ -120,7 +120,7 @@ router.post('/verify_recaptcha', jsonParser, async function (req, res) {
     fetch("https://www.google.com/recaptcha/api/siteverify", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `secret=${'6Lc1P7odAAAAAE4vJN6tbYWiyibGe0v-PMwu3i8v'}&response=${req.body.recaptchaToken}`,
+        body: `secret=${'6Lc1P7odAAAAAOF_fPTrOwOMK78f-C9iRABkExDf'}&response=${req.body.recaptchaToken}`,
       })
       .then(response => response.json())
       .then(result => {
