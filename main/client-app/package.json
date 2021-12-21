@@ -85,6 +85,7 @@
     "react-dropzone-uploader": "^2.11.0",
     "react-full-screen": "^0.3.2-0",
     "react-google-maps": "^9.4.5",
+    "react-google-recaptcha": "^2.1.0",
     "react-headroom": "^2.2.4",
     "react-image-gallery": "^1.2.7",
     "react-intl": "2.4.0",

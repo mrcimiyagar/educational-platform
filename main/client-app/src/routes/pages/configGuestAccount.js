@@ -15,6 +15,7 @@ import {
 } from '../../App'
 import { colors, setToken, token } from '../../util/settings'
 import { serverRoot, useForceUpdate } from '../../util/Utils'
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -85,5 +86,14 @@ export default function ConfigGuestAccount(props) {
       .catch((error) => console.log('error', error));
   }, [])
 
-  return (<div/>);
+  function onChange(value) {
+    console.log("Captcha value:", value);
+  }
+
+  return (
+    <ReCAPTCHA
+      sitekey={'6LcS3LkdAAAAABf9538DF32DVsWJFK0fsa-OVGHl'}
+      onChange={onChange}
+    />
+  );
 }
