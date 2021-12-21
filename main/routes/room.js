@@ -1035,22 +1035,11 @@ router.post('/use_invitation', jsonParser, async function (req, res) {
       'user_joined',
       user,
     )
-    let requestOptions = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      redirect: 'follow',
-    }
-    fetch('https://config.kaspersoft.cloud', requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        res.send({
-          status: 'success',
-          token: acc.token,
-          roomId: invite.valid ? invite.roomId : req.body.roomId,
-        })
-      })
+    res.send({
+      status: 'success',
+      token: acc.token,
+      roomId: invite.valid ? invite.roomId : req.body.roomId,
+    })
   } else {
     res.send({
       status: 'error',
