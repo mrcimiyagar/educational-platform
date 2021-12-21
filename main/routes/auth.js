@@ -116,4 +116,34 @@ router.post('/get_users', jsonParser, async function (req, res) {
     res.send({status: 'success', users: users});
 });
 
+router.post('/verify_recaptcha', jsonParser, async function (req, res) {
+    let requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            secret: '6Lc1P7odAAAAAE4vJN6tbYWiyibGe0v-PMwu3i8v',
+            response: req.body.recaptchaToken
+        }),
+        redirect: 'follow'
+    };
+    fetch("https://www.google.com/recaptcha/api/siteverify", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.success === true) {
+            res.send({status: 'success'});
+        }
+        else {
+            res.send({status: 'error'});
+        }
+      })
+      .catch(error => console.log('error', error));
+});
+
+
+
+
+
 module.exports = router;
