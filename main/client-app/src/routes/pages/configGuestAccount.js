@@ -87,9 +87,13 @@ export default function ConfigGuestAccount(props) {
   }
 
   return (
-    <ReCAPTCHA
-      sitekey={'6Lc1P7odAAAAAE4vJN6tbYWiyibGe0v-PMwu3i8v'}
-      onChange={onChange}
-    />
+    <div
+      style={{width: '100%', height: '100%'}}>
+      <ReCAPTCHA
+        style={{width: 500, height: 500}}
+        sitekey={'6Lc1P7odAAAAAE4vJN6tbYWiyibGe0v-PMwu3i8v'}
+        onChange={onChange}
+      />
+    </div>
   );
 }
