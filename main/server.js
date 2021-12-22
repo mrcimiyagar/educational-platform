@@ -135,7 +135,12 @@ models.setup().then(() => {
         );
 
         app.get('*', (req, res) => {
-            res.sendFile(__dirname + '/client-app/build/index.html');
+            if (fs.existsSync(__dirname + '/client-app/build/index.html')) {
+                res.sendFile(__dirname + '/client-app/build/index.html');
+            }
+            else {
+                res.send({message: 'the web app is under maintenance...'});
+            }
         });
 
         setInterval(async () => {
