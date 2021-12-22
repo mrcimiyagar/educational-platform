@@ -120,11 +120,10 @@
             .catch((error) => console.log('error', error))
         }
       else {
-        alert('test');
         wavesurfer.song = e.data.src
                 wavesurfer.backend.peaks = e.data.previewData.data
-                for (let i = 0; i < result.data.length; i++) {
-                  e.data.previewData[i] = e.data.previewData[i] / 100
+                for (let i = 0; i < e.data.previewData.data.length; i++) {
+                  e.data.previewData.data[i] = e.data.previewData.data[i] / 100
                 }
                 wavesurfer.drawBuffer()
                 wavesurfer.loaded = false
