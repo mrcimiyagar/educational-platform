@@ -1015,7 +1015,7 @@ router.post('/use_invitation', jsonParser, async function (req, res) {
         body: `secret=${'6Lc1P7odAAAAAOF_fPTrOwOMK78f-C9iRABkExDf'}&response=${req.body.recaptchaToken}`,
       })
       .then(response => response.json())
-      .then(result => {
+      .then(async function (result) {
         console.log(JSON.stringify(result));
         if (result.success === true) {
           let invite = resolveInvite(req.body.token)
