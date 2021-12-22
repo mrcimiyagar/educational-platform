@@ -56,33 +56,32 @@ export default function ConfigGuestAccount(props) {
   props = Object.fromEntries(urlSearchParams.entries());
 
   function onChange(value) {
-    console.log("Captcha value:", value);
+    while (props.name === undefined || props.name === null || props.name.length === 0) {
+      props.name = window.prompt('نام خود را وارد نمایید', '');
+    }
     let requestOptions = {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-          recaptchaToken: value
+          recaptchaToken: value,
+          token: props.token,
+          name: props.name,
+          roomId: props.roomId
       }),
       redirect: 'follow'
     };
-    fetch(serverRoot + '/auth/verify_recaptcha', requestOptions)
+    fetch(serverRoot + '/room/use_invitation', requestOptions)
       .then(response => response.json())
       .then(result => {
         if (result.status === 'success') {
-          while (props.name === undefined || props.name === null || props.name.length === 0) {
-            props.name = window.prompt('نام خود را وارد نمایید', '');
-          }
           let requestOptions = {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              token: props.token,
-              name: props.name,
-              roomId: props.roomId
             }),
             redirect: 'follow',
           }

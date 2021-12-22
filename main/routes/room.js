@@ -1009,44 +1009,58 @@ router.get('/generate_invite_link', jsonParser, async function (req, res) {
 })
 
 router.post('/use_invitation', jsonParser, async function (req, res) {
-  let invite = resolveInvite(req.body.token)
-  if (invite.valid || req.body.token === undefined) {
-    let user = await sw.User.create({
-      id: uuid() + '-' + Date.now(),
-      firstName: req.body.name,
-      lastName: '',
-      username: tools.makeRandomCode(32),
-      isGuest: true,
-    })
-    let acc = {
-      id: user.id,
-      roomId: !invite.valid ? req.body.roomId : invite.roomId,
-      user: user,
-      userId: user.id,
-      isGuest: true,
-      ...tools.defaultPermissions,
-      themeColor: tools.lightTheme,
-      token: tools.makeRandomCode(64),
-    }
-    addUser(invite.valid ? invite.roomId : req.body.roomId, user)
-    addGuestAcc(acc)
-    require('../server').pushTo(
-      'room_' + (invite.valid ? invite.roomId : req.body.roomId),
-      'user_joined',
-      user,
-    )
-    res.send({
-      status: 'success',
-      token: acc.token,
-      roomId: invite.valid ? invite.roomId : req.body.roomId,
-    })
-  } else {
-    res.send({
-      status: 'error',
-      errorCode: 'e005',
-      message: 'invitation invalid',
-    })
-  }
+  fetch("https://www.google.com/recaptcha/api/siteverify", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `secret=${'6Lc1P7odAAAAAOF_fPTrOwOMK78f-C9iRABkExDf'}&response=${req.body.recaptchaToken}`,
+      })
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.success === true) {
+          let invite = resolveInvite(req.body.token)
+          if (invite.valid || req.body.token === undefined) {
+            let user = await sw.User.create({
+              id: uuid() + '-' + Date.now(),
+              firstName: req.body.name,
+              lastName: '',
+              username: tools.makeRandomCode(32),
+              isGuest: true,
+            })
+            let acc = {
+              id: user.id,
+              roomId: !invite.valid ? req.body.roomId : invite.roomId,
+              user: user,
+              userId: user.id,
+              isGuest: true,
+              ...tools.defaultPermissions,
+              themeColor: tools.lightTheme,
+              token: tools.makeRandomCode(64),
+            }
+            addUser(invite.valid ? invite.roomId : req.body.roomId, user)
+            addGuestAcc(acc)
+            require('../server').pushTo(
+              'room_' + (invite.valid ? invite.roomId : req.body.roomId),
+              'user_joined',
+              user,
+            )
+            res.send({
+              status: 'success',
+              token: acc.token,
+              roomId: invite.valid ? invite.roomId : req.body.roomId,
+            })
+          } else {
+            res.send({
+              status: 'error',
+              errorCode: 'e005',
+              message: 'invitation invalid',
+            })
+          }
+        }
+        else {
+            res.send({status: 'error'});
+        }
+      });
 })
 
 router.post('/leave_room', jsonParser, async function (req, res) {
