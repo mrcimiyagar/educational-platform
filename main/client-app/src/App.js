@@ -308,7 +308,7 @@ PouchDB.plugin(require('pouchdb-find').default)
 export let db = new PouchDB('SkyDime')
 
 export let cacheFile = (fileId, data) => {
-  let box = {data, tpye: 'file', id: fileId};
+  let box = {data, type: 'file', id: fileId};
   db.putIfNotExists('file_' + fileId, box)
     .then(function (res) {})
     .catch(function (err) {});
@@ -316,8 +316,9 @@ export let cacheFile = (fileId, data) => {
 
 export let fetchFile = async (fileId) => {
   let data = await db.find({
-    selector: { fileId: { $eq: fileId }, type: { $eq: 'file' } }
+    selector: { _id: { $eq: 'file_' + fileId } }
   });
+  data = data.docs;
   return data[0];
 };
 

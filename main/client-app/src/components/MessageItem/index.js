@@ -13,10 +13,10 @@ export default function MessageItem(props) {
     let forceUpdate = useForceUpdate();
     let message = props.message;
     let dateTime = new Date(Number(message.time));
-    useEffect(() => {
+    useEffect(async () => {
+      let cachedFile = await fetchFile(message.fileId);
       if (message.messageType === 'photo') {
-        let cachedFile = fetchFile(message.fileId);
-        if (cachedFile === undefined) {
+        if (cachedFile === undefined || cachedFile.data === undefined) {
           fetch(
             serverRoot + `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
           ).then(r => r.blob()).then(async blob => {
@@ -36,8 +36,7 @@ export default function MessageItem(props) {
         }
       }
       else if (message.messageType === 'audio') {
-        let cachedFile = fetchFile(message.fileId);
-        if (cachedFile === undefined) {
+        if (cachedFile === undefined || cachedFile.data === undefined) {
         let requestOptions = {
           method: 'POST',
           headers: {
@@ -58,11 +57,8 @@ export default function MessageItem(props) {
           .then((result) => {
             console.log(JSON.stringify(result))
             if (result !== undefined) {
-              for (let i = 0; i < result.data.length; i++) {
-                result.data[i] = result.data[i] / 100
-              }
-              cacheFile(message.fileId, result.data);
-              message.previewData = result.data;
+              cacheFile(message.fileId, result);
+              message.previewData = result;
               forceUpdate();
             }
           })
@@ -70,7 +66,6 @@ export default function MessageItem(props) {
         }
         else {
           message.previewData = cachedFile.data;
-          alert('hello')
           forceUpdate();
         }
       }

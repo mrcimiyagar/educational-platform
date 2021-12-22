@@ -123,7 +123,7 @@
       else {
         alert('test');
         wavesurfer.song = e.data.src
-                wavesurfer.backend.peaks = e.data.previewData
+                wavesurfer.backend.peaks = e.data.previewData.data
                 for (let i = 0; i < result.data.length; i++) {
                   e.data.previewData[i] = e.data.previewData[i] / 100
                 }
