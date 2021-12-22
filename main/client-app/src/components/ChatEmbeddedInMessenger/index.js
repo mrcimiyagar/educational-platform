@@ -820,7 +820,10 @@ export default function ChatEmbeddedInMessenger(props) {
                   }
                 })
                 .catch((error) => console.log('error', error))
-              document.getElementById('chatText').value = ''
+                let ct = document.getElementById('chatText');
+                if (ct !== null) {
+                  ct.value = '';
+                }
             }
           }
           if (FileReader) {

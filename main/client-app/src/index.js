@@ -38,6 +38,26 @@ function getOS() {
 
 if (getOS() === 'Windows') document.body.style.zoom = "80%";
 
+function preloadImages(array) {
+  if (!preloadImages.list) {
+      preloadImages.list = [];
+  }
+  var list = preloadImages.list;
+  for (var i = 0; i < array.length; i++) {
+      var img = new Image();
+      img.onload = function() {
+          var index = list.indexOf(this);
+          if (index !== -1) {
+              // remove image from the array once it's loaded
+              // for memory consumption reasons
+              list.splice(index, 1);
+          }
+      }
+      list.push(img);
+      img.src = array[i];
+  }
+}
+
 export let pathConfig = {}
 
 const MainApp = React.lazy(() => {
@@ -194,12 +214,7 @@ let AppContainer = (props) => {
         setDisconnectAlert(true);
       }
     }, 1000);
-    ;[ChatWallpaper, RoomWallpaper, DesktopWallpaper, ProfileHeader].forEach(
-      (picture) => {
-        const img = new Image()
-        img.src = picture
-      },
-    )
+    preloadImages([ChatWallpaper, RoomWallpaper, DesktopWallpaper, ProfileHeader]);
     ifServerOnline(
       () => {
         let requestOptions = {

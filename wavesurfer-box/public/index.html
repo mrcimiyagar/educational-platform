@@ -81,6 +81,7 @@
               playPauseContent.className = 'fa fa-pause';
             }
           }
+          if (e.data.previewData === undefined || e.data.previewData === null) {
           let requestOptions = {
             method: 'POST',
             headers: {
@@ -118,6 +119,23 @@
             })
             .catch((error) => console.log('error', error))
         }
+      }
+      else {
+        alert('test');
+        wavesurfer.song = e.data.src
+                wavesurfer.backend.peaks = e.data.previewData
+                for (let i = 0; i < result.data.length; i++) {
+                  e.data.previewData[i] = e.data.previewData[i] / 100
+                }
+                wavesurfer.drawBuffer()
+                wavesurfer.loaded = false
+                wavesurfer.on('ready', function () {
+                  if (!wavesurfer.loaded) {
+                    wavesurfer.loaded = true
+                    wavesurfer.play()
+                  }
+                })
+      }
       })
     </script>
   </body>

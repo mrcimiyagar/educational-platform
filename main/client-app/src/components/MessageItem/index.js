@@ -3,15 +3,78 @@ import { Avatar, Fab, Grow, Typography } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import { ArrowDownward, DoneAll, PlayArrowTwoTone } from '@material-ui/icons'
 import React, { useEffect } from 'react'
-import { gotoPage, inTheGame, popPage, registerDialogOpen, setDialogOpen } from '../../App'
+import { cacheFile, fetchFile, gotoPage, inTheGame, popPage, registerDialogOpen, setDialogOpen } from '../../App'
 import { WaveSurferBox } from '../../components/WaveSurfer'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import Done from '@material-ui/icons/Done'
 
 export default function MessageItem(props) {
+    let forceUpdate = useForceUpdate();
     let message = props.message;
     let dateTime = new Date(Number(message.time));
+    useEffect(() => {
+      if (message.messageType === 'photo') {
+        let cachedFile = fetchFile(message.fileId);
+        if (cachedFile === undefined) {
+          fetch(
+            serverRoot + `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+          ).then(r => r.blob()).then(async blob => {
+            let dataUrl = await new Promise(resolve => {
+              let reader = new FileReader();
+              reader.onload = () => resolve(reader.result);
+              reader.readAsDataURL(blob);
+            });
+            cacheFile(message.fileId, dataUrl);
+            message.fileUrl = dataUrl;
+            forceUpdate();
+          });
+        }
+        else {
+          message.fileUrl = cachedFile.data;
+          forceUpdate();
+        }
+      }
+      else if (message.messageType === 'audio') {
+        let cachedFile = fetchFile(message.fileId);
+        if (cachedFile === undefined) {
+        let requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            fileId: message.fileId,
+            roomId: message.roomId,
+          }),
+          redirect: 'follow',
+        }
+        fetch(
+          serverRoot + '/file/download_audio_preview',
+          requestOptions,
+        )
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result))
+            if (result !== undefined) {
+              for (let i = 0; i < result.data.length; i++) {
+                result.data[i] = result.data[i] / 100
+              }
+              cacheFile(message.fileId, result.data);
+              message.previewData = result.data;
+              forceUpdate();
+            }
+          })
+          .catch((error) => console.log('error', error));
+        }
+        else {
+          message.previewData = cachedFile.data;
+          alert('hello')
+          forceUpdate();
+        }
+      }
+    }, [])
     return (
       <div key={message.id} id={'message-' + message.id}>
         {message.authorId === me.id ? (
@@ -73,6 +136,7 @@ export default function MessageItem(props) {
                   <WaveSurferBox
                     fileId={message.fileId}
                     roomId={message.roomId}
+                    previewData={message.previewData}
                     src={message.fileUrl === undefined ?
                       serverRoot +
                       `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
@@ -217,6 +281,7 @@ export default function MessageItem(props) {
                   <WaveSurferBox
                     fileId={message.fileId}
                     roomId={message.roomId}
+                    previewData={message.previewData}
                     src={message.fileUrl === undefined ?
                       serverRoot +
                       `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
@@ -378,6 +443,7 @@ export default function MessageItem(props) {
                   <WaveSurferBox
                     fileId={message.fileId}
                     roomId={message.roomId}
+                    previewData={message.previewData}
                     src={message.fileUrl === undefined ?
                       serverRoot +
                       `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
@@ -521,6 +587,7 @@ export default function MessageItem(props) {
                   <WaveSurferBox
                     fileId={message.fileId}
                     roomId={message.roomId}
+                    previewData={message.previewData}
                     src={message.fileUrl === undefined ?
                       serverRoot +
                       `/file/download_file?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
