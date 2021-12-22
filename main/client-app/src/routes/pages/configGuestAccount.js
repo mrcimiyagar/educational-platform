@@ -75,29 +75,12 @@ export default function ConfigGuestAccount(props) {
     fetch(serverRoot + '/room/use_invitation', requestOptions)
       .then(response => response.json())
       .then(result => {
-        if (result.status === 'success') {
-          let requestOptions = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-            }),
-            redirect: 'follow',
-          }
-          fetch(serverRoot + '/room/use_invitation', requestOptions)
-            .then((response) => response.json())
-            .then((result) => {
-              console.log(JSON.stringify(result));
-              if (result.token != undefined) {
-                localStorage.setItem('token', result.token);
-                setToken(result.token);
-                setTimeout(() => {
-                  window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + result.roomId + '&tab_index=0';
-                }, 1000);
-              }
-            })
-            .catch((error) => console.log('error', error));
+        if (result.status === 'success' && result.token != undefined) {
+          localStorage.setItem('token', result.token);
+          setToken(result.token);
+          setTimeout(() => {
+            window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + result.roomId + '&tab_index=0';
+          }, 1000);
         }
       });
   }
