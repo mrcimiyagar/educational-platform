@@ -69,6 +69,26 @@ export default function MessageItem(props) {
           forceUpdate();
         }
       }
+      else if (message.messageType === 'video') {
+        if (cachedFile === undefined || cachedFile.data === undefined) {
+          fetch(
+            serverRoot + `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
+          ).then(r => r.blob()).then(async blob => {
+            let dataUrl = await new Promise(resolve => {
+              let reader = new FileReader();
+              reader.onload = () => resolve(reader.result);
+              reader.readAsDataURL(blob);
+            });
+            cacheFile(message.fileId, dataUrl);
+            message.previewData = dataUrl;
+            forceUpdate();
+          });
+        }
+        else {
+          message.previewData = cachedFile.data;
+          forceUpdate();
+        }
+      }
     }, [])
     return (
       <div key={message.id} id={'message-' + message.id}>
@@ -158,20 +178,17 @@ export default function MessageItem(props) {
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
-                    {message.fileUrl === undefined ?
+                    {message.previewData !== undefined ?
                     <img
-                      onClick={() => {
-                        gotoPage('/app/videoplayer', {
-                          roomId: message.roomId,
-                          fileId: message.fileId
-                        })
-                      }}
-                      style={{ width: 200 }}
-                      src={
-                        serverRoot +
-                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
-                      }
-                    /> :
+                    onClick={() => {
+                      gotoPage('/app/videoplayer', {
+                        roomId: message.roomId,
+                        fileId: message.fileId
+                      })
+                    }}
+                    style={{ width: 200 }}
+                    src={message.previewData}
+                    /> : message.fileUrl !== undefined ?
                     <video
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
@@ -181,6 +198,20 @@ export default function MessageItem(props) {
                       style={{ width: 200 }}
                       src={
                         message.fileUrl
+                      }
+                    /> :
+                    <img
+                      onClick={() => {
+                        gotoPage('/app/videoplayer', {
+                          roomId: message.roomId,
+                          fileId: message.fileId
+                        })
+                      }}
+                      style={{ width: 200 }}
+                      src={ message.previewData === undefined ?
+                        serverRoot +
+                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                        message.previewData
                       }
                     />
                     }
@@ -303,20 +334,17 @@ export default function MessageItem(props) {
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
-                    {message.fileUrl === undefined ?
+                    {message.previewData !== undefined ?
                     <img
-                      onClick={() => {
-                        gotoPage('/app/videoplayer', {
-                          roomId: message.roomId,
-                          fileId: message.fileId
-                        })
-                      }}
-                      style={{ width: 200 }}
-                      src={
-                        serverRoot +
-                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
-                      }
-                    /> :
+                    onClick={() => {
+                      gotoPage('/app/videoplayer', {
+                        roomId: message.roomId,
+                        fileId: message.fileId
+                      })
+                    }}
+                    style={{ width: 200 }}
+                    src={message.previewData}
+                    /> : message.fileUrl !== undefined ?
                     <video
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
@@ -326,6 +354,20 @@ export default function MessageItem(props) {
                       style={{ width: 200 }}
                       src={
                         message.fileUrl
+                      }
+                    /> :
+                    <img
+                      onClick={() => {
+                        gotoPage('/app/videoplayer', {
+                          roomId: message.roomId,
+                          fileId: message.fileId
+                        })
+                      }}
+                      style={{ width: 200 }}
+                      src={ message.previewData === undefined ?
+                        serverRoot +
+                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                        message.previewData
                       }
                     />
                     }
@@ -465,20 +507,17 @@ export default function MessageItem(props) {
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
-                    {message.fileUrl === undefined ?
+                    {message.previewData !== undefined ?
                     <img
-                      onClick={() => {
-                        gotoPage('/app/videoplayer', {
-                          roomId: message.roomId,
-                          fileId: message.fileId
-                        })
-                      }}
-                      style={{ width: 200 }}
-                      src={
-                        serverRoot +
-                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
-                      }
-                    /> :
+                    onClick={() => {
+                      gotoPage('/app/videoplayer', {
+                        roomId: message.roomId,
+                        fileId: message.fileId
+                      })
+                    }}
+                    style={{ width: 200 }}
+                    src={message.previewData}
+                    /> : message.fileUrl !== undefined ?
                     <video
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
@@ -488,6 +527,20 @@ export default function MessageItem(props) {
                       style={{ width: 200 }}
                       src={
                         message.fileUrl
+                      }
+                    /> :
+                    <img
+                      onClick={() => {
+                        gotoPage('/app/videoplayer', {
+                          roomId: message.roomId,
+                          fileId: message.fileId
+                        })
+                      }}
+                      style={{ width: 200 }}
+                      src={ message.previewData === undefined ?
+                        serverRoot +
+                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                        message.previewData
                       }
                     />
                     }
@@ -609,20 +662,17 @@ export default function MessageItem(props) {
                   />
                 ) : message.messageType === 'video' ? (
                   <div>
-                    {message.fileUrl === undefined ?
+                    {message.previewData !== undefined ?
                     <img
-                      onClick={() => {
-                        gotoPage('/app/videoplayer', {
-                          roomId: message.roomId,
-                          fileId: message.fileId
-                        })
-                      }}
-                      style={{ width: 200 }}
-                      src={
-                        serverRoot +
-                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}`
-                      }
-                    /> :
+                    onClick={() => {
+                      gotoPage('/app/videoplayer', {
+                        roomId: message.roomId,
+                        fileId: message.fileId
+                      })
+                    }}
+                    style={{ width: 200 }}
+                    src={message.previewData}
+                    /> : message.fileUrl !== undefined ?
                     <video
                       onClick={() => {
                         gotoPage('/app/videoplayer', {
@@ -632,6 +682,20 @@ export default function MessageItem(props) {
                       style={{ width: 200 }}
                       src={
                         message.fileUrl
+                      }
+                    /> :
+                    <img
+                      onClick={() => {
+                        gotoPage('/app/videoplayer', {
+                          roomId: message.roomId,
+                          fileId: message.fileId
+                        })
+                      }}
+                      style={{ width: 200 }}
+                      src={ message.previewData === undefined ?
+                        serverRoot +
+                        `/file/download_file_thumbnail?token=${token}&roomId=${message.roomId}&fileId=${message.fileId}` :
+                        message.previewData
                       }
                     />
                     }
