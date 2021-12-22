@@ -59,6 +59,7 @@ export default function ConfigGuestAccount(props) {
     while (props.name === undefined || props.name === null || props.name.length === 0) {
       props.name = window.prompt('نام خود را وارد نمایید', '');
     }
+    alert('تا چند لحظه ی دیگر به داخل سامانه هدایت می شوید .');
     let requestOptions = {
       method: 'POST',
       headers: {
