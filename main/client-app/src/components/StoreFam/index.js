@@ -1,7 +1,7 @@
 import { Slide, Zoom } from '@material-ui/core'
 import { pink } from '@material-ui/core/colors'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
-import { Category, Home, Inbox } from '@material-ui/icons'
+import { Add, Category, Home, Inbox } from '@material-ui/icons'
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
 import ExploreIcon from '@material-ui/icons/Explore'
 import ExitToApp from '@material-ui/icons/ExitToApp'
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     height: 380,
     position: 'fixed',
     flexGrow: 1,
-    bottom: -56,
+    bottom: -52,
     left: 16 + 56 + 16
   },
 }))
@@ -81,7 +81,7 @@ export default function StoreFam(props) {
             ariaLabel=""
             color={'primary'}
             hidden={hidden}
-            icon={<NavigationIcon />}
+            icon={<Add />}
             onClose={handleClose}
             onOpen={handleOpen}
             open={open}

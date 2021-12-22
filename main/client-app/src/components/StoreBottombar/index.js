@@ -6,6 +6,7 @@ import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import React from 'react';
 import store, { setCurrentStoreNav } from '../../redux/main';
 import { updateStore } from '../../routes/pages/store';
+import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
 
 const useStyles = makeStyles({
@@ -13,9 +14,7 @@ const useStyles = makeStyles({
     width: '100%',
     height: 72,
     position: 'fixed',
-    bottom: 0,
-    backgroundColor: 'rgba(21, 96, 233, 0.65)',
-    backdropFilter: 'blur(10px)'
+    bottom: 0
   },
 });
 
@@ -35,9 +34,7 @@ export default function HomeBottombar() {
   let forceUpdate = useForceUpdate()
   const classes = useStyles();
   const classesAction = useStylesAction();
-  let [value, setValue] = React.useState(0)
-
-  let currNav = store.getState().global.main.currentStoreNav
+  let [value, setValue] = React.useState(0);
 
   return (
     <BottomNavigation
@@ -49,6 +46,7 @@ export default function HomeBottombar() {
       }}
       showLabels
       className={classes.root}
+      style={{backgroundColor: colors.primaryMedium}}
     >
       <BottomNavigationAction value={0} classes={classesAction} label="اپ بات ها" icon={<ExtensionIcon />}/>
       <BottomNavigationAction value={1} classes={classesAction} label="گیم بات ها" icon={<SportsEsportsIcon />} />

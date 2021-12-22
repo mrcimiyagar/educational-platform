@@ -19,6 +19,7 @@ import React from 'react'
 import { gotoPage, isDesktop, isInRoom } from '../../App'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot } from '../../util/Utils'
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 
 const drawerWidth = 256 + 32 + 32 + 16
 
@@ -76,7 +77,7 @@ function HomeDrawer(props) {
       onKeyDown={() => props.setOpen(false)}
     >
       <List>
-        {['خانه', 'مخاطبان', 'دوستان', 'دعوت نامه ها'].map(
+        {['خانه', 'مخاطبان', 'دوستان', 'دعوت نامه ها', 'کارگاه'].map(
           (text, index) => (
             <ListItem
               button
@@ -103,9 +104,7 @@ function HomeDrawer(props) {
                 ) : index === 3 ? (
                   <AttachMoneyIcon style={{ fill: '#fff' }} />
                 ) : index === 4 ? (
-                  <Language style={{ fill: '#fff' }} />
-                ) : index === 5 ? (
-                  <SettingsIcon style={{ fill: '#fff' }} />
+                  <SmartToyIcon style={{ fill: '#fff' }} />
                 ) : null}
               </ListItemIcon>
               <ListItemText

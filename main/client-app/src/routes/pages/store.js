@@ -1,4 +1,4 @@
-import { AppBar, Box, Card, Fab, Slide, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Box, Card, Fab, Grow, Slide, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,18 +7,19 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ViewCompactIcon from '@material-ui/icons/ViewCompact';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
-import { gotoPage, inTheGame } from '../../App';
+import { gotoPage, inTheGame, isDesktop } from '../../App';
 import HomeToolbar from '../../components/HomeToolbar';
 import Jumper from '../../components/SearchEngineFam';
 import StoreBottombar from '../../components/StoreBottombar';
 import StoreSearchbar from '../../components/StoreSearchbar';
-import { token } from '../../util/settings';
+import { colors, token } from '../../util/settings';
 import { registerEvent, serverRoot, useForceUpdate } from '../../util/Utils';
 import InboxIcon from '@mui/icons-material/Inbox';
 import CategoryIcon from '@mui/icons-material/Category';
 import { SmartToy } from '@mui/icons-material';
 import { Navigation } from '@material-ui/icons';
 import StoreFam from '../../components/StoreFam';
+import { setWallpaper } from '../..';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,11 +39,6 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: -8,
     // Promote the list into its own layer in Chrome. This cost memory, but helps keep FPS high.
     transform: 'translateZ(0)',
-  },
-  titleBar: {
-    background:
-      'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
-      'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
   },
   icon: {
     color: 'white',
@@ -91,6 +87,11 @@ export default function Store() {
   };
 
   useEffect(() => {
+
+    setWallpaper({
+      type: 'color',
+      color: colors.accentDark
+    });
 
     registerEvent('bot-created', bot => {
       categories.forEach(cat => {
@@ -183,9 +184,7 @@ export default function Store() {
   return (
     <div className={classes.root}>
       <HomeToolbar>
-        <AppBar style={{
-          backgroundColor: 'rgba(21, 96, 233, 0.65)',
-          backdropFilter: 'blur(10px)'}}>
+        <AppBar style={{backgroundColor: colors.primaryMedium}}>
           <Toolbar style={{marginTop: 16}}>
             <StoreSearchbar setDrawerOpen={(v) => {
               
@@ -213,7 +212,7 @@ export default function Store() {
         counter++;
         return (
           <TabPanel style={{display: (counter - 1) === value ? 'block' : 'none'}}>
-            <ImageList rowHeight={finalWidth + 56} className={classes.imageList} cols={finalColsCount} >
+            <ImageList rowHeight={finalWidth + 56} className={classes.imageList} cols={finalColsCount} style={{marginLeft: 16, marginRight: 16, width: 'calc(100% - 32px)'}}>
               {cat.packages.map((item) => (
                 <ImageListItem key={'store-package-'+ item.id} cols={3} style={{position: 'relative', marginTop: 8}}>
                   <div style={{width: '100%', height: '100%', backdropFilter: 'blur(10px)', position: 'absolute', left: 0, top: 0}}></div>
@@ -221,12 +220,18 @@ export default function Store() {
                 </ImageListItem>
               ))}
               {cat.bots.map((item) => (
-                <ImageListItem style={{width: finalWidth, height: finalWidth + 56}} key={'store-bot-'+ item.id} cols={1} onClick={() => gotoPage('/app/storebot')}>
-                  <div style={{width: finalWidth, height: finalWidth + 56, borderRadius: 16, position: 'relative'}}>
-                    <img src={'https://icon-library.com/images/bot-icon/bot-icon-5.jpg'} alt={item.title} style={{opacity: 0.65, borderRadius: 16, marginTop: 16, width: finalWidth, height: finalWidth}} />
-                    <Typography style={{position: 'absolute', top: 144, left: '50%', transform: 'translateX(-50%)', borderRadius: '0 0 16px 16px'}}>{'ربات'}</Typography>
+              <Grow
+                in={inTheGame}
+                {...{ timeout: (counter + 1) * 500 }}
+                transitionDuration={1000}
+              >
+                <ImageListItem style={{width: finalWidth, height: finalWidth + 56, marginLeft: 12, marginRight: 12}} key={'store-bot-'+ item.id} cols={1} onClick={() => gotoPage('/app/storebot')}>
+                  <div style={{width: finalWidth, height: finalWidth, borderRadius: 16, position: 'relative'}}>
+                    <img src={'https://icon-library.com/images/bot-icon/bot-icon-5.jpg'} alt={item.title} style={{opacity: 0.65, borderRadius: 16, marginTop: 16, width: finalWidth - 8, height: finalWidth}} />
+                    <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.75)', borderRadius: 12, position: 'absolute', top: finalWidth, left: 'calc(50% + 4px)', transform: 'translateX(-50%)', width: 'calc(100% - 32px)', height: 40, position: 'absolute'}}><div style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>{item.title}</div></Card>
                   </div>
                 </ImageListItem>
+                </Grow>
               ))}
             </ImageList>
           </TabPanel>
@@ -239,6 +244,15 @@ export default function Store() {
         <ViewCompactIcon />
       </Fab>
       <StoreFam />
+      <div
+          style={{
+            position: 'fixed',
+            right: 16,
+            bottom: isDesktop() ? -8 : 0
+          }}
+        >
+          <Jumper />
+        </div>
       <StoreBottombar/>
     </div>
   );

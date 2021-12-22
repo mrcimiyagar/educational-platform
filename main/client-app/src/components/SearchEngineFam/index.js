@@ -94,7 +94,7 @@ export default function Jumper(props) {
                 tooltipTitle={action.name}
                 tooltipOpen
                 onClick={() => {
-                  props.setOpen(false)
+                  setOpen(false)
                   animatePageChange()
                   if (index === 0) {
                     if (histPage !== '/app/home') {
