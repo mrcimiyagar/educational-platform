@@ -11,7 +11,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
   </head>
-  <body style="background-color: transparent;">
+  <body style="background-color: transparent; overflow: hidden;">
     <audio style="display: none;" id="sound" src="" controls="controls"></audio>
     <style>
       .btn {
@@ -35,14 +35,14 @@
       }
     </style>
 
-    <div style="display: flex; flex-wrap: nowrap; height: 40%;">
+    <div style="display: flex; flex-wrap: nowrap; overflow: hidden;">
       <button id="playPauseButton" onclick="wavesurferToggle()" class="btn">
         <i id="playPauseContent" class="fa fa-play"></i>
       </button>
       <div id="loading_flag">
         <!-- content set by JS  -->			
       </div>
-      <div style="width: calc(100% - 56px); margin-left: 56px;">
+      <div style="width: calc(100% - 56px); margin-left: 56px; overflow: hidden;">
         <div id="waveform" />
       </div>
     </div>
