@@ -36,9 +36,7 @@ function getOS() {
   return os;
 }
 
-let isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-
-if (getOS() === 'Windows' && isChrome) document.body.style.zoom = "80%";
+if (getOS() === 'Windows') document.body.style.zoom = "80%";
 
 export let pathConfig = {}
 
