@@ -1,5 +1,5 @@
-import { Fab, makeStyles, Typography } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { AppBar, Avatar, Fab, IconButton, makeStyles, SwipeableDrawer, Toolbar, Typography } from '@material-ui/core';
+import { Add, People } from '@material-ui/icons';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import React, { useEffect } from "react";
@@ -10,6 +10,7 @@ import WhiteColorTextField from '../../components/WhiteColorTextField';
 import Wallpaper from '../../images/chat-wallpaper.jpg';
 import CloudIcon from '../../images/logo.png';
 import {
+  colors,
   setHomeRoomId,
   setHomeSpaceId,
   setMe,
@@ -22,6 +23,8 @@ import WorkshopWallpaper from '../../images/workshop-wallpaper.jpg';
 import ClockHand1 from '../../images/clock-hand-1.png'
 import ClockHand2 from '../../images/clock-hand-2.png'
 import BotContainer from '../../components/BotContainer';
+import Menu from '@material-ui/icons/Menu';
+import HomeDrawer from '../../components/HomeDrawer';
 
 let widget1Gui = {
   type: 'Box',
@@ -173,14 +176,31 @@ function Workshop(props) {
   useEffect(() => {
     setWallpaper({type: 'photo', photo: WorkshopWallpaper});
   }, []);
+  let [open, setOpen] = React.useState(false);
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setOpen(open);
+  };
   return (
-    <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
+    <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000, direction: 'rtl'}}>
       <iframe name="coder-frame" src={pathConfig.codeServer}
           frameborder="0" style={{border: 0, backgroundColor: 'transparent', background: 'transparent',
           width: '50%', height: '100%', position: 'absolute', left: 0, 
           top: 0, bottom: 0, left: 0}}>
         </iframe>
       <div style={{position: 'fixed', left: '50%', top: 0}}>
+        <AppBar variant='fixed' style={{width: '50%', height: 64, position: 'fixed', right: 0, backgroundColor: colors.primaryMedium}}>
+          <Toolbar>
+            <IconButton onClick={toggleDrawer('right', true)}>
+              <Menu style={{fill: '#fff'}}/>
+            </IconButton>
+            <Typography variant='h6' style={{color: '#fff'}}>
+              کارگاه
+            </Typography>
+          </Toolbar>
+        </AppBar>
         <BotContainer
           onIdDictPrepared={(idD) => {
             idDict['widget-1'] = idD
@@ -191,7 +211,7 @@ function Workshop(props) {
           widgetWidth={450}
           widgetHeight={450}
           widgetX={(window.innerWidth / 4) - 225 / 2}
-          widgetY={window.innerHeight / 2 - 225}
+          widgetY={window.innerHeight / 2 - 175}
           gui={widget1Gui}
         />
       </div>
@@ -207,6 +227,39 @@ function Workshop(props) {
       <Fab color={'secondary'} onClick={() => gotoPage('/app/createbot')} style={{position: 'fixed', left: 'calc(50% + 24px)', bottom: 24}}>
         <Add/>
       </Fab>
+      <SwipeableDrawer
+        onClose={toggleDrawer('right', false)}
+        open={open}
+        anchor={'right'}
+      >
+        <div
+          style={{
+            width: 360,
+            height: '100%',
+            backgroundColor: '#fff',
+            display: 'flex',
+            direction: 'rtl',
+          }}
+        >
+          <div style={{ width: 80, height: '100%', backgroundColor: '#eee' }}>
+            <Avatar
+              style={{
+                width: 64,
+                height: 64,
+                backgroundColor: '#fff',
+                position: 'absolute',
+                right: 8,
+                top: 16,
+                padding: 8,
+              }}
+              src={People}
+            />
+          </div>
+          <div style={{ width: 280, height: '100%' }}>
+              
+          </div>
+        </div>
+      </SwipeableDrawer>
     </div>
   )
 }
