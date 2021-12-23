@@ -19,6 +19,155 @@ import {
   serverRoot, setConfig
 } from '../../util/Utils';
 import WorkshopWallpaper from '../../images/workshop-wallpaper.jpg';
+import ClockHand1 from '../../images/clock-hand-1.png'
+import ClockHand2 from '../../images/clock-hand-2.png'
+import BotContainer from '../../components/BotContainer';
+
+let widget1Gui = {
+  type: 'Box',
+  id: 'clockBox',
+  width: '100%',
+  height: '100%',
+  transition: 'transform 1s',
+  children: [
+    {
+      type: 'Image',
+      id: 'clockBackImage',
+      width: '100%',
+      height: '100%',
+      borderRadius: 1000,
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      zIndex: 1,
+      src:
+        'https://i.pinimg.com/originals/eb/ad/bc/ebadbc481c675e0f2dea0cc665f72497.jpg',
+    },
+    {
+      type: 'Box',
+      id: 'clockBackShadow',
+      width: '100%',
+      height: '100%',
+      borderRadius: 1000,
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      zIndex: 2,
+      background: 'rgba(255, 255, 255, 0.5)',
+    },
+    {
+      type: 'Text',
+      id: 'clockMsg',
+      width: '100%',
+      height: 'auto',
+      position: 'absolute',
+      alignChildren: 'center',
+      top: 32,
+      zIndex: 3,
+      text: 'سلام کیهان',
+      transform: 'rotateY(-180deg)',
+      display: 'none',
+    },
+    {
+      type: 'Image',
+      id: 'weather',
+      width: '50%',
+      position: 'absolute',
+      alignChildren: 'center',
+      top: 56,
+      right: 56,
+      zIndex: 3,
+      src:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrRZ2vclesoWZ4DOCjXPzbAvg5VEFEn7OiHQ&usqp=CAU',
+      transform: 'rotateY(-180deg)',
+      display: 'none',
+    },
+    {
+      type: 'Text',
+      id: 'weatherMsg',
+      width: '100%',
+      height: 'auto',
+      position: 'absolute',
+      alignChildren: 'center',
+      top: 112 + 40 + 24,
+      zIndex: 3,
+      text: 'نیمه ابری 31 درجه',
+      transform: 'rotateY(-180deg)',
+      display: 'none',
+    },
+    {
+      type: 'Box',
+      id: 'secondHand',
+      width: 250,
+      height: 25,
+      position: 'absolute',
+      left: 100,
+      top: 'calc(50% - 12.5px)',
+      transform: 'rotate(75deg)',
+      transition: 'transform 1s',
+      zIndex: 3,
+      children: [
+        {
+          type: 'Image',
+          id: 'secondImage',
+          width: 250,
+          height: '100%',
+          position: 'absolute',
+          left: '50%',
+          src: ClockHand1,
+        },
+      ],
+    },
+    {
+      type: 'Box',
+      id: 'minuteHand',
+      width: 450,
+      height: 25,
+      position: 'absolute',
+      left: '0',
+      top: 'calc(50% - 12.5px)',
+      transform: 'rotate(-135deg)',
+      transition: 'transform 1s',
+      zIndex: 3,
+      children: [
+        {
+          type: 'Image',
+          id: 'minuteImage',
+          width: 200,
+          height: '100%',
+          position: 'absolute',
+          left: '50%',
+          src: ClockHand1,
+        },
+      ],
+    },
+    {
+      type: 'Box',
+      id: 'hourHand',
+      width: 450,
+      height: 25,
+      position: 'absolute',
+      left: 0,
+      top: 'calc(50% - 12.5px)',
+      transform: 'rotate(295deg)',
+      transition: 'transform 1s',
+      zIndex: 3,
+      children: [
+        {
+          type: 'Image',
+          id: 'hourImage',
+          width: 250,
+          height: '100%',
+          position: 'absolute',
+          left: '50%',
+          src: ClockHand2,
+        },
+      ],
+    },
+  ],
+}
+
+let idDict = {}
 
 function Workshop(props) {
   useEffect(() => {
@@ -31,6 +180,21 @@ function Workshop(props) {
           width: '50%', height: '100%', position: 'absolute', left: 0, 
           top: 0, bottom: 0, left: 0}}>
         </iframe>
+      <div style={{position: 'fixed', left: '50%', top: 0}}>
+        <BotContainer
+          onIdDictPrepared={(idD) => {
+            idDict['widget-1'] = idD
+          }}
+          widgetId={1}
+          isPreview={false}
+          editMode={false}
+          widgetWidth={450}
+          widgetHeight={450}
+          widgetX={(window.innerWidth / 4) - 225 / 2}
+          widgetY={window.innerHeight / 2 - 225}
+          gui={widget1Gui}
+        />
+      </div>
       <div
         style={{
           position: 'fixed',
@@ -40,7 +204,7 @@ function Workshop(props) {
       >
         <Jumper />
       </div>
-      <Fab color={'secondary'} onClick={() => gotoPage('/app/createbot')} style={{position: 'fixed', left: 24, bottom: 24}}>
+      <Fab color={'secondary'} onClick={() => gotoPage('/app/createbot')} style={{position: 'fixed', left: 'calc(50% + 24px)', bottom: 24}}>
         <Add/>
       </Fab>
     </div>
