@@ -28,8 +28,8 @@ function Workshop(props) {
     <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
       <iframe name="coder-frame" src={pathConfig.codeServer}
           frameborder="0" style={{border: 0, backgroundColor: 'transparent', background: 'transparent',
-          borderRadius: isDesktop() ? 24 : 0, width: '50%', height: (isDesktop() && isInRoom()) ? 'calc(100% - 32px)' : 'calc(100% - 48px)', position: 'absolute', left: 0, 
-          top: (isDesktop() && isInRoom()) ? 64 : -16, bottom: 0, left: 0}}>
+          width: '50%', height: '100%', position: 'absolute', left: 0, 
+          top: 0, bottom: 0, left: 0}}>
         </iframe>
       <div
         style={{
