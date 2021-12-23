@@ -4,7 +4,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import React, { useEffect } from "react";
 import { pathConfig, setWallpaper } from '../..';
-import { db, gotoPage, isDesktop } from '../../App';
+import { db, gotoPage, isDesktop, isInRoom } from '../../App';
 import Jumper from '../../components/SearchEngineFam';
 import WhiteColorTextField from '../../components/WhiteColorTextField';
 import Wallpaper from '../../images/chat-wallpaper.jpg';
@@ -18,14 +18,19 @@ import {
 import {
   serverRoot, setConfig
 } from '../../util/Utils';
-import ChatWallpaper from '../../images/chat-wallpaper.jpg';
+import WorkshopWallpaper from '../../images/workshop-wallpaper.jpg';
 
 function Workshop(props) {
   useEffect(() => {
-    setWallpaper({type: 'photo', photo: ChatWallpaper});
+    setWallpaper({type: 'photo', photo: WorkshopWallpaper});
   }, []);
   return (
     <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
+      <iframe name="coder-frame" src={pathConfig.codeServer}
+          frameborder="0" style={{border: 0, backgroundColor: 'transparent', background: 'transparent',
+          borderRadius: isDesktop() ? 24 : 0, width: '50%', height: (isDesktop() && isInRoom()) ? 'calc(100% - 32px)' : 'calc(100% - 48px)', position: 'absolute', left: 0, 
+          top: (isDesktop() && isInRoom()) ? 64 : -16, bottom: 0, left: 0}}>
+        </iframe>
       <div
         style={{
           position: 'fixed',
