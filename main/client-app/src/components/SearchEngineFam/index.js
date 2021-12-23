@@ -46,7 +46,7 @@ const actions = [
   { icon: <StoreMallDirectoryIcon />, name: 'فروشگاه' },
   { icon: <AccountBalanceIcon />, name: '+روم' },
   { icon: <ExitToApp/>, name: 'خروج'},
-  { icon: <SmartToyIcon/>, name: '+بات'},
+  { icon: <SmartToyIcon/>, name: 'کارگاه'},
 ]
 
 export default function Jumper(props) {
@@ -126,7 +126,7 @@ export default function Jumper(props) {
                       gotoPage('/app/auth');
                     }
                   } else if (index === 5) {
-                    gotoPage('/app/createbot');
+                    gotoPage('/app/workshop');
                   }
                 }}
               />

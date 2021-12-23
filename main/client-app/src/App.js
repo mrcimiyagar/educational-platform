@@ -76,6 +76,7 @@ import { updateMessageSeen3 } from './components/ChannelChats';
 import { updateMessageSeen4 } from './components/GroupChats';
 import CreateBotPage from './routes/pages/createBot';
 import CreateBotCategoryPage from './routes/pages/createBotCategory';
+import Workshop from './routes/pages/workshop';
 const PouchDB = require('pouchdb').default;
 
 export let boardFrame = undefined;
@@ -292,7 +293,8 @@ let pages = {
   '/app/room': RoomPage,
   '/app/searchengine': SearchEngine,
   '/app/auth': Authentication,
-  '/app/use_invitation': ConfigGuestAccount
+  '/app/use_invitation': ConfigGuestAccount,
+  '/app/workshop': Workshop
 }
 
 export let setDialogOpen = null

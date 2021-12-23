@@ -63,6 +63,9 @@ let serv = https.createServer({
   else if (req.headers.host === 'config.kaspersoft.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8080' }, e => {})
   }
+  else if (req.headers.host === 'coder.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://0.0.0.0:8443' }, e => {})
+  }
 })
 
 serv.on('upgrade', function (req, socket, head) {

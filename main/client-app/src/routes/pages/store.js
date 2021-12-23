@@ -245,14 +245,14 @@ export default function Store() {
       </Fab>
       <StoreFam />
       <div
-          style={{
-            position: 'fixed',
-            right: 16,
-            bottom: isDesktop() ? -8 : 0
-          }}
-        >
-          <Jumper />
-        </div>
+        style={{
+          position: 'fixed',
+          right: 16,
+          bottom: isDesktop() ? -8 : 0
+        }}
+      >
+        <Jumper />
+      </div>
       <StoreBottombar/>
     </div>
   );

@@ -45,8 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 const actions = [
   { icon: <Category/>, name: '+دسته'},
-  { icon: <Inbox/>, name: '+پکیچ'},
-  { icon: <SmartToy/>, name: '+بات'},
+  { icon: <Inbox/>, name: '+پکیچ'}
 ]
 
 export default function StoreFam(props) {
@@ -95,10 +94,7 @@ export default function StoreFam(props) {
                 onClick={() => {
                   handleClose();
                   animatePageChange();
-                  if (index === 2) {
-                    gotoPage('/app/createbot');
-                  }
-                  else if (index === 1) {
+                  if (index === 1) {
                     gotoPage('/app/createbotpackage');
                   }
                   else if (index === 0) {

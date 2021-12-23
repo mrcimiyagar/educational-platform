@@ -77,7 +77,7 @@ function HomeDrawer(props) {
       onKeyDown={() => props.setOpen(false)}
     >
       <List>
-        {['خانه', 'مخاطبان', 'دوستان', 'دعوت نامه ها', 'کارگاه'].map(
+        {['خانه', 'مخاطبان', 'دوستان', 'دعوت نامه ها'].map(
           (text, index) => (
             <ListItem
               button
@@ -103,8 +103,6 @@ function HomeDrawer(props) {
                   <AccessibilityIcon style={{ fill: '#fff' }} />
                 ) : index === 3 ? (
                   <AttachMoneyIcon style={{ fill: '#fff' }} />
-                ) : index === 4 ? (
-                  <SmartToyIcon style={{ fill: '#fff' }} />
                 ) : null}
               </ListItemIcon>
               <ListItemText
