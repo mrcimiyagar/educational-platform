@@ -494,6 +494,14 @@ export default function RoomPage(props) {
     },
   })
 
+  let drawer = (
+    <div style={{width: 280, height: '100%'}}>
+      <Typography variant='h6' style={{color: '#000'}}>
+        بات های روم
+      </Typography>
+    </div>
+  )
+
   if (isDesktop()) {
     return (
       <div
@@ -921,7 +929,8 @@ export default function RoomPage(props) {
             <div style={{ width: 280, height: '100%' }}>
               {menuMode === 0 ? (
                 <UsersBox membership={membership} roomId={props.room_id} />
-              ) : null}
+                ) : menuMode === 1 ?
+                drawer : null}
             </div>
           </div>
         </SwipeableDrawer>
@@ -1301,11 +1310,7 @@ export default function RoomPage(props) {
                 (
                   <UsersBox membership={membership} roomId={props.room_id} />
                 ) : menuMode === 1 ?
-                (
-                  <div style={{width: 280, height: '100%', backgroundColor: 'black'}}>
-
-                  </div>
-                ) : null}
+                drawer : null}
             </div>
           </div>
         </SwipeableDrawer>

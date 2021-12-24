@@ -82,7 +82,7 @@ let lock = false
 let processMessage = undefined
 export let usersRef = undefined;
 
-export let UsersBox = (props) => {
+export let MachinesBox = (props) => {
   let forceUpdate = useForceUpdate();
   let [currentHover, setCurrentHover] = React.useState(-1);
   let [video, setVideo] = React.useState({});
@@ -267,12 +267,12 @@ export let UsersBox = (props) => {
             fontSize: 20,
             width: 'calc(100% - 16px)',
             marginRight: 24,
-            marginTop: 12,
+            marginTop: 12, 
             marginBottom: 12,
           }}
         >
           <Typography variant={'body'} style={{ color: colors.textIcons }}>
-            کاربران ({users.length})
+            بات ها ({users.length})
           </Typography>
         </span>
         <div style={{ height: '100%' }}>

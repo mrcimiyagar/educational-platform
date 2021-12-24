@@ -243,8 +243,7 @@ router.post('/is_permissions_accessible', jsonParser, async function (
           return
         }
         if (
-          (session.userId === req.body.targetUserId &&
-            session.userId !== RoomSecret.ownerId) ||
+          session.userId === req.body.targetUserId ||
           req.body.targetUserId === 1
         ) {
           res.send({ status: 'success', isAccessible: false })
