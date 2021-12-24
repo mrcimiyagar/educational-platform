@@ -77,9 +77,6 @@ let createNotification = (type, message, title) => {
   }
 }
 
-let lock = false
-
-let processMessage = undefined
 export let usersRef = undefined;
 
 export let MachinesBox = (props) => {
@@ -89,7 +86,6 @@ export let MachinesBox = (props) => {
   let [audio, setAudio] = React.useState({});
   const [users, setUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-  const [pauseds, setPauseds] = useState([]);
   reloadUsersList = () => {
     let requestOptions = {
       method: 'POST',
@@ -103,7 +99,7 @@ export let MachinesBox = (props) => {
       }),
       redirect: 'follow',
     }
-    fetch(serverRoot + '/room/get_room_users', requestOptions)
+    fetch(serverRoot + '/room/get_room_bots', requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
@@ -115,7 +111,6 @@ export let MachinesBox = (props) => {
           }
         })
         setUsers(result.users);
-        if (result.pauseds !== undefined) setPauseds(result.pauseds);
         setAllUsers(result.allUsers);
       })
       .catch((error) => console.log('error', error))
@@ -142,8 +137,8 @@ export let MachinesBox = (props) => {
       }
     })
     reloadUsersList();
-    unregisterEvent('user-entered');
-    registerEvent('user-entered', ({ rooms, users, allUsers, pauseds }) => {
+    unregisterEvent('bot-added');
+    registerEvent('bot-added', ({ rooms, users, allUsers }) => {
       users.forEach((u) => {
         if (video[u.id] === undefined) {
           video[u.id] = false;
@@ -153,7 +148,6 @@ export let MachinesBox = (props) => {
         }
       })
       if (users !== undefined) setUsers(users);
-      if (pauseds !== undefined) setPauseds(pauseds);
       if (allUsers !== undefined) setAllUsers(allUsers);
       usersRef = {allUsers, rooms, users};
       forceUpdate();
@@ -170,8 +164,8 @@ export let MachinesBox = (props) => {
         console.log(ex);
       }
     })
-    unregisterEvent('user-exited')
-    registerEvent('user-exited', ({ rooms, users, allUsers, pauseds }) => {
+    unregisterEvent('bot-removed')
+    registerEvent('bot-removed', ({ rooms, users, allUsers }) => {
       users.forEach((u) => {
         if (video[u.id] === undefined) {
           video[u.id] = false;
@@ -181,7 +175,6 @@ export let MachinesBox = (props) => {
         }
       })
       if (users !== undefined) setUsers(users);
-      if (pauseds !== undefined) setPauseds(pauseds);
       if (allUsers !== undefined) setAllUsers(allUsers);
       usersRef = {allUsers, rooms, users};
       forceUpdate();
@@ -199,7 +192,9 @@ export let MachinesBox = (props) => {
       }
     })
     unregisterEvent('profile_updated');
-    registerEvent('profile_updated', (user) => {})
+    registerEvent('profile_updated', (user) => {
+      reloadUsersList();
+    })
 
     try {
       window.frames['conf-video-frame'].postMessage(

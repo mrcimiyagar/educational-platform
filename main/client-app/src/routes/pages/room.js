@@ -65,6 +65,7 @@ import {
   useForceUpdate,
 } from '../../util/Utils'
 import DesktopWallpaper2 from '../../images/desktop-wallpaper.jpg'
+import {MachinesBox} from '../../modules/machinesbox/machinesbox';
 
 let accessChangeCallback = undefined
 export let notifyMeOnAccessChange = (callback) => {
@@ -930,7 +931,7 @@ export default function RoomPage(props) {
               {menuMode === 0 ? (
                 <UsersBox membership={membership} roomId={props.room_id} />
                 ) : menuMode === 1 ?
-                drawer : null}
+                <MachinesBox membership={membership} roomId={props.room_id} /> : null}
             </div>
           </div>
         </SwipeableDrawer>
@@ -1310,7 +1311,7 @@ export default function RoomPage(props) {
                 (
                   <UsersBox membership={membership} roomId={props.room_id} />
                 ) : menuMode === 1 ?
-                drawer : null}
+                <MachinesBox membership={membership} roomId={props.room_id} /> : null}
             </div>
           </div>
         </SwipeableDrawer>

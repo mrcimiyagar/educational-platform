@@ -199,7 +199,9 @@ export let UsersBox = (props) => {
       }
     })
     unregisterEvent('profile_updated');
-    registerEvent('profile_updated', (user) => {})
+    registerEvent('profile_updated', (user) => {
+      reloadUsersList();
+    });
 
     try {
       window.frames['conf-video-frame'].postMessage(
