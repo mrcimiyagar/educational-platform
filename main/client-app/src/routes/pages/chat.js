@@ -176,11 +176,68 @@ export default function Chat(props) {
     messagesArr = [];
     messagesDict = {};
     setupRoom();
+    
+    let doRoomDoctor = () => {
+      let requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify({
+          roomId: props.room_id,
+        }),
+        redirect: 'follow',
+      };
+      fetch(
+        serverRoot + '/room/am_i_in_room',
+        requestOptions,
+      )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result));
+        if (result.result === false) {
+          let requestOptions2 = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              token: token,
+            },
+            body: JSON.stringify({
+              roomId: props.room_id,
+            }),
+            redirect: 'follow',
+          };
+          fetch(
+            serverRoot + '/room/enter_room',
+            requestOptions2,
+          )
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result));
+            if (result.membership !== undefined) {
+              setMembership(result.membership);
+              forceUpdate();
+            }
+          })
+          .catch((error) => console.log('error', error));
+        }
+      })
+      .catch((error) => console.log('error', error));
+    };
+
+    let roomPersistanceDoctor = setInterval(() => {
+      doRoomDoctor();
+    }, 3500);
+    
+    console.log('planting destructor...');
+
     return () => {
       if (goingToRoom) {
         goingToRoom = false;
       }
       else {
+        clearInterval(roomPersistanceDoctor);
         leaveRoom(() => {});
       }
     }
@@ -410,8 +467,6 @@ export default function Chat(props) {
   useEffect(() => {
     checkScroller()
   }, [])
-
-
 
   let checkChatTextForPaste = () => {
     if (document.getElementById('chatText') !== null) {
@@ -844,8 +899,6 @@ export default function Chat(props) {
         })
     }
   }, [loading]);
-
-  
 
   useEffect(() => {
     var placeholder = null, small = null;

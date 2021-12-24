@@ -223,10 +223,66 @@ export default function HomePage(props) {
         }
       })
       .catch((error) => console.log('error', error))
+
+      let doRoomDoctor = () => {
+        let requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: homeRoomId,
+          }),
+          redirect: 'follow',
+        };
+        fetch(
+          serverRoot + '/room/am_i_in_room',
+          requestOptions,
+        )
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(JSON.stringify(result));
+          if (result.result === false) {
+            let requestOptions2 = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                token: token,
+              },
+              body: JSON.stringify({
+                roomId: homeRoomId,
+              }),
+              redirect: 'follow',
+            };
+            fetch(
+              serverRoot + '/room/enter_room',
+              requestOptions2,
+            )
+            .then((response) => response.json())
+            .then((result) => {
+              console.log(JSON.stringify(result));
+              if (result.membership !== undefined) {
+                setMembership2(result.membership);
+                forceUpdate();
+              }
+            })
+            .catch((error) => console.log('error', error));
+          }
+        })
+        .catch((error) => console.log('error', error));
+      };
+  
+      let roomPersistanceDoctor = setInterval(() => {
+        doRoomDoctor();
+      }, 3500);
       
-      return () => {
-        leaveRoom(() => {});
-      }
+      console.log('planting destructor...');
+      
+    return () => {
+      clearInterval(roomPersistanceDoctor);
+      leaveRoom(() => {});
+    }
   }, [])
 
   if (!loaded) {
