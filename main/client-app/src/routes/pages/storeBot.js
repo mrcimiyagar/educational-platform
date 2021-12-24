@@ -149,7 +149,7 @@ export default function StoreBot(props) {
             fullScreen={isMobile()} open={open} onClose={handleClose} TransitionComponent={Transition}>
     <div className={classes.root}>
 
-      <Avatar style={{width: 'calc(100% - 256px)', position: 'absolute', maxWidth: 150, left: '50%', transform: 'translateX(-50%)', top: 72}}
+      <Avatar style={{width: 150, height: 150, position: 'absolute', maxWidth: 150, left: '50%', transform: 'translateX(-50%)', top: 72}}
               src={serverRoot + `/file/download_bot_avatar?token=${token}&botId=${bot.id}`}/>
       
       <div style={{padding: 12, display: 'flex', marginTop: 200 + 72}}>

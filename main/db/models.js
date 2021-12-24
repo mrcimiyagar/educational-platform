@@ -307,6 +307,7 @@ async function prepareBotModel() {
         },
         username: Sequelize.STRING,
         title: Sequelize.STRING,
+        description: Sequelize.STRING,
         avatarId: Sequelize.BIGINT,
         categoryId: Sequelize.BIGINT
     }, {

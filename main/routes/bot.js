@@ -141,6 +141,7 @@ router.post('/create_bot', jsonParser, async function (req, res) {
     }
     let bot = await sw.Bot.create({
       title: req.body.title,
+      description: req.body.description,
       username: req.body.username,
       avatarId: req.body.avatarId === undefined ? null : req.body.avatarId,
       categoryId:
@@ -208,6 +209,7 @@ router.post('/update_bot', jsonParser, async function (req, res) {
     }
     let bot = await sw.Bot.findOne({ where: { id: botSecret.botId } })
     bot.title = req.body.title
+    bot.description = req.body.description;
     bot.avatarId = req.body.avatarId
     await bot.save()
     require('../server').pushTo('aseman-bot-store', 'bot-updated', bot)
