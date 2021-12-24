@@ -10,6 +10,7 @@ const {
   guestAccs,
   generateInvite,
   resolveInvite,
+  isUserInRoom,
 } = require('../users')
 const tools = require('../tools')
 const express = require('express')
@@ -1007,6 +1008,17 @@ router.get('/generate_invite_link', jsonParser, async function (req, res) {
       })
   })
 })
+
+router.post('/am_i_in_room', jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user) => {
+    if (isUserInRoom(req.body.roomId, user.id) === true) {
+      res.send({status: 'success', result: true});
+    }
+    else {
+      res.send({status: 'success', result: false});
+    }
+  });
+});
 
 router.post('/use_invitation', jsonParser, async function (req, res) {
   fetch("https://www.google.com/recaptcha/api/siteverify", {

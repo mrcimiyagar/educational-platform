@@ -33,6 +33,17 @@ module.exports = {
         }
         guestAccs[toRoomId][userId] = guestAccs[roomId][userId]
     },
+    isUserInRoom: (roomId, userId) => {
+        if (users[roomId] === undefined) {
+            return false;
+        }
+        if (users[roomId][userId] !== undefined) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
     getRoomUsers: (roomId) => {
         if (users[roomId] === undefined) {
             return [];

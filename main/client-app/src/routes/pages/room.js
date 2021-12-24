@@ -410,9 +410,63 @@ export default function RoomPage(props) {
       }
     }
     window.addEventListener('message', attachWebcamOnMessenger);
+
+    let doRoomDoctor = () => {
+      let requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify({
+          roomId: props.room_id,
+        }),
+        redirect: 'follow',
+      };
+      fetch(
+        serverRoot + '/room/am_i_in_room',
+        requestOptions,
+      )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result));
+        if (result.result === false) {
+          let requestOptions2 = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              token: token,
+            },
+            body: JSON.stringify({
+              roomId: props.room_id,
+            }),
+            redirect: 'follow',
+          };
+          fetch(
+            serverRoot + '/room/enter_room',
+            requestOptions2,
+          )
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result));
+            if (result.membership !== undefined) {
+              setMembership(result.membership);
+              forceUpdate();
+            }
+          })
+          .catch((error) => console.log('error', error));
+        }
+      })
+      .catch((error) => console.log('error', error));
+    };
+
+    let roomPersistanceDoctor = setInterval(() => {
+      doRoomDoctor();
+    }, 3500);
     
     console.log('planting destructor...');
     return () => {
+      clearInterval(roomPersistanceDoctor);
       leaveRoom(() => {});
     }
   }, []);
@@ -1235,9 +1289,15 @@ export default function RoomPage(props) {
               </div>
             </div>
             <div style={{ width: 280, height: '100%' }}>
-              {menuMode === 0 ? (
-                <UsersBox membership={membership} roomId={props.room_id} />
-              ) : null}
+              {menuMode === 0 ?
+                (
+                  <UsersBox membership={membership} roomId={props.room_id} />
+                ) : menuMode === 1 ?
+                (
+                  <div style={{width: 280, height: '100%', backgroundColor: 'black'}}>
+
+                  </div>
+                ) : null}
             </div>
           </div>
         </SwipeableDrawer>

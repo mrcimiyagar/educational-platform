@@ -24,7 +24,7 @@ import ClockHand1 from '../../images/clock-hand-1.png'
 import ClockHand2 from '../../images/clock-hand-2.png'
 import BotContainer from '../../components/BotContainer';
 import Menu from '@material-ui/icons/Menu';
-import HomeDrawer from '../../components/HomeDrawer';
+import CachedIcon from '@mui/icons-material/Cached';
 
 let widget1Gui = {
   type: 'Box',
@@ -225,7 +225,7 @@ function Workshop(props) {
         <Jumper />
       </div>
       <Fab color={'secondary'} onClick={() => gotoPage('/app/createbot')} style={{position: 'fixed', left: 'calc(50% + 24px)', bottom: 24}}>
-        <Add/>
+        <CachedIcon/>
       </Fab>
       <SwipeableDrawer
         onClose={toggleDrawer('right', false)}
