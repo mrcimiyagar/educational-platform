@@ -100,11 +100,6 @@ export default function StoreDialog() {
 
   useEffect(() => {
 
-    setWallpaper({
-      type: 'color',
-      color: colors.accentDark
-    });
-
     registerEvent('bot-created', bot => {
       categories.forEach(cat => {
         if (cat.id === bot.categoryId) {
