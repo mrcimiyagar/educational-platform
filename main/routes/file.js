@@ -299,27 +299,26 @@ router.get('/download_user_avatar', jsonParser, async function (req, res) {
 })
 
 router.get('/download_bot_avatar', jsonParser, async function (req, res) {
-  sw.Bot.findOne({ where: { id: req.query.botId } }).then(async (bot) => {
-    if (bot.avatarId === undefined || bot.avatarId === null) {
-      bot.avatarId = -1;
-      await bot.save();
-      bot = await sw.Bot.findOne({ where: { id: req.query.botId } });
+  let bot = await sw.Bot.findOne({ where: { id: req.query.botId } });
+  if (bot.avatarId === undefined || bot.avatarId === null) {
+    bot.avatarId = -1;
+    await bot.save();
+    bot = await sw.Bot.findOne({ where: { id: req.query.botId } });
+  }
+  if (bot.avatarId < 0) {
+    res.sendFile(rootPath + `/files/bot-image.png`);
+    return;
+  }
+  sw.File.findOne({ where: { id: bot.avatarId } }).then(async (file) => {
+    if (file === null) {
+      res.sendStatus(404)
+      return
     }
-    if (bot.avatarId < 0) {
-      res.sendFile(rootPath + `/files/bot-image.png`);
-      return;
+    if (fs.existsSync(rootPath + '/files/' + file.id)) {
+      res.sendFile(rootPath + '/files/' + file.id)
+    } else {
+      res.sendFile(rootPath + '/files/' + file.id + '.jpg')
     }
-    sw.File.findOne({ where: { id: bot.avatarId } }).then(async (file) => {
-      if (file === null) {
-        res.sendStatus(404)
-        return
-      }
-      if (fs.existsSync(rootPath + '/files/' + file.id)) {
-        res.sendFile(rootPath + '/files/' + file.id)
-      } else {
-        res.sendFile(rootPath + '/files/' + file.id + '.jpg')
-      }
-    })
   })
 })
 
