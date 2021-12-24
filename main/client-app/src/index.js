@@ -189,6 +189,13 @@ let AppContainer = (props) => {
   }, [])
   ;[wallpaper, setWall] = React.useState({})
   setWallpaper = (w) => {
+    if (w.type === wallpaper.type) {
+      if ((w.type === 'photo' && w.photo === wallpaper.photo) ||
+      (w.type === 'video' && w.video === wallpaper.video) ||
+      (w.type === 'color' && w.color === wallpaper.color)) {
+        return;
+      } 
+    }
     setWall(w);
   }
   let [connected, setConnected] = React.useState(false);

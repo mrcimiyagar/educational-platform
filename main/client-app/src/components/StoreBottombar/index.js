@@ -5,7 +5,8 @@ import ExtensionIcon from '@material-ui/icons/Extension';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
 import React from 'react';
 import store, { setCurrentStoreNav } from '../../redux/main';
-import { updateStore } from '../../routes/pages/store';
+import { updateStore as usFull } from '../../routes/pages/store';
+import { updateStore as usDiag } from '../../routes/pages/storeDialog';
 import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
 
@@ -42,7 +43,8 @@ export default function HomeBottombar() {
       onChange={(event, newValue) => {
         setValue(newValue)
         store.dispatch(setCurrentStoreNav(newValue))
-        updateStore()
+        usFull();
+        usDiag();
       }}
       showLabels
       className={classes.root}

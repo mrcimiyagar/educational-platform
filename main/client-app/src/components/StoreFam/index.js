@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     height: 380,
     position: 'fixed',
     flexGrow: 1,
-    bottom: -52,
+    bottom: -56 - 52,
     left: 16 + 56 + 16
   },
 }))

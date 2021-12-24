@@ -2,6 +2,7 @@ import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
+import { ArrowBack } from '@material-ui/icons';
 import Menu from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import React from 'react';
@@ -11,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: 400,
+    width: 400
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -26,13 +27,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function StoreSearchbar() {
+export default function StoreSearchbar(props) {
   const classes = useStyles();
-
   return (
     <Paper component="form" className={classes.root}>
-      <IconButton className={classes.iconButton} aria-label="menu">
-        <Menu />
+      <IconButton className={classes.iconButton} aria-label="menu" onClick={() => props.setDrawerOpen(true)}>
+        <ArrowBack style={{transform: 'rotateZ(180deg)'}}/>
       </IconButton>
       <InputBase
         className={classes.input}

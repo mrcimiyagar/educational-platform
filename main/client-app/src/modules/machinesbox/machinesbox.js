@@ -1,5 +1,5 @@
-import { Avatar, IconButton, Typography } from '@material-ui/core'
-import { VideocamOff } from '@material-ui/icons'
+import { Avatar, Button, Fab, IconButton, Typography } from '@material-ui/core'
+import { Add, VideocamOff } from '@material-ui/icons'
 import MicIcon from '@material-ui/icons/Mic'
 import MicOffIcon from '@material-ui/icons/MicOff'
 import VideocamIcon from '@material-ui/icons/Videocam'
@@ -17,6 +17,7 @@ import { colors, token } from '../../util/settings'
 import { registerEvent, room, serverRoot, socket, unregisterEvent, useForceUpdate } from '../../util/Utils'
 import './style.css'
 import {setPermissionState, togglePermissions} from '../../containers/Sidebar';
+import { gotoPage } from '../../App'
 
 export let reloadUsersList = undefined
 
@@ -255,7 +256,7 @@ export let MachinesBox = (props) => {
   }
 
   return (
-    <div style={{ width: '100%', height: 'calc(100% - 32px)', marginTop: 32 }}>
+    <div style={{ width: '100%', height: 'calc(100% - 32px)', marginTop: 32, position: 'relative' }}>
       <div>
         <span
           style={{
@@ -275,6 +276,10 @@ export let MachinesBox = (props) => {
             option={{ suppressScrollX: true, wheelPropagation: false }}
           >
             <div style={{ height: 'auto', marginRight: 12, paddingTop: 24 }}>
+              <Button style={{width: 'calc(100% - 32px)', color: '#000', height: 32, marginBottom: 24}}
+                      onClick={() => gotoPage('/app/storedialog')} variant={'outlined'}>
+                        + افزودن بات
+              </Button>
               <div>
                 آنلاین
               </div>

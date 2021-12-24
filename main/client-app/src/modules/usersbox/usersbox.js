@@ -282,7 +282,7 @@ export let UsersBox = (props) => {
             option={{ suppressScrollX: true, wheelPropagation: false }}
           >
             <div style={{ height: 'auto', marginRight: 12, paddingTop: 24 }}>
-              <div>
+              <div style={{marginBottom: 16}}>
                 آنلاین
               </div>
               {users.map((user, index) => {
@@ -383,7 +383,7 @@ export let UsersBox = (props) => {
                   </div>
                 )
               })}
-              <div>
+              <div style={{marginBottom: 12}}>
                 آفلاین
               </div>
               {allUsers.filter(u => (onlineDict[u.id] !== true)).map((user, index) => {

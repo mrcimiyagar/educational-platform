@@ -77,6 +77,7 @@ import { updateMessageSeen4 } from './components/GroupChats';
 import CreateBotPage from './routes/pages/createBot';
 import CreateBotCategoryPage from './routes/pages/createBotCategory';
 import Workshop from './routes/pages/workshop';
+import StoreDialog from './routes/pages/storeDialog';
 const PouchDB = require('pouchdb').default;
 
 export let boardFrame = undefined;
@@ -285,7 +286,8 @@ let dialogs = {
   '/app/generate_invitation': GenerateInvitation,
   '/app/spaces_list': SpacesListPage,
   '/app/createbot': CreateBotPage,
-  '/app/createbotcategory': CreateBotCategoryPage
+  '/app/createbotcategory': CreateBotCategoryPage,
+  '/app/storedialog': StoreDialog
 }
 let pages = {
   '/app/store': Store,

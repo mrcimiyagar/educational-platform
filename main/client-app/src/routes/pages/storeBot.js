@@ -1,17 +1,19 @@
-import { Box, Dialog, Fab, IconButton, Slide, Typography } from '@material-ui/core';
+import { Avatar, Box, Dialog, Fab, IconButton, Slide, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import { default as ArrowForward, default as ArrowForwardIcon } from '@material-ui/icons/ArrowForward';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 import Rating from '@material-ui/lab/Rating';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'react-photo-view/dist/index.css';
 import Carousel from 'react-spring-3d-carousel';
-import { gotoPage, popPage, registerDialogOpen } from '../../App';
+import { gotoPage, isMobile, popPage, registerDialogOpen } from '../../App';
 import StoreComments from '../../components/StoreComments';
 import StoreSimiliar from '../../components/StoreSimiliar';
 import BotIcon from '../../images/robot.png';
+import { token } from '../../util/settings';
+import { serverRoot, useForceUpdate } from '../../util/Utils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -21,12 +23,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     height: '100vh',
-    position: 'fixed',
+    position: 'relative',
     overflow: 'auto',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
     direction: 'rtl'
   },
   imageList: {
@@ -96,12 +94,13 @@ const slides = [
   },
 ];
 
-export default function StoreBot() {
+export default function StoreBot(props) {
   
   document.documentElement.style.overflow = 'auto';
 
+  let forceUpdate = useForceUpdate();
   const classes = useStyles();
-  const [value, setValue] = React.useState(0)
+  const [bot, setBot] = React.useState({});
   const [open, setOpen] = React.useState(true);
   let [dest, setDest] = React.useState(3)
   registerDialogOpen(setOpen)
@@ -110,30 +109,51 @@ export default function StoreBot() {
       setTimeout(popPage, 250);
   };
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue)
-  };
-
-  const handleChangeIndex = (index) => {
-    setValue(index)
-  };
+  useEffect(() => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify({
+        botId: props.bot_id
+      }),
+      redirect: 'follow'
+    }
+    fetch(serverRoot + "/bot/get_bot_by_id", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.bot !== undefined) {
+          setBot(result.bot);
+          forceUpdate();
+        }
+      })
+      .catch(error => console.log('error', error));
+  }, []);
 
   return (
     <Dialog
             onTouchStart={(e) => {e.stopPropagation();}}
             PaperProps={{
                 style: {
-                    backgroundColor: 'transparent',
+                    backgroundColor: 'rgba(255, 255, 255, 0.25)',
                     boxShadow: 'none',
+                    backdropFilter: 'blur(10px)',
+                    width: 500,
+                    height: 800,
+                    borderRadius: isMobile() ? 0 : 24
                 },
             }}
-            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
+            fullScreen={isMobile()} open={open} onClose={handleClose} TransitionComponent={Transition}>
     <div className={classes.root}>
 
-      <img style={{width: 'calc(100% - 256px)', marginLeft: 128, marginRight: 128, marginTop: 72, marginBottom: 72}} src={BotIcon}/>
+      <Avatar style={{width: 'calc(100% - 256px)', position: 'absolute', maxWidth: 150, left: '50%', transform: 'translateX(-50%)', top: 72}}
+              src={serverRoot + `/file/download_bot_avatar?token=${token}&botId=${bot.id}`}/>
       
-      <div style={{padding: 12, display: 'flex'}}>
-        <Typography variant={'h6'} style={{color: '#fff'}}>بات ماشین حساب</Typography>
+      <div style={{padding: 12, display: 'flex', marginTop: 200 + 72}}>
+        <Typography variant={'h6'} style={{color: '#fff'}}>{bot.title}</Typography>
         <Rating name="read-only" value={2} readOnly style={{paddingLeft: 16, paddingTop: 8, paddingRight: 16, borderRadius: '0 20px 20px 0',  position: 'absolute', left: 0, height: 40}}/>
       </div>
 

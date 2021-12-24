@@ -1,4 +1,4 @@
-import { AppBar, Box, Card, Fab, Grow, Slide, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Box, Card, Dialog, Fab, Grow, Slide, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,7 +7,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ViewCompactIcon from '@material-ui/icons/ViewCompact';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
-import { gotoPage, inTheGame, isDesktop } from '../../App';
+import { gotoPage, inTheGame, isDesktop, isMobile, popPage } from '../../App';
 import HomeToolbar from '../../components/HomeToolbar';
 import Jumper from '../../components/SearchEngineFam';
 import StoreBottombar from '../../components/StoreBottombar';
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: 'auto',
     position: 'absolute',
-    overflow: 'auto',
+    overflow: 'hidden',
     left: 0,
     top: 0,
     right: 0,
@@ -72,15 +72,27 @@ TabPanel.propTypes = {
 export let updateStore = () => {}
 let categories = [];
 
-export default function Store() {
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
-  document.documentElement.style.overflow = 'auto';
+export default function StoreDialog() {
+
+  document.documentElement.style.overflow = 'hidden';
 
   const classes = useStyles();
   let forceUpdate = useForceUpdate()
   updateStore = forceUpdate
 
   const [value, setValue] = React.useState(0)
+  const [open, setOpen] = React.useState(true);
+
+  const handleClose = () => {
+    setOpen(false);
+    setTimeout(() => {
+      popPage();
+    }, 250);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -182,13 +194,30 @@ export default function Store() {
   let finalWidth = window.innerWidth / finalColsCount;
 
   return (
+    <Dialog TransitionComponent={Transition} fullScreen={isMobile()} open={open} onClose={handleClose}
+            style={{width: '100%', height: '100%'}}
+            PaperProps={{style: {
+              minWidth: isMobile() ? '100%' : 1000,
+              width: isMobile() ? '100%' : 1000,
+              height: isMobile() ? '100%' : 750,
+              backgroundColor: 'rgba(255, 255, 255, 0.35)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: isMobile() ? 0 : 24,
+              overflow: 'hidden',
+              direction: 'rtl'
+            }}}
+    >
     <div className={classes.root}>
-      <HomeToolbar>
-        <AppBar style={{backgroundColor: colors.primaryMedium}}>
+      <AppBar style={{backgroundColor: colors.primaryMedium}}>
           <Toolbar style={{marginTop: 16}}>
-            <StoreSearchbar setDrawerOpen={(v) => {
-              
-            }}/>
+            <div style={{position: 'absolute', left: '50%', transform: 'translateX(-50%)'}}>
+              <StoreSearchbar setDrawerOpen={(v) => {
+                setOpen(false);
+                setTimeout(() => {
+                  popPage();
+                }, 250);
+              }}/>
+            </div>
           </Toolbar>
           <Tabs
             value={value}
@@ -206,8 +235,8 @@ export default function Store() {
               ))
             }
           </Tabs>
-        </AppBar>
-      </HomeToolbar>
+      </AppBar>
+      <div style={{width: '100%', height: 72}}/>
       {categories.map(cat => {
         counter++;
         return (
@@ -248,12 +277,13 @@ export default function Store() {
         style={{
           position: 'fixed',
           right: 16,
-          bottom: isDesktop() ? -8 : 0
+          bottom: isDesktop() ? 8 : 0
         }}
       >
         <Jumper />
       </div>
       <StoreBottombar/>
     </div>
+    </Dialog>
   );
 }
