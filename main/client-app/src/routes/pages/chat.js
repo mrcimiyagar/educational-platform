@@ -233,11 +233,11 @@ export default function Chat(props) {
     console.log('planting destructor...');
 
     return () => {
+      clearInterval(roomPersistanceDoctor);
       if (goingToRoom) {
         goingToRoom = false;
       }
       else {
-        clearInterval(roomPersistanceDoctor);
         leaveRoom(() => {});
       }
     }

@@ -31,6 +31,9 @@ import GroupChats from '../GroupChats';
 import HomeSearchbar from '../HomeSearchbar';
 import HomeToolbar from '../HomeToolbar';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
+import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils';
+import {setMembership as setMCE} from '../ChatEmbedded';
+import {setMembership as setMCEIM} from '../ChatEmbeddedInMessenger';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
@@ -79,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function HomeMessenger(props) {
+    let forceUpdate = useForceUpdate();
     let classes = useStyles();
     useEffect(() => {
         setWallpaper({
@@ -93,7 +97,7 @@ export default function HomeMessenger(props) {
               token: token,
             },
             body: JSON.stringify({
-              roomId: props.room_id,
+              roomId: props.selectedRoomId,
             }),
             redirect: 'follow',
           };
@@ -112,7 +116,7 @@ export default function HomeMessenger(props) {
                   token: token,
                 },
                 body: JSON.stringify({
-                  roomId: props.room_id,
+                  roomId: props.selectedRoomId,
                 }),
                 redirect: 'follow',
               };
@@ -124,7 +128,8 @@ export default function HomeMessenger(props) {
               .then((result) => {
                 console.log(JSON.stringify(result));
                 if (result.membership !== undefined) {
-                  setMembership(result.membership);
+                  if (setMCEIM !== undefined) setMCEIM(result.membership);
+                  if (setMCE !== undefined) setMCE(result.membership);
                   forceUpdate();
                 }
               })

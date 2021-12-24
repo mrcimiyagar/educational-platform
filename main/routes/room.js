@@ -236,7 +236,12 @@ router.post('/is_permissions_accessible', jsonParser, async function (
 ) {
   authenticateMember(req, res, async (membership, session, user) => {
     sw.RoomSecret.findOne({ where: { roomId: membership.roomId } }).then(
-      (RoomSecret) => {
+      async (RoomSecret) => {
+        let room = await sw.Room.findOne({where: {id: membership.roomId}});
+        if (room.chatType === 'p2p') {
+          res.send({ status: 'success', isAccessible: false })
+          return
+        }
         if (
           (session.userId === req.body.targetUserId &&
             session.userId !== RoomSecret.ownerId) ||
