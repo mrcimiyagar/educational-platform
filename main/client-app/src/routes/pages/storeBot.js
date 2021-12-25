@@ -141,8 +141,8 @@ export default function StoreBot(props) {
                     backgroundColor: 'rgba(255, 255, 255, 0.25)',
                     boxShadow: 'none',
                     backdropFilter: 'blur(10px)',
-                    width: 500,
-                    height: 800,
+                    width: isMobile() ? '100%' : 700,
+                    height: isMobile() ? '100%' : 800,
                     borderRadius: isMobile() ? 0 : 24
                 },
             }}
@@ -176,13 +176,18 @@ export default function StoreBot(props) {
           <ArrowBack style={{fill: '#fff'}}/>
         </IconButton>
       </div>
+      
+      <StoreSimiliar/>
 
       <StoreComments/>
 
       <StoreSimiliar/>
 
     </div>
-    <Fab color="secondary" style={{position: 'fixed', bottom: 16, left: 16}}>
+    <Fab color="secondary" style={{position: 'fixed', bottom: 16, left: 16}}
+      onClick={() => {
+        
+      }}>
       <LocalMallIcon />
     </Fab>
   </Dialog>

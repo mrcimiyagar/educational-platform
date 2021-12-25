@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: 400
+    width: window.innerWidth > 450 ? 400 : 300
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -32,7 +32,10 @@ export default function StoreSearchbar(props) {
   return (
     <Paper component="form" className={classes.root}>
       <IconButton className={classes.iconButton} aria-label="menu" onClick={() => props.setDrawerOpen(true)}>
-        <ArrowBack style={{transform: 'rotateZ(180deg)'}}/>
+        {props.dialogMode === true ?
+          <ArrowBack style={{transform: 'rotateZ(180deg)'}}/> :
+          <Menu />
+        }
       </IconButton>
       <InputBase
         className={classes.input}

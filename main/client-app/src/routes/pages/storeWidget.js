@@ -90,7 +90,6 @@ TabPanel.propTypes = {
 };
 
 export let updateStore = () => {}
-let categories = [];
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -106,6 +105,7 @@ export default function StoreDialog() {
 
   const [value, setValue] = React.useState(0)
   const [open, setOpen] = React.useState(true);
+  const [widgets, setWidgets] = React.useState([]);
 
   const handleClose = () => {
     setInTheGame(false);
@@ -121,22 +121,9 @@ export default function StoreDialog() {
 
   useEffect(() => {
 
-    registerEvent('bot-created', bot => {
-      categories.forEach(cat => {
-        if (cat.id === bot.categoryId) {
-          cat.bots.push(bot);
-          forceUpdate();
-        }
-      });
-    });
-    
-    registerEvent('store-category-created', cat => {
-      cat.bots = [];
-      cat.packages = [];
-      categories.push(cat);
-      forceUpdate();
-    });
+    registerEvent('widget-created', widget => {
 
+    });
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -144,61 +131,17 @@ export default function StoreDialog() {
         'token': token
       },
       body: JSON.stringify({
-        loadExtra: true
+        botId: props.bot_id
       }),
       redirect: 'follow'
     }
-    fetch(serverRoot + "/bot/get_categories", requestOptions)
+    fetch(serverRoot + "/bot/get_widgets", requestOptions)
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
-        if (result.categories !== undefined) {
-        categories = result.categories;
-        result.categories.forEach(cat => {
-          let requestOptions = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'token': token
-            },
-            body: JSON.stringify({
-              categoryId: cat.id
-            }),
-            redirect: 'follow'
-          }
-          fetch(serverRoot + "/bot/get_bots", requestOptions)
-            .then(response => response.json())
-            .then(result => {
-              console.log(JSON.stringify(result));
-              if (result.bots !== undefined) {
-                cat.bots = result.bots;
-                forceUpdate();
-              }
-            })
-            .catch(error => console.log('error', error));
-          let requestOptions2 = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'token': token
-            },
-            body: JSON.stringify({
-              categoryId: cat.id
-            }),
-            redirect: 'follow'
-          }
-          fetch(serverRoot + "/bot/get_packages", requestOptions2)
-            .then(response => response.json())
-            .then(result => {
-              console.log(JSON.stringify(result));
-              if (result.packages !== undefined) {
-                cat.packages = result.packages;
-                forceUpdate();
-              }
-            })
-            .catch(error => console.log('error', error));
-        });
-        forceUpdate()
+        if (result.widgets !== undefined) {
+          setWidgets(result.widgets);
+          forceUpdate();
         }
       })
       .catch(error => console.log('error', error));
@@ -236,13 +179,7 @@ export default function StoreDialog() {
           return (
             <TabPanel style={{display: (counter - 1) === value ? 'block' : 'none'}}>
               <ImageList rowHeight={finalWidth + 56} className={classes.imageList} cols={finalColsCount} style={{marginLeft: 16, marginRight: 16, width: 'calc(100% - 32px)'}}>
-                {cat.packages.map((item) => (
-                  <ImageListItem key={'store-package-'+ item.id} cols={3} style={{position: 'relative', marginTop: 8}}>
-                    <div style={{width: '100%', height: '100%', backdropFilter: 'blur(10px)', position: 'absolute', left: 0, top: 0}}></div>
-                    <img src={item.coverUrl} alt={item.title} style={{borderRadius: 16, opacity: '0.65', width: '100%', height: '100%'}} />
-                  </ImageListItem>
-                ))}
-                {cat.bots.map((item) => {
+                {widget.map((item) => {
                   counterMini++;
                 return (<Grow
                   in={inTheGame}

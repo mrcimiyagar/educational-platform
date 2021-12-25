@@ -48,6 +48,7 @@ import {
 } from '../../util/Utils'
 import DesktopWallpaper2 from '../../images/desktop-wallpaper.jpg';
 import {homeRoomId} from '../../util/settings';
+import { MachinesBox } from '../../modules/machinesbox/machinesbox'
 
 let accessChangeCallback = undefined
 export let notifyMeOnAccessChange = (callback) => {
@@ -337,17 +338,22 @@ export default function HomePage(props) {
           open={menuOpen}
           anchor={'right'}
           style={{position: 'relative', zIndex: 99998}}
+          PaperProps={{
+            style: {
+              background: 'rgba(255, 255, 255, 0.55)',
+              backdropFilter: 'blur(15px)'
+            }
+          }}
         >
           <div
             style={{
               width: 360,
               height: '100%',
-              backgroundColor: '#fff',
               display: 'flex',
               direction: 'rtl',
             }}
           >
-            <div style={{ width: 80, height: '100%', backgroundColor: '#eee' }}>
+            <div style={{ width: 80, height: '100%', background: 'rgba(225, 225, 225, 0.55)' }}>
               <Avatar
                 onClick={() => setMenuMode(0)}
                 style={{
@@ -428,7 +434,8 @@ export default function HomePage(props) {
             <div style={{ width: 280, height: '100%' }}>
               {menuMode === 0 ? (
                 <UsersBox membership={membership} roomId={homeRoomId} />
-              ) : null}
+              ) : menuMode === 1 ?
+              <MachinesBox membership={membership} roomId={homeRoomId} /> : null}
             </div>
           </div>
         </SwipeableDrawer>
@@ -472,17 +479,22 @@ export default function HomePage(props) {
           open={menuOpen}
           anchor={'right'}
           style={{position: 'relative', zIndex: 99998}}
+          PaperProps={{
+            style: {
+              background: 'rgba(255, 255, 255, 0.55)',
+              backdropFilter: 'blur(15px)'
+            }
+          }}
         >
           <div
             style={{
               width: 360,
               height: '100%',
-              backgroundColor: '#fff',
               display: 'flex',
               direction: 'rtl',
             }}
           >
-            <div style={{ width: 80, height: '100%', backgroundColor: '#eee' }}>
+            <div style={{ width: 80, height: '100%', background: 'rgba(225, 225, 225, 0.55)' }}>
               <Avatar
                 onClick={() => setMenuMode(0)}
                 style={{
@@ -563,7 +575,8 @@ export default function HomePage(props) {
             <div style={{ width: 280, height: '100%' }}>
               {menuMode === 0 ? (
                 <UsersBox membership={membership} roomId={homeRoomId} />
-              ) : null}
+              ) : menuMode === 1 ?
+              <MachinesBox membership={membership} roomId={homeRoomId} /> : null}
             </div>
           </div>
         </SwipeableDrawer>

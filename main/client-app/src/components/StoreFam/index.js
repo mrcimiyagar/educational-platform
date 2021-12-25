@@ -70,7 +70,7 @@ export default function StoreFam(props) {
       className={classes.root}
     >
         <Slide
-          direction="left"
+          direction="up"
           in={inTheGame}
           mountOnEnter
           unmountOnExit

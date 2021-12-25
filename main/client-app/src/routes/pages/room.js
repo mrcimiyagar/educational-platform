@@ -495,14 +495,6 @@ export default function RoomPage(props) {
     },
   })
 
-  let drawer = (
-    <div style={{width: 280, height: '100%'}}>
-      <Typography variant='h6' style={{color: '#000'}}>
-        بات های روم
-      </Typography>
-    </div>
-  )
-
   if (isDesktop()) {
     return (
       <div
@@ -839,17 +831,20 @@ export default function RoomPage(props) {
           onClose={() => setMenuOpen(false)}
           open={menuOpen}
           anchor={'right'}
+          PaperProps={{style: {
+            background: 'rgba(255, 255, 255, 0.55)',
+            backdropFilter: 'blur(15px)'
+          }}}
         >
           <div
             style={{
               width: 360,
               height: '100%',
-              backgroundColor: '#fff',
               display: 'flex',
               direction: 'rtl',
             }}
           >
-            <div style={{ width: 80, height: '100%', backgroundColor: '#eee' }}>
+            <div style={{ width: 80, height: '100%', background: 'rgba(225, 225, 225, 0.55)' }}>
               <Avatar
                 onClick={() => setMenuMode(0)}
                 style={{
@@ -1218,17 +1213,20 @@ export default function RoomPage(props) {
           onClose={() => setMenuOpen(false)}
           open={menuOpen}
           anchor={'right'}
+          PaperProps={{style: {
+            background: 'rgba(255, 255, 255, 0.55)',
+            backdropFilter: 'blur(15px)'
+          }}}
         >
           <div
             style={{
               width: 360,
               height: '100%',
-              backgroundColor: '#fff',
               display: 'flex',
               direction: 'rtl',
             }}
           >
-            <div style={{ width: 80, height: '100%', backgroundColor: '#eee' }}>
+            <div style={{ width: 80, height: '100%', background: 'rgba(225, 225, 225, 0.55)' }}>
               <Avatar
                 onClick={() => setMenuMode(0)}
                 style={{
