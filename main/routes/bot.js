@@ -230,14 +230,12 @@ router.post('/get_bots', jsonParser, async function (req, res) {
 })
 
 router.post('/get_bot_by_id', jsonParser, async function (req, res) {
-  authenticateMember(req, res, async (membership, session, user, acc) => {
-    let bot = await sw.Bot.findOne({
-      where: {
-        id: req.body.botId
-      }
-    })
-    res.send({ status: 'success', bot: bot })
+  let bot = await sw.Bot.findOne({
+    where: {
+      id: req.body.botId
+    }
   })
+  res.send({ status: 'success', bot: bot })
 })
 
 router.post('/create_comment', jsonParser, async function (req, res) {
