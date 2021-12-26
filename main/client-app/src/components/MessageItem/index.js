@@ -1,5 +1,5 @@
 
-import { Avatar, Fab, Grow, Typography } from '@material-ui/core'
+import { Avatar, Fab, Grow, StylesProvider, Typography } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import { ArrowDownward, DoneAll, PlayArrowTwoTone } from '@material-ui/icons'
 import React, { useEffect } from 'react'
@@ -8,6 +8,7 @@ import { WaveSurferBox } from '../../components/WaveSurfer'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import Done from '@material-ui/icons/Done'
+import { RichPaper } from '../RichComponents'
 
 export default function MessageItem(props) {
     let forceUpdate = useForceUpdate();
@@ -91,6 +92,7 @@ export default function MessageItem(props) {
       }
     }, [])
     return (
+      <StylesProvider injectFirst>
       <div key={message.id} id={'message-' + message.id}>
         {message.authorId === me.id ? (
           <div style={{ position: 'relative', display: 'flex' }}>
@@ -107,7 +109,7 @@ export default function MessageItem(props) {
                 right: 0,
               }}
             />
-            <div
+            <RichPaper
               style={{
                 fontFamily: 'mainFont',
                 fontSize: 15,
@@ -120,13 +122,11 @@ export default function MessageItem(props) {
                 paddingBottom: 4,
                 paddingRight: 16,
                 paddingLeft: 16,
-                backgroundColor: '#1a8a98',
                 color: '#fff',
                 borderRadius: '16px 16px 0px 16px',
                 position: 'absolute',
                 marginTop: 8,
-                right: 48,
-                background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
+                right: 48
               }}
             >
               <Typography
@@ -263,7 +263,7 @@ export default function MessageItem(props) {
                   ':' +
                   dateTime.getSeconds()}
               </div>
-            </div>
+            </RichPaper>
             <div
               style={{
                 visibility: 'hidden',
@@ -279,10 +279,8 @@ export default function MessageItem(props) {
                 paddingRight: 16,
                 paddingLeft: 16,
                 marginTop: 8,
-                backgroundColor: '#1a8a98',
                 color: '#fff',
                 borderRadius: '16px 16px 0px 16px',
-                background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
               }}
             >
               <Typography
@@ -436,7 +434,7 @@ export default function MessageItem(props) {
                 left: 0,
               }}
             />
-            <div
+            <RichPaper
               style={{
                 fontFamily: 'mainFont',
                 fontSize: 15,
@@ -449,13 +447,11 @@ export default function MessageItem(props) {
                 paddingBottom: 4,
                 paddingRight: 16,
                 paddingLeft: 16,
-                backgroundColor: '#1a8a98',
                 color: '#fff',
                 borderRadius: '16px 16px 16px 0px',
                 position: 'absolute',
                 marginTop: 8,
-                left: 48,
-                background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
+                left: 48
               }}
             >
               <Typography
@@ -590,7 +586,7 @@ export default function MessageItem(props) {
                   ':' +
                   dateTime.getSeconds()}
               </div>
-            </div>
+            </RichPaper>
             <div
               style={{
                 visibility: 'hidden',
@@ -609,8 +605,7 @@ export default function MessageItem(props) {
                 marginLeft: 16,
                 marginTop: 8,
                 color: '#fff',
-                left: 0,
-                background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 50%, ${colors.primaryLight} 100%)`,
+                left: 0
               }}
             >
               <Typography
@@ -748,5 +743,6 @@ export default function MessageItem(props) {
           </div>
         )}
       </div>
+      </StylesProvider>
     )
   }

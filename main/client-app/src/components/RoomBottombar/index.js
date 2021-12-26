@@ -12,6 +12,8 @@ import { inTheGame, isDesktop, isInRoom } from '../../App';
 import { isConfConnected } from '../../modules/confbox';
 import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
+import { RichBottomBar } from '../RichComponents';
+import { StylesProvider } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
@@ -71,7 +73,8 @@ export default function RoomBottombar(props) {
   }, [])
 
   return (
-    <BottomNavigation
+    <StylesProvider injectFirst>
+    <RichBottomBar
       value={props.currentRoomNav}
       onChange={(event, newValue) => {
         if (newValue === 2) {
@@ -92,6 +95,7 @@ export default function RoomBottombar(props) {
       <BottomNavigationAction value={2} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="کنفرانس" icon={<VideocamIcon />} />
       <BottomNavigationAction value={3} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="برنامه ریزی" icon={<AssignmentTurnedInIcon />} />
       <BottomNavigationAction value={4} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="فایل ها" icon={<DescriptionIcon />} />
-    </BottomNavigation>
+    </RichBottomBar>
+    </StylesProvider>
   );
 }

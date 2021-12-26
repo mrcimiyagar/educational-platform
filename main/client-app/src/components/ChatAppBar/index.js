@@ -4,6 +4,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
+import {StylesProvider} from '@material-ui/core'
 import {
   ArrowForward,
   Attachment,
@@ -34,6 +35,7 @@ import {
   unregisterEvent,
 } from '../../util/Utils'
 import HomeToolbar from '../HomeToolbar'
+import { RichAppBar } from '../RichComponents'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -113,7 +115,8 @@ export default function ChatAppBar(props) {
   return (
     <div className={classes.root}>
       <HomeToolbar>
-        <AppBar
+          <StylesProvider injectFirst>
+        <RichAppBar
           position="fixed"
           style={{
             width: isDesktop()
@@ -147,8 +150,7 @@ export default function ChatAppBar(props) {
               ? 96 + 16
               : 0,
             paddingTop: 8,
-            height: 64,
-            backgroundColor: colors.primaryMedium,
+            height: 64
           }}
         >
           <Toolbar
@@ -238,7 +240,8 @@ export default function ChatAppBar(props) {
               </IconButton>
             </div>
           </Toolbar>
-        </AppBar>
+        </RichAppBar>
+        </StylesProvider>
       </HomeToolbar>
     </div>
   )

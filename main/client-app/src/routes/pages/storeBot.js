@@ -11,7 +11,8 @@ import Carousel from 'react-spring-3d-carousel';
 import { gotoPage, isMobile, popPage, registerDialogOpen } from '../../App';
 import StoreComments from '../../components/StoreComments';
 import StoreSimiliar from '../../components/StoreSimiliar';
-import BotIcon from '../../images/robot.png';
+import StoreWidgets from '../../components/StoreWidgets';
+import RoomWallpaper from '../../images/roomWallpaper.png';
 import { token } from '../../util/settings';
 import { serverRoot, useForceUpdate } from '../../util/Utils';
 
@@ -73,26 +74,7 @@ TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
-}; 
-
-const slides = [
-  {
-    key: 0,
-    content: <img onClick={() => gotoPage('/app/photoviewer')} style={{width: 100}} src={'https://picsum.photos/600/800/?random'} alt="" />
-  },
-  {
-    key: 1,
-    content: <img onClick={() => gotoPage('/app/photoviewer')} style={{width: 100}} src={'https://picsum.photos/600/800/?random'} alt="" />
-  },
-  {
-    key: 2,
-    content: <img onClick={() => gotoPage('/app/photoviewer')} style={{width: 100}} src={'https://picsum.photos/600/800/?random'} alt="" />
-  },
-  {
-    key: 3,
-    content: <img onClick={() => gotoPage('/app/photoviewer')} style={{width: 100}} src={'https://picsum.photos/600/800/?random'} alt="" />
-  },
-];
+};
 
 export default function StoreBot(props) {
   
@@ -101,8 +83,9 @@ export default function StoreBot(props) {
   let forceUpdate = useForceUpdate();
   const classes = useStyles();
   const [bot, setBot] = React.useState({});
+  const [screenshots, setScreenshots] = React.useState([]);
   const [open, setOpen] = React.useState(true);
-  let [dest, setDest] = React.useState(3)
+  let [dest, setDest] = React.useState(0)
   registerDialogOpen(setOpen)
   const handleClose = () => {
       setOpen(false);
@@ -131,7 +114,31 @@ export default function StoreBot(props) {
         }
       })
       .catch(error => console.log('error', error));
+    
+    let requestOptions2 = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify({
+        botId: props.bot_id
+      }),
+      redirect: 'follow'
+    }
+    fetch(serverRoot + "/bot/get_screenshots", requestOptions2)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.screenshots !== undefined) {
+          setScreenshots(result.screenshots);
+          forceUpdate();
+        }
+      })
+      .catch(error => console.log('error', error));
   }, []);
+
+  let counter = 0;
 
   return (
     <Dialog
@@ -166,22 +173,33 @@ export default function StoreBot(props) {
       </Typography>
 
       <div style={{width: '100%', height: 200, position: 'relative'}}>
+        <Typography variant={'h6'} style={{marginLeft: 16, marginRight: 16, color: '#fff'}}>عکس ها</Typography>
         <div style={{width: 'calc(100% - 64px)', height: '100%', margin: 32}}>
-          <Carousel slides={slides} goToSlide={dest}/>
+        {screenshots.length > 0 ? 
+            <Carousel slides={screenshots.map(ss => (
+              {
+                key: counter++,
+                content: <img onClick={() => gotoPage('/app/photoviewer')} style={{width: 100}}
+                              src={serverRoot + `/file/download_file?token=${token}&roomId=${null}&fileId=${ss.fileId}`}
+                              alt="" />
+              })
+            )} goToSlide={dest}/> :
+            <Typography style={{fontSize: 18, width: '100%', height: 150, lineHeight: 8, color: '#fff'}}>عکسی یافت نشد.</Typography>
+        }
         </div>
-        <IconButton style={{position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)'}} onClick={() => {setDest(dest + 1)}}>
+        {screenshots.length > 0 ? <IconButton style={{position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)'}} onClick={() => {setDest(dest + 1)}}>
           <ArrowForward style={{fill: '#fff'}}/>
-        </IconButton>
-        <IconButton style={{position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)'}} onClick={() => {setDest(dest - 1)}}>
+        </IconButton> : null}
+        {screenshots.length > 0 ? <IconButton style={{position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)'}} onClick={() => {setDest(dest - 1)}}>
           <ArrowBack style={{fill: '#fff'}}/>
-        </IconButton>
+        </IconButton> : null }
       </div>
       
-      <StoreSimiliar/>
+      <StoreWidgets botId={props.bot_id}/>
 
-      <StoreComments/>
+      <StoreComments botId={props.bot_id}/>
 
-      <StoreSimiliar/>
+      <StoreSimiliar botId={props.bot_id}/>
 
     </div>
     <Fab color="secondary" style={{position: 'fixed', bottom: 16, left: 16}}

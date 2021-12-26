@@ -8,6 +8,8 @@ import store, { setCurrentStoreNav } from '../../redux/main';
 import { updateStore } from '../../routes/pages/store';
 import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
+import { RichBottomBar } from '../RichComponents';
+import {StylesProvider} from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
@@ -36,7 +38,8 @@ export default function HomeBottombar() {
   let [value, setValue] = React.useState(0);
 
   return (
-    <BottomNavigation
+    <StylesProvider injectFirst>
+    <RichBottomBar
       value={value}
       onChange={(event, newValue) => {
         setValue(newValue)
@@ -45,10 +48,10 @@ export default function HomeBottombar() {
       }}
       showLabels
       className={classes.root}
-      style={{backgroundColor: colors.primaryMedium}}
     >
       <BottomNavigationAction value={0} classes={classesAction} label="اپ بات ها" icon={<ExtensionIcon />}/>
       <BottomNavigationAction value={1} classes={classesAction} label="گیم بات ها" icon={<SportsEsportsIcon />} />
-    </BottomNavigation>
+    </RichBottomBar>
+    </StylesProvider>
   );
 }

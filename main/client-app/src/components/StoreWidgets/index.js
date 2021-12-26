@@ -2,14 +2,16 @@ import { Card, Typography } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import { makeStyles } from '@material-ui/core/styles';
-import React from 'react';
+import React, { useEffect } from 'react';
 import BotIcon from '../../images/robot.png';
+import { token } from '../../util/settings';
+import { serverRoot, useForceUpdate } from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    height: 'auto',
-    marginTop: 96
+    height: 150,
+    marginTop: 72
   },
   imageList: {
     display: 'flex',
@@ -31,169 +33,47 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const itemData = [
-  {
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-{
-    img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-    title: 'Bot A',
-    author: 'author',
-    featured: true,
-},
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-    {
-        img: 'https://www.bounteous.com/sites/default/files/styles/insights_preview_image/public/insights/2018-10/previews/Understanding%20Bot%20and%20Spider%20Filtering%20from%20Google%20Analytics.jpg?itok=QC1VKCPE',
-        title: 'Bot A',
-        author: 'author',
-        featured: true,
-    },
-];
-
 export default function StoreWidgets(props) {
   const classes = useStyles();
+  const [widgets, setWidgets] = React.useState([]);
+  let forceUpdate = useForceUpdate();
+  useEffect(() => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify({
+        botId: props.botId
+      }),
+      redirect: 'follow'
+    }
+    fetch(serverRoot + "/bot/get_widgets", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.widgets !== undefined) {
+          setWidgets(result.widgets);
+          forceUpdate();
+        }
+      })
+      .catch(error => console.log('error', error));
+  }, []);
   return (
     <div className={classes.root}>
-      <Typography variant={'h6'} style={{margin: 16, color: '#fff'}}>بات های مشابه</Typography>
+      <Typography variant={'h6'} style={{marginLeft: 16, marginRight: 16, color: '#fff'}}>ویجت ها</Typography>
       <ImageList style={{zIndex: 2}} rowHeight={188} cols={2.5} gap={1} className={classes.imageList}>
-        {itemData.map((item) => (
-          <ImageListItem key={item.img} cols={1} rows={1}>
-            <div style={{position: 'relative'}}>
-                <img src={BotIcon} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: 32, width: 'calc(100% - 64px)', height: 96}} />
-                <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32, backgroundColor: '#ddd'}}>
-                    <Typography style={{position: 'absolute', top: 120, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
-                </Card>
-            </div>
-          </ImageListItem>
-        ))}
+        {widgets.length > 0 ? 
+            widgets.map((item) => (
+                <ImageListItem key={'widget_thumbnail_' + item.id} cols={1} rows={1}>
+                    <div style={{position: 'relative'}}>
+                        <img src={serverRoot + `/file/download_widget_thumbnail?token=${token}&widgetId=${item.id}`}
+                            alt={'widget thumbnail'} style={{marginTop: 16, width: 'calc(100% - 64px)', height: 96}} />
+                    </div>
+                </ImageListItem>)) :
+            <Typography style={{fontSize: 18, width: '100%', height: 150, lineHeight: 6, color: '#fff'}}>ویجتی یافت نشد.</Typography>
+        }
       </ImageList>
     </div>
   );

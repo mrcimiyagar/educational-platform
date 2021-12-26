@@ -1,4 +1,4 @@
-import { createTheme, Dialog, ThemeProvider } from '@material-ui/core';
+import { createTheme, Dialog, StylesProvider, ThemeProvider } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import {
   BrowserRouter,

@@ -1,4 +1,4 @@
-import { AppBar, BottomNavigation, BottomNavigationAction, Box, Card, Dialog, Fab, Grow, Slide, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, BottomNavigation, BottomNavigationAction, Box, Card, Checkbox, Dialog, Fab, FormControl, FormControlLabel, FormGroup, FormLabel, Grow, Paper, Slide, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import { makeStyles } from '@material-ui/core/styles';
@@ -22,6 +22,8 @@ import StoreFam from '../../components/StoreFam';
 import { setWallpaper } from '../..';
 import store, { setCurrentStoreNav } from '../../redux/main';
 import Extension from '@material-ui/icons/Extension';
+import {RichAppBar, RichBottomBar} from '../../components/RichComponents';
+import { StylesProvider } from '@material-ui/core';
 
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
@@ -212,15 +214,32 @@ export default function StoreDialog() {
   const classesAction = useStylesAction();
   let [valueBB, setValueBB] = React.useState(0);
 
+  const [category, setCategory] = React.useState({
+    books: true,
+    notes: true,
+    digitals: true,
+    electronics: true,
+    videos: true,
+    bots: true
+  });
+
+  const handleChangeOfCheckbox = (event) => {
+    setCategory({
+      ...category,
+      [event.target.name]: event.target.checked,
+    });
+  };
+
   if (isDesktop() || isTablet()) {
     return (
+      <StylesProvider injectFirst>
       <div style={{width: '100%', height: '100%'}}>
       <Dialog TransitionComponent={Transition} fullScreen={isMobile()} open={open} onClose={handleClose}
               style={{width: '100%', height: '100%'}}
               PaperProps={{style: {
-                transform: 'translateY(72px)',
-                minWidth: isMobile() ? '100%' : '75%',
-                width: isMobile() ? '100%' : '75%',
+                transform: 'translate(-56px, 72px)',
+                minWidth: isMobile() ? '100%' : 'calc(85% - 312px)',
+                width: isMobile() ? '100%' : 'calc(85% - 312px)',
                 height: isMobile() ? '100%' : '75%',
                 backgroundColor: 'rgba(255, 255, 255, 0.35)',
                 backdropFilter: 'blur(10px)',
@@ -286,9 +305,9 @@ export default function StoreDialog() {
         <StoreFam />
       </div>
       </Dialog>
-        <AppBar style={{alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+      <RichAppBar style={{backdropFilter: 'blur(10px)', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
                         backgroundColor: colors.primaryMedium, position: 'fixed', top: inTheGame ? 0 : -200,
-                        left: '50%', transform: 'translateX(-50%)', width: 'auto', maxWidth: 500,
+                        left: '50%', transform: 'translateX(-50%)', width: 'auto', maxWidth: 750,
                         zIndex: 99999, borderRadius: '0px 0px 24px 24px', transition: 'top .5s'}}>
             <Toolbar style={{marginTop: 16}}>
               <div style={{position: 'absolute', left: '50%', transform: 'translateX(-50%)'}}>
@@ -317,8 +336,8 @@ export default function StoreDialog() {
                 ))
               }
             </Tabs>
-        </AppBar>
-      <BottomNavigation
+      </RichAppBar>
+      <RichBottomBar
           value={valueBB}
           onChange={(event, newValue) => {
             setValueBB(newValue)
@@ -328,15 +347,66 @@ export default function StoreDialog() {
           showLabels
           className={classes.rootBB}
           style={{zIndex: 99999, width: 300, height: 80, borderRadius: 40, position: 'fixed', left: inTheGame ? 32 : -200, transition: 'left .5s', top: '50%', transform: 'translateY(-50%) rotateZ(90deg)', backgroundColor: colors.primaryMedium}}
-        >
+      >
           <BottomNavigationAction value={0} classes={classesAction} style={{transform: 'rotateZ(-90deg)'}} label="اپ بات ها" icon={<Extension />}/>
           <BottomNavigationAction value={1} classes={classesAction} style={{transform: 'rotateZ(-90deg)'}} label="گیم بات ها" icon={<SportsEsports />} />
-        </BottomNavigation>
+      </RichBottomBar>
+      <Paper
+          className={classes.rootBB}
+          style={{zIndex: 99999, width: 280, height: '90%', borderRadius: 24, position: 'fixed',
+                  right: inTheGame ? 32 : (-200 - 280), transition: 'right .5s', top: '50%',
+                  transform: 'translateY(-50%)', backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                  backdropFilter: 'blur(15px)'}}
+      >
+      <FormControl sx={{ m: 3 }} component="fieldset" variant="standard" style={{marginTop: 40}}>
+        <FormLabel component="legend" style={{marginRight: 24}}><b>انواع کالا</b></FormLabel>
+        <FormGroup style={{marginTop: 16}}>
+          <FormControlLabel
+            control={
+              <Checkbox checked={category.books} onChange={handleChangeOfCheckbox} name="books" />
+            }
+            label="کتاب"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox checked={category.notes} onChange={handleChangeOfCheckbox} name="notes" />
+            }
+            label="جزوه"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox checked={category.electronics} onChange={handleChangeOfCheckbox} name="electronics" />
+            }
+            label="قطعات الکترونبکی"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox checked={category.digitals} onChange={handleChangeOfCheckbox} name="digitals" />
+            }
+            label="وسایل دیجیتال"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox checked={category.videos} onChange={handleChangeOfCheckbox} name="videos" />
+            }
+            label="فیلم آموزشی"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox checked={category.bots} onChange={handleChangeOfCheckbox} name="bots" />
+            }
+            label="بات"
+          />
+        </FormGroup>
+      </FormControl>
+      </Paper>
       </div>
-    ); 
+      </StylesProvider>
+    );
   }
   else {
     return (
+      <StylesProvider injectFirst>
       <Dialog TransitionComponent={Transition} fullScreen={isMobile()} open={open} onClose={handleClose}
               style={{width: '100%', height: '100%'}}
               PaperProps={{style: {
@@ -352,7 +422,7 @@ export default function StoreDialog() {
         backdropFilter: 'blur(10px)'
       }}>
         <HomeToolbar>
-          <AppBar style={{backgroundColor: colors.primaryMedium}}>
+          <RichAppBar style={{backgroundColor: colors.primaryMedium}}>
             <Toolbar style={{marginTop: 16}}>
               <StoreSearchbar dialogMode={true} setDrawerOpen={(v) => {
                   setOpen(false);
@@ -378,7 +448,7 @@ export default function StoreDialog() {
                 ))
               }
             </Tabs>
-          </AppBar>
+          </RichAppBar>
         </HomeToolbar>
         <div style={{width: '100%', height: 72}}/>
         {categories.map(cat => {
@@ -445,6 +515,7 @@ export default function StoreDialog() {
         <StoreBottombar/>
       </div>
       </Dialog>
+      </StylesProvider>
     );
   }
 }

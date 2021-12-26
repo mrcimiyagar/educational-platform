@@ -298,6 +298,30 @@ router.get('/download_user_avatar', jsonParser, async function (req, res) {
   })
 })
 
+router.get('/download_widget_thumbnail', jsonParser, async function (req, res) {
+  let widget = await sw.Widget.findOne({ where: { id: req.query.widgetId } });
+  if (widget.thumbnailId === undefined || widget.thumbnailId === null) {
+    widget.thumbnailId = -1;
+    await widget.save();
+    widget = await sw.Widget.findOne({ where: { id: req.query.widgetId } });
+  }
+  if (widget.thumbnailId < 0) {
+    res.sendFile(rootPath + `/files/widget.png`);
+    return;
+  }
+  sw.File.findOne({ where: { id: widget.thumbnailId } }).then(async (file) => {
+    if (file === null) {
+      res.sendStatus(404)
+      return
+    }
+    if (fs.existsSync(rootPath + '/files/' + file.id)) {
+      res.sendFile(rootPath + '/files/' + file.id)
+    } else {
+      res.sendFile(rootPath + '/files/' + file.id + '.jpg')
+    }
+  })
+})
+
 router.get('/download_bot_avatar', jsonParser, async function (req, res) {
   let bot = await sw.Bot.findOne({ where: { id: req.query.botId } });
   if (bot.avatarId === undefined || bot.avatarId === null) {
