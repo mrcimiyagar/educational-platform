@@ -353,6 +353,7 @@ router.post('/get_comments', jsonParser, async function (req, res) {
       return
     }
     let comments = await sw.Comment.findAll({
+      include: { all: true },
       raw: true,
       where: { botId: req.body.botId },
     })

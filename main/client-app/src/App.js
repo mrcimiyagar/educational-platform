@@ -78,6 +78,7 @@ import CreateBotPage from './routes/pages/createBot';
 import CreateBotCategoryPage from './routes/pages/createBotCategory';
 import Workshop from './routes/pages/workshop';
 import StoreDialog from './routes/pages/storeDialog';
+import CreateComment from './routes/pages/createComment';
 const PouchDB = require('pouchdb').default;
 
 export let boardFrame = undefined;
@@ -287,7 +288,8 @@ let dialogs = {
   '/app/spaces_list': SpacesListPage,
   '/app/createbot': CreateBotPage,
   '/app/createbotcategory': CreateBotCategoryPage,
-  '/app/storedialog': StoreDialog
+  '/app/storedialog': StoreDialog,
+  '/app/createcomment': CreateComment
 }
 let pages = {
   '/app/store': Store,

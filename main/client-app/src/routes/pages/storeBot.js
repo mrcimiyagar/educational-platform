@@ -1,5 +1,6 @@
 import { Avatar, Box, Dialog, Fab, IconButton, Slide, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { Message } from '@material-ui/icons';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import { default as ArrowForward, default as ArrowForwardIcon } from '@material-ui/icons/ArrowForward';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
@@ -200,6 +201,12 @@ export default function StoreBot(props) {
       <StoreSimiliar botId={props.bot_id}/>
 
     </div>
+    <Fab color="primary" style={{position: 'fixed', bottom: 16, left: 16 + 56 + 16}}
+      onClick={() => {
+        gotoPage('/app/createcomment', {bot_id: props.bot_id})
+      }}>
+      <Message />
+    </Fab>
     <Fab color="secondary" style={{position: 'fixed', bottom: 16, left: 16}}
       onClick={() => {
         
