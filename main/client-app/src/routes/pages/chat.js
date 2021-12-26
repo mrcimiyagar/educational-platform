@@ -19,6 +19,7 @@ import {
   fetchMessagesOfRoom,
   gotoPage,
   inTheGame,
+  isInMessenger,
   isOnline,
   markFileAsUploaded,
   markFileAsUploading,
@@ -46,6 +47,7 @@ import $ from 'jquery'
 import MessageItem from '../../components/MessageItem'
 import store, { changeConferenceMode } from '../../redux/main'
 import './chat.css';
+import { StylesProvider } from '@material-ui/core'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />
@@ -960,12 +962,14 @@ export default function Chat(props) {
             right: 0,
             bottom: 0,
             backdropFilter: 'blur(10px)',
-            borderRadius: '0 0 0 24px',
+            borderRadius: isInMessenger() ? '0 0 0 24px' : 0,
+            objectFit: 'cover'
           }}
         >
         <img
           data-src={ChatWallpaper}
           className="img-small"
+          style={{objectFit: 'cover', height: '100%'}}
         />
         <div style={{paddingBottom: '66.6%'}}></div>
       </div>
@@ -987,6 +991,7 @@ export default function Chat(props) {
           }}
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
+        
         <ChatAppBar
           handleClose={handleClose}
           user={user}
@@ -1006,6 +1011,7 @@ export default function Chat(props) {
               height: 56,
               bottom: inTheGame ? (showEmojiPad ? 416 : 0) : -72,
               transition: 'bottom .5s',
+              backdropFilter: 'blur(10px)'
             }}
           >
             <IconButton

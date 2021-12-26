@@ -73,8 +73,7 @@ export default function RoomBottombar(props) {
   }, [])
 
   return (
-    <StylesProvider injectFirst>
-    <RichBottomBar
+    <BottomNavigation
       value={props.currentRoomNav}
       onChange={(event, newValue) => {
         if (newValue === 2) {
@@ -88,14 +87,16 @@ export default function RoomBottombar(props) {
       }}
       showLabels
       className={classes.root}
-      style={{width: isDesktop() ? 450 : '100%', height: 72, transform: isDesktop() ? 'rotate(90deg)' : undefined, zIndex: 2501, position: 'fixed', bottom: (inTheGame && shown) ? isDesktop() ? '50%' : 0 : '-50%', left: isDesktop() ? -160 : undefined, borderRadius: isDesktop() ? 32 : 0, transition: 'bottom .5s', backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}
+      style={{
+        backgroundColor: colors.primaryMedium,
+        backdropFilter: 'blur(10px)',
+        width: isDesktop() ? 450 : '100%', height: 72, transform: isDesktop() ? 'rotate(90deg)' : undefined, zIndex: 2501, position: 'fixed', bottom: (inTheGame && shown) ? isDesktop() ? '50%' : 0 : '-50%', left: isDesktop() ? -160 : undefined, borderRadius: isDesktop() ? 32 : 0, transition: 'bottom .5s'}}
     >
       <BottomNavigationAction value={0} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="میز کار" icon={<DesktopMacIcon />} />
       <BottomNavigationAction value={1} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="وایت بورد" icon={<BorderColorIcon />} />
       <BottomNavigationAction value={2} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="کنفرانس" icon={<VideocamIcon />} />
       <BottomNavigationAction value={3} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="برنامه ریزی" icon={<AssignmentTurnedInIcon />} />
       <BottomNavigationAction value={4} classes={classesAction} style={{transform: isDesktop() ? 'rotate(-90deg)' : undefined}} label="فایل ها" icon={<DescriptionIcon />} />
-    </RichBottomBar>
-    </StylesProvider>
+    </BottomNavigation>
   );
 }

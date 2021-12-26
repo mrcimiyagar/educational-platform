@@ -1,4 +1,4 @@
-import { AppBar, BottomNavigation, BottomNavigationAction, Box, Card, Checkbox, Dialog, Fab, FormControl, FormControlLabel, FormGroup, FormLabel, Grow, Paper, Slide, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, BottomNavigation, BottomNavigationAction, Box, Card, Checkbox, Dialog, Fab, FormControl, FormControlLabel, FormGroup, FormLabel, Grow, Paper, Slide, SwipeableDrawer, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import { makeStyles } from '@material-ui/core/styles';
@@ -230,10 +230,55 @@ export default function StoreDialog() {
     });
   };
 
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  let filters = (
+      <FormControl sx={{ m: 3 }} component="fieldset" variant="standard" style={{marginTop: 40, width: 280, direction: 'rtl'}}>
+    <FormLabel component="legend" style={{color: '#fff', marginRight: 24}}><b>انواع کالا</b></FormLabel>
+    <FormGroup style={{marginTop: 16}}>
+      <FormControlLabel style={{color: '#fff'}}
+        control={
+          <Checkbox checked={category.books} onChange={handleChangeOfCheckbox} name="books" style={{color: '#fff'}} />
+        }
+        label="کتاب"
+      />
+      <FormControlLabel style={{color: '#fff'}}
+        control={
+          <Checkbox checked={category.notes} onChange={handleChangeOfCheckbox} name="notes" style={{color: '#fff'}} />
+        }
+        label="جزوه"
+      />
+      <FormControlLabel style={{color: '#fff'}}
+        control={
+          <Checkbox checked={category.electronics} onChange={handleChangeOfCheckbox} name="electronics" style={{color: '#fff'}} />
+        }
+        label="قطعات الکترونبکی"
+      />
+      <FormControlLabel style={{color: '#fff'}}
+        control={
+          <Checkbox checked={category.digitals} onChange={handleChangeOfCheckbox} name="digitals" style={{color: '#fff'}} />
+        }
+        label="وسایل دیجیتال"
+      />
+      <FormControlLabel style={{color: '#fff'}}
+        control={
+          <Checkbox checked={category.videos} onChange={handleChangeOfCheckbox} name="videos" style={{color: '#fff'}} />
+        }
+        label="فیلم آموزشی"
+      />
+      <FormControlLabel style={{color: '#fff'}}
+        control={
+          <Checkbox checked={category.bots} onChange={handleChangeOfCheckbox} name="bots" style={{color: '#fff'}} />
+        }
+        label="بات"
+      />
+    </FormGroup>
+    </FormControl>
+  );
+
   if (isDesktop() || isTablet()) {
     return (
-      <StylesProvider injectFirst>
-      <div style={{width: '100%', height: '100%'}}>
+      <div style={{width: '100%', height: '100%', direction: 'rtl'}}>
       <Dialog TransitionComponent={Transition} fullScreen={isMobile()} open={open} onClose={handleClose}
               style={{width: '100%', height: '100%'}}
               PaperProps={{style: {
@@ -305,7 +350,7 @@ export default function StoreDialog() {
         <StoreFam />
       </div>
       </Dialog>
-      <RichAppBar style={{backdropFilter: 'blur(10px)', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+      <AppBar style={{backdropFilter: 'blur(10px)', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
                         backgroundColor: colors.primaryMedium, position: 'fixed', top: inTheGame ? 0 : -200,
                         left: '50%', transform: 'translateX(-50%)', width: 'auto', maxWidth: 750,
                         zIndex: 99999, borderRadius: '0px 0px 24px 24px', transition: 'top .5s'}}>
@@ -336,8 +381,8 @@ export default function StoreDialog() {
                 ))
               }
             </Tabs>
-      </RichAppBar>
-      <RichBottomBar
+      </AppBar>
+      <BottomNavigation
           value={valueBB}
           onChange={(event, newValue) => {
             setValueBB(newValue)
@@ -350,63 +395,21 @@ export default function StoreDialog() {
       >
           <BottomNavigationAction value={0} classes={classesAction} style={{transform: 'rotateZ(-90deg)'}} label="اپ بات ها" icon={<Extension />}/>
           <BottomNavigationAction value={1} classes={classesAction} style={{transform: 'rotateZ(-90deg)'}} label="گیم بات ها" icon={<SportsEsports />} />
-      </RichBottomBar>
+      </BottomNavigation>
       <Paper
           className={classes.rootBB}
           style={{zIndex: 99999, width: 280, height: '90%', borderRadius: 24, position: 'fixed',
                   right: inTheGame ? 32 : (-200 - 280), transition: 'right .5s', top: '50%',
-                  transform: 'translateY(-50%)', backgroundColor: 'rgba(255, 255, 255, 0.35)',
-                  backdropFilter: 'blur(15px)'}}
+                  transform: 'translateY(-50%)', backgroundColor: colors.primaryMedium,
+                  backdropFilter: 'blur(10px)'}}
       >
-      <FormControl sx={{ m: 3 }} component="fieldset" variant="standard" style={{marginTop: 40}}>
-        <FormLabel component="legend" style={{marginRight: 24}}><b>انواع کالا</b></FormLabel>
-        <FormGroup style={{marginTop: 16}}>
-          <FormControlLabel
-            control={
-              <Checkbox checked={category.books} onChange={handleChangeOfCheckbox} name="books" />
-            }
-            label="کتاب"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={category.notes} onChange={handleChangeOfCheckbox} name="notes" />
-            }
-            label="جزوه"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={category.electronics} onChange={handleChangeOfCheckbox} name="electronics" />
-            }
-            label="قطعات الکترونبکی"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={category.digitals} onChange={handleChangeOfCheckbox} name="digitals" />
-            }
-            label="وسایل دیجیتال"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={category.videos} onChange={handleChangeOfCheckbox} name="videos" />
-            }
-            label="فیلم آموزشی"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={category.bots} onChange={handleChangeOfCheckbox} name="bots" />
-            }
-            label="بات"
-          />
-        </FormGroup>
-      </FormControl>
+        {filters}
       </Paper>
       </div>
-      </StylesProvider>
     );
   }
   else {
     return (
-      <StylesProvider injectFirst>
       <Dialog TransitionComponent={Transition} fullScreen={isMobile()} open={open} onClose={handleClose}
               style={{width: '100%', height: '100%'}}
               PaperProps={{style: {
@@ -414,7 +417,8 @@ export default function StoreDialog() {
                 height: '100%',
                 overflow: 'hidden',
                 direction: 'rtl',
-                backgroundColor: 'transparent'
+                backgroundColor: 'transparent',
+                direction: 'rtl'
               }}}
       >
       <div className={classes.root} style={{
@@ -422,14 +426,10 @@ export default function StoreDialog() {
         backdropFilter: 'blur(10px)'
       }}>
         <HomeToolbar>
-          <RichAppBar style={{backgroundColor: colors.primaryMedium}}>
+          <AppBar style={{backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}>
             <Toolbar style={{marginTop: 16}}>
-              <StoreSearchbar dialogMode={true} setDrawerOpen={(v) => {
-                  setOpen(false);
-                  setInTheGame(false);
-                  setTimeout(() => {
-                    popPage();
-                  }, 500);
+              <StoreSearchbar dialogMode={false} setDrawerOpen={(v) => {
+                  setDrawerOpen(true);
               }}/>
             </Toolbar>
             <Tabs
@@ -448,11 +448,12 @@ export default function StoreDialog() {
                 ))
               }
             </Tabs>
-          </RichAppBar>
+          </AppBar>
         </HomeToolbar>
         <div style={{width: '100%', height: 72}}/>
         {categories.map(cat => {
           counter++;
+          let counterMini = 0;
           return (
             <TabPanel style={{display: (counter - 1) === value ? 'block' : 'none'}}>
               <ImageList rowHeight={finalWidth + 56} className={classes.imageList} cols={finalColsCount} style={{marginLeft: 16, marginRight: 16, width: 'calc(100% - 32px)'}}>
@@ -462,10 +463,11 @@ export default function StoreDialog() {
                     <img src={item.coverUrl} alt={item.title} style={{borderRadius: 16, opacity: '0.65', width: '100%', height: '100%'}} />
                   </ImageListItem>
                 ))}
-                {cat.bots.map((item) => (
-                <Grow
+                {cat.bots.map((item) => {
+                  counterMini++;
+                return <Grow
                   in={inTheGame}
-                  {...{ timeout: (counter + 1) * 500 }}
+                  {...{ timeout: counterMini * 500 }}
                   transitionDuration={1000}
                 >
                   <ImageListItem style={{width: finalWidth, height: finalWidth + 56, marginLeft: 12, marginRight: 12}} key={'store-bot-'+ item.id} cols={1} onClick={() => gotoPage('/app/storebot', {bot_id: item.id})}>
@@ -475,7 +477,7 @@ export default function StoreDialog() {
                     </div>
                   </ImageListItem>
                   </Grow>
-                ))}
+                })}
               </ImageList>
             </TabPanel>
           );
@@ -513,9 +515,12 @@ export default function StoreDialog() {
           <Jumper />
         </div>
         <StoreBottombar/>
+        <SwipeableDrawer anchor='right' open={drawerOpen} onClose={() => setDrawerOpen(false)} PaperProps={{style: {
+            backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}}>
+              {filters}
+        </SwipeableDrawer>
       </div>
       </Dialog>
-      </StylesProvider>
     );
   }
 }

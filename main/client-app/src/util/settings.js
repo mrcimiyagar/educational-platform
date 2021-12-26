@@ -9,7 +9,7 @@ export let setColors = (c) => {}
 export let ColorBase = (props) => {
   ;[colors, setColors] = React.useState({
     primaryLight: '#2196F3',
-    primaryMedium: 'rgba(25, 118, 210, 0.55)',
+    primaryMedium: 'rgba(25, 118, 210, 0.5)',
     primaryDark: 'rgba(42, 77, 105, 1)',
     accent: 'rgba(231, 239, 246, 1)',
     accentDark: 'rgba(173, 203, 227, 1)',

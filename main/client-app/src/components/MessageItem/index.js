@@ -92,7 +92,6 @@ export default function MessageItem(props) {
       }
     }, [])
     return (
-      <StylesProvider injectFirst>
       <div key={message.id} id={'message-' + message.id}>
         {message.authorId === me.id ? (
           <div style={{ position: 'relative', display: 'flex' }}>
@@ -109,7 +108,7 @@ export default function MessageItem(props) {
                 right: 0,
               }}
             />
-            <RichPaper
+            <div
               style={{
                 fontFamily: 'mainFont',
                 fontSize: 15,
@@ -126,7 +125,9 @@ export default function MessageItem(props) {
                 borderRadius: '16px 16px 0px 16px',
                 position: 'absolute',
                 marginTop: 8,
-                right: 48
+                right: 48,
+                backdropFilter: 'blur(10px)',
+                backgroundColor: colors.primaryMedium
               }}
             >
               <Typography
@@ -263,7 +264,7 @@ export default function MessageItem(props) {
                   ':' +
                   dateTime.getSeconds()}
               </div>
-            </RichPaper>
+            </div>
             <div
               style={{
                 visibility: 'hidden',
@@ -434,7 +435,7 @@ export default function MessageItem(props) {
                 left: 0,
               }}
             />
-            <RichPaper
+            <div
               style={{
                 fontFamily: 'mainFont',
                 fontSize: 15,
@@ -451,7 +452,9 @@ export default function MessageItem(props) {
                 borderRadius: '16px 16px 16px 0px',
                 position: 'absolute',
                 marginTop: 8,
-                left: 48
+                left: 48,
+                backdropFilter: 'blur(10px)',
+                backgroundColor: colors.primaryMedium
               }}
             >
               <Typography
@@ -586,7 +589,7 @@ export default function MessageItem(props) {
                   ':' +
                   dateTime.getSeconds()}
               </div>
-            </RichPaper>
+            </div>
             <div
               style={{
                 visibility: 'hidden',
@@ -743,6 +746,5 @@ export default function MessageItem(props) {
           </div>
         )}
       </div>
-      </StylesProvider>
     )
   }

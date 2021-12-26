@@ -10,16 +10,16 @@ let richColors = {
 };
 
 export let RichAppBar = styled(AppBar)({
-  background: richColors.primaryMedium,
+  background: 'rgba(25, 118, 210, 0.7)',
   backdropFilter: 'blur(10px)'
 });
 
 export let RichBottomBar = styled(BottomNavigation)({
-  background: richColors.primaryMedium,
+  background: 'rgba(25, 118, 210, 0.7)',
   backdropFilter: 'blur(10px)'
 });
 
 export let RichPaper = styled(Paper)({
-  background: richColors.primaryMedium,
+  background: 'rgba(25, 118, 210, 0.7)',
   backdropFilter: 'blur(10px)'
 });

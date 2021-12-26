@@ -1,3 +1,4 @@
+import { StylesProvider } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Slide from '@material-ui/core/Slide';
 import Toolbar from '@material-ui/core/Toolbar';

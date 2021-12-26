@@ -114,9 +114,7 @@ export default function ChatAppBar(props) {
 
   return (
     <div className={classes.root}>
-      <HomeToolbar>
-          <StylesProvider injectFirst>
-        <RichAppBar
+        <AppBar
           position="fixed"
           style={{
             width: isDesktop()
@@ -150,7 +148,9 @@ export default function ChatAppBar(props) {
               ? 96 + 16
               : 0,
             paddingTop: 8,
-            height: 64
+            height: 64,
+            backgroundColor: colors.primaryMedium,
+            backdropFilter: 'blur(10px)'
           }}
         >
           <Toolbar
@@ -240,9 +240,7 @@ export default function ChatAppBar(props) {
               </IconButton>
             </div>
           </Toolbar>
-        </RichAppBar>
-        </StylesProvider>
-      </HomeToolbar>
+        </AppBar>
     </div>
   )
 }

@@ -16,7 +16,9 @@ const useStyles = makeStyles({
     width: '100%',
     height: 72,
     position: 'fixed',
-    bottom: 0
+    bottom: 0,
+    background: 'rgba(25, 118, 210, 0.5)',
+    backdropFilter: 'blur(10px)'
   },
 });
 
@@ -38,8 +40,7 @@ export default function HomeBottombar() {
   let [value, setValue] = React.useState(0);
 
   return (
-    <StylesProvider injectFirst>
-    <RichBottomBar
+    <BottomNavigation
       value={value}
       onChange={(event, newValue) => {
         setValue(newValue)
@@ -51,7 +52,6 @@ export default function HomeBottombar() {
     >
       <BottomNavigationAction value={0} classes={classesAction} label="اپ بات ها" icon={<ExtensionIcon />}/>
       <BottomNavigationAction value={1} classes={classesAction} label="گیم بات ها" icon={<SportsEsportsIcon />} />
-    </RichBottomBar>
-    </StylesProvider>
+    </BottomNavigation>
   );
 }

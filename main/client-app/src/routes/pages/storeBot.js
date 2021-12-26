@@ -168,9 +168,7 @@ export default function StoreBot(props) {
         <ArrowForwardIcon style={{fill: '#fff'}}/>
       </IconButton>
 
-      <Typography style={{padding: 12, color: '#fff'}}>
-      لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده
-      </Typography>
+      <Typography style={{padding: 12, color: '#fff'}}>{bot.description}</Typography>
 
       <div style={{width: '100%', height: 200, position: 'relative'}}>
         <Typography variant={'h6'} style={{marginLeft: 16, marginRight: 16, color: '#fff'}}>عکس ها</Typography>

@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: window.innerWidth > 450 ? 400 : 300
+    width: window.innerWidth > 450 ? 400 : '100%'
   },
   input: {
     marginLeft: theme.spacing(1),

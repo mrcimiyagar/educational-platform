@@ -926,14 +926,16 @@ placeholder.appendChild(imgLarge);
                 ? 0
                 : 16
               : 0,
-            bottom: isDesktop() ? -16 : 0,
+            bottom: isDesktop() ? -48 : 0,
             backdropFilter: 'blur(10px)',
-            borderRadius: '0 0 0 24px',
+            borderRadius: isInMessenger() ? '0 0 0 24px' : 0,
+            objectFit: 'cover'
           }}
         >
         <img
           data-src={ChatWallpaper}
           className="img-small"
+          style={{objectFit: 'cover', height: '100%'}}
         />
         <div style={{paddingBottom: '66.6%'}}></div>
       </div>
@@ -958,6 +960,7 @@ placeholder.appendChild(imgLarge);
               height: 56,
               bottom: showEmojiPad ? 352 + 56 : isDesktop() ? 48 : 88,
               transform: 'translateX(-128px)',
+              backdropFilter: 'blur(10px)'
             }}
           >
             <IconButton
