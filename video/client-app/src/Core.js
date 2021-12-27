@@ -25,7 +25,8 @@ import {
   Drawer,
   makeStyles,
   IconButton,
-  Paper
+  Paper,
+  Typography
 } from '@material-ui/core'
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows'
 import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled'
