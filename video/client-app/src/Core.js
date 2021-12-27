@@ -1141,9 +1141,14 @@ function App() {
               transform: 'translate(-50%, -50%)',
               width: '65%',
               height: 'auto',
-              padding: 16,
+              paddingTop: 24,
+              paddingLeft: 16,
+              paddingRight: 16,
+              paddingBottom: 24,
               maxWidth: 250,
-              backgroundColor: 'rgba(25, 118, 210, 0.65)'
+              backgroundColor: 'rgba(25, 118, 210, 0.65)',
+              backdropFilter: 'blur(15px)',
+              borderRadius: 24
             }}
           >
             <Typography style={{color: '#fff'}}>
