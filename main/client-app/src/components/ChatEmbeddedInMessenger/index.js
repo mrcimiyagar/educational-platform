@@ -887,13 +887,14 @@ placeholder.appendChild(imgLarge);
               : 0,
             backdropFilter: 'blur(10px)',
             borderRadius: isInMessenger() ? '0 0 0 24px' : 0,
-            objectFit: 'cover'
+            objectFit: 'cover',
+            backgroundColor: 'transparent'
           }}
         >
         <img
           data-src={ChatWallpaper}
           className="img-small"
-          style={{objectFit: 'cover', height: '100%'}}
+          style={{objectFit: 'cover', height: '100%', backgroundColor: 'transparent'}}
         />
         <div style={{paddingBottom: '66.6%'}}></div>
       </div>
@@ -1032,14 +1033,14 @@ placeholder.appendChild(imgLarge);
                   width: isDesktop()
               ? isInRoom() || histPage === '/app/settings'
                 ? 450
-                : 'calc(100% - 658px - 96px)'
+                : 'calc(100% - 16px - 280px - 16px - 26px - 450px - 32px -  96px - 32px)'
               : 'calc(100% - 450px)',
             height: 416,
             position: 'fixed',
             left: isDesktop()
               ? isInRoom() || histPage === '/app/settings'
                 ? 'calc(100% - 450px)'
-                : 96
+                : 112
               : 0,
             bottom: 0,
             zIndex: 5000,
@@ -1057,13 +1058,13 @@ placeholder.appendChild(imgLarge);
           direction: 'ltr',
           width: isDesktop() ? 'calc(100% - 48px)' : '100%',
           height: showEmojiPad
-            ? 'calc(100% - 416px - 56px)'
+            ? 'calc(100% - 416px)'
             : isTablet()
-            ? 'calc(100% - 64px - 72px)'
+            ? 'calc(100% - 64px)'
             : isDesktop() &&
               (isInRoom() || histPage === '/app/settings')
             ? 'calc(100% - 96px)'
-            : 'calc(100% - 64px)',
+            : '100%',
           marginTop: 32,
           marginLeft: isDesktop() ? 32 : 0,
           marginRight: 16,
@@ -1074,8 +1075,9 @@ placeholder.appendChild(imgLarge);
           id={'scroller'}
         >
           <div style={{ height: 64 }} />
+          <div style={{ width: '100%', height: 80 }} />
           <div id={'messagesContainer'}>
-              {messagesArr}
+            {messagesArr}
           </div>
           <div style={{ width: '100%', height: 80 }} />
         </div>

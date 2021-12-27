@@ -233,17 +233,17 @@ export let gotoPageWithDelay
 
 let DesktopDetector = () => {
   ;[sizeMode, setSizeMode] = React.useState(
-    window.innerWidth > 1500
+    window.innerWidth > 900
       ? 'desktop'
-      : window.innerWidth > 1200
+      : window.innerWidth > 600
       ? 'tablet'
       : 'mobile',
   )
   window.onresize = () => {
     setSizeMode(
-      window.innerWidth > 1500
+      window.innerWidth > 900
         ? 'desktop'
-        : window.innerWidth > 1200
+        : window.innerWidth > 600
         ? 'tablet'
         : 'mobile',
     )

@@ -871,7 +871,7 @@ placeholder.appendChild(imgLarge);
   if (isDesktop()) {
     if (isInRoom()) {
       width = 450
-      height = props.webcamOn ? 'calc(100% - 300px)' : 'calc(100% + 16px)'
+      height = props.webcamOn ? 'calc(100% - 300px)' : 'calc(100% + 96px)'
       left = 'calc(100% - 450px)'
       right = 0
       top = 0
@@ -919,7 +919,7 @@ placeholder.appendChild(imgLarge);
             width: '100%',
             height: '100%',
             position: 'absolute',
-            top: isDesktop() ? 16 : 0,
+            top: isDesktop() ? 0 : 0,
             left: isDesktop() ? 96 : 0,
             right: isDesktop()
               ? isInRoom() || histPage === '/app/settings'
@@ -929,13 +929,14 @@ placeholder.appendChild(imgLarge);
             bottom: isDesktop() ? -48 : 0,
             backdropFilter: 'blur(10px)',
             borderRadius: isInMessenger() ? '0 0 0 24px' : 0,
-            objectFit: 'cover'
+            objectFit: 'cover',
+            backgroundColor: 'transparent'
           }}
         >
         <img
           data-src={ChatWallpaper}
           className="img-small"
-          style={{objectFit: 'cover', height: '100%'}}
+          style={{objectFit: 'cover', height: '100%', backgroundColor: 'transparent'}}
         />
         <div style={{paddingBottom: '66.6%'}}></div>
       </div>
@@ -958,7 +959,7 @@ placeholder.appendChild(imgLarge);
             className={classes.root}
             style={{
               height: 56,
-              bottom: showEmojiPad ? 352 + 56 : isDesktop() ? 48 : 88,
+              bottom: showEmojiPad ? isDesktop() ? (352 + 16) : (352 + 56) : isDesktop() ? 16 : 88,
               transform: 'translateX(-128px)',
               backdropFilter: 'blur(10px)'
             }}
@@ -1124,7 +1125,7 @@ placeholder.appendChild(imgLarge);
             <div id={'messagesContainer'}>
                 {messagesArr}
             </div>
-            <div style={{ width: '100%', height: 80 }} />
+            <div style={{ width: '100%', height: 104 }} />
           </div>
           <Fab
             color={'secondary'}

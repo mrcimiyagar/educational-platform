@@ -31,7 +31,7 @@ export default function Profile(props) {
   
   document.documentElement.style.overflowY = 'hidden'
 
-  const [open, setOpen] = React.useState(true)
+  const [open, setOpen] = React.useState(false)
   registerDialogOpen(setOpen)
 
   const handleClose = () => {
@@ -57,6 +57,7 @@ export default function Profile(props) {
       .then((result) => {
         console.log(JSON.stringify(result));
         setUser(result.user);
+        setOpen(true);
       })
   }, [])
 

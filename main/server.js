@@ -154,6 +154,27 @@ models.setup().then(() => {
         }, 5000);
 
         module.exports = {
+            'pushToExcept': async (nodeId, key, data, exceptionId) => {
+                if (nodeId === 'aseman-bot-store') {
+                    let users = await sw.User.findAll({raw: true});
+                    let userIds = users.map(u => u.id);
+                    userIds.forEach(uid => {
+                        if (uid === exceptionId) return;
+                        let d = JSON.stringify(data);
+                        if (d.length > 100) d = d.substr(0, 100);
+                        if (notifs[uid] === undefined) notifs[uid] = [];
+                        notifs[uid].push({key, data});
+                    });
+                }
+                else {
+                    let users = getRoomUsers(Number(nodeId.substr('room_'.length)));
+                    users.forEach(user => {
+                        if (user.id === exceptionId) return;
+                        if (notifs[user.id] === undefined) notifs[user.id] = [];
+                        notifs[user.id].push({key, data});
+                    });
+                }
+            },
             'pushTo': async (nodeId, key, data) => {
                 if (nodeId === 'aseman-bot-store') {
                     let users = await sw.User.findAll({raw: true});

@@ -1018,10 +1018,11 @@ router.post('/create_category', jsonParser, async function (req, res) {
     let cat = await sw.StoreCategory.create({
       title: req.body.title,
     })
-    require('../server').pushTo(
+    require('../server').pushToExcept(
       'aseman-bot-store',
       'store-category-created',
       cat,
+      user.id
     )
     res.send({ status: 'success', category: cat })
   })

@@ -29,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     position: 'fixed',
     bottom: 0,
+    right: 0,
+    left: 0,
     backgroundImage: `url(${SearchWallpaper})`
   },
   input: {
@@ -58,17 +60,6 @@ export default function SearchEngine(props) {
   return (
     <div className={classes.root}>
       <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-        <img
-          src={Logo}
-          style={{
-            width: 200,
-            height: 200,
-            position: 'absolute',
-            left: '50%',
-            top: 32,
-            transform: 'translateX(-50%)',
-          }}
-        />
         <div
           style={{
             width: 112,

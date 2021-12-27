@@ -167,6 +167,7 @@ export default function HomeMessenger(props) {
                 marginTop: isDesktop() ? 32 : undefined,
                 width: isDesktop() || isTablet() ? 450 : '100%',
                 backgroundColor: colors.primaryMedium,
+                backdropFilter: 'blur(10px)'
               }}
             >
               <Toolbar style={{ marginTop: 16 }}>

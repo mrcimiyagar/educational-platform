@@ -1,3 +1,4 @@
+import { Drawer } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -65,9 +66,10 @@ export default function SearchEngineDrawer(props) {
         </div>
     );
     return (
-        <SwipeableDrawer
+        <Drawer
             style={{
-                direction: 'rtl'}}
+                direction: 'rtl'
+            }}
             anchor={'right'}
             open={props.open}
             onClose={() => props.setOpen(false)}
@@ -78,6 +80,6 @@ export default function SearchEngineDrawer(props) {
             </div>
             <div style={{height: 24}}/>
             {list('right')}
-        </SwipeableDrawer>
+        </Drawer>
     );
 }

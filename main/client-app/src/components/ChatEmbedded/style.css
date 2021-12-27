@@ -1,7 +1,6 @@
 .placeholder {
-    background-color: #f6f6f6;
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     position: relative;
     overflow: hidden;
   }
@@ -17,10 +16,10 @@
   
   .placeholder img.loaded {
     opacity: 1;
+    height: 100%;
   }
   
   .img-small {
     filter: blur(50px);
-    /* this is needed so Safari keeps sharp edges */
     transform: scale(1);
   }

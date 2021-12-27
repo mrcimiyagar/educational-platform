@@ -835,6 +835,7 @@ export default function RoomPage(props) {
             background: 'rgba(255, 255, 255, 0.55)',
             backdropFilter: 'blur(15px)'
           }}}
+          keepMounted={true}
         >
           <div
             style={{
@@ -1217,6 +1218,7 @@ export default function RoomPage(props) {
             background: 'rgba(255, 255, 255, 0.55)',
             backdropFilter: 'blur(15px)'
           }}}
+          keepMounted={true}
         >
           <div
             style={{

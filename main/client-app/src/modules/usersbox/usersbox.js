@@ -91,34 +91,39 @@ export let UsersBox = (props) => {
   const [allUsers, setAllUsers] = useState([]);
   const [pauseds, setPauseds] = useState([]);
   reloadUsersList = () => {
-    let requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-      body: JSON.stringify({
-        spaceId: room.spaceId,
-        roomId: props.roomId,
-      }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/room/get_room_users', requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result))
-        result.users.forEach((u) => {
-          if (video[u.id] === undefined) {
-            video[u.id] = false
-          } else if (audio[u.id] === undefined) {
-            audio[u.id] = false
-          }
+    let registeredModuleLoading = setInterval(() => {
+      let requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          token: token,
+        },
+        body: JSON.stringify({
+          spaceId: room.spaceId,
+          roomId: props.roomId,
+        }),
+        redirect: 'follow',
+      }
+      fetch(serverRoot + '/room/get_room_users', requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(JSON.stringify(result))
+          result.users.forEach((u) => {
+            if (video[u.id] === undefined) {
+              video[u.id] = false
+            } else if (audio[u.id] === undefined) {
+              audio[u.id] = false
+            }
+          })
+          setUsers(result.users);
+          if (result.pauseds !== undefined) setPauseds(result.pauseds);
+          setAllUsers(result.allUsers);
         })
-        setUsers(result.users);
-        if (result.pauseds !== undefined) setPauseds(result.pauseds);
-        setAllUsers(result.allUsers);
-      })
-      .catch((error) => console.log('error', error))
+        .catch((error) => console.log('error', error))
+      if (room !== undefined) {
+        clearInterval(registeredModuleLoading);
+      }
+    }, 500);
   }
   useEffect(() => {
     window.addEventListener('message', (e) => {

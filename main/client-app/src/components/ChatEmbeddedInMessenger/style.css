@@ -1,5 +1,4 @@
 .placeholder {
-    background-color: #f6f6f6;
     background-size: cover;
     background-repeat: no-repeat;
     position: relative;
@@ -17,6 +16,7 @@
   
   .placeholder img.loaded {
     opacity: 1;
+    height: 100%;
   }
   
   .img-small {
