@@ -217,9 +217,9 @@ export default function HomeMessenger(props) {
                 ? 'calc(100% - 168px - 40px)'
                 : 'calc(100% - 128px - 32px - 56px)',
               backgroundColor: colors.accentDark,
+              backdropFilter: 'blur(20px)',
               opacity: inTheGame ? 1 : 0,
               transition: 'opacity .5s',
-              backdropFilter: (isDesktop() || isTablet()) ? 'blur(10px)' : undefined,
               marginLeft: isMobile() ? -8 : undefined,
               marginRight: isMobile() || isDesktop() ? -8 : undefined,
               marginTop: isDesktop() ? 128 : 96,
@@ -268,7 +268,6 @@ export default function HomeMessenger(props) {
                   direction: 'ltr',
                 }}
               >
-                <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
                 <GroupChats
                   setInTheGame={setInTheGame}
                   setSelectedRoomId={props.setSelectedRoomId}
@@ -292,7 +291,6 @@ export default function HomeMessenger(props) {
                   direction: 'ltr',
                 }}
               >
-                <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
                 <ChannelChats
                   setInTheGame={setInTheGame}
                   setSelectedRoomId={props.setSelectedRoomId}
@@ -316,7 +314,6 @@ export default function HomeMessenger(props) {
                   direction: 'ltr',
                 }}
               >
-                <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
                 <BotChats
                   setInTheGame={setInTheGame}
                   setSelectedRoomId={props.setSelectedRoomId}

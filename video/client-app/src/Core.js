@@ -25,6 +25,7 @@ import {
   Drawer,
   makeStyles,
   IconButton,
+  Paper
 } from '@material-ui/core'
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows'
 import DesktopAccessDisabledIcon from '@material-ui/icons/DesktopAccessDisabled'
@@ -36,7 +37,7 @@ import {
   Mic,
   MicOff,
   Notes,
-  VideocamOff,
+  VideocamOff
 } from '@material-ui/icons'
 import CallIcon from '@material-ui/icons/Call'
 import CallEndIcon from '@material-ui/icons/CallEnd'
@@ -1129,6 +1130,25 @@ function App() {
           >
             <CallIcon style={{ fill: '#333' }} />
           </Fab>
+          <Paper
+            id="descriptionPanel"
+            style={{
+              display: (!connected && videoAccess) ? 'block' : 'none',
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '65%',
+              height: 'auto',
+              padding: 16,
+              maxWidth: 250,
+              backgroundColor: 'rgba(25, 118, 210, 0.65)'
+            }}
+          >
+            <Typography style={{color: '#fff'}}>
+              به پنل ویدئو خوش آمدید . از این ماژول می توانید برای برقراری تماس ویدئویی , کنفرانس و وبینار استفاده نمایید .
+            </Typography>
+          </Paper>
       </ThemeProvider>
     </div>
   )

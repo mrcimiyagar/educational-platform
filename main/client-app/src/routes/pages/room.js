@@ -660,7 +660,7 @@ export default function RoomPage(props) {
                   </IconButton>
                   <Typography
                     variant={'h6'}
-                    style={{ position: 'absolute', right: 16 + 32 + 16 }}
+                    style={{ position: 'absolute', right: 16 + 32 + 16, color: '#fff' }}
                   >
                     فایل ها
                   </Typography>
