@@ -34,6 +34,7 @@ import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils';
 import {setMembership as setMCE} from '../ChatEmbedded';
 import {setMembership as setMCEIM} from '../ChatEmbeddedInMessenger';
+import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
@@ -86,8 +87,8 @@ export default function HomeMessenger(props) {
     let classes = useStyles();
     useEffect(() => {
         setWallpaper({
-          type: 'color',
-          color: colors.accentDark
+          type: 'photo',
+          photo: RoomWallpaper
         });
         let doRoomDoctor = () => {
           let requestOptions = {
@@ -211,15 +212,17 @@ export default function HomeMessenger(props) {
               position: 'absolute',
               width: isDesktop() || isTablet() ? 450 : 'calc(100% + 16px)',
               height: isDesktop()
-                ? 'calc(100% - 184px)'
+                ? 'calc(100% - 184px - 40px)'
                 : isTablet()
-                ? 'calc(100% - 168px)'
-                : 'calc(100% - 128px - 32px)',
-              backgroundColor: (isDesktop() || isTablet()) ? 'rgba(255, 255, 255, 0.445)' : undefined,
+                ? 'calc(100% - 168px - 40px)'
+                : 'calc(100% - 128px - 32px - 56px)',
+              backgroundColor: colors.accentDark,
+              opacity: inTheGame ? 1 : 0,
+              transition: 'opacity .5s',
               backdropFilter: (isDesktop() || isTablet()) ? 'blur(10px)' : undefined,
               marginLeft: isMobile() ? -8 : undefined,
               marginRight: isMobile() || isDesktop() ? -8 : undefined,
-              marginTop: isDesktop() ? 88 : 56,
+              marginTop: isDesktop() ? 128 : 96,
               borderRadius:
                 isTablet() || isMobile()
                   ? 0
@@ -239,10 +242,9 @@ export default function HomeMessenger(props) {
                   width: '100%',
                   height: '100%',
                   overflow: 'auto',
-                  direction: 'ltr',
+                  direction: 'ltr'
                 }}
               >
-                <div style={{ width: '100%', height: isDesktop() ? 48 : 32 }} />
                 <AllChats
                   setInTheGame={setInTheGame}
                   setSelectedRoomId={props.setSelectedRoomId}

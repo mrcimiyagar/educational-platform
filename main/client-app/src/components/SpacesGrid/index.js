@@ -12,21 +12,16 @@ import { serverRoot } from '../../util/Utils';
 import EmptySign from '../EmptySign';
 import HomeToolbar from '../HomeToolbar';
 import SpacesSearchbar from '../SpacesSearchbar';
+import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    height: '100vh'
-  },
   imageList: {
-    paddingTop: 48,
     width: '100%',
-    height: '100%',
-    overflow: 'auto',
     direction: 'rtl',
-    paddingBottom: 112,
     paddingLeft: isDesktop() ? 112 : 16,
     paddingRight: isDesktop() ? 388 : 16,
+    paddingTop: 96,
+    paddingBottom: 96,
     transform: 'translateZ(0)',
   },
   titleBar: {
@@ -49,8 +44,8 @@ export default function SpacesGrid(props) {
   useEffect(() => {
 
     setWallpaper({
-      type: 'color',
-      color: colors.accentDark
+      type: 'photo',
+      photo: RoomWallpaper
     });
 
     fetchSpaces().then((result) => {
@@ -81,14 +76,10 @@ export default function SpacesGrid(props) {
   }, [])
 
   return (
-    <div className={classes.root}>
-      <div style={{width: '100%', position: 'fixed', height: '100%'}}/>
-      <HomeToolbar inTheGame={inTheGame}>
-        <div style={{width: '75%', position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}>
-          <SpacesSearchbar setDrawerOpen={props.setDrawerOpen}/>
-        </div>
-      </HomeToolbar>
-      <ImageList style={{zIndex: 2}} rowHeight={250} cols={Math.max(1, Math.floor((window.innerWidth - 112 - 240) / 200))} gap={1} className={classes.imageList}>
+    <div style={{overflow: 'auto', position: 'fixed', left: 0, top: 0, right: 0, bottom: 0}}>
+      <div style={{width: '100%', position: 'fixed', height: 'calc(100% - 64px)', backgroundColor: colors.accentDark, opacity: inTheGame ? 1 : 0, transition: 'opacity 1s'}}/>
+      <SpacesSearchbar setDrawerOpen={props.setDrawerOpen}  style={{width: '75%', position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}/>
+      <ImageList rowHeight={266} cols={Math.max(1, Math.floor((window.innerWidth - 112 - 240) / 200))} gap={1} className={classes.imageList} style={{zIndex: 2}}>
         {spaces.length > 0 ?
         spaces.map((item, index) => (
           <Grow in={inTheGame} {...{ timeout: (index + 1) * 500 }} transitionDuration={1000}>

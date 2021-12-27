@@ -37,7 +37,7 @@ export default function SpacesSearchbar(props) {
   const classes = useStyles();
 
   return (
-    <Paper component="form" className={classes.root}>
+    <Paper component="form" className={classes.root} {...props}>
       <IconButton onClick={() => props.setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
         <MenuIcon/>
       </IconButton>

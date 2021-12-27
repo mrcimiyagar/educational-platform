@@ -26,7 +26,6 @@ import {
   isTablet,
   setInTheGame,
 } from '../../App'
-import { setCurrentRoomNavBackup } from '../../routes/pages/room'
 import { colors, token, me } from '../../util/settings'
 import {
   registerEvent,
@@ -35,7 +34,6 @@ import {
   unregisterEvent,
 } from '../../util/Utils'
 import HomeToolbar from '../HomeToolbar'
-import { RichAppBar } from '../RichComponents'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,6 +112,7 @@ export default function ChatAppBar(props) {
 
   return (
     <div className={classes.root}>
+      <HomeToolbar>
         <AppBar
           position="fixed"
           style={{
@@ -241,6 +240,7 @@ export default function ChatAppBar(props) {
             </div>
           </Toolbar>
         </AppBar>
+      </HomeToolbar>
     </div>
   )
 }

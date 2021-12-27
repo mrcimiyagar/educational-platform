@@ -13,6 +13,7 @@ import {
 } from '../../App'
 import { setToken, token } from '../../util/settings'
 import { serverRoot, useForceUpdate } from '../../util/Utils'
+import {pathConfig} from '../../index';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -161,7 +162,8 @@ export default function CreateRoom(props) {
               .then((result) => {
                 console.log(JSON.stringify(result))
                 if (result.room !== undefined) {
-                  gotoPage('/app/room', { room_id: result.room.id, tab_index: 0 })
+                  alert('در حال ورود به روم جدید...');
+                  window.location.href = pathConfig.mainFrontend + '/app/room?room_id=' + result.room.id + '&tab_index=0';
                 }
               })
               .catch((error) => console.log('error', error))

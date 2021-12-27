@@ -70,7 +70,8 @@ export default function HomeBottombar(props) {
         zIndex: 2501,
         left: isDesktop() ? (-274 + 32 + 100) : undefined,
         top: isDesktop() ? 'calc(50% - 56px)' : undefined,
-        borderRadius: isDesktop() ? 32 : undefined
+        borderRadius: isDesktop() ? 32 : undefined,
+        backdropFilter: 'blur(10px)'
       }}
     >
       <BottomNavigationAction value={0} classes={classesAction} style={{
