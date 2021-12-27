@@ -865,7 +865,7 @@ placeholder.appendChild(imgLarge);
         display:
           props.roomId === undefined || props.roomId === 0 ? 'none' : 'block',
         width: isDesktop() ? 'calc(100% - 450px - 450px - 48px)' : 0,
-        height: 'calc(100% - 16px - 56px)',
+        height: 'calc(100% - 74px - 56px)',
         position: 'absolute',
         top: 0,
         left: isDesktop() ? 128 : 0,
@@ -876,7 +876,7 @@ placeholder.appendChild(imgLarge);
       <div className="placeholder" data-large={ChatWallpaper} 
           style={{
             width: '100%',
-            height: 'calc(100% - 40px)',
+            height: 'calc(100% + 16px)',
             position: 'absolute',
             top: isDesktop() ? 16 + 64 : 0,
             left: isDesktop() ? 96 : 0,
