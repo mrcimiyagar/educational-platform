@@ -1137,7 +1137,7 @@ function App() {
               display: (!connected && videoAccess) ? 'block' : 'none',
               position: 'fixed',
               top: '50%',
-              left: '50%',
+              left: sizeMode === 'desktop' ? '50%' : 'calc(50% - 225px)',
               transform: 'translate(-50%, -50%)',
               width: '65%',
               height: 'auto',
