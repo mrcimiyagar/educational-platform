@@ -1151,7 +1151,7 @@ function App() {
               borderRadius: 24
             }}
           >
-            <Typography style={{color: '#fff'}}>
+            <Typography style={{color: '#fff', fontSize: 18, textAlign: 'right', justifyContent: 'right', alignItems: 'right'}}>
               به پنل ویدئو خوش آمدید . از این ماژول می توانید برای برقراری تماس ویدئویی , کنفرانس و وبینار استفاده نمایید .
             </Typography>
           </Paper>
