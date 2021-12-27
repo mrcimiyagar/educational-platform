@@ -270,9 +270,9 @@ function App() {
     useEffect(() => {
       setTimeout(() => {
         setSizeMode(
-          window.innerWidth > 1400
+          window.innerWidth > 900
             ? 'desktop'
-            : window.innerWidth > 900
+            : window.innerWidth > 600
             ? 'tablet'
             : 'mobile',
         )
@@ -280,9 +280,9 @@ function App() {
     }, [])
     window.onresize = () => {
       setSizeMode(
-        window.innerWidth > 1400
+        window.innerWidth > 900
           ? 'desktop'
-          : window.innerWidth > 900
+          : window.innerWidth > 600
           ? 'tablet'
           : 'mobile',
       )
