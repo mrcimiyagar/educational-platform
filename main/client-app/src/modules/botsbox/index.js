@@ -4,6 +4,7 @@ import {
   Drawer,
   Fab,
   Slide,
+  SwipeableDrawer,
   ThemeProvider,
 } from '@material-ui/core'
 import { pink } from '@material-ui/core/colors'
@@ -451,21 +452,27 @@ export default function BotsBox(props) {
       </Fab>
       </Slide>
       </ThemeProvider>
-      <Drawer
+      <SwipeableDrawer
         onClose={() => setMenuOpen(false)}
         open={menuOpen}
         anchor={'left'}
         style={{ direction: 'ltr' }}
+        PaperProps={{
+          style: {
+            background: 'rgba(225, 225, 225, 0.55)',
+            backdropFilter: 'blur(15px)'
+          }
+        }}
+        keepMounted={true}
       >
         <div
           style={{
             width: 360,
             height: '100%',
-            backgroundColor: '#fff',
             display: 'flex',
           }}
         >
-          <div style={{ width: 80, height: '100%', backgroundColor: '#eee' }}>
+          <div style={{ width: 80, height: '100%', background: 'rgba(225, 225, 225, 0.55)' }}>
             <Avatar
               style={{
                 width: 64,
@@ -496,7 +503,7 @@ export default function BotsBox(props) {
             ))}
           </div>
         </div>
-      </Drawer>
+      </SwipeableDrawer>
     </div>
   )
 }

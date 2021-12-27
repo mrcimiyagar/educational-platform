@@ -26,6 +26,7 @@ import {
   isInMessenger,
   isInRoom,
   isOnline,
+  isRoomVisible,
   isTablet,
   markFileAsUploaded,
   markFileAsUploading,
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
       : '100%',
     position: 'fixed',
     left: isDesktop()
-      ? isInRoom() || histPage === '/app/settings'
+      ? isRoomVisible()
         ? 'calc(100% - 288px)'
         : 'calc(50% - 256px - 32px - 32px - 16px - 112px)'
       : 'calc(50% - 256px - 16px)',
@@ -881,7 +882,7 @@ placeholder.appendChild(imgLarge);
             top: isDesktop() ? 16 + 64 : 0,
             left: isDesktop() ? 96 : 0,
             right: isDesktop()
-              ? isInRoom() || histPage === '/app/settings'
+              ? isRoomVisible()
                 ? 0
                 : 16
               : 0,
@@ -1031,14 +1032,14 @@ placeholder.appendChild(imgLarge);
                 set={'apple'}
                 style={{
                   width: isDesktop()
-              ? isInRoom() || histPage === '/app/settings'
+              ? isRoomVisible()
                 ? 450
                 : 'calc(100% - 16px - 280px - 16px - 26px - 450px - 32px -  96px - 32px)'
               : 'calc(100% - 450px)',
             height: 416,
             position: 'fixed',
             left: isDesktop()
-              ? isInRoom() || histPage === '/app/settings'
+              ? isRoomVisible()
                 ? 'calc(100% - 450px)'
                 : 112
               : 0,
@@ -1062,7 +1063,7 @@ placeholder.appendChild(imgLarge);
             : isTablet()
             ? 'calc(100% - 64px)'
             : isDesktop() &&
-              (isInRoom() || histPage === '/app/settings')
+              (isRoomVisible())
             ? 'calc(100% - 96px)'
             : '100%',
           marginTop: 32,

@@ -11,7 +11,7 @@ import {
   popPage,
   registerDialogOpen
 } from '../../App'
-import { setToken, token } from '../../util/settings'
+import { colors, setToken, token } from '../../util/settings'
 import { serverRoot, useForceUpdate } from '../../util/Utils'
 import {pathConfig} from '../../index';
 
@@ -71,7 +71,7 @@ export default function CreateRoom(props) {
         isDesktop
           ? {
               style: {
-                backgroundColor: 'rgba(255, 255, 255, 0.65)',
+                backgroundColor: 'transparent',
                 boxShadow: 'none',
                 borderRadius: isDesktop() ? 16 : 0,
               },
@@ -89,7 +89,8 @@ export default function CreateRoom(props) {
       TransitionComponent={Transition}
       style={{
         zIndex: 2501,
-        backdropFilter: isDesktop() ? undefined : 'blur(10px)',
+        backdropFilter: isDesktop() ? undefined : 'blur(15px)',
+        overflow: 'hidden'
       }}
     >
       <div
@@ -100,6 +101,7 @@ export default function CreateRoom(props) {
           top: isDesktop() ? undefined : 0,
           left: isDesktop() ? undefined : 0,
           direction: 'rtl',
+          overflow: 'hidden',
         }}
       >
         <Paper
@@ -107,8 +109,9 @@ export default function CreateRoom(props) {
             width: isDesktop() ? 450 : undefined,
             paddingTop: 8,
             height: 64,
-            backgroundColor: 'rgba(21, 96, 233, 0.85)',
+            backgroundColor: colors.primaryMedium,
             backdropFilter: 'blur(10px)',
+            borderRadius: 0
           }}
         >
           <Toolbar style={{ marginTop: isDesktop() ? -8 : undefined }}>
@@ -127,6 +130,7 @@ export default function CreateRoom(props) {
             </Typography>
           </Toolbar>
         </Paper>
+        <div style={{backgroundColor: 'rgba(255, 255, 255, 0.65)', width: '100%', height: '100%', overflow: 'hidden'}}>
         <TextField
           className={classes.textField}
           id="roomCreationTitle"
@@ -172,6 +176,7 @@ export default function CreateRoom(props) {
           <Add />
           ساخت روم
         </Fab>
+        </div>
       </div>
     </Dialog>
   )

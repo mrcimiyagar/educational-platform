@@ -48,7 +48,7 @@ import {
 } from '../../util/Utils'
 import DesktopWallpaper2 from '../../images/desktop-wallpaper.jpg';
 import {homeRoomId} from '../../util/settings';
-import { MachinesBox } from '../../modules/machinesbox/machinesbox'
+import { MachinesBox } from '../../modules/machinesbox/machinesbox';
 
 let accessChangeCallback = undefined
 export let notifyMeOnAccessChange = (callback) => {
@@ -344,6 +344,7 @@ export default function HomePage(props) {
               backdropFilter: 'blur(15px)'
             }
           }}
+          keepMounted={true}
         >
           <div
             style={{
@@ -485,6 +486,7 @@ export default function HomePage(props) {
               backdropFilter: 'blur(15px)'
             }
           }}
+          keepMounted={true}
         >
           <div
             style={{

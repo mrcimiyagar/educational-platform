@@ -163,7 +163,7 @@ export function PollBox(props) {
         height: 'calc(100% - 64px)',
         borderRadius: isDesktop() ? '0 0 24px 24px' : undefined,
         backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        backdropFilter: isDesktop() && isInRoom() ? 'blur(15px)' : undefined,
+        backdropFilter: 'blur(15px)'
       }}
     >
       <div

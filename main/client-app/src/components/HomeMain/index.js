@@ -246,8 +246,11 @@ export default function HomeAppbar(props) {
       <div
         style={{
           position: 'fixed',
-          right: isDesktop() ? (isInRoom() && '/app/home') ? (48 + 450) : 48 : isMobile() ? 16 : 32,
-          bottom: isDesktop() ? -32 : 0,
+          right: isDesktop() ? 
+                  (tabIndexBackup === '4') ? (16 + 450) :
+                  48 :
+                  isMobile() ? 16 : 32,
+          bottom: isDesktop() ? (tabIndexBackup === '4') ? -64 : -32 : 0,
           zIndex: 2500,
         }}
       >

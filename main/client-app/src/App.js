@@ -100,7 +100,6 @@ let popTrigger = undefined,
 
 export let sizeMode
 let setSizeMode
-let currentStaticPage = ''
 export let isDesktop = () => {
   return sizeMode === 'desktop'
 }
@@ -140,9 +139,13 @@ export let isInMessenger = () => {
   }
   return false
 }
-let series = []
-let paramsSeries = []
+export let series = []
+export let paramsSeries = []
 let forceUpdate = undefined
+
+export let isRoomVisible = () => {
+  return (series.length === 1 && series[0] === '/app/room') || (series.length > 1 && series[series.length - 1] === '/app/room');
+}
 
 export let popPage
 export let gotoPage

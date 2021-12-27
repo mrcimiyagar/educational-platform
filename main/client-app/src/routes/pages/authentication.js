@@ -8,6 +8,7 @@ import WhiteColorTextField from '../../components/WhiteColorTextField';
 import Wallpaper from '../../images/chat-wallpaper.jpg';
 import CloudIcon from '../../images/logo.png';
 import {
+  colors,
   setHomeRoomId,
   setHomeSpaceId,
   setMe,
@@ -56,7 +57,7 @@ function Authentication(props) {
       <img style={{width: '100%', height: '100%', objectFit: 'cover', position: 'fixed'}} src={Wallpaper}/>
       {register ? 
         <div style={{borderRadius: 32, height: 'auto', paddingLeft: 32, paddingRight: 32, paddingtop: 16, paddingBottom: 16,
-          backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', textAlign: 'center', justifyContent: 'center',
+          backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)', textAlign: 'center', justifyContent: 'center',
           alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', top: '50%', width: '100%', maxWidth: 340,
           transform: 'translate(-50%, -50%)', left: '50%'}}>
           <div style={{width: '100%', height: 'auto'}}>
@@ -116,7 +117,7 @@ function Authentication(props) {
             </Fab>
           </div>
         </div> :
-        <div style={{borderRadius: 32, width: '100%', maxWidth: 340, textAlign: 'center', paddingLeft: 32, paddingRight: 32, paddingtop: 32, paddingBottom: 32, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+        <div style={{borderRadius: 32, width: '100%', maxWidth: 340, textAlign: 'center', paddingLeft: 32, paddingRight: 32, paddingtop: 32, paddingBottom: 32, backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
           <div style={{width: '100%', height: 'auto'}}>
             <img src={CloudIcon} style={{width: 100, height: 100, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
             <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#000', marginTop: 24, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>

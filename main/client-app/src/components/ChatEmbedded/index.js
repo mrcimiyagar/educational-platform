@@ -23,11 +23,13 @@ import {
   isInMessenger,
   isInRoom,
   isOnline,
+  isRoomVisible,
   isTablet,
   markFileAsUploaded,
   markFileAsUploading,
   popPage,
   routeTrigger,
+  series,
   setCurrentRoomId,
   setDialogOpen,
   uploadingFiles,
@@ -55,16 +57,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: isDesktop()
-      ? 'min(20%, 450px)'
+      ? 'min(calc(85% - 64px), 386px)'
       : isTablet()
       ? 'min(60%, 350px)'
       : '100%',
     position: 'fixed',
-    left: isDesktop()
-      ? isInRoom() || histPage === '/app/settings'
-        ? 'calc(100% - 288px)'
-        : 'calc(50% - 256px - 32px - 32px - 16px - 112px)'
-      : 'calc(50% - 256px - 16px)',
     transform: 'translateX(-50%)',
     borderRadius: 16,
     zIndex: 1000,
@@ -921,11 +918,7 @@ placeholder.appendChild(imgLarge);
             position: 'absolute',
             top: isDesktop() ? 0 : 0,
             left: isDesktop() ? 96 : 0,
-            right: isDesktop()
-              ? isInRoom() || histPage === '/app/settings'
-                ? 0
-                : 16
-              : 0,
+            right: 0,
             bottom: isDesktop() ? -48 : 0,
             backdropFilter: 'blur(10px)',
             borderRadius: isInMessenger() ? '0 0 0 24px' : 0,
@@ -950,17 +943,15 @@ placeholder.appendChild(imgLarge);
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
         <ChatAppBar user={user} room={room} webcamOn={props.webcamOn} viewCallback={props.viewCallback}/>
-        <div style={{ width: '100%', height: 'auto', zIndex: 1000, 
+        <div id="test" style={{marginTop: (window.innerHeight + 40) - (showEmojiPad ? 350 : 0) + 'px', marginRight: -164, width: '100%', height: '100%', zIndex: 1000, 
           display: ((props.membership !== undefined && props.membership !== null && (props.membership.canAddMessage === true)) ||
                    (membership !== undefined && membership !== null && (membership.canAddMessage === true)))
-           ? 'block' : 'none'
+           ? 'block' : 'none',
         }}>
           <div
             className={classes.root}
             style={{
               height: 56,
-              bottom: showEmojiPad ? isDesktop() ? (352 + 16) : (352 + 56) : isDesktop() ? 16 : 88,
-              transform: 'translateX(-128px)',
               backdropFilter: 'blur(10px)'
             }}
           >
@@ -1080,14 +1071,14 @@ placeholder.appendChild(imgLarge);
               set={'apple'}
               style={{
                 width: isDesktop()
-                  ? isInRoom() || histPage === '/app/settings'
+                  ? isRoomVisible()
                     ? 450
                     : 'calc(100% - 658px - 96px)'
                   : 'calc(100% - 450px)',
                 height: 416,
                 position: 'fixed',
                 left: isDesktop()
-                  ? isInRoom() || histPage === '/app/settings'
+                  ? isRoomVisible()
                     ? 'calc(100% - 450px)'
                     : 96
                   : 0,
@@ -1108,7 +1099,7 @@ placeholder.appendChild(imgLarge);
               ? 'calc(100% - 416px - 56px)'
               : isTablet()
               ? 'calc(100% - 64px - 72px)'
-              : isDesktop() && (isInRoom() || histPage === '/app/settings')
+              : (isDesktop() && isRoomVisible())
               ? 'calc(100% - 96px)'
               : 'calc(100% - 64px)',
             marginTop: 0,
@@ -1118,10 +1109,10 @@ placeholder.appendChild(imgLarge);
           }}
         >
           <div
-            style={{ width: '100%', height: '100%', overflow: 'auto' }}
+            style={{ width: 450, height: '100%', paddingRight: 16, overflow: 'auto', position: 'fixed', top: 0 }}
             id={'scroller'}
           >
-            <div style={{ height: 64 }} />
+            <div style={{ height: 84 }} />
             <div id={'messagesContainer'}>
                 {messagesArr}
             </div>
