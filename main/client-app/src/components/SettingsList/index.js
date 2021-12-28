@@ -166,6 +166,10 @@ export default function SettingsList(props) {
                               'Content-Type': 'application/json',
                               token: token,
                             },
+                            body: JSON.stringify({
+                              firstName: document.getElementById('profileEditFirstName').value,
+                              lastName: document.getElementById('profileEditLastName').value,
+                            }),
                             redirect: 'follow',
                           }
                           fetch(serverRoot + '/auth/edit_me', requestOptions)

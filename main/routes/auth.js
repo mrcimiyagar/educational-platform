@@ -108,20 +108,22 @@ router.post('/get_user', jsonParser, async function (req, res) {
 
 router.post('/edit_me', jsonParser, async function (req, res) {
     if (req.body.firstName === undefined || req.body.firstName === null || req.body.firstName === '') {
-        res.send({status: 'error', errorCode: 'e006', message: 'firsr name can not be empty.'});
+        res.send({status: 'error', errorCode: 'e006', message: 'first name can not be empty.'});
         return;
     }
     authenticateMember(req, res, async (membership, session, user) => {
         let u = await sw.User.findOne({where: {id: user.id}});
-        if (u === null) {
+        if (u === null || u === undefined) {
             res.send({status: 'error', errorCode: 'e005', message: 'access denied.'});
             return;
         }
         u.firstName = req.body.firstName;
         u.lastName = req.body.lastName;
         await u.save();
-        users[u.id].firstName = req.body.firstName;
-        users[u.id].lastName = req.body.lastName;
+        if (users[u.id] !== undefined) {
+            users[u.id].firstName = req.body.firstName;
+            users[u.id].lastName = req.body.lastName;
+        }
         res.send({status: 'success'});
     })
 });
