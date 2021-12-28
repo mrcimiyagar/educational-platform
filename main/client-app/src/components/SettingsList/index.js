@@ -1,4 +1,4 @@
-import { Avatar, Card, Fab, Grow, Paper, Slide, TextField, Typography } from '@material-ui/core'
+import { Avatar, Card, Fab, Grow, Paper, Slide, TextField, Typography, ThemeProvider } from '@material-ui/core'
 import ImageList from '@material-ui/core/ImageList'
 import ImageListItem from '@material-ui/core/ImageListItem'
 import { makeStyles } from '@material-ui/core/styles'
@@ -13,7 +13,7 @@ import WifiTetheringIcon from '@material-ui/icons/WifiTethering'
 import React, { useEffect } from 'react'
 import { setWallpaper } from '../..'
 import { inTheGame, setBottomSheetContent, setBSO } from '../../App'
-import { colors, me, token } from '../../util/settings'
+import { colors, me, theme, token } from '../../util/settings'
 import HomeToolbar from '../HomeToolbar'
 import SettingsSearchbar from '../SettingsSearchbar'
 import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
@@ -158,7 +158,8 @@ export default function SettingsList(props) {
                 setBottomSheetContent(
                   <div style={{width: '100%', height: 300}}>
                     <Avatar style={{zIndex: 99999, width: 150, height: 150, position: 'absolute', left: '50%', transform: 'translateX(-50%)'}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${me.id}`} />
-                    <Fab style={{zIndex: 99999, position: 'absolute', left: 'calc(50% - 150px)', transform: 'translateX(-50%)'}}
+                    <ThemeProvider theme={theme}>
+                      <Fab color={'secondary'} style={{zIndex: 99999, position: 'absolute', left: 'calc(50% - 150px)', transform: 'translate(-50%, 47px)'}}
                          onClick={() => {
                           let requestOptions = {
                             method: 'POST',
@@ -189,7 +190,8 @@ export default function SettingsList(props) {
                             });
                          }}>
                       <Save />
-                    </Fab>
+                      </Fab>
+                    </ThemeProvider>
                     <Paper style={{borderRadius: '24px 24px 0 0', width: '100%', height: 'calc(100% - 75px)', position: 'absolute', top: 100, left: 0, background: colors.accentDark, backdropFilter: 'blur(10px)'}}>
                       <TextField
                         id="profileEditFirstName"
