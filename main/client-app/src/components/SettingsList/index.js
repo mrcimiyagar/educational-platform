@@ -1,4 +1,4 @@
-import { Avatar, Card, Fab, Grow, Slide, Typography } from '@material-ui/core'
+import { Avatar, Card, Fab, Grow, Paper, Slide, TextField, Typography } from '@material-ui/core'
 import ImageList from '@material-ui/core/ImageList'
 import ImageListItem from '@material-ui/core/ImageListItem'
 import { makeStyles } from '@material-ui/core/styles'
@@ -18,6 +18,7 @@ import HomeToolbar from '../HomeToolbar'
 import SettingsSearchbar from '../SettingsSearchbar'
 import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
 import { serverRoot } from '../../util/Utils'
+import { Done, Save } from '@material-ui/icons'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -139,12 +140,11 @@ export default function SettingsList(props) {
           <SettingsSearchbar setDrawerOpen={props.setDrawerOpen} />
       </div>
       <ImageList
-        style={{ zIndex: 2 }}
         rowHeight={224}
         cols={2}
         gap={1}
         className={classes.imageList}
-        style={{backdropFilter: 'blur(15px)', background: colors.accentDark, opacity: (inTheGame && visibilityAllowed) ? 1 : 0}}
+        style={{zIndex: 2, backdropFilter: 'blur(15px)', background: colors.accentDark, opacity: (inTheGame && visibilityAllowed) ? 1 : 0}}
       >
         <ImageListItem
           key={'settings-my-profile-tag'}
@@ -157,7 +157,49 @@ export default function SettingsList(props) {
               onClick={() => {
                 setBottomSheetContent(
                   <div style={{width: '100%', height: 300}}>
-                    <Avatar style={{width: 150, height: 150}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${me.id}`} />
+                    <Avatar style={{zIndex: 99999, width: 150, height: 150, position: 'absolute', left: '50%', transform: 'translateX(-50%)'}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${me.id}`} />
+                    <Fab style={{zIndex: 99999, position: 'absolute', left: 'calc(50% - 150px)', transform: 'translateX(-50%)'}}
+                         onClick={() => {
+                          let requestOptions = {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                              token: token,
+                            },
+                            redirect: 'follow',
+                          }
+                          fetch(serverRoot + '/auth/edit_me', requestOptions)
+                            .then((response) => response.json())
+                            .then((result) => {
+                              if (result.status === 'success') {
+                                me.firstName = document.getElementById('profileEditFirstName').value;
+                                me.lastName = document.getElementById('profileEditLastName').value;
+                                setBSO(false);
+                                setTimeout(() => {
+                                  setBottomSheetContent(null);
+                                }, 250);
+                              }
+                              else {
+                                alert(result.message);
+                              }
+                            });
+                         }}>
+                      <Save />
+                    </Fab>
+                    <Paper style={{borderRadius: '24px 24px 0 0', width: '100%', height: 'calc(100% - 75px)', position: 'absolute', top: 100, left: 0, background: colors.accentDark, backdropFilter: 'blur(10px)'}}>
+                      <TextField
+                        id="profileEditFirstName"
+                        defaultValue={me.firstName}
+                        variant={'outlined'}
+                        label={'نام'}
+                        style={{marginTop: 16 + 76 + 8, marginLeft: 16, marginRight: 16, width: 'calc(100% - 32px)'}} />
+                      <TextField 
+                        id="profileEditLastName"
+                        defaultValue={me.lastName}
+                        variant={'outlined'}
+                        label={'نام خاموادگی'}
+                        style={{marginTop: 16, marginLeft: 16, marginRight: 16, width: 'calc(100% - 32px)'}} />
+                    </Paper>
                   </div>
                 );
                 setBSO(true);

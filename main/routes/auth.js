@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const { authenticateMember } = require('../users');
 const { uuid } = require('uuidv4');
 const fetch = require('node-fetch');
+const users = require('../users');
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
@@ -103,6 +104,26 @@ router.post('/login', jsonParser, async function (req, res) {
 router.post('/get_user', jsonParser, async function (req, res) {
     let user = await sw.User.findOne({where: {id: req.body.userId}})
     res.send({status: 'success', user: user})
+});
+
+router.post('/edit_me', jsonParser, async function (req, res) {
+    if (req.body.firstName === undefined || req.body.firstName === null || req.body.firstName === '') {
+        res.send({status: 'error', errorCode: 'e006', message: 'firsr name can not be empty.'});
+        return;
+    }
+    authenticateMember(req, res, async (membership, session, user) => {
+        let u = await sw.User.findOne({where: {id: user.id}});
+        if (u === null) {
+            res.send({status: 'error', errorCode: 'e005', message: 'access denied.'});
+            return;
+        }
+        u.firstName = req.body.firstName;
+        u.lastName = req.body.lastName;
+        await u.save();
+        users[u.id].firstName = req.body.firstName;
+        users[u.id].lastName = req.body.lastName;
+        res.send({status: 'success'});
+    })
 });
 
 router.post('/get_me', jsonParser, async function (req, res) {

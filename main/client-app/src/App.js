@@ -743,9 +743,6 @@ export let isOnline = true;
 
     setBSO = (value) => {
       setBottomSheetOpen(value);
-      if (value) {
-        $('#pagesContainer').blockUI();
-      }
     };
 
     return (
@@ -761,7 +758,6 @@ export let isOnline = true;
         <ColorBase/>
         <DesktopDetector/>
         <Sidebar/>
-        <BlockUi tag="div" blocking={bottomSheetOpen}>
         <div
           style={{
             width: '100%',
@@ -776,10 +772,15 @@ export let isOnline = true;
             {D !== undefined ? <D {...dQuery} open={true} /> : null}
           </ThemeProvider>
         </div>
-        </BlockUi>
         <Drawer
+          PaperProps={{
+            style: {
+              background: 'transparent',
+              boxShadow: 'none'
+            }
+          }}
           anchor='bottom'
-          style={{ padding: 32, position: 'fixed', zIndex: 99999 }}
+          style={{ position: 'fixed', zIndex: 99999 }}
           open={bottomSheetOpen}
           onClose={() => setBottomSheetOpen(false)}>
             <div style={{margin: 32}}>

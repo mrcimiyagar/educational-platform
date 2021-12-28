@@ -7,6 +7,7 @@ import SettingsList from '../SettingsList';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    width: '100%'
   },
 }));
 
