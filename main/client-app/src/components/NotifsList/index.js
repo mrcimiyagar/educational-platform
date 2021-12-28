@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useEffect } from 'react';
+import { fetchNotifications } from '../../App';
 import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
@@ -46,101 +47,50 @@ export default function NotifsList() {
   let [notifs, setNotifs] = React.useState([])
 
   useEffect(() => {
-    let requestOptions = {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'token': token
-      },
-      redirect: 'follow'
-    };
-    fetch(serverRoot + "/notifications/get_notifications", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-              console.log(JSON.stringify(result));
-              if (result.notifications !== undefined) {
-                setNotifs(result.notifications);
-              }
-          })
-          .catch(error => console.log('error', error));
+    setNotifs(fetchNotifications());
   }, [])
 
   return notifs.length > 0 ?
     <List className={classes.root}>
-        {notifs.map(i => (
-          <div style={{width: '100%'}}>
-        <ListItem alignItems="flex-start" style={{borderRadius: 16, backgroundColor: 'rgba(200, 10, 120, 0.5)', marginTop: 8, marginRight: -24, width: 'calc(100% + 48px)', backdropFilter: 'blur(10px)'}}>
-          <ListItemAvatar>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-          </ListItemAvatar>
-          <ListItemText
-            style={{color: '#fff'}}
-            primary="Brunch this weekend?"
-            secondary={
-              <React.Fragment style={{color: '#fff'}}>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  className={classes.inline}
-                  color="textPrimary"
-                  style={{color: '#fff'}}
-                >
-                  Ali Connors
-                </Typography>
-                <Typography style={{color: '#fff'}}>{" — I'll be in your neighborhood doing errands this…"}</Typography>
-              </React.Fragment>
-            }
-          />
-        </ListItem>
-        <Divider variant="inset" component="li" />
-        <ListItem alignItems="flex-start" style={{borderRadius: 16, backgroundColor: 'rgba(100, 10, 240, 0.5)', marginTop: 8, marginRight: -24, width: 'calc(100% + 48px)', backdropFilter: 'blur(10px)'}}>
-          <ListItemAvatar>
-            <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-          </ListItemAvatar>
-          <ListItemText
-            style={{color: '#fff'}}
-            primary="Summer BBQ"
-            secondary={
-              <React.Fragment style={{color: '#fff'}}>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  className={classes.inline}
-                  color="textPrimary"
-                  style={{color: '#fff'}}
-                >
-                  to Scott, Alex, Jennifer
-                </Typography>
-                <Typography style={{color: '#fff'}}>{" — Wish I could come, but I'm out of town this…"}</Typography>
-              </React.Fragment>
-            }
-          />
-        </ListItem>
-        <Divider variant="inset" component="li" />
-        <ListItem alignItems="flex-start" style={{borderRadius: 16, backgroundColor: 'rgba(20, 200, 100, 0.5)', marginTop: 8, marginRight: -24, width: 'calc(100% + 48px)', backdropFilter: 'blur(10px)'}}>
-          <ListItemAvatar>
-            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-          </ListItemAvatar>
-          <ListItemText style={{color: '#fff'}}
-            primary="Oui Oui"
-            secondary={
-              <React.Fragment style={{color: '#fff'}}>
-                <Typography
-                  component="span"
-                  variant="body2"
-                  className={classes.inline}
-                  style={{color: '#fff'}}
-                  color="textPrimary"
-                >
-                  Sandra Adams
-                </Typography>
-                <Typography style={{color: '#fff'}}>{' — Do you have Paris recommendations? Have you ever…'}</Typography>
-              </React.Fragment>
-            }
-          />
-        </ListItem>
-          </div>
-        ))
+        {notifs.map(notif => {
+          let dateTime = new Date(Number(notif.time));
+          return (<div style={{width: '100%'}}>
+            <ListItem alignItems="flex-start" style={{borderRadius: 16, backgroundColor: 'rgba(200, 10, 120, 0.5)', marginTop: 8, marginRight: -24, width: 'calc(100% + 48px)', backdropFilter: 'blur(10px)'}}>
+              <ListItemAvatar>
+                <Avatar alt="notification avatar" src={notif.icon} />
+              </ListItemAvatar>
+              <ListItemText
+                style={{color: '#fff'}}
+                primary={notif.title}
+                secondary={
+                  <React.Fragment style={{color: '#fff'}}>
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={classes.inline}
+                      color="textPrimary"
+                      style={{color: '#fff'}}
+                    >
+                      {notif.text}
+                    </Typography>
+                    <Typography style={{color: '#fff'}}>
+                      {
+                        dateTime.toLocaleDateString('fa-IR').toString() +
+                        ' ' +
+                        dateTime.getHours() +
+                        ':' +
+                        dateTime.getMinutes() +
+                        ':' +
+                        dateTime.getSeconds()
+                      }
+                    </Typography>
+                  </React.Fragment>
+                }
+              />
+            </ListItem>
+            <Divider variant="inset" component="li" />
+          </div>);
+        })
       }
     </List> :
     <EmptySign/>

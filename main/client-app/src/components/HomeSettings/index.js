@@ -13,13 +13,6 @@ const useStyles = makeStyles((theme) => ({
 export default function HomeSettings(props) {
   const classes = useStyles()
 
-  useEffect(() => {
-    setWallpaper({
-      type: 'color',
-      color: colors.accentDark
-    });
-  }, []);
-
   return (
     <div className={classes.root}>
         <SettingsList setDrawerOpen={props.setDrawerOpen}/>

@@ -5,9 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import HomeIcon from '@material-ui/icons/Home';
 import React, { useEffect } from 'react';
 import { setWallpaper } from '../..';
-import { cacheSpace, fetchSpaces, gotoPage, inTheGame, isDesktop } from '../../App';
+import { cacheSpace, fetchSpaces, gotoPage, inTheGame, isDesktop, isMobile } from '../../App';
 import EmptyIcon from '../../images/empty.png';
-import { colors, token } from '../../util/settings';
+import { colors, homeRoomId, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 import EmptySign from '../EmptySign';
 import HomeToolbar from '../HomeToolbar';
@@ -34,14 +34,44 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+var lastScrollTop = 0
+
 export default function SpacesGrid(props) {
   const classes = useStyles();
 
-  document.documentElement.style.overflowY = 'hidden'
+  document.documentElement.style.overflowY = 'hidden';
 
   let [spaces, setSpaces] = React.useState([]);
+  let [visibilityAllowed, setVisibilityAllowed] = React.useState(false);
 
   useEffect(() => {
+    let spacesSearchBarContainer = document.getElementById('spacesSearchBarContainer');
+    if (spacesSearchBarContainer !== null) {
+      spacesSearchBarContainer.style.transform = (inTheGame && visibilityAllowed) ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(-100px)';
+    }
+  }, [inTheGame, visibilityAllowed]);
+
+  useEffect(() => {
+
+    setTimeout(() => {
+      setVisibilityAllowed(true);
+    }, 250);
+
+    let spacesSearchBarContainer = document.getElementById('spacesSearchBarContainer');
+    let spacesSearchBarScroller = document.getElementById('spacesSearchBarScroller');
+    spacesSearchBarScroller.addEventListener(
+      'scroll',
+      function () {
+        var st = spacesSearchBarScroller.scrollTop
+        if (st > lastScrollTop) {
+          spacesSearchBarContainer.style.transform = 'translateX(-50%) translateY(-100px)'
+        } else {
+          spacesSearchBarContainer.style.transform = 'translateX(-50%) translateY(0)'
+        }
+        lastScrollTop = st <= 0 ? 0 : st
+      },
+      false
+    );
 
     setWallpaper({
       type: 'photo',
@@ -76,9 +106,10 @@ export default function SpacesGrid(props) {
   }, [])
 
   return (
-    <div style={{overflow: 'auto', position: 'fixed', left: 0, top: 0, right: 0, bottom: 0}}>
-      <div style={{width: '100%', position: 'fixed', height: 'calc(100% - 64px)', backgroundColor: colors.accentDark, opacity: inTheGame ? 1 : 0, transition: 'opacity 1s'}}/>
-      <SpacesSearchbar setDrawerOpen={props.setDrawerOpen}  style={{width: '75%', position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}/>
+    <div id="spacesSearchBarScroller" style={{overflow: 'auto', position: 'fixed', left: 0, top: 0, right: 0, bottom: 0}}>
+      <SpacesSearchbar id="spacesSearchBarContainer" setDrawerOpen={props.setDrawerOpen}  style={{transform: 'translateX(-50%) translateY(-100px)', transition: 'transform .5s', width: '75%',
+            maxWidth: 300, position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}/>
+      <div style={{width: '100%', position: 'fixed', height: isDesktop() ? '100%' : 'calc(100% - 64px)', backdropFilter: 'blur(15px)', backgroundColor: colors.accentDark, opacity: (inTheGame && visibilityAllowed) ? 1 : 0, transition: 'opacity 1s'}}/>
       <ImageList rowHeight={266} cols={Math.max(1, Math.floor((window.innerWidth - 112 - 240) / 200))} gap={1} className={classes.imageList} style={{zIndex: 2}}>
         {spaces.length > 0 ?
         spaces.map((item, index) => (
@@ -95,7 +126,8 @@ export default function SpacesGrid(props) {
         }
       </ImageList>
       <Slide direction="right" in={inTheGame} mountOnEnter unmountOnExit {...{timeout: 1000}}>
-      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop() ? 16 : 72 + 16, left: 16}}>
+      <Fab color="secondary" style={{position: 'fixed', bottom: isDesktop() ? 16 : 72 + 16, left: 16}}
+           onClick={() => gotoPage('/app/room', {room_id: homeRoomId, tab_index: 0})}>
         <HomeIcon />
       </Fab>
       </Slide>

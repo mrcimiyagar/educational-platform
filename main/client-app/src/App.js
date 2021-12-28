@@ -1,12 +1,5 @@
-import { createTheme, Dialog, StylesProvider, ThemeProvider } from '@material-ui/core';
+import { createTheme, Dialog, Drawer, StylesProvider, ThemeProvider } from '@material-ui/core';
 import React, { useEffect } from 'react';
-import {
-  BrowserRouter,
-  Switch,
-  Route,
-  Link,
-  useHistory,
-} from 'react-router-dom';
 import './App.css';
 import { notifyUrlChanged } from './components/SearchEngineFam';
 import AudioPlayer from './routes/pages/audioPlayer';
@@ -79,6 +72,9 @@ import CreateBotCategoryPage from './routes/pages/createBotCategory';
 import Workshop from './routes/pages/workshop';
 import StoreDialog from './routes/pages/storeDialog';
 import CreateComment from './routes/pages/createComment';
+import $ from 'jquery';
+import BlockUi from 'react-block-ui';
+import 'react-block-ui/style.css';
 const PouchDB = require('pouchdb').default;
 
 export let boardFrame = undefined;
@@ -316,6 +312,21 @@ PouchDB.plugin(require('pouchdb-quick-search'))
 PouchDB.plugin(require('pouchdb-find').default)
 export let db = new PouchDB('SkyDime')
 
+export let cacheNotification = (notif) => {
+  notif.type = 'notification';
+  db.putIfNotExists('notification_' + Date.now() + '_' + Math.random(), notif)
+    .then(function (res) {})
+    .catch(function (err) {});
+};
+
+export let fetchNotifications = async () => {
+  let data = await db.find({
+    selector: { type: { $eq: 'notification' } },
+  })
+  data = data.docs
+  return data
+}
+
 export let cacheFile = (fileId, data) => {
   let box = {data, type: 'file', id: fileId};
   db.putIfNotExists('file_' + fileId, box)
@@ -518,10 +529,6 @@ export let isOnline = true;
     ;[uploadingFiles, setUploadingFiles] = React.useState({});
 
     const [bottomSheetOpen, setBottomSheetOpen] = React.useState(false);
-    setBSO = (value) => {
-      setBottomSheetOpen(value);
-      forceUpdate();
-    };
 
     setHistPage = setHp;
     histPage = hp;
@@ -734,6 +741,13 @@ export let isOnline = true;
       });
     }, []);
 
+    setBSO = (value) => {
+      setBottomSheetOpen(value);
+      if (value) {
+        $('#pagesContainer').blockUI();
+      }
+    };
+
     return (
       <div
         style={{
@@ -747,6 +761,7 @@ export let isOnline = true;
         <ColorBase/>
         <DesktopDetector/>
         <Sidebar/>
+        <BlockUi tag="div" blocking={bottomSheetOpen}>
         <div
           style={{
             width: '100%',
@@ -761,14 +776,16 @@ export let isOnline = true;
             {D !== undefined ? <D {...dQuery} open={true} /> : null}
           </ThemeProvider>
         </div>
-        <Dialog
-          style={{ padding: 32 }}
+        </BlockUi>
+        <Drawer
+          anchor='bottom'
+          style={{ padding: 32, position: 'fixed', zIndex: 99999 }}
           open={bottomSheetOpen}
           onClose={() => setBottomSheetOpen(false)}>
             <div style={{margin: 32}}>
               {bottomSheetContent}
             </div>
-        </Dialog>
+        </Drawer>
       </div>
     );
   }

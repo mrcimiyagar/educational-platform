@@ -10,6 +10,8 @@ import { setWallpaper } from '../..';
 import { colors } from '../../util/settings';
 import HomeToolbar from '../HomeToolbar';
 import NotifsList from '../NotifsList';
+import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
+import { inTheGame } from '../../App';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,11 +42,15 @@ TabPanel.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    height: '100%',
+    overflow: 'auto'
   },
   indicator: {
     backgroundColor: '#fff',
   },
 }));
+
+var lastScrollTop = 0
 
 export default function HomeNotifs() {
   const classes = useStyles()
@@ -56,15 +62,46 @@ export default function HomeNotifs() {
 
   useEffect(() => {
     setWallpaper({
-      type: 'color',
-      color: colors.accentDark
+      type: 'photo',
+      photo: RoomWallpaper
     });
   }, []);
 
+  let [visibilityAllowed, setVisibilityAllowed] = React.useState(false);
+
+  useEffect(() => {
+    let notifsAppBarContainer = document.getElementById('notifsAppBarContainer');
+    if (notifsAppBarContainer !== null) {
+      notifsAppBarContainer.style.transform = (inTheGame && visibilityAllowed) ? 'translateY(0)' : 'translateY(-100px)';
+    }
+  }, [inTheGame, visibilityAllowed]);
+
+  useEffect(() => {
+
+    setTimeout(() => {
+      setVisibilityAllowed(true);
+    }, 250);
+
+    let notifsAppBarContainer = document.getElementById('notifsAppBarContainer');
+    let notifsAppBarScroller = document.getElementById('notifsAppBarScroller');
+    notifsAppBarScroller.addEventListener(
+      'scroll',
+      function () {
+        var st = notifsAppBarScroller.scrollTop
+        if (st > lastScrollTop) {
+          notifsAppBarContainer.style.transform = 'translateY(-100px)'
+        } else {
+          notifsAppBarContainer.style.transform = 'translateY(0)'
+        }
+        lastScrollTop = st <= 0 ? 0 : st
+      },
+      false
+    );
+  }, []);
+
   return (
-    <div className={classes.root}>
-      <HomeToolbar>
-      <AppBar style={{backgroundColor: colors.primaryMedium}}>
+    <div className={classes.root} id="notifsAppBarScroller">
+        <AppBar id="notifsAppBarContainer" position={'fixed'} style={{transform: 'translateY(-100px)', transition: 'transform .5s', backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}>
           <Tabs
             variant="fullWidth"
             value={value}
@@ -78,23 +115,24 @@ export default function HomeNotifs() {
             <Tab icon={<AlternateEmailIcon style={{fill: '#fff'}} />} label="منشن ها" />
           </Tabs>
         </AppBar>
-        </HomeToolbar>
-        <div style={{width: '100%', height: '100%'}}>
+      <div style={{width: '100%', height: 'calc(100% - 144px)', marginTop: 76,
+                   background: colors.accentDark, backdropFilter: 'blur(15px)',
+                   backgroundColor: colors.accentDark, opacity: (inTheGame && visibilityAllowed) ? 1 : 0, transition: 'opacity 1s'}}>
         <TabPanel value={value} index={0}>
-            <Container>
-                <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
-                  <NotifsList/>
-                </Box>
-            </Container>
+          <Container>
+              <Box my={2} style={{minHeight: '100%', paddingTop: 48}}>
+                <NotifsList/>
+              </Box>
+          </Container>
         </TabPanel>
         <TabPanel value={value} index={1}>
-            <Container>
-              <Box my={2} style={{minHeight: '100vh', paddingTop: 48}}>
-                  <NotifsList/>
-              </Box>
-            </Container>
+          <Container>
+            <Box my={2} style={{minHeight: '100%', paddingTop: 48}}>
+              <NotifsList/>
+            </Box>
+          </Container>
         </TabPanel>
-        </div>
+      </div>
     </div>
   )
 }

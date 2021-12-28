@@ -10,15 +10,20 @@ import SecurityIcon from '@material-ui/icons/Security'
 import VpnKeyIcon from '@material-ui/icons/VpnKey'
 import WebIcon from '@material-ui/icons/Web'
 import WifiTetheringIcon from '@material-ui/icons/WifiTethering'
-import React from 'react'
-import { inTheGame } from '../../App'
+import React, { useEffect } from 'react'
+import { setWallpaper } from '../..'
+import { inTheGame, setBottomSheetContent, setBSO } from '../../App'
+import { colors, me, token } from '../../util/settings'
 import HomeToolbar from '../HomeToolbar'
 import SettingsSearchbar from '../SettingsSearchbar'
+import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
+import { serverRoot } from '../../util/Utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    height: '100vh',
+    height: 'calc(100vh + 136px)',
+    overflow: 'auto'
   },
   imageList: {
     paddingTop: 48,
@@ -27,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 56,
     paddingLeft: 16,
     paddingRight: 16,
+    overflow: 'hidden',
     // Promote the list into its own layer in Chrome. This cost memory, but helps keep FPS high.
     transform: 'translateZ(0)',
   },
@@ -71,69 +77,111 @@ const itemData = [
   },
 ]
 
-export default function SettingsList(props) {
-  const classes = useStyles()
-  const [state, setState] = React.useState({
-    gilad: true,
-    jason: false,
-    antoine: true,
-  })
+var lastScrollTop = 0
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked })
-  }
+export default function SettingsList(props) {
+
+  const classes = useStyles()
+  
+  let [visibilityAllowed, setVisibilityAllowed] = React.useState(false);
+
+  useEffect(() => {
+    let settingsSearchBarContainer = document.getElementById('settingsSearchBarContainer');
+    if (settingsSearchBarContainer !== null) {
+      settingsSearchBarContainer.style.transform = (inTheGame && visibilityAllowed) ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(-100px)';
+    }
+  }, [inTheGame, visibilityAllowed]);
+
+  useEffect(() => {
+
+    setTimeout(() => {
+      setVisibilityAllowed(true);
+    }, 250);
+
+    let settingsSearchBarContainer = document.getElementById('settingsSearchBarContainer');
+    let settingsSearchBarScroller = document.getElementById('settingsSearchBarScroller');
+    settingsSearchBarScroller.addEventListener(
+      'scroll',
+      function () {
+        var st = settingsSearchBarScroller.scrollTop
+        if (st > lastScrollTop) {
+          settingsSearchBarContainer.style.transform = 'translateX(-50%) translateY(-100px)'
+        } else {
+          settingsSearchBarContainer.style.transform = 'translateX(-50%) translateY(0)'
+        }
+        lastScrollTop = st <= 0 ? 0 : st
+      },
+      false
+    );
+
+    setWallpaper({
+      type: 'photo',
+      photo: RoomWallpaper
+    });
+
+  }, []);
 
   return (
-    <div className={classes.root}>
-      <HomeToolbar>
-        <div
+    <div className={classes.root} id="settingsSearchBarScroller">
+      <div
+          id="settingsSearchBarContainer"
           style={{
+            transform: 'translateX(-50%) translateY(-100px)',
+            transition: 'transform .5s', 
             width: '75%',
+            maxWidth: 300,
             position: 'fixed',
-            right: '12.5%',
+            left: '50%',
             top: 32,
             zIndex: 3,
           }}
         >
           <SettingsSearchbar setDrawerOpen={props.setDrawerOpen} />
-        </div>
-      </HomeToolbar>
+      </div>
       <ImageList
         style={{ zIndex: 2 }}
         rowHeight={224}
         cols={2}
         gap={1}
         className={classes.imageList}
+        style={{backdropFilter: 'blur(15px)', background: colors.accentDark, opacity: (inTheGame && visibilityAllowed) ? 1 : 0}}
       >
         <ImageListItem
           key={'settings-my-profile-tag'}
           cols={2}
           rows={1}
-          style={{ marginTop: 32 }}
+          style={{ marginTop: 48, height: 96 }}
         >
           <Grow in={inTheGame} {...{ timeout: 1000 }} transitionDuration={1000}>
             <Card
+              onClick={() => {
+                setBottomSheetContent(
+                  <div style={{width: '100%', height: 300}}>
+                    <Avatar style={{width: 150, height: 150}} src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${me.id}`} />
+                  </div>
+                );
+                setBSO(true);
+              }}
               style={{
                 width: 'calc(100% - 64px)',
-                height: 96,
-                borderRadius: 48,
-                marginLeft: 32,
-                marginRight: 32,
+                maxWidth: 200,
+                height: 48,
+                borderRadius: 24,
+                position: 'absolute',
+                right: 16,
+                transform: 'translateY(24px)',
                 display: 'flex',
                 backgroundColor: 'rgba(255, 255, 255, 0.5)',
                 backdropFilter: 'blur(10px)',
               }}
             >
-              <div style={{ padding: 8, width: 96, height: 96 }}>
-                <Avatar
-                  src={
-                    'https://www.nj.com/resizer/h8MrN0-Nw5dB5FOmMVGMmfVKFJo=/450x0/smart/cloudfront-us-east-1.images.arcpublishing.com/advancelocal/SJGKVE5UNVESVCW7BBOHKQCZVE.jpg'
-                  }
+              <div style={{ padding: 8, width: 48, height: 48 }}>
+                <Avatar src={serverRoot + `/file/download_user_avatar?token=${token}&userId=${me.id}`}
                   style={{ width: '100%', height: '100%' }}
                 ></Avatar>
               </div>
-              <Typography style={{ marginTop: 32, fontSize: 20 }}>
-                کیهان محمدی
+              <Typography style={{ fontSize: 17, marginTop: 12 }}>
+                {me.firstName + ' ' + me.lastName}
               </Typography>
             </Card>
           </Grow>
@@ -146,7 +194,6 @@ export default function SettingsList(props) {
               cols={1}
               rows={1}
               style={{
-                marginTop: index === 0 || index === 1 ? -72 : 0,
                 padding: 8,
               }}
             >
