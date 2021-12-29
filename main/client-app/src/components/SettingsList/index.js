@@ -12,7 +12,7 @@ import WebIcon from '@material-ui/icons/Web'
 import WifiTetheringIcon from '@material-ui/icons/WifiTethering'
 import React, { useEffect } from 'react'
 import { setWallpaper } from '../..'
-import { inTheGame, setBottomSheetContent, setBSO } from '../../App'
+import { inTheGame, isDesktop, isMobile, isTablet, setBottomSheetContent, setBSO } from '../../App'
 import { colors, me, theme, token } from '../../util/settings'
 import HomeToolbar from '../HomeToolbar'
 import SettingsSearchbar from '../SettingsSearchbar'
@@ -23,8 +23,7 @@ import { Done, Save } from '@material-ui/icons'
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    height: 'calc(100vh + 136px)',
-    overflow: 'auto'
+    height: '100%'
   },
   imageList: {
     paddingTop: 48,
@@ -34,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 16,
     paddingRight: 16,
     overflow: 'hidden',
-    // Promote the list into its own layer in Chrome. This cost memory, but helps keep FPS high.
     transform: 'translateZ(0)',
   },
   titleBar: {
@@ -134,17 +132,18 @@ export default function SettingsList(props) {
             position: 'fixed',
             left: '50%',
             top: 32,
-            zIndex: 3,
+            zIndex: 2501,
           }}
         >
           <SettingsSearchbar setDrawerOpen={props.setDrawerOpen} />
       </div>
+      <div style={{width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, bottom: 0, top: 0, backdropFilter: 'blur(15px)', background: colors.accentDark}} />
       <ImageList
         rowHeight={224}
         cols={2}
         gap={1}
         className={classes.imageList}
-        style={{zIndex: 2, backdropFilter: 'blur(15px)', background: colors.accentDark, opacity: (inTheGame && visibilityAllowed) ? 1 : 0}}
+        style={{width: isDesktop() ? 'calc(100% - 32px - 280px - 144px - 16px)' : '100%', position: 'absolute', left: isDesktop() ? 72 + 32 : 0, zIndex: 2500, opacity: (inTheGame && visibilityAllowed) ? 1 : 0}}
       >
         <ImageListItem
           key={'settings-my-profile-tag'}
@@ -288,6 +287,13 @@ export default function SettingsList(props) {
             </ImageListItem>
           )
         })}
+        <ImageListItem
+          key={'settings-my-profile-tag'}
+          cols={2}
+          rows={1}
+          style={{ marginTop: '100%' }}
+        >
+        </ImageListItem>
       </ImageList>
       <Slide direction="right" in={inTheGame} mountOnEnter unmountOnExit {...{timeout: 1000}}>
         <Fab

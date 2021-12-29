@@ -7,7 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React, { useEffect } from 'react';
-import { fetchNotifications } from '../../App';
+import { fetchNotifications, isDesktop } from '../../App';
 import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
@@ -93,5 +93,7 @@ export default function NotifsList() {
         })
       }
     </List> :
-    <EmptySign/>
+    <div style={{transform: isDesktop() ? 'translateX(-176px)' : undefined}}>
+      <EmptySign/>
+    </div>
 }
