@@ -298,7 +298,7 @@ export default function SettingsList(props) {
       <Slide direction="right" in={inTheGame} mountOnEnter unmountOnExit {...{timeout: 1000}}>
         <Fab
           color="secondary"
-          style={{ position: 'fixed', bottom: 72 + 16, left: 16 }}
+          style={{ position: 'fixed', bottom: 72 + 16, left: 16, zIndex: 2501 }}
         >
           <VpnKeyIcon />
         </Fab>
