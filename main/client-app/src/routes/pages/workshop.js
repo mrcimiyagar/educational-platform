@@ -14,7 +14,8 @@ import {
   setHomeRoomId,
   setHomeSpaceId,
   setMe,
-  setToken
+  setToken,
+  token
 } from '../../util/settings';
 import {
   serverRoot, setConfig
@@ -173,8 +174,25 @@ let widget1Gui = {
 let idDict = {}
 
 function Workshop(props) {
+  const [bots, setBots] = React.useState([]);
   useEffect(() => {
     setWallpaper({type: 'photo', photo: WorkshopWallpaper});
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      redirect: 'follow'
+    }
+    fetch(serverRoot + "/bot/get_my_bots", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.myBots !== undefined) {
+          setBots(result.myBots);
+        }
+      });
   }, []);
   let [open, setOpen] = React.useState(false);
   const toggleDrawer = (anchor, open) => (event) => {
@@ -185,13 +203,13 @@ function Workshop(props) {
   };
   return (
     <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000, direction: 'rtl'}}>
-      <iframe name="coder-frame" src={pathConfig.codeServer}
+      <iframe name="coder-frame" allow="clipboard-read;" src={pathConfig.codeServer}
           frameborder="0" style={{border: 0, backgroundColor: 'transparent', background: 'transparent',
           width: '50%', height: '100%', position: 'absolute', left: 0, 
-          top: 0, bottom: 0, left: 0}}>
-        </iframe>
+          top: 0, bottom: 0}}>
+      </iframe>
       <div style={{position: 'fixed', left: '50%', top: 0}}>
-        <AppBar variant='fixed' style={{width: '50%', height: 64, position: 'fixed', right: 0, backgroundColor: colors.primaryMedium}}>
+        <AppBar variant='fixed' style={{width: '50%', height: 64, position: 'fixed', right: 0, backdropFilter: 'blur(10px)', backgroundColor: colors.primaryMedium}}>
           <Toolbar>
             <IconButton onClick={toggleDrawer('right', true)}>
               <Menu style={{fill: '#fff'}}/>
@@ -231,6 +249,7 @@ function Workshop(props) {
         onClose={toggleDrawer('right', false)}
         open={open}
         anchor={'right'}
+        keepMounted={true}
       >
         <div
           style={{
@@ -242,18 +261,22 @@ function Workshop(props) {
           }}
         >
           <div style={{ width: 80, height: '100%', backgroundColor: '#eee' }}>
-            <Avatar
-              style={{
-                width: 64,
-                height: 64,
-                backgroundColor: '#fff',
-                position: 'absolute',
-                right: 8,
-                top: 16,
-                padding: 8,
-              }}
-              src={People}
-            />
+            {bots.map(bot => {
+              return (
+                <Avatar
+                  style={{
+                    width: 64,
+                    height: 64,
+                    backgroundColor: '#fff',
+                    position: 'absolute',
+                    right: 8,
+                    top: 16,
+                    padding: 8,
+                  }}
+                  src={People}
+                />
+              );
+            })}
           </div>
           <div style={{ width: 280, height: '100%' }}>
               

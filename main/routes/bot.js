@@ -1189,4 +1189,14 @@ router.post('/get_packages', jsonParser, async function (req, res) {
   })
 })
 
+router.post('/get_my_bots', jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
+    let myBots = await sw.Bot.findAll({
+      raw: true,
+      where: { creatorId: user.id },
+    })
+    res.send({ status: 'success', myBots: myBots })
+  })
+})
+
 module.exports = router

@@ -337,7 +337,7 @@ export default function HomePage(props) {
           onClose={() => setMenuOpen(false)}
           open={menuOpen}
           anchor={'right'}
-          style={{position: 'relative', zIndex: 99998}}
+          style={{position: 'relative'}}
           PaperProps={{
             style: {
               background: 'rgba(255, 255, 255, 0.55)',

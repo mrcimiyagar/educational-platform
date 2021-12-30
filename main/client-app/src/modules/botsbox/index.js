@@ -456,7 +456,7 @@ export default function BotsBox(props) {
         onClose={() => setMenuOpen(false)}
         open={menuOpen}
         anchor={'left'}
-        style={{ direction: 'ltr' }}
+        style={{ direction: 'ltr', position: 'fixed', zIndex: 99999 }}
         PaperProps={{
           style: {
             background: 'rgba(225, 225, 225, 0.55)',
