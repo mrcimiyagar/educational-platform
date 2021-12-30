@@ -1191,10 +1191,14 @@ router.post('/get_packages', jsonParser, async function (req, res) {
 
 router.post('/get_my_bots', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-    let myBots = await sw.Bot.findAll({
+    let myBotSecrets = await sw.BotSecret.findAll({
       raw: true,
       where: { creatorId: user.id },
-    })
+    });
+    let myBots = await sw.Bot.findAll({
+      raw: true,
+      where: {id: myBotSecrets.map(bs => bs.botId)}
+    });
     res.send({ status: 'success', myBots: myBots })
   })
 })
