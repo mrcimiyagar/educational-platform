@@ -527,7 +527,7 @@ router.post('/create_widget', jsonParser, async function (req, res) {
       'widget-created',
       widget,
     )
-    res.send({ status: 'success', comment })
+    res.send({ status: 'success', widget })
   })
 })
 

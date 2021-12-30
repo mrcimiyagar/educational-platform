@@ -833,7 +833,7 @@ export default function RoomPage(props) {
           anchor={'right'}
           PaperProps={{style: {
             background: 'rgba(255, 255, 255, 0.55)',
-            backdropFilter: 'blur(10x)'
+            backdropFilter: 'blur(10px)'
           }}}
           keepMounted={true}
         >
