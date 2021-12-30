@@ -277,24 +277,22 @@ function Workshop(props) {
                 background: 'rgba(255, 255, 255, 0.55)'
               }}
             >
-              {bots.map(bot => {
+              {bots.map((bot, index) => {
                 return (
                   <Avatar
-                  onClick={() => setMenuMode(bot.id)}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    backgroundColor: '#fff',
-                    position: 'absolute',
-                    right: 8,
-                    top: 16,
-                    padding: 8,
-                  }}
-                  src={
-                    serverRoot +
-                    `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
-                  }
-                />
+                    onClick={() => setMenuMode(index)}
+                    style={{
+                      width: 56,
+                      height: 56,
+                      backgroundColor: '#fff',
+                      marginTop: 12,
+                      marginRight: 12,
+                      padding: 8,
+                    }}
+                    src={
+                      serverRoot + `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
+                    }
+                  />
                 );
               })}
               <Fab
@@ -324,9 +322,8 @@ function Workshop(props) {
                         width: 64,
                         height: 64,
                         backgroundColor: '#fff',
-                        position: 'absolute',
-                        right: 8,
-                        top: 16 + 64 + 16,
+                        marginRight: 16,
+                        marginTop: 16,
                         padding: 8,
                       }}
                       src={BotIcon}
@@ -335,6 +332,9 @@ function Workshop(props) {
                 }) :
                 null
               }
+              <Fab color={'secondary'} style={{position: 'fixed', left: 16, bottom: 16}} onClick={() => gotoPage('/app/createwidget', {bot_id: bots[menuMode].id})}>
+                <Add />
+              </Fab>
             </div>
           </div>
       </SwipeableDrawer>
