@@ -1199,7 +1199,21 @@ router.post('/get_my_bots', jsonParser, async function (req, res) {
       raw: true,
       where: {id: myBotSecrets.map(bs => bs.botId)}
     });
-    res.send({ status: 'success', myBots: myBots })
+    let result = [];
+    for (let i = 0; i < myBots.length; i++) {
+      let bot = myBots[i];
+      let b = {
+        id: bot.id,
+        title: bot.title,
+        categoryId: bot.categoryId,
+        avatarId: bot.avatarId,
+        description: bot.description,
+        username: bot.username
+      }
+      b.widgets = await sw.Widget.findAll({raw: true, where: {botId: b.id}});
+      result.push(b);
+    }
+    res.send({ status: 'success', myBots: result })
   })
 })
 

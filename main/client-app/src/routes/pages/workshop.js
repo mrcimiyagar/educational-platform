@@ -26,6 +26,7 @@ import ClockHand2 from '../../images/clock-hand-2.png'
 import BotContainer from '../../components/BotContainer';
 import Menu from '@material-ui/icons/Menu';
 import CachedIcon from '@mui/icons-material/Cached';
+import BotIcon from '../../images/bot-image.png';
 
 let widget1Gui = {
   type: 'Box',
@@ -173,10 +174,13 @@ let widget1Gui = {
 
 let idDict = {}
 
+export let updateMyBotsList = () => {};
+
 function Workshop(props) {
   const [bots, setBots] = React.useState([]);
-  useEffect(() => {
-    setWallpaper({type: 'photo', photo: WorkshopWallpaper});
+  const [menuMode, setMenuMode] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
+  updateMyBotsList = () => {
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -193,8 +197,11 @@ function Workshop(props) {
           setBots(result.myBots);
         }
       });
+  };
+  useEffect(() => {
+    setWallpaper({type: 'photo', photo: WorkshopWallpaper});
+    updateMyBotsList();
   }, []);
-  let [open, setOpen] = React.useState(false);
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -209,7 +216,7 @@ function Workshop(props) {
           top: 0, bottom: 0}}>
       </iframe>
       <div style={{position: 'fixed', left: '50%', top: 0}}>
-        <AppBar variant='fixed' style={{width: '50%', height: 64, position: 'fixed', right: 0, backdropFilter: 'blur(10px)', backgroundColor: colors.primaryMedium}}>
+        <AppBar variant='fixed' style={{width: '50%', height: 64, position: 'fixed', right: 0, backdropFilter: 'blur(10px)', backgroundColor: colors.secondary}}>
           <Toolbar>
             <IconButton onClick={toggleDrawer('right', true)}>
               <Menu style={{fill: '#fff'}}/>
@@ -242,28 +249,38 @@ function Workshop(props) {
       >
         <Jumper />
       </div>
-      <Fab color={'secondary'} onClick={() => gotoPage('/app/createbot')} style={{position: 'fixed', left: 'calc(50% + 24px)', bottom: 24}}>
+      <Fab color={'secondary'} style={{position: 'fixed', left: 'calc(50% + 24px)', bottom: 24}}>
         <CachedIcon/>
       </Fab>
       <SwipeableDrawer
-        onClose={toggleDrawer('right', false)}
-        open={open}
-        anchor={'right'}
-        keepMounted={true}
-      >
-        <div
-          style={{
-            width: 360,
-            height: '100%',
-            backgroundColor: '#fff',
-            display: 'flex',
-            direction: 'rtl',
-          }}
+          open={open}
+          onClose={() => setOpen(false)}
+          anchor={'right'}
+          PaperProps={{style: {
+            background: 'rgba(255, 255, 255, 0.55)',
+            backdropFilter: 'blur(10px)'
+          }}}
+          keepMounted={true}
         >
-          <div style={{ width: 80, height: '100%', backgroundColor: '#eee' }}>
-            {bots.map(bot => {
-              return (
-                <Avatar
+          <div
+            style={{
+              width: 360,
+              height: '100%',
+              display: 'flex',
+              direction: 'rtl',
+            }}
+          >
+            <div
+              style={{
+                width: 80,
+                height: '100%',
+                background: 'rgba(255, 255, 255, 0.55)'
+              }}
+            >
+              {bots.map(bot => {
+                return (
+                  <Avatar
+                  onClick={() => setMenuMode(bot.id)}
                   style={{
                     width: 64,
                     height: 64,
@@ -273,15 +290,53 @@ function Workshop(props) {
                     top: 16,
                     padding: 8,
                   }}
-                  src={People}
+                  src={
+                    serverRoot +
+                    `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
+                  }
                 />
-              );
-            })}
+                );
+              })}
+              <Fab
+                style={{
+                  backgroundColor: '#fff',
+                  marginTop: 12,
+                  marginRight: 12,
+                  boxShadow: 'none'
+                }}
+                onClick={() => gotoPage('/app/createbot')}
+              >
+                <Add />
+              </Fab>
+            </div>
+            <div
+              style={{
+                width: 360 - 80,
+                height: '100%',
+              }}
+            >
+              {bots.length > 0 ?
+                bots[menuMode].widgets.map(bot => {
+                  return (
+                    <Avatar
+                      onClick={() => setMenuMode(1)}
+                      style={{
+                        width: 64,
+                        height: 64,
+                        backgroundColor: '#fff',
+                        position: 'absolute',
+                        right: 8,
+                        top: 16 + 64 + 16,
+                        padding: 8,
+                      }}
+                      src={BotIcon}
+                    />
+                  );
+                }) :
+                null
+              }
+            </div>
           </div>
-          <div style={{ width: 280, height: '100%' }}>
-              
-          </div>
-        </div>
       </SwipeableDrawer>
     </div>
   )

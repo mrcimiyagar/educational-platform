@@ -11,6 +11,7 @@ export let ColorBase = (props) => {
     primaryLight: 'rgba(33, 150, 243, 0.65)',
     primaryMedium: 'rgba(25, 118, 210, 0.65)',
     primaryDark: 'rgba(42, 77, 105, 0.65)',
+    secondary: 'rgba(255, 193, 7, 0.55)',
     accent: 'rgba(231, 239, 246, 1)',
     accentDark: 'rgba(173, 203, 227, 0.65)',
   });
