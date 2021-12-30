@@ -31,12 +31,16 @@ export default function StoreSearchbar(props) {
   const classes = useStyles();
   return (
     <Paper component="form" className={classes.root}>
-      <IconButton className={classes.iconButton} aria-label="menu" onClick={() => props.setDrawerOpen(true)}>
-        {props.dialogMode === true ?
-          <ArrowBack style={{transform: 'rotateZ(180deg)'}}/> :
-          <Menu />
-        }
-      </IconButton>
+      {props.removeIcon === false ? 
+        <IconButton className={classes.iconButton} aria-label="menu" onClick={() => props.setDrawerOpen(true)}>
+          {
+            props.dialogMode === true ?
+              <ArrowBack style={{transform: 'rotateZ(180deg)'}}/> :
+              <Menu />
+          }
+        </IconButton> :
+        null
+      }
       <InputBase
         className={classes.input}
         placeholder="جستجو در فروشگاه"
