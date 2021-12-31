@@ -123,7 +123,7 @@ router.post('/set_wallpaper', jsonParser, async function (req, res) {
 })
 
 router.post('/create_bot', jsonParser, async function (req, res) {
-  authenticateMember(req, res, async (membership, session, user, acc) => {
+  authenticateMember(req, res, async (membership, s, user, acc) => {
     if (!acc.canAddBot) {
       res.send({
         status: 'error',
