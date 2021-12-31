@@ -116,7 +116,7 @@ router.post('/login_bot', jsonParser, async function (req, res) {
         return;
     }
     let session = await sw.Session.findOne({where: {
-        botId: bot.id,
+        userId: bot.id,
     }});
     res.send({status: 'success', bot: bot, botSecret: botSecret, session: session});
 });
