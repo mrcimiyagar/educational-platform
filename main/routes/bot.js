@@ -134,7 +134,7 @@ router.post('/get_bot_info', jsonParser, async function (req, res) {
       })
       return;
     }
-    res.send({ status: 'success', botSecret: botSecret })
+    res.send({ status: 'success', botSecret: result })
   })
 })
 
