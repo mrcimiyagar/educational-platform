@@ -26,7 +26,7 @@ import ClockHand2 from '../../images/clock-hand-2.png'
 import BotContainer from '../../components/BotContainer';
 import Menu from '@material-ui/icons/Menu';
 import CachedIcon from '@mui/icons-material/Cached';
-import BotIcon from '../../images/bot-image.png';
+import WidgetIcon from '../../images/bot-image.png';
 
 let widget1Gui = {
   type: 'Box',
@@ -314,19 +314,17 @@ function Workshop(props) {
               }}
             >
               {bots.length > 0 ?
-                bots[menuMode].widgets.map(bot => {
+                bots[menuMode].widgets.map(widget => {
                   return (
-                    <Avatar
-                      onClick={() => setMenuMode(1)}
+                    <img
                       style={{
-                        width: 64,
-                        height: 64,
-                        backgroundColor: '#fff',
+                        width: 200,
+                        height: 200,
                         marginRight: 16,
                         marginTop: 16,
                         padding: 8,
                       }}
-                      src={BotIcon}
+                      src={serverRoot + `/file/download_widget_thumbnail?token=${token}&widgetId=${widget.id}`}
                     />
                   );
                 }) :
