@@ -102,7 +102,7 @@ router.post('/login', jsonParser, async function (req, res) {
 });
 
 router.post('/login_bot', jsonParser, async function (req, res) {
-    let bot = await sw.Bot.findOne({where: {botId: req.body.botId}});
+    let bot = await sw.Bot.findOne({where: {id: req.body.botId}});
     if (bot === null) {
         res.send({status: 'error', errorCode: 'e001', message: 'بات موجود نیست'});
         return;
