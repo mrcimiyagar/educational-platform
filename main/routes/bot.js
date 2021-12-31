@@ -152,7 +152,7 @@ router.post('/create_bot', jsonParser, async function (req, res) {
     let botSecret = await sw.BotSecret.create({
       botId: bot.id,
       token: tools.makeRandomCode(64),
-      creatorId: session.userId,
+      creatorId: s.userId,
     })
     let session = await sw.Session.create({
       userId: bot.id,
