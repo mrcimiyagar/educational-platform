@@ -263,7 +263,7 @@ async function prepareScreenshotModel() {
             autoIncrement: true,
             primaryKey: true,
         },
-        botId: Sequelize.BIGINT,
+        botId: Sequelize.STRING,
         fileId: Sequelize.BIGINT
     }, {
         freezeTableName: true
@@ -282,7 +282,7 @@ async function prepareSubscriptionModel() {
             primaryKey: true,
         },
         botId: {
-            type: Sequelize.DataTypes.BIGINT,
+            type: Sequelize.DataTypes.STRING,
             unique: 'SubscriptionUnique'
         },
         subscriberId: {
@@ -325,7 +325,7 @@ async function prepareBotSecretModel() {
             autoIncrement: true,
             primaryKey: true,
         },
-        botId: Sequelize.BIGINT,
+        botId: Sequelize.STRING,
         token: Sequelize.STRING,
         creatorId: Sequelize.STRING
     }, {
@@ -345,7 +345,7 @@ async function prepareCommentModel() {
             primaryKey: true,
         },
         botId: {
-            type: Sequelize.DataTypes.BIGINT,
+            type: Sequelize.DataTypes.STRING,
             unique: 'commentUnique'
         },
         authorId: {
@@ -371,7 +371,7 @@ async function prepareWidgetModel() {
             primaryKey: true,
         },
         title: Sequelize.STRING,
-        botId: Sequelize.BIGINT,
+        botId: Sequelize.STRING,
         thumbnailId: Sequelize.BIGINT
     }, {
         freezeTableName: true
