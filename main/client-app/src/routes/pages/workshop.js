@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Fab, IconButton, makeStyles, SwipeableDrawer, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Avatar, Button, Fab, IconButton, makeStyles, SwipeableDrawer, Toolbar, Typography } from '@material-ui/core';
 import { Add, People } from '@material-ui/icons';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
@@ -312,6 +312,12 @@ function Workshop(props) {
                 height: '100%',
               }}
             >
+              {bots.length > 0 ?
+                <Button variant={'outlined'} style={{width: 'calc(100% - 48px)', marginRight: 24, marginLeft: 24, marginTop: 24}} onClick={() => gotoPage('/app/botinfo', {bot_id: bots[menuMode].id})}>
+                  اطلاعات بات
+                </Button> :
+                null
+              }
               {bots.length > 0 ?
                 bots[menuMode].widgets.map(widget => {
                   return (

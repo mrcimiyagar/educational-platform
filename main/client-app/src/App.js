@@ -76,6 +76,7 @@ import $ from 'jquery';
 import BlockUi from 'react-block-ui';
 import 'react-block-ui/style.css';
 import CreateWidget from './routes/pages/createWidget';
+import BotInfoPage from './routes/pages/botInfo';
 const PouchDB = require('pouchdb').default;
 
 export let boardFrame = undefined;
@@ -290,7 +291,8 @@ let dialogs = {
   '/app/createbotcategory': CreateBotCategoryPage,
   '/app/storedialog': StoreDialog,
   '/app/createcomment': CreateComment,
-  '/app/createwidget': CreateWidget
+  '/app/createwidget': CreateWidget,
+  '/app/botinfo': BotInfoPage
 }
 let pages = {
   '/app/store': Store,

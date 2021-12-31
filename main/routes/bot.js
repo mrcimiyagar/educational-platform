@@ -5,6 +5,7 @@ const { User } = require('../db/models')
 const { authenticateMember } = require('../users')
 const tools = require('../tools')
 const { uuid } = require('uuidv4');
+const { result } = require('underscore')
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
@@ -119,6 +120,21 @@ router.post('/set_wallpaper', jsonParser, async function (req, res) {
       req.body.wallpaperId,
     )
     res.send({ status: 'success' })
+  })
+})
+
+router.post('/get_bot_info', jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, s, user, acc) => {
+    let result = await sw.BotSecret.findOne({where: {botId: req.body.botId, creatorId: user.id}});
+    if (result === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'bot does not exist.',
+      })
+      return;
+    }
+    res.send({ status: 'success', botSecret: botSecret })
   })
 })
 
