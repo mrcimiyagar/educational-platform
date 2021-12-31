@@ -301,8 +301,8 @@ async function prepareSubscriptionModel() {
 async function prepareBotModel() {
     Bot = sequelizeClient.define('Bot', {
         id: {
-            type: Sequelize.BIGINT,
-            autoIncrement: true,
+            type: Sequelize.STRING,
+            allowNull: false,
             primaryKey: true,
         },
         username: Sequelize.STRING,

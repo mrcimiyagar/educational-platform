@@ -286,8 +286,7 @@ function Workshop(props) {
                       height: 56,
                       backgroundColor: '#fff',
                       marginTop: 12,
-                      marginRight: 12,
-                      padding: 8,
+                      marginRight: 12
                     }}
                     src={
                       serverRoot + `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
@@ -316,23 +315,55 @@ function Workshop(props) {
               {bots.length > 0 ?
                 bots[menuMode].widgets.map(widget => {
                   return (
-                    <img
-                      style={{
-                        width: 200,
-                        height: 200,
-                        marginRight: 16,
-                        marginTop: 16,
-                        padding: 8,
-                      }}
-                      src={serverRoot + `/file/download_widget_thumbnail?token=${token}&widgetId=${widget.id}`}
-                    />
+                    <div style={{width: '100%'}} onClick={() => {
+                      let requestOptions = {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'token': token
+                        },
+                        body: JSON.stringify({
+                          widgetId: widget.id,
+                          preview: true
+                        }),
+                        redirect: 'follow'
+                      }
+                      fetch(serverRoot + "/bot/request_initial_gui", requestOptions)
+                        .then(response => response.json())
+                        .then(result => {
+                          console.log(JSON.stringify(result));
+                          if (result.myBots !== undefined) {
+                            setBots(result.myBots);
+                          }
+                        });
+                    }}>
+                      <img
+                        style={{
+                          width: 'calc(100% - 48px)',
+                          height: 'auto',
+                          maxHeight: 200,
+                          marginLeft: 24,
+                          marginRight: 24,
+                          marginTop: 12
+                        }}
+                        src={serverRoot + `/file/download_widget_thumbnail?token=${token}&widgetId=${widget.id}`}
+                      />
+                      <Typography style={{marginTop: -16,  width: '100%', textAlign: 'center',
+                                          alignItems: 'center', justifyContent: 'center'}}
+                      >
+                        {widget.title}
+                      </Typography>
+                    </div>
                   );
                 }) :
                 null
               }
-              <Fab color={'secondary'} style={{position: 'fixed', left: 16, bottom: 16}} onClick={() => gotoPage('/app/createwidget', {bot_id: bots[menuMode].id})}>
-                <Add />
-              </Fab>
+              {bots.length > 0 ?
+                <Fab color={'secondary'} style={{position: 'fixed', left: 16, bottom: 16}} onClick={() => gotoPage('/app/createwidget', {bot_id: bots[menuMode].id})}>
+                  <Add />
+                </Fab> :
+                null
+              }
             </div>
           </div>
       </SwipeableDrawer>

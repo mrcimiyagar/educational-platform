@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const { User } = require('../db/models')
 const { authenticateMember } = require('../users')
 const tools = require('../tools')
+const { uuid } = require('uuidv4');
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
@@ -140,6 +141,7 @@ router.post('/create_bot', jsonParser, async function (req, res) {
       return;
     }
     let bot = await sw.Bot.create({
+      id: uuid() + '-' + Date.now(),
       title: req.body.title,
       description: req.body.description,
       username: req.body.username,
@@ -152,8 +154,12 @@ router.post('/create_bot', jsonParser, async function (req, res) {
       token: tools.makeRandomCode(64),
       creatorId: session.userId,
     })
+    let session = await sw.Session.create({
+      userId: bot.id,
+      token: tools.makeRandomCode(64)
+    })
     require('../server').pushTo('aseman-bot-store', 'bot-created', bot)
-    res.send({ status: 'success', bot: bot, botSecret: botSecret })
+    res.send({ status: 'success', bot: bot, botSecret: botSecret, session: session })
   })
 })
 
@@ -829,6 +835,56 @@ router.post('/get_workerships', jsonParser, async function (req, res) {
       where: { id: workerships.map((ws) => ws.widgetId) },
     })
     res.send({ status: 'success', workerships: workerships, widgets: widgets })
+  })
+})
+
+router.post('/request_initial_gui', jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
+    if (req.body.preview === true) {
+      let widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
+      if (widget === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'access denied.'
+        });
+        return;
+      }
+      require('../server').pushTo('bot-' + widget.botId, 'request_initial_gui', {
+        widgetId: widget.id,
+        user: user.id,
+        preview: true
+      });
+      res.send({ status: 'success' });
+    }
+    else {
+      let widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
+      if (widget === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'access denied.'
+        });
+        return;
+      }
+      let bot = await sw.Bot.findOne({where: {id: widget.botId}});
+      let workership = await sw.Workership.findOne({where: {roomId: req.body.roomId, botId: bot.id}});
+      if (workership === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'access denied.'
+        });
+        return;
+      }
+      require('../server').pushTo('bot-' + bot.id, 'request_initial_gui', {
+        roomId: workership.roomId,
+        widgetId: widget.id,
+        user: user.id,
+        preview: false
+      });
+      res.send({ status: 'success' });
+    }
   })
 })
 

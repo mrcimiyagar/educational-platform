@@ -101,13 +101,13 @@ module.exports = {
   setup: (server) => {
     const io = require('socket.io')(server, { cors: { origin: '*' }, secure: true })
     io.on('connection', (soc) => {
-      console.log('a user connected')
+      console.log('a user/bot connected')
       soc.on('auth', ({ token }) => {
         console.log('authenticating client...')
         try {
           models.Session.findOne({ where: { token: token } }).then(
             async function (session) {
-              if (session == null) {
+              if (session === null) {
                 let acc = getGuestUser(token)
                 if (acc !== null) {
                   let user = acc.user
@@ -179,6 +179,42 @@ module.exports = {
                     }, 3000);
                   });
                   typingEvent(user, soc);
+                  soc.emit('auth-success', {})
+                }
+              }
+            },
+          )
+        } catch (ex) {
+          console.error(ex)
+        }
+      })
+      soc.on('auth-bot', ({ token }) => {
+        console.log('authenticating client...')
+        try {
+          models.Session.findOne({ where: { token: token } }).then(
+            async function (session) {
+              if (session !== null) {
+                session.socketId = soc.id
+                await session.save()
+                let bot = await models.Bot.findOne({
+                  where: { id: session.userId },
+                })
+                if (bot !== null) {
+                  userToSocketMap[bot.id] = soc
+                  metadata[bot.id] = { socket: soc, user: bot }
+                  netState[bot.id] = true
+                  sockets[bot.id] = soc
+                  soc.on('disconnect', ({}) => {
+                    disconnectWebsocket(bot)
+                  });
+                  soc.on('ping', () => {
+                    if (metadata[bot.id].timer !== undefined) {
+                      clearTimeout(metadata[bot.id].timer);
+                    }
+                    metadata[user.id].timer = setTimeout(() => {
+                      disconnectWebsocket(soc);
+                    }, 3000);
+                  });
                   soc.emit('auth-success', {})
                 }
               }

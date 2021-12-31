@@ -101,6 +101,26 @@ router.post('/login', jsonParser, async function (req, res) {
     res.send({status: 'success', user: user, account: account, session: session, space: home === null ? undefined : home, room: room});
 });
 
+router.post('/login_bot', jsonParser, async function (req, res) {
+    let bot = await sw.Bot.findOne({where: {username: req.body.botId}});
+    if (bot === null) {
+        res.send({status: 'error', errorCode: 'e001', message: 'بات موجود نیست'});
+        return;
+    }
+    let botSecret = await sw.Account.findOne({where: {
+        botId: bot.id,
+        token: req.body.token
+    }});
+    if (botSecret === null) {
+        res.send({status: 'error', errorCode: 'e001', message: 'توکن اشتباه است'});
+        return;
+    }
+    let session = await sw.Session.findOne({where: {
+        botId: bot.id,
+    }});
+    res.send({status: 'success', bot: bot, botSecret: botSecret, session: session});
+});
+
 router.post('/get_user', jsonParser, async function (req, res) {
     let user = await sw.User.findOne({where: {id: req.body.userId}})
     res.send({status: 'success', user: user})
