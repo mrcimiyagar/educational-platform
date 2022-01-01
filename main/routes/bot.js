@@ -86,6 +86,23 @@ router.post('/get_subscriptions', jsonParser, async function (req, res) {
   })
 })
 
+router.post('/subscribe_exists', jsonParser, async function (req, res) {
+
+  let session = await sw.Session.findOne({where: {token: req.headers.token}});
+  if (session === null) {
+    res.send({
+      status: 'error',
+      errorCode: 'e0006',
+      message: 'access denied.',
+    });
+    return;
+  }
+  
+  let subscription = await sw.Subscription.findOne({where: {botId: req.body.botId, subscriberId: session.userId}});
+
+  res.send({ status: 'success', exists: subscription !== null });
+})
+
 router.post('/set_wallpaper', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
     let roomSecret = await sw.RoomSecret.findOne({

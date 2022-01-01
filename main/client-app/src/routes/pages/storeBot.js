@@ -102,12 +102,11 @@ export default function StoreBot(props) {
         'token': token
       },
       body: JSON.stringify({
-        botId: props.bot_id,
-        roomId: props.room_id
+        botId: props.bot_id
       }),
       redirect: 'follow'
     }
-    fetch(serverRoot + "/bot/workership_exists", requestOptions2)
+    fetch(serverRoot + "/bot/subscribe_exists", requestOptions2)
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
