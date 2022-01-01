@@ -260,6 +260,96 @@ router.post('/create_message', jsonParser, async function (req, res) {
   })
 })
 
+router.post('/create_bot_message', jsonParser, async function (req, res) {
+    if (
+      (req.body.text === undefined ||
+        req.body.text === '' ||
+        req.body.text === null) &&
+      (req.body.fileId === undefined ||
+        req.body.fileId === '' ||
+        req.body.fileId === null ||
+        req.body.fileId === 0)
+    ) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'text can not be empty.',
+      })
+      return
+    }
+
+    let session = await sw.Session.findOne({where: {token: req.headers.token}});
+    if (session === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0006',
+        message: 'access denied.',
+      });
+      return;
+    }
+
+    let workership = await sw.Workership.findOne({where: {botId: session.userId, roomId: req.body.roomId}});
+    if (workership === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0007',
+        message: 'access denied.',
+      });
+      return;
+    }
+
+    let msg = await sw.Message.create({
+      authorId: bot.id,
+      time: Date.now(),
+      roomId: workership.roomId,
+      text: req.body.text,
+      fileId: req.body.fileId === undefined ? null : req.body.fileId,
+      messageType: req.body.messageType,
+    })
+    let msgCopy = {
+      id: msg.id,
+      authorId: msg.authorId,
+      time: msg.time,
+      roomId: msg.roomId,
+      text: msg.text,
+      fileId: msg.fileId,
+      messageType: msg.messageType,
+      User: bot,
+    };
+    let users = getRoomUsers(workership.roomId);
+    let pushNotification = (userId, title, text) => {
+      let subscription = usersSubscriptions[userId];
+      if (subscription === undefined) return;
+      const payload = JSON.stringify({ title: title, body: text });
+      webpush
+        .sendNotification(subscription, payload)
+        .catch((err) => console.error(err));
+    }
+    let roomRaw = await sw.Room.findOne({where: {id: workership.roomId}});
+    users.forEach((user) => {
+      if (user.id !== session.userId) {
+        pushNotification(user.id, 'پیام جدید از ' + user.firstName, msgCopy.text);
+        require('../server').signlePushTo(user.id, 'message-added', { msgCopy });
+      }
+    });
+    let mems = await sw.Membership.findAll({raw: true, where: {roomId: roomRaw.id}});
+    let allUsers = await sw.User.findAll({raw: true, where: {id: mems.map(mem => mem.userId)}});
+    let usersDict = {};
+    allUsers.forEach(u => {usersDict[u.id] = true;});
+    users.forEach(u => {
+      if (usersDict[u.id] !== true) {
+        allUsers.push(u);
+      }
+    });
+    for (let i = 0; i < allUsers.length; i++) {
+      let user = allUsers[i];
+      if (user.id !== session.userId) {
+        require('../server').signlePushTo(user.id, 'chat-list-updated', {room: roomRaw});
+      }
+    }
+    res.send({ status: 'success', message: msgCopy })
+})
+
 router.post('/delete_message', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     if (!membership.canRemoveOwnMessage) {

@@ -854,6 +854,27 @@ router.post('/get_workerships', jsonParser, async function (req, res) {
   })
 })
 
+router.post('/get_bot_workerships', jsonParser, async function (req, res) {
+
+  let session = await sw.Session.findOne({where: {token: req.headers.token}});
+  if (session === null) {
+    res.send({
+      status: 'error',
+      errorCode: 'e0006',
+      message: 'access denied.',
+    });
+    return;
+  }
+
+  let workerships = await sw.Workership.findAll({
+    include: { all: true },
+    raw: true,
+    where: { botId: session.userId }
+  });
+
+  res.send({ status: 'success', workerships: workerships });
+})
+
 router.post('/request_initial_gui', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
     if (req.body.preview === true) {
