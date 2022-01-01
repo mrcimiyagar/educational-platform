@@ -49,7 +49,7 @@ export default function RoomsGridList(props) {
         props.rooms.map((room, index) => (
           <Grow in={inTheGame} {...{ timeout: (index + 1) * 500 }} transitionDuration={1000}>
           <ImageListItem key={room.avatarId} cols={1} rows={1} onClick={() => {
-            if (props.clickCallback !== undefined) props.clickCallback();
+            if (props.clickCallback !== undefined) props.clickCallback(room.id);
           }}>
             <Card style={{position: 'relative', margin: 4, backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 16}}>
                 <img src={'https://cdn.dribbble.com/users/6093092/screenshots/15548423/media/54c06b30c11db3ffd26b25c83ab9a737.jpg'} alt={room.title} style={{borderRadius: 16, width: '100%', height: 210}} />

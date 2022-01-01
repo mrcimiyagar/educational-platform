@@ -79,8 +79,28 @@ export default function RoomsListPage(props) {
                     </Toolbar>
                 </AppBar>
                 <div style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', width: '100%', height: isDesktop() ? 'calc(100% - 56px)' : '100%', position: 'absolute', top: 56}}>
-                    <RoomsGridList rooms={rooms} clickCallback={() => {
-
+                    <RoomsGridList rooms={rooms} clickCallback={(roomId) => {
+                        let requestOptions2 = {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                              'token': token
+                            },
+                            body: JSON.stringify({
+                              botId: props.bot_id,
+                              roomId: roomId
+                            }),
+                            redirect: 'follow'
+                          }
+                          fetch(serverRoot + "/bot/create_workership", requestOptions2)
+                            .then(response => response.json())
+                            .then(result => {
+                              console.log(JSON.stringify(result));
+                              if (result.status === 'success') {
+                                  popPage();
+                              }
+                            })
+                            .catch(error => console.log('error', error));
                     }}/>
                 </div>
             </div>

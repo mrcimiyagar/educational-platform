@@ -54,7 +54,12 @@ export default function SpacesListPage(props) {
                     </Toolbar>
                 </AppBar>
                 <div style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', width: '100%', height: isDesktop() ? 'calc(100% - 56px)' : '100%', position: 'absolute', top: 56}}>
-                    <SpacesGridForInvitation canInspectRooms={props.can_inspect_rooms} roomId={props.room_id} userId={props.user_id}/>
+                    <SpacesGridForInvitation
+                        canInspectRooms={props.can_inspect_rooms}
+                        bot_id={props.bot_id}
+                        roomId={props.room_id}
+                        userId={props.user_id}
+                    />
                 </div>
             </div>
         </Dialog>

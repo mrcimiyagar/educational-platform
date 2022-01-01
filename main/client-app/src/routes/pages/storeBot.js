@@ -1,6 +1,6 @@
 import { Avatar, Box, Dialog, Fab, IconButton, Slide, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Message } from '@material-ui/icons';
+import { Add, Message } from '@material-ui/icons';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import { default as ArrowForward, default as ArrowForwardIcon } from '@material-ui/icons/ArrowForward';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
@@ -234,7 +234,7 @@ export default function StoreBot(props) {
       }}>
       <Message />
     </Fab>
-    <Fab color="secondary" style={{position: 'fixed', bottom: 16, left: 16}}
+    <Fab style={{backgroundColor: added ? 'green' : 'yellow', position: 'fixed', bottom: 16, left: 16}}
       onClick={() => {
         let requestOptions2 = {
           method: 'POST',
@@ -243,12 +243,11 @@ export default function StoreBot(props) {
             'token': token
           },
           body: JSON.stringify({
-            botId: props.bot_id,
-            roomId: props.room_id
+            botId: props.bot_id
           }),
           redirect: 'follow'
         }
-        fetch(serverRoot + "/bot/create_workership", requestOptions2)
+        fetch(serverRoot + "/bot/subscribe", requestOptions2)
           .then(response => response.json())
           .then(result => {
             console.log(JSON.stringify(result));
@@ -259,6 +258,12 @@ export default function StoreBot(props) {
           .catch(error => console.log('error', error));
       }}>
       <LocalMallIcon />
+    </Fab>
+    <Fab color="secondary" style={{position: 'fixed', bottom: 16 + 56 + 16, left: 16}}
+      onClick={() => {
+        gotoPage('/app/spaces_list', {can_inspect_rooms: true, bot_id: props.bot_id});
+      }}>
+      <Add />
     </Fab>
   </Dialog>
   );

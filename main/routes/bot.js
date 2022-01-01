@@ -661,7 +661,7 @@ router.post('/create_workership', jsonParser, async function (req, res) {
       return
     }
     let subscription = await sw.Subscription.findOne({
-      where: { userId: session.userId, botId: req.body.botId },
+      where: { subscriberId: session.userId, botId: req.body.botId },
     })
     if (subscription === null) {
       res.send({
