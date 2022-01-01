@@ -388,7 +388,7 @@ async function prepareWorkershipModel() {
             autoIncrement: true,
             primaryKey: true,
         },
-        botId: Sequelize.BIGINT,
+        botId: Sequelize.STRING,
         roomId: Sequelize.BIGINT
     }, {
         freezeTableName: true
