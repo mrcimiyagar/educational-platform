@@ -98,7 +98,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function StoreDialog() {
+export default function StoreDialog(props) {
 
   document.documentElement.style.overflow = 'hidden';
 

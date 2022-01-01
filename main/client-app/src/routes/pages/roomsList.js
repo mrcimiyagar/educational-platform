@@ -8,6 +8,7 @@ import { isDesktop, isMobile, isTablet, popPage } from "../../App";
 import RoomsGridList from '../../components/RoomsGridList';
 import SpacesGridForInvitation from '../../components/SpacesGridForInvitation';
 import { colors, token } from '../../util/settings';
+import { serverRoot } from '../../util/Utils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
