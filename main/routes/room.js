@@ -491,7 +491,7 @@ router.post('/get_room_bots', jsonParser, async function (req, res) {
       return;
     }
     let workerships = await sw.Workership.findAll({raw: true, where: {roomId: membership.roomId}});
-    let bots = await sw.Bot.findAll({raw: true, where: {id: workerships.map(w => w.roomId)}});
+    let bots = await sw.Bot.findAll({raw: true, where: {id: workerships.map(w => w.botId)}});
     res.send({status: 'success', bots: bots});
   });
 })
