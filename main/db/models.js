@@ -388,12 +388,8 @@ async function prepareWorkershipModel() {
             autoIncrement: true,
             primaryKey: true,
         },
-        widgetId: Sequelize.BIGINT,
-        roomId: Sequelize.BIGINT,
-        x: Sequelize.INTEGER,
-        y: Sequelize.INTEGER,
-        width: Sequelize.INTEGER,
-        height: Sequelize.INTEGER,
+        botId: Sequelize.BIGINT,
+        roomId: Sequelize.BIGINT
     }, {
         freezeTableName: true
     });

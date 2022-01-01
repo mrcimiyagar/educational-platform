@@ -313,7 +313,7 @@ export default function StoreDialog(props) {
                   {...{ timeout: counterMini * 500 }}
                   transitionDuration={1000}
                 >
-                  <ImageListItem style={{width: finalWidth, height: finalWidth + 56, marginLeft: 12, marginRight: 12}} key={'store-bot-'+ item.id} cols={1} onClick={() => {gotoPage('/app/storebot', {bot_id: item.id})}}>
+                  <ImageListItem style={{width: finalWidth, height: finalWidth + 56, marginLeft: 12, marginRight: 12}} key={'store-bot-'+ item.id} cols={1} onClick={() => {gotoPage('/app/storebot', {room_id: props.room_id, bot_id: item.id})}}>
                     <div style={{width: finalWidth, height: finalWidth, borderRadius: 16, position: 'relative'}}>
                       <img src={'https://icon-library.com/images/bot-icon/bot-icon-5.jpg'} alt={item.title} style={{opacity: 0.65, borderRadius: 16, marginTop: 16, width: finalWidth - 8, height: finalWidth}} />
                       <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.75)', borderRadius: 12, position: 'absolute', top: finalWidth, left: 'calc(50% + 4px)', transform: 'translateX(-50%)', width: 'calc(100% - 32px)', height: 40, position: 'absolute'}}><div style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>{item.title}</div></Card>

@@ -277,7 +277,7 @@ export let MachinesBox = (props) => {
           >
             <div style={{ height: 'auto', marginRight: 12, paddingTop: 24 }}>
               <Button style={{width: 'calc(100% - 32px)', color: '#000', height: 32, marginBottom: 24}}
-                      onClick={() => gotoPage('/app/storedialog', {room_id: props.room_id})} variant={'outlined'}>
+                      onClick={() => gotoPage('/app/storedialog', {room_id: props.roomId})} variant={'outlined'}>
                         + افزودن بات
               </Button>
               <div>
