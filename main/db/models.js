@@ -393,7 +393,7 @@ async function prepareWorkershipModel() {
     }, {
         freezeTableName: true
     });
-    Workership.belongsTo(Widget, { foreignKey: 'widgetId' });
+    Workership.belongsTo(Bot, { foreignKey: 'botId' });
     Workership.belongsTo(Room, { foreignKey: 'roomId' });
     await Workership.sync();
     module.exports['Workership'] = Workership;
