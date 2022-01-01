@@ -97,6 +97,7 @@ export default function RoomsListPage(props) {
                               console.log(JSON.stringify(result));
                               if (result.status === 'success') {
                                   popPage();
+                                  popPage();
                               }
                             })
                             .catch(error => console.log('error', error));

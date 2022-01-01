@@ -95,7 +95,6 @@ export let MachinesBox = (props) => {
         token: token,
       },
       body: JSON.stringify({
-        spaceId: room.spaceId,
         roomId: props.roomId,
       }),
       redirect: 'follow',

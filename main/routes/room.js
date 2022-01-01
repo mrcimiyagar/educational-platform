@@ -480,6 +480,22 @@ router.post('/get_room', jsonParser, async function (req, res) {
   })
 })
 
+router.post('/get_room_bots', jsonParser, async function (req, res) {
+  authenticateMember(req, res, (membership, session, user, acc) => {
+    if (membership ===  null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      })
+      return;
+    }
+    let workerships = await sw.Workership.findAll({raw: true, where: {roomId: membership.roomId}});
+    let bots = await sw.Bot.findAll({raw: true, where: {id: workerships.map(w => w.roomId)}});
+    res.send({status: 'success', bots: bots});
+  });
+})
+
 router.post('/get_space_rooms', jsonParser, async function (req, res) {
   sw.Session.findOne({ where: { token: req.headers.token } }).then(
     async function (session) {
