@@ -6,7 +6,6 @@ import { Add, ArrowForward, Done, Search } from '@material-ui/icons';
 import Rating from '@material-ui/lab/Rating';
 import React, { useEffect } from 'react';
 import { isDesktop, isMobile, isTablet, popPage } from "../../App";
-import SpacesGridForInvitation from '../../components/SpacesGridForInvitation';
 import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 

@@ -696,24 +696,9 @@ router.post('/create_workership', jsonParser, async function (req, res) {
       })
       return
     }
-    let widget = await sw.Widget.findOne({
-      where: { id: req.body.widgetId, botId: req.body.botId },
-    })
-    if (widget === null) {
-      res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
-      })
-      return
-    }
     let workership = await sw.Workership.create({
-      widgetId: widget.id,
-      roomId: membership.roomId,
-      width: 150,
-      height: 150,
-      x: 100,
-      y: 100,
+      botId: bot.id,
+      roomId: membership.roomId
     })
     require('../server').pushTo(
       'room-' + membership.roomId,

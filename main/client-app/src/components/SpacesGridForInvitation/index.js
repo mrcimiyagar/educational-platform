@@ -69,7 +69,7 @@ export default function SpacesGridForInvitation(props) {
         spaces.map((item, index) => (
           <Grow in={inTheGame} {...{ timeout: (index + 1) * 500 }} transitionDuration={1000}>
           <ImageListItem key={item.img} cols={1} rows={1} onClick={() => {
-            if (props.canInspectRooms) {
+            if (props.canInspectRooms === 'true') {
               gotoPage('/app/roomslist', {space_id: item.id, bot_id: props.bot_id});
             }
             else {

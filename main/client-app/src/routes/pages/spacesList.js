@@ -12,7 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function SpacesListPage(props) {
+export default function SpacesListPage(props) {    
 
     const urlSearchParams = new URLSearchParams(window.location.search);
     props = Object.fromEntries(urlSearchParams.entries());

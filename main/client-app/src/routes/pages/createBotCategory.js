@@ -5,7 +5,6 @@ import Slide from "@material-ui/core/Slide";
 import { Add, ArrowForward, Done, Search } from '@material-ui/icons';
 import React from 'react';
 import { isDesktop, isMobile, isTablet, popPage } from "../../App";
-import SpacesGridForInvitation from '../../components/SpacesGridForInvitation';
 import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 

@@ -81,6 +81,9 @@ export default function StoreBot(props) {
   
   document.documentElement.style.overflow = 'auto';
 
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  props = Object.fromEntries(urlSearchParams.entries());
+
   let forceUpdate = useForceUpdate();
   const classes = useStyles();
   const [bot, setBot] = React.useState({});

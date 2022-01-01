@@ -6,7 +6,6 @@ import { ArrowForward, Search } from '@material-ui/icons';
 import React, { useEffect } from 'react';
 import { isDesktop, isMobile, isTablet, popPage } from "../../App";
 import RoomsGridList from '../../components/RoomsGridList';
-import SpacesGridForInvitation from '../../components/SpacesGridForInvitation';
 import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 
@@ -34,7 +33,7 @@ export default function RoomsListPage(props) {
               token: token,
             },
             body: JSON.stringify({
-              roomId: props.space_id,
+              spaceId: props.space_id,
             }),
             redirect: 'follow',
         }
@@ -91,8 +90,8 @@ export default function RoomsListPage(props) {
                               roomId: roomId
                             }),
                             redirect: 'follow'
-                          }
-                          fetch(serverRoot + "/bot/create_workership", requestOptions2)
+                        }
+                        fetch(serverRoot + "/bot/create_workership", requestOptions2)
                             .then(response => response.json())
                             .then(result => {
                               console.log(JSON.stringify(result));
