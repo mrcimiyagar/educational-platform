@@ -481,7 +481,7 @@ router.post('/get_room', jsonParser, async function (req, res) {
 })
 
 router.post('/get_room_bots', jsonParser, async function (req, res) {
-  authenticateMember(req, res, (membership, session, user, acc) => {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
     if (membership ===  null) {
       res.send({
         status: 'error',
