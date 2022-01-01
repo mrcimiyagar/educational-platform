@@ -103,15 +103,7 @@ export let MachinesBox = (props) => {
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
-        result.users.forEach((u) => {
-          if (video[u.id] === undefined) {
-            video[u.id] = false
-          } else if (audio[u.id] === undefined) {
-            audio[u.id] = false
-          }
-        })
-        setUsers(result.users);
-        setAllUsers(result.allUsers);
+        setUsers(result.bots);
       })
       .catch((error) => console.log('error', error))
   }
@@ -278,10 +270,8 @@ export let MachinesBox = (props) => {
               <Button style={{width: 'calc(100% - 32px)', color: '#000', height: 32, marginBottom: 24}}
                       onClick={() => gotoPage('/app/storedialog', {room_id: props.roomId})} variant={'outlined'}>
                         + افزودن بات
-              </Button>
-              <div>
-                آنلاین
-              </div>
+              </Button>\
+              <div style={{width: '100%', height: 16}}/>
               {users.map((user, index) => {
                 return (
                   <div
@@ -302,7 +292,7 @@ export let MachinesBox = (props) => {
                       onClick={() => permsOnClick(user)}
                       src={
                         serverRoot +
-                        `/file/download_user_avatar?token=${token}&userId=${user.id}`}
+                        `/file/download_bot_avatar?token=${token}&botId=${user.id}`}
                     />
                     <div
                       style={{ marginRight: 16, marginTop: -2 }}
@@ -315,110 +305,7 @@ export let MachinesBox = (props) => {
                           marginTop: 4,
                         }}
                       >
-                        {currentHover === index
-                          ? user.firstName
-                          : user.firstName + ' ' + user.lastName}
-                      </p>
-                    </div>
-                    {props.membership.canEditVideoSound &&
-                    currentHover === index ? (
-                      <div
-                        style={{
-                          marginTop: -12,
-                          position: 'absolute',
-                          left: 0,
-                          display: 'flex',
-                          backgroundColor: colors.primary,
-                        }}
-                      >
-                        <IconButton
-                          onClick={(e) => {
-                            window.frames['conf-video-frame'].postMessage(
-                              {
-                                sender: 'main',
-                                action: 'switchVideoPermission',
-                                targetId: user.id,
-                                status: !video[user.id],
-                              },
-                              pathConfig.videoConfVideo,
-                            )
-                            video[user.id] = !video[user.id]
-                            setVideo(video)
-                            forceUpdate()
-                          }}
-                        >
-                          {video[user.id] ? (
-                            <VideocamIcon style={{ fill: colors.textIcons }} />
-                          ) : (
-                            <VideocamOff style={{ fill: colors.textIcons }} />
-                          )}
-                        </IconButton>
-                        <IconButton
-                          onClick={(e) => {
-                            window.frames['conf-video-frame'].postMessage(
-                              {
-                                sender: 'main',
-                                action: 'switchAudioPermission',
-                                targetId: user.id,
-                                status: !audio[user.id],
-                              },
-                              pathConfig.videoConfVideo,
-                            )
-                            audio[user.id] = !audio[user.id]
-                            setAudio(audio)
-                            forceUpdate()
-                          }}
-                        >
-                          {audio[user.id] ? (
-                            <MicIcon style={{ fill: colors.textIcons }} />
-                          ) : (
-                            <MicOffIcon style={{ fill: colors.textIcons }} />
-                          )}
-                        </IconButton>
-                      </div>
-                    ) : null}
-                  </div>
-                )
-              })}
-              <div>
-                آفلاین
-              </div>
-              {allUsers.filter(u => (onlineDict[u.id] !== true)).map((user, index) => {
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      direction: 'rtl',
-                      position: 'relative',
-                      width: 'calc(100% - 16px)',
-                      marginRight: 16,
-                      display: 'flex',
-                    }}
-                    onMouseEnter={() => setCurrentHover(index)}
-                    onMouseLeave={() => setCurrentHover(-1)}
-                  >
-                    <Avatar
-                      style={{ width: 24, height: 24 }}
-                      alt={user.firstName + ' ' + user.lastName}
-                      onClick={() => permsOnClick(user)}
-                      src={
-                        serverRoot +
-                        `/file/download_user_avatar?token=${token}&userId=${user.id}`}
-                    />
-                    <div
-                      style={{ marginRight: 16, marginTop: -2 }}
-                      onClick={() => permsOnClick(user)}
-                    >
-                      <p
-                        style={{
-                          color: colors.textIcons,
-                          fontSize: 13,
-                          marginTop: 4,
-                        }}
-                      >
-                        {currentHover === index
-                          ? user.firstName
-                          : user.firstName + ' ' + user.lastName}
+                        {user.title}
                       </p>
                     </div>
                     {props.membership.canEditVideoSound &&
