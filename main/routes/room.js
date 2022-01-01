@@ -480,6 +480,48 @@ router.post('/get_room', jsonParser, async function (req, res) {
   })
 })
 
+router.post('/get_space_rooms', jsonParser, async function (req, res) {
+  sw.Session.findOne({ where: { token: req.headers.token } }).then(
+    async function (session) {
+      if (session === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'session does not exist.',
+        })
+        return
+      }
+      let space = await sw.Space.findOne({where: {id: req.body.spaceId}});
+      if (space ===  null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'space does not exist.',
+        })
+        return;
+      }
+      let roomsList = await sw.Room.findAll({raw: true, where: {spaceId: space.id}});
+      let isMember = ((await sw.Membership.findAll({
+        raw: true,
+        where: {
+          userId: session.userId,
+          roomId: roomsList.map(r => r.id)
+        }
+      })).length > 0);
+      if (isMember) {
+        res.send({status: 'success', rooms: roomsList});
+      }
+      else {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'access denied.',
+        });
+      }
+    },
+  )
+})
+
 router.post('/get_rooms', jsonParser, async function (req, res) {
   sw.Session.findOne({ where: { token: req.headers.token } }).then(
     async function (session) {
@@ -491,7 +533,7 @@ router.post('/get_rooms', jsonParser, async function (req, res) {
         })
         return
       }
-      sw.Membership.findAll({ where: { userId: session.userId } }).then(
+      sw.Membership.findAll({raw: true, where: { userId: session.userId } }).then(
         async function (memberships) {
           sw.Room.findAll({
             where: { id: memberships.map((m) => m.roomId) },

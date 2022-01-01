@@ -86,11 +86,36 @@ export default function StoreBot(props) {
   const [bot, setBot] = React.useState({});
   const [screenshots, setScreenshots] = React.useState([]);
   const [open, setOpen] = React.useState(true);
+  const [added, setAdded] = React.useState(false);
   let [dest, setDest] = React.useState(0)
   registerDialogOpen(setOpen)
   const handleClose = () => {
       setOpen(false);
       setTimeout(popPage, 250);
+  };
+
+  let checkAdded = () => {
+    let requestOptions2 = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify({
+        botId: props.bot_id,
+        roomId: props.room_id
+      }),
+      redirect: 'follow'
+    }
+    fetch(serverRoot + "/bot/workership_exists", requestOptions2)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.exists !== undefined) {
+          setAdded(result.exists);
+        }
+      })
+      .catch(error => console.log('error', error));
   };
 
   useEffect(() => {
@@ -137,6 +162,8 @@ export default function StoreBot(props) {
         }
       })
       .catch(error => console.log('error', error));
+      
+      checkAdded();
   }, []);
 
   let counter = 0;
@@ -209,7 +236,27 @@ export default function StoreBot(props) {
     </Fab>
     <Fab color="secondary" style={{position: 'fixed', bottom: 16, left: 16}}
       onClick={() => {
-        
+        let requestOptions2 = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'token': token
+          },
+          body: JSON.stringify({
+            botId: props.bot_id,
+            roomId: props.room_id
+          }),
+          redirect: 'follow'
+        }
+        fetch(serverRoot + "/bot/create_workership", requestOptions2)
+          .then(response => response.json())
+          .then(result => {
+            console.log(JSON.stringify(result));
+            if (result.status === 'success') {
+              checkAdded();
+            }
+          })
+          .catch(error => console.log('error', error));
       }}>
       <LocalMallIcon />
     </Fab>

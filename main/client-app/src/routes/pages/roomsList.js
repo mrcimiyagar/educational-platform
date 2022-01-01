@@ -3,25 +3,49 @@ import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import Slide from "@material-ui/core/Slide";
 import { ArrowForward, Search } from '@material-ui/icons';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { isDesktop, isMobile, isTablet, popPage } from "../../App";
+import RoomsGridList from '../../components/RoomsGridList';
 import SpacesGridForInvitation from '../../components/SpacesGridForInvitation';
-import { colors } from '../../util/settings';
+import { colors, token } from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function SpacesListPage(props) {
+export default function RoomsListPage(props) {
 
     const urlSearchParams = new URLSearchParams(window.location.search);
     props = Object.fromEntries(urlSearchParams.entries());
     
+    const [rooms, setRooms] = React.useState({});
     const [open, setOpen] = React.useState(true);
     const handleClose = () => {
         setOpen(false);
         setTimeout(popPage, 250)
     };
+
+    useEffect(() => {
+        let requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              token: token,
+            },
+            body: JSON.stringify({
+              roomId: props.space_id,
+            }),
+            redirect: 'follow',
+        }
+        fetch(serverRoot + '/room/get_space_rooms', requestOptions)
+            .then(res => res.json())
+            .then(result => {
+                if (result.rooms !== undefined) {
+                    setRooms(result.rooms);
+                }
+            });
+    }, []);
+
     return (
         <Dialog
             onTouchStart={(e) => {e.stopPropagation();}}
@@ -49,12 +73,14 @@ export default function SpacesListPage(props) {
                     borderRadius: isDesktop() ? '24px 24px 0 0' : undefined}}>
                     <Toolbar style={{marginTop: (isDesktop() || isTablet()) ? 0 : 8, width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                        <Typography variant={'h6'} style={{color: '#fff'}}>فضا ها</Typography>
+                        <Typography variant={'h6'} style={{color: '#fff'}}>روم ها</Typography>
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
                 <div style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', width: '100%', height: isDesktop() ? 'calc(100% - 56px)' : '100%', position: 'absolute', top: 56}}>
-                    <SpacesGridForInvitation canInspectRooms={props.can_inspect_rooms} roomId={props.room_id} userId={props.user_id}/>
+                    <RoomsGridList rooms={rooms} clickCallback={() => {
+
+                    }}/>
                 </div>
             </div>
         </Dialog>

@@ -1,11 +1,9 @@
 const sw = require('../db/models')
 const express = require('express')
 const bodyParser = require('body-parser')
-const { User } = require('../db/models')
 const { authenticateMember } = require('../users')
 const tools = require('../tools')
 const { uuid } = require('uuidv4');
-const { result } = require('underscore')
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
@@ -852,6 +850,33 @@ router.post('/get_workerships', jsonParser, async function (req, res) {
     })
     res.send({ status: 'success', workerships: workerships, widgets: widgets })
   })
+})
+
+router.post('/workership_exists', jsonParser, async function (req, res) {
+
+  let session = await sw.Session.findOne({where: {token: req.headers.token}});
+  if (session === null) {
+    res.send({
+      status: 'error',
+      errorCode: 'e0006',
+      message: 'access denied.',
+    });
+    return;
+  }
+
+  let membership = await sw.Membership.findOne({where: {userId: session.userId, roomId: req.body.roomId}});
+  if (membership === null) {
+    res.send({
+      status: 'error',
+      errorCode: 'e0006',
+      message: 'access denied.',
+    });
+    return;
+  }
+  
+  let workership = await sw.Workership.findOne({where: {botId: req.body.botId, roomId: req.body.roomId}});
+
+  res.send({ status: 'success', exists: workership !== null });
 })
 
 router.post('/get_bot_workerships', jsonParser, async function (req, res) {
