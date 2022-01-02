@@ -167,7 +167,7 @@ models.setup().then(() => {
                     });
                 }
                 else {
-                    let roomId = Number(nodeId.substr('room_'.length));
+                    let roomId = nodeId.substr('room_'.length);
                     let users = getRoomUsers(roomId);
                     users.forEach(user => {
                         if (user.id === exceptionId) return;
@@ -194,7 +194,7 @@ models.setup().then(() => {
                     });
                 }
                 else {
-                    let roomId = Number(nodeId.substr('room_'.length));
+                    let roomId = nodeId.substr('room_'.length);
                     let users = getRoomUsers(roomId);
                     users.forEach(user => {
                         if (notifs[user.id] === undefined) notifs[user.id] = [];
