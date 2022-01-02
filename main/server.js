@@ -151,6 +151,13 @@ models.setup().then(() => {
                     sockets[uid].emit('sync');
                 }
             });
+            let bots = await sw.Bot.findAll({raw: true});
+            let botIds = bots.map(u => u.id);
+            botIds.forEach(bid => {
+                if (notifs[bid] !== undefined && notifs[bid].length > 0 && sockets[bid] !== undefined) {
+                    sockets[bid].emit('sync');
+                }
+            });
         }, 5000);
 
         module.exports = {
@@ -167,7 +174,7 @@ models.setup().then(() => {
                     });
                 }
                 else {
-                    let roomId = nodeId.substr('room_'.length);
+                    let roomId = Number(nodeId.substr('room_'.length));
                     let users = getRoomUsers(roomId);
                     users.forEach(user => {
                         if (user.id === exceptionId) return;
@@ -194,7 +201,7 @@ models.setup().then(() => {
                     });
                 }
                 else {
-                    let roomId = nodeId.substr('room_'.length);
+                    let roomId = Number(nodeId.substr('room_'.length));
                     let users = getRoomUsers(roomId);
                     users.forEach(user => {
                         if (notifs[user.id] === undefined) notifs[user.id] = [];
