@@ -12,7 +12,7 @@ import { serverRoot } from '../../util/Utils';
 import EmptySign from '../EmptySign';
 import HomeToolbar from '../HomeToolbar';
 import SpacesSearchbar from '../SpacesSearchbar';
-import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
+import MainWallpaper from '../../images/workshop-wallpaper.jpg';
 
 const useStyles = makeStyles((theme) => ({
   imageList: {
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 var lastScrollTop = 0
 
 export default function SpacesGrid(props) {
+
   const classes = useStyles();
 
   document.documentElement.style.overflowY = 'hidden';
@@ -75,7 +76,7 @@ export default function SpacesGrid(props) {
 
     setWallpaper({
       type: 'photo',
-      photo: RoomWallpaper
+      photo: MainWallpaper
     });
 
     fetchSpaces().then((result) => {

@@ -19,6 +19,7 @@ import SettingsSearchbar from '../SettingsSearchbar'
 import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
 import { serverRoot } from '../../util/Utils'
 import { Done, Save } from '@material-ui/icons'
+import MainWallpaper from '../../images/workshop-wallpaper.jpg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -115,7 +116,7 @@ export default function SettingsList(props) {
 
     setWallpaper({
       type: 'photo',
-      photo: RoomWallpaper
+      photo: MainWallpaper
     });
 
   }, []);

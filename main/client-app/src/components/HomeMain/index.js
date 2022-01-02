@@ -10,7 +10,6 @@ import GroupIcon from '@material-ui/icons/Group';
 import RadioIcon from '@material-ui/icons/Radio';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
-import { setWallpaper } from '../..';
 import {
   cacheChat,
   fetchChats,

@@ -34,7 +34,7 @@ import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils';
 import {setMembership as setMCE} from '../ChatEmbedded';
 import {setMembership as setMCEIM} from '../ChatEmbeddedInMessenger';
-import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
+import MainWallpaper from '../../images/workshop-wallpaper.jpg';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
@@ -86,10 +86,10 @@ export default function HomeMessenger(props) {
     let forceUpdate = useForceUpdate();
     let classes = useStyles();
     useEffect(() => {
-        setWallpaper({
-          type: 'photo',
-          photo: RoomWallpaper
-        });
+      setWallpaper({
+        type: 'photo',
+        photo: MainWallpaper
+      });
         let doRoomDoctor = () => {
           let requestOptions = {
             method: 'POST',

@@ -10,7 +10,7 @@ import { setWallpaper } from '../..';
 import { colors } from '../../util/settings';
 import HomeToolbar from '../HomeToolbar';
 import NotifsList from '../NotifsList';
-import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
+import MainWallpaper from '../../images/workshop-wallpaper.jpg';
 import { inTheGame, isDesktop, isMobile, isTablet } from '../../App';
 
 function TabPanel(props) {
@@ -63,7 +63,7 @@ export default function HomeNotifs() {
   useEffect(() => {
     setWallpaper({
       type: 'photo',
-      photo: RoomWallpaper
+      photo: MainWallpaper
     });
   }, []);
 
