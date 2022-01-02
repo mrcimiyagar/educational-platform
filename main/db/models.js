@@ -305,6 +305,11 @@ async function prepareBotModel() {
             allowNull: false,
             primaryKey: true,
         },
+        creatureType: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            defaultValue: 'bot'
+        },
         username: Sequelize.STRING,
         title: Sequelize.STRING,
         description: Sequelize.STRING,
@@ -405,6 +410,11 @@ async function prepareUserModel() {
             type: Sequelize.STRING,
             allowNull: false,
             primaryKey: true,
+        },
+        creatureType: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            defaultValue: 'user'
         },
         username: Sequelize.STRING,
         firstName: Sequelize.STRING,
@@ -575,7 +585,6 @@ async function prepareMessageModel() {
     }, {
         freezeTableName: true
     });
-    Message.belongsTo(User, { foreignKey: 'authorId' });
     Message.belongsTo(Room, { foreignKey: 'roomId' });
     await Message.sync();
     module.exports['Message'] = Message;

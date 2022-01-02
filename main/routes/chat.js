@@ -298,6 +298,8 @@ router.post('/create_bot_message', jsonParser, async function (req, res) {
       return;
     }
 
+    let bot = await sw.Bot.findOne({where: {id: workership.botId}});
+
     let msg = await sw.Message.create({
       authorId: bot.id,
       time: Date.now(),
