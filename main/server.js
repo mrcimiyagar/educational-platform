@@ -167,11 +167,18 @@ models.setup().then(() => {
                     });
                 }
                 else {
-                    let users = getRoomUsers(Number(nodeId.substr('room_'.length)));
+                    let roomId = Number(nodeId.substr('room_'.length));
+                    let users = getRoomUsers(roomId);
                     users.forEach(user => {
                         if (user.id === exceptionId) return;
                         if (notifs[user.id] === undefined) notifs[user.id] = [];
                         notifs[user.id].push({key, data});
+                    });
+                    let workerships = await sw.Workership.findAll({raw: true, where: {roomId: roomId}});
+                    workerships.forEach(w => {
+                        if (w.botId === exceptionId) return;
+                        if (notifs[w.botId] === undefined) notifs[w.botId] = [];
+                        notifs[w.botId].push({key, data});
                     });
                 }
             },
@@ -187,10 +194,16 @@ models.setup().then(() => {
                     });
                 }
                 else {
-                    let users = getRoomUsers(Number(nodeId.substr('room_'.length)));
+                    let roomId = Number(nodeId.substr('room_'.length));
+                    let users = getRoomUsers(roomId);
                     users.forEach(user => {
                         if (notifs[user.id] === undefined) notifs[user.id] = [];
                         notifs[user.id].push({key, data});
+                    });
+                    let workerships = await sw.Workership.findAll({raw: true, where: {roomId: roomId}});
+                    workerships.forEach(w => {
+                        if (notifs[w.botId] === undefined) notifs[w.botId] = [];
+                        notifs[w.botId].push({key, data});
                     });
                 }
             },
