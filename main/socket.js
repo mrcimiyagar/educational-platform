@@ -211,7 +211,7 @@ module.exports = {
                     if (metadata[bot.id].timer !== undefined) {
                       clearTimeout(metadata[bot.id].timer);
                     }
-                    metadata[user.id].timer = setTimeout(() => {
+                    metadata[bot.id].timer = setTimeout(() => {
                       disconnectWebsocket(soc);
                     }, 3000);
                   });
