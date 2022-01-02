@@ -530,7 +530,7 @@ export default function ChatEmbeddedInMessenger(props) {
                           ? 'video'
                           : undefined,
                       fileUrl: URL.createObjectURL(file),
-                      User: me,
+                      author: me,
                     };
                     const id = markFileAsUploading(props.roomId, {message: msg, file: file, dataUrl: dataUrl});
                     addMessageToList(msg);
@@ -745,7 +745,7 @@ export default function ChatEmbeddedInMessenger(props) {
                 ? 'video'
                 : undefined,
             fileUrl: URL.createObjectURL(file),
-            User: me,
+            author: me,
           };
           const id = markFileAsUploading(props.roomId, {message: msg, file: file, dataUrl: dataUrl});
           addMessageToList(msg);
@@ -981,7 +981,7 @@ placeholder.appendChild(imgLarge);
                   roomId: props.roomId,
                   text: document.getElementById('chatText').value,
                   messageType: 'text',
-                  User: me,
+                  author: me,
                 }
                 addMessageToList(msg)
                 setLastMessage(msg)

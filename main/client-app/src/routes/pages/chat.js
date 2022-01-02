@@ -505,7 +505,7 @@ export default function Chat(props) {
                           ? 'video'
                           : undefined,
                       fileUrl: URL.createObjectURL(file),
-                      User: me,
+                      author: me,
                     };
                     const id = markFileAsUploading(props.room_id, {message: msg, file: file, dataUrl: dataUrl});
                     addMessageToList(msg);
@@ -800,7 +800,7 @@ export default function Chat(props) {
                 ? 'video'
                 : undefined,
             fileUrl: URL.createObjectURL(file),
-            User: me,
+            author: me,
           }
           const id = markFileAsUploading(props.room_id, {
             message: msg,
@@ -1073,7 +1073,7 @@ export default function Chat(props) {
                     roomId: props.room_id,
                     text: document.getElementById('chatText').value,
                     messageType: 'text',
-                    User: me,
+                    author: me,
                   }
                   addMessageToList(msg)
                   setLastMessage(msg)
