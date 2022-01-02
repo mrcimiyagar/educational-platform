@@ -332,9 +332,6 @@ export default function Chat(props) {
         ) {
           isAtEnd = true
         }
-        msg['User.id'] = msg.User.id;
-        msg['User.username'] = msg.User.username;
-        msg['User.firstName'] = msg.User.firstName;
         let lastMsg = (
           <MessageItem
             index={1}

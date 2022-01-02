@@ -669,9 +669,6 @@ export default function ChatEmbeddedInMessenger(props) {
         ) {
           isAtEnd = true
         }
-        msg['User.id'] = msg.User.id
-        msg['User.username'] = msg.User.username
-        msg['User.firstName'] = msg.User.firstName
         let lastMsg = (
           <MessageItem
             key={'message-' + msg.id}

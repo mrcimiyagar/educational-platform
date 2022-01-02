@@ -139,7 +139,7 @@ export default function MessageItem(props) {
                   wordWrap: "break-word"
                 }}
               >
-                {message['User.firstName']}
+              {message.creatureType === 'user' ? message.author.firstName : message.author.title}
               </Typography>
               <br />
               <div >
@@ -293,7 +293,7 @@ export default function MessageItem(props) {
                   wordWrap: "break-word"
                 }}
               >
-                {message.author.firstName}
+                {message.creatureType === 'user' ? message.author.firstName : message.author.title}
               </Typography>
               <br />
               <div >
@@ -466,7 +466,7 @@ export default function MessageItem(props) {
                   wordWrap: "break-word"
                 }}
               >
-                {message.author.firstName}
+              {message.creatureType === 'user' ? message.author.firstName : message.author.title}
               </Typography>
               <br />
               <div >
@@ -620,7 +620,7 @@ export default function MessageItem(props) {
                   wordWrap: "break-word"
                 }}
               >
-                {message.author.firstName}
+              {message.creatureType === 'user' ? message.author.firstName : message.author.title}
               </Typography>
               <br />
               <div >
