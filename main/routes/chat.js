@@ -223,7 +223,7 @@ router.post('/create_message', jsonParser, async function (req, res) {
       text: req.body.text,
       fileId: req.body.fileId === undefined ? null : req.body.fileId,
       messageType: req.body.messageType,
-      User: user,
+      author: user,
     };
     let users = getRoomUsers(membership.roomId);
     let pushNotification = (userId, title, text) => {
@@ -316,7 +316,7 @@ router.post('/create_bot_message', jsonParser, async function (req, res) {
       text: msg.text,
       fileId: msg.fileId,
       messageType: msg.messageType,
-      User: bot,
+      author: bot,
     };
     let users = getRoomUsers(workership.roomId);
     let pushNotification = (userId, title, text) => {
@@ -396,7 +396,6 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     let messages = await sw.Message.findAll({
       raw: true,
       limit: 100,
-      include: [{ all: true }],
       where: { roomId: membership.roomId },
       order: [['createdAt', 'DESC']],
     })
@@ -476,19 +475,20 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     let copies = [];
     for (let i = 0; i < fetchedMessages.length; i++) {
       let msg = fetchedMessages[i];
+      let author = await sw.User.findOne({where: {id: msg.authorId}});
+      if (author === null) {
+        author = await sw.Bot.findOne({where: {id: msg.authorId}});
+      }
       let msgCopy = {
         id: msg.id,
         authorId: msg.authorId,
         roomId: msg.roomId,
-        User: msg.User,
+        author: author,
         Room: msg.Room,
         messageType: msg.messageType,
         fileId: msg.fileId,
         text: msg.text,
-        time: msg.time,
-        'User.firstName': msg['User.firstName'],
-        'User.lastName': msg['User.lastName'],
-        'User.username': msg['User.username'],
+        time: msg.time
       }
       msgCopy.seen = await sw.MessageSeen.count({
         where: { messageId: msgCopy.id },
