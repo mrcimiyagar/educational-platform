@@ -965,6 +965,13 @@ router.post('/accept_invite', jsonParser, async function (req, res) {
           roomId: invite.roomId,
           ...tools.defaultPermissions,
         })
+        let user = await sw.User.findOne({id: mem.userId});
+        let room = await sw.Room.findOne({id: mem.roomId});
+        require('../server').pushTo(
+          'room_' + (invite.valid ? invite.roomId : req.body.roomId),
+          'user_joined',
+          {user, room},
+        )
         require('../server').pushTo(
           'room_' + invite.roomId,
           'invite-accepted',
@@ -1113,10 +1120,11 @@ router.post('/use_invitation', jsonParser, async function (req, res) {
             }
             addUser(invite.valid ? invite.roomId : req.body.roomId, user)
             addGuestAcc(acc)
+            let room = await sw.Room.findOne({id: acc.roomId});
             require('../server').pushTo(
               'room_' + (invite.valid ? invite.roomId : req.body.roomId),
               'user_joined',
-              user,
+              {user, room},
             )
             res.send({
               status: 'success',
