@@ -148,7 +148,6 @@ module.exports = {
                 session.socketId = soc.id
                 await session.save()
                 let user = await models.User.findOne({
-                  raw: true,
                   where: { id: session.userId },
                 })
                 if (user !== null) {
