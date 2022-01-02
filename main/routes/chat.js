@@ -329,7 +329,6 @@ router.post('/create_bot_message', jsonParser, async function (req, res) {
     }
     let roomRaw = await sw.Room.findOne({where: {id: workership.roomId}});
     users.forEach((user) => {
-      console.log(user);
       pushNotification(user.id, 'پیام جدید از ' + user.firstName, msgCopy.text);
       require('../server').signlePushTo(user.id, 'message-added', { msgCopy });
     });
