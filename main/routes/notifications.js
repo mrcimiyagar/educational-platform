@@ -23,6 +23,17 @@ router.post('/sync-bot', jsonParser, async function (req, res) {
     res.send({status: 'success', notifications: nots});
 });
 
+router.post('/recycle', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        if (notifs[user.id] === undefined) {
+            res.send({status: 'success'});
+            return;
+        }
+        notifs[user.id].splice(0, req.body.notifsCount);
+        res.send({status: 'success'});
+    });
+});
+
 router.post('/recycle-bot', jsonParser, async function (req, res) {
     let session = await sw.Session.findOne({where: {token: req.headers.token}});
     if (notifs[session.userId] === undefined) {
