@@ -329,10 +329,9 @@ router.post('/create_bot_message', jsonParser, async function (req, res) {
     }
     let roomRaw = await sw.Room.findOne({where: {id: workership.roomId}});
     users.forEach((user) => {
-      if (user.id !== session.userId) {
-        pushNotification(user.id, 'پیام جدید از ' + user.firstName, msgCopy.text);
-        require('../server').signlePushTo(user.id, 'message-added', { msgCopy });
-      }
+      console.log(user);
+      pushNotification(user.id, 'پیام جدید از ' + user.firstName, msgCopy.text);
+      require('../server').signlePushTo(user.id, 'message-added', { msgCopy });
     });
     let mems = await sw.Membership.findAll({raw: true, where: {roomId: roomRaw.id}});
     let allUsers = await sw.User.findAll({raw: true, where: {id: mems.map(mem => mem.userId)}});
@@ -345,9 +344,7 @@ router.post('/create_bot_message', jsonParser, async function (req, res) {
     });
     for (let i = 0; i < allUsers.length; i++) {
       let user = allUsers[i];
-      if (user.id !== session.userId) {
-        require('../server').signlePushTo(user.id, 'chat-list-updated', {room: roomRaw});
-      }
+      require('../server').signlePushTo(user.id, 'chat-list-updated', {room: roomRaw});
     }
     res.send({ status: 'success', message: msgCopy })
 })
