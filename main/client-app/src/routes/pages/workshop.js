@@ -1,39 +1,30 @@
-import { AppBar, Avatar, Button, Fab, IconButton, makeStyles, SwipeableDrawer, Toolbar, Typography } from '@material-ui/core';
-import { Add, People } from '@material-ui/icons';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import { AppBar, Avatar, Button, Fab, IconButton, SwipeableDrawer, Toolbar, Typography } from '@material-ui/core';
+import { Add } from '@material-ui/icons';
 import React, { useEffect } from "react";
 import { pathConfig, setWallpaper } from '../..';
-import { db, gotoPage, isDesktop, isInRoom } from '../../App';
+import { gotoPage, isDesktop } from '../../App';
 import Jumper from '../../components/SearchEngineFam';
-import WhiteColorTextField from '../../components/WhiteColorTextField';
-import Wallpaper from '../../images/chat-wallpaper.jpg';
-import CloudIcon from '../../images/logo.png';
 import {
   colors,
-  setHomeRoomId,
-  setHomeSpaceId,
-  setMe,
-  setToken,
   token
 } from '../../util/settings';
 import {
   registerEvent,
-  serverRoot, setConfig, useForceUpdate
+  serverRoot, useForceUpdate
 } from '../../util/Utils';
 import WorkshopWallpaper from '../../images/workshop-wallpaper.jpg';
-import ClockHand1 from '../../images/clock-hand-1.png'
-import ClockHand2 from '../../images/clock-hand-2.png'
 import BotContainer from '../../components/BotContainer';
 import Menu from '@material-ui/icons/Menu';
 import CachedIcon from '@mui/icons-material/Cached';
 
 let widget1Gui = {
   type: 'Box'
-}
+};
 
-let idDict = {}
+let idDict = {};
+let memDict = {};
 let currentWidgetId = 0;
+let currentEngineHeartbit;
 
 export let updateMyBotsList = () => {};
 
@@ -44,6 +35,9 @@ function Workshop(props) {
   const [bots, setBots] = React.useState([]);
   const [menuMode, setMenuMode] = React.useState(0);
   const [open, setOpen] = React.useState(false);
+  const [mirrors, setMirrors] = React.useState([])
+  const [timers, setTimers] = React.useState({})
+  
   updateMyBotsList = () => {
     let requestOptions = {
       method: 'POST',
@@ -62,18 +56,97 @@ function Workshop(props) {
         }
       });
   };
+
   useEffect(() => {
+    currentEngineHeartbit = setInterval(() => {
+      mirrors.forEach((mirror) => {
+        let timeNow =
+          mirror.variable.from === 'time.now.seconds'
+            ? new Date().getSeconds()
+            : mirror.variable.from === 'time.now.minutes'
+            ? new Date().getMinutes()
+            : mirror.variable.from === 'time.now.hours'
+            ? new Date().getHours() % 12
+            : 0
+        let varCont = mirror.value
+        varCont = varCont.replace('@' + mirror.variable.id, timeNow)
+        idDict[mirror.widgetId][mirror.elId].obj[mirror.property] = varCont
+      })
+      forceUpdate()
+    }, 1000);
+
     setWallpaper({type: 'photo', photo: WorkshopWallpaper});
-    registerEvent('gui', ({type, gui, widgetId, roomId}) => {
+
+    registerEvent('gui', ({type, gui: data, widgetId, roomId}) => {
       if (currentWidgetId === widgetId) {
         if (type === 'init') {
-          widget1Gui = gui;
+          widget1Gui = data;
+        }
+        else if (type === 'update') {
+          data.forEach((d) => {
+            idDict[widgetId][d.elId].obj[d.property] = d.newValue;
+          });
           forceUpdate();
+        }
+        else if (type === 'mirror') {
+          data.forEach((d) => {
+            d.widgetId = widgetId;
+          });
+          mirrors = mirrors.concat(data);
+          setMirrors(mirrors);
+          forceUpdate();
+        }
+        else if (type === 'timer') {
+          let timer = setInterval(() => {
+            data.updates.forEach((d) => {
+              idDict[widgetId][d.elId].obj[d.property] = d.newValue;
+            })
+            forceUpdate();
+          }, data.interval);
+          timers[data.timerId] = timer;
+          setTimers(timers);
+          forceUpdate();
+        }
+        else if (type === 'untimer') {
+          let timer = timers[data.timerId];
+          clearInterval(timer);
+          delete timers[data.timerId];
+          setTimers(timers);
+          forceUpdate();
+        }
+        else if (type === 'memorize') {
+          memDict[data.memoryId] = data.value;
+          forceUpdate();
+        }
+        else if (type === 'attachClick') {
+          idDict[widgetId][data.elId].view.onclick = (e) => {
+            data.updates.forEach((d) => {
+              idDict[widgetId][d.elId].obj[d.property] = d.newValue;
+            });
+            forceUpdate();
+          }
         }
       }
     });
+
     updateMyBotsList();
+
+    return () => {
+      if (currentEngineHeartbit !== null && currentEngineHeartbit !== undefined) {
+        clearInterval(currentEngineHeartbit);
+        currentEngineHeartbit = undefined;
+      }
+    };
+
   }, []);
+
+
+
+
+
+
+
+  
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
