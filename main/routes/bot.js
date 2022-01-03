@@ -953,7 +953,16 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
 })
 
 router.post('/gui', jsonParser, async function (req, res) {
-  let bot = await sw.Bot.findOne({where: {id: req.headers.token}});
+  let session = await sw.Session.findOne({where: {token: req.headers.token}});
+  if (session === null) {
+    res.send({
+      status: 'error',
+      errorCode: 'e0005',
+      message: 'access denied.',
+    });
+    return;
+  }
+  let bot = await sw.Bot.findOne({where: {id: session.token}});
     if (bot === null) {
       res.send({
         status: 'error',
