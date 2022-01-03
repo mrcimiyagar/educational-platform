@@ -1120,9 +1120,9 @@ placeholder.appendChild(imgLarge);
             style={{
               display: showScrollDown ? 'block' : 'none',
               position: 'fixed',
-              left: isInMessenger() ? undefined : (24 + 16),
-              right: isInRoom() ? 450 - 56 - 16 : undefined,
-              bottom: isInMessenger() ? 72 + 16 : 72 + 32 + 16,
+              left: (isInMessenger() || isInRoom()) ? undefined : (24 + 16),
+              right: (isInMessenger() || isInRoom()) ? 450 - 56 - 16 : undefined,
+              bottom: (isInMessenger() || isInRoom()) ? 72 + 16 : 72 + 32 + 16,
             }}
             onClick={() => {
               scrollToBottom();
