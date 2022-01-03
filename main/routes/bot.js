@@ -963,15 +963,15 @@ router.post('/gui', jsonParser, async function (req, res) {
     return;
   }
   let bot = await sw.Bot.findOne({where: {id: session.userId}});
-    if (bot === null) {
+  if (bot === null) {
       res.send({
         status: 'error',
         errorCode: 'e0005',
         message: 'bot not found.',
       });
       return;
-    }
-    if (req.preview === true) {
+  }
+  if (req.preview === true) {
       let widget = await sw.Widget.findOne({where: {botId: bot.id, id: req.body.widgetId}});
       if (widget === null) {
         res.send({
@@ -987,8 +987,9 @@ router.post('/gui', jsonParser, async function (req, res) {
         widgetId: widget.id,
       });
       res.send({ status: 'success' });
-    }
-    else {
+  }
+  else {
+      let workership = await sw.Workership.findOne({where: {botId: bot.id, roomId: req.body.roomId}});
       if (workership === null) {
         res.send({
           status: 'error',
@@ -1037,7 +1038,7 @@ router.post('/gui', jsonParser, async function (req, res) {
         })
       }
       res.send({ status: 'success' })
-    }
+  }
 })
 
 router.post('/create_ad', jsonParser, async function (req, res) {
