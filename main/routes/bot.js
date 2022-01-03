@@ -971,7 +971,7 @@ router.post('/gui', jsonParser, async function (req, res) {
       });
       return;
   }
-  if (req.preview === true) {
+  if (req.body.preview === true) {
       let widget = await sw.Widget.findOne({where: {botId: bot.id, id: req.body.widgetId}});
       if (widget === null) {
         res.send({
