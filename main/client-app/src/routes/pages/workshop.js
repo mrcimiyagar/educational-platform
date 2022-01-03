@@ -18,7 +18,8 @@ import {
   token
 } from '../../util/settings';
 import {
-  serverRoot, setConfig
+  registerEvent,
+  serverRoot, setConfig, useForceUpdate
 } from '../../util/Utils';
 import WorkshopWallpaper from '../../images/workshop-wallpaper.jpg';
 import ClockHand1 from '../../images/clock-hand-1.png'
@@ -173,10 +174,14 @@ let widget1Gui = {
 }
 
 let idDict = {}
+let currentWidgetId = 0;
 
 export let updateMyBotsList = () => {};
 
 function Workshop(props) {
+  
+  let forceUpdate = useForceUpdate();
+
   const [bots, setBots] = React.useState([]);
   const [menuMode, setMenuMode] = React.useState(0);
   const [open, setOpen] = React.useState(false);
@@ -200,6 +205,14 @@ function Workshop(props) {
   };
   useEffect(() => {
     setWallpaper({type: 'photo', photo: WorkshopWallpaper});
+    registerEvent('gui', data => {
+      if (currentWidgetId === data.widgetId) {
+        if (data.type === 'init') {
+          widget1Gui = data.gui;
+          forceUpdate();
+        }
+      }
+    });
     updateMyBotsList();
   }, []);
   const toggleDrawer = (anchor, open) => (event) => {
@@ -207,6 +220,28 @@ function Workshop(props) {
       return;
     }
     setOpen(open);
+  };
+  let requestInitGui = () => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify({
+        widgetId: currentWidgetId,
+        preview: true
+      }),
+      redirect: 'follow'
+    }
+    fetch(serverRoot + "/bot/request_initial_gui", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.myBots !== undefined) {
+          setBots(result.myBots);
+        }
+      });
   };
   return (
     <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000, direction: 'rtl'}}>
@@ -249,7 +284,7 @@ function Workshop(props) {
       >
         <Jumper />
       </div>
-      <Fab color={'secondary'} style={{position: 'fixed', left: 'calc(50% + 24px)', bottom: 24}}>
+      <Fab color={'secondary'} style={{position: 'fixed', left: 'calc(50% + 24px)', bottom: 24}} onClick={() => requestInitGui()}>
         <CachedIcon/>
       </Fab>
       <SwipeableDrawer
@@ -322,26 +357,8 @@ function Workshop(props) {
                 bots[menuMode].widgets.map(widget => {
                   return (
                     <div style={{width: '100%'}} onClick={() => {
-                      let requestOptions = {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'token': token
-                        },
-                        body: JSON.stringify({
-                          widgetId: widget.id,
-                          preview: true
-                        }),
-                        redirect: 'follow'
-                      }
-                      fetch(serverRoot + "/bot/request_initial_gui", requestOptions)
-                        .then(response => response.json())
-                        .then(result => {
-                          console.log(JSON.stringify(result));
-                          if (result.myBots !== undefined) {
-                            setBots(result.myBots);
-                          }
-                        });
+                      currentWidgetId = widget.id;
+                      requestInitGui();
                     }}>
                       <img
                         style={{

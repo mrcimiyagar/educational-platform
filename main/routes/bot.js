@@ -914,9 +914,9 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
         });
         return;
       }
-      require('../server').pushTo('bot-' + widget.botId, 'request_initial_gui', {
+      require('../server').signlePushTo(widget.botId, 'request_initial_gui', {
         widgetId: widget.id,
-        user: user.id,
+        userId: user.id,
         preview: true
       });
       res.send({ status: 'success' });
@@ -941,10 +941,10 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
         });
         return;
       }
-      require('../server').pushTo('bot-' + bot.id, 'request_initial_gui', {
+      require('../server').signlePushTo(bot.id, 'request_initial_gui', {
         roomId: workership.roomId,
         widgetId: widget.id,
-        user: user.id,
+        userId: user.id,
         preview: false
       });
       res.send({ status: 'success' });
