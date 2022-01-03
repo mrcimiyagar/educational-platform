@@ -962,7 +962,7 @@ router.post('/gui', jsonParser, async function (req, res) {
     });
     return;
   }
-  let bot = await sw.Bot.findOne({where: {id: session.botId}});
+  let bot = await sw.Bot.findOne({where: {id: session.userId}});
     if (bot === null) {
       res.send({
         status: 'error',
