@@ -1120,7 +1120,7 @@ placeholder.appendChild(imgLarge);
             style={{
               display: showScrollDown ? 'block' : 'none',
               position: 'fixed',
-              left: isInMessenger() ? 24 + 16 : undefined,
+              left: isInMessenger() ? undefined : (24 + 16),
               right: isInRoom() ? 450 - 56 - 16 : undefined,
               bottom: isInMessenger() ? 72 + 16 : 72 + 32 + 16,
             }}
