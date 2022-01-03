@@ -1041,6 +1041,25 @@ router.post('/gui', jsonParser, async function (req, res) {
   }
 })
 
+router.post('/notify_gui_base_activated', jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
+      let widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
+      if (widget === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'access denied.'
+        });
+        return;
+      }
+      require('../server').signlePushTo(widget.botId, 'gui_initialized', {
+        widgetId: widget.id,
+        userId: user.id
+      });
+      res.send({ status: 'success' });
+  })
+})
+
 router.post('/create_ad', jsonParser, async function (req, res) {
   let roomId = -1
   authenticateMember(req, res, async (membership, session, user, acc) => {

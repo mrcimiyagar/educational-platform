@@ -81,6 +81,23 @@ function Workshop(props) {
       if (currentWidgetId === widgetId) {
         if (type === 'init') {
           widget1Gui = data;
+          forceUpdate();
+          let requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'token': token
+            },
+            body: JSON.stringify({
+              widgetId: currentWidgetId
+            }),
+            redirect: 'follow'
+          }
+          fetch(serverRoot + "/bot/notify_gui_base_activated", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+              console.log(JSON.stringify(result));
+            });
         }
         else if (type === 'update') {
           data.forEach((d) => {
@@ -139,13 +156,6 @@ function Workshop(props) {
     };
 
   }, []);
-
-
-
-
-
-
-
   
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
