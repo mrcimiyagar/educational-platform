@@ -205,10 +205,10 @@ function Workshop(props) {
   };
   useEffect(() => {
     setWallpaper({type: 'photo', photo: WorkshopWallpaper});
-    registerEvent('gui', data => {
-      if (currentWidgetId === data.widgetId) {
-        if (data.type === 'init') {
-          widget1Gui = data.gui;
+    registerEvent('gui', ({type, gui, widgetId, roomId}) => {
+      if (currentWidgetId === widgetId) {
+        if (type === 'init') {
+          widget1Gui = gui;
           forceUpdate();
         }
       }

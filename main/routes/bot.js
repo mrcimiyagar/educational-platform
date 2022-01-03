@@ -953,63 +953,82 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
 })
 
 router.post('/gui', jsonParser, async function (req, res) {
-  authenticateBot(req, res, async (workership, bot, widget) => {
+  let bot = await sw.Bot.findOne({where: {id: req.headers.token}});
     if (bot === null) {
       res.send({
         status: 'error',
         errorCode: 'e0005',
         message: 'bot not found.',
-      })
-      return
+      });
+      return;
     }
-    if (workership === null) {
-      res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
-      })
-      return
-    }
-    if (widget === null) {
-      res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
-      })
-      return
-    }
-    let targetUserId = req.body.userId
-    if (
-      targetUserId !== undefined &&
-      (await sw.Membership.findOne({
-        where: { roomId: workership.roomId, userId: targetUserId },
-      })) === null
-    ) {
-      res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
-      })
-      return
-    }
-    let isPacketGlobal = req.body.globalGui
-    let gui = req.body.gui
-    if (isPacketGlobal) {
-      require('../server').pushTo('room-' + workership.roomId, 'gui', {
-        gui: gui,
-        roomId: workership.roomId,
+    if (req.preview === true) {
+      let widget = await sw.Widget.findOne({where: {botId: bot.id, id: req.body.widgetId}});
+      if (widget === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'access denied.',
+        });
+        return;
+      }
+      require('../server').signlePushTo(req.body.userId, 'gui', {
+        type: 'init',
+        gui: req.body.gui,
         widgetId: widget.id,
-      })
-    } else {
-      require('../server').pushTo('user-' + targetUserId, 'gui', {
-        gui: gui,
-        roomId: workership.roomId,
-        user: req.body.userId,
-        widgetId: widget.id,
-      })
+      });
+      res.send({ status: 'success' });
     }
-    res.send({ status: 'success' })
-  })
+    else {
+      if (workership === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'access denied.',
+        })
+        return
+      }
+      if (widget === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'access denied.',
+        })
+        return
+      }
+      let targetUserId = req.body.userId
+      if (
+        targetUserId !== undefined &&
+        (await sw.Membership.findOne({
+          where: { roomId: workership.roomId, userId: targetUserId },
+        })) === null
+      ) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'access denied.',
+        })
+        return
+      }
+      let isPacketGlobal = req.body.globalGui
+      let gui = req.body.gui
+      if (isPacketGlobal) {
+        require('../server').pushTo('room-' + workership.roomId, 'gui', {
+          type: 'init',
+          gui: gui,
+          roomId: workership.roomId,
+          widgetId: widget.id,
+        })
+      } else {
+        require('../server').signlePushTo(targetUserId, 'gui', {
+          type: 'init',
+          gui: gui,
+          roomId: workership.roomId,
+          widgetId: widget.id,
+        })
+      }
+      res.send({ status: 'success' })
+    }
 })
 
 router.post('/create_ad', jsonParser, async function (req, res) {
