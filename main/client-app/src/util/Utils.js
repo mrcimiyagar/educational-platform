@@ -258,7 +258,9 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
   registerEvent('disconnect', () => {
     setClientConnected(false)
     socket = null;
-    ConnectToIo(t, onSocketAuth);
+    setTimeout(() => {
+      ConnectToIo(t, onSocketAuth);
+    }, 5000);
   })
 }
 
