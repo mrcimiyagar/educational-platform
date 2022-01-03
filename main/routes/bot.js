@@ -982,7 +982,7 @@ router.post('/gui', jsonParser, async function (req, res) {
         return;
       }
       require('../server').signlePushTo(req.body.userId, 'gui', {
-        type: 'init',
+        type: req.body.type,
         gui: req.body.gui,
         widgetId: widget.id,
       });
@@ -1024,7 +1024,7 @@ router.post('/gui', jsonParser, async function (req, res) {
       let gui = req.body.gui
       if (isPacketGlobal) {
         require('../server').pushTo('room-' + workership.roomId, 'gui', {
-          type: 'init',
+          type: req.body.type,
           gui: gui,
           roomId: workership.roomId,
           widgetId: widget.id,
