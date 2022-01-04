@@ -23,10 +23,92 @@ let widget1Gui = {
 
 let idDict = {};
 let memDict = {};
+let clickEvents = {};
+let mirrors = [];
 let currentWidgetId = 0;
 let currentEngineHeartbit;
 
 export let updateMyBotsList = () => {};
+
+let ckeckCode = (codes) => {
+  for (let i = 0; i < codes.length; i++) {
+    let code = codes[i];
+    let handler = () => {
+      if (code.type === 'conditionList') {
+        for (let i = 0; i < code.conditions.length; i++) {
+          let condition = code.conditions[i];
+          let item1 = undefined;
+          if (condition.item1 !== undefined) {
+            if (condition.item1.type === 'gui') {
+              item1 = idDict[condition.item1.elId].obj[condition.item1.property];
+            }
+            else if (condition.item1.type === 'memory') {
+              item1 = memDict[condition.item1.memoryId];
+            }
+            else if (condition.item1.type === 'constant') {
+              item1 = condition.item1.constant;
+            }
+          }
+          let item2 = undefined;
+          if (condition.item2 !== undefined) {
+            if (condition.item2.type === 'gui') {
+              item2 = idDict[condition.item2.elId].obj[condition.item2.property];
+            }
+            else if (condition.item2.type === 'memory') {
+              item2 = memDict[condition.item2.memoryId];
+            }
+            else if (condition.item2.type === 'constant') {
+              item2 = condition.item2.constant;
+            }
+          }
+          
+          let allowed = false;
+          if (condition.type === 'e' && item1 === item2) {
+            allowed = true;
+          }
+          else if (condition.type === 'lt' && item1 < item2) {
+            allowed = true;
+          }
+          else if (condition.type === 'lte' && item1 <= item2) {
+            allowed = true;
+          }
+          else if (condition.type === 'gte' && item1 >= item2) {
+            allowed = true;
+          }
+          else if (condition.type === 'gt' && item1 > item2) {
+            allowed = true;
+          }
+          else if (condition.type === 'ne' && item1 !== item2) {
+            allowed = true;
+          }
+          
+          if (allowed === true) {
+            if (condition.then !== undefined) {
+              ckeckCode(condition.then);
+              break;
+            }
+          }
+        }
+      }
+      else if (code.type === 'straight') {
+        if (code.updateType === 'gui') {
+          idDict[code.elId].obj[code.property] = code.newValue;
+        }
+        else if (code.updateType === 'memory') {
+          memDict[code.memoryId] = code.value;
+        }
+      }
+    }
+    if (code.delay !== undefined) {
+      setTimeout(() => {
+        handler();
+      }, code.delay);
+    }
+    else {
+      handler();
+    }
+  }
+};
 
 function Workshop(props) {
   
@@ -35,8 +117,8 @@ function Workshop(props) {
   const [bots, setBots] = React.useState([]);
   const [menuMode, setMenuMode] = React.useState(0);
   const [open, setOpen] = React.useState(false);
-  const [mirrors, setMirrors] = React.useState([])
-  const [timers, setTimers] = React.useState({})
+  const [timers, setTimers] = React.useState({});
+  let [styledContents, setStyledContents] = React.useState({});
   
   updateMyBotsList = () => {
     let requestOptions = {
@@ -67,10 +149,10 @@ function Workshop(props) {
             ? new Date().getMinutes()
             : mirror.variable.from === 'time.now.hours'
             ? new Date().getHours() % 12
-            : 0
+            : 0;
         let varCont = mirror.value
         varCont = varCont.replace('@' + mirror.variable.id, timeNow)
-        idDict[mirror.widgetId][mirror.elId].obj[mirror.property] = varCont
+        idDict[mirror.elId].obj[mirror.property] = varCont
       })
       forceUpdate()
     }, 1000);
@@ -80,6 +162,11 @@ function Workshop(props) {
     registerEvent('gui', ({type, gui: data, widgetId, roomId}) => {
       if (currentWidgetId === widgetId) {
         if (type === 'init') {
+          idDict = {};
+          memDict = {};
+          clickEvents = {};
+          mirrors = [];
+          clickEvents = {};
           widget1Gui = data;
           forceUpdate();
           let requestOptions = {
@@ -101,8 +188,12 @@ function Workshop(props) {
         }
         else if (type === 'update') {
           data.forEach((d) => {
-            idDict[widgetId][d.elId].obj[d.property] = d.newValue;
+            if (d.property === 'styledContent') {
+              styledContents[d.elId] = d.newValue;
+            }
+            idDict[d.elId].obj[d.property] = d.newValue;
           });
+          setStyledContents(styledContents);
           forceUpdate();
         }
         else if (type === 'mirror') {
@@ -110,13 +201,12 @@ function Workshop(props) {
             d.widgetId = widgetId;
           });
           mirrors = mirrors.concat(data);
-          setMirrors(mirrors);
           forceUpdate();
         }
         else if (type === 'timer') {
           let timer = setInterval(() => {
             data.updates.forEach((d) => {
-              idDict[widgetId][d.elId].obj[d.property] = d.newValue;
+              idDict[d.elId].obj[d.property] = d.newValue;
             })
             forceUpdate();
           }, data.interval);
@@ -136,12 +226,10 @@ function Workshop(props) {
           forceUpdate();
         }
         else if (type === 'attachClick') {
-          idDict[widgetId][data.elId].view.onclick = (e) => {
-            data.updates.forEach((d) => {
-              idDict[widgetId][d.elId].obj[d.property] = d.newValue;
-            });
+          clickEvents[data.elId] = () => {
+            ckeckCode(data.codes);
             forceUpdate();
-          }
+          };
         }
       }
     });
@@ -185,6 +273,23 @@ function Workshop(props) {
         }
       });
   };
+
+  mirrors.forEach((mirror) => {
+    if (mirror.variable.from === 'variable') {
+      let fetchedDataOfMemory = memDict[mirror.variable.id];
+      let varCont = mirror.value;
+      varCont = varCont.replace('@' + mirror.variable.id, fetchedDataOfMemory);
+      idDict[mirror.elId].obj[mirror.property] = varCont;
+    }
+  });
+
+  Object.keys(styledContents).forEach(scId => {
+    let el = document.getElementById('element_' + scId);
+    if (el !== null) {
+      el.innerHTML = styledContents[scId];
+    }
+  });
+  
   return (
     <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000, direction: 'rtl'}}>
       <iframe name="coder-frame" allow="clipboard-read;" src={pathConfig.codeServer}
@@ -205,7 +310,12 @@ function Workshop(props) {
         </AppBar>
         <BotContainer
           onIdDictPrepared={(idD) => {
-            idDict['widget-1'] = idD
+            idDict = idD
+          }}
+          onElClick={(elId) => {
+            if (clickEvents[elId] !== undefined) {
+              clickEvents[elId]();
+            }
           }}
           widgetId={1}
           isPreview={false}

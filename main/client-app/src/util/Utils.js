@@ -219,7 +219,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
             }
             let eventFunc = eventDict[notif.key];
             if (eventFunc !== undefined) {
-              try {eventFunc(notif.data);} catch (ex) {}
+              try {eventFunc(notif.data);} catch (ex) {console.log(ex);}
             }
           });
           let requestOptions3 = {

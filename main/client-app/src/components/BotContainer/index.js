@@ -281,9 +281,11 @@ export default function BotContainer(props) {
 
     let idDict = {}
 
+    if (props.onElClick === undefined) props.onElClick = () => {};
+
     let renderGui = el => {
       if (el === undefined) return <div/>
-        let style = {
+      let style = {
           width: el.width,
           height: el.height,
           position: el.position,
@@ -305,12 +307,25 @@ export default function BotContainer(props) {
           transitionDuration: el.transitionDuration,
           transition: el.transition,
           zIndex: el.zIndex,
-          display: el.display
+          display: el.display,
+          fontSize: el.fontSize,
+          color: el.color,
+          paddingLeft: el.paddingLeft,
+          paddingTop: el.paddingTop,
+          paddingRight: el.paddingRight,
+          paddingBottom: el.paddingBottom,
+          padding: el.padding,
+          marginLeft: el.marginLeft,
+          marginTop: el.marginTop,
+          marginRight: el.marginRight,
+          marginBottom: el.marginBottom,
+          margin: el.margin
         }
         let result = <div/>
+        el.realId = 'element_' + el.id;
         if (el.type === 'Box') {
           result = (
-            <div id={el.realId} style={style}>
+            <div id={el.realId} style={style} onClick={() => {props.onElClick(el.id);}}>
               {el.children && el.children.map(child => (
                 renderGui(child)
               ))}
@@ -319,7 +334,7 @@ export default function BotContainer(props) {
         }
         else if (el.type === 'Card') {
           result = (
-            <Card id={el.realId} style={style}>
+            <Card id={el.realId} style={style} onClick={() => {props.onElClick(el.id);}}>
               {el.children && el.children.map(child => (
                 renderGui(child)
               ))}
@@ -328,14 +343,14 @@ export default function BotContainer(props) {
         }
         else if (el.type === 'Text') {
           result = (
-            <Typography id={el.realId} style={style}>
+            <Typography id={el.realId} style={style} onClick={() => {props.onElClick(el.id);}}>
               {el.text}
             </Typography>
           )
         }
         else if (el.type === 'Image') {
           result = (
-            <img alt={''} id={el.realId} style={style} src={el.src}/>
+            <img alt={''} id={el.realId} style={style} src={el.src} onClick={() => {props.onElClick(el.id);}}/>
           )
         }
 
