@@ -381,7 +381,7 @@ export default function BotsBox(props) {
                 widgetHeight={250}
                 widgetX={16}
                 widgetY={28}
-                gui={guis['widget-' + w.id]}
+                gui={guis[w.id]}
               />
             )
           })}
