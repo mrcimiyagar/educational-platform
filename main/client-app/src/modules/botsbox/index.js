@@ -140,7 +140,8 @@ export default function BotsBox(props) {
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
-      });
+      })
+      .catch(ex => console.log(ex));
   };
 
   useEffect(() => {
@@ -215,7 +216,8 @@ export default function BotsBox(props) {
             'token': token
           },
           body: JSON.stringify({
-            widgetId: widgetId
+            widgetId: widgetId,
+            roomId: props.roomId
           }),
           redirect: 'follow'
         }
@@ -223,7 +225,8 @@ export default function BotsBox(props) {
           .then(response => response.json())
           .then(result => {
             console.log(JSON.stringify(result));
-          });
+          })
+          .catch(ex => console.log(ex));;
       } else if (type === 'update') {
         data.forEach((d) => {
           if (d.property === 'styledContent') {
@@ -320,7 +323,8 @@ export default function BotsBox(props) {
             requestInitGui(ww.widgetId, false);
           });
         }
-      });
+      })
+      .catch(ex => console.log(ex));;
   };
 
   Object.keys(styledContents).forEach(wId => {
@@ -513,7 +517,8 @@ export default function BotsBox(props) {
                     else {
                       alert(result.message);
                     }
-                  });
+                  })
+                  .catch(ex => console.log(ex));;
               }}>
                 <img
                   style={{

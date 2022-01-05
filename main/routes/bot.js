@@ -1067,7 +1067,7 @@ router.post('/notify_gui_base_activated', jsonParser, async function (req, res) 
       require('../server').signlePushTo(widget.botId, 'gui_initialized', {
         widgetId: widget.id,
         userId: user.id,
-        roomId: membership.roomId
+        roomId: (membership === null || membership === undefined) ? undefined : membership.roomId
       });
       res.send({ status: 'success' });
   })
