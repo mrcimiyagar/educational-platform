@@ -11,7 +11,7 @@ import { Chat } from '@material-ui/icons'
 import Add from '@material-ui/icons/Add'
 import Edit from '@material-ui/icons/Edit'
 import React, { useEffect } from 'react'
-import { gotoPage, inTheGame, isDesktop, isInRoom, isMobile, isOnline, isTablet } from '../../App'
+import { gotoPage, inTheGame, isDesktop, isInRoom, isMobile, isOnline, isTablet, subscribeGuiChannel } from '../../App'
 import BotContainer from '../../components/BotContainer'
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar'
 import { token } from '../../util/settings'
@@ -194,9 +194,72 @@ export default function BotsBox(props) {
       } catch(ex) {console.log(ex);}
     }, 1000);
 
-    if (isOnline) {
-      
-    }
+    subscribeGuiChannel(({type, gui: data, widgetId, roomId}) => {
+      if (type === 'init') {
+        guis[widgetId] = data;
+        idDict[widgetId] = {};
+        memDict[widgetId] = {};
+        clickEvents[widgetId] = {};
+        styledContents[widgetId] = {};
+        mirrors = mirrors.filter(m => m.widgetId !== widgetId);
+        forceUpdate();
+        let requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'token': token
+          },
+          body: JSON.stringify({
+            widgetId: widgetId,
+            roomId: props.roomId
+          }),
+          redirect: 'follow'
+        }
+        fetch(serverRoot + "/bot/notify_gui_base_activated", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            console.log(JSON.stringify(result));
+          })
+          .catch(ex => console.log(ex));
+      } else if (type === 'update') {
+        data.forEach((d) => {
+          if (d.property === 'styledContent') {
+            styledContents[widgetId][d.elId] = d.newValue;
+          }
+          idDict[widgetId][d.elId].obj[d.property] = d.newValue;
+        });
+        forceUpdate();
+      } else if (type === 'mirror') {
+        data.forEach((d) => {
+          d.widgetId = widgetId
+        })
+        mirrors = mirrors.concat(data)
+        forceUpdate()
+      } else if (type === 'timer') {
+        let timer = setInterval(() => {
+          data.updates.forEach((d) => {
+            idDict[widgetId][d.elId].obj[d.property] = d.newValue;
+          })
+          forceUpdate();
+        }, data.interval);
+        timers[data.timerId] = timer;
+        forceUpdate();
+      } else if (type === 'untimer') {
+        let timer = timers[data.timerId];
+        clearInterval(timer);
+        delete timers[data.timerId];
+        forceUpdate();
+      } else if (type === 'memorize') {
+        memDict[widgetId][data.memoryId] = data.value
+        forceUpdate();
+      } else if (type === 'attachClick') {
+        clickEvents[widgetId][data.elId] = () => {
+          ckeckCode(data.codes);
+          forceUpdate();
+        };
+      }
+    })
+    
     let botsSearchbar = document.getElementById('botsSearchbar')
     botsSearchbar.style.transform = 'translateY(0)'
     botsSearchbar.style.transition = 'transform .5s'
