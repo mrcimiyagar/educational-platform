@@ -38,12 +38,6 @@ let jsonParser = bodyParser.json();
 app.use(cors());
 
 let creatures = [];
-sw.User.findAll({raw: true}).then(us => {
-    creatures = creatures.concat(us.map(u => u.id));
-    sw.Bot.findAll({raw: true}).then(bs => {
-        creatures = creatures.concat(bs.map(b => b.id));
-    });
-});
 
 webpush.setVapidDetails(
     "mailto:theprogrammermachine@gmail.com",
@@ -70,7 +64,15 @@ server.listen(2001);
 socket.setup(server);
 
 models.setup().then(() => {
+    
     mongo.setup((s, a) => {
+
+        sw.User.findAll({raw: true}).then(us => {
+            creatures = creatures.concat(us.map(u => u.id));
+            sw.Bot.findAll({raw: true}).then(bs => {
+                creatures = creatures.concat(bs.map(b => b.id));
+            });
+        });
 
         var myIceServers = [
             {"url":"stun:185.81.96.105:3478"},
