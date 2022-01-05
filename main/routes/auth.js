@@ -7,6 +7,7 @@ const { authenticateMember } = require('../users');
 const { uuid } = require('uuidv4');
 const fetch = require('node-fetch');
 const users = require('../users');
+const newCreatureId = require('../server');
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
