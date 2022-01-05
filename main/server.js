@@ -163,7 +163,7 @@ models.setup().then(() => {
         setInterval(updateClients, 1000);
 
         module.exports = {
-            'newCreatureId': id => {
+            'newCreatureId': (id) => {
                 creatures.push(id);
             },
             'pushToExcept': async (nodeId, key, data, exceptionId) => {
