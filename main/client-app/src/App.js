@@ -586,6 +586,11 @@ export let isOnline = true;
       () => {
         isOnline = true;
         ConnectToIo(localStorage.getItem('token'), () => {
+          registerEvent('gui', ({type, gui: data, widgetId, roomId}) => {
+            if (type === 'init') {
+              alert(JSON.stringify(data));
+            }
+          });
           registerEvent('you-moved', ({roomId}) => {
             window.location.href = pathConfig.mainFrontend + `/app/room?room_id=${roomId}&tab_index=0`;
           });

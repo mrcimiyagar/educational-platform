@@ -935,6 +935,14 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
       res.send({ status: 'success' });
     }
     else {
+      if (membership === null || membership === undefined) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'access denied.'
+        });
+        return;
+      }
       let widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
       if (widget === null) {
         res.send({
@@ -945,7 +953,7 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
         return;
       }
       let bot = await sw.Bot.findOne({where: {id: widget.botId}});
-      let workership = await sw.Workership.findOne({where: {roomId: req.body.roomId, botId: bot.id}});
+      let workership = await sw.Workership.findOne({where: {roomId: membership.roomId, botId: bot.id}});
       if (workership === null) {
         res.send({
           status: 'error',
@@ -954,10 +962,12 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
         });
         return;
       }
+      let widgetWorker = await sw.WidgetWorker.findOne({where: {widgetId: widget.id, roomId: membership.roomId}});
       require('../server').signlePushTo(bot.id, 'request_initial_gui', {
         roomId: workership.roomId,
         widgetId: widget.id,
         userId: user.id,
+        widgetWorkerId: widgetWorker.id,
         preview: false
       });
       res.send({ status: 'success' });
@@ -1020,6 +1030,7 @@ router.post('/gui', jsonParser, async function (req, res) {
         })
         return
       }
+      let widgetWorker = await sw.WidgetWorker.findOne({where: {widgetId: widget.id, roomId: workership.roomId}});
       let targetUserId = req.body.userId
       if (
         targetUserId !== undefined &&
@@ -1042,6 +1053,7 @@ router.post('/gui', jsonParser, async function (req, res) {
           gui: gui,
           roomId: workership.roomId,
           widgetId: widget.id,
+          widgetWorkerId: widgetWorker.id
         })
       } else {
         require('../server').signlePushTo(targetUserId, 'gui', {
@@ -1049,6 +1061,7 @@ router.post('/gui', jsonParser, async function (req, res) {
           gui: gui,
           roomId: workership.roomId,
           widgetId: widget.id,
+          widgetWorkerId: widgetWorker.id
         })
       }
       res.send({ status: 'success' })
@@ -1066,10 +1079,15 @@ router.post('/notify_gui_base_activated', jsonParser, async function (req, res) 
         });
         return;
       }
+      let widgetWorker = undefined;
+      if (membership !== undefined && membership !== null) {
+        widgetWorker = await sw.WidgetWorker.findOne({where: {widgetId: widget.id, roomId: membership.roomId}});
+      }
       require('../server').signlePushTo(widget.botId, 'gui_initialized', {
         widgetId: widget.id,
         userId: user.id,
-        roomId: (membership === null || membership === undefined) ? undefined : membership.roomId
+        roomId: (membership === null || membership === undefined) ? undefined : membership.roomId,
+        widgetWorkerId: widgetWorker === undefined ? undefined : widgetWorker.id
       });
       res.send({ status: 'success' });
   })

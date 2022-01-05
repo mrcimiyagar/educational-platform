@@ -22,6 +22,9 @@ let idDict = {};
 let memDict = {};
 let clickEvents = {};
 let mirrors = [];
+let styledContents = {};
+let timers = {};
+let guis = {};
 let currentEngineHeartbit;
 
 let ckeckCode = (codes) => {
@@ -106,22 +109,11 @@ let ckeckCode = (codes) => {
 
 export default function BotsBox(props) {
 
-  useEffect(() => {
-    lastScrollTop = 0
-    idDict = {};
-    memDict = {};
-    clickEvents = {};
-    mirrors = [];
-  }, []);
-
   let forceUpdate = useForceUpdate();
   let [editMode, setEditMode] = React.useState(false);
   let [widgets, setWidgets] = React.useState([]);
   let [myBots, setMyBots] = React.useState([]);
-  let [guis, setGuis] = React.useState({});
-  let [timers, setTimers] = React.useState({});
   let [menuOpen, setMenuOpen] = React.useState(false);
-  let [styledContents, setStyledContents] = React.useState({});
   let [mySelectedBot, setMySelectedBot] = React.useState(0);
   
   let requestInitGui = (wId, preview=true) => {
@@ -203,77 +195,8 @@ export default function BotsBox(props) {
     }, 1000);
 
     if (isOnline) {
-      unregisterEvent('gui');
-      registerEvent('gui', ({type, gui: data, widgetId, roomId}) => {
-      if (type === 'init') {
-        guis[widgetId] = data;
-        setGuis(guis);
-        idDict[widgetId] = {};
-        memDict[widgetId] = {};
-        clickEvents[widgetId] = {};
-        styledContents[widgetId] = {};
-        mirrors = mirrors.filter(m => m.widgetId !== widgetId);
-        forceUpdate();
-        let requestOptions = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'token': token
-          },
-          body: JSON.stringify({
-            widgetId: widgetId,
-            roomId: props.roomId
-          }),
-          redirect: 'follow'
-        }
-        fetch(serverRoot + "/bot/notify_gui_base_activated", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-            console.log(JSON.stringify(result));
-          })
-          .catch(ex => console.log(ex));
-      } else if (type === 'update') {
-        data.forEach((d) => {
-          if (d.property === 'styledContent') {
-            styledContents[widgetId][d.elId] = d.newValue;
-          }
-          idDict[widgetId][d.elId].obj[d.property] = d.newValue;
-        });
-        setStyledContents(styledContents);
-        forceUpdate();
-      } else if (type === 'mirror') {
-        data.forEach((d) => {
-          d.widgetId = widgetId
-        })
-        mirrors = mirrors.concat(data)
-        forceUpdate()
-      } else if (type === 'timer') {
-        let timer = setInterval(() => {
-          data.updates.forEach((d) => {
-            idDict[widgetId][d.elId].obj[d.property] = d.newValue
-          })
-          forceUpdate()
-        }, data.interval)
-        timers[data.timerId] = timer
-        setTimers(timers)
-        forceUpdate()
-      } else if (type === 'untimer') {
-        let timer = timers[data.timerId]
-        clearInterval(timer)
-        delete timers[data.timerId]
-        setTimers(timers)
-        forceUpdate()
-      } else if (type === 'memorize') {
-        memDict[widgetId][data.memoryId] = data.value
-        forceUpdate();
-      } else if (type === 'attachClick') {
-        clickEvents[widgetId][data.elId] = () => {
-          ckeckCode(data.codes);
-          forceUpdate();
-        };
-      }
-    })
-  }
+      
+    }
     let botsSearchbar = document.getElementById('botsSearchbar')
     botsSearchbar.style.transform = 'translateY(0)'
     botsSearchbar.style.transition = 'transform .5s'
