@@ -27,6 +27,7 @@ router.post('/register', jsonParser, async function (req, res) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
     });
+    newCreatureId(user.id);
     let home = await sw.Space.create({
         title: 'خانه',
         mainRoomId: null,

@@ -28,15 +28,22 @@ const mongo = require("./db/mongo");
 const cors = require('cors');
 const sw = require('./db/models');
 const bodyParser = require('body-parser');
-const { authenticateMember, usersSubscriptions, getRoomUsers } = require('./users');
+const { usersSubscriptions, getRoomUsers } = require('./users');
 const expressStaticGzip = require('express-static-gzip');
 const webpush = require('web-push');
-const { dirname } = require('path');
 const { sockets, netState, notifs } = require('./socket');
 
 let jsonParser = bodyParser.json();
 
 app.use(cors());
+
+let creatures = [];
+sw.User.findAll({raw: true}).then(us => {
+    creatures = creatures.concat(us.map(u => u.id));
+    sw.Bot.findAll({raw: true}).then(bs => {
+        creatures = creatures.concat(bs.map(b => b.id));
+    });
+});
 
 webpush.setVapidDetails(
     "mailto:theprogrammermachine@gmail.com",
@@ -143,24 +150,20 @@ models.setup().then(() => {
             }
         });
 
-        let updateClients = async () => {
-            let users = await sw.User.findAll({raw: true});
-            let userIds = users.map(u => u.id);
-            userIds.forEach(uid => {
-                if (notifs[uid] !== undefined && notifs[uid].length > 0 && sockets[uid] !== undefined) {
-                    sockets[uid].emit('sync');
-                }
-            });
-            let bots = await sw.Bot.findAll({raw: true});
-            let botIds = bots.map(u => u.id);
-            botIds.forEach(bid => {
-                if (notifs[bid] !== undefined && notifs[bid].length > 0 && sockets[bid] !== undefined) {
-                    sockets[bid].emit('sync');
+        let updateClients = () => {
+            creatures.forEach(id => {
+                if (notifs[id] !== undefined && notifs[id].length > 0 && sockets[id] !== undefined) {
+                    sockets[id].emit('sync');
                 }
             });
         };
 
+        setInterval(updateClients, 1000);
+
         module.exports = {
+            'newCreatureId': id => {
+                creatures.push(id);
+            },
             'pushToExcept': async (nodeId, key, data, exceptionId) => {
                 if (nodeId === 'aseman-bot-store') {
                     let users = await sw.User.findAll({raw: true});
@@ -188,7 +191,6 @@ models.setup().then(() => {
                         notifs[w.botId].push({key, data});
                     });
                 }
-                updateClients();
             },
             'pushTo': async (nodeId, key, data) => {
                 if (nodeId === 'aseman-bot-store') {
@@ -214,14 +216,12 @@ models.setup().then(() => {
                         notifs[w.botId].push({key, data});
                     });
                 }
-                updateClients();
             },
             'signlePushTo': (userId, key, data) => {
                 let d = JSON.stringify(data);
                 if (d.length > 100) d = d.substr(0, 100);
                 if (notifs[userId] === undefined) notifs[userId] = [];
                 notifs[userId].push({key, data});
-                updateClients();
             },
             'Survey': s,
             'Answer': a
