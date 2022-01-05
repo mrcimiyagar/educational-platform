@@ -122,7 +122,7 @@ export default function BotsBox(props) {
   let [styledContents, setStyledContents] = React.useState({});
   let [mySelectedBot, setMySelectedBot] = React.useState(0);
   
-  let requestInitGui = (wId) => {
+  let requestInitGui = (wId, preview=true) => {
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -131,7 +131,7 @@ export default function BotsBox(props) {
       },
       body: JSON.stringify({
         widgetId: wId,
-        preview: true
+        preview: preview
       }),
       redirect: 'follow'
     }
@@ -160,7 +160,7 @@ export default function BotsBox(props) {
         lastScrollTop = st <= 0 ? 0 : st
       },
       false,
-    )
+    );
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -168,18 +168,14 @@ export default function BotsBox(props) {
         token: token,
       },
       redirect: 'follow',
-    }
+    };
     fetch(serverRoot + '/bot/get_subscriptions', requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(JSON.stringify(result))
+        console.log(JSON.stringify(result));
         setMyBots(result.bots);
-        result.widgets.forEach(widget => {
-          requestInitGui(widget.id);
-        });
-        forceUpdate()
       })
-      .catch((error) => console.log('error', error))
+      .catch((error) => console.log('error', error));
   }, [])
 
   useEffect(() => {
@@ -205,7 +201,7 @@ export default function BotsBox(props) {
     if (isOnline) {
       registerEvent('gui', ({type, gui: data, widgetId, roomId}) => {
       if (type === 'init') {
-        guis[widgetId] = data
+        guis[widgetId] = data;
         idDict[widgetId] = {};
         memDict[widgetId] = {};
         clickEvents[widgetId] = {};
@@ -273,6 +269,8 @@ export default function BotsBox(props) {
     botsSearchbar.style.transform = 'translateY(0)'
     botsSearchbar.style.transition = 'transform .5s'
 
+    updateDesktop();
+
     return () => {
       if (currentEngineHeartbit !== undefined) {
         clearInterval(currentEngineHeartbit);
@@ -315,8 +313,11 @@ export default function BotsBox(props) {
     fetch(serverRoot + '/bot/get_widget_workers', requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        if (result === 'success') {
+        if (result.status === 'success') {
           setWidgets(result.widgetWorkers);
+          result.widgetWorkers.forEach(ww => {
+            requestInitGui(ww.widgetId, false);
+          });
         }
       });
   };
@@ -504,7 +505,7 @@ export default function BotsBox(props) {
                 fetch(serverRoot + '/bot/create_widget_worker', requestOptions)
                   .then((response) => response.json())
                   .then((result) => {
-                    if (result === 'success') {
+                    if (result.status === 'success') {
                       updateDesktop();
                       alert('ربات به میزکار افزوده شد.');
                     }
