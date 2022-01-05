@@ -143,7 +143,7 @@ models.setup().then(() => {
             }
         });
 
-        let updateClients = () => {
+        let updateClients = async () => {
             let users = await sw.User.findAll({raw: true});
             let userIds = users.map(u => u.id);
             userIds.forEach(uid => {
@@ -161,7 +161,7 @@ models.setup().then(() => {
         };
 
         setInterval(async () => {
-            updateClients();
+            await updateClients();
         }, 5000);
 
         module.exports = {
@@ -192,7 +192,7 @@ models.setup().then(() => {
                         notifs[w.botId].push({key, data});
                     });
                 }
-                updateClients();
+                await updateClients();
             },
             'pushTo': async (nodeId, key, data) => {
                 if (nodeId === 'aseman-bot-store') {
@@ -218,14 +218,14 @@ models.setup().then(() => {
                         notifs[w.botId].push({key, data});
                     });
                 }
-                updateClients();
+                await updateClients();
             },
             'signlePushTo': (userId, key, data) => {
                 let d = JSON.stringify(data);
                 if (d.length > 100) d = d.substr(0, 100);
                 if (notifs[userId] === undefined) notifs[userId] = [];
                 notifs[userId].push({key, data});
-                updateClients();
+                await updateClients();
             },
             'Survey': s,
             'Answer': a
