@@ -516,11 +516,6 @@ export let setBottomSheetContent = (value) => {
   forceUpdate();
 }
 
-let guiChannelSubscribers = {};
-export let subscribeGuiChannel = (widgetWorkerId, func) => {
-  guiChannelSubscribers[widgetWorkerId] = func;
-};
-
 export let isOnline = true;
 
   MainAppContainer = (props) => {
@@ -591,12 +586,6 @@ export let isOnline = true;
       () => {
         isOnline = true;
         ConnectToIo(localStorage.getItem('token'), () => {
-          registerEvent('gui', ({type, gui, widgetId, roomId, widgetWorkerId}) => {
-            let func = guiChannelSubscribers[widgetWorkerId];
-            if (func !== undefined) {
-              func({type, gui, widgetId, roomId});
-            }
-          });
           registerEvent('you-moved', ({roomId}) => {
             window.location.href = pathConfig.mainFrontend + `/app/room?room_id=${roomId}&tab_index=0`;
           });

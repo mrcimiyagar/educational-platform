@@ -194,7 +194,7 @@ export default function BotsBox(props) {
       } catch(ex) {console.log(ex);}
     }, 1000);
 
-    subscribeGuiChannel(({type, gui: data, widgetId, roomId}) => {
+    registerEvent('gui', ({type, gui: data, widgetId, roomId, widgetWorkerId}) => {
       if (type === 'init') {
         guis[widgetId] = data;
         idDict[widgetId] = {};
@@ -211,7 +211,7 @@ export default function BotsBox(props) {
           },
           body: JSON.stringify({
             widgetId: widgetId,
-            roomId: props.roomId
+            roomId: roomId
           }),
           redirect: 'follow'
         }
@@ -258,7 +258,7 @@ export default function BotsBox(props) {
           forceUpdate();
         };
       }
-    })
+    });
     
     let botsSearchbar = document.getElementById('botsSearchbar')
     botsSearchbar.style.transform = 'translateY(0)'
@@ -357,18 +357,18 @@ export default function BotsBox(props) {
         }}
       >
         <div id={'botsContainerInner'} style={{ width: '100%', height: 2000 }}>
-          {widgets.map((w) => {
+          {widgets.map((ww) => {
             return (
               <BotContainer
-                realIdPrefix={'widget_' + w.id + '_element_'}
-                widgetId={w.id}
+                realIdPrefix={'widget_' + ww.widgetId + '_element_'}
+                widgetId={ww.widgetId}
                 isPreview={false}
                 onIdDictPrepared={(idD) => {
-                  idDict[w.id] = idD
+                  idDict[ww.widgetId] = idD
                 }}
                 onElClick={(elId) => {
-                  if (clickEvents[w.id][elId] !== undefined) {
-                    clickEvents[w.id][elId]();
+                  if (clickEvents[ww.widgetId][elId] !== undefined) {
+                    clickEvents[ww.widgetId][elId]();
                   }
                 }}
                 editMode={editMode}
@@ -376,7 +376,7 @@ export default function BotsBox(props) {
                 widgetHeight={250}
                 widgetX={16}
                 widgetY={28}
-                gui={guis[w.id]}
+                gui={guis[ww.widgetId]}
               />
             )
           })}
