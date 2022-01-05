@@ -7,7 +7,6 @@ const { authenticateMember } = require('../users');
 const { uuid } = require('uuidv4');
 const fetch = require('node-fetch');
 const users = require('../users');
-const { newCreatureId } = require('../server');
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
@@ -28,6 +27,7 @@ router.post('/register', jsonParser, async function (req, res) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
     });
+    const { newCreatureId } = require('../server');
     newCreatureId(user.id);
     let home = await sw.Space.create({
         title: 'خانه',
