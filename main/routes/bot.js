@@ -1428,7 +1428,7 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
     let widgetWorker = await sw.WidgetWorker.create({
       widgetId: widget.id,
       roomId: membership.roomId,
-      ownerId: user.id,
+      bossId: user.id,
       x: req.body.x,
       y: req.body.y,
       width: req.body.width,
@@ -1454,7 +1454,7 @@ router.post('/delete_widget_worker', jsonParser, async function (req, res) {
       }
     });
     let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorker}});
-    if (roomSecret.ownerId !== user.id && widgetWorker.ownerId !== user.id) {
+    if (roomSecret.ownerId !== user.id && widgetWorker.bossId !== user.id) {
       res.send({
         status: 'error',
         errorCode: 'e0005',
@@ -1483,7 +1483,7 @@ router.post('/update_widget_worker', jsonParser, async function (req, res) {
       }
     });
     let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorker}});
-    if (roomSecret.ownerId !== user.id && widgetWorker.ownerId !== user.id) {
+    if (roomSecret.ownerId !== user.id && widgetWorker.bossId !== user.id) {
       res.send({
         status: 'error',
         errorCode: 'e0005',
