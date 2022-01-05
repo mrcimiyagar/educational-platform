@@ -6,6 +6,7 @@ import {
   Slide,
   SwipeableDrawer,
   ThemeProvider,
+  Typography,
 } from '@material-ui/core'
 import { pink } from '@material-ui/core/colors'
 import { Chat } from '@material-ui/icons'
@@ -115,9 +116,11 @@ export default function BotsBox(props) {
   let [widgets, setWidgets] = React.useState([]);
   let [myBots, setMyBots] = React.useState([]);
   let [guis, setGuis] = React.useState({});
+  let [previewGuis, setPreviewGuis] = React.useState({});
   let [timers, setTimers] = React.useState({});
   let [menuOpen, setMenuOpen] = React.useState(false);
   let [styledContents, setStyledContents] = React.useState({});
+  let [mySelectedBot, setMySelectedBot] = React.useState(0);
   
   let requestInitGui = (wId) => {
     let requestOptions = {
@@ -313,6 +316,27 @@ export default function BotsBox(props) {
     }
   });
 
+  let updateDesktop = () => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.roomId
+      }),
+      redirect: 'follow',
+    }
+    fetch(serverRoot + '/bot/get_widget_workers', requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result === 'success') {
+          setWidgets(result.widgetWorkers);
+        }
+      });
+  };
+
   Object.keys(styledContents).forEach(wId => {
     let widEls = styledContents[wId];
     Object.keys(widEls).forEach(scId => {
@@ -456,35 +480,75 @@ export default function BotsBox(props) {
             display: 'flex',
           }}
         >
-          <div style={{ width: 80, height: '100%', background: 'rgba(225, 225, 225, 0.55)' }}>
-            <Avatar
-              style={{
-                width: 64,
-                height: 64,
-                backgroundColor: '#fff',
-                position: 'absolute',
-                right: 8,
-                bottom: 16,
-                padding: 8,
-              }}
-            />
+          <div style={{ position: 'relative', width: 80, height: '100%', background: 'rgba(225, 225, 225, 0.55)' }}>
+            {
+              myBots.map(bot => (
+                <Avatar
+                  src={serverRoot + `/file/download_bot_avatar?token=${token}&botId=${bot.id}`}
+                  style={{
+                    width: 64,
+                    height: 64,
+                    marginLeft: 8,
+                    marginTop: 16,
+                    backgroundColor: '#fff'
+                  }}
+                />
+              ))
+            }
           </div>
           <div style={{ width: 280, height: '100%', position: 'relative' }}>
-            {widgetPreviews.map((wp) => (
-              <BotContainer
-                widgetId={wp.id}
-                isPreview={true}
-                onIdDictPrepared={(idD) => {
-                  idDict['widget-' + wp.id] = idD
-                }}
-                editMode={editMode}
-                widgetWidth={250}
-                widgetHeight={250}
-                widgetX={16}
-                widgetY={28}
-                gui={guis['widget-' + wp.id]}
-              />
-            ))}
+            {Object.values(myBots).length > 0 ?
+              myBots[mySelectedBot].widgets.map((wp) => (
+              <div style={{width: '100%'}} onClick={() => {
+                let requestOptions = {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    token: token,
+                  },
+                  body: JSON.stringify({
+                    botId: myBots[mySelectedBot].id,
+                    roomId: props.roomId,
+                    widgetId: wp.id,
+                    x: 100,
+                    y: 100,
+                    width: 150,
+                    height: 150
+                  }),
+                  redirect: 'follow',
+                }
+                fetch(serverRoot + '/bot/create_widget_worker', requestOptions)
+                  .then((response) => response.json())
+                  .then((result) => {
+                    if (result === 'success') {
+                      updateDesktop();
+                      alert('ربات به میزکار افزوده شد.');
+                    }
+                    else {
+                      alert(result.message);
+                    }
+                  });
+              }}>
+                <img
+                  style={{
+                    width: 'calc(100% - 48px)',
+                    height: 'auto',
+                    maxHeight: 200,
+                    marginLeft: 24,
+                    marginRight: 24,
+                    marginTop: 12
+                  }}
+                  src={serverRoot + `/file/download_widget_thumbnail?token=${token}&widgetId=${wp.id}`}
+                />
+                <Typography style={{marginTop: -16,  width: '100%', textAlign: 'center',
+                                    alignItems: 'center', justifyContent: 'center'}}
+                >
+                  {wp.title}
+                </Typography>
+              </div>
+              )) :
+              null
+            }
           </div>
         </div>
       </SwipeableDrawer>

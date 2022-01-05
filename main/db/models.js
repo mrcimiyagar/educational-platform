@@ -35,6 +35,7 @@ let StorePackage;
 let Notification;
 let P2pExistance;
 let MessageSeen;
+let WidgetWorker;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
@@ -92,6 +93,7 @@ module.exports = {
         await prepareNotificationModel();
         await prepareP2pExistanceModel();
         await prepareMessageSeenModel();
+        await prepareWidgetWorker();
 
         let adminAcc = await Account.findOne({where: {role: 'admin'}});
         if (adminAcc === null) {
@@ -769,4 +771,27 @@ async function prepareSpaceSecretModel() {
     SpaceSecret.belongsTo(Space, { foreignKey: 'spaceId'});
     await SpaceSecret.sync();
     module.exports['SpaceSecret'] = SpaceSecret;
+}
+
+async function prepareWidgetWorker() {
+    WidgetWorker = sequelizeClient.define('WidgetWorker', {
+        id: {
+            type: Sequelize.BIGINT,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        widgetId: Sequelize.BIGINT,
+        roomId: Sequelize.BIGINT,
+        bossId: Sequelize.STRING,
+        x: Sequelize.INTEGER,
+        y: Sequelize.INTEGER,
+        width: Sequelize.INTEGER,
+        height: Sequelize.INTEGER
+    }, {
+        freezeTableName: true
+    });
+    WidgetWorker.belongsTo(Widget, { foreignKey: 'widgetId'});
+    WidgetWorker.belongsTo(Room, { foreignKey: 'roomId'});
+    await WidgetWorker.sync();
+    module.exports['WidgetWorker'] = WidgetWorker;
 }

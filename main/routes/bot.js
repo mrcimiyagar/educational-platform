@@ -1,7 +1,7 @@
 const sw = require('../db/models')
 const express = require('express')
 const bodyParser = require('body-parser')
-const { authenticateMember } = require('../users')
+const { authenticateMember, isUserInRoom } = require('../users')
 const tools = require('../tools')
 const { uuid } = require('uuidv4');
 
@@ -77,11 +77,22 @@ router.post('/get_subscriptions', jsonParser, async function (req, res) {
       raw: true,
       include: { all: true },
       where: { id: subscriptions.map((s) => s.botId) },
-    })
+    });
+    let result = [];
+    for (let i = 0; i < bots.length; i++) {
+      let bot = bots[i];
+      let botCopy = {...bot};
+      botCopy.widgets = await sw.Widget.findAll({
+        raw: true,
+        include: { all: true },
+        where: { botId: botCopy.id },
+      });
+      result.push(botCopy);
+    }
     res.send({
       status: 'success',
       subscriptions: subscriptions,
-      bots: bots,
+      bots: result,
     })
   })
 })
@@ -1382,6 +1393,127 @@ router.post('/get_my_bots', jsonParser, async function (req, res) {
       result.push(b);
     }
     res.send({ status: 'success', myBots: result })
+  })
+})
+
+router.post('/create_widget_worker', jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
+    if (membership === null || membership === undefined) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
+    let botSecret = await sw.BotSecret.findOne({where: {ownerId: user.id, botId: req.body.botId}});
+    if (botSecret === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
+    let widget = await sw.Widget.findOne({where: {botId: botSecret.botId, id: req.body.widgetId}});
+    if (widget === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
+    let widgetWorker = await sw.WidgetWorker.create({
+      widgetId: widget.id,
+      roomId: membership.roomId,
+      ownerId: user.id,
+      x: req.body.x,
+      y: req.body.y,
+      width: req.body.width,
+      height: req.body.height
+    });
+    res.send({ status: 'success', widgetWorker: widgetWorker });
+  })
+})
+
+router.post('/delete_widget_worker', jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
+    if (membership === null || membership === undefined) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
+    let roomSecret = await sw.RoomSecret.findOne({
+      where: {
+        roomId: membership.roomId
+      }
+    });
+    let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorker}});
+    if (roomSecret.ownerId !== user.id && widgetWorker.ownerId !== user.id) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
+    await widgetWorker.destroy();
+    res.send({ status: 'success' })
+  })
+})
+
+router.post('/update_widget_worker', jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
+    if (membership === null || membership === undefined) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
+    let roomSecret = await sw.RoomSecret.findOne({
+      where: {
+        roomId: membership.roomId
+      }
+    });
+    let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorker}});
+    if (roomSecret.ownerId !== user.id && widgetWorker.ownerId !== user.id) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
+    widgetWorker.x = req.body.x;
+    widgetWorker.y = req.body.y;
+    widgetWorker.width = req.body.width;
+    widgetWorker.height = req.body.height;
+    await widgetWorker.save();
+    res.send({ status: 'success' });
+  })
+})
+
+router.post('/get_widget_worker', jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
+    if (membership === null || membership === undefined) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
+    let widgetWorkers = await sw.WidgetWorker.findAll({
+      raw: true,
+      where: { roomId: membership.roomId },
+    });
+    res.send({ status: 'success', widgetWorkers: widgetWorkers });
   })
 })
 
