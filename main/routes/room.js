@@ -17,7 +17,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const { uuid } = require('uuidv4')
 const fetch = require('node-fetch')
-const { newCreatureId } = require('../server')
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
@@ -1109,6 +1108,7 @@ router.post('/use_invitation', jsonParser, async function (req, res) {
               username: tools.makeRandomCode(32),
               isGuest: true,
             })
+            const { newCreatureId } = require('../server')
             newCreatureId(user.id);
             let acc = {
               id: user.id,
