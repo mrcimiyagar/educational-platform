@@ -278,23 +278,7 @@ export default function BotsBox(props) {
         clearInterval(currentEngineHeartbit);
       }
     };
-  }, [])
-
-  useEffect(() => {
-    if (menuOpen) {
-      setTimeout(() => {
-        widgetPreviews.forEach((wp) => {
-          let wpDiv = document.getElementById(`widget-pane-${wp.id}-preview`)
-          wpDiv.onclick = () => {
-            setMenuOpen(false)
-            widgets.push(wp)
-            setWidgets(widgets)
-            forceUpdate()
-          }
-        })
-      }, 500)
-    }
-  }, [menuOpen])
+  }, []);
 
   let theme = createTheme({
     palette: {

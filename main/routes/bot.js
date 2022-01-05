@@ -1406,7 +1406,7 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
       });
       return;
     }
-    let botSecret = await sw.BotSecret.findOne({where: {ownerId: user.id, botId: req.body.botId}});
+    let botSecret = await sw.BotSecret.findOne({where: {creatorId: user.id, botId: req.body.botId}});
     if (botSecret === null) {
       res.send({
         status: 'error',
