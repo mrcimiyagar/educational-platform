@@ -160,7 +160,7 @@ models.setup().then(() => {
             });
         };
 
-        setInterval(updateClients, 5000);
+        //setInterval(updateClients, 5000);
 
         module.exports = {
             'pushToExcept': async (nodeId, key, data, exceptionId) => {
