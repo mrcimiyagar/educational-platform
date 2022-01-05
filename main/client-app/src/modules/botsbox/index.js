@@ -1,14 +1,12 @@
 import {
   Avatar,
   createTheme,
-  Drawer,
   Fab,
   Slide,
   SwipeableDrawer,
   ThemeProvider,
   Typography,
 } from '@material-ui/core'
-import { pink } from '@material-ui/core/colors'
 import { Chat } from '@material-ui/icons'
 import Add from '@material-ui/icons/Add'
 import Edit from '@material-ui/icons/Edit'
@@ -16,13 +14,10 @@ import React, { useEffect } from 'react'
 import { gotoPage, inTheGame, isDesktop, isInRoom, isMobile, isOnline, isTablet } from '../../App'
 import BotContainer from '../../components/BotContainer'
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar'
-import HomeToolbar from '../../components/HomeToolbar'
-import ClockHand1 from '../../images/clock-hand-1.png'
-import ClockHand2 from '../../images/clock-hand-2.png'
 import { token } from '../../util/settings'
-import { registerEvent, serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { registerEvent, serverRoot, unregisterEvent, useForceUpdate } from '../../util/Utils'
 
-var lastScrollTop = 0
+var lastScrollTop = 0;
 let idDict = {};
 let memDict = {};
 let clickEvents = {};
@@ -110,13 +105,20 @@ let ckeckCode = (codes) => {
 };
 
 export default function BotsBox(props) {
+
+  useEffect(() => {
+    lastScrollTop = 0
+    idDict = {};
+    memDict = {};
+    clickEvents = {};
+    mirrors = [];
+  }, []);
+
   let forceUpdate = useForceUpdate();
   let [editMode, setEditMode] = React.useState(false);
-  let [widgetPreviews, setWidgetPreviews] = React.useState([{id: 1}]);
   let [widgets, setWidgets] = React.useState([]);
   let [myBots, setMyBots] = React.useState([]);
   let [guis, setGuis] = React.useState({});
-  let [previewGuis, setPreviewGuis] = React.useState({});
   let [timers, setTimers] = React.useState({});
   let [menuOpen, setMenuOpen] = React.useState(false);
   let [styledContents, setStyledContents] = React.useState({});
@@ -178,7 +180,7 @@ export default function BotsBox(props) {
         setMyBots(result.bots);
       })
       .catch((error) => console.log('error', error));
-  }, [])
+  }, []);
 
   useEffect(() => {
     currentEngineHeartbit = setInterval(() => {
@@ -201,12 +203,15 @@ export default function BotsBox(props) {
     }, 1000);
 
     if (isOnline) {
+      unregisterEvent('gui');
       registerEvent('gui', ({type, gui: data, widgetId, roomId}) => {
       if (type === 'init') {
         guis[widgetId] = data;
+        setGuis(guis);
         idDict[widgetId] = {};
         memDict[widgetId] = {};
         clickEvents[widgetId] = {};
+        styledContents[widgetId] = {};
         mirrors = mirrors.filter(m => m.widgetId !== widgetId);
         forceUpdate();
         let requestOptions = {
@@ -226,7 +231,7 @@ export default function BotsBox(props) {
           .then(result => {
             console.log(JSON.stringify(result));
           })
-          .catch(ex => console.log(ex));;
+          .catch(ex => console.log(ex));
       } else if (type === 'update') {
         data.forEach((d) => {
           if (d.property === 'styledContent') {
@@ -373,7 +378,7 @@ export default function BotsBox(props) {
                 widgetId={w.id}
                 isPreview={false}
                 onIdDictPrepared={(idD) => {
-                  idDict['widget-' + w.id] = idD
+                  idDict[w.id] = idD
                 }}
                 onElClick={(elId) => {
                   if (clickEvents[w.id][elId] !== undefined) {
