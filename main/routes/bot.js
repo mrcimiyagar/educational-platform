@@ -1009,7 +1009,7 @@ router.post('/gui', jsonParser, async function (req, res) {
         })
         return
       }
-      let widget = await sw.Widget.findOne({where: {id: widget.id, botId: bot.id, roomId: req.body.roomId}});
+      let widget = await sw.Widget.findOne({where: {id: req.body.widgetId, botId: bot.id, roomId: req.body.roomId}});
       if (widget === null) {
         res.send({
           status: 'error',
