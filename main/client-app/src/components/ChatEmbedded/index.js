@@ -50,6 +50,7 @@ import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery'
 import MessageItem from '../MessageItem'
 import './style.css';
+import CustomImageBox from '../CustomImageBox'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -836,26 +837,6 @@ export default function ChatEmbedded(props) {
     }
   }, [loading]);
 
-  useEffect(() => {
-    var placeholder = document.querySelector('.placeholder'),
-    small = placeholder.querySelector('.img-small')
-
-// 1: load small image and show it
-var img = new Image();
-img.src = small.src;
-img.onload = function () {
- small.classList.add('loaded');
-};
-
-// 2: load large image
-var imgLarge = new Image();
-imgLarge.src = placeholder.dataset.large; 
-imgLarge.onload = function () {
-  imgLarge.classList.add('loaded');
-};
-placeholder.appendChild(imgLarge);
-  }, []);
-
   let width = 0
   let height = 0
   let left = 0
@@ -908,7 +889,7 @@ placeholder.appendChild(imgLarge);
           bottom: isDesktop() ? 16 : 0,
         }}
       >
-        <div className="placeholder" data-large={ChatWallpaper} 
+        <CustomImageBox src={ChatWallpaper}
           style={{
             width: '100%',
             height: '100%',
@@ -922,14 +903,7 @@ placeholder.appendChild(imgLarge);
             objectFit: 'cover',
             backgroundColor: 'transparent'
           }}
-        >
-        <img
-          data-src={ChatWallpaper}
-          className="img-small"
-          style={{objectFit: 'cover', height: '100%', backgroundColor: 'transparent'}}
         />
-        <div style={{paddingBottom: '66.6%'}}></div>
-      </div>
         <Viewer
           zIndex={99999}
           style={{ position: 'fixed', left: 0, top: 0 }}

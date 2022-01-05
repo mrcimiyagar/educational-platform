@@ -22,195 +22,123 @@ import { token } from '../../util/settings'
 import { registerEvent, serverRoot, socket, useForceUpdate } from '../../util/Utils'
 
 var lastScrollTop = 0
+let idDict = {};
+let memDict = {};
+let clickEvents = {};
+let mirrors = [];
+let currentEngineHeartbit;
 
-let widget1Gui = {
-  type: 'Box',
-  id: 'clockBox',
-  width: '100%',
-  height: '100%',
-  transition: 'transform 1s',
-  children: [
-    {
-      type: 'Image',
-      id: 'clockBackImage',
-      width: '100%',
-      height: '100%',
-      borderRadius: 1000,
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      zIndex: 1,
-      src:
-        'https://i.pinimg.com/originals/eb/ad/bc/ebadbc481c675e0f2dea0cc665f72497.jpg',
-    },
-    {
-      type: 'Box',
-      id: 'clockBackShadow',
-      width: '100%',
-      height: '100%',
-      borderRadius: 1000,
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      zIndex: 2,
-      background: 'rgba(255, 255, 255, 0.5)',
-    },
-    {
-      type: 'Text',
-      id: 'clockMsg',
-      width: '100%',
-      height: 'auto',
-      position: 'absolute',
-      alignChildren: 'center',
-      top: 32,
-      zIndex: 3,
-      text: 'سلام کیهان',
-      transform: 'rotateY(-180deg)',
-      display: 'none',
-    },
-    {
-      type: 'Image',
-      id: 'weather',
-      width: '50%',
-      position: 'absolute',
-      alignChildren: 'center',
-      top: 56,
-      right: 56,
-      zIndex: 3,
-      src:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrRZ2vclesoWZ4DOCjXPzbAvg5VEFEn7OiHQ&usqp=CAU',
-      transform: 'rotateY(-180deg)',
-      display: 'none',
-    },
-    {
-      type: 'Text',
-      id: 'weatherMsg',
-      width: '100%',
-      height: 'auto',
-      position: 'absolute',
-      alignChildren: 'center',
-      top: 112 + 40 + 24,
-      zIndex: 3,
-      text: 'نیمه ابری 31 درجه',
-      transform: 'rotateY(-180deg)',
-      display: 'none',
-    },
-    {
-      type: 'Box',
-      id: 'secondHand',
-      width: 250,
-      height: 25,
-      position: 'absolute',
-      left: 0,
-      top: 'calc(50% - 12.5px)',
-      transform: 'rotate(75deg)',
-      transition: 'transform 1s',
-      zIndex: 3,
-      children: [
-        {
-          type: 'Image',
-          id: 'secondImage',
-          width: 125,
-          height: '100%',
-          position: 'absolute',
-          left: '50%',
-          src: ClockHand1,
-        },
-      ],
-    },
-    {
-      type: 'Box',
-      id: 'minuteHand',
-      width: 250,
-      height: 25,
-      position: 'absolute',
-      left: '0',
-      top: 'calc(50% - 12.5px)',
-      transform: 'rotate(-135deg)',
-      transition: 'transform 1s',
-      zIndex: 3,
-      children: [
-        {
-          type: 'Image',
-          id: 'minuteImage',
-          width: 100,
-          height: '100%',
-          position: 'absolute',
-          left: '50%',
-          src: ClockHand1,
-        },
-      ],
-    },
-    {
-      type: 'Box',
-      id: 'hourHand',
-      width: 250,
-      height: 25,
-      position: 'absolute',
-      left: 0,
-      top: 'calc(50% - 12.5px)',
-      transform: 'rotate(295deg)',
-      transition: 'transform 1s',
-      zIndex: 3,
-      children: [
-        {
-          type: 'Image',
-          id: 'hourImage',
-          width: 125,
-          height: '100%',
-          position: 'absolute',
-          left: '50%',
-          src: ClockHand2,
-        },
-      ],
-    },
-  ],
-}
-let timeSecMirror = {
-  widgetId: 'widget-0',
-  elId: 'secondHand',
-  property: 'transform',
-  value: 'rotate(calc((@timeSec * 6deg) - 90deg))',
-  variable: { id: 'timeSec', from: 'time.now.seconds' },
-}
-let timeMinMirror = {
-  widgetId: 'widget-0',
-  elId: 'minuteHand',
-  property: 'transform',
-  value: 'rotate(calc((@timeMin * 6deg) - 90deg))',
-  variable: { id: 'timeMin', from: 'time.now.minutes' },
-}
-let timeHourMirror = {
-  widgetId: 'widget-0',
-  elId: 'hourHand',
-  property: 'transform',
-  value: 'rotate(calc((@timeHour * 30deg) - 90deg))',
-  variable: { id: 'timeHour', from: 'time.now.hours' },
-}
-
-let timeSecShowUpdate = {
-  elId: 'secondHand',
-  property: 'display',
-  newValue: 'block',
-}
-let timeSecHideUpdate = {
-  elId: 'secondHand',
-  property: 'display',
-  newValue: 'none',
-}
-
-let idDict = {}
-let memDict = {}
+let ckeckCode = (codes) => {
+  for (let i = 0; i < codes.length; i++) {
+    let code = codes[i];
+    let handler = () => {
+      if (code.type === 'conditionList') {
+        for (let i = 0; i < code.conditions.length; i++) {
+          let condition = code.conditions[i];
+          let item1 = undefined;
+          if (condition.item1 !== undefined) {
+            if (condition.item1.type === 'gui') {
+              item1 = idDict[condition.item1.elId].obj[condition.item1.property];
+            }
+            else if (condition.item1.type === 'memory') {
+              item1 = memDict[condition.item1.memoryId];
+            }
+            else if (condition.item1.type === 'constant') {
+              item1 = condition.item1.constant;
+            }
+          }
+          let item2 = undefined;
+          if (condition.item2 !== undefined) {
+            if (condition.item2.type === 'gui') {
+              item2 = idDict[condition.item2.elId].obj[condition.item2.property];
+            }
+            else if (condition.item2.type === 'memory') {
+              item2 = memDict[condition.item2.memoryId];
+            }
+            else if (condition.item2.type === 'constant') {
+              item2 = condition.item2.constant;
+            }
+          }
+          
+          let allowed = false;
+          if (condition.type === 'e' && item1 === item2) {
+            allowed = true;
+          }
+          else if (condition.type === 'lt' && item1 < item2) {
+            allowed = true;
+          }
+          else if (condition.type === 'lte' && item1 <= item2) {
+            allowed = true;
+          }
+          else if (condition.type === 'gte' && item1 >= item2) {
+            allowed = true;
+          }
+          else if (condition.type === 'gt' && item1 > item2) {
+            allowed = true;
+          }
+          else if (condition.type === 'ne' && item1 !== item2) {
+            allowed = true;
+          }
+          
+          if (allowed === true) {
+            if (condition.then !== undefined) {
+              ckeckCode(condition.then);
+              break;
+            }
+          }
+        }
+      }
+      else if (code.type === 'straight') {
+        if (code.updateType === 'gui') {
+          idDict[code.elId].obj[code.property] = code.newValue;
+        }
+        else if (code.updateType === 'memory') {
+          memDict[code.memoryId] = code.value;
+        }
+      }
+    }
+    if (code.delay !== undefined) {
+      setTimeout(() => {
+        handler();
+      }, code.delay);
+    }
+    else {
+      handler();
+    }
+  }
+};
 
 export default function BotsBox(props) {
-  let forceUpdate = useForceUpdate()
-  let [editMode, setEditMode] = React.useState(false)
-  let [widgetPreviews, setWidgetPreviews] = React.useState([{id: 1}])
-  let [widgets, setWidgets] = React.useState([])
-  let [guis, setGuis] = React.useState({'widget-1': widget1Gui})
-  let [mirrors, setMirrors] = React.useState([])
-  let [timers, setTimers] = React.useState({})
-  let [menuOpen, setMenuOpen] = React.useState(false)
+  let forceUpdate = useForceUpdate();
+  let [editMode, setEditMode] = React.useState(false);
+  let [widgetPreviews, setWidgetPreviews] = React.useState([{id: 1}]);
+  let [widgets, setWidgets] = React.useState([]);
+  let [myBots, setMyBots] = React.useState([]);
+  let [guis, setGuis] = React.useState({});
+  let [timers, setTimers] = React.useState({});
+  let [menuOpen, setMenuOpen] = React.useState(false);
+  let [styledContents, setStyledContents] = React.useState({});
+  
+  let requestInitGui = (wId) => {
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify({
+        widgetId: wId,
+        preview: true
+      }),
+      redirect: 'follow'
+    }
+    fetch(serverRoot + "/bot/request_initial_gui", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+      });
+  };
+
   useEffect(() => {
     let element = document.getElementById('botsContainerOuter')
     let botsSearchbar = document.getElementById('botsSearchbar')
@@ -238,54 +166,80 @@ export default function BotsBox(props) {
       },
       redirect: 'follow',
     }
-
     fetch(serverRoot + '/bot/get_subscriptions', requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result))
-        //setWidgetPreviews(result.widgets)
+        setMyBots(result.bots);
+        result.widgets.forEach(widget => {
+          requestInitGui(widget.id);
+        });
         forceUpdate()
       })
       .catch((error) => console.log('error', error))
   }, [])
 
   useEffect(() => {
-    setInterval(() => {
-      mirrors.forEach((mirror) => {
-        let timeNow =
-          mirror.variable.from === 'time.now.seconds'
-            ? new Date().getSeconds()
-            : mirror.variable.from === 'time.now.minutes'
-            ? new Date().getMinutes()
-            : mirror.variable.from === 'time.now.hours'
-            ? new Date().getHours() % 12
-            : 0
-        let varCont = mirror.value
-        varCont = varCont.replace('@' + mirror.variable.id, timeNow)
-        idDict[mirror.widgetId][mirror.elId].obj[mirror.property] = varCont
-      })
-      forceUpdate()
+    currentEngineHeartbit = setInterval(() => {
+      try {
+        mirrors.forEach((mirror) => {
+          let timeNow =
+            mirror.variable.from === 'time.now.seconds'
+              ? new Date().getSeconds()
+              : mirror.variable.from === 'time.now.minutes'
+              ? new Date().getMinutes()
+              : mirror.variable.from === 'time.now.hours'
+              ? new Date().getHours() % 12
+              : 0;
+          let varCont = mirror.value;
+          varCont = varCont.replace('@' + mirror.variable.id, timeNow);
+          idDict[mirror.widgetId][mirror.elId].obj[mirror.property] = varCont;
+        });
+        forceUpdate();
+      } catch(ex) {console.log(ex);}
     }, 1000);
 
     if (isOnline) {
-    registerEvent('notifyWidget', ({ widgetId, ev, data }) => {
-      if (ev === 'init') {
+      registerEvent('gui', ({type, gui: data, widgetId, roomId}) => {
+      if (type === 'init') {
         guis[widgetId] = data
-        setGuis(guis)
-        forceUpdate()
-      } else if (ev === 'update') {
+        idDict[widgetId] = {};
+        memDict[widgetId] = {};
+        clickEvents[widgetId] = {};
+        mirrors = mirrors.filter(m => m.widgetId !== widgetId);
+        forceUpdate();
+        let requestOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'token': token
+          },
+          body: JSON.stringify({
+            widgetId: widgetId
+          }),
+          redirect: 'follow'
+        }
+        fetch(serverRoot + "/bot/notify_gui_base_activated", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            console.log(JSON.stringify(result));
+          });
+      } else if (type === 'update') {
         data.forEach((d) => {
-          idDict[widgetId][d.elId].obj[d.property] = d.newValue
-        })
-        forceUpdate()
-      } else if (ev === 'mirror') {
+          if (d.property === 'styledContent') {
+            styledContents[widgetId][d.elId] = d.newValue;
+          }
+          idDict[widgetId][d.elId].obj[d.property] = d.newValue;
+        });
+        setStyledContents(styledContents);
+        forceUpdate();
+      } else if (type === 'mirror') {
         data.forEach((d) => {
           d.widgetId = widgetId
         })
         mirrors = mirrors.concat(data)
-        setMirrors(mirrors)
         forceUpdate()
-      } else if (ev === 'timer') {
+      } else if (type === 'timer') {
         let timer = setInterval(() => {
           data.updates.forEach((d) => {
             idDict[widgetId][d.elId].obj[d.property] = d.newValue
@@ -295,27 +249,32 @@ export default function BotsBox(props) {
         timers[data.timerId] = timer
         setTimers(timers)
         forceUpdate()
-      } else if (ev === 'untimer') {
+      } else if (type === 'untimer') {
         let timer = timers[data.timerId]
         clearInterval(timer)
         delete timers[data.timerId]
         setTimers(timers)
         forceUpdate()
-      } else if (ev === 'memorize') {
-        memDict[data.memoryId] = data.value
-      } else if (ev === 'attachClick') {
-        idDict[widgetId][data.elId].view.onclick = (e) => {
-          data.updates.forEach((d) => {
-            idDict[widgetId][d.elId].obj[d.property] = d.newValue
-          })
-          forceUpdate()
-        }
+      } else if (type === 'memorize') {
+        memDict[widgetId][data.memoryId] = data.value
+        forceUpdate();
+      } else if (type === 'attachClick') {
+        clickEvents[widgetId][data.elId] = () => {
+          ckeckCode(data.codes);
+          forceUpdate();
+        };
       }
     })
   }
     let botsSearchbar = document.getElementById('botsSearchbar')
     botsSearchbar.style.transform = 'translateY(0)'
     botsSearchbar.style.transition = 'transform .5s'
+
+    return () => {
+      if (currentEngineHeartbit !== undefined) {
+        clearInterval(currentEngineHeartbit);
+      }
+    };
   }, [])
 
   useEffect(() => {
@@ -344,6 +303,25 @@ export default function BotsBox(props) {
       },
     },
   })
+
+  mirrors.forEach((mirror) => {
+    if (mirror.variable.from === 'variable') {
+      let fetchedDataOfMemory = memDict[mirror.widgetId][mirror.variable.id];
+      let varCont = mirror.value;
+      varCont = varCont.replace('@' + mirror.variable.id, fetchedDataOfMemory);
+      idDict[mirror.widgetId][mirror.elId].obj[mirror.property] = varCont;
+    }
+  });
+
+  Object.keys(styledContents).forEach(wId => {
+    let widEls = styledContents[wId];
+    Object.keys(widEls).forEach(scId => {
+      let el = document.getElementById('widget_' + wId + '_element_' + scId);
+      if (el !== null) {
+        el.innerHTML = styledContents[wId][scId];
+      }
+    });
+  });
 
   return (
     <div id={props.id}
@@ -377,10 +355,16 @@ export default function BotsBox(props) {
           {widgets.map((w) => {
             return (
               <BotContainer
+                realIdPrefix={'widget_' + w.id + '_element_'}
                 widgetId={w.id}
                 isPreview={false}
                 onIdDictPrepared={(idD) => {
                   idDict['widget-' + w.id] = idD
+                }}
+                onElClick={(elId) => {
+                  if (clickEvents[w.id][elId] !== undefined) {
+                    clickEvents[w.id][elId]();
+                  }
                 }}
                 editMode={editMode}
                 widgetWidth={250}

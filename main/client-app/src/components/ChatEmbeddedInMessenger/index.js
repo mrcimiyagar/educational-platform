@@ -46,6 +46,7 @@ import html2canvas from 'html2canvas';
 import MessageItem from '../MessageItem';
 import { updateMessageSeen } from '../AllChats'
 import './style.css';
+import CustomImageBox from '../CustomImageBox'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -837,26 +838,6 @@ export default function ChatEmbeddedInMessenger(props) {
     }
   }, [loading])
 
-  useEffect(() => {
-    var placeholder = document.querySelector('.placeholder'),
-    small = placeholder.querySelector('.img-small')
-
-// 1: load small image and show it
-var img = new Image();
-img.src = small.src;
-img.onload = function () {
- small.classList.add('loaded');
-};
-
-// 2: load large image
-var imgLarge = new Image();
-imgLarge.src = placeholder.dataset.large; 
-imgLarge.onload = function () {
-  imgLarge.classList.add('loaded');
-};
-placeholder.appendChild(imgLarge);
-  }, []);
-
   return (
     <div
       style={{
@@ -871,7 +852,7 @@ placeholder.appendChild(imgLarge);
     >
       <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256, opacity: 0}}></div> 
       
-      <div className="placeholder" data-large={ChatWallpaper} 
+      <CustomImageBox src={ChatWallpaper}
           style={{
             width: '100%',
             height: 'calc(100% + 16px)',
@@ -888,14 +869,7 @@ placeholder.appendChild(imgLarge);
             objectFit: 'cover',
             backgroundColor: 'transparent'
           }}
-        >
-        <img
-          data-src={ChatWallpaper}
-          className="img-small"
-          style={{objectFit: 'cover', height: '100%', backgroundColor: 'transparent'}}
-        />
-        <div style={{paddingBottom: '66.6%'}}></div>
-      </div>
+      />
       <Viewer
         zIndex={99999}
         style={{ position: 'fixed', left: 0, top: 0 }}

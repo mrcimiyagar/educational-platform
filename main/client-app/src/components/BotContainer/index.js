@@ -281,8 +281,6 @@ export default function BotContainer(props) {
 
     let idDict = {}
 
-    if (props.onElClick === undefined) props.onElClick = () => {};
-
     let renderGui = el => {
       if (el === undefined) return <div/>
       let style = {
@@ -322,7 +320,7 @@ export default function BotContainer(props) {
           margin: el.margin
         }
         let result = <div/>
-        el.realId = 'element_' + el.id;
+        el.realId = props.realIdPrefix + el.id;
         if (el.type === 'Box') {
           result = (
             <div id={el.realId} style={style} onClick={() => {props.onElClick(el.id);}}>

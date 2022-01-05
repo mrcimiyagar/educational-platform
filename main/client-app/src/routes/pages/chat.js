@@ -48,6 +48,7 @@ import MessageItem from '../../components/MessageItem'
 import store, { changeConferenceMode } from '../../redux/main'
 import './chat.css';
 import { StylesProvider } from '@material-ui/core'
+import CustomImageBox from '../../components/CustomImageBox'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />
@@ -949,27 +950,7 @@ export default function Chat(props) {
       style={{ zIndex: 2501 }}
     >
       <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256, opacity: 0}}></div> 
-      <div className="placeholder" data-large={ChatWallpaper} 
-          style={{
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backdropFilter: 'blur(10px)',
-            borderRadius: isInMessenger() ? '0 0 0 24px' : 0,
-            objectFit: 'cover'
-          }}
-        >
-        <img
-          data-src={ChatWallpaper}
-          className="img-small"
-          style={{objectFit: 'cover', height: '100%'}}
-        />
-        <div style={{paddingBottom: '66.6%'}}></div>
-      </div>
+      <CustomImageBox borderRadius={isInMessenger() ? '0 0 0 24px' : 0}/>
       <div
         style={{
           width: '100%',

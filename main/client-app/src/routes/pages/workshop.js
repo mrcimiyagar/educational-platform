@@ -166,7 +166,6 @@ function Workshop(props) {
           memDict = {};
           clickEvents = {};
           mirrors = [];
-          clickEvents = {};
           widget1Gui = data;
           forceUpdate();
           let requestOptions = {
@@ -251,6 +250,7 @@ function Workshop(props) {
     }
     setOpen(open);
   };
+
   let requestInitGui = () => {
     let requestOptions = {
       method: 'POST',
@@ -268,9 +268,6 @@ function Workshop(props) {
       .then(response => response.json())
       .then(result => {
         console.log(JSON.stringify(result));
-        if (result.myBots !== undefined) {
-          setBots(result.myBots);
-        }
       });
   };
 
@@ -309,6 +306,7 @@ function Workshop(props) {
           </Toolbar>
         </AppBar>
         <BotContainer
+          realIdPrefix={'element_'}
           onIdDictPrepared={(idD) => {
             idDict = idD
           }}

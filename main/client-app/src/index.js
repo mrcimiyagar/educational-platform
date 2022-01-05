@@ -12,6 +12,7 @@ import store from './redux/main';
 import { setup, socket } from './util/Utils';
 import './notifSystem';
 import { Alert, Snackbar } from '@mui/material';
+import CustomImageBox from './components/CustomImageBox'
 
 function getOS() {
   var userAgent = window.navigator.userAgent,
@@ -178,15 +179,6 @@ export function ifServerOnline(ifOnline, ifOffline) {
 export let setClientConnected = (b) => {};
 
 let AppContainer = (props) => {
-  useEffect(() => {
-    let imgObj = document.getElementById("wallpaperImg");
-    function fadeImg () {
-      this.style.transition = "opacity 2s";
-      this.style.opacity = "1";
-    }
-    imgObj.style.opacity = "0";
-    imgObj.addEventListener("load", fadeImg);
-  }, [])
   ;[wallpaper, setWall] = React.useState({})
   setWallpaper = (w) => {
     if (w.type === wallpaper.type) {
@@ -269,7 +261,7 @@ let AppContainer = (props) => {
   if (!loaded) {
     return (
       <div style={{ width: '100%', height: '100%' }}>
-          <img
+          <CustomImageBox
             id={'wallpaperImg'}
             src={wallpaper.photo}
             style={{
@@ -316,17 +308,17 @@ let AppContainer = (props) => {
     <div style={{ width: '100%', height: '100%' }}>
       {wallpaper === undefined || wallpaper === null ? null : wallpaper.type ===
         'photo' ? (
-        <img
-          src={wallpaper.photo}
-          style={{
-            position: 'fixed',
-            left: 0,
-            top: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
+          <CustomImageBox
+            src={wallpaper.photo}
+            style={{
+              position: 'fixed',
+              left: 0,
+              top: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
       ) : wallpaper.type === 'video' ? (
         <video
           loop

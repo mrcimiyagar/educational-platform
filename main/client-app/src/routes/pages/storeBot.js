@@ -263,7 +263,32 @@ export default function StoreBot(props) {
     </Fab>
     <Fab color="secondary" style={{position: 'fixed', bottom: 16 + 56 + 16, left: 16}}
       onClick={() => {
-        gotoPage('/app/spaces_list', {can_inspect_rooms: true, bot_id: props.bot_id});
+        if (props.room_id !== undefined) {
+          let requestOptions2 = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'token': token
+            },
+            body: JSON.stringify({
+              botId: props.bot_id,
+              roomId: props.room_id
+            }),
+            redirect: 'follow'
+        }
+        fetch(serverRoot + "/bot/create_workership", requestOptions2)
+            .then(response => response.json())
+            .then(result => {
+              console.log(JSON.stringify(result));
+              if (result.status === 'success') {
+                alert('ربات با موفقیت به روم اضافه شد.');
+              }
+            })
+            .catch(error => console.log('error', error));
+        }
+        else {
+          gotoPage('/app/spaces_list', {can_inspect_rooms: true, bot_id: props.bot_id});
+        }
       }}>
       <Add />
     </Fab>

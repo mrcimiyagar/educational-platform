@@ -73,15 +73,15 @@ router.post('/get_subscriptions', jsonParser, async function (req, res) {
       include: { all: true },
       where: { subscriberId: session.userId },
     })
-    let widgets = await sw.Widget.findAll({
+    let bots = await sw.Bot.findAll({
       raw: true,
       include: { all: true },
-      where: { botId: subscriptions.map((s) => s.botId) },
+      where: { id: subscriptions.map((s) => s.botId) },
     })
     res.send({
       status: 'success',
       subscriptions: subscriptions,
-      widgets: widgets,
+      bots: bots,
     })
   })
 })

@@ -12,7 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function SpacesListPage(props) {    
+export default function SpacesListPage(props) {
 
     const urlSearchParams = new URLSearchParams(window.location.search);
     props = Object.fromEntries(urlSearchParams.entries());
@@ -20,7 +20,7 @@ export default function SpacesListPage(props) {
     const [open, setOpen] = React.useState(true);
     const handleClose = () => {
         setOpen(false);
-        setTimeout(popPage, 250)
+        setTimeout(popPage, 250);
     };
     return (
         <Dialog
