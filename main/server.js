@@ -160,8 +160,6 @@ models.setup().then(() => {
             });
         };
 
-        //setInterval(updateClients, 5000);
-
         module.exports = {
             'pushToExcept': async (nodeId, key, data, exceptionId) => {
                 if (nodeId === 'aseman-bot-store') {
