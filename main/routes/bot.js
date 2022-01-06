@@ -1462,7 +1462,7 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
       height: req.body.height
     });
     
-    require('../server').pushTo('room_' + widgetWorker.roomId, 'widget_worker_added', widgetWorker);
+    require('../server').pushTo('room_' + widgetWorker.roomId, 'widget_worker_added', widgetWorker, user.id);
 
     res.send({ status: 'success', widgetWorker: widgetWorker });
   })
@@ -1497,7 +1497,7 @@ router.post('/delete_widget_worker', jsonParser, async function (req, res) {
 
     await widgetWorker.destroy();
     
-    require('../server').pushTo('room_' + widgetWorker.roomId, 'widget_worker_removed', wwId);
+    require('../server').pushToExcept('room_' + widgetWorker.roomId, 'widget_worker_removed', wwId, user.id);
 
     res.send({ status: 'success' })
   })
@@ -1533,7 +1533,7 @@ router.post('/update_widget_worker', jsonParser, async function (req, res) {
     widgetWorker.height = req.body.height;
     await widgetWorker.save();
 
-    require('../server').pushTo('room_' + widgetWorker.roomId, 'widget_worker_moved', widgetWorker);
+    require('../server').pushTo('room_' + widgetWorker.roomId, 'widget_worker_moved', widgetWorker, user.id);
 
     res.send({ status: 'success' });
   })
