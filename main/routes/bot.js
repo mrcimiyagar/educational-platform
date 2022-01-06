@@ -943,7 +943,8 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
         });
         return;
       }
-      let widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
+      let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId}});
+      let widget = await sw.Widget.findOne({where: {id: widgetWorkerId.widgetId}});
       if (widget === null) {
         res.send({
           status: 'error',
@@ -962,7 +963,6 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
         });
         return;
       }
-      let widgetWorker = await sw.WidgetWorker.findOne({where: {widgetId: widget.id, roomId: membership.roomId}});
       require('../server').signlePushTo(bot.id, 'request_initial_gui', {
         roomId: workership.roomId,
         widgetId: widget.id,
@@ -1021,7 +1021,8 @@ router.post('/gui', jsonParser, async function (req, res) {
         })
         return
       }
-      let widget = await sw.Widget.findOne({where: {id: req.body.widgetId, botId: bot.id}});
+      let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId}});
+      let widget = await sw.Widget.findOne({where: {id: widgetWorker.widgetId, botId: bot.id}});
       if (widget === null) {
         res.send({
           status: 'error',
@@ -1030,7 +1031,6 @@ router.post('/gui', jsonParser, async function (req, res) {
         })
         return
       }
-      let widgetWorker = await sw.WidgetWorker.findOne({where: {widgetId: widget.id, roomId: workership.roomId}});
       let targetUserId = req.body.userId
       if (
         targetUserId !== undefined &&

@@ -116,7 +116,7 @@ export default function BotsBox(props) {
   let [menuOpen, setMenuOpen] = React.useState(false);
   let [mySelectedBot, setMySelectedBot] = React.useState(0);
   
-  let requestInitGui = (wId, preview=true) => {
+  let requestInitGui = (wwId, preview=true) => {
     let requestOptions = {
       method: 'POST',
       headers: {
@@ -124,7 +124,7 @@ export default function BotsBox(props) {
         'token': token
       },
       body: JSON.stringify({
-        widgetId: wId,
+        widgetWorkerId: wwId,
         preview: preview,
         roomId: props.roomId
       }),
@@ -188,7 +188,7 @@ export default function BotsBox(props) {
               : 0;
           let varCont = mirror.value;
           varCont = varCont.replace('@' + mirror.variable.id, timeNow);
-          idDict[mirror.widgetId][mirror.elId].obj[mirror.property] = varCont;
+          idDict[mirror.widgetWorkerId][mirror.elId].obj[mirror.property] = varCont;
         });
         forceUpdate();
       } catch(ex) {console.log(ex);}
@@ -196,12 +196,12 @@ export default function BotsBox(props) {
 
     registerEvent('gui', ({type, gui: data, widgetId, roomId, widgetWorkerId}) => {
       if (type === 'init') {
-        guis[widgetId] = data;
-        idDict[widgetId] = {};
-        memDict[widgetId] = {};
-        clickEvents[widgetId] = {};
-        styledContents[widgetId] = {};
-        mirrors = mirrors.filter(m => m.widgetId !== widgetId);
+        guis[widgetWorkerId] = data;
+        idDict[widgetWorkerId] = {};
+        memDict[widgetWorkerId] = {};
+        clickEvents[widgetWorkerId] = {};
+        styledContents[widgetWorkerId] = {};
+        mirrors = mirrors.filter(m => m.widgetWorkerId !== widgetWorkerId);
         forceUpdate();
         let requestOptions = {
           method: 'POST',
@@ -210,7 +210,7 @@ export default function BotsBox(props) {
             'token': token
           },
           body: JSON.stringify({
-            widgetId: widgetId,
+            widgetWorkerId: widgetWorkerId,
             roomId: roomId
           }),
           redirect: 'follow'
@@ -224,36 +224,36 @@ export default function BotsBox(props) {
       } else if (type === 'update') {
         data.forEach((d) => {
           if (d.property === 'styledContent') {
-            styledContents[widgetId][d.elId] = d.newValue;
+            styledContents[widgetWorkerId][d.elId] = d.newValue;
           }
-          idDict[widgetId][d.elId].obj[d.property] = d.newValue;
+          idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
         });
         forceUpdate();
       } else if (type === 'mirror') {
         data.forEach((d) => {
-          d.widgetId = widgetId
+          d.widgetWorkerId = widgetWorkerId
         })
         mirrors = mirrors.concat(data)
         forceUpdate()
       } else if (type === 'timer') {
         let timer = setInterval(() => {
           data.updates.forEach((d) => {
-            idDict[widgetId][d.elId].obj[d.property] = d.newValue;
+            idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
           })
           forceUpdate();
         }, data.interval);
         timers[data.timerId] = timer;
         forceUpdate();
       } else if (type === 'untimer') {
-        let timer = timers[data.timerId];
+        let timer = timers[widgetWorkerId][data.timerId];
         clearInterval(timer);
-        delete timers[data.timerId];
+        delete timers[widgetWorkerId][data.timerId];
         forceUpdate();
       } else if (type === 'memorize') {
-        memDict[widgetId][data.memoryId] = data.value
+        memDict[widgetWorkerId][data.memoryId] = data.value
         forceUpdate();
       } else if (type === 'attachClick') {
-        clickEvents[widgetId][data.elId] = () => {
+        clickEvents[widgetWorkerId][data.elId] = () => {
           ckeckCode(data.codes);
           forceUpdate();
         };
@@ -286,10 +286,10 @@ export default function BotsBox(props) {
 
   mirrors.forEach((mirror) => {
     if (mirror.variable.from === 'variable') {
-      let fetchedDataOfMemory = memDict[mirror.widgetId][mirror.variable.id];
+      let fetchedDataOfMemory = memDict[mirror.widgetWorkerId][mirror.variable.id];
       let varCont = mirror.value;
       varCont = varCont.replace('@' + mirror.variable.id, fetchedDataOfMemory);
-      idDict[mirror.widgetId][mirror.elId].obj[mirror.property] = varCont;
+      idDict[mirror.widgetWorkerId][mirror.elId].obj[mirror.property] = varCont;
     }
   });
 
@@ -311,7 +311,7 @@ export default function BotsBox(props) {
         if (result.status === 'success') {
           setWidgets(result.widgetWorkers);
           result.widgetWorkers.forEach(ww => {
-            requestInitGui(ww.widgetId, false);
+            requestInitGui(ww.id, false);
           });
         }
       })
@@ -360,15 +360,15 @@ export default function BotsBox(props) {
           {widgets.map((ww) => {
             return (
               <BotContainer
-                realIdPrefix={'widget_' + ww.widgetId + '_element_'}
-                widgetId={ww.widgetId}
+                realIdPrefix={'widget_' + ww.id + '_element_'}
+                widgetWorkerId={ww.id}
                 isPreview={false}
                 onIdDictPrepared={(idD) => {
-                  idDict[ww.widgetId] = idD
+                  idDict[ww.id] = idD
                 }}
                 onElClick={(elId) => {
-                  if (clickEvents[ww.widgetId][elId] !== undefined) {
-                    clickEvents[ww.widgetId][elId]();
+                  if (clickEvents[ww.id][elId] !== undefined) {
+                    clickEvents[ww.id][elId]();
                   }
                 }}
                 editMode={editMode}
@@ -376,7 +376,7 @@ export default function BotsBox(props) {
                 widgetHeight={250}
                 widgetX={16}
                 widgetY={28}
-                gui={guis[ww.widgetId]}
+                gui={guis[ww.id]}
               />
             )
           })}

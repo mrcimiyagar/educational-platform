@@ -26,7 +26,7 @@ export default function BotContainer(props) {
     var b, x, y;
     
     var redraw = false;
-    var pane = document.getElementById("widget-pane-" + props.widgetId + (props.isPreview ? '-preview' : ''));
+    var pane = document.getElementById("widget-pane-" + props.widgetWorkerId + (props.isPreview ? '-preview' : ''));
     var ghostpane = document.getElementById('ghostpane');
 
     if (!props.editMode) {
@@ -277,7 +277,7 @@ export default function BotContainer(props) {
     
       clicked = null;
     }
-    }, [props.editMode, props.isPreview, props.widgetId])
+    }, [props.editMode, props.isPreview, props.widgetWorkerId])
 
     let idDict = {}
 
@@ -365,7 +365,7 @@ export default function BotContainer(props) {
 
     if (props.editMode) {
       return (
-        <div id={"widget-pane-" + props.widgetId + (props.isPreview ? '-preview' : '')} className={'pane'} onClick={props.onClick}
+        <div id={"widget-pane-" + props.widgetWorkerId + (props.isPreview ? '-preview' : '')} className={'pane'} onClick={props.onClick}
           style={{width: props.widgetWidth, height: props.widgetHeight + 30, position: 'absolute', left: props.widgetX, top: props.widgetY}}>
           <div id="title"></div>
           <div style={{width: '100%', height: 'calc(100% - 30px)', position: 'relative'}}>
@@ -373,20 +373,20 @@ export default function BotContainer(props) {
               [fullGui]
             }
           </div>
-          <div style={{width: '100%', height: '100%', position: 'relative', zIndex: 99999}} id={'widget-cover-' + props.widgetId + (props.isPreview ? '-preview' : '')}/>
+          <div style={{width: '100%', height: '100%', position: 'relative', zIndex: 99999}} id={'widget-cover-' + props.widgetWorkerId + (props.isPreview ? '-preview' : '')}/>
         </div>
       )
     }
     else {
       return (
-        <div id={"widget-pane-" + props.widgetId + (props.isPreview ? '-preview' : '')} onClick={props.onClick}
+        <div id={"widget-pane-" + props.widgetWorkerId + (props.isPreview ? '-preview' : '')} onClick={props.onClick}
           style={{width: props.widgetWidth, height: props.widgetHeight, position: 'absolute', left: props.widgetX, top: props.widgetY}}>
           <div style={{width: '100%', height: '100%', position: 'relative'}}>
             {
               [fullGui]
             }
           </div>
-          <div style={{width: '100%', height: '100%', position: 'relative', zIndex: 99999}} id={'widget-cover-' + props.widgetId + (props.isPreview ? '-preview' : '')}/>
+          <div style={{width: '100%', height: '100%', position: 'relative', zIndex: 99999}} id={'widget-cover-' + props.widgetWorkerId + (props.isPreview ? '-preview' : '')}/>
         </div>
       )
     }
