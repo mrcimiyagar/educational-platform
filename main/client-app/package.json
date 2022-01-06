@@ -105,6 +105,7 @@
     "react-rater": "^5.0.3",
     "react-redux": "^5.1.2",
     "react-resizable": "^3.0.4",
+    "react-rnd": "^10.3.5",
     "react-router-dom": "^5.2.0",
     "react-router-transition": "^2.1.0",
     "react-scripts": "4.0.3",

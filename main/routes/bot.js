@@ -1480,7 +1480,7 @@ router.post('/delete_widget_worker', jsonParser, async function (req, res) {
         roomId: membership.roomId
       }
     });
-    let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorker}});
+    let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId}});
     if (roomSecret.ownerId !== user.id && widgetWorker.bossId !== user.id) {
       res.send({
         status: 'error',
@@ -1509,7 +1509,7 @@ router.post('/update_widget_worker', jsonParser, async function (req, res) {
         roomId: membership.roomId
       }
     });
-    let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorker}});
+    let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId}});
     if (roomSecret.ownerId !== user.id && widgetWorker.bossId !== user.id) {
       res.send({
         status: 'error',

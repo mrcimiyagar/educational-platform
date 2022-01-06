@@ -16,6 +16,7 @@ import BotContainer from '../../components/BotContainer'
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar'
 import { token } from '../../util/settings'
 import { registerEvent, serverRoot, unregisterEvent, useForceUpdate } from '../../util/Utils'
+import { Rnd } from 'react-rnd';
 
 var lastScrollTop = 0;
 let idDict = {};
@@ -81,7 +82,7 @@ let ckeckCode = (wwId, codes) => {
           
           if (allowed === true) {
             if (condition.then !== undefined) {
-              ckeckCode(condition.then);
+              ckeckCode(wwId, condition.then);
               break;
             }
           }
@@ -195,7 +196,6 @@ export default function BotsBox(props) {
     }, 1000);
 
     registerEvent('gui', ({type, gui: data, widgetId, roomId, widgetWorkerId}) => {
-      console.log(widgetWorkerId);
       if (type === 'init') {
         guis[widgetWorkerId] = data;
         idDict[widgetWorkerId] = {};
@@ -361,6 +361,41 @@ export default function BotsBox(props) {
         <div id={'botsContainerInner'} style={{ width: '100%', height: 2000 }}>
           {widgets.map((ww) => {
             return (
+              <Rnd
+                default={{x: ww.x, y: ww.y, width: ww.width, height: ww.height}}
+                onDragStop={(e, d) => {
+                  let requestOptions = {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      token: token,
+                    },
+                    body: JSON.stringify({
+                      widgetWorkerId: ww.id,
+                      x: d.x,
+                      y: d.y,
+                      width: ww.width,
+                      height: ww.height
+                    }),
+                    redirect: 'follow',
+                  }
+                  fetch(serverRoot + '/bot/create_widget_worker', requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                      if (result.status === 'success') {
+                        updateDesktop();
+                        alert('ربات به میزکار افزوده شد.');
+                      }
+                      else {
+                        alert(result.message);
+                      }
+                    })
+                    .catch(ex => console.log(ex));;
+                }}
+                onResizeStop={(e, direction, ref, delta, position) => {
+                  this.setState({width: ref.style.width,height: ref.style.height,...position,});
+                }}
+              >
               <BotContainer
                 realIdPrefix={'widget_' + ww.id + '_element_'}
                 widgetWorkerId={ww.id}
@@ -374,12 +409,13 @@ export default function BotsBox(props) {
                   }
                 }}
                 editMode={editMode}
-                widgetWidth={250}
-                widgetHeight={250}
-                widgetX={16}
-                widgetY={28}
+                widgetWidth={'100%'}
+                widgetHeight={'100%'}
+                widgetX={0}
+                widgetY={0}
                 gui={guis[ww.id]}
               />
+              </Rnd>
             )
           })}
           <div id="ghostpane" style={{ display: 'none' }}></div>
@@ -465,8 +501,9 @@ export default function BotsBox(props) {
         >
           <div style={{ position: 'relative', width: 80, height: '100%', background: 'rgba(225, 225, 225, 0.55)' }}>
             {
-              myBots.map(bot => (
+              myBots.map((bot, index) => (
                 <Avatar
+                  onClick={() => setMySelectedBot(index)}
                   src={serverRoot + `/file/download_bot_avatar?token=${token}&botId=${bot.id}`}
                   style={{
                     width: 64,
@@ -511,7 +548,7 @@ export default function BotsBox(props) {
                       alert(result.message);
                     }
                   })
-                  .catch(ex => console.log(ex));;
+                  .catch(ex => console.log(ex));
               }}>
                 <img
                   style={{
