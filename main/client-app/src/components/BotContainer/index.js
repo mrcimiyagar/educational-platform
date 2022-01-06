@@ -91,7 +91,7 @@ export default function BotContainer(props) {
     props.onIdDictPrepared(idDict)
 
     return (
-      <Grow in={props.gui !== undefined} {...{ timeout: props.step * 500 }}>
+      <Grow in={props.gui !== undefined} {...{ timeout: (props.step + 1) * 650 }}>
         <div id={"widget-pane-" + props.widgetWorkerId + (props.isPreview ? '-preview' : '')}
           style={{width: props.widgetWidth, height: props.widgetHeight, position: 'absolute', left: props.widgetX, top: props.widgetY}}>
           <div style={{width: '100%', height: '100%', position: 'relative'}}>
