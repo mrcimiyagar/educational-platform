@@ -1461,6 +1461,9 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
       width: req.body.width,
       height: req.body.height
     });
+    
+    require('../server').pushTo('room_' + widgetWorker.roomId, 'widget_worker_added', widgetWorker);
+
     res.send({ status: 'success', widgetWorker: widgetWorker });
   })
 })
@@ -1489,7 +1492,13 @@ router.post('/delete_widget_worker', jsonParser, async function (req, res) {
       });
       return;
     }
+
+    const wwId = widgetWorker.id;
+
     await widgetWorker.destroy();
+    
+    require('../server').pushTo('room_' + widgetWorker.roomId, 'widget_worker_removed', wwId);
+
     res.send({ status: 'success' })
   })
 })

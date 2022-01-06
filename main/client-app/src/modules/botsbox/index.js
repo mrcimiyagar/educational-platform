@@ -28,6 +28,7 @@ let styledContents = {};
 let timers = {};
 let guis = {};
 let currentEngineHeartbit;
+let widgets = [];
 
 let ckeckCode = (wwId, codes) => {
   for (let i = 0; i < codes.length; i++) {
@@ -113,7 +114,6 @@ export default function BotsBox(props) {
 
   let forceUpdate = useForceUpdate();
   let [editMode, setEditMode] = React.useState(false);
-  let [widgets, setWidgets] = React.useState([]);
   let [myBots, setMyBots] = React.useState([]);
   let [menuOpen, setMenuOpen] = React.useState(false);
   let [mySelectedBot, setMySelectedBot] = React.useState(0);
@@ -196,11 +196,32 @@ export default function BotsBox(props) {
       } catch(ex) {console.log(ex);}
     }, 1000);
 
+    unregisterEvent('widget_worker_added');
+    registerEvent('widget_worker_added', (ww) => {
+      widgets.push(ww);
+      forceUpdate();
+      requestInitGui(ww.id, false);
+    });
+
+    unregisterEvent('widget_worker_removed');
+    registerEvent('widget_worker_removed', (wwId) => {
+      for (let i = 0; i < widgets.length; i++) {
+        if (widgets[i].id === wwId) {
+          widgets.splice(i);
+          break;
+        }
+      }
+      forceUpdate();
+    });
+
     unregisterEvent('widget_worker_moved');
     registerEvent('widget_worker_moved', (ww) => {
       for (let i = 0; i < widgets.length; i++) {
         if (widgets[i].id === ww.id) {
-          widgets[i] = ww;
+          widgets[i].x = ww.x;
+          widgets[i].y = ww.y;
+          widgets[i].width = ww.width;
+          widgets[i].height = ww.height;
           forceUpdate();
           break;
         }
@@ -324,7 +345,8 @@ export default function BotsBox(props) {
       .then((response) => response.json())
       .then((result) => {
         if (result.status === 'success') {
-          setWidgets(result.widgetWorkers);
+          widgets = result.widgetWorkers;
+          forceUpdate();
           result.widgetWorkers.forEach(ww => {
             requestInitGui(ww.id, false);
           });
