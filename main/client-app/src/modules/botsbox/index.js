@@ -196,7 +196,7 @@ export default function BotsBox(props) {
       } catch(ex) {console.log(ex);}
     }, 1000);
 
-    unregisterEvent('widget-worker-moved');
+    unregisterEvent('widget_worker_moved');
     registerEvent('widget_worker_moved', (ww) => {
       for (let i = 0; i < widgets.length; i++) {
         if (widgets[i].id === ww.id) {
