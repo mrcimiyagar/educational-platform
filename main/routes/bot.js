@@ -1467,7 +1467,8 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
 
 router.post('/delete_widget_worker', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-    if (membership === null || membership === undefined) {
+    let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId}});
+    if (widgetWorker === null) {
       res.send({
         status: 'error',
         errorCode: 'e0005',
@@ -1477,10 +1478,9 @@ router.post('/delete_widget_worker', jsonParser, async function (req, res) {
     }
     let roomSecret = await sw.RoomSecret.findOne({
       where: {
-        roomId: membership.roomId
+        roomId: widgetWorker.roomId
       }
     });
-    let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId}});
     if (roomSecret.ownerId !== user.id && widgetWorker.bossId !== user.id) {
       res.send({
         status: 'error',

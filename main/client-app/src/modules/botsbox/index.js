@@ -379,21 +379,31 @@ export default function BotsBox(props) {
                     }),
                     redirect: 'follow',
                   }
-                  fetch(serverRoot + '/bot/create_widget_worker', requestOptions)
+                  fetch(serverRoot + '/bot/update_widget_worker', requestOptions)
                     .then((response) => response.json())
-                    .then((result) => {
-                      if (result.status === 'success') {
-                        updateDesktop();
-                        alert('ربات به میزکار افزوده شد.');
-                      }
-                      else {
-                        alert(result.message);
-                      }
-                    })
+                    .then((result) => {})
                     .catch(ex => console.log(ex));;
                 }}
                 onResizeStop={(e, direction, ref, delta, position) => {
-                  this.setState({width: ref.style.width,height: ref.style.height,...position,});
+                  let requestOptions = {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      token: token,
+                    },
+                    body: JSON.stringify({
+                      widgetWorkerId: ww.id,
+                      x: ww.x,
+                      y: ww.y,
+                      width: ref.style.width,
+                      height: ref.style.height
+                    }),
+                    redirect: 'follow',
+                  }
+                  fetch(serverRoot + '/bot/update_widget_worker', requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {})
+                    .catch(ex => console.log(ex));;
                 }}
               >
               <BotContainer
