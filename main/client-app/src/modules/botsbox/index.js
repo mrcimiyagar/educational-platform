@@ -27,7 +27,7 @@ let timers = {};
 let guis = {};
 let currentEngineHeartbit;
 
-let ckeckCode = (codes) => {
+let ckeckCode = (wwId, codes) => {
   for (let i = 0; i < codes.length; i++) {
     let code = codes[i];
     let handler = () => {
@@ -37,10 +37,10 @@ let ckeckCode = (codes) => {
           let item1 = undefined;
           if (condition.item1 !== undefined) {
             if (condition.item1.type === 'gui') {
-              item1 = idDict[condition.item1.elId].obj[condition.item1.property];
+              item1 = idDict[wwId][condition.item1.elId].obj[condition.item1.property];
             }
             else if (condition.item1.type === 'memory') {
-              item1 = memDict[condition.item1.memoryId];
+              item1 = memDict[wwId][condition.item1.memoryId];
             }
             else if (condition.item1.type === 'constant') {
               item1 = condition.item1.constant;
@@ -49,10 +49,10 @@ let ckeckCode = (codes) => {
           let item2 = undefined;
           if (condition.item2 !== undefined) {
             if (condition.item2.type === 'gui') {
-              item2 = idDict[condition.item2.elId].obj[condition.item2.property];
+              item2 = idDict[wwId][condition.item2.elId].obj[condition.item2.property];
             }
             else if (condition.item2.type === 'memory') {
-              item2 = memDict[condition.item2.memoryId];
+              item2 = memDict[wwId][condition.item2.memoryId];
             }
             else if (condition.item2.type === 'constant') {
               item2 = condition.item2.constant;
@@ -89,10 +89,10 @@ let ckeckCode = (codes) => {
       }
       else if (code.type === 'straight') {
         if (code.updateType === 'gui') {
-          idDict[code.elId].obj[code.property] = code.newValue;
+          idDict[wwId][code.elId].obj[code.property] = code.newValue;
         }
         else if (code.updateType === 'memory') {
-          memDict[code.memoryId] = code.value;
+          memDict[wwId][code.memoryId] = code.value;
         }
       }
     }
@@ -256,7 +256,7 @@ export default function BotsBox(props) {
         forceUpdate();
       } else if (type === 'attachClick') {
         clickEvents[widgetWorkerId][data.elId] = () => {
-          ckeckCode(data.codes);
+          ckeckCode(widgetWorkerId, data.codes);
           forceUpdate();
         };
       }
