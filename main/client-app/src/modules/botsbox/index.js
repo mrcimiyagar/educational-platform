@@ -362,7 +362,7 @@ export default function BotsBox(props) {
           {widgets.map((ww) => {
             return (
               <Rnd
-                default={{x: ww.x, y: ww.y, width: ww.width, height: ww.height}}
+                default={{x: ww.x, y: ww.y, width: ww.width === null ? 150 : ww.width, height: ww.height === null ? 150 : ww.height}}
                 onDragStop={(e, d) => {
                   let requestOptions = {
                     method: 'POST',
@@ -395,8 +395,8 @@ export default function BotsBox(props) {
                       widgetWorkerId: ww.id,
                       x: ww.x,
                       y: ww.y,
-                      width: ref.style.width,
-                      height: ref.style.height
+                      width: Number(ref.style.width.substring(0, ref.style.width.length - 2)),
+                      height: Number(ref.style.height.substring(0, ref.style.height.length - 2))
                     }),
                     redirect: 'follow',
                   }
