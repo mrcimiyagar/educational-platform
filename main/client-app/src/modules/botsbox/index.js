@@ -199,7 +199,7 @@ export default function BotsBox(props) {
     unregisterEvent('widget-worker-moved');
     registerEvent('widget_worker_moved', (ww) => {
       for (let i = 0; i < widgets.length; i++) {
-        if (widgets.id === ww.id) {
+        if (widgets[i].id === ww.id) {
           widgets[i] = ww;
           forceUpdate();
           break;
