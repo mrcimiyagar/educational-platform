@@ -1462,7 +1462,7 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
       height: req.body.height
     });
     
-    require('../server').pushToExcept('room_' + widgetWorker.roomId, 'widget_worker_added', widgetWorker, user.id);
+    //require('../server').pushToExcept('room_' + widgetWorker.roomId, 'widget_worker_added', widgetWorker, user.id);
 
     res.send({ status: 'success', widgetWorker: widgetWorker });
   })
