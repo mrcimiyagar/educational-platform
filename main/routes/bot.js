@@ -1057,7 +1057,7 @@ router.post('/gui', jsonParser, async function (req, res) {
         })
       } else {
         require('../server').signlePushTo(targetUserId, 'gui', {
-          type: 'init',
+          type: req.body.type,
           gui: gui,
           roomId: workership.roomId,
           widgetId: widget.id,

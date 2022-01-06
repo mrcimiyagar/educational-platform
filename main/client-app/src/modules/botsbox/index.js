@@ -195,6 +195,7 @@ export default function BotsBox(props) {
     }, 1000);
 
     registerEvent('gui', ({type, gui: data, widgetId, roomId, widgetWorkerId}) => {
+      console.log(widgetWorkerId);
       if (type === 'init') {
         guis[widgetWorkerId] = data;
         idDict[widgetWorkerId] = {};
