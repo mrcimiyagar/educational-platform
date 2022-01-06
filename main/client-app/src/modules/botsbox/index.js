@@ -198,7 +198,8 @@ export default function BotsBox(props) {
 
     unregisterEvent('widget_worker_added');
     registerEvent('widget_worker_added', (ww) => {
-      widgets.push(ww);
+      
+      //widgets.push(ww);
       forceUpdate();
       requestInitGui(ww.id, false);
     });
