@@ -2,6 +2,7 @@ import {
   Avatar,
   createTheme,
   Fab,
+  Grow,
   Slide,
   SwipeableDrawer,
   ThemeProvider,
@@ -359,74 +360,103 @@ export default function BotsBox(props) {
         }}
       >
         <div id={'botsContainerInner'} style={{ width: '100%', height: 2000 }}>
-          {widgets.map((ww) => {
-            return (
-              <Rnd
-                default={{x: ww.x, y: ww.y, width: ww.width === null ? 150 : ww.width, height: ww.height === null ? 150 : ww.height}}
-                onDragStop={(e, d) => {
-                  let requestOptions = {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      token: token,
-                    },
-                    body: JSON.stringify({
-                      widgetWorkerId: ww.id,
-                      x: d.x,
-                      y: d.y,
-                      width: ww.width,
-                      height: ww.height
-                    }),
-                    redirect: 'follow',
-                  }
-                  fetch(serverRoot + '/bot/update_widget_worker', requestOptions)
-                    .then((response) => response.json())
-                    .then((result) => {})
-                    .catch(ex => console.log(ex));;
-                }}
-                onResizeStop={(e, direction, ref, delta, position) => {
-                  let requestOptions = {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      token: token,
-                    },
-                    body: JSON.stringify({
-                      widgetWorkerId: ww.id,
-                      x: ww.x,
-                      y: ww.y,
-                      width: Number(ref.style.width.substring(0, ref.style.width.length - 2)),
-                      height: Number(ref.style.height.substring(0, ref.style.height.length - 2))
-                    }),
-                    redirect: 'follow',
-                  }
-                  fetch(serverRoot + '/bot/update_widget_worker', requestOptions)
-                    .then((response) => response.json())
-                    .then((result) => {})
-                    .catch(ex => console.log(ex));;
-                }}
-              >
-              <BotContainer
-                realIdPrefix={'widget_' + ww.id + '_element_'}
-                widgetWorkerId={ww.id}
-                isPreview={false}
-                onIdDictPrepared={(idD) => {
-                  idDict[ww.id] = idD
-                }}
-                onElClick={(elId) => {
-                  if (clickEvents[ww.id][elId] !== undefined) {
-                    clickEvents[ww.id][elId]();
-                  }
-                }}
-                editMode={editMode}
-                widgetWidth={'100%'}
-                widgetHeight={'100%'}
-                widgetX={0}
-                widgetY={0}
-                gui={guis[ww.id]}
-              />
-              </Rnd>
-            )
+          {widgets.map((ww, index) => {
+            if (editMode === true) {
+              return (
+                <Rnd
+                  default={{x: ww.x, y: ww.y, width: ww.width === null ? 150 : ww.width, height: ww.height === null ? 150 : ww.height}}
+                  onDragStop={(e, d) => {
+                    ww.x = d.x;
+                    ww.y = d.y;
+                    let requestOptions = {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        token: token,
+                      },
+                      body: JSON.stringify({
+                        widgetWorkerId: ww.id,
+                        x: d.x,
+                        y: d.y,
+                        width: ww.width,
+                        height: ww.height
+                      }),
+                      redirect: 'follow',
+                    }
+                    fetch(serverRoot + '/bot/update_widget_worker', requestOptions)
+                      .then((response) => response.json())
+                      .then((result) => {})
+                      .catch(ex => console.log(ex));;
+                  }}
+                  onResizeStop={(e, direction, ref, delta, position) => {
+                    ww.width = Number(ref.style.width.substring(0, ref.style.width.length - 2));
+                    ww.height = Number(ref.style.height.substring(0, ref.style.height.length - 2));
+                    let requestOptions = {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        token: token,
+                      },
+                      body: JSON.stringify({
+                        widgetWorkerId: ww.id,
+                        x: ww.x,
+                        y: ww.y,
+                        width: Number(ref.style.width.substring(0, ref.style.width.length - 2)),
+                        height: Number(ref.style.height.substring(0, ref.style.height.length - 2))
+                      }),
+                      redirect: 'follow',
+                    }
+                    fetch(serverRoot + '/bot/update_widget_worker', requestOptions)
+                      .then((response) => response.json())
+                      .then((result) => {})
+                      .catch(ex => console.log(ex));;
+                  }}
+                >
+                <BotContainer step={index}
+                  realIdPrefix={'widget_' + ww.id + '_element_'}
+                  widgetWorkerId={ww.id}
+                  isPreview={false}
+                  onIdDictPrepared={(idD) => {
+                    idDict[ww.id] = idD
+                  }}
+                  onElClick={(elId) => {
+                    if (clickEvents[ww.id][elId] !== undefined) {
+                      clickEvents[ww.id][elId]();
+                    }
+                  }}
+                  editMode={editMode}
+                  widgetWidth={'100%'}
+                  widgetHeight={'100%'}
+                  widgetX={0}
+                  widgetY={0}
+                  gui={guis[ww.id]}
+                />
+                </Rnd>
+              )
+            }
+            else {
+              return (
+                <BotContainer step={index}
+                  realIdPrefix={'widget_' + ww.id + '_element_'}
+                  widgetWorkerId={ww.id}
+                  isPreview={false}
+                  onIdDictPrepared={(idD) => {
+                    idDict[ww.id] = idD
+                  }}
+                  onElClick={(elId) => {
+                    if (clickEvents[ww.id][elId] !== undefined) {
+                      clickEvents[ww.id][elId]();
+                    }
+                  }}
+                  editMode={editMode}
+                  widgetWidth={ww.width === null ? 150 : ww.width}
+                  widgetHeight={ww.height === null ? 150 : ww.height}
+                  widgetX={ww.x}
+                  widgetY={ww.y}
+                  gui={guis[ww.id]}
+                />
+              );
+            }
           })}
           <div id="ghostpane" style={{ display: 'none' }}></div>
         </div>

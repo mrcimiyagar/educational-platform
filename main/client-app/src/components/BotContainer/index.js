@@ -1,4 +1,4 @@
-import { Card, Typography } from "@material-ui/core";
+import { Card, Grow, Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import './index.css';
 
@@ -90,12 +90,16 @@ export default function BotContainer(props) {
 
     props.onIdDictPrepared(idDict)
 
-    return (<div id={"widget-pane-" + props.widgetWorkerId + (props.isPreview ? '-preview' : '')}
-    style={{width: props.widgetWidth, height: props.widgetHeight, position: 'absolute', left: props.widgetX, top: props.widgetY}}>
-    <div style={{width: '100%', height: '100%', position: 'relative'}}>
-      {
-        [fullGui]
-      }
-    </div>
-  </div>);
+    return (
+      <Grow in={props.gui !== undefined} {...{ timeout: props.step * 500 }}>
+        <div id={"widget-pane-" + props.widgetWorkerId + (props.isPreview ? '-preview' : '')}
+          style={{width: props.widgetWidth, height: props.widgetHeight, position: 'absolute', left: props.widgetX, top: props.widgetY}}>
+          <div style={{width: '100%', height: '100%', position: 'relative'}}>
+            {
+              [fullGui]
+            }
+          </div>
+        </div>
+      </Grow>
+    );
 }
