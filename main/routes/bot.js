@@ -1523,6 +1523,9 @@ router.post('/update_widget_worker', jsonParser, async function (req, res) {
     widgetWorker.width = req.body.width;
     widgetWorker.height = req.body.height;
     await widgetWorker.save();
+
+    require('../server').pushTo('room-' + widgetWorker.roomId, 'widget_worker_moved', widgetWorker);
+
     res.send({ status: 'success' });
   })
 })

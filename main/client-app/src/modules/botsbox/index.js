@@ -196,6 +196,18 @@ export default function BotsBox(props) {
       } catch(ex) {console.log(ex);}
     }, 1000);
 
+    unregisterEvent('widget-worker-moved');
+    registerEvent('widget_worker_moved', (ww) => {
+      for (let i = 0; i < widgets.length; i++) {
+        if (widgets.id === ww.id) {
+          widgets[i] = ww;
+          forceUpdate();
+          break;
+        }
+      }
+    });
+
+    unregisterEvent('gui');
     registerEvent('gui', ({type, gui: data, widgetId, roomId, widgetWorkerId}) => {
       if (type === 'init') {
         guis[widgetWorkerId] = data;
