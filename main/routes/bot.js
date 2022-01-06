@@ -1070,9 +1070,8 @@ router.post('/gui', jsonParser, async function (req, res) {
 
 router.post('/notify_gui_base_activated', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-      let widget;
+      let widget, widgetWorker;
       if (req.body.preview === false) {
-        let widgetWorker = undefined;
         if (membership !== undefined && membership !== null) {
           widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId, roomId: membership.roomId}});
           widget = await sw.Widget.findOne({where: {id: widgetWorker.widgetId}});
