@@ -1092,7 +1092,8 @@ router.post('/notify_gui_base_activated', jsonParser, async function (req, res) 
         widgetId: widget.id,
         userId: user.id,
         roomId: (membership === null || membership === undefined) ? undefined : membership.roomId,
-        widgetWorkerId: widgetWorker === undefined ? undefined : widgetWorker.id
+        widgetWorkerId: widgetWorker === undefined ? undefined : widgetWorker.id,
+        preview: req.body.preview
       });
       res.send({ status: 'success' });
   })
