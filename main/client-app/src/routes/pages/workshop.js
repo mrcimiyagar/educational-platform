@@ -175,7 +175,8 @@ function Workshop(props) {
               'token': token
             },
             body: JSON.stringify({
-              widgetId: currentWidgetId
+              widgetId: currentWidgetId,
+              preview: true,
             }),
             redirect: 'follow'
           }

@@ -211,6 +211,7 @@ export default function BotsBox(props) {
           },
           body: JSON.stringify({
             widgetWorkerId: widgetWorkerId,
+            preview: false,
             roomId: roomId
           }),
           redirect: 'follow'

@@ -1070,7 +1070,17 @@ router.post('/gui', jsonParser, async function (req, res) {
 
 router.post('/notify_gui_base_activated', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-      let widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
+      let widget;
+      if (req.body.preview === false) {
+        let widgetWorker = undefined;
+        if (membership !== undefined && membership !== null) {
+          widgetWorker = await sw.WidgetWorker.findOne({where: {widgetId: widget.id, roomId: membership.roomId}});
+          widget = await sw.Widget.findOne({where: {id: widgetWorker.widgetId}});
+        }
+      }
+      else {
+        widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
+      }
       if (widget === null) {
         res.send({
           status: 'error',
@@ -1078,10 +1088,6 @@ router.post('/notify_gui_base_activated', jsonParser, async function (req, res) 
           message: 'access denied.'
         });
         return;
-      }
-      let widgetWorker = undefined;
-      if (membership !== undefined && membership !== null) {
-        widgetWorker = await sw.WidgetWorker.findOne({where: {widgetId: widget.id, roomId: membership.roomId}});
       }
       require('../server').signlePushTo(widget.botId, 'gui_initialized', {
         widgetId: widget.id,
