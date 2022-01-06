@@ -198,10 +198,18 @@ export default function BotsBox(props) {
 
     unregisterEvent('widget_worker_added');
     registerEvent('widget_worker_added', (ww) => {
-      
-      //widgets.push(ww);
-      forceUpdate();
-      requestInitGui(ww.id, false);
+      let found = false;
+      for (let i = 0; i < widgets.length; i++) {
+        if (widgets[i].id === ww.id) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        widgets.push(ww);
+        forceUpdate();
+        requestInitGui(ww.id, false);
+      }
     });
 
     unregisterEvent('widget_worker_removed');
