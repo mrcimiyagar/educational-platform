@@ -944,7 +944,7 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
         return;
       }
       let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId}});
-      let widget = await sw.Widget.findOne({where: {id: widgetWorkerId.widgetId}});
+      let widget = await sw.Widget.findOne({where: {id: widgetWorker.widgetId}});
       if (widget === null) {
         res.send({
           status: 'error',
