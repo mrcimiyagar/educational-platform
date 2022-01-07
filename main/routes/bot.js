@@ -1456,10 +1456,10 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
       widgetId: widget.id,
       roomId: membership.roomId,
       bossId: user.id,
-      x: Math.floor(req.body.x),
-      y: Math.floor(req.body.y),
-      width: Math.floor(req.body.width),
-      height: Math.floor(req.body.height)
+      x: Math.floor(Number(req.body.x)),
+      y: Math.floor(Number(req.body.y)),
+      width: Math.floor(Number(req.body.width)),
+      height: Math.floor(Number(req.body.height))
     });
     
     require('../server').pushToExcept('room_' + widgetWorker.roomId, 'widget_worker_added', widgetWorker, user.id);
@@ -1527,10 +1527,10 @@ router.post('/update_widget_worker', jsonParser, async function (req, res) {
       });
       return;
     }
-    widgetWorker.x = req.body.x;
-    widgetWorker.y = req.body.y;
-    widgetWorker.width = req.body.width;
-    widgetWorker.height = req.body.height;
+    widgetWorker.x = Math.floor(Number(req.body.x)),
+    widgetWorker.y = Math.floor(Number(req.body.y)),
+    widgetWorker.width = Math.floor(Number(req.body.width)),
+    widgetWorker.height = Math.floor(Number(req.body.height));
     await widgetWorker.save();
 
     require('../server').pushToExcept('room_' + widgetWorker.roomId, 'widget_worker_moved', widgetWorker, user.id);
