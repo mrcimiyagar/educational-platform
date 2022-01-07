@@ -1456,10 +1456,10 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
       widgetId: widget.id,
       roomId: membership.roomId,
       bossId: user.id,
-      x: req.body.x,
-      y: req.body.y,
-      width: req.body.width,
-      height: req.body.height
+      x: Math.floor(req.body.x),
+      y: Math.floor(req.body.y),
+      width: Math.floor(req.body.width),
+      height: Math.floor(req.body.height)
     });
     
     require('../server').pushToExcept('room_' + widgetWorker.roomId, 'widget_worker_added', widgetWorker, user.id);
