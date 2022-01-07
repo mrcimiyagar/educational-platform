@@ -3,6 +3,7 @@ import {
   createTheme,
   Fab,
   Grow,
+  Paper,
   Slide,
   SwipeableDrawer,
   ThemeProvider,
@@ -474,6 +475,7 @@ export default function BotsBox(props) {
                   widgetY={0}
                   gui={guis[ww.id]}
                 />
+                <Paper style={{width: 32, height: 32, position: 'fixed', right: -16, bottom: -16}}/>
                 </Rnd>
               )
             }
