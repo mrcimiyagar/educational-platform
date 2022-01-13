@@ -931,7 +931,7 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
         widgetId: widget.id,
         userId: user.id,
         preview: true
-      });
+      }, true);
       res.send({ status: 'success' });
     }
     else {
@@ -969,7 +969,7 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
         userId: user.id,
         widgetWorkerId: widgetWorker.id,
         preview: false
-      });
+      }, true);
       res.send({ status: 'success' });
     }
   })
@@ -1094,7 +1094,7 @@ router.post('/notify_gui_base_activated', jsonParser, async function (req, res) 
         roomId: (membership === null || membership === undefined) ? undefined : membership.roomId,
         widgetWorkerId: widgetWorker === undefined ? undefined : widgetWorker.id,
         preview: req.body.preview
-      });
+      }, true);
       res.send({ status: 'success' });
   })
 })
