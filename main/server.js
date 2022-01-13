@@ -219,7 +219,13 @@ models.setup().then(() => {
                     });
                 }
             },
-            'signlePushTo': (userId, key, data) => {
+            'signlePushTo': (userId, key, data, instantly) => {
+                if (instantly === true) {
+                    if (sockets[userId] !== undefined) {
+                        sockets[userId].emit(key, data);
+                    }
+                    return;
+                }
                 let d = JSON.stringify(data);
                 if (d.length > 100) d = d.substr(0, 100);
                 if (notifs[userId] === undefined) notifs[userId] = [];

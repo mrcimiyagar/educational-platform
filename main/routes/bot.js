@@ -1008,7 +1008,7 @@ router.post('/gui', jsonParser, async function (req, res) {
         type: req.body.type,
         gui: req.body.gui,
         widgetId: widget.id,
-      });
+      }, true);
       res.send({ status: 'success' });
   }
   else {
@@ -1042,11 +1042,11 @@ router.post('/gui', jsonParser, async function (req, res) {
           status: 'error',
           errorCode: 'e0005',
           message: 'access denied.',
-        })
-        return
+        });
+        return;
       }
-      let isPacketGlobal = req.body.globalGui
-      let gui = req.body.gui
+      let isPacketGlobal = req.body.globalGui;
+      let gui = req.body.gui;
       if (isPacketGlobal) {
         require('../server').pushTo('room-' + workership.roomId, 'gui', {
           type: req.body.type,
@@ -1054,7 +1054,7 @@ router.post('/gui', jsonParser, async function (req, res) {
           roomId: workership.roomId,
           widgetId: widget.id,
           widgetWorkerId: widgetWorker.id
-        })
+        }, true);
       } else {
         require('../server').signlePushTo(targetUserId, 'gui', {
           type: req.body.type,
@@ -1062,9 +1062,9 @@ router.post('/gui', jsonParser, async function (req, res) {
           roomId: workership.roomId,
           widgetId: widget.id,
           widgetWorkerId: widgetWorker.id
-        })
+        }, true);
       }
-      res.send({ status: 'success' })
+      res.send({ status: 'success' });
   }
 })
 
