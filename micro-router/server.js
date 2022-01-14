@@ -67,6 +67,7 @@ let serv = https.createServer({
 
 serv.on('upgrade', function (req, socket, head) {
   if (req.headers.host === 'backend.society.kasperian.cloud') {
+    console.log('connecting to main websocket.');
     proxy.ws(req, socket, { target: 'ws://localhost:2001' }, e => {})
   }
   else if (req.headers.host === 'whiteboard.society.kasperian.cloud') {
