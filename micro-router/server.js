@@ -63,7 +63,7 @@ let serv = https.createServer({
 })
 
 serv.on('upgrade', function (req, socket, head) {
-  if (req.headers.host === 'society.kasperian.cloud') {
+  if (req.headers.host === 'kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:2001' }, e => {})
   }
   else if (req.headers.host === 'whiteboard.society.kasperian.cloud') {

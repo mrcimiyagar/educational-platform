@@ -186,7 +186,7 @@ export const ConnectToIo = (t, onSocketAuth, force) => {
       return
     }
   }
-  socket = io(pathConfig.mainBackend)
+  socket = io('https://kasperian.cloud')
   if (pingTimer !== undefined) {
     try {clearInterval(pingTimer);} catch (ex) {console.log(ex);}
   }
