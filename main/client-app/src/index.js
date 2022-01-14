@@ -236,18 +236,18 @@ let AppContainer = (props) => {
       },
       () => {
         pathConfig = {
-          mainBackend: 'https://backend.kasperian.cloud',
+          mainBackend: 'https://society.kasperian.cloud',
           mainFrontend: 'https://society.kasperian.cloud',
-          confClient: 'https://conf.society.kasperian.cloud',
-          audioPlayer: 'https://audioplayer.society.kasperian.cloud',
-          waveSurferBox: 'https://wavesurferbox.society.kasperian.cloud',
-          whiteBoard: 'https://whiteboard.society.kasperian.cloud',
-          sharedNotes: 'https://sharednotes.society.kasperian.cloud',
-          videoConfVideo: 'https://confvideo.society.kasperian.cloud',
-          videoConfAudio: 'https://confaudio.society.kasperian.cloud',
-          videoConfScreen: 'https://confscreen.society.kasperian.cloud',
-          taskBoard: 'https://taskboard.society.kasperian.cloud',
-          codeServer: 'https://coder.society.kasperian.cloud',
+          confClient: 'https://conf.kasperian.cloud',
+          audioPlayer: 'https://audioplayer.kasperian.cloud',
+          waveSurferBox: 'https://wavesurferbox.kasperian.cloud',
+          whiteBoard: 'https://whiteboard.kasperian.cloud',
+          sharedNotes: 'https://sharednotes.kasperian.cloud',
+          videoConfVideo: 'https://confvideo.kasperian.cloud',
+          videoConfAudio: 'https://confaudio.kasperian.cloud',
+          videoConfScreen: 'https://confscreen.kasperian.cloud',
+          taskBoard: 'https://taskboard.kasperian.cloud',
+          codeServer: 'https://coder.kasperian.cloud',
           mainWebsocket: 'wss://society.kasperian.cloud'
         }
         setup()
