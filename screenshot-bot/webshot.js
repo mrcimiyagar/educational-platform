@@ -16,7 +16,7 @@ const screen = {
 
   let shotter = async () => {
     
-    fetch('https://kaspersoft.cloud/fetch_rooms', {
+    fetch('https://kasperian.cloud/fetch_rooms', {
       method: 'post',
       headers: { 'Content-Type': 'application/json', token: 'admin' },
     })
@@ -24,7 +24,7 @@ const screen = {
     .then(async result => {
       if (result.status === 'success') {
         result.rooms.forEach(async room => {
-          let p = `https://kaspersoft.cloud/app/conf?room_id=${room.id}&is_guest=true&guest_token=admin`;
+          let p = `https://kasperian.cloud/app/conf?room_id=${room.id}&is_guest=true&guest_token=admin`;
           console.info(p);
           try {
             await driver.get(p);

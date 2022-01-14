@@ -12,7 +12,7 @@ import { serverRoot } from '../../util/Utils';
 import EmptySign from '../EmptySign';
 import HomeToolbar from '../HomeToolbar';
 import SpacesSearchbar from '../SpacesSearchbar';
-import MainWallpaper from '../../images/workshop-wallpaper.jpg';
+import MainWallpaper from '../../images/home-wallpaper.jpg';
 
 const useStyles = makeStyles((theme) => ({
   imageList: {
@@ -48,7 +48,7 @@ export default function SpacesGrid(props) {
   useEffect(() => {
     let spacesSearchBarContainer = document.getElementById('spacesSearchBarContainer');
     if (spacesSearchBarContainer !== null) {
-      spacesSearchBarContainer.style.transform = (inTheGame && visibilityAllowed) ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(-100px)';
+      spacesSearchBarContainer.style.transform = (inTheGame && visibilityAllowed) ? `translateX(${isDesktop() ? 'calc(-50% - 125px)' : '-50%'}) translateY(0)` : `translateX(${isDesktop() ? 'calc(-50% - 125px)' : '-50%'}) translateY(-100px)`;
     }
   }, [inTheGame, visibilityAllowed]);
 
@@ -65,9 +65,9 @@ export default function SpacesGrid(props) {
       function () {
         var st = spacesSearchBarScroller.scrollTop
         if (st > lastScrollTop) {
-          spacesSearchBarContainer.style.transform = 'translateX(-50%) translateY(-100px)'
+          spacesSearchBarContainer.style.transform = `translateX(${isDesktop() ? 'calc(-50% - 125px)' : '-50%'}) translateY(-100px)`
         } else {
-          spacesSearchBarContainer.style.transform = 'translateX(-50%) translateY(0)'
+          spacesSearchBarContainer.style.transform = `translateX(${isDesktop() ? 'calc(-50% - 125px)' : '-50%'}) translateY(0)`
         }
         lastScrollTop = st <= 0 ? 0 : st
       },
@@ -108,7 +108,7 @@ export default function SpacesGrid(props) {
 
   return (
     <div id="spacesSearchBarScroller" style={{overflow: 'auto', position: 'fixed', left: 0, top: 0, right: 0, bottom: 0}}>
-      <SpacesSearchbar id="spacesSearchBarContainer" setDrawerOpen={props.setDrawerOpen}  style={{transform: 'translateX(-50%) translateY(-100px)', transition: 'transform .5s', width: '75%',
+      <SpacesSearchbar id="spacesSearchBarContainer" setDrawerOpen={props.setDrawerOpen}  style={{transform: `translateX(${isDesktop() ? 'calc(-50% - 125px)' : '-50%'}) translateY(-100px)`, transition: 'transform .5s', width: '75%',
             maxWidth: 300, position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}/>
       <div style={{width: '100%', position: 'fixed', height: isDesktop() ? '100%' : 'calc(100% - 64px)', backdropFilter: 'blur(15px)', backgroundColor: colors.accentDark, opacity: (inTheGame && visibilityAllowed) ? 1 : 0, transition: 'opacity 1s'}}/>
       <ImageList rowHeight={266} cols={Math.max(1, Math.floor((window.innerWidth - 112 - 240) / 200))} gap={1} className={classes.imageList} style={{zIndex: 2}}>

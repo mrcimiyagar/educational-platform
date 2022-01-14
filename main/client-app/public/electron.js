@@ -21,8 +21,8 @@ function createWindow() {
     height: 720,
     title: "ابر آسمان"
   });
-  mainWindow.loadURL('https://kaspersoft.cloud');
-  //mainWindow.loadURL(isDev ? 'https://kaspersoft.cloud' : `file://${path.join(__dirname, '../build/index.html')}`);
+  mainWindow.loadURL('https://kasperian.cloud');
+  //mainWindow.loadURL(isDev ? 'https://kasperian.cloud' : `file://${path.join(__dirname, '../build/index.html')}`);
   mainWindow.on('closed', function () {
     mainWindow = null
   })

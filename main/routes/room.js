@@ -1067,7 +1067,7 @@ router.get('/generate_invite_link', jsonParser, async function (req, res) {
       },
       redirect: 'follow',
     }
-    fetch('https://config.kaspersoft.cloud', requestOptions)
+    fetch('https://config.kasperian.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
         res.send({

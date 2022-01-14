@@ -18,79 +18,73 @@ let serv = https.createServer({
   key: fs.readFileSync('server.key')
 }, function(req, res) {
 
-  if (req.headers.host === 'kaspersoft.cloud') {
+  if (req.headers.host === 'society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:2001' }, e => {})
   }
-  else if (req.headers.host === 'code.kaspersoft.cloud') {
-    proxy.web(req, res, { target: 'http://localhost:8100' }, e => {})
-  }
-  else if (req.headers.host === 'confclient.kaspersoft.cloud') {
+  else if (req.headers.host === 'confclient.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:1013' }, e => {})
   }
-  else if (req.headers.host === 'taskboardbackend.kaspersoft.cloud') {
+  else if (req.headers.host === 'taskboardbackend.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:1337' }, e => {})
   }
-  else if (req.headers.host === 'taskboard.kaspersoft.cloud') {
+  else if (req.headers.host === 'taskboard.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:3000' }, e => {})
   }
-  else if (req.headers.host === 'backend.kaspersoft.cloud') {
+  else if (req.headers.host === 'backend.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:2001' }, e => {})
   }
-  else if (req.headers.host === 'confvideo.kaspersoft.cloud') {
+  else if (req.headers.host === 'confvideo.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:1010' }, e => {})
   }
-  else if (req.headers.host === 'confaudio.kaspersoft.cloud') {
+  else if (req.headers.host === 'confaudio.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:1011' }, e => {})
   }
-  else if (req.headers.host === 'confscreen.kaspersoft.cloud') {
+  else if (req.headers.host === 'confscreen.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:1012' }, e => {})
   }
-  else if (req.headers.host === 'audioplayer.kaspersoft.cloud') {
+  else if (req.headers.host === 'audioplayer.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8085' }, e => {})
   }
-  else if (req.headers.host === 'wavesurferbox.kaspersoft.cloud') {
+  else if (req.headers.host === 'wavesurferbox.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8084' }, e => {})
   }
-  else if (req.headers.host === 'conf.kaspersoft.cloud') {
+  else if (req.headers.host === 'conf.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8082' }, e => {})
   }
-  else if (req.headers.host === 'whiteboard.kaspersoft.cloud') {
+  else if (req.headers.host === 'whiteboard.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8081' }, e => {})
   }
-  else if (req.headers.host === 'sharednotes.kaspersoft.cloud') {
+  else if (req.headers.host === 'sharednotes.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:9001' }, e => {})
   }
-  else if (req.headers.host === 'config.kaspersoft.cloud') {
+  else if (req.headers.host === 'config.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8080' }, e => {})
   }
-  else if (req.headers.host === 'coder.kaspersoft.cloud') {
+  else if (req.headers.host === 'coder.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:10000' }, e => {})
   }
 })
 
 serv.on('upgrade', function (req, socket, head) {
-  if (req.headers.host === 'kaspersoft.cloud') {
+  if (req.headers.host === 'society.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:2001' }, e => {})
   }
-  else if (req.headers.host === 'whiteboard.kaspersoft.cloud') {
+  else if (req.headers.host === 'whiteboard.society.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:8081' }, e => {})
   }
-  else if (req.headers.host === 'code.kaspersoft.cloud') {
+  else if (req.headers.host === 'code.society.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:8100' }, e => {})
   }
-  else if (req.headers.host === 'webinar.kaspersoft.cloud') {
+  else if (req.headers.host === 'webinar.society.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:1001'}, e => {})
   }
-  else if (req.headers.host === 'videoconference.kaspersoft.cloud') {
+  else if (req.headers.host === 'videoconference.society.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:1010'}, e => {})
   }
-  else if (req.headers.host === 'whiteboard1.kaspersoft.cloud') {
-    proxy.ws(req, socket, { target: 'ws://localhost:1000'}, e => {})
-  }
-  else if (req.headers.host === 'taskboardbackend.kaspersoft.cloud') {
+  else if (req.headers.host === 'taskboardbackend.society.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:1337'}, e => {})
   }
-  else if (req.headers.host === 'coder.kaspersoft.cloud') {
+  else if (req.headers.host === 'coder.society.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:10000'}, e => {})
   }
 });

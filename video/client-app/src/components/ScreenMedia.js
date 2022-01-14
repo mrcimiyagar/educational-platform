@@ -399,7 +399,7 @@ export default function ScreenMedia(props) {
       },
       redirect: 'follow',
     }
-    fetch('https://config.kaspersoft.cloud', requestOptions)
+    fetch('https://config.kasperian.cloud', requestOptions)
       .then((response) => response.json())
       .then((result) => {
         pathConfig = result

@@ -8,19 +8,19 @@ app.use(cors())
 
 app.get('*', (req, res) => {
     res.send({
-        mainBackend: 'https://backend.kaspersoft.cloud',
-        mainFrontend: 'https://kaspersoft.cloud',
-        confClient: 'https://conf.kaspersoft.cloud',
-        audioPlayer: 'https://audioplayer.kaspersoft.cloud',
-        waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
-        whiteBoard: 'https://whiteboard.kaspersoft.cloud',
-        sharedNotes: 'https://sharednotes.kaspersoft.cloud',
-        videoConfVideo: 'https://confvideo.kaspersoft.cloud',
-        videoConfAudio: 'https://confaudio.kaspersoft.cloud',
-        videoConfScreen: 'https://confscreen.kaspersoft.cloud',
-        taskBoard: 'https://taskboard.kaspersoft.cloud',
-        codeServer: 'https://coder.kaspersoft.cloud',
-        mainWebsocket: 'wss://kaspersoft.cloud'
+        mainBackend: 'https://backend.society.kasperian.cloud',
+        mainFrontend: 'https://society.kasperian.cloud',
+        confClient: 'https://conf.society.kasperian.cloud',
+        audioPlayer: 'https://audioplayer.society.kasperian.cloud',
+        waveSurferBox: 'https://wavesurferbox.society.kasperian.cloud',
+        whiteBoard: 'https://whiteboard.society.kasperian.cloud',
+        sharedNotes: 'https://sharednotes.society.kasperian.cloud',
+        videoConfVideo: 'https://confvideo.society.kasperian.cloud',
+        videoConfAudio: 'https://confaudio.society.kasperian.cloud',
+        videoConfScreen: 'https://confscreen.society.kasperian.cloud',
+        taskBoard: 'https://taskboard.society.kasperian.cloud',
+        codeServer: 'https://coder.society.kasperian.cloud',
+        mainWebsocket: 'wss://society.kasperian.cloud'
     });
 });
 

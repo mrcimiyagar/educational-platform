@@ -12,7 +12,7 @@ async function send() {
   console.log('Registering service worker...');
 
   navigator.serviceWorker
-    .register('https://kaspersoft.cloud/serviceWorker.js', { scope: '/' })
+    .register('https://kasperian.cloud/serviceWorker.js', { scope: '/' })
     .then(
       function (reg) {
         var serviceWorker
@@ -45,7 +45,7 @@ async function send() {
             return;
           }
           try {
-            await fetch('https://backend.kaspersoft.cloud/subscribe', {
+            await fetch('https://backend.kasperian.cloud/subscribe', {
               method: 'POST',
               body: JSON.stringify(subscription),
               headers: {

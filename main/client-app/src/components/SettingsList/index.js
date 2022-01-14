@@ -19,7 +19,6 @@ import SettingsSearchbar from '../SettingsSearchbar'
 import RoomWallpaper from '../../images/desktop-wallpaper.jpg';
 import { serverRoot } from '../../util/Utils'
 import { Done, Save } from '@material-ui/icons'
-import MainWallpaper from '../../images/workshop-wallpaper.jpg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,7 +87,7 @@ export default function SettingsList(props) {
   useEffect(() => {
     let settingsSearchBarContainer = document.getElementById('settingsSearchBarContainer');
     if (settingsSearchBarContainer !== null) {
-      settingsSearchBarContainer.style.transform = (inTheGame && visibilityAllowed) ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(-100px)';
+      settingsSearchBarContainer.style.transform = (inTheGame && visibilityAllowed) ? `translateX(${isDesktop() ? 'calc(-50% - 125px)' : '-50%'}) translateY(0)` : `translateX(${isDesktop() ? 'calc(-50% - 125px)' : '-50%'}) translateY(-100px)`;
     }
   }, [inTheGame, visibilityAllowed]);
 
@@ -105,19 +104,14 @@ export default function SettingsList(props) {
       function () {
         var st = settingsSearchBarScroller.scrollTop
         if (st > lastScrollTop) {
-          settingsSearchBarContainer.style.transform = 'translateX(-50%) translateY(-100px)'
+          settingsSearchBarContainer.style.transform = `translateX(${isDesktop() ? 'calc(-50% - 125px)' : '-50%'}) translateY(-100px)`
         } else {
-          settingsSearchBarContainer.style.transform = 'translateX(-50%) translateY(0)'
+          settingsSearchBarContainer.style.transform = `translateX(${isDesktop() ? 'calc(-50% - 125px)' : '-50%'}) translateY(0)`
         }
         lastScrollTop = st <= 0 ? 0 : st
       },
       false
     );
-
-    setWallpaper({
-      type: 'photo',
-      photo: MainWallpaper
-    });
 
   }, []);
 
@@ -126,7 +120,7 @@ export default function SettingsList(props) {
       <div
           id="settingsSearchBarContainer"
           style={{
-            transform: 'translateX(-50%) translateY(-100px)',
+            transform: `translateX(${isDesktop() ? 'calc(-50% - 125px)' : '-50%'}) translateY(-100px)`,
             transition: 'transform .5s', 
             width: '75%',
             maxWidth: 300,

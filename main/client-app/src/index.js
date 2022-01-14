@@ -168,7 +168,7 @@ let loading = (
 
 export let display2, setDisplay2
 export function ifServerOnline(ifOnline, ifOffline) {
-  fetch('https://kaspersoft.cloud', { mode: 'no-cors' })
+  fetch('https://kasperian.cloud', { mode: 'no-cors' })
     .then((r) => {
       ifOnline()
     })
@@ -223,7 +223,7 @@ let AppContainer = (props) => {
           },
           redirect: 'follow',
         }
-        fetch('https://config.kaspersoft.cloud', requestOptions)
+        fetch('https://config.kasperian.cloud', requestOptions)
           .then((response) => response.json())
           .then((result) => {
             pathConfig = result
@@ -236,18 +236,18 @@ let AppContainer = (props) => {
       },
       () => {
         pathConfig = {
-          mainBackend: 'https://backend.kaspersoft.cloud',
-          mainFrontend: 'https://kaspersoft.cloud',
-          confClient: 'https://confclient.kaspersoft.cloud',
-          audioPlayer: 'https://audioplayer.kaspersoft.cloud',
-          waveSurferBox: 'https://wavesurferbox.kaspersoft.cloud',
-          whiteBoard: 'https://whiteboard.kaspersoft.cloud',
-          sharedNotes: 'https://sharednotes.kaspersoft.cloud',
-          videoConfVideo: 'https://confvideo.kaspersoft.cloud',
-          videoConfAudio: 'https://confaudio.kaspersoft.cloud',
-          videoConfScreen: 'https://confscreen.kaspersoft.cloud',
-          taskBoard: 'https://taskboard.kaspersoft.cloud',
-          mainWebsocket: 'wss://kaspersoft.cloud',
+          mainBackend: 'https://backend.kasperian.cloud',
+          mainFrontend: 'https://kasperian.cloud',
+          confClient: 'https://confclient.kasperian.cloud',
+          audioPlayer: 'https://audioplayer.kasperian.cloud',
+          waveSurferBox: 'https://wavesurferbox.kasperian.cloud',
+          whiteBoard: 'https://whiteboard.kasperian.cloud',
+          sharedNotes: 'https://sharednotes.kasperian.cloud',
+          videoConfVideo: 'https://confvideo.kasperian.cloud',
+          videoConfAudio: 'https://confaudio.kasperian.cloud',
+          videoConfScreen: 'https://confscreen.kasperian.cloud',
+          taskBoard: 'https://taskboard.kasperian.cloud',
+          mainWebsocket: 'wss://kasperian.cloud',
         }
         setup()
         loaded = true

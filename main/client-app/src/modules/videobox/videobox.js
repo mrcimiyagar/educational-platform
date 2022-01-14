@@ -115,18 +115,18 @@ export let VideoBox = (props) => {
                   <div style={{display: screen ? 'none' : 'block', width: 'calc(100% - 64px - 84px - 84px)', backgroundColor: screen ? colors.primaryDark : colors.primary, height: '90%', position: 'absolute', transform: screen ? undefined : 'translate(-50%, -50%)', top: screen ? -8 : '50%', right: screen ? -12 : undefined, left: screen ? undefined : 'calc(50% - 128px)'}}>
                     <div style={{width: '100%', height: '100%', display: 'flex', position: 'absolute', left: 0, top: 0, right: 0, bottom: 0}}>
                       {actors.includes(myId) ?
-                        <iframe id ={'video-frame'} name="video-frame" src={'https://webinarvideo.kaspersoft.cloud/broadcast_video.html'} allow={'microphone; camera'}
+                        <iframe id ={'video-frame'} name="video-frame" src={'https://webinarvideo.kasperian.cloud/broadcast_video.html'} allow={'microphone; camera'}
                           style={{display: store.getState().global.webinar.video === true ? 'block' : 'none', zIndex: 4000, width: '100%', height: '100%'}} frameBorder="0"></iframe> :
-                        <iframe id ={'video-frame'} name="video-frame" src={'https://webinarvideo.kaspersoft.cloud/watch_video.html'} allow={'microphone; camera'}
+                        <iframe id ={'video-frame'} name="video-frame" src={'https://webinarvideo.kasperian.cloud/watch_video.html'} allow={'microphone; camera'}
                           style={{display: store.getState().global.webinar.video === true ? 'block' : 'none', zIndex: 4000, width: '100%', height: '100%'}} frameBorder="0"></iframe>
                       }
                     </div>
                   </div>
                   <div style={{width: 'calc(100% - 64px - 84px - 84px)', height: '90%', position: 'absolute', right: 248, top: 16, display: screen ? 'block' : 'none'}}>
                     {actors.includes(myId) ?
-                      <iframe id ={'screen-frame'} name="screen-frame" src={'https://webinarscreen.kaspersoft.cloud/broadcast_screen.html'} allow={'microphone; camera'}
+                      <iframe id ={'screen-frame'} name="screen-frame" src={'https://webinarscreen.kasperian.cloud/broadcast_screen.html'} allow={'microphone; camera'}
                         style={{display: screen === true ? 'block' : 'none', width: '100%', height: '100%', position: 'absolute', left: 0, top: 0, right: 0, bottom: 0}} frameBorder="0"></iframe> :
-                      <iframe id ={'screen-frame'} name="screen-frame" src={'https://webinarscreen.kaspersoft.cloud/watch_screen.html'} allow={'microphone; camera'}
+                      <iframe id ={'screen-frame'} name="screen-frame" src={'https://webinarscreen.kasperian.cloud/watch_screen.html'} allow={'microphone; camera'}
                         style={{display: screen === true ? 'block' : 'none', width: '100%', height: '100%', position: 'absolute', left: 0, top: 0, right: 0, bottom: 0}} frameBorder="0"></iframe>
                     }
                   </div>
@@ -135,8 +135,8 @@ export let VideoBox = (props) => {
           </div>
           <div>
             {actors.includes(myId) ?
-              <iframe id ={'audio-frame'} name="audio-frame" src={'https://webinaraudio.kaspersoft.cloud/broadcast_audio.html'} allow={'microphone; camera'} frameBorder="0"></iframe> :
-              <iframe id ={'audio-frame'} name="audio-frame" src={'https://webinaraudio.kaspersoft.cloud/watch_audio.html'} allow={'microphone; camera'} frameBorder="0"></iframe>
+              <iframe id ={'audio-frame'} name="audio-frame" src={'https://webinaraudio.kasperian.cloud/broadcast_audio.html'} allow={'microphone; camera'} frameBorder="0"></iframe> :
+              <iframe id ={'audio-frame'} name="audio-frame" src={'https://webinaraudio.kasperian.cloud/watch_audio.html'} allow={'microphone; camera'} frameBorder="0"></iframe>
             }
           </div>
         </div>

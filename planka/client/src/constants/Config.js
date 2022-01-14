@@ -1,4 +1,4 @@
-const SERVER_BASE_URL = 'https://taskboardbackend.kaspersoft.cloud';
+const SERVER_BASE_URL = 'https://taskboardbackend.kasperian.cloud';
 
 const POSITION_GAP = 65535;
 

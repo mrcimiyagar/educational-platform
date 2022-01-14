@@ -10,7 +10,7 @@ import { setWallpaper } from '../..';
 import { colors } from '../../util/settings';
 import HomeToolbar from '../HomeToolbar';
 import NotifsList from '../NotifsList';
-import MainWallpaper from '../../images/workshop-wallpaper.jpg';
+import MainWallpaper from '../../images/home-wallpaper.jpg';
 import { inTheGame, isDesktop, isMobile, isTablet } from '../../App';
 
 function TabPanel(props) {
