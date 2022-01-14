@@ -118,10 +118,10 @@ export default function FilesGrid(props) {
         height: '100%',
       }}
     >
-      <div className={classes.root}>
+      <div className={classes.root} style={{height: '100%'}}>
         <Viewer
           zIndex={props.usedBy === 'presents' ? 1 : 99999}
-          style={{ position: 'fixed', left: 0, top: 0 }}
+          style={{ position: 'fixed', left: 0, top: 0, height: '100%' }}
           visible={photoViewerVisible}
           onClose={() => {
             setPhotoViewerVisible(false)
@@ -131,6 +131,7 @@ export default function FilesGrid(props) {
         <ImageList
           rowHeight={window.innerWidth / (cols + 1)}
           className={classes.imageList}
+          style={{height: '100%'}}
           cols={cols}
         >
           {props.files.map((file, index) => {
@@ -267,6 +268,7 @@ export default function FilesGrid(props) {
               </ImageListItem>
             )
           })}
+          <ImageListItem key={Math.random()} cols={cols} />
         </ImageList>
       </div>
     </div>

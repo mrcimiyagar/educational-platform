@@ -1125,16 +1125,20 @@ export default function RoomPage(props) {
                 axis={'x-reverse'}
                 index={fileMode}
                 onChangeIndex={handleChangeIndex}
+                style={{height: '100%'}}
               >
-                <div>
+                <div
+                style={{height: '100%'}}>
                   <FilesGrid
                     fileType={'photo'}
                     files={files.filter((f) => f.fileType === 'photo')}
                     setFiles={setFiles}
                     roomId={props.room_id}
+                    style={{height: '100%'}}
                   />
                 </div>
-                <div>
+                <div
+                style={{height: '100%'}}>
                   <FilesGrid
                     fileType={'audio'}
                     files={files.filter((f) => f.fileType === 'audio')}
@@ -1142,7 +1146,8 @@ export default function RoomPage(props) {
                     roomId={props.room_id}
                   />
                 </div>
-                <div>
+                <div
+                style={{height: '100%'}}>
                   <FilesGrid
                     fileType={'video'}
                     files={files.filter((f) => f.fileType === 'video')}
@@ -1150,7 +1155,8 @@ export default function RoomPage(props) {
                     roomId={props.room_id}
                   />
                 </div>
-                <div>
+                <div
+                style={{height: '100%'}}>
                   <FilesGrid
                     fileType={'document'}
                     files={files.filter((f) => f.fileType === 'document')}
