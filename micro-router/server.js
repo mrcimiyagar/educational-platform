@@ -18,7 +18,7 @@ let serv = https.createServer({
   key: fs.readFileSync('server.key')
 }, function(req, res) {
 
-  if (req.headers.host === 'society.kasperian.cloud') {
+  if (req.headers.host === 'kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:2001' }, e => {})
   }
   else if (req.headers.host === 'backend.kasperian.cloud') {
