@@ -21,6 +21,9 @@ let serv = https.createServer({
   if (req.headers.host === 'society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:2001' }, e => {})
   }
+  else if (req.headers.host === 'backend.kaspersoft.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:2001' }, e => {})
+  }
   else if (req.headers.host === 'confclient.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:1013' }, e => {})
   }
