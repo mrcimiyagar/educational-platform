@@ -2,10 +2,9 @@ import { Fab, makeStyles, Typography } from '@material-ui/core';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import React, { useEffect } from "react";
-import { pathConfig } from '../..';
+import { pathConfig, setWallpaper } from '../..';
 import { db } from '../../App';
 import WhiteColorTextField from '../../components/WhiteColorTextField';
-import Wallpaper from '../../images/chat-wallpaper.jpg';
 import CloudIcon from '../../images/logo.png';
 import {
   colors,
@@ -17,6 +16,7 @@ import {
 import {
   serverRoot, setConfig
 } from '../../util/Utils';
+import Wallpaper from '../../images/login-wallpaper.jpg';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +41,7 @@ function Authentication(props) {
     }, 2000)
   }, [])
   useEffect(() => {
+    setWallpaper({type: 'photo', photo: Wallpaper});
     setTimeout(() => {
       if (registeredUsername !== undefined && registeredUsername !== null && registeredUsername !== '') {
         let loginUsername = document.getElementById('loginUsername');
@@ -54,7 +55,6 @@ function Authentication(props) {
   }, [register]);
   return (
     <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
-      <img style={{width: '100%', height: '100%', objectFit: 'cover', position: 'fixed'}} src={Wallpaper}/>
       {register ? 
         <div style={{borderRadius: 32, height: 'auto', paddingLeft: 32, paddingRight: 32, paddingtop: 16, paddingBottom: 16,
           backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)', textAlign: 'center', justifyContent: 'center',
