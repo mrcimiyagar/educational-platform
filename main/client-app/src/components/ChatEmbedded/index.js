@@ -914,7 +914,7 @@ export default function ChatEmbedded(props) {
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
         <ChatAppBar user={user} room={room} webcamOn={props.webcamOn} viewCallback={props.viewCallback}/>
-        <div style={{marginTop: (window.innerHeight - 144) - (showEmojiPad ? 350 : 0) + 'px', marginRight: -164, width: '100%', height: '100%', zIndex: 1000, 
+        <div style={{marginTop: (window.innerHeight + 40) - (showEmojiPad ? 350 : 0) + 'px', marginRight: -164, width: '100%', height: '100%', zIndex: 1000, 
           display: ((props.membership !== undefined && props.membership !== null && (props.membership.canAddMessage === true)) ||
                    (membership !== undefined && membership !== null && (membership.canAddMessage === true)))
            ? 'block' : 'none',

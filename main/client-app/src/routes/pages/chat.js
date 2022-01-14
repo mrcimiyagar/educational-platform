@@ -47,7 +47,6 @@ import $ from 'jquery'
 import MessageItem from '../../components/MessageItem'
 import store, { changeConferenceMode } from '../../redux/main'
 import './chat.css';
-import { StylesProvider } from '@material-ui/core'
 import CustomImageBox from '../../components/CustomImageBox'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -950,7 +949,7 @@ export default function Chat(props) {
       style={{ zIndex: 2501 }}
     >
       <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256, opacity: 0}}></div> 
-      <CustomImageBox borderRadius={isInMessenger() ? '0 0 0 24px' : 0}/>
+      <CustomImageBox src={ChatWallpaper} borderRadius={isInMessenger() ? '0 0 0 24px' : 0}/>
       <div
         style={{
           width: '100%',
