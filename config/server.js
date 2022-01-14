@@ -19,6 +19,7 @@ app.get('*', (req, res) => {
           videoConfAudio: 'https://confaudio.kasperian.cloud',
           videoConfScreen: 'https://confscreen.kasperian.cloud',
           taskBoard: 'https://taskboard.kasperian.cloud',
+          taskboardBackend: 'https://taskboardBackend.kasperian.cloud',
           codeServer: 'https://coder.kasperian.cloud',
           mainWebsocket: 'wss://society.kasperian.cloud'
     });

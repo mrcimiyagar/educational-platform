@@ -54,7 +54,7 @@ let serv = https.createServer({
   else if (req.headers.host === 'sharednotes.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:9001' }, e => {})
   }
-  else if (req.headers.host === 'config.cloud') {
+  else if (req.headers.host === 'config.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:8080' }, e => {})
   }
   else if (req.headers.host === 'coder.kasperian.cloud') {
@@ -72,8 +72,14 @@ serv.on('upgrade', function (req, socket, head) {
   else if (req.headers.host === 'webinar.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:1001'}, e => {})
   }
-  else if (req.headers.host === 'videoconference.kasperian.cloud') {
+  else if (req.headers.host === 'confvideo.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:1010'}, e => {})
+  }
+  else if (req.headers.host === 'confaudio.kasperian.cloud') {
+    proxy.ws(req, socket, { target: 'ws://localhost:1011'}, e => {})
+  }
+  else if (req.headers.host === 'confscreen.kasperian.cloud') {
+    proxy.ws(req, socket, { target: 'ws://localhost:1012'}, e => {})
   }
   else if (req.headers.host === 'taskboardbackend.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:1337'}, e => {})
