@@ -30,16 +30,16 @@ let registeredUsername = '';
 let registeredPassword = '';
 
 function Authentication(props) {
-  let [logoTop, setLogoTop] = React.useState(400)
-  let [opacity, setOpacity] = React.useState(0)
-  let [register, setRegister] = React.useState(false)
-  let classes = useStyles()
+  let [logoTop, setLogoTop] = React.useState(400);
+  let [opacity, setOpacity] = React.useState(0);
+  let [register, setRegister] = React.useState(false);
+  let classes = useStyles();
   useEffect(() => {
     setTimeout(() => {
       setLogoTop(100);
-      setOpacity(1)
-    }, 2000)
-  }, [])
+      setOpacity(1);
+    }, 2000);
+  }, []);
   useEffect(() => {
     setWallpaper({type: 'photo', photo: Wallpaper});
     setTimeout(() => {
@@ -57,7 +57,7 @@ function Authentication(props) {
     <div style={{overflow: 'auto', width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, zIndex: 1000}}>
       {register ? 
         <div style={{borderRadius: 32, height: 'auto', paddingLeft: 32, paddingRight: 32, paddingtop: 16, paddingBottom: 16,
-          backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)', textAlign: 'center', justifyContent: 'center',
+          background: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(10px)', textAlign: 'center', justifyContent: 'center',
           alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', top: '50%', width: '100%', maxWidth: 340,
           transform: 'translate(-50%, -50%)', left: '50%'}}>
           <div style={{width: '100%', height: 'auto'}}>
@@ -117,7 +117,8 @@ function Authentication(props) {
             </Fab>
           </div>
         </div> :
-        <div style={{borderRadius: 32, width: '100%', maxWidth: 340, textAlign: 'center', paddingLeft: 32, paddingRight: 32, paddingtop: 32, paddingBottom: 32, backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
+        <div style={{borderRadius: 32, width: '100%', maxWidth: 340, textAlign: 'center', paddingLeft: 32, paddingRight: 32,
+          paddingtop: 32, paddingBottom: 32, background: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(10px)', justifyContent: 'center', alignItems: 'center', opacity: opacity, transition: 'opacity 1s', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>
           <div style={{width: '100%', height: 'auto'}}>
             <img src={CloudIcon} style={{width: 100, height: 100, fill: '#fff', transition: 'top 1s', marginTop: -56}}/>
             <Typography variant={'h5'} style={{fontWeight: 'bold', width: '100%', textAlign: 'center', color: '#000', marginTop: 24, transition: 'top 1s'}}>به ابر آسمان خوش آمدید</Typography>
