@@ -8,7 +8,7 @@ app.use(cors())
 
 app.get('*', (req, res) => {
     res.send({
-        mainBackend: 'https://backend.society.kasperian.cloud',
+        mainBackend: 'https://backend.kasperian.cloud',
         mainFrontend: 'https://society.kasperian.cloud',
         confClient: 'https://conf.society.kasperian.cloud',
         audioPlayer: 'https://audioplayer.society.kasperian.cloud',

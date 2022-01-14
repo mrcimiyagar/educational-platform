@@ -30,9 +30,6 @@ let serv = https.createServer({
   else if (req.headers.host === 'taskboard.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:3000' }, e => {})
   }
-  else if (req.headers.host === 'backend.society.kasperian.cloud') {
-    proxy.web(req, res, { target: 'http://localhost:2001' }, e => {})
-  }
   else if (req.headers.host === 'confvideo.society.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:1010' }, e => {})
   }
