@@ -72,9 +72,6 @@ serv.on('upgrade', function (req, socket, head) {
   else if (req.headers.host === 'whiteboard.society.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:8081' }, e => {})
   }
-  else if (req.headers.host === 'code.society.kasperian.cloud') {
-    proxy.ws(req, socket, { target: 'ws://localhost:8100' }, e => {})
-  }
   else if (req.headers.host === 'webinar.society.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:1001'}, e => {})
   }
