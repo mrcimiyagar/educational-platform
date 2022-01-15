@@ -375,7 +375,7 @@ function App() {
         )
         let streamPack = findValueByPrefix(screens, presenter + '_screen')
         let streamPack2 = findValueByPrefix(videos, presenter + '_video')
-        if (streamPack !== undefined && extWebcam === true) {
+        if (streamPack !== undefined && extWebcam !== true) {
           document.getElementById('screenMax').srcObject = streamPack.value
           document.getElementById('screenMax').style.display = 'block';
         }
