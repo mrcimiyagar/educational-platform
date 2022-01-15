@@ -892,11 +892,11 @@ export default function ChatEmbedded(props) {
       >
         <CustomImageBox src={ChatWallpaper}
           style={{
-            width: '100%',
+            width: 450,
             height: '100%',
             position: 'fixed',
-            top: isDesktop() ? 0 : 0,
-            left: isDesktop() ? 96 : 0,
+            top: isDesktop() ? props.webcamOn ? 300 : 0 : 0,
+            left: isDesktop() ? undefined : 96,
             right: 0,
             bottom: isDesktop() ? -48 : 0,
             backdropFilter: 'blur(10px)',

@@ -33,7 +33,7 @@ export default function NotePage(props) {
                 style: {
                     backgroundColor: 'transparent',
                     boxShadow: 'none',
-                    width: isDesktop() ? '85%' : "100%", height: '100%'
+                    width: isDesktop() ? '85%' : "100%", height: '80%'
                 },
             }}
             style={{height: '100%', width: '100%'}}
@@ -59,8 +59,10 @@ export default function NotePage(props) {
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
-                <iframe name="notes-frame" src={pathConfig.sharedNotes + '/p/' + rId}
-                    style={{width: '100%', height: isMobile() ? '100%' : 'calc(100% - 112px)', marginTop: isMobile() ? 56 : 88}} frameBorder="0"></iframe>
+                <div style={{borderRadius: '0 0 24px 24px', width: '100%', height: isMobile() ? '100%' : 'calc(100% - 112px)', marginTop: isMobile() ? 56 : 88}}>
+                    <iframe name="notes-frame" src={pathConfig.sharedNotes + '/p/' + rId}
+                        style={{width: '100%', height: '100%'}} frameBorder="0"></iframe>
+                </div>
             </div>
         </Dialog>
     );
