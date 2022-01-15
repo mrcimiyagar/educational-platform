@@ -252,7 +252,7 @@ export default function HomeAppbar(props) {
                     (tabIndexBackup === '4') ? (16 + 450) :
                     48 :
                     isMobile() ? 16 : 32,
-            bottom: isDesktop() ? (tabIndexBackup === '4') ? 16 : 48 : 0,
+            bottom: isDesktop() ? (tabIndexBackup === '4') ? 16 : 48 : (64 + 24),
             zIndex: 2500,
           }}
         >

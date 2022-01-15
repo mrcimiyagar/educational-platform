@@ -332,7 +332,7 @@ function Workshop(props) {
         style={{
           position: "fixed",
           right: 16,
-          bottom: isDesktop() ? 24 : 0
+          bottom: 24
         }}
       >
         <RocketLaunch />

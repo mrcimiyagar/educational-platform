@@ -536,10 +536,10 @@ export default function Store() {
           style={{
             position: 'fixed',
             right: 16,
-            bottom: isDesktop() ? 16 : 0
+            bottom: 16 + 56 + 16
           }}
         >
-          <Jumper />
+          <RocketLaunchIcon />
         </Fab>
         <StoreBottombar/>
         <SwipeableDrawer anchor='right' open={drawerOpen} onClose={() => setDrawerOpen(false)} PaperProps={{style: {
