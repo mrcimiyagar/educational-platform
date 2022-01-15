@@ -47,6 +47,7 @@ import MessageItem from '../MessageItem';
 import { updateMessageSeen } from '../AllChats'
 import './style.css';
 import CustomImageBox from '../CustomImageBox'
+import { setWallpaper } from '../..'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -122,6 +123,7 @@ export default function ChatEmbeddedInMessenger(props) {
   }
 
   useEffect(() => {
+    setWallpaper({type: 'photo', photo: ChatWallpaper})
     socket.io.on('reconnect', () => {
       if (isInRoom() && isDesktop()) return;
       setupRoom();
