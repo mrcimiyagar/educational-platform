@@ -18,14 +18,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    overflow: 'auto',
+    overflow: 'hidden',
     height: 'calc(100vh - 112px - 88px)',
     paddingTop: 24,
     marginTop: isDesktop() && isInRoom() ? 64 : 16,
     width: isDesktop() && isInRoom() ? 'calc(100% - 64px)' : '100%',
-    borderRadius: isDesktop() && isInRoom() ? 24 : undefined,
-    backgroundColor: isDesktop() ? 'rgba(255, 255, 255, 0.5)' : 'transparent',
-    backdropFilter: isDesktop() ? 'blur(15px)' : undefined,
     marginRight: isDesktop() && isInRoom() ? 32 : undefined,
     marginLeft: isDesktop() && isInRoom() ? 32 : undefined,
   },
@@ -115,10 +112,10 @@ export default function FilesGrid(props) {
         width: '100%',
         position: 'relative',
         overflow: 'hidden',
-        height: '100%',
+        height: 'auto',
       }}
     >
-      <div className={classes.root} style={{height: '100%'}}>
+      <div className={classes.root} style={{height: 'auto'}}>
         <Viewer
           zIndex={props.usedBy === 'presents' ? 1 : 99999}
           style={{ position: 'fixed', left: 0, top: 0, height: '100%' }}
@@ -131,7 +128,7 @@ export default function FilesGrid(props) {
         <ImageList
           rowHeight={window.innerWidth / (cols + 1)}
           className={classes.imageList}
-          style={{height: '100%'}}
+          style={{height: 'auto'}}
           cols={cols}
         >
           {props.files.map((file, index) => {

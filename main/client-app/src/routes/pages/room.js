@@ -712,7 +712,7 @@ export default function RoomPage(props) {
                 style={{
                   height: 'calc(100% - 64px - 72px - 48px)',
                   width: 'calc(100% - 112px)',
-                  marginTop: 64 + 48,
+                  marginTop: 64 + 48 + 48,
                 }}
               >
                 <SwipeableViews
@@ -720,7 +720,10 @@ export default function RoomPage(props) {
                   index={fileMode}
                   onChangeIndex={handleChangeIndex}
                 >
-                  <div>
+                  <div style={{overflow: 'auto', width: 'calc(100% - 16px)', height: window.innerHeight - 72 + 'px', 
+    borderRadius: isDesktop() && isInRoom() ? 24 : undefined,
+    backgroundColor: isDesktop() ? 'rgba(255, 255, 255, 0.5)' : 'transparent',
+    backdropFilter: isDesktop() ? 'blur(15px)' : undefined}}>
                     <FilesGrid
                       fileType={'photo'}
                       files={files.filter((f) => f.fileType === 'photo')}
@@ -728,7 +731,10 @@ export default function RoomPage(props) {
                       roomId={props.room_id}
                     />
                   </div>
-                  <div>
+                  <div style={{overflow: 'auto', width: 'calc(100% - 16px)', height: window.innerHeight - 72 + 'px', 
+    borderRadius: isDesktop() && isInRoom() ? 24 : undefined,
+    backgroundColor: isDesktop() ? 'rgba(255, 255, 255, 0.5)' : 'transparent',
+    backdropFilter: isDesktop() ? 'blur(15px)' : undefined}}>
                     <FilesGrid
                       fileType={'audio'}
                       files={files.filter((f) => f.fileType === 'audio')}
@@ -736,7 +742,10 @@ export default function RoomPage(props) {
                       roomId={props.room_id}
                     />
                   </div>
-                  <div>
+                  <div style={{overflow: 'auto', width: 'calc(100% - 16px)', height: window.innerHeight - 72 + 'px', 
+    borderRadius: isDesktop() && isInRoom() ? 24 : undefined,
+    backgroundColor: isDesktop() ? 'rgba(255, 255, 255, 0.5)' : 'transparent',
+    backdropFilter: isDesktop() ? 'blur(15px)' : undefined}}>
                     <FilesGrid
                       fileType={'video'}
                       files={files.filter((f) => f.fileType === 'video')}
@@ -744,7 +753,10 @@ export default function RoomPage(props) {
                       roomId={props.room_id}
                     />
                   </div>
-                  <div>
+                  <div style={{overflow: 'auto', width: 'calc(100% - 16px)', height: window.innerHeight - 72 + 'px', 
+    borderRadius: isDesktop() && isInRoom() ? 24 : undefined,
+    backgroundColor: isDesktop() ? 'rgba(255, 255, 255, 0.5)' : 'transparent',
+    backdropFilter: isDesktop() ? 'blur(15px)' : undefined}}>
                     <FilesGrid
                       fileType={'document'}
                       files={files.filter((f) => f.fileType === 'document')}
