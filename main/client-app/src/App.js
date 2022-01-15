@@ -72,6 +72,7 @@ import CreateBotCategoryPage from './routes/pages/createBotCategory';
 import Workshop from './routes/pages/workshop';
 import StoreDialog from './routes/pages/storeDialog';
 import CreateComment from './routes/pages/createComment';
+import Rocket from './routes/pages/rocket';
 import $ from 'jquery';
 import BlockUi from 'react-block-ui';
 import 'react-block-ui/style.css';
@@ -294,7 +295,8 @@ let dialogs = {
   '/app/createcomment': CreateComment,
   '/app/createwidget': CreateWidget,
   '/app/botinfo': BotInfoPage,
-  '/app/roomslist': RoomsListPage
+  '/app/roomslist': RoomsListPage,
+  '/app/rocket': Rocket
 }
 let pages = {
   '/app/store': Store,

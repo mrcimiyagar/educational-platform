@@ -13,6 +13,7 @@ import React, { useEffect } from 'react';
 import {
   cacheChat,
   fetchChats,
+  gotoPage,
   histPage,
   inTheGame,
   isDesktop,
@@ -42,6 +43,7 @@ import SpacesGrid from '../SpacesGrid';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import HomePage from '../../routes/pages/home';
 import HomeMessenger from '../HomeMessenger';
+import { RocketLaunch } from '@mui/icons-material';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -242,23 +244,20 @@ export default function HomeAppbar(props) {
       ) : tabIndexBackup === '3' ? (
         <HomeSettings setDrawerOpen={setDrawerOpen} />
       ) : null}
-      <div
-        style={{
-          position: 'fixed',
-          right: isDesktop() ? 
-                  (tabIndexBackup === '4') ? (16 + 450) :
-                  48 :
-                  isMobile() ? 16 : 32,
-          bottom: isDesktop() ? (tabIndexBackup === '4') ? -64 : -32 : 0,
-          zIndex: 2500,
-        }}
-      >
-        <Jumper
-          inTheGame={inTheGame}
-          open={jumperOpen}
-          setOpen={setJumperOpen}
-        />
-      </div>
+        <Fab
+          onClick={() => gotoPage("/app/rocket")}
+          style={{
+            position: "fixed",
+            right: isDesktop() ? 
+                    (tabIndexBackup === '4') ? (16 + 450) :
+                    48 :
+                    isMobile() ? 16 : 32,
+            bottom: isDesktop() ? (tabIndexBackup === '4') ? 16 : 48 : 0,
+            zIndex: 2500,
+          }}
+        >
+          <RocketLaunch />
+        </Fab>
       <HomeBottombar inTheGame={inTheGame} tabIndex={tabIndexBackup}/>
       <HomeDrawer
         open={drawerOpen}

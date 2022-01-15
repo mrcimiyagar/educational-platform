@@ -16,6 +16,7 @@ import WorkshopWallpaper from '../../images/workshop-wallpaper.jpg';
 import BotContainer from '../../components/BotContainer';
 import Menu from '@material-ui/icons/Menu';
 import CachedIcon from '@mui/icons-material/Cached';
+import { RocketLaunch } from '@mui/icons-material';
 
 let widget1Gui = {
   type: 'Box'
@@ -326,15 +327,16 @@ function Workshop(props) {
           gui={widget1Gui}
         />
       </div>
-      <div
+      <Fab
+        onClick={() => gotoPage("/app/rocket")}
         style={{
-          position: 'fixed',
+          position: "fixed",
           right: 16,
-          bottom: isDesktop() ? -52 : 0
+          bottom: isDesktop() ? 24 : 0
         }}
       >
-        <Jumper />
-      </div>
+        <RocketLaunch />
+      </Fab>
       <Fab color={'secondary'} style={{position: 'fixed', left: 'calc(50% + 24px)', bottom: 24}} onClick={() => requestInitGui()}>
         <CachedIcon/>
       </Fab>

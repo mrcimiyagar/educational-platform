@@ -303,8 +303,8 @@ export default function Store() {
     return (
       <div style={{width: '100%', height: '100%', direction: 'rtl'}}>
       <Fab
+        onClick={() => gotoPage("/app/rocket")}
         ariaLabel=""
-        color={'secondary'}
         style={{position: 'fixed', right: 280 + 80, bottom: 24 + 40, zIndex: 99999}}
       >
         <RocketLaunchIcon />
@@ -531,15 +531,16 @@ export default function Store() {
         </Fab>
         </Slide>
         <StoreFam />
-        <div
+        <Fab
+          onClick={() => gotoPage("/app/rocket")}
           style={{
             position: 'fixed',
             right: 16,
-            bottom: isDesktop() ? -8 : 0
+            bottom: isDesktop() ? 16 : 0
           }}
         >
           <Jumper />
-        </div>
+        </Fab>
         <StoreBottombar/>
         <SwipeableDrawer anchor='right' open={drawerOpen} onClose={() => setDrawerOpen(false)} PaperProps={{style: {
             backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}}>
