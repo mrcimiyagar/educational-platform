@@ -97,8 +97,9 @@ export default function MessageItem(props) {
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar
               src={
-                serverRoot +
-                `/file/download_user_avatar?token=${token}&userId=${message.authorId}`
+                message.author.creatureType === 'user' ? 
+                  serverRoot + `/file/download_user_avatar?token=${token}&userId=${message.authorId}` : 
+                  serverRoot + `/file/download_bot_avatar?token=${token}&botId=${message.authorId}`
               }
               style={{
                 width: 40,
@@ -424,8 +425,9 @@ export default function MessageItem(props) {
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar
               src={
-                serverRoot +
-                `/file/download_user_avatar?token=${token}&userId=${message.authorId}`
+                message.author.creatureType === 'user' ? 
+                  serverRoot + `/file/download_user_avatar?token=${token}&userId=${message.authorId}` : 
+                  serverRoot + `/file/download_bot_avatar?token=${token}&botId=${message.authorId}`
               }
               style={{
                 width: 40,

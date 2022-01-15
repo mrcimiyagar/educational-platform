@@ -977,8 +977,7 @@ export default function Chat(props) {
             goingToRoom = true
           }}
         />
-        <div
-          style={{ position: 'fixed', bottom: 0, height: 'auto', zIndex: 1000,
+        <div style={{position: 'fixed', bottom: (showEmojiPad ? 400 : 0) + 'px', width: '100%', height: 56, zIndex: 1000,
             display: (membership !== undefined && membership !== null && (membership.canAddMessage === true)) ? 'block' : 'none'
           }}
         >
@@ -1038,7 +1037,6 @@ export default function Chat(props) {
             />
             <IconButton
               id={'sendBtn'}
-              color="primary"
               className={classes.iconButton}
               style={{ transform: 'rotate(180deg)' }}
               onClick={() => {
@@ -1096,7 +1094,7 @@ export default function Chat(props) {
                 }
               }}
             >
-              <SendIcon />
+              <SendIcon style={{fill: colors.primaryMedium}}/>
             </IconButton>
             <br />
           </div>

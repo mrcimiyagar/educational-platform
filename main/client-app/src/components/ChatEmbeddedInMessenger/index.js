@@ -940,7 +940,6 @@ export default function ChatEmbeddedInMessenger(props) {
           />
           <IconButton
             id={'sendBtn'}
-            color="primary"
             className={classes.iconButton}
             style={{ transform: 'rotate(180deg)' }}
             onClick={() => {

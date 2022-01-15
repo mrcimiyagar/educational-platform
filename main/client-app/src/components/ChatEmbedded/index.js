@@ -914,7 +914,7 @@ export default function ChatEmbedded(props) {
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
         <ChatAppBar user={user} room={room} webcamOn={props.webcamOn} viewCallback={props.viewCallback}/>
-        <div style={{marginTop: (window.innerHeight + 40) - (showEmojiPad ? 350 : 0) + 'px', marginRight: -164, width: '100%', height: '100%', zIndex: 1000, 
+        <div style={{position: 'fixed', bottom: 16 + (showEmojiPad ? 400 : 0) + 'px', right: -164, width: '100%', height: 56, zIndex: 1000, 
           display: ((props.membership !== undefined && props.membership !== null && (props.membership.canAddMessage === true)) ||
                    (membership !== undefined && membership !== null && (membership.canAddMessage === true)))
            ? 'block' : 'none',
@@ -974,7 +974,6 @@ export default function ChatEmbedded(props) {
             />
             <IconButton
               id={'sendBtn'}
-              color="primary"
               className={classes.iconButton}
               style={{ transform: 'rotate(180deg)' }}
               onClick={() => {
@@ -1080,7 +1079,7 @@ export default function ChatEmbedded(props) {
           }}
         >
           <div
-            style={{ width: 450, height: '100%', paddingRight: 16, overflow: 'auto', position: 'fixed', top: 0 }}
+            style={{ width: 450, height: '100%', paddingRight: 16, overflow: 'auto', position: 'fixed', top: props.webcamOn === true ? 300 : 0 }}
             id={'scroller'}
           >
             <div style={{ height: 84 }} />

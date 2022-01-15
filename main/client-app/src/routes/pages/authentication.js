@@ -35,13 +35,13 @@ function Authentication(props) {
   let [register, setRegister] = React.useState(false);
   let classes = useStyles();
   useEffect(() => {
+    setWallpaper({type: 'photo', photo: Wallpaper});
     setTimeout(() => {
       setLogoTop(100);
       setOpacity(1);
     }, 2000);
   }, []);
   useEffect(() => {
-    setWallpaper({type: 'photo', photo: Wallpaper});
     setTimeout(() => {
       if (registeredUsername !== undefined && registeredUsername !== null && registeredUsername !== '') {
         let loginUsername = document.getElementById('loginUsername');

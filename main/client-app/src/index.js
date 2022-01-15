@@ -8,6 +8,7 @@ import DesktopWallpaper from './images/roomWallpaper.png'
 import RoomWallpaper from './images/desktop-wallpaper.jpg'
 import ChatWallpaper from './images/chat-wallpaper.jpg'
 import ProfileHeader from './images/profile-header.jpeg'
+import LoginWallpaper from './images/login-wallpaper.jpg';
 import store from './redux/main';
 import { setup, socket } from './util/Utils';
 import './notifSystem';
@@ -213,7 +214,7 @@ let AppContainer = (props) => {
         setDisconnectAlert(true);
       }
     }, 1000);
-    preloadImages([ChatWallpaper, RoomWallpaper, DesktopWallpaper, ProfileHeader]);
+    preloadImages([ChatWallpaper, RoomWallpaper, DesktopWallpaper, ProfileHeader, LoginWallpaper]);
     ifServerOnline(
       () => {
         let requestOptions = {
