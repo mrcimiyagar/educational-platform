@@ -31,6 +31,7 @@ export default function CustomImageBox(props) {
             bottom: 0,
             backdropFilter: 'blur(10px)',
             objectFit: 'fit',
+            backgroundColor: 'transparent',
             ...props.style
           }}
         >

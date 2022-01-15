@@ -275,9 +275,10 @@ function App() {
             : window.innerWidth > 600
             ? 'tablet'
             : 'mobile',
-        )
-      }, 2500)
-    }, [])
+        );
+        forceUpdate();
+      }, 2500);
+    }, []);
     window.onresize = () => {
       setSizeMode(
         window.innerWidth > 900
@@ -285,10 +286,10 @@ function App() {
           : window.innerWidth > 600
           ? 'tablet'
           : 'mobile',
-      )
+      );
       forceUpdate();
     }
-    return <div />
+    return <div />;
   }
 
   useEffect(() => {
@@ -876,8 +877,7 @@ function App() {
           objectFit: 'cover',
           position: 'absolute',
           right: 0,
-          top:
-            sizeMode === 'mobile' ? (window.innerWidth * 4) / 5 - 0 + 'px' : 0,
+          top: 0,
           width:
             webcamSize === 'big' ? 450 : webcamSize === 'medium' ? 270 : 150,
           height:

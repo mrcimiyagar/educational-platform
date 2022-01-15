@@ -70,7 +70,7 @@ export default function RoomBottombar(props) {
         }
       }
     });
-  }, [])
+  }, []);
 
   return (
     <BottomNavigation

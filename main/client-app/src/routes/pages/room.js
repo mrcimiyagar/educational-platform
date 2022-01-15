@@ -814,16 +814,17 @@ export default function RoomPage(props) {
         )}
         <RoomBottombar
           setCurrentRoomNavBackup={(v) => {
-            props.tab_index = v
+            props.tab_index = v;
           }}
           setCurrentRoomNav={(i) => {
-            setOpacity(0)
+            props.tab_index = i;
+            setOpacity(0);
             setTimeout(() => {
-              setCurrentRoomNav(i)
+              setCurrentRoomNav(i);
               setTimeout(() => {
-                setOpacity(1)
-              }, 250)
-            }, 250)
+                setOpacity(1);
+              }, 250);
+            }, 250);
           }}
           currentRoomNav={currentRoomNav}
         />
