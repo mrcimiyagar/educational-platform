@@ -332,6 +332,14 @@ function App() {
           document.getElementById('screenMax2').srcObject = undefined
           document.getElementById('screenMax2').style.display = 'none';
         }
+        else {
+          
+          document.getElementById('screenMax').srcObject = undefined;
+          document.getElementById('screenMax').style.display = 'none';
+
+          document.getElementById('screenMax2').srcObject = undefined
+          document.getElementById('screenMax2').style.display = 'none';
+        }
       } else if (
         shownVideos[presenter] !== true &&
         shownScreens[presenter] === true
@@ -349,6 +357,13 @@ function App() {
           document.getElementById('screenMax2').srcObject = undefined
           document.getElementById('screenMax2').style.display = 'none';
         }
+        else {
+          document.getElementById('screenMax').srcObject = undefined
+          document.getElementById('screenMax').style.display = 'none';
+  
+          document.getElementById('screenMax2').srcObject = undefined
+          document.getElementById('screenMax2').style.display = 'none';
+        }
       } else if (
         shownVideos[presenter] === true &&
         shownScreens[presenter] === true
@@ -360,13 +375,21 @@ function App() {
         )
         let streamPack = findValueByPrefix(screens, presenter + '_screen')
         let streamPack2 = findValueByPrefix(videos, presenter + '_video')
-        if (streamPack !== undefined) {
+        if (streamPack !== undefined && extWebcam === true) {
           document.getElementById('screenMax').srcObject = streamPack.value
           document.getElementById('screenMax').style.display = 'block';
+        }
+        else {
+          document.getElementById('screenMax').srcObject = undefined
+          document.getElementById('screenMax').style.display = 'none';
         }
         if (streamPack2 !== undefined) {
           document.getElementById('screenMax2').srcObject = streamPack2.value
           document.getElementById('screenMax2').style.display = 'block';
+        }
+        else {
+          document.getElementById('screenMax2').srcObject = undefined
+          document.getElementById('screenMax2').style.display = 'none';
         }
       }
     }
