@@ -59,9 +59,10 @@ export default function NotePage(props) {
                         <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
                     </Toolbar>
                 </AppBar>
-                <div style={{borderRadius: '0 0 24px 24px', width: '100%', height: isMobile() ? '100%' : 'calc(100% - 112px)', marginTop: isMobile() ? 56 : 88}}>
+                <div style={{borderRadius: '0 0 24px 24px', width: '100%', height: isMobile() ? '100%' : 'calc(100% - 112px)',
+                marginTop: isMobile() ? 56 : 32, background: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(15px)'}}>
                     <iframe name="notes-frame" src={pathConfig.sharedNotes + '/p/' + rId}
-                        style={{width: '100%', height: '100%'}} frameBorder="0"></iframe>
+                        style={{borderRadius: '0 0 24px 24px', width: '100%', height: '100%'}} frameBorder="0"></iframe>
                 </div>
             </div>
         </Dialog>
