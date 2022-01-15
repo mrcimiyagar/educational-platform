@@ -121,7 +121,6 @@ export default function ChatEmbedded(props) {
   }
 
   useEffect(() => {
-    setWallpaper({type: 'photo', photo: ChatWallpaper})
     socket.io.on('reconnect', () => {
       if (isInRoom() && isDesktop()) return;
       setupRoom();
@@ -895,7 +894,7 @@ export default function ChatEmbedded(props) {
           style={{
             width: '100%',
             height: '100%',
-            position: 'absolute',
+            position: 'fixed',
             top: isDesktop() ? 0 : 0,
             left: isDesktop() ? 96 : 0,
             right: 0,
@@ -1081,7 +1080,7 @@ export default function ChatEmbedded(props) {
           }}
         >
           <div
-            style={{ width: 450, height: '100%', paddingRight: 16, overflow: 'auto', position: 'fixed', top: props.webcamOn === true ? 300 : 0 }}
+            style={{ width: 450, height: props.webcamOn === true ? 'calc(100% - 300px)' : '100%', paddingRight: 16, overflow: 'auto', position: 'fixed', top: props.webcamOn === true ? 300 : 0 }}
             id={'scroller'}
           >
             <div style={{ height: 84 }} />
