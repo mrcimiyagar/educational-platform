@@ -91,7 +91,7 @@ export default function ConfigGuestAccount(props) {
       style={{width: '100%', height: '100%'}}>
       <ReCAPTCHA
         style={{width: '100%', height: '100%'}}
-        sitekey={'6Lc1P7odAAAAAE4vJN6tbYWiyibGe0v-PMwu3i8v'}
+        sitekey={'6LcA4BMeAAAAALqhKrXF0CMwoW6yulBXUQA8IkwW'}
         onChange={onChange}
       />
     </div>
