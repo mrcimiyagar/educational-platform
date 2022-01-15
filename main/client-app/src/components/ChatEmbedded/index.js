@@ -901,8 +901,7 @@ export default function ChatEmbedded(props) {
             bottom: isDesktop() ? -48 : 0,
             backdropFilter: 'blur(10px)',
             borderRadius: isInMessenger() ? '0 0 0 24px' : 0,
-            objectFit: 'cover',
-            backgroundColor: 'transparent'
+            objectFit: 'cover'
           }}
         />
         <Viewer
