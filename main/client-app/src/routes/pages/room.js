@@ -1259,7 +1259,7 @@ export default function RoomPage(props) {
           style={{
             position: "fixed",
             right: isDesktop() ? (isInRoom() ? 450 + 16 : 16) : 16,
-            bottom: -16,
+            bottom: 16 + 56 + 12,
             zIndex: 2500,
           }}
         >

@@ -1145,7 +1145,7 @@ function App() {
               display: (!connected && videoAccess) ? 'block' : 'none',
               position: 'fixed',
               left: (sizeMode === 'mobile' || sizeMode === 'tablet') ? 16 : 32,
-              bottom: 24,
+              bottom: 24
             }}
             onClick={() => {
               instantConnectionFlag = true
