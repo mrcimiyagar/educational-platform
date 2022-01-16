@@ -130,7 +130,7 @@ export default function CreateRoom(props) {
             </Typography>
           </Toolbar>
         </Paper>
-        <div style={{backgroundColor: 'rgba(255, 255, 255, 0.65)', width: '100%', height: '100%', overflow: 'hidden'}}>
+        <div style={{backgroundColor: 'rgba(255, 255, 255, 0.65)', backdropFilter: 'blur(15px)', width: '100%', height: '100%', overflow: 'hidden'}}>
         <TextField
           className={classes.textField}
           id="roomCreationTitle"

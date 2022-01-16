@@ -8,7 +8,7 @@ import DesktopMacIcon from '@material-ui/icons/DesktopMac';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import React, { useEffect } from 'react';
 import { pathConfig } from '../..';
-import { gotoPage, histPage, inTheGame, isDesktop, isInRoom, popPage } from '../../App';
+import { gotoPage, histPage, inTheGame, isDesktop, isInRoom, popPage, series } from '../../App';
 import { isConfConnected } from '../../modules/confbox';
 import { colors } from '../../util/settings';
 import { useForceUpdate } from '../../util/Utils';
@@ -79,8 +79,8 @@ export default function RocketDock(props) {
       value={props.currentRoomNav}
       onChange={(event, newValue) => {
         if (newValue === 0) {
-          if (histPage === '/app/room') {
-            if (!window.prompt('این انتقال موجب خروج از این فضا میگردد.')) {
+          if (series[series.length - 2] === '/app/room') {
+            if (!window.confirm('این انتقال موجب خروج از این فضا میگردد.')) {
               return;
             }
           }
@@ -88,8 +88,8 @@ export default function RocketDock(props) {
           gotoPage('/app/home', {tab_index: 0});
         }
         else if (newValue === 1) {
-          if (histPage === '/app/room') {
-            if (!window.prompt('این انتقال موجب خروج از این فضا میگردد.')) {
+          if (series[series.length - 2] === '/app/room') {
+            if (!window.confirm('این انتقال موجب خروج از این فضا میگردد.')) {
               return;
             }
           }
@@ -97,8 +97,8 @@ export default function RocketDock(props) {
           gotoPage('/app/store');
         }
         else if (newValue === 2) {
-          if (histPage === '/app/room') {
-            if (!window.prompt('این انتقال موجب خروج از این فضا میگردد.')) {
+          if (series[series.length - 2] === '/app/room') {
+            if (!window.confirm('این انتقال موجب خروج از این فضا میگردد.')) {
               return;
             }
           }
@@ -106,8 +106,8 @@ export default function RocketDock(props) {
           gotoPage('/app/searchengine');
         }
         else if (newValue === 3) {
-          if (histPage === '/app/room') {
-            if (!window.prompt('این انتقال موجب خروج از این فضا میگردد.')) {
+          if (series[series.length - 2] === '/app/room') {
+            if (!window.confirm('این انتقال موجب خروج از این فضا میگردد.')) {
               return;
             }
           }
