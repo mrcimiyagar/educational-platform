@@ -178,6 +178,7 @@ export default function RoomPage(props) {
       .then((result) => {
         console.log(JSON.stringify(result));
         if (result.membership !== undefined) {
+          clearTimeout(timeoutId)
           setMembership(result.membership);
           forceUpdate();
         }
