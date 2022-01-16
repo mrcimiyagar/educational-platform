@@ -150,6 +150,47 @@ export default function RoomPage(props) {
   let [webcamOn, setWebcamOn] = React.useState(false);
   let [messengerView, setMessengerView] = React.useState(true);
 
+  let enterRoom = (getRoomPromise, callback) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    let requestOptions2 = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.room_id,
+      }),
+      redirect: "follow",
+      signal: controller.signal,
+    };
+
+    let enterRoomPromise = fetch(
+      serverRoot + "/room/enter_room",
+      requestOptions2
+    );
+
+    enterRoomPromise
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result));
+        if (result.membership !== undefined) {
+          setMembership(result.membership);
+          forceUpdate();
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        enterRoom(getRoomPromise, callback);
+      });
+
+    Promise.all([getRoomPromise, enterRoomPromise]).then(() => {
+      if (callback !== undefined) callback();
+    });
+  };
+
   let loadData = (callback) => {
     let requestOptions = {
       method: "POST",
@@ -176,36 +217,7 @@ export default function RoomPage(props) {
       })
       .catch((error) => console.log("error", error));
 
-    let requestOptions2 = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: props.room_id,
-      }),
-      redirect: "follow",
-    };
-    let enterRoomPromise = fetch(
-      serverRoot + "/room/enter_room",
-      requestOptions2
-    );
-
-    enterRoomPromise
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result));
-        if (result.membership !== undefined) {
-          setMembership(result.membership);
-          forceUpdate();
-        }
-      })
-      .catch((error) => console.log("error", error));
-
-    Promise.all([getRoomPromise, enterRoomPromise]).then(() => {
-      if (callback !== undefined) callback();
-    });
+    enterRoom(getRoomPromise, callback);
   };
 
   socket.io.removeAllListeners("reconnect");
