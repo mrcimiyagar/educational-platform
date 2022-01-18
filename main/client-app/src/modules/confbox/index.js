@@ -117,10 +117,10 @@ export function ConfBox(props) {
     }
   } else {
     width = "100%";
-    height = "calc(100% - 84px)";
+    height = "calc(100% - 116px)";
     right = 0;
     top = 0;
-    marginTop = undefined;
+    marginTop = 64;
     position = "fixed";
   }
 
@@ -267,7 +267,7 @@ export function ConfBox(props) {
           width: width,
           height: height,
           marginTop: marginTop,
-          marginBottom: 32,
+          marginBottom: 16,
         }}
         frameBorder="0"
       ></iframe>
