@@ -1031,9 +1031,7 @@ export default function RoomPage(props) {
             top: 0,
             bottom: 0,
             opacity: opacity,
-            transition: "opacity .250s",
-            width: '100%',
-            height: '100%'
+            transition: "opacity .250s"
           }}
         >
           <ConfBox

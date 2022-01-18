@@ -38,8 +38,6 @@ function getOS() {
   return os;
 }
 
-if (getOS() === 'Windows') document.body.style.zoom = "80%";
-
 function preloadImages(array) {
   if (!preloadImages.list) {
       preloadImages.list = [];
