@@ -330,7 +330,7 @@ function App() {
           pathConfig.mainFrontend,
         )
         window.parent.postMessage(
-          { sender: 'conf', action: 'notifyWebcamTurnedOff' },
+          { sender: 'conf', action: 'notifyWebcamTurnedOn' },
           pathConfig.mainFrontend,
         )
         let streamPack = findValueByPrefix(videos, presenter + '_video')
