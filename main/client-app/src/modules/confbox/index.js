@@ -117,7 +117,7 @@ export function ConfBox(props) {
     }
   } else {
     width = "100%";
-    height = "calc(100% - 128px)";
+    height = "calc(100% - 144px)";
     right = 0;
     top = 0;
     marginTop = 80;
