@@ -28,6 +28,72 @@ export function ConfBox(props) {
         window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'disableVideoAccess'}, pathConfig.confClient);
       }
     });
+    let top = undefined;
+    let right = undefined;
+    let position = undefined;
+    let width = undefined;
+    let height = undefined;
+    let marginTop = undefined;
+
+    if (props.currentRoomNav === 2) {
+      if (props.webcamOn === true && props.webcamOnSecond === true) {
+        alert('hello 1');
+        width = '100%';
+        height = '100%';
+        right = 0;
+        top = 0;
+        marginTop = undefined;
+        position = 'fixed';
+      }
+      else if (props.webcamOn === true && props.webcamOnSecond === false) {
+        alert('hello 2');
+        width = '100%';
+        height = '100%';
+        right = 0;
+        top = 0;
+        marginTop = undefined;
+        position = 'fixed';
+      }
+      else if (props.webcamOn === false && props.webcamOnSecond === false) {
+        alert('hello 3');
+        width = '100%';
+        height = '100%';
+        right = 0;
+        top = 0;
+        marginTop = undefined;
+        position = 'fixed';
+      }
+    }
+    else {
+      if (props.webcamOn === true && props.webcamOnSecond === true) {
+        alert('hello 4');
+        width = 450;
+        height = 300;
+        right = 0;
+        top = 0;
+        marginTop = undefined;
+        position = 'fixed';
+      }
+      else if (props.webcamOn === true && props.webcamOnSecond === false) {
+        alert('hello 5');
+        width = 450;
+        height = 300;
+        right = 0;
+        top = 0;
+        marginTop = undefined;
+        position = 'fixed';
+      }
+      else if (props.webcamOn === false && props.webcamOnSecond === false) {
+        alert('hello 6');
+        width = 0;
+        height = 0;
+        right = 0;
+        top = 0;
+        marginTop = undefined;
+        position = 'fixed';
+      }
+    }
+    
     return (
       <div id={props.id} style={{
           right: props.currentRoomNav !== 2 ? 0 : undefined,
@@ -88,12 +154,12 @@ export function ConfBox(props) {
           onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', videoAccess: membership.canActInVideo, me: me, roomId: props.roomId}, pathConfig.confClient)}}
           allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera; fullscreen; display-capture'}
           style={{
-            right: ((props.currentRoomNav === 2 && props.webcamOn) || (props.currentRoomNav !== 2 && !props.webcamOnSecond)) ? -116 : undefined,
-            top: ((props.currentRoomNav === 2 && props.webcamOn) || (props.currentRoomNav !== 2 && !props.webcamOnSecond)) ? -80 : undefined,
-            position: ((props.currentRoomNav === 2 && props.webcamOn) || (props.currentRoomNav !== 2 && !props.webcamOnSecond)) ? 'fixed' : undefined,
-            width: ((props.currentRoomNav === 2 && props.webcamOn) || (props.currentRoomNav !== 2 && !props.webcamOnSecond)) ? 450 + 116 : '100%',
-            height: ((props.currentRoomNav === 2 && props.webcamOn) || (props.currentRoomNav !== 2 && !props.webcamOnSecond)) ? 300 + 80 : '100%',
-            marginTop: (isDesktop() && isInRoom()) ? 0 : 64, marginBottom: 32}} frameBorder="0"></iframe>
+            right: right,
+            top: top,
+            position: position,
+            width: width,
+            height: height,
+            marginTop: marginTop, marginBottom: 32}} frameBorder="0"></iframe>
       </div>
     );
 }
