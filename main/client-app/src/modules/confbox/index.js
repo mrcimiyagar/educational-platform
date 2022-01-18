@@ -45,7 +45,7 @@ export function ConfBox(props) {
         marginTop = undefined;
         position = 'fixed';
       }
-      else if (props.webcamOn === true && props.webcamOnSecond === false) {
+      else if (props.webcamOn === false && props.webcamOnSecond === true) {
         alert('hello 2');
         width = '100%';
         height = '100%';
@@ -74,7 +74,7 @@ export function ConfBox(props) {
         marginTop = undefined;
         position = 'fixed';
       }
-      else if (props.webcamOn === true && props.webcamOnSecond === false) {
+      else if (props.webcamOn === false && props.webcamOnSecond === true) {
         alert('hello 5');
         width = 450;
         height = 300;
