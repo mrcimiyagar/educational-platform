@@ -148,6 +148,7 @@ export default function RoomPage(props) {
   const [menuMode, setMenuMode] = React.useState(0);
   const [opacity, setOpacity] = React.useState(1);
   let [webcamOn, setWebcamOn] = React.useState(false);
+  let [webcamOnSecond, setWebcamOnSecond] = React.useState(false);
   let [messengerView, setMessengerView] = React.useState(true);
 
   let enterRoom = (getRoomPromise, callback) => {
@@ -537,7 +538,7 @@ export default function RoomPage(props) {
           style={{
             position: "absolute",
             left: 0,
-            right: isDesktop() && currentRoomNav !== 2 && !webcamOn ? 450 : 0,
+            right: isDesktop() && currentRoomNav !== 2 && !webcamOn && !webcamOnSecond ? 450 : 0,
             top: 0,
             bottom: 0,
             opacity: opacity,
@@ -870,6 +871,7 @@ export default function RoomPage(props) {
           </Fab>
         )}
         <RoomBottombar
+          setWebcamOnSecond={setWebcamOnSecond}
           setCurrentRoomNavBackup={(v) => {
             props.tab_index = v;
           }}

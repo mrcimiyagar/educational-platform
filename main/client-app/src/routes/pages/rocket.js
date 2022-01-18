@@ -3,7 +3,7 @@ import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import Slide from '@material-ui/core/Slide'
 import { makeStyles } from '@material-ui/core/styles'
-import { ArrowForward, Search } from '@material-ui/icons'
+import { ArrowForward, Close, Search } from '@material-ui/icons'
 import ViewListIcon from '@material-ui/icons/ViewList'
 import React from 'react'
 import { popPage } from '../../App'
@@ -80,6 +80,9 @@ export default function Rocket(props) {
         }}
       >
         <RocketDock />
+        <IconButton onClick={() => popPage()} style={{position: 'fixed', right: 16, top: 16}}>
+          <Close style={{fill: '#fff'}}/>
+        </IconButton>
       </div>
     </Dialog>
   )
