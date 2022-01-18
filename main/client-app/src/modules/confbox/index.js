@@ -88,10 +88,10 @@ export function ConfBox(props) {
           onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', videoAccess: membership.canActInVideo, me: me, roomId: props.roomId}, pathConfig.confClient)}}
           allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera; fullscreen; display-capture'}
           style={{
-            right: (props.currentRoomNav !== 2 && !props.webcamOn) ? -116 : undefined,
-            top: (props.currentRoomNav !== 2 && !props.webcamOn) ? -80 : undefined,
-            position: props.currentRoomNav !== 2 ? 'fixed' : undefined,
-            width: (props.currentRoomNav !== 2 && !props.webcamOn) ? 450 + 116 : '100%', height: (props.currentRoomNav !== 2 && !props.webcamOn) ? 300 + 80 : '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64, marginBottom: 32}} frameBorder="0"></iframe>
+            right: (props.currentRoomNav !== 2 && !props.webcamOnSecond) ? -116 : undefined,
+            top: (props.currentRoomNav !== 2 && !props.webcamOnSecond) ? -80 : undefined,
+            position: (props.currentRoomNav !== 2 && !props.webcamOnSecond) ? 'fixed' : undefined,
+            width: (props.currentRoomNav !== 2 && !props.webcamOnSecond) ? 450 + 116 : '100%', height: (props.currentRoomNav !== 2 && !props.webcamOn) ? 300 + 80 : '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64, marginBottom: 32}} frameBorder="0"></iframe>
       </div>
     );
 }

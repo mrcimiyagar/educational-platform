@@ -558,6 +558,7 @@ export default function RoomPage(props) {
             openPolls={openPolls}
             setMenuOpen={setMenuOpen}
             webcamOn={webcamOn}
+            webcamOnSecond={webcamOnSecond}
             currentRoomNav={currentRoomNav}
             style={{
               display: currentRoomNav === 2 || webcamOn || (webcamOnSecond && currentRoomNav !== 2) ? "block" : "none",
