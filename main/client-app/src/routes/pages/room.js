@@ -560,7 +560,7 @@ export default function RoomPage(props) {
             webcamOn={webcamOn}
             currentRoomNav={currentRoomNav}
             style={{
-              display: currentRoomNav === 2 || webcamOn || webcamOnSecond ? "block" : "none",
+              display: currentRoomNav === 2 || webcamOn || (webcamOnSecond && currentRoomNav !== 2) ? "block" : "none",
             }}
             roomId={props.room_id}
           />
