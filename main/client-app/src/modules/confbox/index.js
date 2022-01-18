@@ -37,7 +37,6 @@ export function ConfBox(props) {
 
     if (props.currentRoomNav === 2) {
       if (props.webcamOn === true && props.webcamOnSecond === true) {
-        alert('hello 1');
         width = '100%';
         height = '100%';
         right = 0;
@@ -46,7 +45,6 @@ export function ConfBox(props) {
         position = 'fixed';
       }
       else if (props.webcamOn === false && props.webcamOnSecond === true) {
-        alert('hello 2');
         width = '100%';
         height = '100%';
         right = 0;
@@ -55,7 +53,6 @@ export function ConfBox(props) {
         position = 'fixed';
       }
       else if (props.webcamOn === false && props.webcamOnSecond === false) {
-        alert('hello 3');
         width = '100%';
         height = '100%';
         right = 0;
@@ -66,7 +63,6 @@ export function ConfBox(props) {
     }
     else {
       if (props.webcamOn === true && props.webcamOnSecond === true) {
-        alert('hello 4');
         width = 450;
         height = 300;
         right = 0;
@@ -75,16 +71,14 @@ export function ConfBox(props) {
         position = 'fixed';
       }
       else if (props.webcamOn === false && props.webcamOnSecond === true) {
-        alert('hello 5');
-        width = 450;
-        height = 300;
-        right = 0;
-        top = 0;
+        width = 450 + 116;
+        height = 300 + 80;
+        right = -90;
+        top = -80;
         marginTop = undefined;
         position = 'fixed';
       }
       else if (props.webcamOn === false && props.webcamOnSecond === false) {
-        alert('hello 6');
         width = 0;
         height = 0;
         right = 0;
