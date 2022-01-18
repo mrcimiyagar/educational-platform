@@ -134,7 +134,7 @@ export default function ChatAppBar(props) {
             position: isDesktop() || isTablet() ? 'fixed' : undefined,
             top: isDesktop()
               ? isInRoom()
-                ? props.webcamOn === true
+                ? props.webcamOn === true || (props.webcamOnSecond && props.currentRoomNav !== 2)
                   ? 300
                   : 0
                 : 32

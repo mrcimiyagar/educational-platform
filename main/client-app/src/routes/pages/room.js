@@ -428,6 +428,12 @@ export default function RoomPage(props) {
         } else if (e.data.action === "detachWebcamOnMessenger") {
           setWebcamOn(false);
         }
+        else if (e.data.action === "notifyWebcamTurnedOn") {
+          setWebcamOnSecond(true);
+        }
+        else if (e.data.action === "notifyWebcamTurnedOff") {
+          setWebcamOnSecond(false);
+        }
       }
     };
     window.addEventListener("message", attachWebcamOnMessenger);
@@ -519,18 +525,19 @@ export default function RoomPage(props) {
         <div
           style={{
             width: 450,
-            height: "100%",
-            position: "fixed",
-            right: 0,
-            top: webcamOn ? 300 : 0,
+            height: 200,
+            position: "relative",
+            marginTop: 1000,
             zIndex: 2491,
-            display: messengerView ? "block" : "none",
+            display: messengerView ? "block" : "none"
           }}
         >
           <ChatEmbedded
             membership={membership}
             roomId={props.room_id}
             webcamOn={webcamOn}
+            webcamOnSecond={webcamOnSecond}
+            currentRoomNav={currentRoomNav}
             viewCallback={() => setMessengerView(!messengerView)}
           />
         </div>
@@ -538,7 +545,7 @@ export default function RoomPage(props) {
           style={{
             position: "absolute",
             left: 0,
-            right: isDesktop() && currentRoomNav !== 2 && !webcamOn && !webcamOnSecond ? 450 : 0,
+            right: 0,
             top: 0,
             bottom: 0,
             opacity: opacity,
@@ -553,15 +560,17 @@ export default function RoomPage(props) {
             webcamOn={webcamOn}
             currentRoomNav={currentRoomNav}
             style={{
-              display: currentRoomNav === 2 || webcamOn ? "block" : "none",
+              display: currentRoomNav === 2 || webcamOn || webcamOnSecond ? "block" : "none",
             }}
             roomId={props.room_id}
           />
           <div
             style={{
-              paddingRight: webcamOn && currentRoomNav !== 2 ? 450 : 0,
+              paddingRight: 450,
               width: "100%",
               height: "100%",
+              position: 'fixed',
+              display: currentRoomNav === 2 ? "none" : "block",
             }}
           >
             <BotsBox

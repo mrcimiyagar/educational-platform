@@ -846,11 +846,11 @@ export default function ChatEmbedded(props) {
 
   if (isDesktop()) {
     if (isInRoom()) {
-      width = 450
-      height = props.webcamOn ? 'calc(100% - 300px)' : 'calc(100% + 96px)'
-      left = 'calc(100% - 450px)'
-      right = 0
-      top = 0
+      width = 450;
+      height = props.webcamOn ? 'calc(100% - 300px)' : 'calc(100% + 96px)';
+      left = 'calc(100% - 450px)';
+      right = 0;
+      top = undefined;
     } else if (isInMessenger()) {
       width = '100٪'
       height = '100%'
@@ -895,7 +895,7 @@ export default function ChatEmbedded(props) {
             width: 450,
             height: '100%',
             position: 'fixed',
-            top: isDesktop() ? props.webcamOn ? 300 : 0 : 0,
+            top: isDesktop() ? props.webcamOn || (props.webcamOnSecond && props.currentRoomNav !== 2) ? 300 : 0 : 0,
             left: isDesktop() ? undefined : 96,
             right: 0,
             bottom: isDesktop() ? -48 : 0,
@@ -913,7 +913,7 @@ export default function ChatEmbedded(props) {
           }}
           images={[{ src: currentPhotoSrc, alt: '' }]}
         />
-        <ChatAppBar user={user} room={room} webcamOn={props.webcamOn} viewCallback={props.viewCallback}/>
+        <ChatAppBar webcamOnSecond={props.webcamOnSecond} currentRoomNav={props.currentRoomNav} user={user} room={room} webcamOn={props.webcamOn} viewCallback={props.viewCallback}/>
         <div style={{position: 'fixed', bottom: 16 + (showEmojiPad ? 400 : 0) + 'px', right: -164, width: 450, height: 56, zIndex: 1000, 
           display: ((props.membership !== undefined && props.membership !== null && (props.membership.canAddMessage === true)) ||
                    (membership !== undefined && membership !== null && (membership.canAddMessage === true)))
@@ -1079,7 +1079,7 @@ export default function ChatEmbedded(props) {
           }}
         >
           <div
-            style={{ width: 450, height: props.webcamOn === true ? 'calc(100% - 300px)' : '100%', paddingRight: 16, overflow: 'auto', position: 'fixed', top: props.webcamOn === true ? 300 : 0 }}
+            style={{ width: 450, height: props.webcamOn === true ? 'calc(100% - 300px)' : '100%', paddingRight: 16, overflow: 'auto', position: 'fixed', top: props.webcamOn === true || (props.webcamOnSecond && props.currentRoomNav !== 2) ? 300 : 0 }}
             id={'scroller'}
           >
             <div style={{ height: 84 }} />

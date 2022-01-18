@@ -77,11 +77,9 @@ export default function RoomBottombar(props) {
       value={props.currentRoomNav}
       onChange={(event, newValue) => {
         if (newValue === 2) {
-          if (props.setWebcamOnSecond !== undefined) props.setWebcamOnSecond(false);
           window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'intWebcam'}, pathConfig.confClient);
         }
         else {
-          if (props.setWebcamOnSecond !== undefined) props.setWebcamOnSecond(true);
           window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'extWebcam'}, pathConfig.confClient);
         }
         props.setCurrentRoomNav(newValue);

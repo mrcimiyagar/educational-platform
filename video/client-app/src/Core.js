@@ -311,6 +311,10 @@ function App() {
           { sender: 'conf', action: 'detachWebcamOnMessenger' },
           pathConfig.mainFrontend,
         )
+        window.parent.postMessage(
+          { sender: 'conf', action: 'notifyWebcamTurnedOff' },
+          pathConfig.mainFrontend,
+        )
         document.getElementById('screenMax').srcObject = undefined
         document.getElementById('screenMax').style.display = 'none';
         
@@ -323,6 +327,10 @@ function App() {
         setScreenOn(true)
         window.parent.postMessage(
           { sender: 'conf', action: 'detachWebcamOnMessenger' },
+          pathConfig.mainFrontend,
+        )
+        window.parent.postMessage(
+          { sender: 'conf', action: 'notifyWebcamTurnedOff' },
           pathConfig.mainFrontend,
         )
         let streamPack = findValueByPrefix(videos, presenter + '_video')
@@ -350,6 +358,10 @@ function App() {
           { sender: 'conf', action: 'detachWebcamOnMessenger' },
           pathConfig.mainFrontend,
         )
+        window.parent.postMessage(
+          { sender: 'conf', action: 'notifyWebcamTurnedOff' },
+          pathConfig.mainFrontend,
+        )
         let streamPack = findValueByPrefix(screens, presenter + '_screen')
         if (streamPack !== undefined) {
           document.getElementById('screenMax').srcObject = streamPack.value
@@ -372,6 +384,10 @@ function App() {
         setScreenOn(true)
         window.parent.postMessage(
           { sender: 'conf', action: 'attachWebcamOnMessenger' },
+          pathConfig.mainFrontend,
+        )
+        window.parent.postMessage(
+          { sender: 'conf', action: 'notifyWebcamTurnedOn' },
           pathConfig.mainFrontend,
         )
         let streamPack = findValueByPrefix(screens, presenter + '_screen')
@@ -724,6 +740,10 @@ function App() {
         { sender: 'conf', action: 'detachWebcamOnMessenger' },
         pathConfig.mainFrontend,
       )
+      window.parent.postMessage(
+        { sender: 'conf', action: 'notifyWebcamTurnedOff' },
+        pathConfig.mainFrontend,
+      )
       setScreenOn(false)
       document.getElementById('screenMax').srcObject = undefined
       document.getElementById('screenMax2').srcObject = undefined
@@ -1022,6 +1042,10 @@ function App() {
                 setConnected(false)
                 window.parent.postMessage(
                   { sender: 'conf', action: 'detachWebcamOnMessenger' },
+                  pathConfig.mainFrontend,
+                )
+                window.parent.postMessage(
+                  { sender: 'conf', action: 'notifyWebcamTurnedOff' },
                   pathConfig.mainFrontend,
                 )
                 setScreenOn(false)

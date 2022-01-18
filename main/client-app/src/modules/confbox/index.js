@@ -30,16 +30,16 @@ export function ConfBox(props) {
     });
     return (
       <div id={props.id} style={{
-          right: (props.webcamOn && props.currentRoomNav !== 2) ? 0 : undefined,
-          top: (props.webcamOn && props.currentRoomNav !== 2) ? 0 : undefined,
-          width: (props.webcamOn && props.currentRoomNav !== 2) ? 450 : '100%',
+          right: props.currentRoomNav !== 2 ? 0 : undefined,
+          top: props.currentRoomNav !== 2 ? 0 : undefined,
+          width: props.currentRoomNav !== 2 ? 450 : '100%',
           height: isDesktop() ? '100%' : 'calc(100% - 128px)',
-          position: (props.webcamOn && props.currentRoomNav !== 2) ? 'fixed' : 'relative',
+          position: props.currentRoomNav !== 2 ? 'fixed' : 'relative',
           direction: 'ltr',
           display: props.style.display
         }}>
         <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
-          display: props.currentRoomNav !== 2 && props.webcamOn ? 'none' : 'block',
+          display: props.currentRoomNav !== 2 ? 'none' : 'block',
           borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
           backgroundColor: colors.primaryMedium,
           backdropFilter: 'blur(10px)',
@@ -87,7 +87,11 @@ export function ConfBox(props) {
         <iframe scrolling="no"
           onLoad={() => {window.frames['conf-video-frame'].postMessage({sender: 'main', action: 'init', videoAccess: membership.canActInVideo, me: me, roomId: props.roomId}, pathConfig.confClient)}}
           allowTransparency={true} id ={'conf-video-frame'} name="conf-video-frame" src={pathConfig.confClient} allow={'microphone; camera; fullscreen; display-capture'}
-          style={{top: 0, width: '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64, marginBottom: 32}} frameBorder="0"></iframe>
+          style={{
+            right: props.currentRoomNav !== 2 ? -116 : undefined,
+            top: props.currentRoomNav !== 2 ? -80: undefined,
+            position: props.currentRoomNav !== 2 ? 'fixed' : undefined,
+            width: props.currentRoomNav !== 2 ? 450 + 116 : '100%', height: props.currentRoomNav !== 2 ? 300 + 80 : '100%', marginTop: (isDesktop() && isInRoom()) ? 0 : 64, marginBottom: 32}} frameBorder="0"></iframe>
       </div>
     );
 }
