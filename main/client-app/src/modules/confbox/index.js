@@ -73,7 +73,7 @@ export function ConfBox(props) {
       else if (props.webcamOn === false && props.webcamOnSecond === true) {
         width = 450 + 116;
         height = 300 + 80;
-        right = -90;
+        right = -106;
         top = -80;
         marginTop = undefined;
         position = 'fixed';
