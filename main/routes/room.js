@@ -329,12 +329,14 @@ router.post('/create_room', jsonParser, async function (req, res) {
           room = await sw.Room.create({
             title: req.body.title,
             spaceId: req.body.spaceId,
+            accessType: (req.body.participentId !== null && req.body.participentId !== undefined) ? 'private' : req.body.accessType
           })
           roomId = room.id
         } else {
           room = await sw.Room.create({
             title: req.body.title,
             spaceId: req.body.spaceId,
+            accessType: (req.body.participentId !== null && req.body.participentId !== undefined) ? 'private' : req.body.accessType
           })
           roomId = room.id
         }
@@ -350,6 +352,7 @@ router.post('/create_room', jsonParser, async function (req, res) {
         room = await sw.Room.create({
           title: req.body.title,
           spaceId: space.id,
+          accessType: (req.body.participentId !== null && req.body.participentId !== undefined) ? 'private' : req.body.accessType
         })
         space.mainRoomId = room.id
         space.save()

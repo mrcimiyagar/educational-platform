@@ -40,6 +40,7 @@ router.post('/register', jsonParser, async function (req, res) {
     let room = await sw.Room.create({
         title: 'خانه',
         spaceId: home.id,
+        accessType: 'private'
     });
     home.mainRoomId = room.id;
     home.save();

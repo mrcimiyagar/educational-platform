@@ -917,7 +917,8 @@ router.post('/get_bot_workerships', jsonParser, async function (req, res) {
 
 router.post('/request_initial_gui', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-    if (req.body.preview === true) {
+    let r = req.body.roomId === undefined ? null : await sw.Room.findOne({where: {id: req.body.roomId}});
+    if (req.body.preview === true || (r !== null && r.accessType === 'public')) {
       let widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
       if (widget === null) {
         res.send({
@@ -994,7 +995,8 @@ router.post('/gui', jsonParser, async function (req, res) {
       });
       return;
   }
-  if (req.body.preview === true) {
+  let r = req.body.roomId === undefined ? null : await sw.Room.findOne({where: {id: req.body.roomId}});
+  if (req.body.preview === true || (r !== null && r.accessType === 'public')) {
       let widget = await sw.Widget.findOne({where: {botId: bot.id, id: req.body.widgetId}});
       if (widget === null) {
         res.send({
@@ -1071,11 +1073,10 @@ router.post('/gui', jsonParser, async function (req, res) {
 router.post('/notify_gui_base_activated', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
       let widget, widgetWorker;
-      if (req.body.preview === false) {
-        if (membership !== undefined && membership !== null) {
-          widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId, roomId: membership.roomId}});
-          widget = await sw.Widget.findOne({where: {id: widgetWorker.widgetId}});
-        }
+      let r = req.body.roomId === undefined ? null : await sw.Room.findOne({where: {id: req.body.roomId}});
+      if (req.body.preview === true || (membership !== undefined && membership !== null) || (r !== null && r.accessType === 'private')) {
+        widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId, roomId: membership.roomId}});
+        widget = await sw.Widget.findOne({where: {id: widgetWorker.widgetId}});
       }
       else {
         widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
@@ -1541,6 +1542,15 @@ router.post('/update_widget_worker', jsonParser, async function (req, res) {
 
 router.post('/get_widget_workers', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
+    let room = req.body.roomId === undefined ? null : await sw.Room.findOne({where: {id: req.body.roomId}});
+    if (room !== null && r.accessType === 'public') {
+      let widgetWorkers = await sw.WidgetWorker.findAll({
+        raw: true,
+        where: { roomId: req.body.roomId },
+      });
+      res.send({ status: 'success', widgetWorkers: widgetWorkers });
+      return;
+    }
     if (membership === null || membership === undefined) {
       res.send({
         status: 'error',
