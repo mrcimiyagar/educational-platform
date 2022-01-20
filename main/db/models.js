@@ -39,7 +39,7 @@ let WidgetWorker;
 
 const pgUsername = 'postgres';
 const pgPassword = '3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t';
-const dbName = 'MarlikAmoozesh';
+const dbName = 'Society';
 const dbName2 = 'TaskBoard';
 module.exports = {
     setup: async function() {
