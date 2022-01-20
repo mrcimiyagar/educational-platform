@@ -4,7 +4,6 @@ const bodyParser = require('body-parser')
 const { User } = require('../db/models')
 const { authenticateMember, usersSubscriptions, getRoomUsers } = require('../users')
 const Sequelize = require('sequelize')
-const { pushNotification } = require('../server')
 const webpush = require('web-push');
 
 const router = express.Router()
