@@ -715,6 +715,8 @@ MainAppContainer = (props) => {
             animatePageChange();
             if (window.location.pathname === "/app/use_invitation") {
               gotoPage("/app/use_invitation", params);
+            } else if (window.location.pathname === '/app/room') {
+              gotoPage("/app/room", params);
             } else {
               gotoPage("/app/auth", {});
             }

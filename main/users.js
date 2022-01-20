@@ -1,9 +1,6 @@
 
 const sw = require('./db/models');
-const { 
-    v1: uuidv1,
-    v4: uuidv4,
-  } = require('uuid');
+const { uuid } = require('uuidv4');
 
 let users = {};
 let guestAccs = {};
@@ -103,6 +100,13 @@ module.exports = {
                     else {
                         callback(a, null, {userId: a.userId}, a);
                     }
+                    return;
+                }
+                if (roomId !== undefined) {
+                    let userId = uuid() + Date.now();
+                    let userToken = uuid() + Date.now();
+                    guestAccsOutOfRoom[userToken] = {userId: userId, roomId: roomId};
+                    callback(guestAccsOutOfRoom[userToken], {userId: userId}, {id: userId}, guestAccsOutOfRoom[userToken]);
                     return;
                 }
                 res.send({status: 'error', errorCode: 'e0007', message: 'session does not exist.'});
