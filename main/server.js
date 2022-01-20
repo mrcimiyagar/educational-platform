@@ -24,14 +24,13 @@ const view = require('./routes/view');
 const bot = require('./routes/bot');
 const search = require('./routes/search');
 const notif = require('./routes/notifications');
-const mongo = require("./db/mongo");
 const cors = require('cors');
 const sw = require('./db/models');
 const bodyParser = require('body-parser');
 const { usersSubscriptions, getRoomUsers } = require('./users');
 const expressStaticGzip = require('express-static-gzip');
 const webpush = require('web-push');
-const { sockets, netState, notifs } = require('./socket');
+const { sockets, notifs } = require('./socket');
 
 let jsonParser = bodyParser.json();
 
@@ -65,174 +64,171 @@ socket.setup(server);
 
 models.setup().then(() => {
     
-    mongo.setup((s, a) => {
-
-        sw.User.findAll({raw: true}).then(us => {
-            creatures = creatures.concat(us.map(u => u.id));
-            sw.Bot.findAll({raw: true}).then(bs => {
-                creatures = creatures.concat(bs.map(b => b.id));
-            });
+    sw.User.findAll({raw: true}).then(us => {
+        creatures = creatures.concat(us.map(u => u.id));
+        sw.Bot.findAll({raw: true}).then(bs => {
+            creatures = creatures.concat(bs.map(b => b.id));
         });
+    });
 
-        var myIceServers = [
-            {"url":"stun:185.81.96.105:3478"},
-            {
-              "url":"turn:185.81.96.105:3478",
-              "username":"guest",
-              "credential":"somepassword"
+    var myIceServers = [
+        {"url":"stun:185.81.96.105:3478"},
+        {
+          "url":"turn:185.81.96.105:3478",
+          "username":"guest",
+          "credential":"somepassword"
+        }
+    ];
+
+    app.use(function (req, res, next) {
+        console.log('\u001b[' + 32 + 'm' + '..............................................................' + '\u001b[0m')
+        console.log('\u001b[' + 32 + 'm' + req.method + ' ' + req.path + '\u001b[0m')
+        console.log('\u001b[' + 32 + 'm' + '..............................................................' + '\u001b[0m')
+        next()
+    })
+
+    app.use('/present', present);
+    app.use('/auth', auth);
+    app.use('/room', room);
+    app.use('/file', file);
+    app.use('/poll', poll);
+    app.use('/chat', chat);
+    app.use('/video', video);
+    app.use('/survey', survey);
+    app.use('/shots', shots);
+    app.use('/home', home);
+    app.use('/view', view);
+    app.use('/bot', bot);
+    app.use('/notifications', notif);
+    app.use('/search', search);
+
+    app.use('/fetch_rooms', (req, res) => {
+        sw.Session.findAll({limit: 1}).then(async function (sessions) {
+            if (req.headers.token === sessions[0].token) {
+                sw.Room.findAll({}).then(rooms => {
+                    res.send({status: 'success', rooms: rooms});
+                });
             }
-        ];
-
-        app.use(function (req, res, next) {
-            console.log('\u001b[' + 32 + 'm' + '..............................................................' + '\u001b[0m')
-            console.log('\u001b[' + 32 + 'm' + req.method + ' ' + req.path + '\u001b[0m')
-            console.log('\u001b[' + 32 + 'm' + '..............................................................' + '\u001b[0m')
-            next()
-        })
-
-        app.use('/present', present);
-        app.use('/auth', auth);
-        app.use('/room', room);
-        app.use('/file', file);
-        app.use('/poll', poll);
-        app.use('/chat', chat);
-        app.use('/video', video);
-        app.use('/survey', survey);
-        app.use('/shots', shots);
-        app.use('/home', home);
-        app.use('/view', view);
-        app.use('/bot', bot);
-        app.use('/notifications', notif);
-        app.use('/search', search);
-
-        app.use('/fetch_rooms', (req, res) => {
-            sw.Session.findAll({limit: 1}).then(async function (sessions) {
-                if (req.headers.token === sessions[0].token) {
-                    sw.Room.findAll({}).then(rooms => {
-                        res.send({status: 'success', rooms: rooms});
-                    });
-                }
-            });
         });
+    });
 
-        app.post('/fetch_membership', jsonParser, async function (req, res) {
-            sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
-                if (session === null) {
-                    res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+    app.post('/fetch_membership', jsonParser, async function (req, res) {
+        sw.Session.findOne({where: {token: req.headers.token}}).then(async function (session) {
+            if (session === null) {
+                res.send({status: 'error', errorCode: 'e0005', message: 'session does not exist.'});
+                return;
+            }
+            sw.Membership.findOne({where: {roomId: req.body.roomId, userId: session.userId}}).then(async membership => {
+                console.log(req.headers.token + ' ' + req.body.roomId)
+                if (membership === null) {
+                    res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'});
                     return;
                 }
-                sw.Membership.findOne({where: {roomId: req.body.roomId, userId: session.userId}}).then(async membership => {
-                    console.log(req.headers.token + ' ' + req.body.roomId)
-                    if (membership === null) {
-                        res.send({status: 'error', errorCode: 'e0005', message: 'membership does not exist.'});
-                        return;
-                    }
-                    res.send({status: 'success', membership});
-                });
+                res.send({status: 'success', membership});
             });
         });
+    });
 
-        app.use(express.static('client-app/build'));
+    app.use(express.static('client-app/build'));
 
-        const buildPath = path.join(__dirname, '..', 'build');
-        app.use(
-            '/',
-            expressStaticGzip(buildPath, {
-                enableBrotli: true,
-                orderPreference: ['br', 'gz']
-            })
-        );
+    const buildPath = path.join(__dirname, '..', 'build');
+    app.use(
+        '/',
+        expressStaticGzip(buildPath, {
+            enableBrotli: true,
+            orderPreference: ['br', 'gz']
+        })
+    );
 
-        app.get('*', (req, res) => {
-            if (fs.existsSync(__dirname + '/client-app/build/index.html')) {
-                res.sendFile(__dirname + '/client-app/build/index.html');
+    app.get('*', (req, res) => {
+        if (fs.existsSync(__dirname + '/client-app/build/index.html')) {
+            res.sendFile(__dirname + '/client-app/build/index.html');
+        }
+        else {
+            res.send({message: 'the web app is under maintenance...'});
+        }
+    });
+
+    let updateClients = () => {
+        creatures.forEach(id => {
+            if (notifs[id] !== undefined && notifs[id].length > 0 && sockets[id] !== undefined) {
+                sockets[id].emit('sync');
+            }
+        });
+    };
+
+    setInterval(updateClients, 1000);
+
+    module.exports = {
+        newCreatureId: (id) => {
+            creatures.push(id);
+        },
+        'pushToExcept': async (nodeId, key, data, exceptionId) => {
+            if (nodeId === 'aseman-bot-store') {
+                let users = await sw.User.findAll({raw: true});
+                let userIds = users.map(u => u.id);
+                userIds.forEach(uid => {
+                    if (uid === exceptionId) return;
+                    let d = JSON.stringify(data);
+                    if (d.length > 100) d = d.substr(0, 100);
+                    if (notifs[uid] === undefined) notifs[uid] = [];
+                    notifs[uid].push({key, data});
+                });
             }
             else {
-                res.send({message: 'the web app is under maintenance...'});
+                let roomId = Number(nodeId.substr('room_'.length));
+                let users = getRoomUsers(roomId);
+                users.forEach(user => {
+                    if (user.id === exceptionId) return;
+                    if (notifs[user.id] === undefined) notifs[user.id] = [];
+                    notifs[user.id].push({key, data});
+                });
+                let workerships = await sw.Workership.findAll({raw: true, where: {roomId: roomId}});
+                workerships.forEach(w => {
+                    if (w.botId === exceptionId) return;
+                    if (notifs[w.botId] === undefined) notifs[w.botId] = [];
+                    notifs[w.botId].push({key, data});
+                });
             }
-        });
-
-        let updateClients = () => {
-            creatures.forEach(id => {
-                if (notifs[id] !== undefined && notifs[id].length > 0 && sockets[id] !== undefined) {
-                    sockets[id].emit('sync');
+        },
+        'pushTo': async (nodeId, key, data) => {
+            if (nodeId === 'aseman-bot-store') {
+                let users = await sw.User.findAll({raw: true});
+                let userIds = users.map(u => u.id);
+                userIds.forEach(uid => {
+                    let d = JSON.stringify(data);
+                    if (d.length > 100) d = d.substr(0, 100);
+                    if (notifs[uid] === undefined) notifs[uid] = [];
+                    notifs[uid].push({key, data});
+                });
+            }
+            else {
+                let roomId = Number(nodeId.substr('room_'.length));
+                let users = getRoomUsers(roomId);
+                users.forEach(user => {
+                    if (notifs[user.id] === undefined) notifs[user.id] = [];
+                    notifs[user.id].push({key, data});
+                });
+                let workerships = await sw.Workership.findAll({raw: true, where: {roomId: roomId}});
+                workerships.forEach(w => {
+                    if (notifs[w.botId] === undefined) notifs[w.botId] = [];
+                    notifs[w.botId].push({key, data});
+                });
+            }
+        },
+        'signlePushTo': (userId, key, data, instantly) => {
+            if (instantly === true) {
+                if (sockets[userId] !== undefined) {
+                    sockets[userId].emit(key, data);
                 }
-            });
-        };
-
-        setInterval(updateClients, 1000);
-
-        module.exports = {
-            newCreatureId: (id) => {
-                creatures.push(id);
-            },
-            'pushToExcept': async (nodeId, key, data, exceptionId) => {
-                if (nodeId === 'aseman-bot-store') {
-                    let users = await sw.User.findAll({raw: true});
-                    let userIds = users.map(u => u.id);
-                    userIds.forEach(uid => {
-                        if (uid === exceptionId) return;
-                        let d = JSON.stringify(data);
-                        if (d.length > 100) d = d.substr(0, 100);
-                        if (notifs[uid] === undefined) notifs[uid] = [];
-                        notifs[uid].push({key, data});
-                    });
-                }
-                else {
-                    let roomId = Number(nodeId.substr('room_'.length));
-                    let users = getRoomUsers(roomId);
-                    users.forEach(user => {
-                        if (user.id === exceptionId) return;
-                        if (notifs[user.id] === undefined) notifs[user.id] = [];
-                        notifs[user.id].push({key, data});
-                    });
-                    let workerships = await sw.Workership.findAll({raw: true, where: {roomId: roomId}});
-                    workerships.forEach(w => {
-                        if (w.botId === exceptionId) return;
-                        if (notifs[w.botId] === undefined) notifs[w.botId] = [];
-                        notifs[w.botId].push({key, data});
-                    });
-                }
-            },
-            'pushTo': async (nodeId, key, data) => {
-                if (nodeId === 'aseman-bot-store') {
-                    let users = await sw.User.findAll({raw: true});
-                    let userIds = users.map(u => u.id);
-                    userIds.forEach(uid => {
-                        let d = JSON.stringify(data);
-                        if (d.length > 100) d = d.substr(0, 100);
-                        if (notifs[uid] === undefined) notifs[uid] = [];
-                        notifs[uid].push({key, data});
-                    });
-                }
-                else {
-                    let roomId = Number(nodeId.substr('room_'.length));
-                    let users = getRoomUsers(roomId);
-                    users.forEach(user => {
-                        if (notifs[user.id] === undefined) notifs[user.id] = [];
-                        notifs[user.id].push({key, data});
-                    });
-                    let workerships = await sw.Workership.findAll({raw: true, where: {roomId: roomId}});
-                    workerships.forEach(w => {
-                        if (notifs[w.botId] === undefined) notifs[w.botId] = [];
-                        notifs[w.botId].push({key, data});
-                    });
-                }
-            },
-            'signlePushTo': (userId, key, data, instantly) => {
-                if (instantly === true) {
-                    if (sockets[userId] !== undefined) {
-                        sockets[userId].emit(key, data);
-                    }
-                    return;
-                }
-                let d = JSON.stringify(data);
-                if (d.length > 100) d = d.substr(0, 100);
-                if (notifs[userId] === undefined) notifs[userId] = [];
-                notifs[userId].push({key, data});
-            },
-            'Survey': s,
-            'Answer': a
-        };
-    });
+                return;
+            }
+            let d = JSON.stringify(data);
+            if (d.length > 100) d = d.substr(0, 100);
+            if (notifs[userId] === undefined) notifs[userId] = [];
+            notifs[userId].push({key, data});
+        },
+        'Survey': s,
+        'Answer': a
+    };
 });
