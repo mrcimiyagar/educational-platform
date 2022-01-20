@@ -227,8 +227,6 @@ models.setup().then(() => {
             if (d.length > 100) d = d.substr(0, 100);
             if (notifs[userId] === undefined) notifs[userId] = [];
             notifs[userId].push({key, data});
-        },
-        'Survey': s,
-        'Answer': a
+        }
     };
 });
