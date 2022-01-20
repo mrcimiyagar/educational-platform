@@ -1347,7 +1347,7 @@ router.post('/move_user', jsonParser, async function (req, res) {
               room.users = getRoomUsers(room.id)
             }
             require('../server').pushTo(
-              'room_' + metadata[membership.userId].roomId,
+              'room_' + metadata[req.body.userId].roomId,
               'user-exited',
               { rooms: rooms },
             )

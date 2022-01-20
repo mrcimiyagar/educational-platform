@@ -9,44 +9,51 @@ import {
   MenuItem,
   Radio,
   RadioGroup,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import ArrowRightIcon from '@material-ui/icons/ArrowRight'
-import PersonIcon from '@material-ui/icons/Person'
-import TreeItem from '@material-ui/lab/TreeItem'
-import TreeView from '@material-ui/lab/TreeView'
-import 'chartjs-plugin-datalabels'
-import PropTypes from 'prop-types'
-import React, { useEffect } from 'react'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
-import 'react-circular-progressbar/dist/styles.css'
-import 'react-perfect-scrollbar/dist/css/styles.css'
-import SortableTree from 'react-sortable-tree'
-import 'react-sortable-tree/style.css'
-import 'react-table/react-table.css'
-import { isDesktop } from '../../App'
-import { NotificationManager } from '../../components/ReactNotifications'
-import { me, token } from '../../util/settings'
-import { registerEvent, serverRoot, socket, unregisterEvent, useForceUpdate } from '../../util/Utils'
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import PersonIcon from "@material-ui/icons/Person";
+import TreeItem from "@material-ui/lab/TreeItem";
+import TreeView from "@material-ui/lab/TreeView";
+import "chartjs-plugin-datalabels";
+import PropTypes from "prop-types";
+import React, { useEffect } from "react";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "react-circular-progressbar/dist/styles.css";
+import "react-perfect-scrollbar/dist/css/styles.css";
+import SortableTree from "react-sortable-tree";
+import "react-sortable-tree/style.css";
+import "react-table/react-table.css";
+import { isDesktop } from "../../App";
+import { NotificationManager } from "../../components/ReactNotifications";
+import { me, token } from "../../util/settings";
+import {
+  registerEvent,
+  serverRoot,
+  socket,
+  unregisterEvent,
+  useForceUpdate,
+} from "../../util/Utils";
 
-export let reloadUsersList = undefined
+export let reloadUsersList = undefined;
 
 const useTreeItemStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.text.secondary,
-    '&:hover > $content': {
+    "&:hover > $content": {
       backgroundColor: theme.palette.action.hover,
     },
-    '&:focus > $content, &$selected > $content': {
+    "&:focus > $content, &$selected > $content": {
       backgroundColor: `var(--tree-view-bg-color, ${theme.palette.grey[400]})`,
-      color: 'var(--tree-view-color)',
+      color: "var(--tree-view-color)",
     },
-    '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label': {
-      backgroundColor: 'transparent',
-    },
+    "&:focus > $content $label, &:hover > $content $label, &$selected > $content $label":
+      {
+        backgroundColor: "transparent",
+      },
   },
   content: {
     color: theme.palette.text.secondary,
@@ -54,38 +61,38 @@ const useTreeItemStyles = makeStyles((theme) => ({
     borderBottomRightRadius: theme.spacing(2),
     paddingRight: theme.spacing(1),
     fontWeight: theme.typography.fontWeightMedium,
-    '$expanded > &': {
+    "$expanded > &": {
       fontWeight: theme.typography.fontWeightRegular,
     },
   },
   group: {
     marginLeft: 0,
-    '& $content': {
+    "& $content": {
       paddingLeft: theme.spacing(2),
     },
   },
   expanded: {},
   selected: {},
   label: {
-    fontWeight: 'inherit',
-    color: 'inherit',
+    fontWeight: "inherit",
+    color: "inherit",
   },
   labelRoot: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     padding: theme.spacing(0.5, 0),
   },
   labelIcon: {
     marginRight: theme.spacing(1),
   },
   labelText: {
-    fontWeight: 'inherit',
+    fontWeight: "inherit",
     flexGrow: 1,
   },
-}))
+}));
 
 function StyledTreeItem(props) {
-  const classes = useTreeItemStyles()
+  const classes = useTreeItemStyles();
   const {
     labelText,
     labelIcon: LabelIcon,
@@ -93,7 +100,7 @@ function StyledTreeItem(props) {
     color,
     bgColor,
     ...other
-  } = props
+  } = props;
 
   return (
     <TreeItem
@@ -110,8 +117,8 @@ function StyledTreeItem(props) {
         </div>
       }
       style={{
-        '--tree-view-color': color,
-        '--tree-view-bg-color': bgColor,
+        "--tree-view-color": color,
+        "--tree-view-bg-color": bgColor,
       }}
       classes={{
         root: classes.root,
@@ -123,7 +130,7 @@ function StyledTreeItem(props) {
       }}
       {...other}
     />
-  )
+  );
 }
 
 StyledTreeItem.propTypes = {
@@ -132,30 +139,30 @@ StyledTreeItem.propTypes = {
   labelIcon: PropTypes.elementType.isRequired,
   labelInfo: PropTypes.string,
   labelText: PropTypes.string.isRequired,
-}
+};
 
-let selectedRoomId = 0
+let selectedRoomId = 0;
 
 function ConfirmationDialogRaw(props) {
-  const { onClose, open, ...other } = props
-  const radioGroupRef = React.useRef(null)
+  const { onClose, open, ...other } = props;
+  const radioGroupRef = React.useRef(null);
 
   const handleEntering = () => {
     if (radioGroupRef.current != null) {
-      radioGroupRef.current.focus()
+      radioGroupRef.current.focus();
     }
-  }
+  };
 
   const handleCancel = () => {
-    onClose()
-  }
+    onClose();
+  };
 
   const handleOk = () => {
-    onClose(props.value)
+    onClose(props.value);
     let requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         token: token,
       },
       body: JSON.stringify({
@@ -163,22 +170,22 @@ function ConfirmationDialogRaw(props) {
         userId: selectedUserId,
         toRoomId: selectedRoomId,
       }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/room/move_user', requestOptions)
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/room/move_user", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(JSON.stringify(result))
+        console.log(JSON.stringify(result));
         if (selectedUserId === me.id) {
-          window.location.href = '/app/room?room_id=' + selectedRoomId
+          window.location.href = "/app/room?room_id=" + selectedRoomId;
         }
       })
-      .catch((error) => console.log('error', error))
-  }
+      .catch((error) => console.log("error", error));
+  };
 
   const handleChange = (event) => {
-    props.setValue(event.target.value)
-  }
+    props.setValue(event.target.value);
+  };
 
   return (
     <Dialog
@@ -200,11 +207,11 @@ function ConfirmationDialogRaw(props) {
           {props.rooms.map((room) => (
             <FormControlLabel
               value={room.id}
-              key={'room-' + room.id}
+              key={"room-" + room.id}
               control={<Radio />}
               label={room.title}
               onClick={() => {
-                selectedRoomId = room.id
+                selectedRoomId = room.id;
               }}
             />
           ))}
@@ -219,133 +226,139 @@ function ConfirmationDialogRaw(props) {
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }
 
 ConfirmationDialogRaw.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   value: PropTypes.string.isRequired,
-}
+};
 
 const useStyles = makeStyles({
   root: {
-    height: 'auto',
+    height: "auto",
     flexGrow: 1,
     maxWidth: 400,
   },
-})
+});
 
-let selectedUserId = 0
+let selectedUserId = 0;
 
 export let RoomTreeBox = (props) => {
-  const classes = useStyles()
 
-  let forceUpdate = useForceUpdate()
-  let [treeData, setTreeData] = React.useState([])
+  const classes = useStyles();
+
+  let [treeData, setTreeData] = React.useState([]);
   let processUsers = (rooms) => {
     rooms.forEach((room) => {
-      room.expanded = true
-      room.title = room.title
-      room.head = true
+      room.expanded = true;
+      room.title = room.title;
+      room.head = true;
       room.users.forEach((user) => {
-        user.title = user.firstName
-      })
-      room.children = room.users
-    })
-    setTreeData(rooms)
-  }
-  reloadUsersList = () => {
+        user.title = user.firstName;
+      });
+      room.children = room.users;
+    });
+    setTreeData(rooms);
+  };
+  let fetchSpaceRoomList = () => {
+    if (props.room !== undefined) {
     let requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         token: token,
       },
       body: JSON.stringify({
         spaceId: props.room.spaceId,
         roomId: props.room.id,
       }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/room/get_room_users', requestOptions)
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/room/get_room_users", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(JSON.stringify(result))
-        processUsers(result.rooms)
+        console.log(JSON.stringify(result));
+        processUsers(result.rooms);
       })
-      .catch((error) => console.log('error', error))
-  }
-  
-  useEffect(() => {
-    reloadUsersList()
-  }, [])
-
-  unregisterEvent('user-entered')
-  registerEvent('user-entered', ({ rooms }) => {
-    processUsers(rooms)
-  })
-  unregisterEvent('user-exited')
-  registerEvent('user-exited', ({ rooms }) => {
-    processUsers(rooms)
-  })
-  unregisterEvent('profile_updated')
-  registerEvent('profile_updated', (user) => {})
-
-  useEffect(() => {
-    if (props.room.id !== undefined) {
-      reloadUsersList()
+      .catch((error) => console.log("error", error));
     }
-  }, [props.room])
+    else {
+      setTimeout(() => {
+        fetchSpaceRoomList();
+      }, 500);
+    }
+  }
+  reloadUsersList = () => {
+    fetchSpaceRoomList();
+  };
 
-  const [anchorEl, setAnchorEl] = React.useState(null)
+  unregisterEvent("user-entered");
+  registerEvent("user-entered", ({ rooms }) => {
+    processUsers(rooms);
+  });
+  unregisterEvent("user-exited");
+  registerEvent("user-exited", ({ rooms }) => {
+    processUsers(rooms);
+  });
+  unregisterEvent("profile_updated");
+  registerEvent("profile_updated", (user) => {});
+
+  useEffect(() => {
+    if (props.room !== undefined && props.room.id !== undefined) {
+      reloadUsersList();
+    }
+  }, [props.room]);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
-    event.preventDefault()
-    setAnchorEl(event.currentTarget)
-  }
+    event.preventDefault();
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleClose = () => {
-    setAnchorEl(null)
-  }
+    setAnchorEl(null);
+  };
 
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState(0)
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState(0);
   const handleClickListItem = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleCloseOfDialog = (newValue) => {
-    setOpen(false)
+    setOpen(false);
 
     if (newValue) {
-      setValue(newValue)
+      setValue(newValue);
     }
-  }
+  };
 
   const sendUserToRoom = () => {
     for (let i = 0; i < treeData.length; i++) {
-      let children = treeData[i].children
-      let found = false
+      let children = treeData[i].children;
+      let found = false;
       for (let j = 0; j < children.length; j++) {
         if (children[j].id === selectedUserId) {
-          setValue(treeData[i].id)
-          handleClickListItem()
-          found = true
-          break
+          setValue(treeData[i].id);
+          handleClickListItem();
+          found = true;
+          break;
         }
       }
-      if (found) break
+      if (found) break;
     }
-  }
+  };
 
   return (
-    <div style={{ width: '100%', height: 'auto', marginTop: 16 }}>
+    <div style={{ width: "100%", height: "auto", marginTop: 16 }}>
       <ConfirmationDialogRaw
         classes={{
           paper: classes.paper,
         }}
-        spaceId={props.room.spaceId}
+        spaceId={props.room !== undefined ? props.room.spaceId : 0}
         rooms={treeData}
         keepMounted
         open={open}
@@ -356,7 +369,7 @@ export let RoomTreeBox = (props) => {
       />
 
       <div>
-        <div style={{ height: 'auto' }}>
+        <div style={{ height: "auto" }}>
           <Menu
             id="simple-menu"
             anchorEl={anchorEl}
@@ -366,8 +379,8 @@ export let RoomTreeBox = (props) => {
           >
             <MenuItem
               onClick={() => {
-                sendUserToRoom()
-                handleClose()
+                sendUserToRoom();
+                handleClose();
               }}
             >
               ارسال به روم دیگر
@@ -376,7 +389,7 @@ export let RoomTreeBox = (props) => {
           <TreeView
             className={classes.root}
             defaultExpanded={treeData.map((room) => {
-              return 'room-' + room.id
+              return "room-" + room.id;
             })}
             defaultCollapseIcon={<ArrowDropDownIcon />}
             defaultExpandIcon={<ArrowRightIcon />}
@@ -385,7 +398,7 @@ export let RoomTreeBox = (props) => {
             {treeData.map((room) => {
               return (
                 <StyledTreeItem
-                  nodeId={'room-' + room.id}
+                  nodeId={"room-" + room.id}
                   labelText={room.title}
                   labelIcon={AccountBalanceIcon}
                   labelInfo={
@@ -398,24 +411,24 @@ export let RoomTreeBox = (props) => {
                     return (
                       <StyledTreeItem
                         onContextMenu={(e) => {
-                          selectedUserId = user.id
-                          handleClick(e)
+                          selectedUserId = user.id;
+                          handleClick(e);
                         }}
-                        nodeId={'user-' + user.id}
+                        nodeId={"user-" + user.id}
                         labelText={user.title}
                         labelIcon={PersonIcon}
                         color="#1a73e8"
                         bgColor="#e8f0fe"
                       />
-                    )
+                    );
                   })}
                 </StyledTreeItem>
-              )
+              );
             })}
-            <div style={{ width: '100%', height: 56 }} />
+            <div style={{ width: "100%", height: 56 }} />
           </TreeView>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
