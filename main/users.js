@@ -1,6 +1,7 @@
 
 const sw = require('./db/models');
 const { uuid } = require('uuidv4');
+const { defaultPermissions } = require('./tools');
 
 let users = {};
 let guestAccs = {};
@@ -85,7 +86,14 @@ module.exports = {
         let userId = uuid() + Date.now();
         let userToken = uuid() + Date.now();
         addUser(roomId, {id: userId});
-        addGuestAcc({anon: true, userId: userId, roomId: roomId, token: userToken, user: {id: userId}});
+        addGuestAcc({
+            anon: true,
+            userId: userId,
+            roomId: roomId,
+            token: userToken,
+            user: {id: userId},
+            ...defaultPermissions
+        });
         return {userId: userId, token: userToken};
     },
     authenticateMember: (req, res, callback) => {
