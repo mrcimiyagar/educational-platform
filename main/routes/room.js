@@ -700,7 +700,7 @@ router.post('/get_spaces', jsonParser, async function (req, res) {
 })
 
 router.post('/anon', jsonParser, async function (req, res) {
-  res.send({status: 'success', auth: anon()});
+  res.send({status: 'success', auth: anon(req.body.roomId)});
 })
 
 router.post('/enter_room', jsonParser, async function (req, res) {

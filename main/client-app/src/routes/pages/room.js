@@ -221,6 +221,9 @@ export default function RoomPage(props) {
             headers: {
               "Content-Type": "application/json"
             },
+            body: JSON.stringify({
+              roomId: props.room_id
+            }),
             redirect: "follow",
           };
           let r = await fetch(serverRoot + '/room/anon', requestOptions2);

@@ -77,7 +77,7 @@ module.exports = {
         guestAccsOutOfRoom[guestAcc.token] = guestAcc;
         guestAccsByUserId[guestAcc.userId] = guestAcc;
     },
-    anon: () => {
+    anon: (roomId) => {
         let userId = uuid() + Date.now();
         let userToken = uuid() + Date.now();
         guestAccsOutOfRoom[userToken] = {anon: true, userId: userId, roomId: roomId};
