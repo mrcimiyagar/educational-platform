@@ -77,6 +77,12 @@ module.exports = {
         guestAccsOutOfRoom[guestAcc.token] = guestAcc;
         guestAccsByUserId[guestAcc.userId] = guestAcc;
     },
+    anon: () => {
+        let userId = uuid() + Date.now();
+        let userToken = uuid() + Date.now();
+        guestAccsOutOfRoom[userToken] = {anon: true, userId: userId, roomId: roomId};
+        return {userId: userId, token: userToken};
+    },
     authenticateMember: (req, res, callback) => {
         let token = req.headers.token;
         if (token === undefined) {
@@ -90,7 +96,10 @@ module.exports = {
             if (session === null || session === undefined) {
                 if (token in guestAccsOutOfRoom) {
                     let a = guestAccsOutOfRoom[token];
-                    if (a.roomId === roomId)
+                    if (a.anon === true) {
+                        callback(a, {userId: userId}, {id: userId}, a);
+                    }
+                    else if (a.roomId === roomId)
                         callback(a, {userId: a.userId}, a.user, a);
                     else if (a.subroomId === roomId) {
                         let temp = {...a}
@@ -100,13 +109,6 @@ module.exports = {
                     else {
                         callback(a, null, {userId: a.userId}, a);
                     }
-                    return;
-                }
-                if (roomId !== undefined) {
-                    let userId = uuid() + Date.now();
-                    let userToken = uuid() + Date.now();
-                    guestAccsOutOfRoom[userToken] = {userId: userId, roomId: roomId};
-                    callback(guestAccsOutOfRoom[userToken], {userId: userId}, {id: userId}, guestAccsOutOfRoom[userToken]);
                     return;
                 }
                 res.send({status: 'error', errorCode: 'e0007', message: 'session does not exist.'});

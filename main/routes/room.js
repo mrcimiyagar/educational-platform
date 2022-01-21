@@ -11,6 +11,7 @@ const {
   generateInvite,
   resolveInvite,
   isUserInRoom,
+  anon,
 } = require('../users')
 const tools = require('../tools')
 const express = require('express')
@@ -694,6 +695,10 @@ router.post('/get_spaces', jsonParser, async function (req, res) {
       )
     },
   )
+})
+
+router.post('/anon', jsonParser, async function (req, res) {
+  res.send({status: 'success', auth: anon()});
 })
 
 router.post('/enter_room', jsonParser, async function (req, res) {
