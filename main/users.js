@@ -108,7 +108,6 @@ module.exports = {
         }
         sw.Session.findOne({where: {token: token}}).then(async function (session) {
             if (session === null || session === undefined) {
-                res.send({message: 'test'});
                 if (token in guestAccsOutOfRoom) {
                     let a = guestAccsOutOfRoom[token];
                     if (a.anon === true) {
