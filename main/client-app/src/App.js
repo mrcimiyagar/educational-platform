@@ -712,6 +712,7 @@ MainAppContainer = (props) => {
               gotoPage(window.location.pathname, params);
             }
           } else {
+            localStorage.removeItem('token');
             animatePageChange();
             if (window.location.pathname === "/app/use_invitation") {
               gotoPage("/app/use_invitation", params);

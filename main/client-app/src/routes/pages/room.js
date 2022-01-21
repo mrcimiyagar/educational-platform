@@ -227,6 +227,7 @@ export default function RoomPage(props) {
             redirect: "follow",
           };
           let r = await fetch(serverRoot + '/room/anon', requestOptions2);
+          r = await r.json();
           if (r.status === 'success') {
             let auth = r.auth;
             localStorage.setItem('token', auth.token);

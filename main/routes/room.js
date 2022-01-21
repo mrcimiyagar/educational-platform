@@ -711,7 +711,9 @@ router.post('/enter_room', jsonParser, async function (req, res) {
     }
 
     let s = sockets[user.id]
-    if (s === undefined) return
+    if (s === undefined) {
+      throw 'socket not found !';
+    }
     let roomId = metadata[membership.userId].roomId
 
     if (membership.roomId === roomId) {
