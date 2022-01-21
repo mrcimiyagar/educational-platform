@@ -52,7 +52,7 @@ import { ConfBox } from "../../modules/confbox";
 import { TaskBox } from "../../modules/taskbox/taskbox";
 import { UsersBox } from "../../modules/usersbox/usersbox";
 import store, { changeConferenceMode } from "../../redux/main";
-import { colors, setToken, token } from "../../util/settings";
+import { colors, setMe, setToken, token } from "../../util/settings";
 import {
   ConnectToIo,
   leaveRoom,
@@ -151,7 +151,7 @@ export default function RoomPage(props) {
   let [webcamOnSecond, setWebcamOnSecond] = React.useState(false);
   let [messengerView, setMessengerView] = React.useState(true);
 
-  let enterRoom = (getRoomPromise, callback) => {
+  let enterRoom = (callback) => {
     
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -182,16 +182,14 @@ export default function RoomPage(props) {
           clearTimeout(timeoutId)
           setMembership(result.membership);
           forceUpdate();
+
+          if (callback !== undefined) callback();
         }
       })
       .catch((error) => {
         console.log("error", error);
-        enterRoom(getRoomPromise, callback);
+        enterRoom(callback);
       });
-
-    Promise.all([getRoomPromise, enterRoomPromise]).then(() => {
-      if (callback !== undefined) callback();
-    });
   };
 
   let loadData = (callback) => {
@@ -209,7 +207,7 @@ export default function RoomPage(props) {
     let getRoomPromise = fetch(serverRoot + "/room/get_room", requestOptions);
     getRoomPromise
       .then((response) => response.json())
-      .then((result) => {
+      .then(async (result) => {
         console.log(JSON.stringify(result));
         setRoom(result.room);
         setToken(localStorage.getItem("token"));
@@ -217,10 +215,26 @@ export default function RoomPage(props) {
         registerEvent("view-updated", (v) => {});
         window.scrollTo(0, 0);
         store.dispatch(changeConferenceMode(true));
+        if ((token === null || token === undefined || token === '') && result.room.accessType === 'public') {
+          let requestOptions2 = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            redirect: "follow",
+          };
+          let r = await fetch(serverRoot + '/room/anon', requestOptions2);
+          if (r.status === 'success') {
+            let auth = r.auth;
+            localStorage.setItem('token', auth.token);
+            setToken(auth.token);
+            window.location.reload();
+          }
+        }
+
+        enterRoom(callback);
       })
       .catch((error) => console.log("error", error));
-
-    enterRoom(getRoomPromise, callback);
   };
 
   socket.io.removeAllListeners("reconnect");

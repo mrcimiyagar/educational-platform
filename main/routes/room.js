@@ -467,21 +467,23 @@ router.post('/delete_room', jsonParser, async function (req, res) {
 })
 
 router.post('/get_room', jsonParser, async function (req, res) {
-  authenticateMember(req, res, async (membership, session, user) => {
-    if (membership === null || membership === undefined) {
-      res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'membership does not exist.',
-      })
-      return
-    }
-    sw.Room.findOne({ where: { id: membership.roomId } }).then(async function (
-      room,
-    ) {
-      res.send({ status: 'success', room: room })
-    })
-  })
+  let room = await sw.Room.findOne({ where: { id: req.body.roomId } });
+  if (room.accessType === 'public') {
+    res.send({ status: 'success', room: room });
+  }
+  else {
+    authenticateMember(req, res, async (membership, session, user) => {
+      if (membership === null || membership === undefined) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'membership does not exist.',
+        });
+        return;
+      }
+    });
+    res.send({ status: 'success', room: room });
+  }
 })
 
 router.post('/get_room_bots', jsonParser, async function (req, res) {
@@ -1370,3 +1372,4 @@ router.post('/move_user', jsonParser, async function (req, res) {
 })
 
 module.exports = router
+
