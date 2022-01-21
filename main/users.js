@@ -97,7 +97,7 @@ module.exports = {
                 if (token in guestAccsOutOfRoom) {
                     let a = guestAccsOutOfRoom[token];
                     if (a.anon === true) {
-                        callback(a, {userId: userId}, {id: userId}, a);
+                        callback(a, {userId: a.userId}, {id: a.userId}, a);
                     }
                     else if (a.roomId === roomId)
                         callback(a, {userId: a.userId}, a.user, a);
