@@ -85,7 +85,7 @@ module.exports = {
         let userId = uuid() + Date.now();
         let userToken = uuid() + Date.now();
         addUser(roomId, {id: userId});
-        addGuestAcc({anon: true, userId: userId, roomId: roomId, token: userToken, user: {id: a.userId}});
+        addGuestAcc({anon: true, userId: userId, roomId: roomId, token: userToken, user: {id: userId}});
         return {userId: userId, token: userToken};
     },
     authenticateMember: (req, res, callback) => {
