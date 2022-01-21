@@ -5,6 +5,7 @@ const { User } = require('../db/models')
 const { authenticateMember, usersSubscriptions, getRoomUsers } = require('../users')
 const Sequelize = require('sequelize')
 const webpush = require('web-push');
+const users = require('../users')
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
@@ -470,10 +471,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     let copies = [];
     for (let i = 0; i < fetchedMessages.length; i++) {
       let msg = fetchedMessages[i];
-      let author = await sw.User.findOne({where: {id: msg.authorId}});
-      if (author === null) {
-        author = await sw.Bot.findOne({where: {id: msg.authorId}});
-      }
+      let author = users[msg.roomId][msg.authorId];
       let msgCopy = {
         id: msg.id,
         authorId: msg.authorId,
