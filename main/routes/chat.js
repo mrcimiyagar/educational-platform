@@ -471,7 +471,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     let copies = [];
     for (let i = 0; i < fetchedMessages.length; i++) {
       let msg = fetchedMessages[i];
-      let author = users[msg.roomId][msg.authorId];
+      let author = users[msg.roomId] === undefined ? null : users[msg.roomId][msg.authorId];
       let msgCopy = {
         id: msg.id,
         authorId: msg.authorId,
