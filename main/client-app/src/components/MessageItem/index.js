@@ -97,7 +97,7 @@ export default function MessageItem(props) {
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar
               src={
-                message.author.creatureType === 'user' ? 
+                message.author === null ? '' : message.author.creatureType === 'user' ? 
                   serverRoot + `/file/download_user_avatar?token=${token}&userId=${message.authorId}` : 
                   serverRoot + `/file/download_bot_avatar?token=${token}&botId=${message.authorId}`
               }
@@ -140,7 +140,7 @@ export default function MessageItem(props) {
                   wordWrap: "break-word"
                 }}
               >
-              {message.author.creatureType === 'user' ? message.author.firstName : message.author.title}
+              {message.author === null ? 'anon' : message.author.creatureType === 'user' ? message.author.firstName : message.author.title}
               </Typography>
               <br />
               <div >
@@ -294,7 +294,7 @@ export default function MessageItem(props) {
                   wordWrap: "break-word"
                 }}
               >
-                {message.author.creatureType === 'user' ? message.author.firstName : message.author.title}
+                {message.author === null ? 'anon' : message.author.creatureType === 'user' ? message.author.firstName : message.author.title}
               </Typography>
               <br />
               <div >
@@ -425,7 +425,7 @@ export default function MessageItem(props) {
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar
               src={
-                message.author.creatureType === 'user' ? 
+                message.author === null ? '' : message.author.creatureType === 'user' ? 
                   serverRoot + `/file/download_user_avatar?token=${token}&userId=${message.authorId}` : 
                   serverRoot + `/file/download_bot_avatar?token=${token}&botId=${message.authorId}`
               }
@@ -468,7 +468,7 @@ export default function MessageItem(props) {
                   wordWrap: "break-word"
                 }}
               >
-              {message.author.creatureType === 'user' ? message.author.firstName : message.author.title}
+              {message.author === null ? 'anon' : message.author.creatureType === 'user' ? message.author.firstName : message.author.title}
               </Typography>
               <br />
               <div >
@@ -622,7 +622,7 @@ export default function MessageItem(props) {
                   wordWrap: "break-word"
                 }}
               >
-              {message.author.creatureType === 'user' ? message.author.firstName : message.author.title}
+              {message.author === null ? 'anon' : message.author.creatureType === 'user' ? message.author.firstName : message.author.title}
               </Typography>
               <br />
               <div >
