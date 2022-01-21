@@ -171,7 +171,6 @@ async function prepareMessageSeenModel() {
     }, {
         freezeTableName: true
     });
-    MessageSeen.belongsTo(User, { foreignKey: 'userId' });
     MessageSeen.belongsTo(Message, { foreignKey: 'messageId' });
     MessageSeen.belongsTo(Room, { foreignKey: 'roomId' });
     await MessageSeen.sync();
