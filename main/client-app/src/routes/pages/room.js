@@ -230,12 +230,12 @@ export default function RoomPage(props) {
           if (r.status === 'success') {
             let auth = r.auth;
             localStorage.setItem('token', auth.token);
-            setToken(auth.token);
             window.location.reload();
           }
         }
-
-        enterRoom(callback);
+        else {
+          enterRoom(callback);
+        }
       })
       .catch((error) => console.log("error", error));
   };
