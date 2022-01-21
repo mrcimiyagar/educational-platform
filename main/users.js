@@ -9,6 +9,23 @@ let guestAccsByUserId = {};
 let invites = {}
 let usersSubscriptions = {}
 
+let addGuestAcc = (guestAcc) => {
+    if (guestAccs[guestAcc.roomId] === undefined) {
+        guestAccs[guestAcc.roomId] = {};
+    }
+    guestAccs[guestAcc.roomId][guestAcc.id] = guestAcc;
+    guestAccsOutOfRoom[guestAcc.token] = guestAcc;
+    guestAccsByUserId[guestAcc.userId] = guestAcc;
+};
+
+let addUser = (roomId, user) => {
+    if (user === undefined) return
+    if (users[roomId] === undefined) {
+        users[roomId] = {};
+    }
+    users[roomId][user.id] = user;
+};
+
 module.exports = {
     usersSubscriptions: usersSubscriptions,
     users: users,
@@ -62,26 +79,13 @@ module.exports = {
         users[roomId][userId] = undefined;
         return user;
     },
-    addUser: (roomId, user) => {
-        if (user === undefined) return
-        if (users[roomId] === undefined) {
-            users[roomId] = {};
-        }
-        users[roomId][user.id] = user;
-    },
-    addGuestAcc: (guestAcc) => {
-        if (guestAccs[guestAcc.roomId] === undefined) {
-            guestAccs[guestAcc.roomId] = {};
-        }
-        guestAccs[guestAcc.roomId][guestAcc.id] = guestAcc;
-        guestAccsOutOfRoom[guestAcc.token] = guestAcc;
-        guestAccsByUserId[guestAcc.userId] = guestAcc;
-    },
+    addUser: addUser,
+    addGuestAcc: addGuestAcc,
     anon: (roomId) => {
         let userId = uuid() + Date.now();
         let userToken = uuid() + Date.now();
-        this.addUser(roomId, {id: userId});
-        this.addGuestAcc({anon: true, userId: userId, roomId: roomId, token: userToken});
+        addUser(roomId, {id: userId});
+        addGuestAcc({anon: true, userId: userId, roomId: roomId, token: userToken});
         return {userId: userId, token: userToken};
     },
     authenticateMember: (req, res, callback) => {
