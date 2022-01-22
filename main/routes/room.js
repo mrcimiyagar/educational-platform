@@ -797,17 +797,17 @@ router.post('/enter_room', jsonParser, async function (req, res) {
     metadata[membership.userId].roomId = membership.roomId
     addUser(membership.roomId, user)
 
-    let room = await sw.Room.findOne({ where: { spaceId: membership.roomId } });
-    let rooms = await sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } });
+    room = await sw.Room.findOne({ where: { spaceId: membership.roomId } });
+    rooms = await sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } });
     for (let i = 0; i < rooms.length; i++) {
       let room = rooms[i]
       room.users = getRoomUsers(room.id)
     }
-    let memberships = await sw.Membership.findAll({
+    memberships = await sw.Membership.findAll({
       raw: true,
       where: { roomId: membership.roomId },
     });
-    let users = await sw.User.findAll({
+    users = await sw.User.findAll({
       raw: true,
       where: { id: memberships.map((mem) => mem.userId) },
     });
