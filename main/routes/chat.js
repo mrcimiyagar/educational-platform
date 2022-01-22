@@ -456,8 +456,9 @@ router.post('/get_messages', jsonParser, async function (req, res) {
       raw: true,
       where: { roomId: membership.roomId },
     });
-    members.forEach((member) => {
-      require('../server').signlePushTo(member.userId, 'message-seen', { messages });
+    let us = getRoomUsers(membership.roomId);
+    us.forEach((u) => {
+      require('../server').signlePushTo(u.id, 'message-seen', { messages });
     });
     let fetchedMessages = await sw.Message.findAll({
       raw: true,
