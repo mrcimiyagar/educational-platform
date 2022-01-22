@@ -1258,13 +1258,14 @@ router.post("/get_room_users", jsonParser, async function (req, res) {
               ) {
                 require("../socket").pauseds[membership.roomId] = {};
               }
+              let onlineUsers = getRoomUsers(membership.roomId).map(u => usersBook[u.id]);
               res.send({
                 status: "success",
                 rooms: rooms,
                 pauseds: Object.values(
                   require("../socket").pauseds[membership.roomId]
                 ).map((v) => v.user),
-                users: getRoomUsers(membership.roomId),
+                users: onlineUsers,
                 allUsers: users,
               });
             });
