@@ -33,6 +33,7 @@ export default function BotContainer(props) {
           transition: el.transition,
           zIndex: el.zIndex,
           display: el.display,
+          flexWrap: el.flexWrap,
           fontSize: el.fontSize,
           color: el.color,
           paddingLeft: el.paddingLeft,
