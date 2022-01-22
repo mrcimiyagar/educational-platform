@@ -9,6 +9,7 @@ let guestAccsOutOfRoom = {};
 let guestAccsByUserId = {};
 let invites = {}
 let usersSubscriptions = {}
+let usersBook = {}
 
 let addGuestAcc = (guestAcc) => {
     if (guestAccs[guestAcc.roomId] === undefined) {
@@ -32,6 +33,7 @@ module.exports = {
     users: users,
     guestAccsByUserId: guestAccsByUserId,
     guestAccs: guestAccs,
+    usersBook: usersBook,
     moveMembership: (roomId, userId, toRoomId) => {
         let mem = sw.Membership.findOne({where: {roomId: roomId, userId: userId}})
         if (mem === null) {
@@ -85,7 +87,9 @@ module.exports = {
     anon: (roomId) => {
         let userId = uuid() + Date.now();
         let userToken = uuid() + Date.now();
-        addUser(roomId, {id: userId});
+        let user = {id: userId, firstName: 'anon', lastName: '', avatarId: null};
+        addUser(roomId, user);
+        usersBook[userId] = user;
         addGuestAcc({
             anon: true,
             id: userId,
@@ -112,7 +116,7 @@ module.exports = {
                 if (token in guestAccsOutOfRoom) {
                     let a = guestAccsOutOfRoom[token];
                     if (a.anon === true) {
-                        callback(a, {userId: a.userId}, {id: a.userId}, a);
+                        callback(a, {userId: a.userId}, usersBook[a.userId], a);
                     }
                     else if (a.roomId === roomId)
                         callback(a, {userId: a.userId}, a.user, a);

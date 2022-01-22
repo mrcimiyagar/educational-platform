@@ -3,7 +3,7 @@ const express = require('express');
 const tools = require('../tools');
 const Sequelize = require('sequelize');
 const bodyParser = require('body-parser');
-const { authenticateMember } = require('../users');
+const { authenticateMember, usersBook } = require('../users');
 const { uuid } = require('uuidv4');
 const fetch = require('node-fetch');
 const users = require('../users');
@@ -27,6 +27,7 @@ router.post('/register', jsonParser, async function (req, res) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
     });
+    usersBook[user.id] = user;
     const { newCreatureId } = require('../server');
     newCreatureId(user.id);
     let home = await sw.Space.create({

@@ -27,7 +27,7 @@ const notif = require('./routes/notifications');
 const cors = require('cors');
 const sw = require('./db/models');
 const bodyParser = require('body-parser');
-const { usersSubscriptions, getRoomUsers } = require('./users');
+const { usersSubscriptions, getRoomUsers, usersBook } = require('./users');
 const expressStaticGzip = require('express-static-gzip');
 const webpush = require('web-push');
 const { sockets, notifs } = require('./socket');
@@ -65,6 +65,9 @@ socket.setup(server);
 models.setup().then(() => {
     
     sw.User.findAll({raw: true}).then(us => {
+        us.forEach(user => {
+            usersBook[user.id] = user;
+        });
         creatures = creatures.concat(us.map(u => u.id));
         sw.Bot.findAll({raw: true}).then(bs => {
             creatures = creatures.concat(bs.map(b => b.id));

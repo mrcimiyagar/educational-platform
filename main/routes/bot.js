@@ -1,7 +1,7 @@
 const sw = require('../db/models')
 const express = require('express')
 const bodyParser = require('body-parser')
-const { authenticateMember, isUserInRoom } = require('../users')
+const { authenticateMember, isUserInRoom, usersBook } = require('../users')
 const tools = require('../tools')
 const { uuid } = require('uuidv4');
 
@@ -190,7 +190,8 @@ router.post('/create_bot', jsonParser, async function (req, res) {
       avatarId: req.body.avatarId === undefined ? null : req.body.avatarId,
       categoryId:
         req.body.categoryId === undefined ? null : req.body.categoryId,
-    })
+    });
+    usersBook[bot.id] = bot;
     const { newCreatureId } = require('../server')
     newCreatureId(bot.id);
     let botSecret = await sw.BotSecret.create({

@@ -2,7 +2,7 @@ const sw = require('../db/models')
 const express = require('express')
 const bodyParser = require('body-parser')
 const { User } = require('../db/models')
-const { authenticateMember, usersSubscriptions, getRoomUsers } = require('../users')
+const { authenticateMember, usersSubscriptions, getRoomUsers, usersBook } = require('../users')
 const Sequelize = require('sequelize')
 const webpush = require('web-push');
 const users = require('../users')
@@ -472,7 +472,7 @@ router.post('/get_messages', jsonParser, async function (req, res) {
     let copies = [];
     for (let i = 0; i < fetchedMessages.length; i++) {
       let msg = fetchedMessages[i];
-      let author = users[msg.roomId] === undefined ? null : users[msg.roomId][msg.authorId];
+      let author = usersBook[msg.authorId] === undefined ? null : usersBook[msg.authorId];
       let msgCopy = {
         id: msg.id,
         authorId: msg.authorId,

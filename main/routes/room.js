@@ -12,6 +12,7 @@ const {
   resolveInvite,
   isUserInRoom,
   anon,
+  usersBook,
 } = require("../users");
 const tools = require("../tools");
 const express = require("express");
@@ -1150,6 +1151,7 @@ router.post("/use_invitation", jsonParser, async function (req, res) {
             username: tools.makeRandomCode(32),
             isGuest: true,
           });
+          usersBook[user.id] = user;
           const { newCreatureId } = require("../server");
           newCreatureId(user.id);
           let acc = {
