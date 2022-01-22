@@ -737,7 +737,9 @@ router.post("/get_spaces", jsonParser, async function (req, res) {
 });
 
 router.post("/anon", jsonParser, async function (req, res) {
-  res.send({ status: "success", auth: anon(req.body.roomId) });
+  let auth = anon(req.body.roomId);
+  newCreatureId(auth.userId);
+  res.send({ status: "success", auth: auth });
 });
 
 router.post("/enter_room", jsonParser, async function (req, res) {
@@ -1147,7 +1149,7 @@ router.post("/use_invitation", jsonParser, async function (req, res) {
             username: tools.makeRandomCode(32),
             isGuest: true,
           });
-          const { newCreatureId } = require("../server");
+          const { newCreatureId, newCreatureId } = require("../server");
           newCreatureId(user.id);
           let acc = {
             id: user.id,
