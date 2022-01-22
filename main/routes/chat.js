@@ -235,10 +235,10 @@ router.post('/create_message', jsonParser, async function (req, res) {
         .catch((err) => console.error(err));
     }
     let roomRaw = await sw.Room.findOne({where: {id: membership.roomId}});
-    users.forEach((user) => {
-      if (user.id !== session.userId) {
-        pushNotification(user.id, 'پیام جدید از ' + user.firstName, msgCopy.text);
-        require('../server').signlePushTo(user.id, 'message-added', { msgCopy });
+    users.forEach((u) => {
+      if (u.id !== session.userId) {
+        require('../server').signlePushTo(u.id, 'message-added', { msgCopy });
+        pushNotification(u.id, 'پیام جدید از ' + u.firstName, msgCopy.text);
       }
     });
     let mems = await sw.Membership.findAll({raw: true, where: {roomId: roomRaw.id}});

@@ -93,6 +93,7 @@ module.exports = {
             roomId: roomId,
             token: userToken,
             user: {id: userId},
+            isGuest: true,
             ...defaultPermissions
         });
         return {userId: userId, token: userToken};
