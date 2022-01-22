@@ -90,6 +90,9 @@ serv.on('upgrade', function (req, socket, head) {
   else if (req.headers.host === 'coder.kasperian.cloud') {
     proxy.ws(req, socket, { target: 'ws://localhost:10000'}, e => {})
   }
+  else if (req.headers.host === 'coder2.kasperian.cloud') {
+    proxy.ws(req, socket, { target: 'ws://localhost:10001'}, e => {})
+  }
 });
 
 serv.listen(443);
