@@ -717,42 +717,33 @@ router.post('/enter_room', jsonParser, async function (req, res) {
     let roomId = metadata[membership.userId].roomId
 
     if (membership.roomId === roomId) {
-      sw.Room.findOne({ where: { spaceId: membership.roomId } }).then(
-        async (room) => {
-          sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
-            async (rooms) => {
-              for (let i = 0; i < rooms.length; i++) {
-                let room = rooms[i]
-                room.users = getRoomUsers(room.id)
-              }
-              sw.Membership.findAll({
-                raw: true,
-                where: { roomId: membership.roomId },
-              }).then(async (memberships) => {
-                sw.User.findAll({
-                  raw: true,
-                  where: { id: memberships.map((mem) => mem.userId) },
-                }).then(async (users) => {
-                  if (require('../socket').pauseds[membership.roomId] === undefined) {
-                    require('../socket').pauseds[membership.roomId] = {};
-                  }
-                  require('../server').pushTo(
-                    'room_' + membership.roomId,
-                    'user-entered',
-                    {
-                      rooms: rooms,
-                      pauseds: Object.values(require('../socket').pauseds[membership.roomId]).map(v => v.user),
-                      users: getRoomUsers(membership.roomId),
-                      allUsers: users,
-                    },
-                  )
-                })
-              })
-            },
-          )
+      let room = await sw.Room.findOne({ where: { spaceId: membership.roomId } });
+      let rooms = await sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } });
+      for (let i = 0; i < rooms.length; i++) {
+        let room = rooms[i]
+        room.users = getRoomUsers(room.id)
+      }
+      let memberships = await sw.Membership.findAll({
+        raw: true,
+        where: { roomId: membership.roomId },
+      });
+      let users = await sw.User.findAll({
+        raw: true,
+        where: { id: memberships.map((mem) => mem.userId) },
+      })
+      if (require('../socket').pauseds[membership.roomId] === undefined) {
+        require('../socket').pauseds[membership.roomId] = {};
+      }
+      require('../server').pushTo(
+        'room_' + membership.roomId,
+        'user-entered',
+        {
+          rooms: rooms,
+          pauseds: Object.values(require('../socket').pauseds[membership.roomId]).map(v => v.user),
+          users: getRoomUsers(membership.roomId),
+          allUsers: users,
         },
       )
-
       res.send({ status: 'success', membership: membership })
       return
     }
