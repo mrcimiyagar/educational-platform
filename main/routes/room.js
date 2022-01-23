@@ -763,7 +763,7 @@ router.post("/enter_room", jsonParser, async function (req, res) {
 
     if (membership.roomId === roomId) {
       let room = await sw.Room.findOne({
-        where: { spaceId: membership.roomId },
+        where: { id: membership.roomId },
       });
       let rooms = await sw.Room.findAll({
         raw: true,
