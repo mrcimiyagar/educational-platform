@@ -352,6 +352,10 @@ export let RoomTreeBox = (props) => {
     }
   };
 
+  const editAccess = () => {
+    
+  };
+
   return (
     <div style={{ width: "100%", height: "auto", marginTop: 16 }}>
       <ConfirmationDialogRaw
@@ -384,6 +388,14 @@ export let RoomTreeBox = (props) => {
               }}
             >
               ارسال به روم دیگر
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                editAccess();
+                handleClose();
+              }}
+            >
+              تغییر محدوده ی دسترسی
             </MenuItem>
           </Menu>
           <TreeView

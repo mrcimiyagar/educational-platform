@@ -1356,15 +1356,9 @@ router.post("/move_user", jsonParser, async function (req, res) {
             });
           } else {
             fromMems.forEach((fm) => {
-              fm.destroy();
-            });
-          }
-
-          if (!isGuest) {
-            let mem = await sw.Membership.create({
-              userId: req.body.userId,
-              roomId: req.body.toRoomId,
-              ...tools.defaultPermissions,
+              if (fm.roomId !== fromRoom.mainRoomId) {
+                fm.destroy();
+              }
             });
           }
 
