@@ -1436,7 +1436,16 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
       });
       return;
     }
-    let botSecret = await sw.BotSecret.findOne({where: {creatorId: user.id, botId: req.body.botId}});
+    let subscription = await sw.Subscription.findOne({where: {botId: req.body.botId, subscriberId: user.id}});
+    if (subscription === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e4',
+        message: 'access denied.',
+      });
+      return;
+    }
+    let botSecret = await sw.BotSecret.findOne({where: {botId: req.body.botId}});
     if (botSecret === null) {
       res.send({
         status: 'error',
