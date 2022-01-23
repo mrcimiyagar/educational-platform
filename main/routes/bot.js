@@ -1553,7 +1553,7 @@ router.post('/update_widget_worker', jsonParser, async function (req, res) {
 router.post('/get_widget_workers', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
     let room = req.body.roomId === undefined ? null : await sw.Room.findOne({where: {id: req.body.roomId}});
-    if (room !== null && r.accessType === 'public') {
+    if (room !== null && room.accessType === 'public') {
       let widgetWorkers = await sw.WidgetWorker.findAll({
         raw: true,
         where: { roomId: req.body.roomId },
