@@ -24,6 +24,7 @@ export default function BotContainer(props) {
           ...(el.backImageSize && {backgroundSize: el.backImageSize}),
           ...(el.backRepeat && {backgroundRepeat: el.backRepeat}),
           borderRadius: el.borderRadius,
+          border: el.border,
           textAlign: el.alignChildren,
           alignItems: el.alignChildren,
           justifyContent: el.alignChildren,
