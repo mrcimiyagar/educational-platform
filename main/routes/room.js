@@ -720,6 +720,7 @@ router.post("/get_spaces", jsonParser, async function (req, res) {
             where: { id: memberships.map((m) => m.roomId) },
           }).then(async function (rooms) {
             sw.Space.findAll({
+              raw: true,
               where: {
                 id: rooms
                   .map((r) => r.spaceId)
