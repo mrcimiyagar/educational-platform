@@ -1431,7 +1431,7 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
     if (membership === null || membership === undefined) {
       res.send({
         status: 'error',
-        errorCode: 'e0005',
+        errorCode: 'e1',
         message: 'access denied.',
       });
       return;
@@ -1440,7 +1440,7 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
     if (botSecret === null) {
       res.send({
         status: 'error',
-        errorCode: 'e0005',
+        errorCode: 'e2',
         message: 'access denied.',
       });
       return;
@@ -1449,7 +1449,7 @@ router.post('/create_widget_worker', jsonParser, async function (req, res) {
     if (widget === null) {
       res.send({
         status: 'error',
-        errorCode: 'e0005',
+        errorCode: 'e3',
         message: 'access denied.',
       });
       return;
