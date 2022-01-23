@@ -1364,6 +1364,14 @@ router.post("/move_user", jsonParser, async function (req, res) {
             });
           }
 
+          if (!isGuest) {
+            let mem = await sw.Membership.create({
+              userId: req.body.userId,
+              roomId: req.body.toRoomId,
+              ...tools.defaultPermissions,
+            });
+          }
+
           removeUser(fromRoom.id, req.body.userId);
           let user = await sw.User.findOne({ where: { id: req.body.userId } });
           addUser(toRoom.id, user);
