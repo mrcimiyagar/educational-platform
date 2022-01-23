@@ -728,7 +728,7 @@ router.post("/get_spaces", jsonParser, async function (req, res) {
                     return value !== null;
                   }),
               },
-            }).then(async function (spaces) {
+            }).then(function (spaces) {
               res.send({ status: "success", spaces: spaces });
             });
           });
@@ -1356,8 +1356,9 @@ router.post("/move_user", jsonParser, async function (req, res) {
               }
             });
           } else {
+            let space = await sw.Space.findOne({ where: { id: req.body.spaceId } });
             fromMems.forEach((fm) => {
-              if (fm.roomId !== fromRoom.mainRoomId) {
+              if (fm.roomId !== space.mainRoomId) {
                 fm.destroy();
               }
             });
