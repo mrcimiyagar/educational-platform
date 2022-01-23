@@ -714,9 +714,9 @@ router.post("/get_spaces", jsonParser, async function (req, res) {
         });
         return;
       }
-      sw.Membership.findAll({ where: { userId: session.userId } }).then(
+      sw.Membership.findAll({ raw: true, where: { userId: session.userId } }).then(
         async function (memberships) {
-          sw.Room.findAll({
+          sw.Room.findAll({ raw: true,
             where: { id: memberships.map((m) => m.roomId) },
           }).then(async function (rooms) {
             sw.Space.findAll({
@@ -724,7 +724,7 @@ router.post("/get_spaces", jsonParser, async function (req, res) {
               where: {
                 id: rooms
                   .map((r) => r.spaceId)
-                  .filter((value, index, arr) => {
+                  .filter((value) => {
                     return value !== null;
                   }),
               },
