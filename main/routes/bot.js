@@ -920,7 +920,14 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
     let r = req.body.roomId === undefined ? null : await sw.Room.findOne({where: {id: req.body.roomId}});
     if (req.body.preview === true || (r !== null && r.accessType === 'public')) {
-      let widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
+      let widget;
+      if (req.body.widgetWorkerId !== undefined) {
+        let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId}});
+        widget = await sw.Widget.findOne({where: {id: widgetWorker.widgetId}});
+      }
+      else {
+        widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
+      }
       if (widget === null) {
         res.send({
           status: 'error',
@@ -998,21 +1005,28 @@ router.post('/gui', jsonParser, async function (req, res) {
   }
   let r = req.body.roomId === undefined ? null : await sw.Room.findOne({where: {id: req.body.roomId}});
   if (req.body.preview === true || (r !== null && r.accessType === 'public')) {
-      let widget = await sw.Widget.findOne({where: {botId: bot.id, id: req.body.widgetId}});
-      if (widget === null) {
-        res.send({
-          status: 'error',
-          errorCode: 'e0005',
-          message: 'access denied.',
-        });
-        return;
-      }
-      require('../server').signlePushTo(req.body.userId, 'gui', {
-        type: req.body.type,
-        gui: req.body.gui,
-        widgetId: widget.id,
-      }, true);
-      res.send({ status: 'success' });
+    let widget;
+    if (req.body.widgetWorkerId !== undefined) {
+      let widgetWorker = await sw.WidgetWorker.findOne({where: {id: req.body.widgetWorkerId}});
+      widget = await sw.Widget.findOne({where: {botId: bot.id, id: widgetWorker.widgetId}});
+    }
+    else {
+      widget = await sw.Widget.findOne({where: {botId: bot.id, id: req.body.widgetId}});
+    }
+    if (widget === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.'
+      });
+      return;
+    }
+    require('../server').signlePushTo(req.body.userId, 'gui', {
+      type: req.body.type,
+      gui: req.body.gui,
+      widgetId: widget.id,
+    }, true);
+    res.send({ status: 'success' });
   }
   else {
       let workership = await sw.Workership.findOne({where: {botId: bot.id, roomId: req.body.roomId}});
