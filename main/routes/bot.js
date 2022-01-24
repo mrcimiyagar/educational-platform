@@ -918,7 +918,6 @@ router.post('/get_bot_workerships', jsonParser, async function (req, res) {
 
 router.post('/request_initial_gui', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-    let r = req.body.roomId === undefined ? null : await sw.Room.findOne({where: {id: req.body.roomId}});
     if (req.body.preview === true) {
       let widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
       if (widget === null) {
