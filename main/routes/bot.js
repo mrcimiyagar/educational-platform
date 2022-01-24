@@ -939,6 +939,9 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
       require('../server').signlePushTo(widget.botId, 'request_initial_gui', {
         widgetId: widget.id,
         userId: user.id,
+        preview: req.body.preview,
+        roomId: req.body.roomId,
+        widgetWorkerId: req.body.widgetWorkerId,
         preview: req.body.preview
       }, true);
       res.send({ status: 'success' });
@@ -1025,6 +1028,9 @@ router.post('/gui', jsonParser, async function (req, res) {
       type: req.body.type,
       gui: req.body.gui,
       widgetId: widget.id,
+      roomId: req.body.roomId,
+      widgetWorkerId: req.body.widgetWorkerId,
+      preview: req.body.preview
     }, true);
     res.send({ status: 'success' });
   }
