@@ -918,7 +918,8 @@ router.post('/get_bot_workerships', jsonParser, async function (req, res) {
 
 router.post('/request_initial_gui', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-    if (req.body.preview === true) {
+    let r = req.body.roomId === undefined ? null : await sw.Room.findOne({where: {id: req.body.roomId}});
+    if (req.body.preview === true || (r !== null && r.accessType === 'public')) {
       let widget = await sw.Widget.findOne({where: {id: req.body.widgetId}});
       if (widget === null) {
         res.send({
@@ -931,7 +932,7 @@ router.post('/request_initial_gui', jsonParser, async function (req, res) {
       require('../server').signlePushTo(widget.botId, 'request_initial_gui', {
         widgetId: widget.id,
         userId: user.id,
-        preview: true
+        preview: req.body.preview
       }, true);
       res.send({ status: 'success' });
     }
