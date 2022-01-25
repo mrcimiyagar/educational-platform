@@ -98,6 +98,16 @@ let scrollReady = false;
 
 export default function ChatEmbeddedInMessenger(props) {
 
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  let urlPropsDict = Object.fromEntries(urlSearchParams.entries());
+
+  if (urlPropsDict.user_id !== undefined) {
+    props = {...props, userId: urlPropsDict.user_id};
+  }
+  if (urlPropsDict.room_id !== undefined) {
+    props = {...props, roomId: urlPropsDict.room_id};
+  }
+
   document.documentElement.style.overflowY = 'hidden';
 
   let forceUpdate = useForceUpdate();
