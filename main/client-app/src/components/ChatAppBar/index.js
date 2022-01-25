@@ -96,7 +96,7 @@ export default function ChatAppBar(props) {
       registerEvent('chat-typing', (typingList) => {
         typingList = typingList.filter((u) => {
           if (u === undefined) return false;
-          if (u.id === me.id) {
+          if (u === me.id) {
             return false
           }
           return true
