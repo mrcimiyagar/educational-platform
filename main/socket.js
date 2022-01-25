@@ -74,7 +74,7 @@ let typingEvent = (user, soc) => {
     typing[metadata[user.id].roomId][user.id] = setTimeout(() => {
       checkTypingUndefinedStructures(user);
       delete typing[metadata[user.id].roomId][user.id];
-    }, 5000);
+    }, 1000);
   });
 };
 
@@ -89,7 +89,7 @@ setInterval(() => {
       );
     }
   }
-}, 1000);
+}, 250);
 
 module.exports = {
   pauseds: pauseds,
