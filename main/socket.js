@@ -52,7 +52,7 @@ let metadata = {};
 let userToSocketMap = {};
 let typing = {};
 
-let checkTypingUndefinedStructures = () => {
+let checkTypingUndefinedStructures = (user) => {
   if (metadata[user.id] === undefined) {
     metadata[user.id] = {};
   }
@@ -66,13 +66,13 @@ let checkTypingUndefinedStructures = () => {
 
 let typingEvent = (user, soc) => {
   soc.on("chat-typing", () => {
-    checkTypingUndefinedStructures();
+    checkTypingUndefinedStructures(user);
     if (typing[metadata[user.id].roomId][user.id] !== undefined) {
       clearTimeout(typing[metadata[user.id].roomId][user.id]);
       delete typing[metadata[user.id].roomId][user.id];
     }
     typing[metadata[user.id].roomId][user.id] = setTimeout(() => {
-      checkTypingUndefinedStructures();
+      checkTypingUndefinedStructures(user);
       delete typing[metadata[user.id].roomId][user.id];
     }, 5000);
   });
