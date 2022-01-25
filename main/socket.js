@@ -83,16 +83,10 @@ setInterval(() => {
     if (typing[key] !== undefined && typing[key] !== null) {
       let roomTypings = typing[key];
       getRoomUsers(key).forEach(u => {
-        let typingUsersForIndividual = {};
-        for (let userId in roomTypings) {
-          if (userId !== u.id) {
-            typingUsersForIndividual[userId] = true;
-          }
-        }
         require("./server").signlePushTo(
           u.id,
           "chat-typing",
-          Object.keys(typingUsersForIndividual),
+          Object.keys(roomTypings),
           true
         );
       });      
