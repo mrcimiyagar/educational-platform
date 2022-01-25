@@ -13,6 +13,8 @@ import React, { useEffect } from 'react';
 import { setWallpaper } from '../..';
 import DesktopWallpaper from '../../images/desktop-wallpaper.jpg';
 import {
+  currentRoomId,
+  currentUserId,
   inTheGame,
   isDesktop,
   isInMessenger,
@@ -98,7 +100,7 @@ export default function HomeMessenger(props) {
               token: token,
             },
             body: JSON.stringify({
-              roomId: props.selectedRoomId,
+              roomId: currentRoomId,
             }),
             redirect: 'follow',
           };
@@ -117,7 +119,7 @@ export default function HomeMessenger(props) {
                   token: token,
                 },
                 body: JSON.stringify({
-                  roomId: props.selectedRoomId,
+                  roomId: currentRoomId,
                 }),
                 redirect: 'follow',
               };
@@ -161,7 +163,7 @@ export default function HomeMessenger(props) {
               style={{
                 borderRadius: !isDesktop()
                   ? undefined
-                  : props.selectedRoomId === undefined
+                  : currentRoomId === undefined
                   ? '24px 24px 0 0'
                   : '0 24px 0 0',
                 marginRight: isDesktop() ? 256 + 32 + 32 + 64 : undefined,
@@ -226,7 +228,7 @@ export default function HomeMessenger(props) {
               borderRadius:
                 isTablet() || isMobile()
                   ? 0
-                  : props.selectedRoomId === undefined
+                  : currentRoomId === undefined
                   ? '0 0 24px 24px'
                   : '0 0 24px 0',
             }}
@@ -247,8 +249,6 @@ export default function HomeMessenger(props) {
               >
                 <AllChats
                   setInTheGame={setInTheGame}
-                  setSelectedRoomId={props.setSelectedRoomId}
-                  setSelectedUserId={props.setSelectedUserId}
                   chats={props.chats.filter((c) => c.chatType === 'p2p')}
                 />
                 <div style={{ width: '100%', height: 100 }} />
@@ -270,8 +270,6 @@ export default function HomeMessenger(props) {
               >
                 <GroupChats
                   setInTheGame={setInTheGame}
-                  setSelectedRoomId={props.setSelectedRoomId}
-                  setSelectedUserId={props.setSelectedUserId}
                   chats={props.chats.filter((c) => c.chatType === 'group')}
                 />
                 <div style={{ width: '100%', height: 100 }} />
@@ -293,8 +291,6 @@ export default function HomeMessenger(props) {
               >
                 <ChannelChats
                   setInTheGame={setInTheGame}
-                  setSelectedRoomId={props.setSelectedRoomId}
-                  setSelectedUserId={props.setSelectedUserId}
                   chats={props.chats.filter((c) => c.chatType === 'channel')}
                 />
                 <div style={{ width: '100%', height: 100 }} />
@@ -316,8 +312,6 @@ export default function HomeMessenger(props) {
               >
                 <BotChats
                   setInTheGame={setInTheGame}
-                  setSelectedRoomId={props.setSelectedRoomId}
-                  setSelectedUserId={props.setSelectedUserId}
                   chats={props.chats.filter((c) => c.chatType === 'bot')}
                 />
                 <div style={{ width: '100%', height: 100 }} />
@@ -327,8 +321,8 @@ export default function HomeMessenger(props) {
           {isDesktop() && isInMessenger() ? (
             <ChatEmbeddedInMessenger
               key={'chat1'}
-              roomId={props.selectedRoomId}
-              userId={props.selectedUserId}
+              roomId={currentRoomId}
+              userId={currentUserId}
             />
           ) : isTablet() ? (
             <div
@@ -342,8 +336,8 @@ export default function HomeMessenger(props) {
             >
               <ChatEmbedded
                 key={'chat2'}
-                roomId={props.selectedRoomId}
-                userId={props.selectedUserId}
+                roomId={currentRoomId}
+                userId={currentUserId}
               />
             </div>
           ) : null}

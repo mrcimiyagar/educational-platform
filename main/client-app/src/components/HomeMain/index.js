@@ -103,8 +103,6 @@ export default function HomeAppbar(props) {
   updateHome = useForceUpdate()
   const classes = useStyles()
 
-  let [selectedRoomId, setSelectedRoomId] = React.useState(props.selectedChatId)
-  let [selectedUserId, setSelectedUserId] = React.useState(props.selectedUserId)
   const [jumperOpen, setJumperOpen] = React.useState(true)
   const [value, setValue] = React.useState(3)
   let [chats, setChats] = React.useState([])
@@ -232,10 +230,6 @@ export default function HomeAppbar(props) {
           }}
           value={value}
           handleChange={handleChange}
-          selectedUserId={selectedUserId}
-          selectedRoomId={selectedRoomId}
-          setSelectedRoomId={setSelectedRoomId}
-          setSelectedUserId={setSelectedUserId}
           setDrawerOpen={setDrawerOpen}/>
         : tabIndexBackup === '1' ? (
         <SpacesGrid setDrawerOpen={setDrawerOpen} />
@@ -262,7 +256,6 @@ export default function HomeAppbar(props) {
       <HomeDrawer
         open={drawerOpen}
         setOpen={setDrawerOpen}
-        roomId={selectedRoomId}
       />
     </div>
   )

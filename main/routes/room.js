@@ -840,7 +840,7 @@ router.post("/enter_room", jsonParser, async function (req, res) {
     metadata[membership.userId].roomId = membership.roomId;
     addUser(membership.roomId, user);
 
-    room = await sw.Room.findOne({ where: { spaceId: membership.roomId } });
+    room = await sw.Room.findOne({ where: { id: membership.roomId } });
     rooms = await sw.Room.findAll({
       raw: true,
       where: { spaceId: room.spaceId },

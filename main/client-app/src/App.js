@@ -95,6 +95,13 @@ export let setBoardFrame = (bf) => {
 export let currentRoomId = 0;
 export let setCurrentRoomId = (rId) => {
   currentRoomId = rId;
+  forceUpdate();
+};
+
+export let currentUserId = 0;
+export let setCurrentUserId = (uId) => {
+  currentUserId = uId;
+  forceUpdate();
 };
 
 export let histPage = undefined;

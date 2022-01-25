@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import { Audiotrack, Done, DoneAll, Photo, Videocam } from '@material-ui/icons'
 import React from 'react'
 import { Badge } from 'reactstrap'
-import { gotoPage, isDesktop, isTablet } from '../../App'
+import { gotoPage, isDesktop, isTablet, setCurrentRoomId, setCurrentUserId } from '../../App'
 import EmptySign from '../../components/EmptySign'
 import { resetMessages } from '../../routes/pages/chat'
 import { colors, me, token } from '../../util/settings'
@@ -20,6 +20,7 @@ import {
   useForceUpdate,
 } from '../../util/Utils'
 import { inTheGame } from '../../App'
+import { updateHome } from '../HomeMain'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,8 +75,8 @@ export default function GroupChats(props) {
                   if (isMobile()) props.setInTheGame(false)
                   resetMessages()
                   if (isDesktop() || isTablet()) {
-                    props.setSelectedRoomId(chat.id);
-                    props.setSelectedUserId(undefined);
+                    setCurrentRoomId(chat.id);
+                    setCurrentUserId(undefined);
                   } else {
                     gotoPage('/app/chat', { room_id: chat.id })
                   }
