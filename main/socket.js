@@ -86,7 +86,7 @@ setInterval(() => {
         let typingUsersForIndividual = {};
         for (let userId in roomTypings) {
           if (userId !== u.id) {
-            typingUsersForIndividual[u.id] = true;
+            typingUsersForIndividual[userId] = true;
           }
         }
         require("./server").signlePushTo(
