@@ -82,11 +82,14 @@ setInterval(() => {
   for (let key in typing) {
     if (typing[key] !== undefined && typing[key] !== null) {
       let roomTypings = typing[key];
-      require("./server").pushTo(
-        "room_" + key,
-        "chat-typing",
-        Object.keys(roomTypings)
-      );
+      getRoomUsers(key).forEach(u => {
+        require("./server").signlePushTo(
+          u.id,
+          "chat-typing",
+          Object.keys(roomTypings),
+          true
+        );
+      });      
     }
   }
 }, 250);
