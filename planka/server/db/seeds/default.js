@@ -15,16 +15,16 @@ exports.seed = async (knex) => {
 
   let users = [];
   
-  users.push({
-    email: 'admin',
-    password: bcrypt.hashSync('admin', 10),
-    isAdmin: true,
-    name: 'admin',
-    username: 'admin',
-    subscribeToOwnCards: false,
-    createdAt: date,
-    updatedAt: date,
-  });
+  // users.push({
+  //   email: 'admin',
+  //   password: bcrypt.hashSync('admin', 10),
+  //   isAdmin: true,
+  //   name: 'admin',
+  //   username: 'admin',
+  //   subscribeToOwnCards: false,
+  //   createdAt: date,
+  //   updatedAt: date,
+  // });
 
   result.users.forEach(user => {
     users.push(({
