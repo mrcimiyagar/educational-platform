@@ -11,7 +11,7 @@ exports.seed = async (knex) => {
     },
     redirect: 'follow',
   }
-  let result = await (await fetch('https://kasperian.cloud/auth/get_users', requestOptions)).json();
+  let result = await (await fetch('https://society.kasperian.cloud/auth/get_users', requestOptions)).json();
 
   let users = [];
   
