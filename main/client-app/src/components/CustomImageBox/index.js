@@ -13,7 +13,8 @@ export default function CustomImageBox(props) {
         small.classList.add('loaded');
       };
       var imgLarge = new Image();
-      imgLarge.src = placeholder.dataset.large; 
+      imgLarge.src = placeholder.dataset.large;
+      imgLarge.style.objectFit = props.style.objectFit === undefined ? 'fit' : props.style.objectFit;
       imgLarge.onload = function () {
         imgLarge.classList.add('loaded');
       };
@@ -39,7 +40,7 @@ export default function CustomImageBox(props) {
           id={randId + '_'}
           data-src={props.src}
           className="img-small"
-          style={{objectFit: 'fit', height: '100%'}}
+          style={{objectFit: props.style.objectFit === undefined ? 'fit' : props.style.objectFit, height: '100%'}}
         />
         <div style={{paddingBottom: '66.6%'}}></div>
       </div>

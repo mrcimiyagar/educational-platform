@@ -298,6 +298,7 @@ export default function RoomPage(props) {
           setWallpaper({
             type: "photo",
             photo: DesktopWallpaper2,
+            fitType: 'cover'
           });
         }
         let wall = JSON.parse(result.wallpaper);

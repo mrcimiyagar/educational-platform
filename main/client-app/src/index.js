@@ -317,7 +317,7 @@ let AppContainer = (props) => {
               top: 0,
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
+              objectFit: wallpaper.fitType === undefined ? 'cover' : wallpaper.fitType,
             }}
           />
       ) : wallpaper.type === 'video' ? (
