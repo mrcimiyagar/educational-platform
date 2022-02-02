@@ -36,7 +36,7 @@ import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils';
 import {setMembership as setMCE} from '../ChatEmbedded';
 import {setMembership as setMCEIM} from '../ChatEmbeddedInMessenger';
-import MainWallpaper from '../../images/home-wallpaper.jpg';
+import MainWallpaper from '../../images/home-wallpaper2.jpg';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
