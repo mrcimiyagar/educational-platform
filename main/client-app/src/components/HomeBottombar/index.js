@@ -61,6 +61,7 @@ export default function HomeBottombar(props) {
       showLabels
       className={classes.root}
       style={{
+        zIndex: 2,
         bottom: props.inTheGame ? 0 : -80,
         transition: 'bottom .5s',
         backgroundColor: colors.primaryMedium,

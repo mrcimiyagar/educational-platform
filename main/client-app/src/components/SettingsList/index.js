@@ -138,7 +138,7 @@ export default function SettingsList(props) {
         cols={2}
         gap={1}
         className={classes.imageList}
-        style={{width: isDesktop() ? 'calc(100% - 32px - 280px - 144px - 16px)' : '100%', position: 'absolute', left: isDesktop() ? 72 + 32 : 0, zIndex: 2500, opacity: (inTheGame && visibilityAllowed) ? 1 : 0}}
+        style={{width: isDesktop() ? 'calc(100% - 32px - 280px - 144px - 16px)' : '100%', position: 'absolute', left: isDesktop() ? 72 + 32 : 0, zIndex: 1, opacity: (inTheGame && visibilityAllowed) ? 1 : 0}}
       >
         <ImageListItem
           key={'settings-my-profile-tag'}
