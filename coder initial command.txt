@@ -1,0 +1,1 @@
+docker run --name workshop-calendar -p 127.0.0.1:10001:8080 -e SERVICE_URL=https://open-vsx.org/vscode/gallery -e ITEM_URL=https://open-vsx.org/vscode/item codercom/code-server
