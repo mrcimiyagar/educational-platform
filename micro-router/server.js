@@ -63,6 +63,9 @@ let serv = https.createServer({
   else if (req.headers.host === 'calendarbot.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:10001' }, e => {})
   }
+  else if (req.headers.host === 'lab.kasperian.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:1013' }, e => {})
+  }
 })
 
 serv.on('upgrade', function (req, socket, head) {
