@@ -66,6 +66,9 @@ let serv = https.createServer({
   else if (req.headers.host === 'lab.kasperian.cloud') {
     proxy.web(req, res, { target: 'http://localhost:1013' }, e => {})
   }
+  else if (req.headers.host === 'carousel.kasperian.cloud') {
+    proxy.web(req, res, { target: 'http://localhost:4000' }, e => {})
+  }
 })
 
 serv.on('upgrade', function (req, socket, head) {
