@@ -85,6 +85,7 @@ import "react-block-ui/style.css";
 import CreateWidget from "./routes/pages/createWidget";
 import BotInfoPage from "./routes/pages/botInfo";
 import RoomsListPage from "./routes/pages/roomsList";
+import Space from "./routes/pages/space";
 const PouchDB = require("pouchdb").default;
 
 export let boardFrame = undefined;
@@ -785,20 +786,7 @@ MainAppContainer = (props) => {
       <ColorBase />
       <DesktopDetector />
       <Sidebar />
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          opacity: opacity,
-          transition: "opacity .125s",
-          direction: "rtl",
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          {P !== undefined ? <P {...pQuery} /> : null}
-          {D !== undefined ? <D {...dQuery} open={true} /> : null}
-        </ThemeProvider>
-      </div>
+      <Space />
       <Drawer
         PaperProps={{
           style: {
