@@ -88,10 +88,6 @@ export default function HomeMessenger(props) {
     let forceUpdate = useForceUpdate();
     let classes = useStyles();
     useEffect(() => {
-      setWallpaper({
-        type: 'photo',
-        photo: MainWallpaper
-      });
         let doRoomDoctor = () => {
           let requestOptions = {
             method: 'POST',
@@ -173,8 +169,8 @@ export default function HomeMessenger(props) {
                 backdropFilter: 'blur(10px)'
               }}
             >
-              <Toolbar style={{ marginTop: 16 }}>
-                <HomeSearchbar setDrawerOpen={props.setDrawerOpen} onSearch={props.onSearch} />
+              <Toolbar style={{ marginTop: 16, direction: 'rtl' }}>
+                <HomeSearchbar setBackClicked={props.onClose} onSearch={props.onSearch} />
               </Toolbar>
               <Tabs
                 variant="fullWidth"
@@ -217,7 +213,7 @@ export default function HomeMessenger(props) {
                 ? 'calc(100% - 184px - 40px)'
                 : isTablet()
                 ? 'calc(100% - 168px - 40px)'
-                : 'calc(100% - 128px - 32px - 56px)',
+                : 'calc(100% - 128px - 28px)',
               backgroundColor: colors.accentDark,
               backdropFilter: 'blur(20px)',
               opacity: inTheGame ? 1 : 0,
@@ -346,7 +342,7 @@ export default function HomeMessenger(props) {
                 color="secondary"
                 style={{
                   position: 'fixed',
-                  bottom: isDesktop() ? 48 : isTablet() ? 104 : 88,
+                  bottom: isDesktop() ? 48 : isTablet() ? 104 : 24,
                   left: isDesktop() || isTablet() ? undefined : 16,
                   right: isDesktop()
                     ? 568 + 64 + 256 + 32 + 32 - 16 - 180

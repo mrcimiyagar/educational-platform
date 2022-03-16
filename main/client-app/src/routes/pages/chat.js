@@ -98,8 +98,6 @@ let messagesDict = {};
 let scrollReady3 = false;
 
 export default function Chat(props) {
-  const urlSearchParams = new URLSearchParams(window.location.search)
-  props = Object.fromEntries(urlSearchParams.entries())
 
   document.documentElement.style.overflowY = 'hidden';
 
@@ -252,7 +250,7 @@ export default function Chat(props) {
     setTimeout(() => {
       setOpen(false)
       setTimeout(() => {
-        popPage()
+        props.onClose();
       }, 250)
     }, 500)
   }

@@ -536,6 +536,8 @@ export let setBottomSheetContent = (value) => {
 };
 
 export let isOnline = true;
+export let authenticationValid = undefined;
+let setAuthenticationValid = undefined;
 
 MainAppContainer = (props) => {
   window.onunload = () => leaveRoom(() => {});
@@ -551,8 +553,10 @@ MainAppContainer = (props) => {
   let [opacity, setOpacity] = React.useState(0);
   [routeTrigger, setRouteTrigger] = React.useState(false);
   [uploadingFiles, setUploadingFiles] = React.useState({});
+  [authenticationValid, setAuthenticationValid] = React.useState(true);
 
   const [bottomSheetOpen, setBottomSheetOpen] = React.useState(false);
+  const [connectedIO, setConnectedIO] = React.useState(false);
 
   setHistPage = setHp;
   histPage = hp;
@@ -671,6 +675,7 @@ MainAppContainer = (props) => {
             messages.forEach((msg) => updateMessageSeen3(msg));
             messages.forEach((msg) => updateMessageSeen4(msg));
           });
+          setConnectedIO(true);
         });
         let requestOptions = {
           method: "POST",
@@ -727,7 +732,7 @@ MainAppContainer = (props) => {
             } else if (window.location.pathname === '/app/room') {
               gotoPage("/app/room", params);
             } else {
-              gotoPage("/app/auth", {});
+              setAuthenticationValid(false);
             }
           }
         });
@@ -772,6 +777,10 @@ MainAppContainer = (props) => {
   setBSO = (value) => {
     setBottomSheetOpen(value);
   };
+
+  if (!connectedIO) {
+    return <div />;
+  }
 
   return (
     <div

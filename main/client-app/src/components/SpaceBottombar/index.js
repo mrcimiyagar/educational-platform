@@ -20,9 +20,9 @@ const useStyles = makeStyles({
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
   root: {
-    color: "#333",
+    color: "#ccc",
     "&$selected": {
-      color: "#000",
+      color: "#fff",
     },
   },
   /* Styles applied to the root element if selected. */
@@ -40,7 +40,7 @@ export default function SpaceBottombar(props) {
       showLabels
       className={classes.root}
       style={{
-        backgroundColor: "rgba(255, 255, 255, 0.5)",
+        backgroundColor: "rgba(30, 37, 41, 0.5)",
         backdropFilter: "blur(10px)",
         width: "calc(100% - 48px)",
         height: 72,

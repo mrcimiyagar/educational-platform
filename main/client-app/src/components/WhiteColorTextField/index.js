@@ -12,23 +12,24 @@ const styles = (theme) => ({
   },
   textField: {
     marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
+    color: '#fff'
   },
   cssLabel: {
-    color: '#000',
+    color: '#fff',
     '&.Mui-focused': {
-      color: '#000',
+      color: '#fff',
     },
   },
   cssOutlinedInput: {
     '&:not(hover):not($disabled):not($cssFocused):not($error) $notchedOutline': {
-      borderColor: '#000', //default
+      borderColor: '#fff', //default
     },
     '&:hover:not($disabled):not($cssFocused):not($error) $notchedOutline': {
-      borderColor: '#000', //hovered #DCDCDC
+      borderColor: '#fff', //hovered #DCDCDC
     },
     '&$cssFocused $notchedOutline': {
-      borderColor: '#000', //focused
+      borderColor: '#fff', //focused
     },
   },
   notchedOutline: {},

@@ -111,6 +111,8 @@ let ckeckCode = (wwId, codes) => {
   }
 };
 
+export let openToolbox = () => {};
+
 export default function BotsBox(props) {
 
   let forceUpdate = useForceUpdate();
@@ -118,6 +120,8 @@ export default function BotsBox(props) {
   let [myBots, setMyBots] = React.useState([]);
   let [menuOpen, setMenuOpen] = React.useState(false);
   let [mySelectedBot, setMySelectedBot] = React.useState(0);
+
+  openToolbox = () => setMenuOpen(true);
   
   let requestInitGui = (wwId, preview=true) => {
     let requestOptions = {
@@ -388,9 +392,7 @@ export default function BotsBox(props) {
           top: 32,
           zIndex: 3,
         }}
-      >
-        <BotsBoxSearchbar openMenu={props.openMenu} />
-      </div>
+      ></div>
       <div
         id={'botsContainerOuter'}
         style={{
@@ -506,64 +508,6 @@ export default function BotsBox(props) {
           <div id="ghostpane" style={{ display: 'none' }}></div>
         </div>
       </div>
-      <ThemeProvider theme={theme}>
-      {(isDesktop() && isInRoom()) ? null :
-      <Slide
-          direction="right"
-          in={inTheGame}
-          mountOnEnter
-        >
-      <Fab
-        color={'secondary'}
-        style={{
-          position: 'fixed',
-          bottom: (isInRoom() && (isMobile() || isTablet())) ? (72 + 12) : 12,
-          right: 16 + 72,
-          zIndex: 4,
-        }}
-        onClick={() => gotoPage('/app/chat', {room_id: props.roomId, user_id: props.userId})}
-      >
-        <Chat />
-      </Fab>
-      </Slide>}
-      <Slide
-          direction="right"
-          in={inTheGame}
-          mountOnEnter
-        >
-      <Fab
-        color={'secondary'}
-        style={{
-          position: 'fixed',
-          bottom: (isInRoom() && (isMobile() || isTablet())) ? (72 + 16) : 16,
-          left: isDesktop() && isInRoom() ? 32 : 16,
-          zIndex: 4,
-        }}
-        onClick={() => setEditMode(!editMode)}
-      >
-        <Edit />
-      </Fab>
-      </Slide>
-      <Slide
-          direction="right"
-          in={inTheGame}
-          mountOnEnter
-        >
-      <Fab
-        size={'medium'}
-        color={'primary'}
-        style={{
-          position: 'fixed',
-          bottom: (isInRoom() && (isMobile() || isTablet())) ? (56 + 16 + 72 + 16) : (16 + 56 + 16),
-          left: (isDesktop() && isInRoom() ? 32 : 16) + 4,
-          zIndex: 4,
-        }}
-        onClick={() => setMenuOpen(true)}
-      >
-        <Add />
-      </Fab>
-      </Slide>
-      </ThemeProvider>
       <SwipeableDrawer
         onClose={() => setMenuOpen(false)}
         open={menuOpen}

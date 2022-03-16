@@ -6,6 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import React from 'react';
 import { isDesktop } from '../../App';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,8 +35,8 @@ export default function HomeSearchbar(props) {
     <Paper component="form" className={classes.root}>
       {isDesktop() ?
         null :
-        <IconButton onClick={() => props.setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
-          <MenuIcon />
+        <IconButton onClick={() => props.setBackClicked()} className={classes.iconButton} aria-label="menu">
+          <ArrowForwardIcon />
         </IconButton>
       }
       <InputBase

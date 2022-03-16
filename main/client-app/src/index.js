@@ -14,6 +14,7 @@ import { setup, socket } from './util/Utils';
 import './notifSystem';
 import { Alert, Snackbar } from '@mui/material';
 import CustomImageBox from './components/CustomImageBox'
+import SpaceWallpaper from './images/space-wallpaper.jpg';
 
 function getOS() {
   var userAgent = window.navigator.userAgent,
@@ -90,10 +91,10 @@ let Loading = (props) => {
             textAlign: 'center',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#333',
+            color: '#fff',
           }}
         >
-          ابر آسمان
+          جامعه
         </Typography>
       </div>
     </section>
@@ -127,10 +128,10 @@ let PreLoading = (props) => {
             textAlign: 'center',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#333',
+            color: '#fff',
           }}
         >
-          ابر آسمان
+          جامعه
         </Typography>
       </div>
     </section>
@@ -178,7 +179,7 @@ export function ifServerOnline(ifOnline, ifOffline) {
 export let setClientConnected = (b) => {};
 
 let AppContainer = (props) => {
-  ;[wallpaper, setWall] = React.useState({})
+  ;[wallpaper, setWall] = React.useState({type: 'photo', photo: SpaceWallpaper})
   setWallpaper = (w) => {
     if (w.type === wallpaper.type) {
       if ((w.type === 'photo' && w.photo === wallpaper.photo) ||
