@@ -102,7 +102,7 @@ const actions = [
   { icon: <SmartToy/>, name: 'کارگاه'},
 ]
 
-export default function Store() {
+export default function Store(props) {
 
   document.documentElement.style.overflow = 'hidden';
 
@@ -119,23 +119,10 @@ export default function Store() {
   const handleClose = () => {
     setInTheGame(false);
     setOpen(false);
-    setJumperOpen(false);
     setTimeout(() => {
-      popPage();
+      props.onClose();
     }, 750);
   };
-
-  const handleJumperOpen = () => {
-    setJumperOpen(true)
-  }
-
-  const handleJumperClose = () => {
-    setJumperOpen(false)
-  }
-
-  const handleOpen = () => {
-    setOpen(true)
-  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -205,11 +192,6 @@ export default function Store() {
 );
 
   useEffect(() => {
-
-    setWallpaper({
-      type: 'photo',
-      photo: DesktopWallpaper
-    });
 
     registerEvent('bot-created', bot => {
       categories.forEach(cat => {
@@ -455,7 +437,7 @@ export default function Store() {
           <AppBar style={{backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}>
             <Toolbar style={{marginTop: 16}}>
               <StoreSearchbar dialogMode={false} removeIcon={false} setDrawerOpen={(v) => {
-                  setDrawerOpen(true);
+                  handleClose();
               }}/>
             </Toolbar>
             <Tabs
@@ -531,16 +513,6 @@ export default function Store() {
         </Fab>
         </Slide>
         <StoreFam />
-        <Fab
-          onClick={() => gotoPage("/app/rocket")}
-          style={{
-            position: 'fixed',
-            right: 16,
-            bottom: 16 + 56 + 16
-          }}
-        >
-          <RocketLaunchIcon />
-        </Fab>
         <StoreBottombar/>
         <SwipeableDrawer anchor='right' open={drawerOpen} onClose={() => setDrawerOpen(false)} PaperProps={{style: {
             backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}}>

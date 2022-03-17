@@ -128,9 +128,10 @@ export default function SettingsList(props) {
             left: '50%',
             top: 32,
             zIndex: 2501,
+            direction: 'rtl'
           }}
         >
-          <SettingsSearchbar setDrawerOpen={props.setDrawerOpen} />
+          <SettingsSearchbar setDrawerOpen={props.onClose} />
       </div>
       <div style={{width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, bottom: 0, top: 0, backdropFilter: 'blur(15px)', background: colors.accentDark}} />
       <ImageList

@@ -34,9 +34,7 @@ export default function StoreSearchbar(props) {
       {props.removeIcon === false ? 
         <IconButton className={classes.iconButton} aria-label="menu" onClick={() => props.setDrawerOpen(true)}>
           {
-            props.dialogMode === true ?
-              <ArrowBack style={{transform: 'rotateZ(180deg)'}}/> :
-              <Menu />
+            <ArrowBack style={{transform: 'rotateZ(180deg)'}}/>
           }
         </IconButton> :
         null

@@ -24,12 +24,12 @@ export default function SpaceSearchbar(props) {
       style={{
         display: "flex",
         alignItems: "center",
-        marginLeft: props.fixed ? 32 : 8,
-        marginRight: props.fixed ? 32 : 8,
-        width: props.fixed ? "calc(100% - 64px)" : "calc(100% - 16px)",
+        marginLeft: props.fixed ? 56 : 32,
+        marginRight: props.fixed ? 56 : 32,
+        width: props.fixed ? "calc(100% - 112px)" : "calc(100% - 64px)",
         borderRadius: 24,
         background: "rgba(91, 95, 99, 0.5)",
-        height: props.fixed ? 24 : 56,
+        height: props.fixed ? 24 : 48,
         transition:
           "width .25s, height .25s, margin-left .25s, margin-right .25s",
       }}
@@ -42,6 +42,7 @@ export default function SpaceSearchbar(props) {
           opacity: props.fixed ? 0 : 1,
           transition: "opacity .25s",
         }}
+        onClick={props.onMenuClicked}
       >
         <MenuIcon style={{ fill: "#fff" }} />
       </IconButton>

@@ -1,6 +1,5 @@
 import { Dialog, Paper } from "@mui/material";
 import SpaceSearchbar from "../../components/SpaceSearchbar";
-import SpaceWallpaper from "../../images/space-wallpaper.jpg";
 import SpaceBottombar from "../../components/SpaceBottombar";
 import Authentication from "./authentication";
 import { authenticationValid } from "../../App";
@@ -81,6 +80,8 @@ import { MachinesBox } from "../../modules/machinesbox/machinesbox";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import Chat from "./chat";
 import MessengerPage from "./messenger";
+import Store from "./store";
+import MainSettings from './mainsettings';
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -123,6 +124,7 @@ let roomId = undefined;
 let oldSt = 0;
 
 export default function Space(props) {
+  props = {};
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
   const [selectedNav, setSelectedNav] = React.useState(undefined);
   const attachScrollCallback = () => {
@@ -146,8 +148,6 @@ export default function Space(props) {
     }
   };
   useEffect(() => attachScrollCallback(), []);
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  props = Object.fromEntries(urlSearchParams.entries());
 
   roomId = homeRoomId;
   props.room_id = homeRoomId;
@@ -600,49 +600,173 @@ export default function Space(props) {
           setMenuOpen={setMenuOpen}
           membership={membership}
           roomId={props.room_id}
-          style={{ display: "block"}}
+          style={{ display: "block" }}
         />
         <div style={{ width: "100%", height: 72 + 16 }} />
       </div>
 
-      <div
+      <AppBar
+        position={"fixed"}
         style={{
-          background: "rgba(30, 37, 41, 0.75)",
+          background: "rgba(24, 34, 44, 0.85)",
           borderRadius: 0,
           width: "100%",
-          height: searchBarFixed ? 64 : 96,
-          backdropFilter: "blur(15px)",
+          height: searchBarFixed ? 48 : 80,
+          backdropFilter: "blur(20px)",
           position: "fixed",
-          top: -16,
           transition: "height .25s",
         }}
       >
-        <div style={{ width: "100%", height: 28 }} />
-        <SpaceSearchbar fixed={searchBarFixed} />
-      </div>
+        <div style={{ width: "100%", height: 16 }} />
+        <SpaceSearchbar fixed={searchBarFixed} onMenuClicked={() => setMenuOpen(true)} />
+      </AppBar>
 
       <SpaceBottombar
         fixed={searchBarFixed}
         setCurrentRoomNav={(index) => {
           if (index === 3) {
             openToolbox();
-          }
-          else {
+          } else {
             setSelectedNav(index);
           }
         }}
       />
+
+      <SwipeableDrawer
+        onClose={() => setMenuOpen(false)}
+        open={menuOpen}
+        anchor={"right"}
+        PaperProps={{
+          style: {
+            background: "rgba(255, 255, 255, 0.55)",
+            backdropFilter: "blur(10px)",
+          },
+        }}
+        keepMounted={true}
+      >
+        <div
+          style={{
+            width: 360,
+            height: "100%",
+            display: "flex",
+            direction: "rtl",
+          }}
+        >
+          <div
+            style={{
+              width: 80,
+              height: "100%",
+              background: "rgba(225, 225, 225, 0.55)",
+            }}
+          >
+            <Avatar
+              onClick={() => setMenuMode(0)}
+              style={{
+                width: 64,
+                height: 64,
+                backgroundColor: "#fff",
+                position: "absolute",
+                right: 8,
+                top: 16,
+                padding: 8,
+              }}
+              src={PeopleIcon}
+            />
+            <Avatar
+              onClick={() => setMenuMode(1)}
+              style={{
+                width: 64,
+                height: 64,
+                backgroundColor: "#fff",
+                position: "absolute",
+                right: 8,
+                top: 16 + 64 + 16,
+                padding: 8,
+              }}
+              src={BotIcon}
+            />
+            <Avatar
+              onClick={() => {
+                setMenuOpen(false);
+                window.location.href = "/app/room?room_id=1";
+              }}
+              style={{
+                width: 64,
+                height: 64,
+                backgroundColor: "#fff",
+                position: "absolute",
+                right: 8,
+                bottom: 16 + 64 + 16 + 64 + 16,
+                padding: 8,
+              }}
+              src={HomeIcon}
+            />
+            <Avatar
+              onClick={() => {
+                setMenuOpen(false);
+                gotoPage("/app/roomstree", { room_id: props.room_id });
+              }}
+              style={{
+                width: 64,
+                height: 64,
+                backgroundColor: "#fff",
+                position: "absolute",
+                right: 8,
+                bottom: 16 + 64 + 16,
+                padding: 8,
+              }}
+              src={RoomIcon}
+            />
+            <div
+              onClick={() => {
+                setMenuOpen(false);
+                gotoPage("/app/settings", { room_id: props.room_id });
+              }}
+              style={{
+                borderRadius: 32,
+                width: 64,
+                height: 64,
+                backgroundColor: "#fff",
+                position: "absolute",
+                right: 8,
+                bottom: 16,
+                padding: 8,
+              }}
+            >
+              <Settings style={{ fill: "#666", width: 48, height: 48 }} />
+            </div>
+          </div>
+          <div style={{ width: 280, height: "100%" }}>
+            {menuMode === 0 ? (
+              <UsersBox membership={membership} roomId={props.room_id} />
+            ) : menuMode === 1 ? (
+              <MachinesBox membership={membership} roomId={props.room_id} />
+            ) : null}
+          </div>
+        </div>
+      </SwipeableDrawer>
+
       {authenticationValid ? null : <Authentication />}
       {selectedNav === 2 ? (
         <Chat
-          onClose={() => setSelectedNav(undefined)}
+          onClose={() => {setSelectedNav(undefined); setInTheGame(true);}}
           room_id={props.room_id}
         />
       ) : null}
       {selectedNav === 0 ? (
         <MessengerPage
           tab_index={"0"}
-          onClose={() => setSelectedNav(undefined)}
+          onClose={() => {setSelectedNav(undefined); setInTheGame(true);}}
+        />
+      ) : null}
+      {selectedNav === 1 ? (
+        <Store
+          onClose={() => {setSelectedNav(undefined); setInTheGame(true);}}
+        />
+      ) : null}
+      {selectedNav === 4 ? (
+        <MainSettings
+          onClose={() => {setSelectedNav(undefined); setInTheGame(true);}}
         />
       ) : null}
     </div>

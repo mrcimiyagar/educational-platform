@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import React from 'react';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,8 +35,8 @@ export default function SettingsSearchbar(props) {
 
   return (
     <Paper component="form" className={classes.root}>
-      <IconButton onClick={() => props.setDrawerOpen(true)} className={classes.iconButton} aria-label="menu">
-        <MenuIcon style={{fill: '#333'}}/>
+      <IconButton onClick={() => props.setDrawerOpen()} className={classes.iconButton} aria-label="menu">
+        <ArrowForwardIcon style={{fill: '#333'}}/>
       </IconButton>
       <InputBase
         className={classes.input}

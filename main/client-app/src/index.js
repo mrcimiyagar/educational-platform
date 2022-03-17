@@ -14,7 +14,7 @@ import { setup, socket } from './util/Utils';
 import './notifSystem';
 import { Alert, Snackbar } from '@mui/material';
 import CustomImageBox from './components/CustomImageBox'
-import SpaceWallpaper from './images/space-wallpaper.jpg';
+import SpaceWallpaper from './images/space-wallpaper.png';
 
 function getOS() {
   var userAgent = window.navigator.userAgent,
