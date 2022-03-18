@@ -16,7 +16,7 @@ import React, { useEffect } from 'react'
 import { gotoPage, inTheGame, isDesktop, isInRoom, isMobile, isOnline, isTablet, subscribeGuiChannel } from '../../App'
 import BotContainer from '../../components/BotContainer'
 import BotsBoxSearchbar from '../../components/BotsBoxSearchbar'
-import { token } from '../../util/settings'
+import { colors, token } from '../../util/settings'
 import { registerEvent, serverRoot, unregisterEvent, useForceUpdate } from '../../util/Utils'
 import { Rnd } from 'react-rnd';
 
@@ -515,7 +515,7 @@ export default function BotsBox(props) {
         style={{ direction: 'ltr', position: 'fixed', zIndex: 99999 }}
         PaperProps={{
           style: {
-            background: 'rgba(225, 225, 225, 0.55)',
+            background: colors.primaryMedium,
             backdropFilter: 'blur(15px)'
           }
         }}
@@ -528,7 +528,7 @@ export default function BotsBox(props) {
             display: 'flex',
           }}
         >
-          <div style={{ position: 'relative', width: 80, height: '100%', background: 'rgba(225, 225, 225, 0.55)' }}>
+          <div style={{ position: 'relative', width: 80, height: '100%', background: colors.primaryMedium }}>
             {
               myBots.map((bot, index) => (
                 <Avatar
