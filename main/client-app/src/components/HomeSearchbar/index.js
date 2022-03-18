@@ -14,6 +14,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
+    borderRadius: 24,
+    background: 'rgba(91, 95, 99, 0.5)'
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -28,15 +30,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const useStylesInput = makeStyles((theme) => ({
+  InputBaseStyle: {
+    "&::placeholder": {
+      color: "#fff",
+      textAlign: 'center'
+    }
+  }
+}));
+
 export default function HomeSearchbar(props) {
   const classes = useStyles();
+  const classesInput = useStylesInput();
 
   return (
-    <Paper component="form" className={classes.root}>
+    <div className={classes.root}>
       {isDesktop() ?
         null :
         <IconButton onClick={() => props.setBackClicked()} className={classes.iconButton} aria-label="menu">
-          <ArrowForwardIcon />
+          <ArrowForwardIcon style={{fill: '#fff'}} />
         </IconButton>
       }
       <InputBase
@@ -45,10 +57,14 @@ export default function HomeSearchbar(props) {
         onChange={(e) => {
           props.onSearch(e.target.value);
         }}
+        classes={{
+          input: classesInput.InputBaseStyle
+        }}
+        style={{ color: "#fff", marginRight: 8, textAlign: 'center' }}
       />
-      <IconButton type="submit" className={classes.iconButton} aria-label="search">
-        <SearchIcon />
+      <IconButton className={classes.iconButton} aria-label="search">
+        <SearchIcon style={{fill: '#fff'}} />
       </IconButton>
-    </Paper>
+    </div>
   );
 }

@@ -165,7 +165,7 @@ export default function HomeMessenger(props) {
                 marginRight: isDesktop() ? 256 + 32 + 32 + 64 : undefined,
                 marginTop: isDesktop() ? 32 : undefined,
                 width: isDesktop() || isTablet() ? 450 : '100%',
-                backgroundColor: colors.primaryMedium,
+                backgroundColor: 'rgba(24, 34, 44, 0.85)',
                 backdropFilter: 'blur(10px)'
               }}
             >
@@ -214,7 +214,7 @@ export default function HomeMessenger(props) {
                 : isTablet()
                 ? 'calc(100% - 168px - 40px)'
                 : 'calc(100% - 128px - 28px)',
-              backgroundColor: colors.accentDark,
+              backgroundColor: 'rgba(23, 29, 32, 0.5)',
               backdropFilter: 'blur(20px)',
               opacity: inTheGame ? 1 : 0,
               transition: 'opacity .5s',

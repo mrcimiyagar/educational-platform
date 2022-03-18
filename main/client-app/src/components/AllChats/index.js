@@ -57,7 +57,7 @@ export default function AllChats(props) {
             <ListItem
               alignItems="flex-start"
               button
-              style={{ height: 80, backgroundColor: 'rgba(255, 255, 255, 0.75)', borderRadius: (index === 0 ? '16px 16px ' : '0 0 ') + (index === (props.chats.length - 1) ? '16px 16px' : '0 0')}}
+              style={{ height: 80, backgroundColor: 'rgba(91, 95, 99, 0.5)', borderRadius: (index === 0 ? '16px 16px ' : '0 0 ') + (index === (props.chats.length - 1) ? '16px 16px' : '0 0')}}
               onClick={() => {
                 if (isMobile()) props.setInTheGame(false);
                 resetMessages();
@@ -90,7 +90,7 @@ export default function AllChats(props) {
                       style={{
                         width: '100%',
                         textAlign: 'right',
-                        color: '#000',
+                        color: '#fff',
                         fontSize: 17,
                         fontWeight: 'bold',
                       }}
@@ -108,7 +108,7 @@ export default function AllChats(props) {
                           top: 16,
                           fontSize: 12,
                           left: 16,
-                          color: '#000',
+                          color: '#fff',
                         }}
                       >
                         {dateTime.toLocaleDateString('fa-IR').toString() +
@@ -126,8 +126,8 @@ export default function AllChats(props) {
                   <div style={{ width: '100%', position: 'relative' }}>
                     {chat.lastMessage.authorId === me.id ?
                         <div style={{ position: 'relative' }}>
-                          <Done id={'message-seen-chat-' + chat.lastMessage.id} style={{ left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen === 0 || chat.lastMessage.seen === undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
-                          <DoneAll id={'message-seen-chat-all-' + chat.lastMessage.id} style={{ left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen > 0  && chat.lastMessage.seen !== undefined) ? 'block' : 'none', fill: colors.primaryMedium, width: 16, height: 16 }} /> :
+                          <Done id={'message-seen-chat-' + chat.lastMessage.id} style={{fill: 'rgba(231, 239, 246, 1)', left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen === 0 || chat.lastMessage.seen === undefined) ? 'block' : 'none', width: 16, height: 16 }} /> :
+                          <DoneAll id={'message-seen-chat-all-' + chat.lastMessage.id} style={{fill: 'rgba(231, 239, 246, 1)', left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen > 0  && chat.lastMessage.seen !== undefined) ? 'block' : 'none', width: 16, height: 16 }} /> :
                         </div> :
                       null
                     }
@@ -180,7 +180,7 @@ export default function AllChats(props) {
                         style={{
                           width: '100%',
                           textAlign: 'right',
-                          color: '#000',
+                          color: '#fff',
                           fontSize: 14,
                           top: 0,
                           right: 0,
@@ -194,7 +194,7 @@ export default function AllChats(props) {
                       <div
                         style={{
                           borderRadius: '50%',
-                          backgroundColor: colors.primaryMedium,
+                          backgroundColor: 'rgba(91, 95, 99, 0.5)',
                           paddingLeft: 4,
                           paddingRight: 4,
                           paddingTop: 4,

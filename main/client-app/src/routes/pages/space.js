@@ -81,7 +81,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import Chat from "./chat";
 import MessengerPage from "./messenger";
 import Store from "./store";
-import MainSettings from './mainsettings';
+import MainSettings from "./mainsettings";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -611,14 +611,48 @@ export default function Space(props) {
           background: "rgba(24, 34, 44, 0.85)",
           borderRadius: 0,
           width: "100%",
-          height: searchBarFixed ? 48 : 80,
+          height: searchBarFixed ? 56 : 80 + 40,
           backdropFilter: "blur(20px)",
           position: "fixed",
           transition: "height .25s",
         }}
       >
-        <div style={{ width: "100%", height: 16 }} />
-        <SpaceSearchbar fixed={searchBarFixed} onMenuClicked={() => setMenuOpen(true)} />
+        <SpaceSearchbar
+          fixed={searchBarFixed}
+          onMenuClicked={() => setMenuOpen(true)}
+        />
+
+        <Tabs
+          variant={'scrollable'}
+          value={0}
+          onChange={props.handleChange}
+          classes={{
+            indicator: classes.indicator,
+          }}
+          style={{ marginTop: 8, direction: "ltr", opacity: searchBarFixed ? 0 : 1, transition: 'opacity .25s' }}
+        >
+          <Tab
+            classes={{ root: classes.tab }}
+            label="میز اسناد x"
+            style={{marginLeft: 32}}
+          />
+          <Tab
+            classes={{ root: classes.tab }}
+            label="میز کنفرانس فردا"
+          />
+          <Tab
+            classes={{ root: classes.tab }}
+            label="میز تست نرم افزار"
+          />
+          <Tab
+            classes={{ root: classes.tab }}
+            label="میز بازی شطرنج 2"
+          />
+          <Tab
+            classes={{ root: classes.tab }}
+            label="میز کنفرانس هفته ی بعد"
+          />
+        </Tabs>
       </AppBar>
 
       <SpaceBottombar
@@ -749,24 +783,36 @@ export default function Space(props) {
       {authenticationValid ? null : <Authentication />}
       {selectedNav === 2 ? (
         <Chat
-          onClose={() => {setSelectedNav(undefined); setInTheGame(true);}}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
           room_id={props.room_id}
         />
       ) : null}
       {selectedNav === 0 ? (
         <MessengerPage
           tab_index={"0"}
-          onClose={() => {setSelectedNav(undefined); setInTheGame(true);}}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
         />
       ) : null}
       {selectedNav === 1 ? (
         <Store
-          onClose={() => {setSelectedNav(undefined); setInTheGame(true);}}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
         />
       ) : null}
       {selectedNav === 4 ? (
         <MainSettings
-          onClose={() => {setSelectedNav(undefined); setInTheGame(true);}}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
         />
       ) : null}
     </div>

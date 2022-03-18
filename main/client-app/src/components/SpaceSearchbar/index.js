@@ -24,12 +24,13 @@ export default function SpaceSearchbar(props) {
       style={{
         display: "flex",
         alignItems: "center",
+        marginTop: 16,
         marginLeft: props.fixed ? 56 : 32,
         marginRight: props.fixed ? 56 : 32,
         width: props.fixed ? "calc(100% - 112px)" : "calc(100% - 64px)",
         borderRadius: 24,
         background: "rgba(91, 95, 99, 0.5)",
-        height: props.fixed ? 24 : 48,
+        height: props.fixed ? 24 : 40,
         transition:
           "width .25s, height .25s, margin-left .25s, margin-right .25s",
       }}
@@ -52,7 +53,7 @@ export default function SpaceSearchbar(props) {
         classes={{
           input: classes.InputBaseStyle
         }}
-        style={{ color: "#fff", marginRight: 8 }}
+        style={{ color: "#fff", marginRight: 8, textAlign: 'center' }}
       />
       <IconButton
         sx={{ p: "10px" }}
