@@ -278,7 +278,7 @@ export let UsersBox = (props) => {
             marginBottom: 12,
           }}
         >
-          <Typography variant={'body'} style={{ color: colors.textIcons }}>
+          <Typography variant={'body'} style={{ color: '#fff' }}>
             کاربران ({users.length})
           </Typography>
         </span>
@@ -287,7 +287,7 @@ export let UsersBox = (props) => {
             option={{ suppressScrollX: true, wheelPropagation: false }}
           >
             <div style={{ height: 'auto', marginRight: 12, paddingTop: 24 }}>
-              <div style={{marginBottom: 16}}>
+              <div style={{marginBottom: 16, color: colors.text}}>
                 آنلاین
               </div>
               {users.map((user, index) => {
@@ -318,7 +318,7 @@ export let UsersBox = (props) => {
                     >
                       <p
                         style={{
-                          color: colors.textIcons,
+                          color: colors.text,
                           fontSize: 13,
                           marginTop: 4,
                         }}
@@ -356,9 +356,9 @@ export let UsersBox = (props) => {
                           }}
                         >
                           {video[user.id] ? (
-                            <VideocamIcon style={{ fill: colors.textIcons }} />
+                            <VideocamIcon style={{ fill: colors.text }} />
                           ) : (
-                            <VideocamOff style={{ fill: colors.textIcons }} />
+                            <VideocamOff style={{ fill: colors.text }} />
                           )}
                         </IconButton>
                         <IconButton
@@ -378,9 +378,9 @@ export let UsersBox = (props) => {
                           }}
                         >
                           {audio[user.id] ? (
-                            <MicIcon style={{ fill: colors.textIcons }} />
+                            <MicIcon style={{ fill: colors.text }} />
                           ) : (
-                            <MicOffIcon style={{ fill: colors.textIcons }} />
+                            <MicOffIcon style={{ fill: colors.text }} />
                           )}
                         </IconButton>
                       </div>
@@ -388,7 +388,7 @@ export let UsersBox = (props) => {
                   </div>
                 )
               })}
-              <div style={{marginBottom: 12}}>
+              <div style={{marginBottom: 12, color: colors.text}}>
                 آفلاین
               </div>
               {allUsers.filter(u => (onlineDict[u.id] !== true)).map((user, index) => {
@@ -419,7 +419,7 @@ export let UsersBox = (props) => {
                     >
                       <p
                         style={{
-                          color: colors.textIcons,
+                          color: colors.text,
                           fontSize: 13,
                           marginTop: 4,
                         }}
@@ -436,8 +436,7 @@ export let UsersBox = (props) => {
                           marginTop: -12,
                           position: 'absolute',
                           left: 0,
-                          display: 'flex',
-                          backgroundColor: colors.primary,
+                          display: 'flex'
                         }}
                       >
                         <IconButton
@@ -457,9 +456,9 @@ export let UsersBox = (props) => {
                           }}
                         >
                           {video[user.id] ? (
-                            <VideocamIcon style={{ fill: colors.textIcons }} />
+                            <VideocamIcon style={{ fill: colors.text }} />
                           ) : (
-                            <VideocamOff style={{ fill: colors.textIcons }} />
+                            <VideocamOff style={{ fill: colors.text }} />
                           )}
                         </IconButton>
                         <IconButton
@@ -479,9 +478,9 @@ export let UsersBox = (props) => {
                           }}
                         >
                           {audio[user.id] ? (
-                            <MicIcon style={{ fill: colors.textIcons }} />
+                            <MicIcon style={{ fill: colors.text }} />
                           ) : (
-                            <MicOffIcon style={{ fill: colors.textIcons }} />
+                            <MicOffIcon style={{ fill: colors.text }} />
                           )}
                         </IconButton>
                       </div>

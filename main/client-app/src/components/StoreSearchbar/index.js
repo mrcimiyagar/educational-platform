@@ -12,11 +12,15 @@ const useStyles = makeStyles((theme) => ({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: window.innerWidth > 450 ? 400 : '100%'
+    width: window.innerWidth > 450 ? 400 : '100%',
+    borderRadius: 24,
+    background: "rgba(91, 95, 99, 0.5)",
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
+    color: '#fff',
+    textAlign: 'center'
   },
   iconButton: {
     padding: 10,
@@ -27,14 +31,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const useStylesInput = makeStyles((theme) => ({
+  InputBaseStyle: {
+    "&::placeholder": {
+      color: "#fff",
+      textAlign: 'center'
+    }
+  }
+}));
+
 export default function StoreSearchbar(props) {
   const classes = useStyles();
+  const classesInput = useStylesInput();
   return (
-    <Paper component="form" className={classes.root}>
+    <div className={classes.root}>
       {props.removeIcon === false ? 
         <IconButton className={classes.iconButton} aria-label="menu" onClick={() => props.setDrawerOpen(true)}>
           {
-            <ArrowBack style={{transform: 'rotateZ(180deg)'}}/>
+            <ArrowBack style={{transform: 'rotateZ(180deg)', fill: '#fff'}}/>
           }
         </IconButton> :
         null
@@ -42,10 +56,13 @@ export default function StoreSearchbar(props) {
       <InputBase
         className={classes.input}
         placeholder="جستجو در فروشگاه"
+        classes={{
+          input: classesInput.InputBaseStyle
+        }}
       />
-      <IconButton type="submit" className={classes.iconButton} aria-label="search">
-        <SearchIcon />
+      <IconButton className={classes.iconButton} aria-label="search">
+        <SearchIcon style={{fill: '#fff'}} />
       </IconButton>
-    </Paper>
+    </div>
   );
 }

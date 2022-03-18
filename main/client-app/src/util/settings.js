@@ -8,11 +8,16 @@ export let colors = {}
 export let setColors = (c) => {}
 export let ColorBase = (props) => {
   ;[colors, setColors] = React.useState({
-    primaryLight: 'rgba(33, 150, 243, 0.65)',
-    primaryMedium: 'rgba(25, 118, 210, 0.65)',
-    primaryDark: 'rgba(42, 77, 105, 0.65)',
+    primaryLight: 'rgba(24, 34, 44, 0.5)',
+    primaryMedium: 'rgba(24, 34, 44, 0.85)',
+    primaryDark: 'rgba(23, 29, 32, 0.85)',
     secondary: 'rgba(255, 193, 7, 0.55)',
-    accent: 'rgba(231, 239, 246, 1)',
+    text: '#fff',
+    textPassive: '#ddd',
+    field: "rgba(91, 95, 99, 0.5)",
+    icon: '#fff',
+    accent: 'rgba(255, 193, 7, 1)',
+    accent2: 'rgba(0, 51, 103, 1)',
     accentDark: 'rgba(173, 203, 227, 0.65)',
   });
   theme = createTheme({

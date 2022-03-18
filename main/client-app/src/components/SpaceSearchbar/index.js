@@ -8,16 +8,15 @@ import TravelExplore from "@mui/icons-material/TravelExplore";
 import { colors } from "../../util/settings";
 import { makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  InputBaseStyle: {
-    "&::placeholder": {
-      color: "#fff",
-      textAlign: 'center'
-    }
-  }
-}));
-
 export default function SpaceSearchbar(props) {
+  let useStyles = makeStyles((theme) => ({
+    InputBaseStyle: {
+      "&::placeholder": {
+        color: colors.text,
+        textAlign: 'center'
+      }
+    }
+  }));
   let classes = useStyles();
   return (
     <div
@@ -29,7 +28,7 @@ export default function SpaceSearchbar(props) {
         marginRight: props.fixed ? 56 : 32,
         width: props.fixed ? "calc(100% - 112px)" : "calc(100% - 64px)",
         borderRadius: 24,
-        background: "rgba(91, 95, 99, 0.5)",
+        background: colors.field,
         height: props.fixed ? 24 : 40,
         transition:
           "width .25s, height .25s, margin-left .25s, margin-right .25s",
@@ -45,7 +44,7 @@ export default function SpaceSearchbar(props) {
         }}
         onClick={props.onMenuClicked}
       >
-        <MenuIcon style={{ fill: "#fff" }} />
+        <MenuIcon style={{ fill: colors.text }} />
       </IconButton>
       <InputBase
         sx={{ ml: 1, flex: 1 }}
@@ -53,7 +52,7 @@ export default function SpaceSearchbar(props) {
         classes={{
           input: classes.InputBaseStyle
         }}
-        style={{ color: "#fff", marginRight: 8, textAlign: 'center' }}
+        style={{ color: colors.text, marginRight: 8, textAlign: 'center' }}
       />
       <IconButton
         sx={{ p: "10px" }}
@@ -65,13 +64,13 @@ export default function SpaceSearchbar(props) {
           transition: "opacity .25s",
         }}
       >
-        <SearchIcon style={{ fill: "#fff" }} />
+        <SearchIcon style={{ fill: colors.text }} />
       </IconButton>
       <Divider
         sx={{ height: 28, m: 0.5 }}
         orientation="vertical"
         style={{
-          backgroundColor: "#eee",
+          backgroundColor: colors.text,
           opacity: props.fixed ? 0 : 1,
           transition: "opacity .25s",
           marginLeft: 8
@@ -81,13 +80,13 @@ export default function SpaceSearchbar(props) {
         sx={{ p: "10px" }}
         aria-label="directions"
         style={{
-          fill: "#fff",
+          fill: colors.text,
           opacity: props.fixed ? 0 : 1,
           transition: "opacity .25s",
           marginLeft: 8
         }}
       >
-        <TravelExplore style={{fill: colors.primaryLight}} />
+        <TravelExplore style={{fill: colors.accent}} />
       </IconButton>
     </div>
   );

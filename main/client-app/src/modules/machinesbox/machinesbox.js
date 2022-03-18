@@ -258,7 +258,7 @@ export let MachinesBox = (props) => {
             marginBottom: 12,
           }}
         >
-          <Typography variant={'body'} style={{ color: colors.textIcons }}>
+          <Typography variant={'body'} style={{ color: colors.text }}>
             بات ها ({users.length})
           </Typography>
         </span>
@@ -267,10 +267,10 @@ export let MachinesBox = (props) => {
             option={{ suppressScrollX: true, wheelPropagation: false }}
           >
             <div style={{ height: 'auto', marginRight: 12, paddingTop: 24 }}>
-              <Button style={{width: 'calc(100% - 32px)', color: '#000', height: 32, marginBottom: 24}}
+              <Button style={{width: 'calc(100% - 32px)', color: '#fff', height: 32, marginBottom: 24}}
                       onClick={() => gotoPage('/app/storedialog', {room_id: props.roomId})} variant={'outlined'}>
                         + افزودن بات
-              </Button>\
+              </Button>
               <div style={{width: '100%', height: 16}}/>
               {users.map((user, index) => {
                 return (
@@ -300,7 +300,7 @@ export let MachinesBox = (props) => {
                     >
                       <p
                         style={{
-                          color: colors.textIcons,
+                          color: colors.text,
                           fontSize: 13,
                           marginTop: 4,
                         }}
@@ -315,8 +315,7 @@ export let MachinesBox = (props) => {
                           marginTop: -12,
                           position: 'absolute',
                           left: 0,
-                          display: 'flex',
-                          backgroundColor: colors.primary,
+                          display: 'flex'
                         }}
                       >
                         <IconButton
@@ -336,9 +335,9 @@ export let MachinesBox = (props) => {
                           }}
                         >
                           {video[user.id] ? (
-                            <VideocamIcon style={{ fill: colors.textIcons }} />
+                            <VideocamIcon style={{ fill: colors.text }} />
                           ) : (
-                            <VideocamOff style={{ fill: colors.textIcons }} />
+                            <VideocamOff style={{ fill: colors.text }} />
                           )}
                         </IconButton>
                         <IconButton
@@ -358,9 +357,9 @@ export let MachinesBox = (props) => {
                           }}
                         >
                           {audio[user.id] ? (
-                            <MicIcon style={{ fill: colors.textIcons }} />
+                            <MicIcon style={{ fill: colors.text }} />
                           ) : (
-                            <MicOffIcon style={{ fill: colors.textIcons }} />
+                            <MicOffIcon style={{ fill: colors.text }} />
                           )}
                         </IconButton>
                       </div>

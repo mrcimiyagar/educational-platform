@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     height: 72,
     position: 'fixed',
     bottom: 0,
-    background: 'rgba(25, 118, 210, 0.5)',
+    background: "rgba(24, 34, 44, 0.85)",
     backdropFilter: 'blur(10px)'
   },
 });

@@ -66,7 +66,7 @@ export default function GroupChats(props) {
                 button
                 style={{
                   height: 80,
-                  backgroundColor: 'rgba(91, 95, 99, 0.5)',
+                  backgroundColor: colors.field,
                   borderRadius:
                     (index === 0 ? '16px 16px ' : '0 0 ') +
                     (index === props.chats.length - 1 ? '16px 16px' : '0 0'),
@@ -98,7 +98,7 @@ export default function GroupChats(props) {
                         style={{
                           width: '100%',
                           textAlign: 'right',
-                          color: '#fff',
+                          color: colors.text,
                           fontSize: 17,
                           fontWeight: 'bold',
                         }}
@@ -114,7 +114,7 @@ export default function GroupChats(props) {
                             top: 16,
                             fontSize: 12,
                             left: 16,
-                            color: '#fff',
+                            color: colors.text,
                           }}
                         >
                           {dateTime.toLocaleDateString('fa-IR').toString() +
@@ -132,8 +132,8 @@ export default function GroupChats(props) {
                     <div style={{ width: '100%', position: 'relative' }}>
                     {chat.lastMessage.authorId === me.id ?
                         <div style={{ position: 'relative' }}>
-                          <Done id={'message-seen-chat-' + chat.lastMessage.id} style={{fill: 'rgba(231, 239, 246, 1)', left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen === 0 || chat.lastMessage.seen === undefined) ? 'block' : 'none', width: 16, height: 16 }} /> :
-                          <DoneAll id={'message-seen-chat-all-' + chat.lastMessage.id} style={{fill: 'rgba(231, 239, 246, 1)', left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen > 0  && chat.lastMessage.seen !== undefined) ? 'block' : 'none', width: 16, height: 16 }} /> :
+                          <Done id={'message-seen-chat-' + chat.lastMessage.id} style={{fill: colors.accent, left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen === 0 || chat.lastMessage.seen === undefined) ? 'block' : 'none', width: 16, height: 16 }} /> :
+                          <DoneAll id={'message-seen-chat-all-' + chat.lastMessage.id} style={{fill: colors.accent, left: 12 + 40, position: 'absolute', top: 0, display: (chat.lastMessage.seen > 0  && chat.lastMessage.seen !== undefined) ? 'block' : 'none', width: 16, height: 16 }} /> :
                         </div> :
                       null
                     }
@@ -200,7 +200,7 @@ export default function GroupChats(props) {
                         <div
                           style={{
                             borderRadius: '50%',
-                            backgroundColor: 'rgba(91, 95, 99, 0.5)',
+                            backgroundColor: colors.accent,
                             paddingLeft: 4,
                             paddingRight: 4,
                             paddingTop: 4,
@@ -211,7 +211,7 @@ export default function GroupChats(props) {
                             left: 16,
                             top: 16,
                             transform: 'translateY(-20px)',
-                            color: '#fff',
+                            color: colors.text,
                           }}
                         >
                           {chat.unread}

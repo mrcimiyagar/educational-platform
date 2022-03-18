@@ -163,7 +163,7 @@ export default function ChatAppBar(props) {
                 style={{ marginRight: -16 }}
                 onClick={() => props.handleClose()}
               >
-                <ArrowForward style={{ fill: '#fff' }} />
+                <ArrowForward style={{ fill: colors.icon }} />
               </IconButton>
             ) : null}
             <Avatar
@@ -199,7 +199,7 @@ export default function ChatAppBar(props) {
             />
             <Typography
               variant="h6"
-              style={{ fontFamily: 'mainFont', marginRight: 8, color: '#fff' }}
+              style={{ fontFamily: 'mainFont', marginRight: 8, color: colors.text }}
             >
               {props.user !== undefined && props.user !== null
                 ? props.user.firstName + ' ' + props.user.lastName
@@ -208,7 +208,7 @@ export default function ChatAppBar(props) {
                 : ''}
             </Typography>
             <br />
-            <Typography style={{ color: '#fff', marginRight: 16 }}>
+            <Typography style={{ color: colors.text, marginRight: 16 }}>
               {tl.toString()}
             </Typography>
             <div className={classes.search}>
@@ -218,7 +218,7 @@ export default function ChatAppBar(props) {
                     props.viewCallback()
                   }}
                 >
-                  <VisibilityOff style={{ fill: '#fff' }} />
+                  <VisibilityOff style={{ fill: colors.icon }} />
                 </IconButton>
               )}
               {isInRoom() ? null : (
@@ -231,11 +231,11 @@ export default function ChatAppBar(props) {
                     });
                   }}
                 >
-                  <Roofing style={{ fill: '#fff' }} />
+                  <Roofing style={{ fill: colors.icon }} />
                 </IconButton>
               )}
               <IconButton>
-                <MoreIcon style={{ fill: '#fff' }} />
+                <MoreIcon style={{ fill: colors.icon }} />
               </IconButton>
             </div>
           </Toolbar>

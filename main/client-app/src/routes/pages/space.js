@@ -82,6 +82,11 @@ import Chat from "./chat";
 import MessengerPage from "./messenger";
 import Store from "./store";
 import MainSettings from "./mainsettings";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import BedroomBabyOutlinedIcon from "@mui/icons-material/BedroomBabyOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -608,7 +613,7 @@ export default function Space(props) {
       <AppBar
         position={"fixed"}
         style={{
-          background: "rgba(24, 34, 44, 0.85)",
+          background: colors.primaryMedium,
           borderRadius: 0,
           width: "100%",
           height: searchBarFixed ? 56 : 80 + 40,
@@ -623,35 +628,28 @@ export default function Space(props) {
         />
 
         <Tabs
-          variant={'scrollable'}
+          variant={"scrollable"}
           value={0}
           onChange={props.handleChange}
           classes={{
             indicator: classes.indicator,
           }}
-          style={{ marginTop: 8, direction: "ltr", opacity: searchBarFixed ? 0 : 1, transition: 'opacity .25s' }}
+          style={{
+            marginTop: 8,
+            direction: "ltr",
+            opacity: searchBarFixed ? 0 : 1,
+            transition: "opacity .25s",
+          }}
         >
           <Tab
             classes={{ root: classes.tab }}
             label="میز اسناد x"
-            style={{marginLeft: 32}}
+            style={{ marginLeft: 32, color: colors.text }}
           />
-          <Tab
-            classes={{ root: classes.tab }}
-            label="میز کنفرانس فردا"
-          />
-          <Tab
-            classes={{ root: classes.tab }}
-            label="میز تست نرم افزار"
-          />
-          <Tab
-            classes={{ root: classes.tab }}
-            label="میز بازی شطرنج 2"
-          />
-          <Tab
-            classes={{ root: classes.tab }}
-            label="میز کنفرانس هفته ی بعد"
-          />
+          <Tab classes={{ root: classes.tab }} style={{color: colors.text}} label="میز کنفرانس فردا" />
+          <Tab classes={{ root: classes.tab }} style={{color: colors.text}} label="میز تست نرم افزار" />
+          <Tab classes={{ root: classes.tab }} style={{color: colors.text}} label="میز بازی شطرنج 2" />
+          <Tab classes={{ root: classes.tab }} style={{color: colors.text}} label="میز کنفرانس هفته ی بعد" />
         </Tabs>
       </AppBar>
 
@@ -672,7 +670,7 @@ export default function Space(props) {
         anchor={"right"}
         PaperProps={{
           style: {
-            background: "rgba(255, 255, 255, 0.55)",
+            background: colors.primaryLight,
             backdropFilter: "blur(10px)",
           },
         }}
@@ -690,7 +688,7 @@ export default function Space(props) {
             style={{
               width: 80,
               height: "100%",
-              background: "rgba(225, 225, 225, 0.55)",
+              background: colors.primaryLight
             }}
           >
             <Avatar
@@ -698,27 +696,29 @@ export default function Space(props) {
               style={{
                 width: 64,
                 height: 64,
-                backgroundColor: "#fff",
+                background: colors.field,
                 position: "absolute",
                 right: 8,
                 top: 16,
                 padding: 8,
               }}
-              src={PeopleIcon}
-            />
+            >
+              <PeopleAltOutlinedIcon style={{ fill: colors.text }} />
+            </Avatar>
             <Avatar
               onClick={() => setMenuMode(1)}
               style={{
                 width: 64,
                 height: 64,
-                backgroundColor: "#fff",
+                background: colors.field,
                 position: "absolute",
                 right: 8,
                 top: 16 + 64 + 16,
                 padding: 8,
               }}
-              src={BotIcon}
-            />
+            >
+              <SmartToyOutlinedIcon style={{ fill: colors.text }} />
+            </Avatar>
             <Avatar
               onClick={() => {
                 setMenuOpen(false);
@@ -727,14 +727,15 @@ export default function Space(props) {
               style={{
                 width: 64,
                 height: 64,
-                backgroundColor: "#fff",
+                background: colors.field,
                 position: "absolute",
                 right: 8,
                 bottom: 16 + 64 + 16 + 64 + 16,
                 padding: 8,
               }}
-              src={HomeIcon}
-            />
+            >
+              <HomeOutlinedIcon style={{ fill: colors.text }} />
+            </Avatar>
             <Avatar
               onClick={() => {
                 setMenuOpen(false);
@@ -743,14 +744,15 @@ export default function Space(props) {
               style={{
                 width: 64,
                 height: 64,
-                backgroundColor: "#fff",
+                background: colors.field,
                 position: "absolute",
                 right: 8,
                 bottom: 16 + 64 + 16,
                 padding: 8,
               }}
-              src={RoomIcon}
-            />
+            >
+              <BedroomBabyOutlinedIcon style={{ fill: colors.text }} />
+            </Avatar>
             <div
               onClick={() => {
                 setMenuOpen(false);
@@ -760,14 +762,26 @@ export default function Space(props) {
                 borderRadius: 32,
                 width: 64,
                 height: 64,
-                backgroundColor: "#fff",
+                background: colors.field,
                 position: "absolute",
                 right: 8,
                 bottom: 16,
                 padding: 8,
               }}
             >
-              <Settings style={{ fill: "#666", width: 48, height: 48 }} />
+              <div
+                style={{ position: "relative", width: "100%", height: "100%" }}
+              >
+                <SettingsOutlinedIcon
+                  style={{
+                    fill: colors.text,
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                />
+              </div>
             </div>
           </div>
           <div style={{ width: 280, height: "100%" }}>

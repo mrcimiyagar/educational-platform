@@ -8,6 +8,7 @@ import ForumIcon from '@mui/icons-material/Forum';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import StorefrontIcon from '@mui/icons-material/Storefront';
+import {colors} from '../../util/settings';
 
 const useStyles = makeStyles({
   root: {
@@ -17,19 +18,19 @@ const useStyles = makeStyles({
   },
 });
 
-const useStylesAction = makeStyles({
-  /* Styles applied to the root element. */
-  root: {
-    color: "#ccc",
-    "&$selected": {
-      color: "#fff",
-    },
-  },
-  /* Styles applied to the root element if selected. */
-  selected: {},
-});
-
 export default function SpaceBottombar(props) {
+  let useStylesAction = makeStyles({
+    /* Styles applied to the root element. */
+    root: {
+      color: colors.textPassive,
+      "&$selected": {
+        color: colors.text,
+      },
+    },
+    /* Styles applied to the root element if selected. */
+    selected: {},
+  });
+  
   const classes = useStyles();
   const classesAction = useStylesAction();
 
@@ -40,7 +41,7 @@ export default function SpaceBottombar(props) {
       showLabels
       className={classes.root}
       style={{
-        backgroundColor: "rgba(30, 37, 41, 0.5)",
+        backgroundColor: colors.primaryMedium,
         backdropFilter: "blur(10px)",
         width: "calc(100% - 48px)",
         height: 72,

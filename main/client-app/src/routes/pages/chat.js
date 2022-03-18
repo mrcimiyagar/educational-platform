@@ -41,7 +41,7 @@ import {
   unregisterEvent,
   useForceUpdate,
 } from '../../util/Utils'
-import ChatWallpaper from '../../images/chat-wallpaper.jpg'
+import SpaceWallpaper from '../../images/chat-wallpaper.png';
 import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery'
 import MessageItem from '../../components/MessageItem'
@@ -51,33 +51,7 @@ import CustomImageBox from '../../components/CustomImageBox'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />
-})
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    position: 'fixed',
-    bottom: 0,
-    zIndex: 1000,
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
-    direction: 'rtl',
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-    fontFamily: 'mainFont',
-  },
-  iconButton: {
-    padding: 10,
-  },
-  divider: {
-    height: 28,
-    margin: 4,
-  },
-}))
+});
 
 let messagesArr = []
 export let resetMessages = () => {
@@ -98,6 +72,41 @@ let messagesDict = {};
 let scrollReady3 = false;
 
 export default function Chat(props) {
+  let useStylesInput = makeStyles((theme) => ({
+    InputBaseStyle: {
+      "&::placeholder": {
+        color: colors.text,
+        textAlign: 'center'
+      }
+    }
+  }));
+  
+  let useStyles = makeStyles((theme) => ({
+    root: {
+      padding: '2px 4px',
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%',
+      position: 'fixed',
+      bottom: 0,
+      zIndex: 1000,
+      backgroundColor: colors.field,
+      direction: 'rtl',
+    },
+    input: {
+      marginLeft: theme.spacing(1),
+      flex: 1,
+      fontFamily: 'mainFont',
+      color: colors.text
+    },
+    iconButton: {
+      padding: 10,
+    },
+    divider: {
+      height: 28,
+      margin: 4,
+    },
+  }));
 
   document.documentElement.style.overflowY = 'hidden';
 
@@ -254,7 +263,8 @@ export default function Chat(props) {
       }, 250)
     }, 500)
   }
-  let classes = useStyles()
+  let classes = useStyles();
+  let classesInput = useStylesInput();
   const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
     readAs: 'DataURL',
   })
@@ -947,7 +957,7 @@ export default function Chat(props) {
       style={{ zIndex: 2501 }}
     >
       <div contenteditable="true" id="pasteRedirect" style={{position: 'fixed', top: -256, opacity: 0}}></div> 
-      <CustomImageBox src={ChatWallpaper} borderRadius={isInMessenger() ? '0 0 0 24px' : 0}/>
+      <CustomImageBox src={SpaceWallpaper} borderRadius={isInMessenger() ? '0 0 0 24px' : 0} style={{position: 'fixed'}}/>
       <div
         style={{
           width: '100%',
@@ -995,7 +1005,7 @@ export default function Chat(props) {
                 openFileSelector()
               }}
             >
-              <DescriptionIcon />
+              <DescriptionIcon style={{fill: colors.icon}} />
             </IconButton>
             <IconButton
               className={classes.iconButton}
@@ -1022,7 +1032,7 @@ export default function Chat(props) {
                 }
               }}
             >
-              <EmojiEmotionsIcon />
+              <EmojiEmotionsIcon style={{fill: colors.icon}} />
             </IconButton>
             <InputBase
               multiline
@@ -1031,6 +1041,9 @@ export default function Chat(props) {
               placeholder="پیام خود را بنویسید"
               onChange={() => {
                 socket.emit('chat-typing')
+              }}
+              classes={{
+                input: classes.InputBaseStyle
               }}
             />
             <IconButton
@@ -1092,7 +1105,7 @@ export default function Chat(props) {
                 }
               }}
             >
-              <SendIcon style={{fill: colors.primaryMedium}}/>
+              <SendIcon style={{fill: colors.icon}} />
             </IconButton>
             <br />
           </div>
@@ -1116,11 +1129,11 @@ export default function Chat(props) {
             height: showEmojiPad ? 'calc(100% - 416px)' : '100%',
           }}
         >
+          <div style={{ height: 64 }} />
           <div
             style={{ width: '100%', height: '100%', overflow: 'auto' }}
             id={'chatScroller'}
           >
-            <div style={{ height: 64 }} />
             <div id={'messagesContainer'}>{messagesArr}</div>
             <div style={{ width: '100%', height: 160 }} />
           </div>

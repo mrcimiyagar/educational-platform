@@ -90,7 +90,7 @@ export let updateStore = () => {}
 let categories = [];
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction="left" ref={ref} {...props} />;
 });
 
 const actions = [
@@ -430,11 +430,11 @@ export default function Store(props) {
               }}}
       >
       <div className={classes.root} style={{
-        backgroundColor: 'rgba(255, 255, 255, 0.35)',
+        backgroundColor: 'rgba(24, 34, 44, 0.85)',
         backdropFilter: 'blur(10px)'
       }}>
         <HomeToolbar>
-          <AppBar style={{backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}>
+          <AppBar style={{backgroundColor: "rgba(24, 34, 44, 0.85)", backdropFilter: 'blur(10px)'}}>
             <Toolbar style={{marginTop: 16}}>
               <StoreSearchbar dialogMode={false} removeIcon={false} setDrawerOpen={(v) => {
                   handleClose();
@@ -514,10 +514,6 @@ export default function Store(props) {
         </Slide>
         <StoreFam />
         <StoreBottombar/>
-        <SwipeableDrawer anchor='right' open={drawerOpen} onClose={() => setDrawerOpen(false)} PaperProps={{style: {
-            backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}}>
-              {filters}
-        </SwipeableDrawer>
       </div>
       </Dialog>
     );
