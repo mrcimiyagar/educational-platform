@@ -244,6 +244,7 @@ export default function HomeMessenger(props) {
                 }}
               >
                 <AllChats
+                  setSelectedChatId={props.setSelectedChatId}
                   setInTheGame={setInTheGame}
                   chats={props.chats.filter((c) => c.chatType === 'p2p')}
                 />
@@ -265,6 +266,7 @@ export default function HomeMessenger(props) {
                 }}
               >
                 <GroupChats
+                  setSelectedChatId={props.setSelectedChatId}
                   setInTheGame={setInTheGame}
                   chats={props.chats.filter((c) => c.chatType === 'group')}
                 />
@@ -286,6 +288,7 @@ export default function HomeMessenger(props) {
                 }}
               >
                 <ChannelChats
+                  setSelectedChatId={props.setSelectedChatId}
                   setInTheGame={setInTheGame}
                   chats={props.chats.filter((c) => c.chatType === 'channel')}
                 />
@@ -307,6 +310,7 @@ export default function HomeMessenger(props) {
                 }}
               >
                 <BotChats
+                  setSelectedChatId={props.setSelectedChatId}
                   setInTheGame={setInTheGame}
                   chats={props.chats.filter((c) => c.chatType === 'bot')}
                 />

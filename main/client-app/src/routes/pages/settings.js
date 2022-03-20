@@ -3,14 +3,15 @@ import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import Slide from '@material-ui/core/Slide'
 import { ArrowForward, Search } from '@material-ui/icons'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   isDesktop,
   isInRoom,
   isMobile,
   isTablet,
   popPage,
-  registerDialogOpen
+  registerDialogOpen,
+  setInTheGame
 } from '../../App'
 import RoomSettings from '../../components/RoomSettings'
 import { colors } from '../../util/settings'
@@ -20,17 +21,16 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 function SettingsPage(props) {
-
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  props = Object.fromEntries(urlSearchParams.entries());
   
   const [open, setOpen] = React.useState(true)
   registerDialogOpen(setOpen)
 
   const handleClose = () => {
     setOpen(false)
-    setTimeout(popPage, 250)
+    setTimeout(props.onClose, 250)
   }
+
+  useEffect(() => setInTheGame(true), []);
 
   return (
     <Dialog
@@ -104,9 +104,6 @@ function SettingsPage(props) {
           style={{
             width: '100%',
             height: '100%',
-            backdropFilter: !(isDesktop() && isInRoom())
-              ? 'blur(10px)'
-              : undefined,
           }}
         >
           <RoomSettings roomId={props.room_id} />

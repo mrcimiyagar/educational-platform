@@ -77,7 +77,7 @@ export default function ChannelChats(props) {
                     setCurrentRoomId(chat.id);
                     setCurrentUserId(undefined);
                   } else {
-                    gotoPage('/app/chat', { room_id: chat.id })
+                    props.setSelectedChatId(chat.id)
                   }
                 }}
               >

@@ -1,100 +1,72 @@
-import React, { Component } from 'react'
-import { TextField, Button, Grid } from '@material-ui/core'
-import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
+import React, { Component } from "react";
+import { TextField } from "@material-ui/core";
+import PropTypes from "prop-types";
+import { colors } from "../../util/settings";
 
-let self
-
-const styles = (theme) => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    color: '#fff'
-  },
-  cssLabel: {
-    color: '#fff',
-    '&.Mui-focused': {
-      color: '#fff',
+function WhiteColorTextField(props) {
+  const styles = (theme) => ({
+    container: {
+      display: "flex",
+      flexWrap: "wrap",
     },
-  },
-  cssOutlinedInput: {
-    '&:not(hover):not($disabled):not($cssFocused):not($error) $notchedOutline': {
-      borderColor: '#fff', //default
+    textField: {
+      marginLeft: 16,
+      marginRight: 16,
+      color: colors.text,
     },
-    '&:hover:not($disabled):not($cssFocused):not($error) $notchedOutline': {
-      borderColor: '#fff', //hovered #DCDCDC
+    cssLabel: {
+      color: "#fff",
+      "&.Mui-focused": {
+        color: colors.text,
+      },
     },
-    '&$cssFocused $notchedOutline': {
-      borderColor: '#fff', //focused
+    cssOutlinedInput: {
+      "&:not(hover):not($disabled):not($cssFocused):not($error) $notchedOutline":
+        {
+          borderColor: colors.text,
+        },
+      "&:hover:not($disabled):not($cssFocused):not($error) $notchedOutline": {
+        borderColor: colors.text,
+      },
+      "&$cssFocused $notchedOutline": {
+        borderColor: colors.text,
+      },
     },
-  },
-  notchedOutline: {},
-  cssFocused: {},
-  error: {},
-  disabled: {},
-})
-class WhiteColorTextField extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      loggedIn: false,
-      user: '',
-      errorMsg: '',
-      errorMsgLength: '',
-      loginErrorMsg: '',
-      flag: false,
-      password: '',
-      hidden: true,
-      valuePassText: 'SHOW',
-    }
-    self = this
-  }
-
-  componentDidMount() {
-    this._isMounted = true
-    if (this.props.password) {
-      this.setState({ password: this.props.password })
-    }
-  }
-
-  componentDidUpdate(prevProps) {}
-
-  render() {
-    const { classes } = this.props
-    return (
-      <TextField
-        type={this.props.type}
-        id={this.props.id}
-        className={classes.textField}
-        onChange={this.props.onChange}
-        label={this.props.label}
-        variant={this.props.variant}
-        InputLabelProps={{
-          classes: {
-            root: classes.cssLabel,
-            focused: classes.cssFocused,
-          },
-        }}
-        InputProps={{
-          classes: {
-            root: classes.cssOutlinedInput,
-            focused: classes.cssFocused,
-            notchedOutline: classes.notchedOutline,
-          },
-          inputMode: 'numeric',
-        }}
-        style={this.props.style}
-      />
-    )
-  }
+    notchedOutline: {},
+    cssFocused: {},
+    error: {},
+    disabled: {},
+  });
+  const classes = styles();
+  return (
+    <TextField
+      defaultValue={props.defaultValue}
+      id={props.id}
+      className={classes.textField}
+      onChange={props.onChange}
+      label={props.label}
+      variant={props.variant}
+      InputLabelProps={{
+        classes: {
+          root: classes.cssLabel,
+          focused: classes.cssFocused,
+        },
+      }}
+      InputProps={{
+        classes: {
+          root: classes.cssOutlinedInput,
+          focused: classes.cssFocused,
+          notchedOutline: classes.notchedOutline,
+        },
+        inputMode: "numeric",
+      }}
+      style={props.style}
+    />
+  );
 }
 
 WhiteColorTextField.propTypes = {
   classes: PropTypes.object.isRequired,
-}
+};
 
-export default withStyles(styles)(WhiteColorTextField)
+export default WhiteColorTextField;

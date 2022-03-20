@@ -6,6 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import React from 'react';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import {colors} from '../../util/settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,13 +14,17 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.65)',
-    backdropFilter: 'blur(10px)'
+    backgroundColor: colors.field,
+    backdropFilter: 'blur(10px)',
+    borderRadius: 24
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
-    color: '#333'
+    color: '#fff',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   iconButton: {
     padding: 10,
@@ -31,20 +36,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SettingsSearchbar(props) {
+  let useStylesInput = makeStyles((theme) => ({
+    InputBaseStyle: {
+      "&::placeholder": {
+        color: colors.text,
+        textAlign: 'center'
+      }
+    }
+  }));
+
   const classes = useStyles();
+  const classesInput = useStylesInput();
 
   return (
-    <Paper component="form" className={classes.root}>
+    <div component="form" className={classes.root}>
       <IconButton onClick={() => props.setDrawerOpen()} className={classes.iconButton} aria-label="menu">
-        <ArrowForwardIcon style={{fill: '#333'}}/>
+        <ArrowForwardIcon style={{fill: '#fff'}}/>
       </IconButton>
       <InputBase
         className={classes.input}
         placeholder="جستجو در تنظیمات"
+        classes={{
+          input: classesInput.InputBaseStyle
+        }}
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
-        <SearchIcon style={{fill: '#333'}}/>
+        <SearchIcon style={{fill: '#fff'}}/>
       </IconButton>
-    </Paper>
+    </div>
   );
 }

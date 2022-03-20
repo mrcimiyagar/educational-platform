@@ -21,14 +21,15 @@ import WallpaperIcon from '@material-ui/icons/Wallpaper'
 import VideocamIcon from '@material-ui/icons/Videocam'
 import BorderColorIcon from '@material-ui/icons/BorderColor'
 import DesktopMacIcon from '@material-ui/icons/DesktopMac'
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn'
-import DescriptionIcon from '@material-ui/icons/Description'
-import LiveHelpIcon from '@material-ui/icons/LiveHelp'
-import Gradient from '@material-ui/icons/Gradient'
-import RoomBackgroundPhoto from '../../components/RoomBackgroundPhoto'
-import RoomBackgroundColor from '../../components/RoomBackgroundColor'
-import RoomBackgroundGradient from '../../components/RoomBackgroundGradient'
-import { gotoPage } from '../../App'
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import DescriptionIcon from '@material-ui/icons/Description';
+import LiveHelpIcon from '@material-ui/icons/LiveHelp';
+import Gradient from '@material-ui/icons/Gradient';
+import RoomBackgroundPhoto from '../../components/RoomBackgroundPhoto';
+import RoomBackgroundColor from '../../components/RoomBackgroundColor';
+import RoomBackgroundGradient from '../../components/RoomBackgroundGradient';
+import { gotoPage } from '../../App';
+import { colors } from '../../util/settings';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -57,32 +58,33 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    direction: 'rtl',
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary,
-  },
-  listRoot: {
-    flexGrow: 1,
-    maxWidth: 752,
-  },
-  demo: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  title: {
-    margin: theme.spacing(4, 0, 2),
-  },
-}))
-
 export default function RoomSettings(props) {
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      width: '100%',
+      direction: 'rtl',
+      backgroundColor: colors.primaryDark,
+      backdropFilter: 'blur(10px)'
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+    },
+    secondaryHeading: {
+      fontSize: theme.typography.pxToRem(15),
+      color: theme.palette.text.secondary,
+    },
+    listRoot: {
+      flexGrow: 1,
+      maxWidth: 752,
+    },
+    demo: {
+      backgroundColor: theme.palette.background.paper,
+    },
+    title: {
+      margin: theme.spacing(4, 0, 2),
+    },
+  }));
+
   const classes = useStyles()
   let [room, setRoom] = React.useState({})
 
@@ -176,14 +178,14 @@ export default function RoomSettings(props) {
           <ListItem
             style={{
               position: 'relative',
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: colors.primaryMedium,
             }}
           >
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -212,14 +214,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <WallpaperIcon style={{ fill: '#666' }} />
+                <WallpaperIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -239,7 +241,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
           <Divider />
@@ -259,14 +261,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <InvertColorsIcon style={{ fill: '#666' }} />
+                <InvertColorsIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -286,7 +288,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
           <Divider />
@@ -306,14 +308,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <Gradient style={{ fill: '#666' }} />
+                <Gradient style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -333,7 +335,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
           <Divider />
@@ -341,14 +343,14 @@ export default function RoomSettings(props) {
             button
             style={{
               position: 'relative',
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: colors.primaryMedium,
             }}
           >
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -370,14 +372,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <VideocamIcon style={{ fill: '#666' }} />
+                <VideocamIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -397,7 +399,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
           <Divider />
@@ -411,14 +413,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <DescriptionIcon style={{ fill: '#666' }} />
+                <DescriptionIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -438,7 +440,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
           <Divider />
@@ -446,14 +448,14 @@ export default function RoomSettings(props) {
             button
             style={{
               position: 'relative',
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: colors.primaryMedium,
             }}
           >
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -475,14 +477,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <DesktopMacIcon style={{ fill: '#666' }} />
+                <DesktopMacIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -502,7 +504,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
           <Divider />
@@ -515,14 +517,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <AssignmentTurnedInIcon style={{ fill: '#666' }} />
+                <AssignmentTurnedInIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -542,7 +544,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
           <Divider />
@@ -555,14 +557,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <BorderColorIcon style={{ fill: '#666' }} />
+                <BorderColorIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -582,7 +584,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
 
@@ -591,14 +593,14 @@ export default function RoomSettings(props) {
             button
             style={{
               position: 'relative',
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: colors.primaryMedium,
             }}
           >
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -623,14 +625,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <LiveHelpIcon style={{ fill: '#666' }} />
+                <LiveHelpIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -650,7 +652,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
           <Divider />
@@ -666,14 +668,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <LiveHelpIcon style={{ fill: '#666' }} />
+                <LiveHelpIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -693,7 +695,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
           <Divider />
@@ -706,14 +708,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <LiveHelpIcon style={{ fill: '#666' }} />
+                <LiveHelpIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -733,7 +735,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
 
@@ -742,14 +744,14 @@ export default function RoomSettings(props) {
             button
             style={{
               position: 'relative',
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: colors.primaryMedium,
             }}
           >
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -771,14 +773,14 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <LiveHelpIcon style={{ fill: '#666' }} />
+                <LiveHelpIcon style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   style={{
-                    color: '#666',
+                    color: colors.text,
                     width: '100%',
                     textAlign: 'right',
                     fontSize: 18.5,
@@ -798,7 +800,7 @@ export default function RoomSettings(props) {
                 top: 16,
               }}
             >
-              <ArrowBackIos style={{ fill: '#666' }} />
+              <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
         </List>

@@ -87,6 +87,7 @@ import BedroomBabyOutlinedIcon from "@mui/icons-material/BedroomBabyOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
+import SettingsPage from "./settings";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -756,7 +757,10 @@ export default function Space(props) {
             <div
               onClick={() => {
                 setMenuOpen(false);
-                gotoPage("/app/settings", { room_id: props.room_id });
+                setInTheGame(false);
+                setTimeout(() => {
+                  setSelectedNav(5);
+                }, 250);
               }}
               style={{
                 borderRadius: 32,
@@ -795,15 +799,6 @@ export default function Space(props) {
       </SwipeableDrawer>
 
       {authenticationValid ? null : <Authentication />}
-      {selectedNav === 2 ? (
-        <Chat
-          onClose={() => {
-            setSelectedNav(undefined);
-            setInTheGame(true);
-          }}
-          room_id={props.room_id}
-        />
-      ) : null}
       {selectedNav === 0 ? (
         <MessengerPage
           tab_index={"0"}
@@ -811,6 +806,15 @@ export default function Space(props) {
             setSelectedNav(undefined);
             setInTheGame(true);
           }}
+        />
+      ) : null}
+      {selectedNav === 2 ? (
+        <Chat
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+          room_id={props.room_id}
         />
       ) : null}
       {selectedNav === 1 ? (
@@ -823,6 +827,15 @@ export default function Space(props) {
       ) : null}
       {selectedNav === 4 ? (
         <MainSettings
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 5 ? (
+        <SettingsPage
+          room_id={props.room_id}
           onClose={() => {
             setSelectedNav(undefined);
             setInTheGame(true);

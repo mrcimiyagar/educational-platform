@@ -1,4 +1,4 @@
-import { Dialog, Slide } from "@mui/material";
+import { Dialog, Slide } from "@material-ui/core";
 import "chartjs-plugin-datalabels";
 import React from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -7,45 +7,51 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import "react-table/react-table.css";
 import { setInTheGame } from "../../App";
 import MainSettingsPanel from "../../components/MainSettingsPanel";
-import './messenger.css';
+import "./messenger.css";
 
 export let reloadRoomsList = undefined;
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="left" ref={ref} {...props} />
-})
+  return <Slide direction="left" ref={ref} {...props} />;
+});
 
 export default function MainSettings(props) {
+  document.documentElement.style.overflow = "auto";
 
-  document.documentElement.style.overflow = 'auto';
-  
   const [open, setOpen] = React.useState(true);
 
   const handleClose = () => {
-    setInTheGame(false)
+    setInTheGame(false);
     setTimeout(() => {
-      setOpen(false)
+      setOpen(false);
       setTimeout(() => {
         props.onClose();
-      }, 250)
-    }, 500)
-  }
+      }, 250);
+    }, 500);
+  };
 
   return (
     <Dialog
       PaperProps={{
         style: {
-          backgroundColor: 'transparent',
-          boxShadow: 'none',
+          backgroundColor: "transparent",
+          boxShadow: "none",
         },
       }}
       fullScreen
       open={open}
       onClose={handleClose}
       TransitionComponent={Transition}
-      style={{ zIndex: 2501, position: 'fixed', left: 0, right: 0, top: 0, bottom: 0}}>
+      style={{
+        zIndex: 2501,
+        position: "fixed",
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+      }}
+    >
       <MainSettingsPanel onClose={handleClose} />
     </Dialog>
   );
 }
-

@@ -67,10 +67,7 @@ export default function AllChats(props) {
                   setCurrentRoomId(chat.id);
                   setCurrentUserId(chat.participent.id);
                 } else {
-                  gotoPage('/app/chat', {
-                    room_id: chat.id,
-                    user_id: chat.participent.id,
-                  })
+                  props.setSelectedChatId(chat.id)
                 }
               }}
             >
