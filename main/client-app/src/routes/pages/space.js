@@ -2,7 +2,7 @@ import { Dialog, Paper } from "@mui/material";
 import SpaceSearchbar from "../../components/SpaceSearchbar";
 import SpaceBottombar from "../../components/SpaceBottombar";
 import Authentication from "./authentication";
-import { authenticationValid } from "../../App";
+import { authenticationValid, currentRoomId } from "../../App";
 import {
   AppBar,
   Avatar,
@@ -157,8 +157,7 @@ export default function Space(props) {
   };
   useEffect(() => attachScrollCallback(), []);
 
-  roomId = homeRoomId;
-  props.room_id = homeRoomId;
+  roomId = props.room_id;
 
   const useStyles = makeStyles({
     root: {
@@ -791,7 +790,9 @@ export default function Space(props) {
             ) : menuMode === 1 ? (
               <MachinesBox membership={membership} roomId={props.room_id} />
             ) : menuMode === 2 ?
-              thisRoom !== undefined ? (<RoomTreeBox room={thisRoom} />) : null
+              thisRoom !== undefined ? (<RoomTreeBox room={thisRoom} onRoomSelected={(id) => {
+
+              }} />) : null
             : null}
           </div>
         </div>

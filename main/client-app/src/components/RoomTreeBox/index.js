@@ -27,7 +27,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import SortableTree from "react-sortable-tree";
 import "react-sortable-tree/style.css";
 import "react-table/react-table.css";
-import { isDesktop } from "../../App";
+import { isDesktop, setCurrentRoomId } from "../../App";
 import { NotificationManager } from "../../components/ReactNotifications";
 import { colors, me, token } from "../../util/settings";
 import {
@@ -173,29 +173,8 @@ function ConfirmationDialogRaw(props) {
   };
 
   const handleOk = () => {
-    onClose(props.value);
-    let requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: token,
-      },
-      body: JSON.stringify({
-        spaceId: props.spaceId,
-        userId: selectedUserId,
-        toRoomId: selectedRoomId,
-      }),
-      redirect: "follow",
-    };
-    fetch(serverRoot + "/room/move_user", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result));
-        if (selectedUserId === me.id) {
-          window.location.href = "/app/room?room_id=" + selectedRoomId;
-        }
-      })
-      .catch((error) => console.log("error", error));
+    
+    
   };
 
   const handleChange = (event) => {
@@ -324,17 +303,6 @@ export let RoomTreeBox = (props) => {
     }
   }, [props.room]);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    event.preventDefault();
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
   const handleClickListItem = () => {
@@ -387,30 +355,6 @@ export let RoomTreeBox = (props) => {
 
       <div>
         <div style={{ height: "auto" }}>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem
-              onClick={() => {
-                sendUserToRoom();
-                handleClose();
-              }}
-            >
-              ارسال به روم دیگر
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                editAccess();
-                handleClose();
-              }}
-            >
-              تغییر محدوده ی دسترسی
-            </MenuItem>
-          </Menu>
           <p style={{ color: colors.text, width: 'calc(100% - 16px)', marginTop: 32, textAlign: 'right', marginRight: 24 }}>
             {`اتاق ها (${treeData.length})`}
           </p>
@@ -433,22 +377,29 @@ export let RoomTreeBox = (props) => {
                       ? room.children.length
                       : undefined
                   }
+                  onClick={() => {
+                    let requestOptions = {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        token: token,
+                      },
+                      body: JSON.stringify({
+                        roomId: room.id
+                      }),
+                      redirect: "follow",
+                    };
+                    fetch(serverRoot + "/room/check_room_access", requestOptions)
+                      .then((response) => response.json())
+                      .then((result) => {
+                        console.log(JSON.stringify(result));
+                        if (result.canAccess === true) {
+                          setCurrentRoomId(room.id);
+                        }
+                      })
+                      .catch((error) => console.log("error", error));
+                  }}
                 >
-                  {room.children.map((user) => {
-                    return (
-                      <StyledTreeItem
-                        onContextMenu={(e) => {
-                          selectedUserId = user.id;
-                          handleClick(e);
-                        }}
-                        nodeId={"user-" + user.id}
-                        labelText={user.title}
-                        labelIcon={PersonIcon}
-                        color="#1a73e8"
-                        bgColor="#e8f0fe"
-                      />
-                    );
-                  })}
                 </StyledTreeItem>
               );
             })}

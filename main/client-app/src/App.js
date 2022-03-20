@@ -795,7 +795,7 @@ MainAppContainer = (props) => {
       <ColorBase />
       <DesktopDetector />
       <Sidebar />
-      <Space />
+      <Space room_id={currentRoomId} key={currentRoomId}/>
       <Drawer
         PaperProps={{
           style: {

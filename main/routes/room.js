@@ -1277,6 +1277,21 @@ router.post("/get_room_users", jsonParser, async function (req, res) {
   });
 });
 
+router.post("/check_room_access", jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user) => {
+    if (membership === null || membership === undefined) {
+      res.send({
+        status: "success", canAccess: false
+      });
+    }
+    else {
+      res.send({
+        status: "success", canAccess: true
+      });
+    }
+  });
+});
+
 router.post("/move_user", jsonParser, async function (req, res) {
   sw.Session.findOne({ where: { token: req.headers.token } }).then(
     async function (session) {
