@@ -29,7 +29,7 @@ import "react-sortable-tree/style.css";
 import "react-table/react-table.css";
 import { isDesktop } from "../../App";
 import { NotificationManager } from "../../components/ReactNotifications";
-import { me, token } from "../../util/settings";
+import { colors, me, token } from "../../util/settings";
 import {
   registerEvent,
   serverRoot,
@@ -107,18 +107,33 @@ function StyledTreeItem(props) {
       onContextMenu={props.onContextMenu}
       label={
         <div className={classes.labelRoot}>
-          <LabelIcon color="inherit" className={classes.labelIcon} />
-          <Typography variant="body2" className={classes.labelText}>
+          <LabelIcon
+            color="inherit"
+            className={classes.labelIcon}
+            style={{ color: colors.icon }}
+          />
+          <Typography
+            variant="body2"
+            className={classes.labelText}
+            style={{ color: colors.text }}
+          >
             {labelText}
           </Typography>
-          <Typography variant="caption" color="inherit">
+          <Typography
+            variant="caption"
+            color="inherit"
+            style={{ color: colors.text }}
+          >
             {labelInfo}
           </Typography>
         </div>
       }
       style={{
-        "--tree-view-color": color,
-        "--tree-view-bg-color": bgColor,
+        "--tree-view-color": colors.field,
+        "--tree-view-bg-color": colors.field,
+        color: colors.field,
+        widthL: 'calc(100% - 16px)',
+        marginLeft: 16
       }}
       classes={{
         root: classes.root,
@@ -246,7 +261,6 @@ const useStyles = makeStyles({
 let selectedUserId = 0;
 
 export let RoomTreeBox = (props) => {
-
   const classes = useStyles();
 
   let [treeData, setTreeData] = React.useState([]);
@@ -264,32 +278,31 @@ export let RoomTreeBox = (props) => {
   };
   let fetchSpaceRoomList = () => {
     if (props.room !== undefined) {
-    let requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: token,
-      },
-      body: JSON.stringify({
-        spaceId: props.room.spaceId,
-        roomId: props.room.id,
-      }),
-      redirect: "follow",
-    };
-    fetch(serverRoot + "/room/get_room_users", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result));
-        processUsers(result.rooms);
-      })
-      .catch((error) => console.log("error", error));
-    }
-    else {
+      let requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          spaceId: props.room.spaceId,
+          roomId: props.room.id,
+        }),
+        redirect: "follow",
+      };
+      fetch(serverRoot + "/room/get_room_users", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(JSON.stringify(result));
+          processUsers(result.rooms);
+        })
+        .catch((error) => console.log("error", error));
+    } else {
       setTimeout(() => {
         fetchSpaceRoomList();
       }, 500);
     }
-  }
+  };
   reloadUsersList = () => {
     fetchSpaceRoomList();
   };
@@ -352,12 +365,12 @@ export let RoomTreeBox = (props) => {
     }
   };
 
-  const editAccess = () => {
-    
-  };
+  const editAccess = () => {};
 
   return (
-    <div style={{ width: "100%", height: "auto", marginTop: 16 }}>
+    <div
+      style={{ width: "100%", height: "auto", marginTop: 16, direction: "rtl" }}
+    >
       <ConfirmationDialogRaw
         classes={{
           paper: classes.paper,
@@ -398,14 +411,16 @@ export let RoomTreeBox = (props) => {
               تغییر محدوده ی دسترسی
             </MenuItem>
           </Menu>
+          <p style={{ color: colors.text, width: 'calc(100% - 16px)', marginTop: 32, textAlign: 'right', marginRight: 24 }}>
+            {`اتاق ها (${treeData.length})`}
+          </p>
           <TreeView
             className={classes.root}
             defaultExpanded={treeData.map((room) => {
               return "room-" + room.id;
             })}
-            defaultCollapseIcon={<ArrowDropDownIcon />}
-            defaultExpandIcon={<ArrowRightIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
+            style={{ marginTop: -24 }}
           >
             {treeData.map((room) => {
               return (

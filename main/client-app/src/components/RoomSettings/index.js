@@ -128,22 +128,28 @@ export default function RoomSettings(props) {
         style={{
           zIndex: 5000,
           position: 'relative',
-          width: '100%',
+          width: '100%'
+        }}
+        PaperProps={{
+          style: {
+            background: colors.field,
+            backdropFilter: 'blur(10px)'
+          }
         }}
         anchor={'bottom'}
         onClose={() => setMenuOpen(false)}
         open={menuOpen}
       >
         {subSettingsIndex === 1 ? (
-          <div style={{ width: '100%', height: 600, backgroundColor: '#fff' }}>
+          <div style={{ width: '100%', height: 600}}>
             <RoomBackgroundPhoto room={room} roomId={room.id} />
           </div>
         ) : subSettingsIndex === 2 ? (
-          <div style={{ width: '100%', height: 400, backgroundColor: '#fff' }}>
+          <div style={{ width: '100%', height: 400}}>
             <RoomBackgroundColor room={room} roomId={room.id} />
           </div>
         ) : subSettingsIndex === 3 ? (
-          <div style={{ width: '100%', height: 400, backgroundColor: '#fff' }}>
+          <div style={{ width: '100%', height: 400}}>
             <RoomBackgroundGradient room={room} roomId={room.id} />
           </div>
         ) : null}
@@ -197,7 +203,6 @@ export default function RoomSettings(props) {
               }
             />
           </ListItem>
-          <Divider />
           <ListItem
             button
             onClick={() => {
@@ -244,7 +249,7 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
-          <Divider />
+          <Divider style={{backgroundColor: colors.field, width: 'calc(100% - 32px)', marginLeft: 16, marginRight: 16}} />
           <ListItem
             button
             onClick={() => {
@@ -291,7 +296,7 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
-          <Divider />
+          <Divider style={{backgroundColor: colors.field, width: 'calc(100% - 32px)', marginLeft: 16, marginRight: 16}} />
           <ListItem
             button
             onClick={() => {
@@ -338,7 +343,7 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
-          <Divider />
+          
           <ListItem
             button
             style={{
@@ -362,7 +367,6 @@ export default function RoomSettings(props) {
               }
             />
           </ListItem>
-          <Divider />
           <ListItem button style={{ position: 'relative' }}>
             <ListItemAvatar>
               <Avatar
@@ -402,7 +406,7 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
-          <Divider />
+          <Divider style={{backgroundColor: colors.field, width: 'calc(100% - 32px)', marginLeft: 16, marginRight: 16}} />
 
           <ListItem button style={{ position: 'relative' }}>
             <ListItemAvatar>
@@ -443,7 +447,7 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
-          <Divider />
+          
           <ListItem
             button
             style={{
@@ -467,7 +471,6 @@ export default function RoomSettings(props) {
               }
             />
           </ListItem>
-          <Divider />
           <ListItem button style={{ position: 'relative' }}>
             <ListItemAvatar>
               <Avatar
@@ -507,7 +510,7 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
-          <Divider />
+          <Divider style={{backgroundColor: colors.field, width: 'calc(100% - 32px)', marginLeft: 16, marginRight: 16}} />
           <ListItem button style={{ position: 'relative' }}>
             <ListItemAvatar>
               <Avatar
@@ -547,7 +550,7 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
-          <Divider />
+          <Divider style={{backgroundColor: colors.field, width: 'calc(100% - 32px)', marginLeft: 16, marginRight: 16}} />
           <ListItem button style={{ position: 'relative' }}>
             <ListItemAvatar>
               <Avatar
@@ -588,7 +591,6 @@ export default function RoomSettings(props) {
             </IconButton>
           </ListItem>
 
-          <Divider />
           <ListItem
             button
             style={{
@@ -612,7 +614,6 @@ export default function RoomSettings(props) {
               }
             />
           </ListItem>
-          <Divider />
           <ListItem button style={{ position: 'relative' }}
             onClick={() => {
               gotoPage('/app/generate_invite_link', {room_id: props.roomId})
@@ -655,7 +656,7 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
-          <Divider />
+          <Divider style={{backgroundColor: colors.field, width: 'calc(100% - 32px)', marginLeft: 16, marginRight: 16}} />
           <ListItem button style={{ position: 'relative' }}
             onClick={() => {
               gotoPage('/app/generate_invitation', {room_id: props.roomId})
@@ -698,7 +699,7 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
-          <Divider />
+          <Divider style={{backgroundColor: colors.field, width: 'calc(100% - 32px)', marginLeft: 16, marginRight: 16}} />
           <ListItem button style={{ position: 'relative' }}>
             <ListItemAvatar>
               <Avatar
@@ -739,7 +740,7 @@ export default function RoomSettings(props) {
             </IconButton>
           </ListItem>
 
-          <Divider />
+          
           <ListItem
             button
             style={{
@@ -763,7 +764,6 @@ export default function RoomSettings(props) {
               }
             />
           </ListItem>
-          <Divider />
           <ListItem button style={{ position: 'relative' }}>
             <ListItemAvatar>
               <Avatar

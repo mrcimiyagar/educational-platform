@@ -69,6 +69,7 @@ function SettingsPage(props) {
             transform: isDesktop() ? 'translate(-258px, -390px)' : undefined,
             position: 'fixed',
             backgroundColor: colors.primaryMedium,
+            backdropFilter: 'blur(10px)',
             borderRadius: isDesktop() ? '24px 24px 0 0' : undefined,
           }}
         >

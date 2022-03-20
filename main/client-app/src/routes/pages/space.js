@@ -88,6 +88,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 import SettingsPage from "./settings";
+import { RoomTreeBox } from "../../components/RoomTreeBox";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -133,6 +134,7 @@ export default function Space(props) {
   props = {};
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
   const [selectedNav, setSelectedNav] = React.useState(undefined);
+  const [thisRoom, setThisRoom] = React.useState(undefined);
   const attachScrollCallback = () => {
     const searchScrollView = document.getElementById("botsContainerOuter");
     if (searchScrollView === null) {
@@ -187,15 +189,10 @@ export default function Space(props) {
   [membership, setMembership] = React.useState({});
   const [loaded, setLoaded] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const [currentRoomNav, setCurrentRoomNav] = React.useState(
-    Number(props.tab_index)
-  );
   const [fileMode, setFileMode] = React.useState(0);
   const [menuMode, setMenuMode] = React.useState(0);
-  const [opacity, setOpacity] = React.useState(1);
   let [webcamOn, setWebcamOn] = React.useState(false);
   let [webcamOnSecond, setWebcamOnSecond] = React.useState(false);
-  let [messengerView, setMessengerView] = React.useState(true);
 
   let enterRoom = (callback) => {
     const controller = new AbortController();
@@ -254,6 +251,7 @@ export default function Space(props) {
       .then((response) => response.json())
       .then(async (result) => {
         console.log(JSON.stringify(result));
+        setThisRoom(result.room);
         setRoom(result.room);
         setToken(localStorage.getItem("token"));
         unregisterEvent("view-updated");
@@ -326,7 +324,7 @@ export default function Space(props) {
   };
 
   let syncWallpaper = () => {
-    /*let requestOptions = {
+    let requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -368,7 +366,7 @@ export default function Space(props) {
           setWallpaper(wall);
         }
       })
-      .catch((error) => console.log("error", error));*/
+      .catch((error) => console.log("error", error));
   };
 
   useEffect(() => {
@@ -739,8 +737,7 @@ export default function Space(props) {
             </Avatar>
             <Avatar
               onClick={() => {
-                setMenuOpen(false);
-                gotoPage("/app/roomstree", { room_id: props.room_id });
+                setMenuMode(2);
               }}
               style={{
                 width: 64,
@@ -793,7 +790,9 @@ export default function Space(props) {
               <UsersBox membership={membership} roomId={props.room_id} />
             ) : menuMode === 1 ? (
               <MachinesBox membership={membership} roomId={props.room_id} />
-            ) : null}
+            ) : menuMode === 2 ?
+              thisRoom !== undefined ? (<RoomTreeBox room={thisRoom} />) : null
+            : null}
           </div>
         </div>
       </SwipeableDrawer>
