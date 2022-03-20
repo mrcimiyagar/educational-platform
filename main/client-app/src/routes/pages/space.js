@@ -89,6 +89,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 import SettingsPage from "./settings";
 import { RoomTreeBox } from "../../components/RoomTreeBox";
+import CreateRoom from "./createRoom";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -131,7 +132,6 @@ let roomId = undefined;
 let oldSt = 0;
 
 export default function Space(props) {
-  props = {};
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
   const [selectedNav, setSelectedNav] = React.useState(undefined);
   const [thisRoom, setThisRoom] = React.useState(undefined);
@@ -790,7 +790,12 @@ export default function Space(props) {
             ) : menuMode === 1 ? (
               <MachinesBox membership={membership} roomId={props.room_id} />
             ) : menuMode === 2 ?
-              thisRoom !== undefined ? (<RoomTreeBox room={thisRoom} onRoomSelected={(id) => {
+              thisRoom !== undefined ? (<RoomTreeBox room={thisRoom} addRoomClicked={() => {
+                setMenuOpen(false);
+                setTimeout(() => {
+                  setSelectedNav(6);
+                }, 250);
+              }} onRoomSelected={(id) => {
 
               }} />) : null
             : null}
@@ -841,6 +846,17 @@ export default function Space(props) {
             setInTheGame(true);
           }}
         />
+      ) : null}
+      {selectedNav === 6 ? (
+        thisRoom !== undefined ?
+        <CreateRoom
+          spaceId={thisRoom.spaceId}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+        : null
       ) : null}
     </div>
   );

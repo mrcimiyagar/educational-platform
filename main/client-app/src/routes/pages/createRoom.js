@@ -11,13 +11,14 @@ import { colors, setToken, token } from "../../util/settings";
 import { serverRoot, useForceUpdate } from "../../util/Utils";
 import { pathConfig } from "../../index";
 import {
+  AppBar,
   FormControl,
   FormControlLabel,
   FormLabel,
   Radio,
   RadioGroup,
 } from "@mui/material";
-import { reloadUsersList } from "../../components/RoomTreeBox";
+import { reloadRoomsList } from "../../components/RoomTreeBox";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -52,8 +53,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-let uplaodedFileId = 0;
-
 export default function CreateRoom(props) {
   setToken(localStorage.getItem("token"));
 
@@ -62,7 +61,7 @@ export default function CreateRoom(props) {
   registerDialogOpen(setOpen);
   const handleClose = () => {
     setOpen(false);
-    setTimeout(popPage, 250);
+    setTimeout(props.onClose, 250);
   };
   const [value, setValue] = React.useState('public');
   const handleChange = (event) => {
@@ -113,7 +112,8 @@ export default function CreateRoom(props) {
           overflow: "hidden",
         }}
       >
-        <Paper
+        <AppBar
+          position={'fixed'}
           style={{
             width: isDesktop() ? 450 : undefined,
             paddingTop: 8,
@@ -138,14 +138,15 @@ export default function CreateRoom(props) {
               ساخت روم
             </Typography>
           </Toolbar>
-        </Paper>
+        </AppBar>
         <div
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.65)",
-            backdropFilter: "blur(15px)",
+            backgroundColor: colors.primaryDark,
+            backdropFilter: "blur(10px)",
             width: "100%",
             height: "100%",
             overflow: "hidden",
+            marginTop: 56
           }}
         >
           <TextField
@@ -206,7 +207,8 @@ export default function CreateRoom(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result));
                   if (result.room !== undefined) {
-                    popPage();
+                    reloadRoomsList()
+                    handleClose();
                   }
                 })
                 .catch((error) => console.log("error", error));

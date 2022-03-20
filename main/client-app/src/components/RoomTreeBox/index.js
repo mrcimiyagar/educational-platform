@@ -18,6 +18,8 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import PersonIcon from "@material-ui/icons/Person";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
+import { Add } from "@mui/icons-material";
+import { Fab } from "@mui/material";
 import "chartjs-plugin-datalabels";
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
@@ -38,7 +40,7 @@ import {
   useForceUpdate,
 } from "../../util/Utils";
 
-export let reloadUsersList = undefined;
+export let reloadRoomsList = undefined;
 
 const useTreeItemStyles = makeStyles((theme) => ({
   root: {
@@ -282,7 +284,7 @@ export let RoomTreeBox = (props) => {
       }, 500);
     }
   };
-  reloadUsersList = () => {
+  reloadRoomsList = () => {
     fetchSpaceRoomList();
   };
 
@@ -299,7 +301,7 @@ export let RoomTreeBox = (props) => {
 
   useEffect(() => {
     if (props.room !== undefined && props.room.id !== undefined) {
-      reloadUsersList();
+      reloadRoomsList();
     }
   }, [props.room]);
 
@@ -407,6 +409,11 @@ export let RoomTreeBox = (props) => {
           </TreeView>
         </div>
       </div>
+      <Fab style={{backgroundColor: colors.accent, position: 'fixed', left: 16, bottom: 16}} onClick={() => {
+        props.addRoomClicked();
+      }}>
+        <Add />
+      </Fab>
     </div>
   );
 };

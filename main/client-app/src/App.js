@@ -34,6 +34,7 @@ import StartupSound from "./sounds/startup.mp3";
 import {
   ColorBase,
   colors,
+  homeRoomId,
   initTheme,
   me,
   setColors,
@@ -93,11 +94,8 @@ export let setBoardFrame = (bf) => {
   boardFrame = bf;
 };
 
-export let currentRoomId = 0;
-export let setCurrentRoomId = (rId) => {
-  currentRoomId = rId;
-  forceUpdate();
-};
+export let currentRoomId = undefined;
+export let setCurrentRoomId = undefined;
 
 export let currentUserId = 0;
 export let setCurrentUserId = (uId) => {
@@ -554,6 +552,7 @@ MainAppContainer = (props) => {
   [routeTrigger, setRouteTrigger] = React.useState(false);
   [uploadingFiles, setUploadingFiles] = React.useState({});
   [authenticationValid, setAuthenticationValid] = React.useState(true);
+  [currentRoomId, setCurrentRoomId] = React.useState(homeRoomId);
 
   const [bottomSheetOpen, setBottomSheetOpen] = React.useState(false);
   const [connectedIO, setConnectedIO] = React.useState(false);

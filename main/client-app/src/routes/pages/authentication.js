@@ -3,7 +3,7 @@ import ListAltIcon from "@material-ui/icons/ListAlt";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import React, { useEffect } from "react";
 import { pathConfig, setWallpaper } from "../..";
-import { db } from "../../App";
+import { db, setCurrentRoomId } from "../../App";
 import WhiteColorTextField from "../../components/WhiteColorTextField";
 import CloudIcon from "../../images/logo.png";
 import {
@@ -369,6 +369,7 @@ export default function Authentication(props) {
                       setToken(result.session.token);
                       setHomeSpaceId(result.space.id);
                       setHomeRoomId(result.room.id);
+                      setCurrentRoomId(result.room.id);
                       localStorage.setItem("token", result.session.token);
                       localStorage.setItem("homeSpaceId", result.space.id);
                       localStorage.setItem("homeRoomId", result.room.id);
