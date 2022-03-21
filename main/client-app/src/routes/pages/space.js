@@ -90,6 +90,7 @@ import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 import SettingsPage from "./settings";
 import { RoomTreeBox } from "../../components/RoomTreeBox";
 import CreateRoom from "./createRoom";
+import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -131,10 +132,13 @@ let roomId = undefined;
 
 let oldSt = 0;
 
+let roomPersistanceDoctor;
+
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(undefined);
+  const [selectedNav, setSelectedNav] = React.useState(7);
   const [thisRoom, setThisRoom] = React.useState(undefined);
+  const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const attachScrollCallback = () => {
     const searchScrollView = document.getElementById("botsContainerOuter");
     if (searchScrollView === null) {
@@ -344,26 +348,30 @@ export default function Space(props) {
             photo: DesktopWallpaper2,
             fitType: "cover",
           });
+        } else {
+          let wall = JSON.parse(result.wallpaper);
+          if (wall === undefined || wall === null) return;
+          if (wall.type === "photo") {
+            setWallpaper({
+              type: "photo",
+              photo:
+                serverRoot +
+                `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
+            });
+          } else if (wall.type === "video") {
+            setWallpaper({
+              type: "video",
+              video:
+                serverRoot +
+                `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
+            });
+          } else if (wall.type === "color") {
+            setWallpaper(wall);
+          }
         }
-        let wall = JSON.parse(result.wallpaper);
-        if (wall === undefined || wall === null) return;
-        if (wall.type === "photo") {
-          setWallpaper({
-            type: "photo",
-            photo:
-              serverRoot +
-              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
-          });
-        } else if (wall.type === "video") {
-          setWallpaper({
-            type: "video",
-            video:
-              serverRoot +
-              `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
-          });
-        } else if (wall.type === "color") {
-          setWallpaper(wall);
-        }
+        setTimeout(() => {
+          setWallpaperLoaded(true);
+        }, 1000);
       })
       .catch((error) => console.log("error", error));
   };
@@ -503,7 +511,17 @@ export default function Space(props) {
       syncWallpaper();
     });
 
+    console.log("planting destructor...");
+    return () => {
+      leaveRoom(() => {});
+    };
+  }, []);
+
+  useEffect(() => {
+    if (roomPersistanceDoctor !== undefined)
+      clearInterval(roomPersistanceDoctor);
     let doRoomDoctor = () => {
+      if (selectedNav === 2 || selectedNav === 0) return;
       let requestOptions = {
         method: "POST",
         headers: {
@@ -546,31 +564,69 @@ export default function Space(props) {
         .catch((error) => console.log("error", error));
     };
 
-    let roomPersistanceDoctor = setInterval(() => {
+    roomPersistanceDoctor = setInterval(() => {
       doRoomDoctor();
     }, 3500);
-
-    console.log("planting destructor...");
+    console.log("planting destructor 2...");
     return () => {
       clearInterval(roomPersistanceDoctor);
-      leaveRoom(() => {});
     };
-  }, []);
+  }, [selectedNav]);
 
   if (!loaded || isObjectEmpty(membership)) {
-    return <div />;
+    return (
+      <div style={{ width: "100%", height: "100%" }}>
+        {!wallpaperLoaded ? (
+          <div
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.35)",
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <Paper
+            style={{
+              width: 144,
+              height: 144,
+              borderRadius: 32,
+              position: "fixed",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: colors.field,
+              backdropFilter: "blur(15px)",
+            }}
+          >
+            <div
+              style={{ widthL: "100%", height: "100%", position: "relative" }}
+            >
+              <div
+                style={{
+                  position: "fixed",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <Hypnosis
+                  color={colors.icon}
+                  width="96px"
+                  height="96px"
+                  duration="3s"
+                />
+              </div>
+            </div>
+          </Paper>
+        </div>
+        ) : null}
+      </div>
+    );
   }
 
-  let theme = createTheme({
-    palette: {
-      primary: {
-        main: "#BBDEFB",
-      },
-      secondary: {
-        main: "#FFC107",
-      },
-    },
-  });
   return (
     <div
       style={{
@@ -644,10 +700,26 @@ export default function Space(props) {
             label="میز اسناد x"
             style={{ marginLeft: 32, color: colors.text }}
           />
-          <Tab classes={{ root: classes.tab }} style={{color: colors.text}} label="میز کنفرانس فردا" />
-          <Tab classes={{ root: classes.tab }} style={{color: colors.text}} label="میز تست نرم افزار" />
-          <Tab classes={{ root: classes.tab }} style={{color: colors.text}} label="میز بازی شطرنج 2" />
-          <Tab classes={{ root: classes.tab }} style={{color: colors.text}} label="میز کنفرانس هفته ی بعد" />
+          <Tab
+            classes={{ root: classes.tab }}
+            style={{ color: colors.text }}
+            label="میز کنفرانس فردا"
+          />
+          <Tab
+            classes={{ root: classes.tab }}
+            style={{ color: colors.text }}
+            label="میز تست نرم افزار"
+          />
+          <Tab
+            classes={{ root: classes.tab }}
+            style={{ color: colors.text }}
+            label="میز بازی شطرنج 2"
+          />
+          <Tab
+            classes={{ root: classes.tab }}
+            style={{ color: colors.text }}
+            label="میز کنفرانس هفته ی بعد"
+          />
         </Tabs>
       </AppBar>
 
@@ -686,7 +758,7 @@ export default function Space(props) {
             style={{
               width: 80,
               height: "100%",
-              background: colors.primaryLight
+              background: colors.primaryLight,
             }}
           >
             <Avatar
@@ -789,16 +861,20 @@ export default function Space(props) {
               <UsersBox membership={membership} roomId={props.room_id} />
             ) : menuMode === 1 ? (
               <MachinesBox membership={membership} roomId={props.room_id} />
-            ) : menuMode === 2 ?
-              thisRoom !== undefined ? (<RoomTreeBox room={thisRoom} addRoomClicked={() => {
-                setMenuOpen(false);
-                setTimeout(() => {
-                  setSelectedNav(6);
-                }, 250);
-              }} onRoomSelected={(id) => {
-
-              }} />) : null
-            : null}
+            ) : menuMode === 2 ? (
+              thisRoom !== undefined ? (
+                <RoomTreeBox
+                  room={thisRoom}
+                  addRoomClicked={() => {
+                    setMenuOpen(false);
+                    setTimeout(() => {
+                      setSelectedNav(6);
+                    }, 250);
+                  }}
+                  onRoomSelected={(id) => {}}
+                />
+              ) : null
+            ) : null}
           </div>
         </div>
       </SwipeableDrawer>
@@ -848,15 +924,73 @@ export default function Space(props) {
         />
       ) : null}
       {selectedNav === 6 ? (
-        thisRoom !== undefined ?
-        <CreateRoom
-          spaceId={thisRoom.spaceId}
+        thisRoom !== undefined ? (
+          <CreateRoom
+            spaceId={thisRoom.spaceId}
+            onClose={() => {
+              setSelectedNav(undefined);
+              setInTheGame(true);
+            }}
+          />
+        ) : null
+      ) : null}
+      {selectedNav === 7 ? (
+        <BoardBox
           onClose={() => {
             setSelectedNav(undefined);
             setInTheGame(true);
           }}
+          membership={membership}
+          roomId={props.room_id}
+          style={{ display: "block" }}
         />
-        : null
+      ) : null}
+      {!wallpaperLoaded ? (
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.35)",
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <Paper
+            style={{
+              width: 144,
+              height: 144,
+              borderRadius: 32,
+              position: "fixed",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: colors.field,
+              backdropFilter: "blur(15px)",
+            }}
+          >
+            <div
+              style={{ widthL: "100%", height: "100%", position: "relative" }}
+            >
+              <div
+                style={{
+                  position: "fixed",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <Hypnosis
+                  color={colors.icon}
+                  width="96px"
+                  height="96px"
+                  duration="3s"
+                />
+              </div>
+            </div>
+          </Paper>
+        </div>
       ) : null}
     </div>
   );

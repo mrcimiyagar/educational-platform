@@ -1,11 +1,10 @@
-import { css } from '@emotion/css'
-import { Avatar, Fab, Typography } from '@material-ui/core'
-import Dialog from '@material-ui/core/Dialog'
+import { Fab } from '@material-ui/core'
+import Dialog from '@mui/material/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import InputBase from '@material-ui/core/InputBase'
 import Slide from '@material-ui/core/Slide'
 import { makeStyles } from '@material-ui/core/styles'
-import { ArrowDownward, DoneAll, PlayArrowTwoTone } from '@material-ui/icons'
+import { ArrowDownward } from '@material-ui/icons'
 import DescriptionIcon from '@material-ui/icons/Description'
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions'
 import SendIcon from '@material-ui/icons/Send'
@@ -17,7 +16,6 @@ import { useFilePicker } from 'use-file-picker'
 import {
   cacheMessage,
   fetchMessagesOfRoom,
-  gotoPage,
   inTheGame,
   isInMessenger,
   isOnline,
@@ -25,7 +23,6 @@ import {
   markFileAsUploading,
   popPage,
   registerDialogOpen,
-  setCurrentRoomId,
   setDialogOpen,
   setInTheGame,
   uploadingFiles,
@@ -70,6 +67,8 @@ let goingToRoom = false
 let lastLoadCount = 25;
 let messagesDict = {};
 let scrollReady3 = false;
+
+let roomPersistanceDoctor;
 
 export default function Chat(props) {
   let useStylesInput = makeStyles((theme) => ({
@@ -179,13 +178,26 @@ export default function Chat(props) {
   });
 
   useEffect(() => {
-    setCurrentRoomId(props.room_id);
     scrollReady3 = false;
     lastLoadCount = 25;
     messagesArr = [];
     messagesDict = {};
     setupRoom();
-    
+
+    console.log('planting destructor...');
+
+    return () => {
+      if (goingToRoom) {
+        goingToRoom = false;
+      }
+      else {
+        leaveRoom(() => {});
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (roomPersistanceDoctor !== undefined) clearInterval(roomPersistanceDoctor);
     let doRoomDoctor = () => {
       let requestOptions = {
         method: 'POST',
@@ -235,7 +247,7 @@ export default function Chat(props) {
       .catch((error) => console.log('error', error));
     };
 
-    let roomPersistanceDoctor = setInterval(() => {
+    roomPersistanceDoctor = setInterval(() => {
       doRoomDoctor();
     }, 3500);
     
@@ -243,14 +255,8 @@ export default function Chat(props) {
 
     return () => {
       clearInterval(roomPersistanceDoctor);
-      if (goingToRoom) {
-        goingToRoom = false;
-      }
-      else {
-        leaveRoom(() => {});
-      }
     }
-  }, [])
+  }, []);
 
   registerDialogOpen(setOpen)
   const handleClose = () => {

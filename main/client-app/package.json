@@ -76,6 +76,7 @@
     "react-color": "^2.19.3",
     "react-color-gradient-picker": "^0.1.2",
     "react-contextmenu": "^2.9.4",
+    "react-cssfx-loading": "^1.1.0",
     "react-datepicker": "^1.5.0",
     "react-declare-animate": "^2.0.9",
     "react-device-detect": "^1.17.0",

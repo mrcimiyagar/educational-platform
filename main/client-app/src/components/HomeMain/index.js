@@ -235,6 +235,7 @@ export default function HomeAppbar(props) {
         handleChange={handleChange}
         onClose={props.onClose}
         setSelectedChatId={props.setSelectedChatId}
+        selectedChatId={props.selectedChatId}
       />
     </div>
   );

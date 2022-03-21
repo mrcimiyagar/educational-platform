@@ -87,67 +87,6 @@ const useStyles = makeStyles((theme) => ({
 export default function HomeMessenger(props) {
     let forceUpdate = useForceUpdate();
     let classes = useStyles();
-    useEffect(() => {
-        let doRoomDoctor = () => {
-          let requestOptions = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              token: token,
-            },
-            body: JSON.stringify({
-              roomId: currentRoomId,
-            }),
-            redirect: 'follow',
-          };
-          fetch(
-            serverRoot + '/room/am_i_in_room',
-            requestOptions,
-          )
-          .then((response) => response.json())
-          .then((result) => {
-            console.log(JSON.stringify(result));
-            if (result.result === false) {
-              let requestOptions2 = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  token: token,
-                },
-                body: JSON.stringify({
-                  roomId: currentRoomId,
-                }),
-                redirect: 'follow',
-              };
-              fetch(
-                serverRoot + '/room/enter_room',
-                requestOptions2,
-              )
-              .then((response) => response.json())
-              .then((result) => {
-                console.log(JSON.stringify(result));
-                if (result.membership !== undefined) {
-                  if (setMCEIM !== undefined) setMCEIM(result.membership);
-                  if (setMCE !== undefined) setMCE(result.membership);
-                  forceUpdate();
-                }
-              })
-              .catch((error) => console.log('error', error));
-            }
-          })
-          .catch((error) => console.log('error', error));
-        };
-    
-        let roomPersistanceDoctor = setInterval(() => {
-          doRoomDoctor();
-        }, 3500);
-        
-        console.log('planting destructor...');
-        return () => {
-          clearInterval(roomPersistanceDoctor);
-          leaveRoom(() => {});
-        }
-    }, []);
     return <div
           style={{
             background: 'transparent',

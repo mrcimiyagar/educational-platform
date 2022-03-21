@@ -56,10 +56,10 @@ function MessengerPage(props) {
       >
         <HomeAppbar
           onClose={handleClose}
-          selectedChatId={props.room_id}
           selectedUserId={props.user_id}
           tabIndex={props.tab_index}
           setSelectedChatId={setSelectedChatId}
+          selectedChatId={selectedChatId}
         />
       </Dialog>
       {selectedChatId !== undefined ? (

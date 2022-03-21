@@ -162,8 +162,8 @@ export default function CreateRoom(props) {
               color: "#fff",
             }}
           />
-          <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">محدوده ی دسترسی</FormLabel>
+          <FormControl style={{marginTop: 84}}>
+            <FormLabel id="demo-radio-buttons-group-label" style={{color: colors.text, marginRight: 16}} >محدوده ی دسترسی</FormLabel>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="public"
@@ -172,13 +172,15 @@ export default function CreateRoom(props) {
               onChange={handleChange}
             >
               <FormControlLabel
+                style={{color: colors.text, marginTop: 16, marginRight: 16}}
                 value="public"
-                control={<Radio />}
+                control={<Radio style={{color: colors.text, fill: colors.icon}} />}
                 label="عمومی"
               />
               <FormControlLabel
+                style={{color: colors.text, marginTop: 16, marginRight: 16}}
                 value="private"
-                control={<Radio />}
+                control={<Radio style={{color: colors.text, fill: colors.icon}} />}
                 label="خصوصی"
               />
             </RadioGroup>

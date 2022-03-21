@@ -64,10 +64,11 @@ export default function AllChats(props) {
                 resetMessages2();
                 resetMessages3();
                 if (isDesktop() || isTablet()) {
-                  setCurrentRoomId(chat.id);
-                  setCurrentUserId(chat.participent.id);
+                  //setCurrentRoomId(chat.id);
+                  //setCurrentUserId(chat.participent.id);
                 } else {
-                  props.setSelectedChatId(chat.id)
+                  props.setSelectedChatId(chat.id);
+                  setCurrentUserId(chat.participent.id);
                 }
               }}
             >

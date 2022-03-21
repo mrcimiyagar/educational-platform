@@ -15,37 +15,16 @@ let cachedIframe = null;
 export let BoardBox = (props) => {
     if (boardFrame === undefined) {
       setBoardFrame(
-        <iframe name="board-frame" src={pathConfig.whiteBoard + `/boards/${props.roomId}`}
+        <iframe allowTransparency={true} name="board-frame" src={pathConfig.whiteBoard + `/boards/${props.roomId}`}
           frameborder="0" style={{border: 0, borderRadius: isDesktop() ? 24 : 0, width: '100%',
-          height: (isDesktop() && isInRoom()) ? 'calc(100% - 32px)' : 'calc(100% - 48px)', position: 'absolute', left: 0, 
-          top: (isDesktop() && isInRoom()) ? 64 : -16, bottom: 0, right: 0}}>
+          height: '100%', position: 'absolute', left: 0, 
+          top: 0, bottom: 0, right: 0}}>
         </iframe>
       );
     }
     return (
-      <div id={props.id} style={{backgroundColor: 'transparent', background: 'transparent', height: isDesktop() ? (isInRoom() ? 'calc(100% - 32px)' : '100%') : 'calc(100% - 72px)', marginTop: isDesktop() ? 16 : 64, display: props.style.display, width: (isDesktop() && isInRoom()) ? 'calc(100% - 144px)' : '100%', marginLeft: (isDesktop() && isInRoom()) ? 16 : 0, marginRight: (isDesktop() && isInRoom()) ? 16 : 0, display: props.style.display}}>
+      <div id={props.id} style={{backgroundColor: 'transparent', background: 'transparent', height: '100%', width: '100%', marginLeft: (isDesktop() && isInRoom()) ? 16 : 0, marginRight: (isDesktop() && isInRoom()) ? 16 : 0, position: 'relative', zIndex: 99999}}>
           <div style={{position: 'relative', height: '100%', width: '100%'}}>
-            <AppBar style={{marginRight: (isDesktop() && isInRoom()) ? 'calc(50% - 275px + 175px)' : 0, width: (isDesktop() && isInRoom()) ? 550 : '100%', height: 64,
-              backgroundColor: colors.primaryMedium,
-              backdropFilter: 'blur(10px)',
-              borderRadius: isDesktop() ? '0 0 24px 24px' : 0
-            }}>
-              <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
-                <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
-                  props.openDeck()
-                }}><ViewCarousel style={{fill: '#fff'}}/></IconButton>
-                <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16}} onClick={() => {
-                  props.openNotes()
-                }}><Notes style={{fill: '#fff'}}/></IconButton>
-                <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16 + 32 + 16}} onClick={() => {
-                  props.openPolls()
-                }}><PollIcon style={{fill: '#fff'}}/></IconButton>
-                <Typography variant={'h6'} style={{color: '#fff', position: 'absolute', right: 16 + 32 + 16}}>وایت بورد</Typography>
-                <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
-              </Toolbar>
-            </AppBar>
-
             <div className="maincontentdiv" style={{borderRadius: isDesktop() ? 24 : 0}}>
               {(props.membership !== undefined && props.membership !== null) ? boardFrame : null}
               {(props.membership !== undefined && props.membership !== null && props.membership.canUseWhiteboard) ?  
@@ -53,12 +32,6 @@ export let BoardBox = (props) => {
                 <div style={{width: '100%', height: '100%', position: 'absolute', left: 0, top: 0, bottom: 0, right: 0}}/>
               }
             </div>
-            
-            {(isDesktop() && isInRoom()) ? null :
-            <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16 + 56 + 16, bottom: 72 + 16}} onClick={() => {
-              gotoPage('/app/chat', {room_id: props.roomId, user_id: props.userId})
-            }}><Chat/></Fab>
-            }
           </div>
       </div>);
 };
