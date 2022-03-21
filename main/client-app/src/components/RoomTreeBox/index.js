@@ -29,7 +29,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import SortableTree from "react-sortable-tree";
 import "react-sortable-tree/style.css";
 import "react-table/react-table.css";
-import { isDesktop, setCurrentRoomId } from "../../App";
+import { isDesktop, setCurrentRoomId, setInTheGame } from "../../App";
 import { NotificationManager } from "../../components/ReactNotifications";
 import { colors, me, token } from "../../util/settings";
 import {
@@ -396,7 +396,11 @@ export let RoomTreeBox = (props) => {
                       .then((result) => {
                         console.log(JSON.stringify(result));
                         if (result.canAccess === true) {
-                          setCurrentRoomId(room.id);
+                          setInTheGame(false);
+                          props.addRoomClicked();
+                          setTimeout(() => {
+                            setCurrentRoomId(room.id);
+                          }, 500);
                         }
                       })
                       .catch((error) => console.log("error", error));

@@ -168,7 +168,6 @@ export let gotoPage;
 export let gotoPageWithDelay;
 
 gotoPage = (p, params) => {
-  setInTheGame(false);
   forceUpdate();
 
   series.push(p);
@@ -187,22 +186,16 @@ gotoPage = (p, params) => {
   window.history.pushState("", "", p + (query.length > 0 ? "?" : "") + query);
   if (notifyUrlChanged !== undefined) notifyUrlChanged();
 
-  setTimeout(() => {
-    setInTheGame(true);
-    forceUpdate();
-  }, 250);
 };
 
 gotoPageWithDelay = (p, params) => {
   series.push(p);
   paramsSeries.push(params);
   setTimeout(() => {
-    setInTheGame(true);
     forceUpdate();
     setHistPage(p);
     setRouteTrigger(!routeTrigger);
     setTimeout(() => {
-      setInTheGame(true);
       forceUpdate();
     }, 250);
   }, 125);
@@ -242,7 +235,6 @@ popPage = () => {
     );
 
     setTimeout(() => {
-      setInTheGame(true);
       forceUpdate();
     }, 250);
     if (notifyUrlChanged !== undefined) notifyUrlChanged();
@@ -532,10 +524,12 @@ export let setBottomSheetContent = (value) => {
   bottomSheetContent = value;
   forceUpdate();
 };
+let onBsClose = () => {}
+export let setOnBsClosed = (callback) => {onBsClose = callback;};
 
 export let isOnline = true;
 export let authenticationValid = undefined;
-let setAuthenticationValid = undefined;
+export let setAuthenticationValid = undefined;
 
 MainAppContainer = (props) => {
   window.onunload = () => leaveRoom(() => {});
@@ -724,21 +718,17 @@ MainAppContainer = (props) => {
               gotoPage(window.location.pathname, params);
             }
           } else {
-            localStorage.removeItem('token');
+            localStorage.removeItem("token");
             animatePageChange();
             if (window.location.pathname === "/app/use_invitation") {
               gotoPage("/app/use_invitation", params);
-            } else if (window.location.pathname === '/app/room') {
+            } else if (window.location.pathname === "/app/room") {
               gotoPage("/app/room", params);
             } else {
               setAuthenticationValid(false);
             }
           }
         });
-
-        setTimeout(() => {
-          setInTheGame(true);
-        }, 1000);
 
         var audio = new Audio(StartupSound);
         audio.play();
@@ -778,7 +768,13 @@ MainAppContainer = (props) => {
   };
 
   if (!connectedIO) {
-    return <div />;
+    return (
+      <div style={{ width: "100%", height: "100vh" }}>
+        <ColorBase />
+        <DesktopDetector />
+        {authenticationValid ? null : <Authentication />}
+      </div>
+    );
   }
 
   return (
@@ -794,7 +790,7 @@ MainAppContainer = (props) => {
       <ColorBase />
       <DesktopDetector />
       <Sidebar />
-      <Space room_id={currentRoomId} key={currentRoomId}/>
+      <Space room_id={currentRoomId} key={currentRoomId} />
       <Drawer
         PaperProps={{
           style: {
@@ -805,7 +801,7 @@ MainAppContainer = (props) => {
         anchor="bottom"
         style={{ position: "fixed", zIndex: 99999 }}
         open={bottomSheetOpen}
-        onClose={() => setBottomSheetOpen(false)}
+        onClose={() => {onBsClose(); setBottomSheetOpen(false);}}
       >
         <div style={{ margin: 32 }}>{bottomSheetContent}</div>
       </Drawer>

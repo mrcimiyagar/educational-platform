@@ -2,7 +2,7 @@ import { Dialog, Paper } from "@mui/material";
 import SpaceSearchbar from "../../components/SpaceSearchbar";
 import SpaceBottombar from "../../components/SpaceBottombar";
 import Authentication from "./authentication";
-import { authenticationValid, currentRoomId } from "../../App";
+import { authenticationValid, currentRoomId, inTheGame } from "../../App";
 import {
   AppBar,
   Avatar,
@@ -134,9 +134,14 @@ let oldSt = 0;
 
 let roomPersistanceDoctor;
 
+let TriggerInTheGame = () => {
+  setInTheGame(true);
+  return null;
+}
+
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(7);
+  const [selectedNav, setSelectedNav] = React.useState(undefined);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const attachScrollCallback = () => {
@@ -379,7 +384,6 @@ export default function Space(props) {
   useEffect(() => {
     roomId = props.room_id;
     setRoomId(roomId);
-    setInTheGame(true);
     setTimeout(() => {
       loadData(() => {
         loadFiles();
@@ -578,50 +582,50 @@ export default function Space(props) {
       <div style={{ width: "100%", height: "100%" }}>
         {!wallpaperLoaded ? (
           <div
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.35)",
-          }}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          <Paper
             style={{
-              width: 144,
-              height: 144,
-              borderRadius: 32,
-              position: "fixed",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              backgroundColor: colors.field,
-              backdropFilter: "blur(15px)",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.35)",
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
             }}
           >
-            <div
-              style={{ widthL: "100%", height: "100%", position: "relative" }}
+            <Paper
+              style={{
+                width: 144,
+                height: 144,
+                borderRadius: 32,
+                position: "fixed",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: colors.field,
+                backdropFilter: "blur(15px)",
+              }}
             >
               <div
-                style={{
-                  position: "fixed",
-                  left: "50%",
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
+                style={{ widthL: "100%", height: "100%", position: "relative" }}
               >
-                <Hypnosis
-                  color={colors.icon}
-                  width="96px"
-                  height="96px"
-                  duration="3s"
-                />
+                <div
+                  style={{
+                    position: "fixed",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <Hypnosis
+                    color={colors.icon}
+                    width="96px"
+                    height="96px"
+                    duration="3s"
+                  />
+                </div>
               </div>
-            </div>
-          </Paper>
-        </div>
+            </Paper>
+          </div>
         ) : null}
       </div>
     );
@@ -673,7 +677,8 @@ export default function Space(props) {
           height: searchBarFixed ? 56 : 80 + 40,
           backdropFilter: "blur(20px)",
           position: "fixed",
-          transition: "height .25s",
+          transform: inTheGame ? "translateY(0px)" : "translateY(-110%)",
+          transition: "height .25s, transform .5s",
         }}
       >
         <SpaceSearchbar
@@ -992,6 +997,7 @@ export default function Space(props) {
           </Paper>
         </div>
       ) : null}
+      <TriggerInTheGame />
     </div>
   );
 }

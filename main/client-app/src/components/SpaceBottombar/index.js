@@ -9,6 +9,7 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import {colors} from '../../util/settings';
+import { inTheGame } from "../../App";
 
 const useStyles = makeStyles({
   root: {
@@ -47,11 +48,11 @@ export default function SpaceBottombar(props) {
         height: 72,
         borderRadius: 24,
         position: "fixed",
-        bottom: props.fixed ? -104 : 16,
+        bottom: (props.fixed || !inTheGame) ? -104 : 16,
         left: "50%",
         transform: "translateX(-50%)",
         maxWidth: 350,
-        transition: 'bottom .25s'
+        transition: 'bottom .5s'
       }}
     >
       <BottomNavigationAction

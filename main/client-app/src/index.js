@@ -16,49 +16,6 @@ import { Alert, Snackbar } from '@mui/material';
 import CustomImageBox from './components/CustomImageBox'
 import SpaceWallpaper from './images/space-wallpaper.png';
 
-function getOS() {
-  var userAgent = window.navigator.userAgent,
-      platform = window.navigator.platform,
-      macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
-      windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
-      iosPlatforms = ['iPhone', 'iPad', 'iPod'],
-      os = null;
-
-  if (macosPlatforms.indexOf(platform) !== -1) {
-    os = 'Mac OS';
-  } else if (iosPlatforms.indexOf(platform) !== -1) {
-    os = 'iOS';
-  } else if (windowsPlatforms.indexOf(platform) !== -1) {
-    os = 'Windows';
-  } else if (/Android/.test(userAgent)) {
-    os = 'Android';
-  } else if (!os && /Linux/.test(platform)) {
-    os = 'Linux';
-  }
-
-  return os;
-}
-
-function preloadImages(array) {
-  if (!preloadImages.list) {
-      preloadImages.list = [];
-  }
-  var list = preloadImages.list;
-  for (var i = 0; i < array.length; i++) {
-      var img = new Image();
-      img.onload = function() {
-          var index = list.indexOf(this);
-          if (index !== -1) {
-              // remove image from the array once it's loaded
-              // for memory consumption reasons
-              list.splice(index, 1);
-          }
-      }
-      list.push(img);
-      img.src = array[i];
-  }
-}
-
 export let pathConfig = {}
 
 const MainApp = React.lazy(() => {
@@ -178,8 +135,15 @@ export function ifServerOnline(ifOnline, ifOffline) {
 }
 export let setClientConnected = (b) => {};
 
+let rndKey, setRndKey;
+
+export let reloadApp = () => {
+  window.location.reload(false)
+}
+
 let AppContainer = (props) => {
-  ;[wallpaper, setWall] = React.useState({type: 'photo', photo: SpaceWallpaper})
+  ;[wallpaper, setWall] = React.useState({type: 'photo', photo: SpaceWallpaper});
+  ;[rndKey, setRndKey] = React.useState(1);
   setWallpaper = (w) => {
     if (w.type === wallpaper.type) {
       if ((w.type === 'photo' && w.photo === wallpaper.photo) ||
@@ -213,7 +177,6 @@ let AppContainer = (props) => {
         setDisconnectAlert(true);
       }
     }, 1000);
-    preloadImages([ChatWallpaper, RoomWallpaper, DesktopWallpaper, ProfileHeader, LoginWallpaper]);
     ifServerOnline(
       () => {
         let requestOptions = {

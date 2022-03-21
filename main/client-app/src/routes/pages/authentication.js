@@ -1,10 +1,9 @@
-import { Fab, makeStyles, Typography } from "@material-ui/core";
+import { Fab, makeStyles, Paper, Typography } from "@material-ui/core";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import React, { useEffect } from "react";
-import { pathConfig, setWallpaper } from "../..";
-import { db, setCurrentRoomId } from "../../App";
-import WhiteColorTextField from "../../components/WhiteColorTextField";
+import { pathConfig, reloadApp } from "../..";
+import { db, setCurrentRoomId, setInTheGame } from "../../App";
 import CloudIcon from "../../images/logo.png";
 import {
   colors,
@@ -14,8 +13,9 @@ import {
   setToken,
 } from "../../util/settings";
 import { serverRoot, setConfig } from "../../util/Utils";
-import Wallpaper from "../../images/login-wallpaper.jpg";
 import { Dialog, TextField } from "@mui/material";
+import ProfileEditField from "../../components/ProfileEditField";
+import {setAuthenticationValid} from '../../App';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +32,7 @@ export default function Authentication(props) {
   let [boxShow, setBoxShow] = React.useState(false);
   let [register, setRegister] = React.useState(false);
   let [opacity, setOpacity] = React.useState(0.25);
-  let classes = useStyles();
+  document.body.style.overflow = "hidden";
   useEffect(() => {
     setTimeout(() => {
       setOpacity(1);
@@ -40,6 +40,12 @@ export default function Authentication(props) {
     }, 1000);
   }, []);
   useEffect(() => {
+    if (register) {
+      document.body.style.overflow = "auto";
+    }
+    else {
+      document.body.style.overflow = "hidden";
+    }
     setTimeout(() => {
       if (
         registeredUsername !== undefined &&
@@ -70,9 +76,8 @@ export default function Authentication(props) {
         left: 0,
         top: 0,
         background: "transparent",
-        backdropFilter: "blur(10px)",
         opacity: opacity,
-        transition: 'opacity .5s'
+        transition: "opacity .5s",
       }}
       PaperProps={{
         style: {
@@ -83,20 +88,20 @@ export default function Authentication(props) {
           left: 0,
           top: 0,
           zIndex: 1000,
-          background: "transparent",
+          backgroundColor: 'transparent'
         },
       }}
     >
       {register ? (
-        <div
+        <Paper
           style={{
             borderRadius: 32,
             height: "auto",
             paddingLeft: 32,
             paddingRight: 32,
-            paddingtop: 16,
-            paddingBottom: 16,
-            background: "rgba(30, 37, 41, 0.5)",
+            paddingTop: 32,
+            paddingBottom: 32,
+            background: colors.primaryMedium,
             backdropFilter: "blur(10px)",
             textAlign: "center",
             justifyContent: "center",
@@ -127,7 +132,7 @@ export default function Authentication(props) {
                 fontWeight: "bold",
                 width: "100%",
                 textAlign: "center",
-                color: "#fff",
+                color: colors.text,
                 marginTop: 24,
                 transition: "top 1s",
               }}
@@ -135,73 +140,68 @@ export default function Authentication(props) {
               به جامعه خوش آمدید
             </Typography>
           </div>
-          <TextField
-            className={classes.root}
+          <ProfileEditField
             id="registerUsername"
-            label="نام کاربری"
-            variant="filled"
-            style={{ marginTop: 24, width: "100%", color: "#fff" }}
-            InputProps={{
-              style: {
-                color: '#fff'
-              }
+            placeholder="نام کاربری"
+            style={{
+              marginTop: 24,
+              marginRight: 16,
+              width: "100%",
+              height: 48,
+              color: "#fff",
             }}
           />
-          <TextField
-            className={classes.root}
-            type="password"
+          <ProfileEditField
             id="registerPassword"
-            label="رمز عبور"
-            variant="filled"
-            style={{ marginTop: 24, width: "100%", color: "#fff" }}
-            InputProps={{
-              style: {
-                color: '#fff'
-              }
-            }}
-          />
-          <TextField
-            className={classes.root}
             type="password"
+            placeholder="رمز عبور"
+            style={{
+              marginTop: 24,
+              marginRight: 16,
+              width: "100%",
+              height: 48,
+              color: "#fff",
+            }}
+          />
+          <ProfileEditField
             id="registerConfirmPass"
-            label="تکرار رمز عبور"
-            variant="filled"
-            style={{ marginTop: 24, width: "100%", color: "#fff" }}
-            InputProps={{
-              style: {
-                color: '#fff'
-              }
+            type="password"
+            placeholder="تکرار رمز عبور"
+            style={{
+              marginTop: 24,
+              marginRight: 16,
+              width: "100%",
+              height: 48,
+              color: "#fff",
             }}
           />
-          <TextField
-            className={classes.root}
+          <ProfileEditField
             id="registerFirstName"
-            label="نام"
-            variant="filled"
-            style={{ marginTop: 24, width: "100%", color: "#fff" }}
-            InputProps={{
-              style: {
-                color: '#fff'
-              }
+            placeholder="نام"
+            style={{
+              marginTop: 24,
+              marginRight: 16,
+              width: "100%",
+              height: 48,
+              color: "#fff",
             }}
           />
-          <TextField
-            className={classes.root}
+          <ProfileEditField
             id="registerLastName"
-            label="نام خانوادگی"
-            variant="filled"
-            style={{ marginTop: 24, width: "100%", color: "#fff" }}
-            InputProps={{
-              style: {
-                color: '#fff'
-              }
+            placeholder="نام خانوادگی"
+            style={{
+              marginTop: 24,
+              marginRight: 16,
+              width: "100%",
+              height: 48,
+              color: "#fff",
             }}
           />
           <div style={{ width: "auto", marginTop: 48 }}>
             <Fab
               color={"primary"}
               variant="extended"
-              style={{ marginLeft: 24 }}
+              style={{ backgroundColor: colors.accent2 }}
               onClick={() => {
                 if (
                   document.getElementById("registerPassword").value !==
@@ -246,21 +246,21 @@ export default function Authentication(props) {
                   .catch((error) => console.log("error", error));
               }}
             >
-              <VpnKeyIcon sx={{ mr: 1 }} />
-              <div style={{ marginRight: 8 }}>ثبت نام</div>
+              <VpnKeyIcon style={{color: colors.text}} />
+              <div style={{ marginLeft: 8 }}>ثبت نام</div>
             </Fab>
             <Fab
-              color={"primary"}
               variant="extended"
               onClick={() => setRegister(false)}
+              style={{marginLeft: 24, backgroundColor: colors.accent}}
             >
-              <ListAltIcon sx={{ mr: 1 }} />
-              <div style={{ marginRight: 8 }}>برو به لاگین</div>
+              <ListAltIcon />
+              <div style={{ marginLeft: 8 }}>برو به لاگین</div>
             </Fab>
           </div>
-        </div>
+        </Paper>
       ) : (
-        <div
+        <Paper
           style={{
             borderRadius: 32,
             width: "100%",
@@ -270,7 +270,7 @@ export default function Authentication(props) {
             paddingRight: 32,
             paddingtop: 32,
             paddingBottom: 32,
-            background: "rgba(30, 37, 41, 0.5)",
+            background: colors.primaryMedium,
             backdropFilter: "blur(10px)",
             justifyContent: "center",
             alignItems: "center",
@@ -298,7 +298,7 @@ export default function Authentication(props) {
                 fontWeight: "bold",
                 width: "100%",
                 textAlign: "center",
-                color: "#fff",
+                color: colors.text,
                 marginTop: 24,
                 transition: "top 1s",
               }}
@@ -306,29 +306,27 @@ export default function Authentication(props) {
               به جامعه خوش آمدید
             </Typography>
           </div>
-          <TextField
-            className={classes.root}
+          <ProfileEditField
             id="loginUsername"
-            label="نام کاربری"
-            variant="filled"
-            style={{ marginTop: 24, width: "100%", color: "#fff" }}
-            InputProps={{
-              style: {
-                color: '#fff'
-              }
+            placeholder="نام کاربری"
+            style={{
+              marginTop: 24,
+              marginRight: 16,
+              width: "100%",
+              height: 48,
+              color: "#fff",
             }}
           />
-          <TextField
-            className={classes.root}
-            type="password"
+          <ProfileEditField
             id="loginPassword"
-            label="رمز عبور"
-            variant="filled"
-            style={{ marginTop: 24, width: "100%", color: "#fff" }}
-            InputProps={{
-              style: {
-                color: '#fff'
-              }
+            type="password"
+            placeholder="رمز عبور"
+            style={{
+              marginTop: 24,
+              marginRight: 16,
+              width: "100%",
+              height: 48,
+              color: "#fff",
             }}
           />
           <div style={{ width: "auto", marginTop: 48 }}>
@@ -336,7 +334,7 @@ export default function Authentication(props) {
               id={"loginBtn"}
               color={"primary"}
               variant="extended"
-              style={{ marginLeft: 24 }}
+              style={{ backgroundColor: colors.accent2 }}
               onClick={() => {
                 let requestOptions = {
                   method: "POST",
@@ -385,7 +383,11 @@ export default function Authentication(props) {
                       document.getElementById("loginPassword").value = "";
                       setConfig(result.account);
                       setBoxShow(false);
-                      window.location.href = pathConfig.mainFrontend;
+                      setInTheGame(false);
+                      setTimeout(() => {
+                        setAuthenticationValid(true);
+                        reloadApp();
+                      }, 500);
                     } else {
                       alert(result.message);
                     }
@@ -393,19 +395,19 @@ export default function Authentication(props) {
                   .catch((error) => console.log("error", error));
               }}
             >
-              <VpnKeyIcon />
-              <div style={{ marginRight: 8 }}>لاگین</div>
+              <VpnKeyIcon style={{fill: colors.text}} />
+              <div style={{ marginLeft: 8 }}>لاگین</div>
             </Fab>
             <Fab
-              color={"primary"}
               variant="extended"
               onClick={() => setRegister(true)}
+              style={{marginLeft: 24, backgroundColor: colors.accent}}
             >
               <ListAltIcon />
-              <div style={{ marginRight: 8 }}>برو به ثبت نام</div>
+              <div style={{ marginLeft: 8 }}>برو به ثبت نام</div>
             </Fab>
           </div>
-        </div>
+        </Paper>
       )}
       <div style={{ width: "100%", height: 72 }} />
     </Dialog>
