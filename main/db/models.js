@@ -137,31 +137,31 @@ module.exports = {
         token: "admin",
       });
 
-      let home = await sw.Space.create({
+      let home = await Space.create({
         title: "فروشگاه",
         mainRoomId: null,
       });
-      let spaceSecret = await sw.SpaceSecret.create({
+      let spaceSecret = await SpaceSecret.create({
         ownerId: user.id,
         spaceId: home.id,
       });
-      let room = await sw.Room.create({
+      let room = await Room.create({
         title: "فروشگاه",
         spaceId: home.id,
         accessType: "private",
       });
       home.mainRoomId = room.id;
       home.save();
-      let RoomSecret = await sw.RoomSecret.create({
+      let RoomSecret = await RoomSecret.create({
         ownerId: user.id,
         roomId: room.id,
       });
-      let mem = await sw.Membership.create({
+      let mem = await Membership.create({
         userId: user.id,
         roomId: room.id,
         ...tools.adminPermissions,
       });
-      let msg = await sw.Message.create({
+      let msg = await Message.create({
         authorId: user.id,
         time: Date.now(),
         roomId: room.id,
