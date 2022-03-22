@@ -3,13 +3,6 @@ import React, { useEffect } from "react";
 import { setBottomSheetContent, setBSO, setOnBsClosed } from "../../App";
 import { colors, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
 import { reloadRoomsList } from "../../components/RoomTreeBox";
 import ProfileEditField from "../../components/ProfileEditField";
 import { Done } from "@material-ui/icons";
@@ -29,7 +22,7 @@ export default function CreateRoom(props) {
   useEffect(() => {
     setOnBsClosed(handleClose);
     setBottomSheetContent(
-      <div style={{ width: "100%", height: 600, direction: "rtl" }}>
+      <div style={{ width: "100%", height: 450, direction: "rtl" }}>
         <Fab
           style={{
             zIndex: 99999,

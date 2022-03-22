@@ -91,6 +91,7 @@ import SettingsPage from "./settings";
 import { RoomTreeBox } from "../../components/RoomTreeBox";
 import CreateRoom from "./createRoom";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
+import { FileBox } from "../../modules/filebox/filebox";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -137,11 +138,11 @@ let roomPersistanceDoctor;
 let TriggerInTheGame = () => {
   setInTheGame(true);
   return null;
-}
+};
 
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(undefined);
+  const [selectedNav, setSelectedNav] = React.useState(9);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const attachScrollCallback = () => {
@@ -191,9 +192,7 @@ export default function Space(props) {
   let forceUpdate = useForceUpdate();
 
   const classes = useStyles();
-  const classesAction = useStylesAction();
 
-  const [jumperOpen, setJumperOpen] = React.useState(true);
   [membership, setMembership] = React.useState({});
   const [loaded, setLoaded] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -620,7 +619,7 @@ export default function Space(props) {
                     color={colors.icon}
                     width="96px"
                     height="96px"
-                    duration="3s"
+                    duration="0.5s"
                   />
                 </div>
               </div>
@@ -947,7 +946,24 @@ export default function Space(props) {
           }}
           membership={membership}
           roomId={props.room_id}
-          style={{ display: "block" }}
+        />
+      ) : null}
+      {selectedNav === 8 ? (
+        <TaskBox
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+          roomId={props.room_id}
+        />
+      ) : null}
+      {selectedNav === 9 ? (
+        <FileBox
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+          roomId={props.room_id}
         />
       ) : null}
       {!wallpaperLoaded ? (
@@ -990,7 +1006,7 @@ export default function Space(props) {
                   color={colors.icon}
                   width="96px"
                   height="96px"
-                  duration="3s"
+                  duration="0.5s"
                 />
               </div>
             </div>

@@ -1,66 +1,104 @@
-import { AppBar, Fab, IconButton, Toolbar, Typography } from "@material-ui/core";
-import { Notes, Search, ViewCarousel } from "@material-ui/icons";
-import Add from "@material-ui/icons/Add";
-import Chat from "@material-ui/icons/Chat";
-import Menu from "@material-ui/icons/Menu";
-import PollIcon from '@material-ui/icons/Poll';
-import React, { useEffect } from "react";
-import Board, { createTranslate } from 'react-trello';
-import { gotoPage, isDesktop, isInRoom } from "../../App";
+import React from "react";
 import { pathConfig } from "../../index";
-import { colors, me, token } from "../../util/settings";
-import { serverRoot, useForceUpdate } from "../../util/Utils";
-import './style.css';
+import { colors, me } from "../../util/settings";
+import "./style.css";
+import Dialog from "@material-ui/core/Dialog";
+import { IconButton, Slide } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 
 let TRANSLATION_TABLE = {
   "Add another lane": "افزودن لیست",
   "Click to add card": "افزودن کارت",
   "Delete lane": "پاک نمودن لیست",
   "Lane actions": "عملیات لیست",
-  "button": {
+  button: {
     "Add lane": "افزودن",
     "Add card": "افزودن",
-    "Cancel": "لغو"
+    Cancel: "لغو",
   },
-  "placeholder": {
-    "title": "عنوان",
-    "description": "توضیحات",
-    "label": "برچسب"
-  }
-}
+  placeholder: {
+    title: "عنوان",
+    description: "توضیحات",
+    label: "برچسب",
+  },
+};
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="left" ref={ref} {...props} />;
+});
 
 export let TaskBox = (props) => {
+  const [open, setOpen] = React.useState(true);
   return (
-    <div id={props.id} style={{height: 'calc(100% - 64px - 72px)', display: props.style.display}}>
-      <AppBar style={{width: isDesktop() ? 550 : '100%', height: 64,
-          borderRadius: isDesktop() ? '0 0 24px 24px' : 0,
-          backgroundColor: colors.primaryMedium,
-          backdropFilter: 'blur(10px)',
-          position: 'fixed', left: (isDesktop() && isInRoom()) ? 'calc(50% - 225px)' : '50%', transform: 'translateX(-50%)'}}>
-        <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
-          <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-          <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16}} onClick={() => {
-            props.openDeck()
-          }}><ViewCarousel style={{fill: '#fff'}}/></IconButton>
-          <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16}} onClick={() => {
-            props.openNotes()
-          }}><Notes style={{fill: '#fff'}}/></IconButton>
-          <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16 + 32 + 16 + 32 + 16 + 32 + 16}} onClick={() => {
-            props.openPolls()
-          }}><PollIcon style={{fill: '#fff'}}/></IconButton>
-          <Typography variant={'h6'} style={{color: '#fff', position: 'absolute', right: 16 + 32 + 16}}>برنامه ریزی</Typography>
-          <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => props.setMenuOpen(true)}><Menu style={{fill: '#fff'}}/></IconButton>
-        </Toolbar>
-      </AppBar>
-      <iframe allowTransparency={true}
-        onLoad={() => window.frames['task-board-frame'].postMessage({sender: 'main', action: 'init', username: me.username, password: me.username}, pathConfig.taskBoard)}
-        id ={'task-board-frame'} name="task-board-frame" src={pathConfig.taskBoard + '/login'}
-        style={{width: (isDesktop() && isInRoom()) ? 'calc(100% - 16px - 96px)' : '100%', height: '100%', marginTop: (isDesktop() && isInRoom()) ? 80 : 64,
-        marginLeft: (isDesktop() && isInRoom()) ? (96 + 32) : undefined, marginBottom: 32}} frameBorder="0"></iframe>
-      {(isDesktop() && isInRoom()) ? null :
-      <Fab id="messagesButton" color={'secondary'} style={{position: 'fixed', left: 16, bottom: 72 + 16}} onClick={() => {
-          gotoPage('/app/chat', {room_id: props.roomId, user_id: props.userId})
-      }}><Chat/></Fab>}
-    </div>
-  )
+    <Dialog
+      fullScreen
+      open={open}
+      TransitionComponent={Transition}
+      PaperProps={{
+        style: {
+          width: "100%",
+          height: "100%",
+          background: "transparent",
+          backdropFilter: 'blur(10px)'
+        },
+      }}
+      style={{
+        background: "transparent",
+        width: "100%",
+        height: "100%",
+        position: "fixed",
+        left: 0,
+        top: 0,
+      }}
+    >
+      <IconButton
+        onClick={() => {
+          setOpen(false);
+          setTimeout(() => {
+            props.onClose();
+          }, 250);
+        }}
+        style={{
+          position: "fixed",
+          left: 8,
+          top: 8,
+          width: 40,
+          height: 40,
+          backgroundColor: colors.field,
+        }}
+      >
+        <Close style={{ fill: colors.icon }} />
+      </IconButton>
+      <div
+        id={props.id}
+        style={{
+          height: "calc(100% - 56px)",
+          width: '100%',
+          marginTop: 56,
+          position: "relative",
+          zIndex: 99999,
+        }}
+      >
+        <iframe
+          allowTransparency={true}
+          onLoad={() =>
+            window.frames["task-board-frame"].postMessage(
+              {
+                sender: "main",
+                action: "init",
+                username: me.username,
+                password: me.username,
+              },
+              pathConfig.taskBoard
+            )
+          }
+          id={"task-board-frame"}
+          name="task-board-frame"
+          src={pathConfig.taskBoard + "/login"}
+          style={{ width: "100%", height: "100%" }}
+          frameBorder="0"
+        ></iframe>
+      </div>
+    </Dialog>
+  );
 };

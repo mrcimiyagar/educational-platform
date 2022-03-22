@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function FilesGrid(props) {
+
   let forceUpdate = useForceUpdate()
 
   let classes = useStyles()
