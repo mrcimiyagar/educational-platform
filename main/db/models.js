@@ -152,7 +152,7 @@ module.exports = {
       });
       home.mainRoomId = room.id;
       home.save();
-      let RoomSecret = await RoomSecret.create({
+      let roomSecret = await RoomSecret.create({
         ownerId: user.id,
         roomId: room.id,
       });
