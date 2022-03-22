@@ -19,7 +19,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import { SmartToy } from '@mui/icons-material';
 import { AccountBalance, ExitToApp, Explore, Home, Navigation, StoreMallDirectory } from '@material-ui/icons';
 import StoreFam from '../../components/StoreFam';
-import { setWallpaper } from '../..';
+import { pathConfig, setWallpaper } from '../..';
 import store, { setCurrentStoreNav } from '../../redux/main';
 import Extension from '@material-ui/icons/Extension';
 import SportsEsports from '@material-ui/icons/SportsEsports';
@@ -464,6 +464,7 @@ export default function Store(props) {
           let counterMini = 0;
           return (
             <TabPanel style={{display: (counter - 1) === value ? 'block' : 'none'}}>
+              <iframe frameBorder={0} src={pathConfig.carouselfrontend}  style={{width: '100%', height: 300}} />
               <ImageList rowHeight={finalWidth + 56} className={classes.imageList} cols={finalColsCount} style={{marginLeft: 16, marginRight: 16, width: 'calc(100% - 32px)'}}>
                 {cat.packages.map((item) => (
                   <ImageListItem key={'store-package-'+ item.id} cols={3} style={{position: 'relative', marginTop: 8}}>

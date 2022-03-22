@@ -2,85 +2,43 @@ import { Dialog, Paper } from "@mui/material";
 import SpaceSearchbar from "../../components/SpaceSearchbar";
 import SpaceBottombar from "../../components/SpaceBottombar";
 import Authentication from "./authentication";
-import { authenticationValid, currentRoomId, inTheGame } from "../../App";
+import { authenticationValid, inTheGame } from "../../App";
 import {
   AppBar,
   Avatar,
-  createTheme,
   SwipeableDrawer,
-  Fab,
-  IconButton,
   makeStyles,
   Tab,
   Tabs,
-  ThemeProvider,
-  Toolbar,
-  Typography,
+  Slide,
 } from "@material-ui/core";
-import { pink } from "@material-ui/core/colors";
-import { Attachment, ChatIcon, Search, Visibility } from "@material-ui/icons";
-import AddIcon from "@material-ui/icons/Add";
-import AudiotrackIcon from "@material-ui/icons/Audiotrack";
-import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
-import Menu from "@material-ui/icons/Menu";
-import NotesIcon from "@material-ui/icons/Notes";
-import PhotoIcon from "@material-ui/icons/Photo";
-import PlayCircleFilledIcon from "@material-ui/icons/PlayCircleFilled";
-import PollIcon from "@material-ui/icons/Poll";
-import Settings from "@material-ui/icons/Settings";
-import ViewCarouselIcon from "@material-ui/icons/ViewCarousel";
 import React, { useEffect } from "react";
-import SwipeableViews from "react-swipeable-views";
-import { useFilePicker } from "use-file-picker";
-import { pathConfig, setWallpaper } from "../..";
+import { setWallpaper } from "../..";
 import {
   gotoPage,
   isDesktop,
-  isInRoom,
-  isMobile,
-  isOnline,
   isTablet,
   setInTheGame,
   setRoomId,
 } from "../../App";
-import ChatEmbedded from "../../components/ChatEmbedded";
-import FilesGrid from "../../components/FilesGrid/FilesGrid";
-import RoomBottombar from "../../components/RoomBottombar";
-import Jumper from "../../components/SearchEngineFam";
-import HomeIcon from "../../images/home.png";
-import PeopleIcon from "../../images/people.png";
-import BotIcon from "../../images/robot.png";
-import RoomIcon from "../../images/room.png";
 import { BoardBox } from "../../modules/boardbox/boardbox";
 import BotsBox, { openToolbox } from "../../modules/botsbox";
-import { ConfBox } from "../../modules/confbox";
 import { TaskBox } from "../../modules/taskbox/taskbox";
 import { UsersBox } from "../../modules/usersbox/usersbox";
 import store, { changeConferenceMode } from "../../redux/main";
+import { colors, setToken, token } from "../../util/settings";
 import {
-  colors,
-  homeRoomId,
-  setMe,
-  setToken,
-  token,
-} from "../../util/settings";
-import {
-  ConnectToIo,
   leaveRoom,
   registerEvent,
   serverRoot,
   setRoom,
-  socket,
-  switchRoom,
   unregisterEvent,
   useForceUpdate,
 } from "../../util/Utils";
 import DesktopWallpaper2 from "../../images/desktop-wallpaper.jpg";
 import { MachinesBox } from "../../modules/machinesbox/machinesbox";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import Chat from "./chat";
 import MessengerPage from "./messenger";
-import Store from "./store";
 import MainSettings from "./mainsettings";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import BedroomBabyOutlinedIcon from "@mui/icons-material/BedroomBabyOutlined";
@@ -112,21 +70,8 @@ function isObjectEmpty(obj) {
   return true;
 }
 
-const useStylesAction = makeStyles({
-  /* Styles applied to the root element. */
-  root: {
-    color: "#eee",
-    "&$selected": {
-      color: "#fff",
-    },
-  },
-  /* Styles applied to the root element if selected. */
-  selected: {},
-});
-
 export let membership = undefined;
 export let setMembership = () => {};
-let pickingFile = false;
 
 let attachWebcamOnMessenger = undefined;
 let roomId = undefined;
@@ -140,9 +85,13 @@ let TriggerInTheGame = () => {
   return null;
 };
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="left" ref={ref} {...props} />;
+});
+
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(9);
+  const [selectedNav, setSelectedNav] = React.useState(undefined);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const attachScrollCallback = () => {
@@ -298,38 +247,6 @@ export default function Space(props) {
   //loadData();
   //});
 
-  let loadFiles = () => {
-    let requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: token,
-      },
-      body: JSON.stringify({
-        roomId: roomId,
-        fileMode:
-          fileMode === 0
-            ? "photo"
-            : fileMode === 1
-            ? "audio"
-            : fileMode === "video"
-            ? 2
-            : 3,
-      }),
-      redirect: "follow",
-    };
-    fetch(serverRoot + "/file/get_files", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result));
-        result.files.forEach((fi) => {
-          fi.progress = 100;
-        });
-        setFiles(result.files);
-      })
-      .catch((error) => console.log("error", error));
-  };
-
   let syncWallpaper = () => {
     let requestOptions = {
       method: "POST",
@@ -385,95 +302,11 @@ export default function Space(props) {
     setRoomId(roomId);
     setTimeout(() => {
       loadData(() => {
-        loadFiles();
         setLoaded(true);
         syncWallpaper();
       });
     }, 0);
   }, [props.room_id]);
-
-  const [files, setFiles] = React.useState([]);
-
-  const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
-    readAs: "DataURL",
-  });
-
-  useEffect(() => {
-    if (!loading && pickingFile) {
-      pickingFile = false;
-      let dataUrl = filesContent[0].content;
-      if (dataUrl === undefined) return;
-      fetch(dataUrl)
-        .then((d) => d.blob())
-        .then((file) => {
-          let data = new FormData();
-          data.append("file", file);
-          let request = new XMLHttpRequest();
-
-          let ext = filesContent[0].name.includes(".")
-            ? filesContent[0].name.substr(filesContent[0].name.indexOf(".") + 1)
-            : "";
-          let fileType =
-            ext === "png" ||
-            ext === "jpg" ||
-            ext === "jpeg" ||
-            ext === "gif" ||
-            ext === "webp" ||
-            ext === "svg"
-              ? "photo"
-              : ext === "wav" ||
-                ext === "mpeg" ||
-                ext === "aac" ||
-                ext === "mp3"
-              ? "audio"
-              : ext === "webm" ||
-                ext === "mkv" ||
-                ext === "flv" ||
-                ext === "mp4" ||
-                ext === "3gp"
-              ? "video"
-              : "document";
-
-          let f = {
-            progress: 0,
-            name: file.name,
-            size: file.size,
-            local: true,
-            src: dataUrl,
-            fileType: fileType,
-          };
-
-          request.onreadystatechange = function () {
-            if (request.readyState == XMLHttpRequest.DONE) {
-              loadFiles();
-            }
-          };
-
-          request.open(
-            "POST",
-            serverRoot +
-              `/file/upload_file?token=${token}&roomId=${roomId}&extension=${ext}`
-          );
-
-          files.push(f);
-          setFiles(files);
-          forceUpdate();
-          request.upload.addEventListener("progress", function (e) {
-            let percent_completed = (e.loaded * 100) / e.total;
-            f.progress = percent_completed;
-            if (percent_completed === 100) {
-              f.local = false;
-            }
-            forceUpdate();
-          });
-          if (FileReader && files && files.length) {
-            let fr = new FileReader();
-            fr.readAsDataURL(file);
-          }
-          request.send(data);
-        });
-    }
-  }, [loading]);
 
   let openDeck = () => {
     gotoPage("/app/deck", { room_id: props.room_id });
@@ -483,12 +316,6 @@ export default function Space(props) {
   };
   let openPolls = () => {
     gotoPage("/app/poll", { room_id: props.room_id });
-  };
-  const handleChange = (event, newValue) => {
-    setFileMode(newValue);
-  };
-  const handleChangeIndex = (index) => {
-    setFileMode(index);
   };
 
   useEffect(() => {
@@ -576,6 +403,8 @@ export default function Space(props) {
     };
   }, [selectedNav]);
 
+  const [open, setOpen] = React.useState(true);
+
   if (!loaded || isObjectEmpty(membership)) {
     return (
       <div style={{ width: "100%", height: "100%" }}>
@@ -630,7 +459,7 @@ export default function Space(props) {
     );
   }
 
-  return (
+  let ui = (
     <div
       style={{
         width: "100%",
@@ -681,8 +510,19 @@ export default function Space(props) {
         }}
       >
         <SpaceSearchbar
+          backable={props.backable}
           fixed={searchBarFixed}
-          onMenuClicked={() => setMenuOpen(true)}
+          onMenuClicked={() => {
+            if (props.backable === true) {
+              setOpen(false);
+              setTimeout(() => {
+                props.onClose();
+              }, 250);
+            }
+            else {
+              setMenuOpen(true);
+            }
+          }}
         />
 
         <Tabs
@@ -903,10 +743,13 @@ export default function Space(props) {
         />
       ) : null}
       {selectedNav === 1 ? (
-        <Store
+        <Space
+          backable={true}
+          room_id={1}
           onClose={() => {
             setSelectedNav(undefined);
             setInTheGame(true);
+            syncWallpaper();
           }}
         />
       ) : null}
@@ -1016,4 +859,36 @@ export default function Space(props) {
       <TriggerInTheGame />
     </div>
   );
+
+  if (props.backable === true) {
+    return (
+      <Dialog
+        fullScreen
+        hideBackdrop={true}
+        open={open}
+        TransitionComponent={Transition}
+        PaperProps={{
+          style: {
+            width: "100%",
+            height: "100%",
+            background: 'transparent',
+            boxShadow: 'none'
+          },
+        }}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          background: 'transparent',
+          boxShadow: 'none'
+        }}
+      >
+        {ui}
+      </Dialog>
+    );
+  } else {
+    return ui;
+  }
 }

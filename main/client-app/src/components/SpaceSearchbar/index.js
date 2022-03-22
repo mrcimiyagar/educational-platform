@@ -7,6 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import TravelExplore from "@mui/icons-material/TravelExplore";
 import { colors } from "../../util/settings";
 import { makeStyles } from "@material-ui/core";
+import { ArrowForward } from "@material-ui/icons";
 
 export default function SpaceSearchbar(props) {
   let useStyles = makeStyles((theme) => ({
@@ -44,7 +45,7 @@ export default function SpaceSearchbar(props) {
         }}
         onClick={props.onMenuClicked}
       >
-        <MenuIcon style={{ fill: colors.text }} />
+        {props.backable === true ? <ArrowForward style={{ fill: colors.text }} /> : <MenuIcon style={{ fill: colors.text }} />}
       </IconButton>
       <InputBase
         sx={{ ml: 1, flex: 1 }}
