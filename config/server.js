@@ -21,6 +21,7 @@ app.get('*', (req, res) => {
           taskBoard: 'https://taskboard.kasperian.cloud',
           taskboardBackend: 'https://taskboardbackend.kasperian.cloud',
           codeServer: 'https://coder.kasperian.cloud',
+          carouselfrontend: 'https://carouselfrontend.kasperian.cloud',
           mainWebsocket: 'wss://society.kasperian.cloud'
     });
 });
