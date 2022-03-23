@@ -273,7 +273,7 @@ export default function SettingsList(props) {
                         position: "absolute",
                         top: 100,
                         left: 0,
-                        background: colors.field,
+                        background: colors.primaryMedium,
                         backdropFilter: "blur(10px)",
                       }}
                     >

@@ -379,7 +379,7 @@ export let RoomTreeBox = (props) => {
                       ? room.children.length
                       : undefined
                   }
-                  onClick={() => {
+                  onClick={(e) => {
                     let requestOptions = {
                       method: "POST",
                       headers: {
@@ -397,7 +397,6 @@ export let RoomTreeBox = (props) => {
                         console.log(JSON.stringify(result));
                         if (result.canAccess === true) {
                           setInTheGame(false);
-                          props.addRoomClicked();
                           setTimeout(() => {
                             setCurrentRoomId(room.id);
                           }, 500);
