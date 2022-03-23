@@ -36,6 +36,10 @@ let Notification;
 let P2pExistance;
 let MessageSeen;
 let WidgetWorker;
+let TaskProject;
+let TaskBoard;
+let TaskList;
+let TaskCard;
 
 const pgUsername = "postgres";
 const pgPassword = "3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t";
@@ -955,4 +959,91 @@ async function prepareWidgetWorker() {
   WidgetWorker.belongsTo(Room, { foreignKey: "roomId" });
   await WidgetWorker.sync();
   module.exports["WidgetWorker"] = WidgetWorker;
+}
+
+async function prepareTaskProject() {
+  TaskProject = sequelizeClient.define(
+    "TaskProject",
+    {
+      id: {
+        type: Sequelize.BIGINT,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      roomId: Sequelize.BIGINT,
+      title: Sequelize.STRING,
+      description: Sequelize.STRING,
+    },
+    {
+      freezeTableName: true,
+    }
+  );
+  TaskProject.belongsTo(Room, { foreignKey: "roomId" });
+  await TaskProject.sync();
+  module.exports["TaskProject"] = TaskProject;
+}
+
+async function prepareTaskBoard() {
+  TaskBoard = sequelizeClient.define(
+    "TaskBoard",
+    {
+      id: {
+        type: Sequelize.BIGINT,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      taskProjectId: Sequelize.BIGINT,
+      title: Sequelize.STRING,
+      description: Sequelize.STRING
+    },
+    {
+      freezeTableName: true,
+    }
+  );
+  TaskBoard.belongsTo(TaskProject, { foreignKey: "taskProjectId" });
+  await TaskBoard.sync();
+  module.exports["TaskBoard"] = TaskBoard;
+}
+
+async function prepareTaskList() {
+  TaskList = sequelizeClient.define(
+    "TaskList",
+    {
+      id: {
+        type: Sequelize.BIGINT,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      taskBoardId: Sequelize.BIGINT,
+      title: Sequelize.STRING
+    },
+    {
+      freezeTableName: true,
+    }
+  );
+  TaskList.belongsTo(TaskBoard, { foreignKey: "taskBoardId" });
+  await TaskList.sync();
+  module.exports["TaskList"] = TaskList;
+}
+
+async function prepareTaskCard() {
+  TaskCard = sequelizeClient.define(
+    "TaskCard",
+    {
+      id: {
+        type: Sequelize.BIGINT,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      taskListId: Sequelize.BIGINT,
+      title: Sequelize.STRING,
+      content: Sequelize.STRING
+    },
+    {
+      freezeTableName: true,
+    }
+  );
+  TaskCard.belongsTo(TaskList, { foreignKey: "taskListId" });
+  await TaskCard.sync();
+  module.exports["TaskCard"] = TaskCard;
 }
