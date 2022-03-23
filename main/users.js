@@ -170,7 +170,7 @@ module.exports = {
               });
               return;
             }
-            sw.User.findOne({ where: { id: membership.userId } }).then(
+            sw.User.findOne({ where: { id: session.userId } }).then(
               async function (user) {
                 sw.Account.findOne({ where: { userId: session.userId } }).then(
                   async function (acc) {
