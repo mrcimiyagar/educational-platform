@@ -170,16 +170,24 @@ module.exports = {
               });
               return;
             }
-            return {
-              anon: true,
-              id: session.userId,
-              userId: session.userId,
-              roomId: roomId,
-              token: session.token,
-              user: { id: session.userId },
-              isGuest: true,
-              ...defaultPermissions,
-            };
+            sw.User.findOne({ where: { id: membership.userId } }).then(
+              async function (user) {
+                sw.Account.findOne({ where: { userId: session.userId } }).then(
+                  async function (acc) {
+                    callback({
+                      anon: true,
+                      id: session.userId,
+                      userId: session.userId,
+                      roomId: roomId,
+                      token: session.token,
+                      user: { id: session.userId },
+                      isGuest: true,
+                      ...defaultPermissions,
+                    }, session, user, acc); ;
+                  }
+                );
+              }
+            );
           });
         } else {
           sw.User.findOne({ where: { id: membership.userId } }).then(
