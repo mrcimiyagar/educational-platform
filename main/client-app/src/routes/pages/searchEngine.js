@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SearchEngine(props) {
-  setToken(localStorage.getItem("token"));
 
   const [open, setOpen] = React.useState(true);
   const handleClose = () => {

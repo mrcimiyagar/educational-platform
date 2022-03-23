@@ -233,7 +233,6 @@ export default function Space(props) {
           r = await r.json();
           if (r.status === "success") {
             let auth = r.auth;
-            localStorage.setItem("token", auth.token);
             window.location.reload();
           }
         } else {
