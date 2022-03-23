@@ -50,6 +50,7 @@ import { RoomTreeBox } from "../../components/RoomTreeBox";
 import CreateRoom from "./createRoom";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import { FileBox } from "../../modules/filebox/filebox";
+import {setCurrentRoomId} from '../../App';
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -518,8 +519,7 @@ export default function Space(props) {
               setTimeout(() => {
                 props.onClose();
               }, 250);
-            }
-            else {
+            } else {
               setMenuOpen(true);
             }
           }}
@@ -572,6 +572,11 @@ export default function Space(props) {
         setCurrentRoomNav={(index) => {
           if (index === 3) {
             openToolbox();
+          } else if (index === 1) {
+            setInTheGame(false);
+            setTimeout(() => {
+              setCurrentRoomId(1);
+            }, 500);
           } else {
             setSelectedNav(index);
           }
@@ -871,8 +876,8 @@ export default function Space(props) {
           style: {
             width: "100%",
             height: "100%",
-            background: 'transparent',
-            boxShadow: 'none'
+            background: "transparent",
+            boxShadow: "none",
           },
         }}
         style={{
@@ -881,8 +886,8 @@ export default function Space(props) {
           position: "fixed",
           left: 0,
           top: 0,
-          background: 'transparent',
-          boxShadow: 'none'
+          background: "transparent",
+          boxShadow: "none",
         }}
       >
         {ui}

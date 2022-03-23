@@ -152,7 +152,7 @@ module.exports = {
       let room = await Room.create({
         title: "فروشگاه",
         spaceId: home.id,
-        accessType: "private",
+        accessType: "public",
       });
       home.mainRoomId = room.id;
       home.save();
