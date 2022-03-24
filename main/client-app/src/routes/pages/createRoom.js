@@ -51,7 +51,12 @@ export default function CreateRoom(props) {
               .then((result) => {
                 console.log(JSON.stringify(result));
                 if (result.room !== undefined) {
-                  reloadRoomsList();
+                  if  (props.reloadDataCallback !== undefined) {
+                    props.reloadDataCallback();
+                  }
+                  else {
+                    reloadRoomsList();
+                  }
                   handleClose();
                 }
               })

@@ -51,6 +51,7 @@ import CreateRoom from "./createRoom";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import { FileBox } from "../../modules/filebox/filebox";
 import {setCurrentRoomId} from '../../App';
+import SpacesGrid from "../../components/SpacesGrid";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -512,6 +513,9 @@ export default function Space(props) {
         <SpaceSearchbar
           backable={props.backable}
           fixed={searchBarFixed}
+          onSpacesClicked={() => {
+            setSelectedNav(10);
+          }}
           onMenuClicked={() => {
             if (props.backable === true) {
               setOpen(false);
@@ -811,6 +815,14 @@ export default function Space(props) {
             setInTheGame(true);
           }}
           roomId={props.room_id}
+        />
+      ) : null}
+      {selectedNav === 10 ? (
+        <SpacesGrid
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
         />
       ) : null}
       {!wallpaperLoaded ? (

@@ -86,6 +86,7 @@ export default function SpaceSearchbar(props) {
           transition: "opacity .25s",
           marginLeft: 8
         }}
+        onClick={() => props.onSpacesClicked()}
       >
         <TravelExplore style={{fill: colors.accent}} />
       </IconButton>
