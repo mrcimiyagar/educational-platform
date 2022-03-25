@@ -47,7 +47,7 @@ import './chat.css';
 import CustomImageBox from '../../components/CustomImageBox'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="left" ref={ref} {...props} />
+  return <Slide direction="right" ref={ref} {...props} />
 });
 
 let messagesArr = []

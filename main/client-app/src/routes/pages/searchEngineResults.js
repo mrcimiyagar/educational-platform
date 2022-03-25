@@ -6,42 +6,43 @@ import {
   ImageListItem,
   Slide,
   Toolbar,
-  Typography
-} from '@material-ui/core'
-import Box from '@material-ui/core/Box'
-import { makeStyles } from '@material-ui/core/styles'
-import Tab from '@material-ui/core/Tab'
-import Tabs from '@material-ui/core/Tabs'
-import { Audiotrack, Chat, Photo, Videocam } from '@material-ui/icons'
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance'
-import EmailIcon from '@material-ui/icons/Email'
-import PeopleIcon from '@material-ui/icons/People'
-import RedditIcon from '@material-ui/icons/Reddit'
-import PropTypes from 'prop-types'
-import React, { useEffect } from 'react'
-import SwipeableViews from 'react-swipeable-views'
+  Typography,
+} from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import { makeStyles } from "@material-ui/core/styles";
+import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
+import { Audiotrack, Chat, Photo, Videocam } from "@material-ui/icons";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import EmailIcon from "@material-ui/icons/Email";
+import PeopleIcon from "@material-ui/icons/People";
+import RedditIcon from "@material-ui/icons/Reddit";
+import PropTypes from "prop-types";
+import React, { useEffect } from "react";
+import SwipeableViews from "react-swipeable-views";
 import {
   gotoPage,
   isDesktop,
   popPage,
   query,
   registerDialogOpen,
-  setQuery
-} from '../../App'
-import HomeToolbar from '../../components/HomeToolbar'
-import PhotoGrid from '../../components/PhotoGrid'
-import Post from '../../components/Post'
-import SearchEngineResultsSearchbar from '../../components/SearchEngineResultsSearchbar'
-import SearchResultsMessages from '../../components/SearchResultsMessages'
-import SearchResultsUsers from '../../components/SearchResultsUsers'
-import SearchResultsVideos from '../../components/SearchResultsVideos'
-import AudioWallpaper from '../../images/audio-wallpaper.jpg'
-import EmptyIcon from '../../images/empty.png'
-import { colors, token } from '../../util/settings'
-import { serverRoot } from '../../util/Utils'
+  setQuery,
+} from "../../App";
+import HomeToolbar from "../../components/HomeToolbar";
+import PhotoGrid from "../../components/PhotoGrid";
+import Post from "../../components/Post";
+import SearchEngineResultsSearchbar from "../../components/SearchEngineResultsSearchbar";
+import SearchResultsMessages from "../../components/SearchResultsMessages";
+import SearchResultsUsers from "../../components/SearchResultsUsers";
+import SearchResultsVideos from "../../components/SearchResultsVideos";
+import AudioWallpaper from "../../images/audio-wallpaper.jpg";
+import EmptyIcon from "../../images/empty.png";
+import { colors, token } from "../../util/settings";
+import { serverRoot } from "../../util/Utils";
+import Profile from "./profile";
 
 function TabPanel(props) {
-  const { children, value, index, ...other } = props
+  const { children, value, index, ...other } = props;
 
   return (
     <div
@@ -53,235 +54,240 @@ function TabPanel(props) {
     >
       {value === index && <Box p={3}>{children}</Box>}
     </div>
-  )
+  );
 }
 
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
-}
-
-const useStyles = makeStyles((theme) => ({
-  indicator: {
-    backgroundColor: 'white',
-  },
-  imageList: {
-    overflow: 'auto',
-  },
-}))
+};
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
+  return <Slide direction="right" ref={ref} {...props} />;
+});
 
 function SearchEngineResults(props) {
-  const classes = useStyles()
-  const [value, setValue] = React.useState(0)
-  const [open, setOpen] = React.useState(true)
-  registerDialogOpen(setOpen)
+  const useStyles = makeStyles((theme) => ({
+    indicator: {
+      backgroundColor: colors.icon,
+    },
+    imageList: {
+      overflow: "auto",
+    },
+  }));
 
-  let [users, setUsers] = React.useState([])
-  let [bots, setBots] = React.useState([])
-  let [rooms, setRooms] = React.useState([])
-  let [photos, setPhotos] = React.useState([])
-  let [audios, setAudios] = React.useState([])
-  let [videos, setVideos] = React.useState([])
-  let [messages, setMessages] = React.useState([])
+  document.documentElement.style.overflow = 'hidden';
+
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+  const [open, setOpen] = React.useState(true);
+  const [showProfile, setShowProfile] = React.useState(false);
+  const [selectedUserId, setSelectedUserId] = React.useState(undefined);
+  registerDialogOpen(setOpen);
+
+  let [users, setUsers] = React.useState([]);
+  let [bots, setBots] = React.useState([]);
+  let [rooms, setRooms] = React.useState([]);
+  let [photos, setPhotos] = React.useState([]);
+  let [audios, setAudios] = React.useState([]);
+  let [videos, setVideos] = React.useState([]);
+  let [messages, setMessages] = React.useState([]);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue)
-  }
+    setValue(newValue);
+  };
 
   const handleChangeIndex = (index) => {
-    setValue(index)
-  }
+    setValue(index);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-    setTimeout(popPage, 250)
-  }
+    setOpen(false);
+    setTimeout(props.onClose, 250);
+  };
 
   let fetchUsers = () => {
     let requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         token: token,
       },
       body: JSON.stringify({
         query: query,
       }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/search/search_users', requestOptions)
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/search/search_users", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(JSON.stringify(result))
+        console.log(JSON.stringify(result));
         if (result.users !== undefined) {
-          setUsers(result.users)
+          setUsers(result.users);
         }
       })
-      .catch((error) => console.log('error', error))
-  }
+      .catch((error) => console.log("error", error));
+  };
 
   let fetchBots = () => {
     let requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         token: token,
       },
       body: JSON.stringify({
         query: query,
       }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/search/search_bots', requestOptions)
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/search/search_bots", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(JSON.stringify(result))
+        console.log(JSON.stringify(result));
         if (result.bots !== undefined) {
-          setBots(result.bots)
+          setBots(result.bots);
         }
       })
-      .catch((error) => console.log('error', error))
-  }
+      .catch((error) => console.log("error", error));
+  };
 
   let fetchRooms = () => {
     let requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         token: token,
       },
       body: JSON.stringify({
         query: query,
       }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/search/search_rooms', requestOptions)
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/search/search_rooms", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(JSON.stringify(result))
+        console.log(JSON.stringify(result));
         if (result.rooms !== undefined) {
-          setRooms(result.rooms)
+          setRooms(result.rooms);
         }
       })
-      .catch((error) => console.log('error', error))
-  }
+      .catch((error) => console.log("error", error));
+  };
 
   let fetchFiles = (fileType) => {
     let requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         token: token,
       },
       body: JSON.stringify({
         query: query,
         fileType: fileType,
       }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/search/search_files', requestOptions)
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/search/search_files", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(JSON.stringify(result))
+        console.log(JSON.stringify(result));
         if (result.files !== undefined) {
-          if (fileType === 'photo') {
-            setPhotos(result.files)
-          } else if (fileType === 'audio') {
-            setAudios(result.files)
-          } else if (fileType === 'video') {
-            setVideos(result.files)
+          if (fileType === "photo") {
+            setPhotos(result.files);
+          } else if (fileType === "audio") {
+            setAudios(result.files);
+          } else if (fileType === "video") {
+            setVideos(result.files);
           }
         }
       })
-      .catch((error) => console.log('error', error))
-  }
+      .catch((error) => console.log("error", error));
+  };
 
   let fetchMessages = () => {
     let requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         token: token,
       },
       body: JSON.stringify({
         query: query,
       }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/search/search_messages', requestOptions)
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/search/search_messages", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(JSON.stringify(result))
+        console.log(JSON.stringify(result));
         if (result.messages !== undefined) {
-          setMessages(result.messages)
+          setMessages(result.messages);
         }
       })
-      .catch((error) => console.log('error', error))
-  }
+      .catch((error) => console.log("error", error));
+  };
 
   let fetchTotal = () => {
-    fetchUsers()
-    fetchBots()
-    fetchRooms()
-    fetchFiles('photo')
-    fetchFiles('audio')
-    fetchFiles('video')
-    fetchMessages()
-  }
+    fetchUsers();
+    fetchBots();
+    fetchRooms();
+    fetchFiles("photo");
+    fetchFiles("audio");
+    fetchFiles("video");
+    fetchMessages();
+  };
 
   useEffect(() => {
-    fetchTotal()
-  }, [])
+    fetchTotal();
+  }, []);
 
   return (
     <Dialog
-      onTouchStart={(e) => {
-        e.stopPropagation()
-      }}
+      fullScreen
+      open={open}
+      TransitionComponent={Transition}
       PaperProps={{
         style: {
-          backgroundColor: 'transparent',
-          boxShadow: 'none',
+          width: "100%",
+          height: "100%",
+          background: "transparent",
+          backdropFilter: "blur(10px)",
         },
       }}
-      fullScreen={!isDesktop()}
-      open={open}
-      onClose={handleClose}
-      TransitionComponent={Transition}
+      style={{
+        background: "transparent",
+        width: "100%",
+        height: "100%",
+        position: "fixed",
+        left: 0,
+        top: 0,
+      }}
     >
       <div
         style={{
-          direction: 'ltr',
-          width: isDesktop() ? 450 : '100%',
-          height: isDesktop() ? 650 : '100%',
-          position: 'fixed',
-          transform: isDesktop() ? 'translate(-50%, -50%)' : undefined,
-          left: isDesktop() ? '50%' : 0,
-          right: isDesktop() ? undefined : 0,
-          top: isDesktop() ? '50%' : 0,
-          bottom: isDesktop() ? undefined : 0,
-          backdropFilter: 'blur(10px)',
+          direction: "ltr",
+          width: "100%",
+          height: "100%",
+          position: "fixed",
+          left: 0,
+          top: 0
         }}
       >
-        <div style={{ width: '100%', height: '100%' }}>
-          <HomeToolbar>
+        <div style={{ width: "100%", height: "100%" }}>
             <AppBar
               style={{
                 backgroundColor: colors.primaryMedium,
-                backdropFilter: 'blur(10px)',
+                backdropFilter: "blur(20px)",
               }}
             >
               <Toolbar style={{ marginTop: 16 }}>
                 <SearchEngineResultsSearchbar
                   handleClose={handleClose}
                   onQueryChange={(q) => {
-                    setQuery(q)
-                    fetchTotal()
+                    setQuery(q);
+                    fetchTotal();
                   }}
                 />
               </Toolbar>
@@ -305,38 +311,34 @@ function SearchEngineResults(props) {
                 <Tab icon={<Chat />} label="پیام ها" />
               </Tabs>
             </AppBar>
-          </HomeToolbar>
           <SwipeableViews
-            axis={'x-reverse'}
+            axis={"x-reverse"}
             index={value}
             onChangeIndex={handleChangeIndex}
-            style={{ width: '100%', height: 'calc(100vh - 56px)' }}
+            style={{ width: "100%", height: "100%" }}
           >
             <TabPanel>
               <ImageList
                 rowHeight={462}
                 style={{
-                  overflowY: 'auto',
-                  overflow: 'auto',
-                  height: 'calc(100vh - 56px)',
+                  overflowY: "auto",
+                  overflow: "auto",
+                  height: "100%",
                 }}
                 cols={1}
               >
-                <div style={{width: '100%', height: 72}}/>
+                <div style={{ width: "100%", height: 112 + 24 }} />
                 {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
-                  <ImageListItem
-                    key={'search-post-' + 0}
-                    cols={1}
-                  >
+                  <ImageListItem key={"search-post-" + 0} cols={1}>
                     <Post />
                   </ImageListItem>
                 ))}
-                <div style={{width: '100%', height: 72}}/>
+                <div style={{ width: "100%", height: 72 }} />
               </ImageList>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <div style={{ height: 88 }} />
-              <SearchResultsUsers data={users} />
+              <div style={{ height: 112 + 24 }} />
+              <SearchResultsUsers data={users} onUserSelected={(userId) => {setSelectedUserId(userId); setShowProfile(true);}}/>
             </TabPanel>
             <TabPanel value={value} index={2}>
               <div style={{ height: 88 }} />
@@ -344,11 +346,11 @@ function SearchEngineResults(props) {
                 {bots.length > 0 ? (
                   bots.map((bot) => (
                     <ImageListItem
-                      key={'search-bot-' + bot.id}
+                      key={"search-bot-" + bot.id}
                       cols={1}
-                      onClick={() => gotoPage('/app/storebot')}
+                      onClick={() => gotoPage("/app/storebot")}
                     >
-                      <div style={{ position: 'relative' }}>
+                      <div style={{ position: "relative" }}>
                         <img
                           src={
                             serverRoot +
@@ -360,30 +362,30 @@ function SearchEngineResults(props) {
                             paddingRight: 24,
                             paddingTop: 16,
                             paddingBottom: 16,
-                            backgroundColor: '#fff',
+                            backgroundColor: "#fff",
                             borderRadius: 16,
                             marginTop: 16,
-                            marginRight: '5%',
-                            width: '95%',
+                            marginRight: "5%",
+                            width: "95%",
                             height: 128,
                           }}
                         />
                         <Card
                           style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                            backgroundColor: "rgba(255, 255, 255, 0.5)",
                             borderRadius: 16,
-                            width: '95%',
+                            width: "95%",
                             height: 72,
-                            marginRight: '2.5%',
+                            marginRight: "2.5%",
                             marginTop: -32,
                           }}
                         >
                           <Typography
                             style={{
-                              position: 'absolute',
+                              position: "absolute",
                               top: 156,
-                              left: '50%',
-                              transform: 'translateX(-50%)',
+                              left: "50%",
+                              transform: "translateX(-50%)",
                             }}
                           >
                             {bot.title}
@@ -395,19 +397,19 @@ function SearchEngineResults(props) {
                 ) : (
                   <div
                     style={{
-                      width: 'calc(100% - 96px)',
-                      height: '100%',
+                      width: "calc(100% - 96px)",
+                      height: "100%",
                       marginLeft: 48,
                       marginRight: 48,
                       marginTop: 80,
-                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                      backdropFilter: 'blur(10px)',
-                      borderRadius: '50%',
+                      backgroundColor: "rgba(255, 255, 255, 0.25)",
+                      backdropFilter: "blur(10px)",
+                      borderRadius: "50%",
                     }}
                   >
                     <img
                       src={EmptyIcon}
-                      style={{ width: '100%', height: '100%', padding: 64 }}
+                      style={{ width: "100%", height: "100%", padding: 64 }}
                     />
                   </div>
                 )}
@@ -416,7 +418,6 @@ function SearchEngineResults(props) {
             <TabPanel value={value} index={3}>
               <div style={{ height: 80 }} />
               <ImageList
-                style={{ zIndex: 2 }}
                 rowHeight={200}
                 cols={3}
                 gap={1}
@@ -424,49 +425,50 @@ function SearchEngineResults(props) {
                 style={{
                   marginLeft: -16,
                   marginRight: -16,
-                  width: 'calc(100% + 32px)',
+                  width: "calc(100% + 32px)",
+                  zIndex: 2
                 }}
               >
                 {rooms.length > 0 ? (
                   rooms.map((room) => (
                     <ImageListItem
-                      key={'search-room-' + room.id}
+                      key={"search-room-" + room.id}
                       cols={1}
                       rows={1}
                       onClick={() => {
-                        gotoPage('/app/conf?room_id=1')
+                        gotoPage("/app/conf?room_id=1");
                       }}
                     >
-                      <div style={{ position: 'relative' }}>
+                      <div style={{ position: "relative" }}>
                         <img
                           src={
-                            'https://cdn.dribbble.com/users/6093092/screenshots/15548423/media/54c06b30c11db3ffd26b25c83ab9a737.jpg'
+                            "https://cdn.dribbble.com/users/6093092/screenshots/15548423/media/54c06b30c11db3ffd26b25c83ab9a737.jpg"
                           }
                           alt={room.title}
                           style={{
                             borderRadius: 16,
                             marginTop: 16,
-                            marginRight: '2.5%',
-                            width: '95%',
+                            marginRight: "2.5%",
+                            width: "95%",
                             height: 128,
                           }}
                         />
                         <Card
                           style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                            backgroundColor: "rgba(255, 255, 255, 0.5)",
                             borderRadius: 16,
-                            width: '95%',
+                            width: "95%",
                             height: 72,
-                            marginRight: '2.5%',
+                            marginRight: "2.5%",
                             marginTop: -32,
                           }}
                         >
                           <Typography
                             style={{
-                              position: 'absolute',
+                              position: "absolute",
                               top: 156,
-                              left: '50%',
-                              transform: 'translateX(-50%)',
+                              left: "50%",
+                              transform: "translateX(-50%)",
                             }}
                           >
                             {room.title}
@@ -478,19 +480,19 @@ function SearchEngineResults(props) {
                 ) : (
                   <div
                     style={{
-                      width: 'calc(100% - 96px)',
-                      height: '100%',
+                      width: "calc(100% - 96px)",
+                      height: "100%",
                       marginLeft: 48,
                       marginRight: 48,
                       marginTop: 80,
-                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                      backdropFilter: 'blur(10px)',
-                      borderRadius: '50%',
+                      backgroundColor: "rgba(255, 255, 255, 0.25)",
+                      backdropFilter: "blur(10px)",
+                      borderRadius: "50%",
                     }}
                   >
                     <img
                       src={EmptyIcon}
-                      style={{ width: '100%', height: '100%', padding: 64 }}
+                      style={{ width: "100%", height: "100%", padding: 64 }}
                     />
                   </div>
                 )}
@@ -506,25 +508,25 @@ function SearchEngineResults(props) {
                 <ImageList
                   rowHeight={196}
                   style={{
-                    width: 'calc(100% + 32px)',
+                    width: "calc(100% + 32px)",
                     marginLeft: -16,
                     marginRight: -16,
                   }}
                   cols={2}
                 >
                   {audios.map((audio) => (
-                    <ImageListItem key={'search-audio-' + audio.id} cols={1}>
+                    <ImageListItem key={"search-audio-" + audio.id} cols={1}>
                       <div
                         style={{
-                          position: 'relative',
-                          display: 'flex',
-                          flexWrap: 'nowrap',
+                          position: "relative",
+                          display: "flex",
+                          flexWrap: "nowrap",
                         }}
                       >
                         <div
                           style={{
                             borderRadius: 176 / 2,
-                            backgroundColor: '#000',
+                            backgroundColor: "#000",
                             width: 176 - 32,
                             height: 176 - 32,
                             marginTop: 16 + 16,
@@ -538,24 +540,26 @@ function SearchEngineResults(props) {
                             borderRadius: 16,
                             marginTop: 16,
                             marginRight: -72,
-                            width: 'calc(95% - 32px)',
+                            width: "calc(95% - 32px)",
                             height: 176,
                           }}
                         />
                         <Typography
                           style={{
-                            background: 'rgba(255, 255, 255, 0.5)',
-                            borderRadius: '12px 0px 0px 12px',
+                            background: "rgba(255, 255, 255, 0.5)",
+                            borderRadius: "12px 0px 0px 12px",
                             marginLeft: -72,
                             marginTop: 136,
                             width: 144,
                             height: 24,
-                            textAlign: 'center',
-                            justifyContent: 'center',
-                            alignItems: 'center',
+                            textAlign: "center",
+                            justifyContent: "center",
+                            alignItems: "center",
                           }}
                         >
-                          {audio['User.firstName'] + ' ' + audio['User.lastName']}
+                          {audio["User.firstName"] +
+                            " " +
+                            audio["User.lastName"]}
                         </Typography>
                       </div>
                     </ImageListItem>
@@ -564,19 +568,19 @@ function SearchEngineResults(props) {
               ) : (
                 <div
                   style={{
-                    width: 'calc(100% - 96px)',
-                    height: '100%',
+                    width: "calc(100% - 96px)",
+                    height: "100%",
                     marginLeft: 48,
                     marginRight: 48,
                     marginTop: 80,
-                    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-                    backdropFilter: 'blur(10px)',
-                    borderRadius: '50%',
+                    backgroundColor: "rgba(255, 255, 255, 0.25)",
+                    backdropFilter: "blur(10px)",
+                    borderRadius: "50%",
                   }}
                 >
                   <img
                     src={EmptyIcon}
-                    style={{ width: '100%', height: '100%', padding: 64 }}
+                    style={{ width: "100%", height: "100%", padding: 64 }}
                   />
                 </div>
               )}
@@ -591,8 +595,9 @@ function SearchEngineResults(props) {
             </TabPanel>
           </SwipeableViews>
         </div>
+        {showProfile ? <Profile onClose={() => setShowProfile(false)} user_id={selectedUserId}/> : null}
       </div>
     </Dialog>
-  )
+  );
 }
-export default SearchEngineResults
+export default SearchEngineResults;

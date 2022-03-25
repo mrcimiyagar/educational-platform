@@ -67,16 +67,6 @@ export default function SpaceSearchbar(props) {
       >
         <SearchIcon style={{ fill: colors.text }} />
       </IconButton>
-      <Divider
-        sx={{ height: 28, m: 0.5 }}
-        orientation="vertical"
-        style={{
-          backgroundColor: colors.text,
-          opacity: props.fixed ? 0 : 1,
-          transition: "opacity .25s",
-          marginLeft: 8
-        }}
-      />
       <IconButton
         sx={{ p: "10px" }}
         aria-label="directions"

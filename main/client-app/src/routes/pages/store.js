@@ -90,7 +90,7 @@ export let updateStore = () => {}
 let categories = [];
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="left" ref={ref} {...props} />;
+  return <Slide direction="right" ref={ref} {...props} />;
 });
 
 const actions = [

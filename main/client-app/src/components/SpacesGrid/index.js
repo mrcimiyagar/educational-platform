@@ -18,6 +18,7 @@ import { Add } from "@material-ui/icons";
 import HomeToolbar from "../HomeToolbar";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import CreateRoom from "../../routes/pages/createRoom";
+import SearchEngine from "../../routes/pages/searchEngine";
 
 const useStyles = makeStyles((theme) => ({
   imageList: {
@@ -39,11 +40,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="left" ref={ref} {...props} />;
+  return <Slide direction="right" ref={ref} {...props} />;
 });
+
+export let closeSpacesGrid = () => {};
 
 export default function SpacesGrid(props) {
   const [open, setOpen] = React.useState(true);
+  const [showGlobe, setShowGlobe] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
     setTimeout(() => {
@@ -61,32 +65,32 @@ export default function SpacesGrid(props) {
 
   const loadSpaces = () => {
     fetchSpaces()
-    .then((result) => {
-      setSpaces(result);
-      let requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: token,
-        },
-        redirect: "follow",
-      };
-      fetch(serverRoot + "/room/get_spaces", requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          console.log(JSON.stringify(result));
-          if (result.spaces !== undefined) {
-            setSpaces(result.spaces);
-            result.spaces.forEach((s) => {
-              cacheSpace(s);
-            });
-          }
-        })
-        .catch((error) => console.log("error", error));
-    })
-    .catch((ex) => {
-      console.log(ex);
-    });
+      .then((result) => {
+        setSpaces(result);
+        let requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+          redirect: "follow",
+        };
+        fetch(serverRoot + "/room/get_spaces", requestOptions)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result));
+            if (result.spaces !== undefined) {
+              setSpaces(result.spaces);
+              result.spaces.forEach((s) => {
+                cacheSpace(s);
+              });
+            }
+          })
+          .catch((error) => console.log("error", error));
+      })
+      .catch((ex) => {
+        console.log(ex);
+      });
   };
 
   useEffect(() => {
@@ -128,6 +132,7 @@ export default function SpacesGrid(props) {
         <SpacesSearchbar
           id="spacesSearchBarContainer"
           onBackClicked={handleClose}
+          onGlobeClicked={() => setShowGlobe(true)}
           style={{
             transform: `translateX(-50%)`,
             transition: "transform .5s",
@@ -206,7 +211,9 @@ export default function SpacesGrid(props) {
           ) : (
             <EmptySign />
           )}
-          {spaces.length > 0 ? (<div style={{width: '100%', height: 200}} />) : null}
+          {spaces.length > 0 ? (
+            <div style={{ width: "100%", height: 200 }} />
+          ) : null}
         </ImageList>
         <Fab
           style={{
@@ -259,6 +266,7 @@ export default function SpacesGrid(props) {
             }}
           />
         ) : null}
+        {showGlobe ? <SearchEngine onClose={() => setShowGlobe(false)} /> : null}
       </div>
     </Dialog>
   );

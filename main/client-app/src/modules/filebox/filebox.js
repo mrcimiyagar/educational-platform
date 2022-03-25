@@ -11,7 +11,7 @@ import { serverRoot, useForceUpdate } from "../../util/Utils";
 export let toggleFileBox = undefined;
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="left" ref={ref} {...props} />;
+  return <Slide direction="right" ref={ref} {...props} />;
 });
 let pickingFile = false;
 

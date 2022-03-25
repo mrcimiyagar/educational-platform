@@ -17,7 +17,7 @@ import RoomSettings from '../../components/RoomSettings'
 import { colors } from '../../util/settings'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="left" ref={ref} {...props} />
+  return <Slide direction="right" ref={ref} {...props} />
 })
 
 function SettingsPage(props) {

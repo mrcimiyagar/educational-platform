@@ -15,33 +15,33 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ShareIcon from '@material-ui/icons/Share';
 import clsx from 'clsx';
 import React from 'react';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    marginTop: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)'
-  },
-  media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-}));
+import { colors } from '../../util/settings';
 
 export default function Post() {
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      width: '100%',
+      marginTop: 16,
+      backgroundColor: colors.field
+    },
+    media: {
+      height: 0,
+      paddingTop: '56.25%', // 16:9
+    },
+    expand: {
+      transform: 'rotate(0deg)',
+      marginLeft: 'auto',
+      transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+      }),
+    },
+    expandOpen: {
+      transform: 'rotate(180deg)',
+    },
+    avatar: {
+      backgroundColor: red[500],
+    },
+  }));
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -52,14 +52,15 @@ export default function Post() {
   return (
     <Card className={classes.root}>
       <CardHeader
+        style={{color: colors.text}}
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
             R
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
+          <IconButton>
+            <MoreVertIcon style={{fill: colors.icon}} />
           </IconButton>
         }
         title="Shrimp and Chorizo Paella"
@@ -71,17 +72,17 @@ export default function Post() {
         title="Paella dish"
       />
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography variant="body2" component="p" style={{color: colors.text}}>
           This impressive paella is a perfect party dish and a fun meal to cook together with your
           guests. Add 1 cup of frozen peas along with the mussels, if you like.
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+        <IconButton>
+          <FavoriteIcon style={{fill: colors.icon}} />
         </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
+        <IconButton>
+          <ShareIcon style={{fill: colors.icon}} />
         </IconButton>
         <IconButton
           className={clsx(classes.expand, {
@@ -91,11 +92,11 @@ export default function Post() {
           aria-expanded={expanded}
           aria-label="show more"
         >
-          <ExpandMoreIcon />
+          <ExpandMoreIcon style={{fill: colors.icon}} />
         </IconButton>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
+        <CardContent style={{fill: colors.icon}}>
           <Typography paragraph>Method:</Typography>
           <Typography paragraph>
             Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
