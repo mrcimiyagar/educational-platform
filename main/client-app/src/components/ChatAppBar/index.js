@@ -191,10 +191,7 @@ export default function ChatAppBar(props) {
                 if (props.room !== undefined && props.room.chatType === 'group' ||
                     props.room !== undefined && props.room.chatType === 'channel' ||
                     props.room !== undefined && props.room.chatType === 'bot') return;
-                gotoPage('/app/userprofile', {
-                  user_id: props.user !== undefined ? props.user.id : undefined,
-                  room_id: props.room !== undefined ? props.room.id : undefined,
-                })
+                props.onUserAvatarClicked();
               }}
             />
             <Typography

@@ -45,6 +45,7 @@ import MessageItem from "../../components/MessageItem";
 import store, { changeConferenceMode } from "../../redux/main";
 import "./chat.css";
 import CustomImageBox from "../../components/CustomImageBox";
+import Profile from "./profile";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
@@ -117,6 +118,7 @@ export default function Chat(props) {
   let [room, setRoom] = React.useState(undefined);
   const [open, setOpen] = React.useState(true);
   const [showEmojiPad, setShowEmojiPad] = React.useState(false);
+  const [showProfile, setShowProfile] = React.useState(false);
   let [pickingFile, setPickingFile] = React.useState(false);
   [membership, setMembership] = React.useState({});
 
@@ -1008,7 +1010,7 @@ export default function Chat(props) {
         style={{
           width: "100%",
           height: "100%",
-          position: "absolute",
+          position: "fixed",
           top: 0,
           left: 0,
         }}
@@ -1030,6 +1032,7 @@ export default function Chat(props) {
           handleCallClicked={() => {
             goingToRoom = true;
           }}
+          onUserAvatarClicked={() => setShowProfile(true)}
         />
         <div
           style={{
@@ -1212,6 +1215,7 @@ export default function Chat(props) {
             <ArrowDownward />
           </Fab>
         </div>
+        {(showProfile && user !== undefined) ? <Profile onClose={() => setShowProfile(false)} user_id={user.id}/> : null}
       </div>
     </Dialog>
   );

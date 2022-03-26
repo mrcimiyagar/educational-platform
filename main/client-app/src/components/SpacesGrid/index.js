@@ -2,7 +2,7 @@ import { Card, Dialog, Fab, Grow, Slide } from "@material-ui/core";
 import ImageList from "@material-ui/core/ImageList";
 import ImageListItem from "@material-ui/core/ImageListItem";
 import { makeStyles } from "@material-ui/core/styles";
-import HomeIcon from "@material-ui/icons/Home";
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import React, { useEffect } from "react";
 import {
   cacheSpace,
@@ -15,7 +15,6 @@ import { serverRoot } from "../../util/Utils";
 import EmptySign from "../EmptySign";
 import SpacesSearchbar from "../SpacesSearchbar";
 import { Add } from "@material-ui/icons";
-import HomeToolbar from "../HomeToolbar";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import CreateRoom from "../../routes/pages/createRoom";
 import SearchEngine from "../../routes/pages/searchEngine";
@@ -229,7 +228,7 @@ export default function SpacesGrid(props) {
             }, 250);
           }}
         >
-          <HomeIcon />
+          <HomeOutlinedIcon />
         </Fab>
         <Fab
           style={{

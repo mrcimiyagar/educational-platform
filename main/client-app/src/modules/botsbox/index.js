@@ -8,17 +8,32 @@ import {
   SwipeableDrawer,
   ThemeProvider,
   Typography,
-} from '@material-ui/core'
-import { Chat } from '@material-ui/icons'
-import Add from '@material-ui/icons/Add'
-import Edit from '@material-ui/icons/Edit'
-import React, { useEffect } from 'react'
-import { gotoPage, inTheGame, isDesktop, isInRoom, isMobile, isOnline, isTablet, subscribeGuiChannel } from '../../App'
-import BotContainer from '../../components/BotContainer'
-import BotsBoxSearchbar from '../../components/BotsBoxSearchbar'
-import { colors, token } from '../../util/settings'
-import { registerEvent, serverRoot, unregisterEvent, useForceUpdate } from '../../util/Utils'
-import { Rnd } from 'react-rnd';
+} from "@material-ui/core";
+import { Chat } from "@material-ui/icons";
+import Add from "@material-ui/icons/Add";
+import Edit from "@material-ui/icons/Edit";
+import React, { useEffect } from "react";
+import {
+  gotoPage,
+  inTheGame,
+  isDesktop,
+  isInRoom,
+  isMobile,
+  isOnline,
+  isTablet,
+  subscribeGuiChannel,
+} from "../../App";
+import BotContainer from "../../components/BotContainer";
+import BotsBoxSearchbar from "../../components/BotsBoxSearchbar";
+import { colors, token } from "../../util/settings";
+import {
+  registerEvent,
+  serverRoot,
+  unregisterEvent,
+  useForceUpdate,
+} from "../../util/Utils";
+import { Rnd } from "react-rnd";
+import { display } from "@mui/system";
 
 var lastScrollTop = 0;
 let idDict = {};
@@ -35,54 +50,51 @@ let ckeckCode = (wwId, codes) => {
   for (let i = 0; i < codes.length; i++) {
     let code = codes[i];
     let handler = () => {
-      if (code.type === 'conditionList') {
+      if (code.type === "conditionList") {
         for (let i = 0; i < code.conditions.length; i++) {
           let condition = code.conditions[i];
           let item1 = undefined;
           if (condition.item1 !== undefined) {
-            if (condition.item1.type === 'gui') {
-              item1 = idDict[wwId][condition.item1.elId].obj[condition.item1.property];
-            }
-            else if (condition.item1.type === 'memory') {
+            if (condition.item1.type === "gui") {
+              item1 =
+                idDict[wwId][condition.item1.elId].obj[
+                  condition.item1.property
+                ];
+            } else if (condition.item1.type === "memory") {
               item1 = memDict[wwId][condition.item1.memoryId];
-            }
-            else if (condition.item1.type === 'constant') {
+            } else if (condition.item1.type === "constant") {
               item1 = condition.item1.constant;
             }
           }
           let item2 = undefined;
           if (condition.item2 !== undefined) {
-            if (condition.item2.type === 'gui') {
-              item2 = idDict[wwId][condition.item2.elId].obj[condition.item2.property];
-            }
-            else if (condition.item2.type === 'memory') {
+            if (condition.item2.type === "gui") {
+              item2 =
+                idDict[wwId][condition.item2.elId].obj[
+                  condition.item2.property
+                ];
+            } else if (condition.item2.type === "memory") {
               item2 = memDict[wwId][condition.item2.memoryId];
-            }
-            else if (condition.item2.type === 'constant') {
+            } else if (condition.item2.type === "constant") {
               item2 = condition.item2.constant;
             }
           }
-          
+
           let allowed = false;
-          if (condition.type === 'e' && item1 === item2) {
+          if (condition.type === "e" && item1 === item2) {
+            allowed = true;
+          } else if (condition.type === "lt" && item1 < item2) {
+            allowed = true;
+          } else if (condition.type === "lte" && item1 <= item2) {
+            allowed = true;
+          } else if (condition.type === "gte" && item1 >= item2) {
+            allowed = true;
+          } else if (condition.type === "gt" && item1 > item2) {
+            allowed = true;
+          } else if (condition.type === "ne" && item1 !== item2) {
             allowed = true;
           }
-          else if (condition.type === 'lt' && item1 < item2) {
-            allowed = true;
-          }
-          else if (condition.type === 'lte' && item1 <= item2) {
-            allowed = true;
-          }
-          else if (condition.type === 'gte' && item1 >= item2) {
-            allowed = true;
-          }
-          else if (condition.type === 'gt' && item1 > item2) {
-            allowed = true;
-          }
-          else if (condition.type === 'ne' && item1 !== item2) {
-            allowed = true;
-          }
-          
+
           if (allowed === true) {
             if (condition.then !== undefined) {
               ckeckCode(wwId, condition.then);
@@ -90,22 +102,19 @@ let ckeckCode = (wwId, codes) => {
             }
           }
         }
-      }
-      else if (code.type === 'straight') {
-        if (code.updateType === 'gui') {
+      } else if (code.type === "straight") {
+        if (code.updateType === "gui") {
           idDict[wwId][code.elId].obj[code.property] = code.newValue;
-        }
-        else if (code.updateType === 'memory') {
+        } else if (code.updateType === "memory") {
           memDict[wwId][code.memoryId] = code.value;
         }
       }
-    }
+    };
     if (code.delay !== undefined) {
       setTimeout(() => {
         handler();
       }, code.delay);
-    }
-    else {
+    } else {
       handler();
     }
   }
@@ -114,7 +123,6 @@ let ckeckCode = (wwId, codes) => {
 export let openToolbox = () => {};
 
 export default function BotsBox(props) {
-
   let forceUpdate = useForceUpdate();
   let [editMode, setEditMode] = React.useState(false);
   let [myBots, setMyBots] = React.useState([]);
@@ -122,63 +130,63 @@ export default function BotsBox(props) {
   let [mySelectedBot, setMySelectedBot] = React.useState(0);
 
   openToolbox = () => setMenuOpen(true);
-  
-  let requestInitGui = (wwId, preview=true) => {
+
+  let requestInitGui = (wwId, preview = true) => {
     let requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'token': token
+        "Content-Type": "application/json",
+        token: token,
       },
       body: JSON.stringify({
         widgetWorkerId: wwId,
         preview: preview,
-        roomId: props.roomId
+        roomId: props.roomId,
       }),
-      redirect: 'follow'
-    }
+      redirect: "follow",
+    };
     fetch(serverRoot + "/bot/request_initial_gui", requestOptions)
-      .then(response => response.json())
-      .then(result => {
+      .then((response) => response.json())
+      .then((result) => {
         console.log(JSON.stringify(result));
       })
-      .catch(ex => console.log(ex));
+      .catch((ex) => console.log(ex));
   };
 
   useEffect(() => {
-    let element = document.getElementById('botsContainerOuter')
-    let botsSearchbar = document.getElementById('botsSearchbar')
-    botsSearchbar.style.transform = 'translateY(-100px)'
+    let element = document.getElementById("botsContainerOuter");
+    let botsSearchbar = document.getElementById("botsSearchbar");
+    botsSearchbar.style.transform = "translateY(-100px)";
     element.addEventListener(
-      'scroll',
+      "scroll",
       function () {
-        var st = element.scrollTop
+        var st = element.scrollTop;
         if (st > lastScrollTop) {
-          botsSearchbar.style.transform = 'translateY(-100px)'
-          botsSearchbar.style.transition = 'transform .5s'
+          botsSearchbar.style.transform = "translateY(-100px)";
+          botsSearchbar.style.transition = "transform .5s";
         } else {
-          botsSearchbar.style.transform = 'translateY(0)'
-          botsSearchbar.style.transition = 'transform .5s'
+          botsSearchbar.style.transform = "translateY(0)";
+          botsSearchbar.style.transition = "transform .5s";
         }
-        lastScrollTop = st <= 0 ? 0 : st
+        lastScrollTop = st <= 0 ? 0 : st;
       },
-      false,
+      false
     );
     let requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         token: token,
       },
-      redirect: 'follow',
+      redirect: "follow",
     };
-    fetch(serverRoot + '/bot/get_subscriptions', requestOptions)
+    fetch(serverRoot + "/bot/get_subscriptions", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(JSON.stringify(result));
         setMyBots(result.bots);
       })
-      .catch((error) => console.log('error', error));
+      .catch((error) => console.log("error", error));
   }, []);
 
   useEffect(() => {
@@ -186,23 +194,26 @@ export default function BotsBox(props) {
       try {
         mirrors.forEach((mirror) => {
           let timeNow =
-            mirror.variable.from === 'time.now.seconds'
+            mirror.variable.from === "time.now.seconds"
               ? new Date().getSeconds()
-              : mirror.variable.from === 'time.now.minutes'
+              : mirror.variable.from === "time.now.minutes"
               ? new Date().getMinutes()
-              : mirror.variable.from === 'time.now.hours'
+              : mirror.variable.from === "time.now.hours"
               ? new Date().getHours() % 12
               : 0;
           let varCont = mirror.value;
-          varCont = varCont.replace('@' + mirror.variable.id, timeNow);
-          idDict[mirror.widgetWorkerId][mirror.elId].obj[mirror.property] = varCont;
+          varCont = varCont.replace("@" + mirror.variable.id, timeNow);
+          idDict[mirror.widgetWorkerId][mirror.elId].obj[mirror.property] =
+            varCont;
         });
         forceUpdate();
-      } catch(ex) {console.log(ex);}
+      } catch (ex) {
+        console.log(ex);
+      }
     }, 1000);
 
-    unregisterEvent('widget_worker_added');
-    registerEvent('widget_worker_added', (ww) => {
+    unregisterEvent("widget_worker_added");
+    registerEvent("widget_worker_added", (ww) => {
       let found = false;
       for (let i = 0; i < widgets.length; i++) {
         if (widgets[i].id === ww.id) {
@@ -217,8 +228,8 @@ export default function BotsBox(props) {
       }
     });
 
-    unregisterEvent('widget_worker_removed');
-    registerEvent('widget_worker_removed', (wwId) => {
+    unregisterEvent("widget_worker_removed");
+    registerEvent("widget_worker_removed", (wwId) => {
       for (let i = 0; i < widgets.length; i++) {
         if (widgets[i].id === wwId) {
           widgets.splice(i);
@@ -228,8 +239,8 @@ export default function BotsBox(props) {
       forceUpdate();
     });
 
-    unregisterEvent('widget_worker_moved');
-    registerEvent('widget_worker_moved', (ww) => {
+    unregisterEvent("widget_worker_moved");
+    registerEvent("widget_worker_moved", (ww) => {
       for (let i = 0; i < widgets.length; i++) {
         if (widgets[i].id === ww.id) {
           widgets[i].x = ww.x;
@@ -242,77 +253,80 @@ export default function BotsBox(props) {
       }
     });
 
-    unregisterEvent('gui');
-    registerEvent('gui', ({type, gui: data, widgetId, roomId, widgetWorkerId}) => {
-      if (type === 'init') {
-        guis[widgetWorkerId] = data;
-        idDict[widgetWorkerId] = {};
-        memDict[widgetWorkerId] = {};
-        clickEvents[widgetWorkerId] = {};
-        styledContents[widgetWorkerId] = {};
-        mirrors = mirrors.filter(m => m.widgetWorkerId !== widgetWorkerId);
-        forceUpdate();
-        let requestOptions = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'token': token
-          },
-          body: JSON.stringify({
-            widgetWorkerId: widgetWorkerId,
-            preview: false,
-            roomId: roomId
-          }),
-          redirect: 'follow'
-        }
-        fetch(serverRoot + "/bot/notify_gui_base_activated", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-            console.log(JSON.stringify(result));
-          })
-          .catch(ex => console.log(ex));
-      } else if (type === 'update') {
-        data.forEach((d) => {
-          if (d.property === 'styledContent') {
-            styledContents[widgetWorkerId][d.elId] = d.newValue;
-          }
-          idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
-        });
-        forceUpdate();
-      } else if (type === 'mirror') {
-        data.forEach((d) => {
-          d.widgetWorkerId = widgetWorkerId
-        })
-        mirrors = mirrors.concat(data)
-        forceUpdate()
-      } else if (type === 'timer') {
-        let timer = setInterval(() => {
-          data.updates.forEach((d) => {
+    unregisterEvent("gui");
+    registerEvent(
+      "gui",
+      ({ type, gui: data, widgetId, roomId, widgetWorkerId }) => {
+        if (type === "init") {
+          guis[widgetWorkerId] = data;
+          idDict[widgetWorkerId] = {};
+          memDict[widgetWorkerId] = {};
+          clickEvents[widgetWorkerId] = {};
+          styledContents[widgetWorkerId] = {};
+          mirrors = mirrors.filter((m) => m.widgetWorkerId !== widgetWorkerId);
+          forceUpdate();
+          let requestOptions = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              token: token,
+            },
+            body: JSON.stringify({
+              widgetWorkerId: widgetWorkerId,
+              preview: false,
+              roomId: roomId,
+            }),
+            redirect: "follow",
+          };
+          fetch(serverRoot + "/bot/notify_gui_base_activated", requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              console.log(JSON.stringify(result));
+            })
+            .catch((ex) => console.log(ex));
+        } else if (type === "update") {
+          data.forEach((d) => {
+            if (d.property === "styledContent") {
+              styledContents[widgetWorkerId][d.elId] = d.newValue;
+            }
             idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
-          })
+          });
           forceUpdate();
-        }, data.interval);
-        timers[data.timerId] = timer;
-        forceUpdate();
-      } else if (type === 'untimer') {
-        let timer = timers[widgetWorkerId][data.timerId];
-        clearInterval(timer);
-        delete timers[widgetWorkerId][data.timerId];
-        forceUpdate();
-      } else if (type === 'memorize') {
-        memDict[widgetWorkerId][data.memoryId] = data.value
-        forceUpdate();
-      } else if (type === 'attachClick') {
-        clickEvents[widgetWorkerId][data.elId] = () => {
-          ckeckCode(widgetWorkerId, data.codes);
+        } else if (type === "mirror") {
+          data.forEach((d) => {
+            d.widgetWorkerId = widgetWorkerId;
+          });
+          mirrors = mirrors.concat(data);
           forceUpdate();
-        };
+        } else if (type === "timer") {
+          let timer = setInterval(() => {
+            data.updates.forEach((d) => {
+              idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
+            });
+            forceUpdate();
+          }, data.interval);
+          timers[data.timerId] = timer;
+          forceUpdate();
+        } else if (type === "untimer") {
+          let timer = timers[widgetWorkerId][data.timerId];
+          clearInterval(timer);
+          delete timers[widgetWorkerId][data.timerId];
+          forceUpdate();
+        } else if (type === "memorize") {
+          memDict[widgetWorkerId][data.memoryId] = data.value;
+          forceUpdate();
+        } else if (type === "attachClick") {
+          clickEvents[widgetWorkerId][data.elId] = () => {
+            ckeckCode(widgetWorkerId, data.codes);
+            forceUpdate();
+          };
+        }
       }
-    });
-    
-    let botsSearchbar = document.getElementById('botsSearchbar')
-    botsSearchbar.style.transform = 'translateY(0)'
-    botsSearchbar.style.transition = 'transform .5s'
+    );
+
+    let botsSearchbar = document.getElementById("botsSearchbar");
+    botsSearchbar.style.transform = "translateY(0)";
+    botsSearchbar.style.transition = "transform .5s";
 
     updateDesktop();
 
@@ -326,53 +340,101 @@ export default function BotsBox(props) {
   let theme = createTheme({
     palette: {
       primary: {
-        main: '#BBDEFB',
+        main: "#BBDEFB",
       },
       secondary: {
-        main: '#FFC107',
+        main: "#FFC107",
       },
     },
-  })
+  });
 
   mirrors.forEach((mirror) => {
-    if (mirror.variable.from === 'variable') {
-      let fetchedDataOfMemory = memDict[mirror.widgetWorkerId][mirror.variable.id];
+    if (mirror.variable.from === "variable") {
+      let fetchedDataOfMemory =
+        memDict[mirror.widgetWorkerId][mirror.variable.id];
       let varCont = mirror.value;
-      varCont = varCont.replace('@' + mirror.variable.id, fetchedDataOfMemory);
+      varCont = varCont.replace("@" + mirror.variable.id, fetchedDataOfMemory);
       idDict[mirror.widgetWorkerId][mirror.elId].obj[mirror.property] = varCont;
     }
   });
 
   let updateDesktop = () => {
     let requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         token: token,
       },
       body: JSON.stringify({
-        roomId: props.roomId
+        roomId: props.roomId,
       }),
-      redirect: 'follow',
-    }
-    fetch(serverRoot + '/bot/get_widget_workers', requestOptions)
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/bot/get_widget_workers", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        if (result.status === 'success') {
+        if (result.status === "success") {
           widgets = result.widgetWorkers;
+          widgets.push({
+            id: "whiteboard",
+            widgetId: "whiteboard",
+            roomId: props.roomId,
+            bossId: "admin",
+            x: 32,
+            y: 32,
+            width: "calc(100% - 64px)",
+            height: "150px",
+          });
+          widgets.push({
+            id: "taskboard",
+            widgetId: "taskboard",
+            roomId: props.roomId,
+            bossId: "admin",
+            x: 32,
+            y: 32 + 150 + 32,
+            width: "calc(100% - 64px)",
+            height: "150px",
+          });
+          widgets.push({
+            id: "filestorage",
+            widgetId: "filestorage",
+            roomId: props.roomId,
+            bossId: "admin",
+            x: 32,
+            y: 32 + 150 + 32 + 150 + 32,
+            width: "calc(100% - 64px)",
+            height: "150px",
+          });
+          widgets.push({
+            id: "videochat",
+            widgetId: "videochat",
+            roomId: props.roomId,
+            bossId: "admin",
+            x: 32,
+            y: 32 + 150 + 32 + 150 + 32 + 150 + 32,
+            width: "calc(100% - 64px)",
+            height: "150px",
+          });
           forceUpdate();
-          result.widgetWorkers.forEach(ww => {
-            requestInitGui(ww.id, false);
+          result.widgetWorkers.forEach((ww) => {
+            if (
+              ww.id !== "whiteboard" &&
+              ww.id !== "taskboard" &&
+              ww.id !== "filestorage" &&
+              ww.id !== "videochat"
+            ) {
+              requestInitGui(ww.id, false);
+            }
           });
         }
       })
-      .catch(ex => console.log(ex));;
+      .catch((ex) => console.log(ex));
   };
 
-  Object.keys(styledContents).forEach(wId => {
+  Object.keys(styledContents).forEach((wId) => {
     let widEls = styledContents[wId];
-    Object.keys(widEls).forEach(scId => {
-      let el = document.getElementById('widget_' + wId + '_element_' + scId);
+    Object.keys(widEls).forEach((scId) => {
+      let el = document.getElementById("widget_" + wId + "_element_" + scId);
       if (el !== null) {
         el.innerHTML = styledContents[wId][scId];
       }
@@ -380,44 +442,54 @@ export default function BotsBox(props) {
   });
 
   return (
-    <div id={props.id}
-      style={{ width: '100%', height: '100%', display: props.style.display }}
+    <div
+      id={props.id}
+      style={{ width: "100%", height: "100%", display: props.style.display }}
     >
       <div
-        id={'botsSearchbar'}
+        id={"botsSearchbar"}
         style={{
-          width: '75%',
-          position: 'absolute',
-          right: '12.5%',
+          width: "75%",
+          position: "absolute",
+          right: "12.5%",
           top: 32,
           zIndex: 3,
         }}
       ></div>
       <div
-        id={'botsContainerOuter'}
+        id={"botsContainerOuter"}
         style={{
-          width: '100%',
-          height: '100%',
-          overflow: 'auto',
+          width: "100%",
+          height: "100%",
+          overflow: "auto",
           zIndex: 2,
-          position: 'absolute',
+          position: "absolute",
           left: 0,
           top: 0,
         }}
       >
-        <div id={'botsContainerInner'} style={{ width: '100%', height: 2000 }}>
+        <div
+          id={"botsContainerInner"}
+          style={{ width: "100%", height: 2000, direction: "ltr" }}
+        >
           {widgets.map((ww, index) => {
             if (editMode === true) {
               return (
                 <Rnd
-                  default={{x: ww.x, y: ww.y, width: ww.width === null ? 150 : ww.width, height: ww.height === null ? 150 : ww.height}}
+                  default={{
+                    x: ww.x,
+                    y: ww.y,
+                    transform: "translateY(+144px)",
+                    width: ww.width === null ? 150 : ww.width,
+                    height: ww.height === null ? 150 : ww.height,
+                  }}
                   onDragStop={(e, d) => {
                     ww.x = d.x;
                     ww.y = d.y;
                     let requestOptions = {
-                      method: 'POST',
+                      method: "POST",
                       headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json",
                         token: token,
                       },
                       body: JSON.stringify({
@@ -425,70 +497,307 @@ export default function BotsBox(props) {
                         x: d.x,
                         y: d.y,
                         width: ww.width,
-                        height: ww.height
+                        height: ww.height,
                       }),
-                      redirect: 'follow',
-                    }
-                    fetch(serverRoot + '/bot/update_widget_worker', requestOptions)
+                      redirect: "follow",
+                    };
+                    fetch(
+                      serverRoot + "/bot/update_widget_worker",
+                      requestOptions
+                    )
                       .then((response) => response.json())
                       .then((result) => {})
-                      .catch(ex => console.log(ex));;
+                      .catch((ex) => console.log(ex));
                   }}
                   onResizeStop={(e, direction, ref, delta, position) => {
-                    ww.width = Number(ref.style.width.substring(0, ref.style.width.length - 2));
-                    ww.height = Number(ref.style.height.substring(0, ref.style.height.length - 2));
+                    ww.width = Number(
+                      ref.style.width.substring(0, ref.style.width.length - 2)
+                    );
+                    ww.height = Number(
+                      ref.style.height.substring(0, ref.style.height.length - 2)
+                    );
                     let requestOptions = {
-                      method: 'POST',
+                      method: "POST",
                       headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json",
                         token: token,
                       },
                       body: JSON.stringify({
                         widgetWorkerId: ww.id,
                         x: ww.x,
                         y: ww.y,
-                        width: Number(ref.style.width.substring(0, ref.style.width.length - 2)),
-                        height: Number(ref.style.height.substring(0, ref.style.height.length - 2))
+                        width: Number(
+                          ref.style.width.substring(
+                            0,
+                            ref.style.width.length - 2
+                          )
+                        ),
+                        height: Number(
+                          ref.style.height.substring(
+                            0,
+                            ref.style.height.length - 2
+                          )
+                        ),
                       }),
-                      redirect: 'follow',
-                    }
-                    fetch(serverRoot + '/bot/update_widget_worker', requestOptions)
+                      redirect: "follow",
+                    };
+                    fetch(
+                      serverRoot + "/bot/update_widget_worker",
+                      requestOptions
+                    )
                       .then((response) => response.json())
                       .then((result) => {})
-                      .catch(ex => console.log(ex));;
+                      .catch((ex) => console.log(ex));
                   }}
                 >
-                <BotContainer step={index}
-                  realIdPrefix={'widget_' + ww.id + '_element_'}
-                  widgetWorkerId={ww.id}
-                  isPreview={false}
-                  onIdDictPrepared={(idD) => {
-                    idDict[ww.id] = idD
-                  }}
-                  onElClick={(elId) => {
-                    if (clickEvents[ww.id][elId] !== undefined) {
-                      clickEvents[ww.id][elId]();
-                    }
-                  }}
-                  editMode={editMode}
-                  widgetWidth={'100%'}
-                  widgetHeight={'100%'}
-                  widgetX={0}
-                  widgetY={0}
-                  gui={guis[ww.id]}
-                />
-                <Paper style={{width: 32, height: 32, position: 'fixed', right: -16, bottom: -16}}/>
+                  <BotContainer
+                    step={index}
+                    realIdPrefix={"widget_" + ww.id + "_element_"}
+                    widgetWorkerId={ww.id}
+                    isPreview={false}
+                    onIdDictPrepared={(idD) => {
+                      idDict[ww.id] = idD;
+                    }}
+                    onElClick={(elId) => {
+                      if (clickEvents[ww.id][elId] !== undefined) {
+                        clickEvents[ww.id][elId]();
+                      }
+                    }}
+                    editMode={editMode}
+                    widgetWidth={"100%"}
+                    widgetHeight={"100%"}
+                    widgetX={0}
+                    widgetY={0}
+                    gui={guis[ww.id]}
+                  />
+                  <Paper
+                    style={{
+                      width: 32,
+                      height: 32,
+                      position: "fixed",
+                      right: -16,
+                      bottom: -16,
+                    }}
+                  />
                 </Rnd>
-              )
-            }
-            else {
-              return (
-                <BotContainer step={index}
-                  realIdPrefix={'widget_' + ww.id + '_element_'}
+              );
+            } else {
+              return ww.id === "whiteboard" ? (
+                <Paper
+                  onClick={() => props.onModuleSelected("whiteboard")}
+                  style={{
+                    width: ww.width === null ? 150 : ww.width,
+                    height: ww.height === null ? 150 : ww.height,
+                    position: "absolute",
+                    left: ww.x,
+                    top: ww.y,
+                    transform: "translateY(+144px)",
+                    borderRadius: 24,
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "transparent",
+                    backgroundImage:
+                      "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(98, 132, 255, 0.5) 50%, rgba(255, 0, 0, 0.5) 100%)",
+                    display: "flex",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative",
+                    }}
+                  >
+                    <Avatar
+                      style={{
+                        width: 96,
+                        height: 96,
+                        marginLeft: 27,
+                        marginTop: 27,
+                      }}
+                      src={
+                        "https://cdn.dribbble.com/users/64533/screenshots/15988309/media/168ff694237775fe784c3597d481c0df.gif"
+                      }
+                    />
+                    <Typography
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        right: 27,
+                        fontWeight: "bold",
+                        transform: "translateY(-50%)",
+                        color: "#fff",
+                        width: "100%",
+                        textAlign: "right",
+                      }}
+                    >
+                      وایت بورد
+                    </Typography>
+                  </div>
+                </Paper>
+              ) : ww.id === "taskboard" ? (
+                <Paper
+                  onClick={() => props.onModuleSelected("taskboard")}
+                  style={{
+                    width: ww.width === null ? 150 : ww.width,
+                    height: ww.height === null ? 150 : ww.height,
+                    position: "absolute",
+                    left: ww.x,
+                    top: ww.y,
+                    transform: "translateY(+144px)",
+                    borderRadius: 24,
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "transparent",
+                    backgroundImage:
+                      "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
+                    display: "flex",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative",
+                    }}
+                  >
+                    <Avatar
+                      style={{
+                        width: 96,
+                        height: 96,
+                        marginLeft: 27,
+                        marginTop: 27,
+                      }}
+                      src={
+                        "https://cdn.dribbble.com/users/2202649/screenshots/13995054/media/b08e2ee6c6aa058abd3bd268e0fdfc07.png"
+                      }
+                    />
+                    <Typography
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        right: 27,
+                        fontWeight: "bold",
+                        transform: "translateY(-50%)",
+                        color: "#fff",
+                        width: "100%",
+                        textAlign: "right",
+                      }}
+                    >
+                      تسک بورد
+                    </Typography>
+                  </div>
+                </Paper>
+              ) : ww.id === "filestorage" ? (
+                <Paper
+                  onClick={() => props.onModuleSelected("filestorage")}
+                  style={{
+                    width: ww.width === null ? 150 : ww.width,
+                    height: ww.height === null ? 150 : ww.height,
+                    position: "absolute",
+                    left: ww.x,
+                    top: ww.y,
+                    transform: "translateY(+144px)",
+                    borderRadius: 24,
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "transparent",
+                    backgroundImage:
+                      "linear-gradient(225deg, rgba(217, 175, 217, 0.5) 0%, rgba(151, 217, 225, 0.5) 100%)",
+                    display: "flex",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative",
+                    }}
+                  >
+                    <Avatar
+                      style={{
+                        width: 96,
+                        height: 96,
+                        marginLeft: 27,
+                        marginTop: 27,
+                      }}
+                      src={
+                        "https://cdn.dribbble.com/users/59138/screenshots/16532391/media/1e1af62832ee575bd13369b9c93941fc.png"
+                      }
+                    />
+                    <Typography
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        right: 27,
+                        fontWeight: "bold",
+                        transform: "translateY(-50%)",
+                        color: "#fff",
+                        width: "100%",
+                        textAlign: "right",
+                      }}
+                    >
+                      فایل ها
+                    </Typography>
+                  </div>
+                </Paper>
+              ) : ww.id === "videochat" ? (
+                <Paper
+                  onClick={() => props.onModuleSelected("videochat")}
+                  style={{
+                    width: ww.width === null ? 150 : ww.width,
+                    height: ww.height === null ? 150 : ww.height,
+                    position: "absolute",
+                    left: ww.x,
+                    top: ww.y,
+                    transform: "translateY(+144px)",
+                    borderRadius: 24,
+                    backdropFilter: "blur(10px)",
+                    backgroundColor: "transparent",
+                    backgroundImage:
+                      "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
+                    display: "flex",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative",
+                    }}
+                  >
+                    <Avatar
+                      style={{
+                        width: 96,
+                        height: 96,
+                        marginLeft: 27,
+                        marginTop: 27,
+                      }}
+                      src={
+                        "https://cdn.dribbble.com/users/6230165/screenshots/15935130/media/417730a823332743665a45e34321768b.jpg"
+                      }
+                    />
+                    <Typography
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        right: 27,
+                        fontWeight: "bold",
+                        transform: "translateY(-50%)",
+                        color: "#fff",
+                        width: "100%",
+                        textAlign: "right",
+                      }}
+                    >
+                      ویدئو چت
+                    </Typography>
+                  </div>
+                </Paper>
+              ) : (
+                <BotContainer
+                  step={index}
+                  realIdPrefix={"widget_" + ww.id + "_element_"}
                   widgetWorkerId={ww.id}
                   isPreview={false}
                   onIdDictPrepared={(idD) => {
-                    idDict[ww.id] = idD
+                    idDict[ww.id] = idD;
                   }}
                   onElClick={(elId) => {
                     if (clickEvents[ww.id][elId] !== undefined) {
@@ -505,103 +814,124 @@ export default function BotsBox(props) {
               );
             }
           })}
-          <div id="ghostpane" style={{ display: 'none' }}></div>
+          <div id="ghostpane" style={{ display: "none" }}></div>
         </div>
       </div>
       <SwipeableDrawer
         onClose={() => setMenuOpen(false)}
         open={menuOpen}
-        anchor={'left'}
-        style={{ direction: 'ltr', position: 'fixed', zIndex: 99999 }}
+        anchor={"left"}
+        style={{ direction: "ltr", position: "fixed", zIndex: 99999 }}
         PaperProps={{
           style: {
             background: colors.primaryMedium,
-            backdropFilter: 'blur(15px)'
-          }
+            backdropFilter: "blur(15px)",
+          },
         }}
         keepMounted={true}
       >
         <div
           style={{
             width: 360,
-            height: '100%',
-            display: 'flex',
+            height: "100%",
+            display: "flex",
           }}
         >
-          <div style={{ position: 'relative', width: 80, height: '100%', background: colors.primaryMedium }}>
-            {
-              myBots.map((bot, index) => (
-                <Avatar
-                  onClick={() => setMySelectedBot(index)}
-                  src={serverRoot + `/file/download_bot_avatar?token=${token}&botId=${bot.id}`}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    marginLeft: 8,
-                    marginTop: 16,
-                    backgroundColor: '#fff'
-                  }}
-                />
-              ))
-            }
-          </div>
-          <div style={{ width: 280, height: '100%', position: 'relative' }}>
-            {Object.values(myBots).length > 0 ?
-              myBots[mySelectedBot].widgets.map((wp) => (
-              <div style={{width: '100%'}} onClick={() => {
-                let requestOptions = {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    token: token,
-                  },
-                  body: JSON.stringify({
-                    botId: myBots[mySelectedBot].id,
-                    roomId: props.roomId,
-                    widgetId: wp.id,
-                    x: 100,
-                    y: 100,
-                    width: 150,
-                    height: 150
-                  }),
-                  redirect: 'follow',
+          <div
+            style={{
+              position: "relative",
+              width: 80,
+              height: "100%",
+              background: colors.primaryMedium,
+            }}
+          >
+            {myBots.map((bot, index) => (
+              <Avatar
+                onClick={() => setMySelectedBot(index)}
+                src={
+                  serverRoot +
+                  `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
                 }
-                fetch(serverRoot + '/bot/create_widget_worker', requestOptions)
-                  .then((response) => response.json())
-                  .then((result) => {
-                    if (result.status === 'success') {
-                      updateDesktop();
-                      alert('ربات به میزکار افزوده شد.');
-                    }
-                    else {
-                      alert(result.message);
-                    }
-                  })
-                  .catch(ex => console.log(ex));
-              }}>
-                <img
-                  style={{
-                    width: 'calc(100% - 48px)',
-                    height: 'auto',
-                    maxHeight: 200,
-                    marginLeft: 24,
-                    marginRight: 24,
-                    marginTop: 12
-                  }}
-                  src={serverRoot + `/file/download_widget_thumbnail?token=${token}&widgetId=${wp.id}`}
-                />
-                <Typography style={{marginTop: -16,  width: '100%', textAlign: 'center',
-                                    alignItems: 'center', justifyContent: 'center'}}
-                >
-                  {wp.title}
-                </Typography>
-              </div>
-              )) :
-              null
-            }
+                style={{
+                  width: 64,
+                  height: 64,
+                  marginLeft: 8,
+                  marginTop: 16,
+                  backgroundColor: "#fff",
+                }}
+              />
+            ))}
+          </div>
+          <div style={{ width: 280, height: "100%", position: "relative" }}>
+            {Object.values(myBots).length > 0
+              ? myBots[mySelectedBot].widgets.map((wp) => (
+                  <div
+                    style={{ width: "100%" }}
+                    onClick={() => {
+                      let requestOptions = {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                          token: token,
+                        },
+                        body: JSON.stringify({
+                          botId: myBots[mySelectedBot].id,
+                          roomId: props.roomId,
+                          widgetId: wp.id,
+                          x: 100,
+                          y: 100,
+                          width: 150,
+                          height: 150,
+                        }),
+                        redirect: "follow",
+                      };
+                      fetch(
+                        serverRoot + "/bot/create_widget_worker",
+                        requestOptions
+                      )
+                        .then((response) => response.json())
+                        .then((result) => {
+                          if (result.status === "success") {
+                            updateDesktop();
+                            alert("ربات به میزکار افزوده شد.");
+                          } else {
+                            alert(result.message);
+                          }
+                        })
+                        .catch((ex) => console.log(ex));
+                    }}
+                  >
+                    <img
+                      style={{
+                        width: "calc(100% - 48px)",
+                        height: "auto",
+                        maxHeight: 200,
+                        marginLeft: 24,
+                        marginRight: 24,
+                        marginTop: 12,
+                      }}
+                      src={
+                        serverRoot +
+                        `/file/download_widget_thumbnail?token=${token}&widgetId=${wp.id}`
+                      }
+                    />
+                    <Typography
+                      style={{
+                        marginTop: -16,
+                        width: "100%",
+                        textAlign: "center",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {wp.title}
+                    </Typography>
+                  </div>
+                ))
+              : null}
           </div>
         </div>
       </SwipeableDrawer>
     </div>
-  )
+  );
 }

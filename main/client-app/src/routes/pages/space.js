@@ -493,6 +493,20 @@ export default function Space(props) {
           membership={membership}
           roomId={props.room_id}
           style={{ display: "block" }}
+          onModuleSelected={(modName) => {
+            if (modName === 'whiteboard') {
+              setSelectedNav(7);
+            }
+            else if (modName === 'taskboard') {
+              setSelectedNav(8);
+            }
+            else if (modName === 'filestorage') {
+              setSelectedNav(9);
+            }
+            else if (modName === 'videochat') {
+              
+            }
+          }}
         />
         <div style={{ width: "100%", height: 72 + 16 }} />
       </div>
