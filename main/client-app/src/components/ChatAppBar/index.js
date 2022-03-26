@@ -24,6 +24,7 @@ import {
   isInRoom,
   isMobile,
   isTablet,
+  setCurrentRoomId,
   setInTheGame,
 } from '../../App'
 import { colors, token, me } from '../../util/settings'
@@ -222,10 +223,7 @@ export default function ChatAppBar(props) {
                 <IconButton
                   onClick={() => {
                     if (props.handleCallClicked !== undefined) props.handleCallClicked();
-                    gotoPage('/app/room', {
-                      room_id: props.room.id,
-                      tab_index: 0,
-                    });
+                    setCurrentRoomId(props.room.id);
                   }}
                 >
                   <Roofing style={{ fill: colors.icon }} />
