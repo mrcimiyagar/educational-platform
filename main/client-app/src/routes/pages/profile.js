@@ -18,6 +18,7 @@ import {
   isTablet,
   popPage,
   registerDialogOpen,
+  setCurrentRoomId,
   setInTheGame,
 } from "../../App";
 import header from "../../images/profile-header.jpeg";
@@ -666,11 +667,7 @@ export default function Profile(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result));
                   if (result.room !== undefined) {
-                    
-                    gotoPage("/app/chat", {
-                      user_id: props.user_id,
-                      room_id: result.room.id,
-                    });
+                    setCurrentRoomId(result.room.id);
                   }
                 })
                 .catch((error) => console.log("error", error));

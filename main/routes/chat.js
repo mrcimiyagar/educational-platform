@@ -23,8 +23,9 @@ router.post('/get_participent', jsonParser, async function (req, res) {
     let roomMembers = await sw.Membership.findAll({
       raw: true,
       where: { roomId: membership.roomId },
-    })
-    if (roomMembers.length !== 2) {
+    });
+    let room = await sw.Room.findOne({where: {id: req.body.roomId}});
+    if (roomMembers.length !== 2 || room.chatType !== 'p2p') {
       res.send({
         status: 'error',
         errorCode: 'e0005',
@@ -34,8 +35,8 @@ router.post('/get_participent', jsonParser, async function (req, res) {
     }
     let participent =
       roomMembers[0].userId === membership.userId
-        ? await sw.User.findOne({ where: { userId: roomMembers[1].userId } })
-        : await sw.User.findOne({ where: { userId: roomMembers[0].userId } })
+        ? await sw.User.findOne({ where: { id: roomMembers[1].userId } })
+        : await sw.User.findOne({ where: { id: roomMembers[0].userId } })
 
     res.send({ status: 'success', participent: participent })
   })
