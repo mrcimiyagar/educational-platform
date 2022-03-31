@@ -4,7 +4,7 @@ import ImageListItem from '@material-ui/core/ImageListItem';
 import { makeStyles } from '@material-ui/core/styles';
 import React, { useEffect } from 'react';
 import BotIcon from '../../images/robot.png';
-import { token } from '../../util/settings';
+import { colors, token } from '../../util/settings';
 import { serverRoot, useForceUpdate } from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +62,7 @@ export default function StoreWidgets(props) {
   }, []);
   return (
     <div className={classes.root}>
-      <Typography variant={'h6'} style={{marginLeft: 16, marginRight: 16, color: '#fff'}}>ویجت ها</Typography>
+      <Typography variant={'h6'} style={{marginLeft: 16, marginRight: 16, color: colors.text}}>ویجت ها</Typography>
       <ImageList style={{zIndex: 2}} rowHeight={188} cols={2.5} gap={1} className={classes.imageList}>
         {widgets.length > 0 ? 
             widgets.map((item) => (
@@ -72,7 +72,7 @@ export default function StoreWidgets(props) {
                             alt={'widget thumbnail'} style={{marginTop: 16, width: 'calc(100% - 64px)', height: 96}} />
                     </div>
                 </ImageListItem>)) :
-            <Typography style={{fontSize: 18, width: '100%', height: 150, lineHeight: 6, color: '#fff'}}>ویجتی یافت نشد.</Typography>
+            <Typography style={{fontSize: 18, width: '100%', height: 150, lineHeight: 6, color: colors.text}}>ویجتی یافت نشد.</Typography>
         }
       </ImageList>
     </div>

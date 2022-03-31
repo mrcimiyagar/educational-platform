@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import NavigationIcon from '@material-ui/icons/Navigation';
 import Rating from '@material-ui/lab/Rating';
 import React, { useEffect } from 'react';
-import { token } from '../../util/settings';
+import { colors, token } from '../../util/settings';
 import { serverRoot, useForceUpdate } from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,7 +51,7 @@ export default function StoreComments(props) {
   }, []);
   return (
     <div style={{marginTop: 32}}>
-      <Typography variant={'h6'} style={{marginLeft: 16, marginRight: 16, color: '#fff'}}>کامنت ها</Typography>
+      <Typography variant={'h6'} style={{marginLeft: 16, marginRight: 16, color: colors.text}}>کامنت ها</Typography>
       {
           comments.length > 0 ?
             comments.map(comment => (
@@ -68,15 +68,14 @@ export default function StoreComments(props) {
                 <Divider variant="inset" component="li" />
               </div>
             )) :
-            <Typography style={{fontSize: 18, width: '100%', height: 150, lineHeight: 8, color: '#fff'}}>کامنتی یافت نشد.</Typography>
+            <Typography style={{fontSize: 18, width: '100%', height: 150, lineHeight: 8, color: colors.text}}>کامنتی یافت نشد.</Typography>
       }
       {
         comments.length > 0 ?
           <Fab
             variant="extended"
             size="small"
-            color="primary"
-            style={{position: 'absolute', marginTop: 16, left: '50%', transform: 'translateX(-50%)'}}
+            style={{backgroundColor: colors.accent, position: 'absolute', marginTop: 16, left: '50%', transform: 'translateX(-50%)'}}
           >
             <NavigationIcon className={classes.extendedIcon} />
             نمایش همه ی کامنت ها

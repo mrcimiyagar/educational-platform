@@ -264,8 +264,7 @@ export let FileBox = (props) => {
         </AppBar>
         <div
           style={{
-            height: "calc(100% - 64px - 48px)",
-            marginTop: 64 + 48,
+            height: "100%",
             backgroundColor: colors.primaryDark
           }}
         >
@@ -276,6 +275,7 @@ export let FileBox = (props) => {
             style={{ height: "100%" }}
           >
             <div style={{ height: "100%" }}>
+              <div style={{height: 112}} />
               <FilesGrid
                 fileType={"photo"}
                 files={files.filter((f) => f.fileType === "photo")}
@@ -285,6 +285,7 @@ export let FileBox = (props) => {
               />
             </div>
             <div style={{ height: "100%" }}>
+              <div style={{height: 112}} />
               <FilesGrid
                 fileType={"audio"}
                 files={files.filter((f) => f.fileType === "audio")}
@@ -293,6 +294,7 @@ export let FileBox = (props) => {
               />
             </div>
             <div style={{ height: "100%" }}>
+              <div style={{height: 112}} />
               <FilesGrid
                 fileType={"video"}
                 files={files.filter((f) => f.fileType === "video")}
@@ -301,6 +303,7 @@ export let FileBox = (props) => {
               />
             </div>
             <div style={{ height: "100%" }}>
+              <div style={{height: 112}} />
               <FilesGrid
                 fileType={"document"}
                 files={files.filter((f) => f.fileType === "document")}

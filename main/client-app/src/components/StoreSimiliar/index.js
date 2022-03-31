@@ -4,6 +4,7 @@ import ImageListItem from '@material-ui/core/ImageListItem';
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 import BotIcon from '../../images/robot.png';
+import { colors } from '../../util/settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -189,8 +190,8 @@ export default function StoreSimiliar() {
           <ImageListItem key={item.img} cols={1} rows={1}>
             <div style={{position: 'relative'}}>
                 <img src={BotIcon} alt={item.title} style={{borderRadius: 16, marginTop: 16, marginRight: 32, width: 'calc(100% - 64px)', height: 96}} />
-                <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32, backgroundColor: '#ddd'}}>
-                    <Typography style={{position: 'absolute', top: 120, left: '50%', transform: 'translateX(-50%)'}}>{item.title}</Typography>
+                <Card style={{borderRadius: 16, width: '95%', height: 72, marginRight: '2.5%', marginTop: -32, backgroundColor: colors.field}}>
+                    <Typography style={{position: 'absolute', top: 120, left: '50%', transform: 'translateX(-50%)', color: colors.text}}>{item.title}</Typography>
                 </Card>
             </div>
           </ImageListItem>

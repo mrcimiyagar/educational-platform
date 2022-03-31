@@ -50,8 +50,9 @@ import { RoomTreeBox } from "../../components/RoomTreeBox";
 import CreateRoom from "./createRoom";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import { FileBox } from "../../modules/filebox/filebox";
-import {setCurrentRoomId} from '../../App';
+import { setCurrentRoomId } from "../../App";
 import SpacesGrid from "../../components/SpacesGrid";
+import StoreBot from "./storeBot";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -93,7 +94,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(undefined);
+  const [selectedNav, setSelectedNav] = React.useState(11);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const attachScrollCallback = () => {
@@ -147,10 +148,10 @@ export default function Space(props) {
   [membership, setMembership] = React.useState({});
   const [loaded, setLoaded] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const [fileMode, setFileMode] = React.useState(0);
   const [menuMode, setMenuMode] = React.useState(0);
   let [webcamOn, setWebcamOn] = React.useState(false);
   let [webcamOnSecond, setWebcamOnSecond] = React.useState(false);
+  const [selectedBotId, setSelectedBotId] = React.useState(undefined);
 
   let enterRoom = (callback) => {
     const controller = new AbortController();
@@ -494,17 +495,13 @@ export default function Space(props) {
           roomId={props.room_id}
           style={{ display: "block" }}
           onModuleSelected={(modName) => {
-            if (modName === 'whiteboard') {
+            if (modName === "whiteboard") {
               setSelectedNav(7);
-            }
-            else if (modName === 'taskboard') {
+            } else if (modName === "taskboard") {
               setSelectedNav(8);
-            }
-            else if (modName === 'filestorage') {
+            } else if (modName === "filestorage") {
               setSelectedNav(9);
-            }
-            else if (modName === 'videochat') {
-              
+            } else if (modName === "videochat") {
             }
           }}
         />
@@ -839,6 +836,17 @@ export default function Space(props) {
           }}
         />
       ) : null}
+      {selectedNav === 11 ? (
+        selectedBotId !== undefined ? (
+          <StoreBot
+            bot_id={selectedBotId}
+            onClose={() => {
+              setSelectedNav(undefined);
+              setInTheGame(true);
+            }}
+          />
+        ) : null
+      ) : null}
       {!wallpaperLoaded ? (
         <div
           style={{
@@ -865,7 +873,7 @@ export default function Space(props) {
             }}
           >
             <div
-              style={{ widthL: "100%", height: "100%", position: "relative" }}
+              style={{ width: "100%", height: "100%", position: "relative" }}
             >
               <div
                 style={{
