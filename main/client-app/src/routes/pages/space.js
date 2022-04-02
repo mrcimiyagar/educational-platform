@@ -50,9 +50,12 @@ import { RoomTreeBox } from "../../components/RoomTreeBox";
 import CreateRoom from "./createRoom";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import { FileBox } from "../../modules/filebox/filebox";
-import { setCurrentRoomId } from "../../App";
+import { setCurrentRoomId, currentRoomId } from "../../App";
 import SpacesGrid from "../../components/SpacesGrid";
 import StoreBot from "./storeBot";
+import StoreFam from "../../components/StoreFam";
+import CreateBotCategoryPage from "./createBotCategory";
+import Workshop from "./workshop";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -94,7 +97,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(11);
+  const [selectedNav, setSelectedNav] = React.useState(13);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const attachScrollCallback = () => {
@@ -517,7 +520,7 @@ export default function Space(props) {
           height: searchBarFixed ? 56 : 80 + 40,
           backdropFilter: "blur(20px)",
           position: "fixed",
-          transform: inTheGame ? "translateY(0px)" : "translateY(-110%)",
+          transform: inTheGame ? "translateY(0px)" : "translateY(-200px)",
           transition: "height .25s, transform .5s",
         }}
       >
@@ -596,6 +599,10 @@ export default function Space(props) {
           }
         }}
       />
+
+      {currentRoomId === 1 ? (
+        <StoreFam onCategoryCreationSelected={() => setSelectedNav(12)} />
+      ) : null}
 
       <SwipeableDrawer
         onClose={() => setMenuOpen(false)}
@@ -761,17 +768,6 @@ export default function Space(props) {
           room_id={props.room_id}
         />
       ) : null}
-      {selectedNav === 1 ? (
-        <Space
-          backable={true}
-          room_id={1}
-          onClose={() => {
-            setSelectedNav(undefined);
-            setInTheGame(true);
-            syncWallpaper();
-          }}
-        />
-      ) : null}
       {selectedNav === 4 ? (
         <MainSettings
           onClose={() => {
@@ -846,6 +842,22 @@ export default function Space(props) {
             }}
           />
         ) : null
+      ) : null}
+      {selectedNav === 12 ? (
+        <CreateBotCategoryPage
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 13 ? (
+        <Workshop
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
       ) : null}
       {!wallpaperLoaded ? (
         <div

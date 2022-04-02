@@ -9,7 +9,7 @@ import SpacesGridForInvitation from '../../components/SpacesGridForInvitation';
 import { colors } from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="left" ref={ref} {...props} />;
+    return <Slide direction="right" ref={ref} {...props} />;
 });
 
 export default function SpacesListPage(props) {

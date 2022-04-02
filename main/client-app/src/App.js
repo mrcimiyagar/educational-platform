@@ -80,8 +80,6 @@ import Workshop from "./routes/pages/workshop";
 import StoreDialog from "./routes/pages/storeDialog";
 import CreateComment from "./routes/pages/createComment";
 import Rocket from "./routes/pages/rocket";
-import $ from "jquery";
-import BlockUi from "react-block-ui";
 import "react-block-ui/style.css";
 import CreateWidget from "./routes/pages/createWidget";
 import BotInfoPage from "./routes/pages/botInfo";
@@ -95,7 +93,8 @@ export let setBoardFrame = (bf) => {
 };
 
 export let currentRoomId = undefined;
-export let setCurrentRoomId = undefined;
+let setCRId = undefined;
+export let setCurrentRoomId = (id) => {setInTheGame(false); setTimeout(() => setCRId(id), 250);};
 
 export let currentUserId = 0;
 export let setCurrentUserId = (uId) => {
@@ -546,7 +545,7 @@ MainAppContainer = (props) => {
   [routeTrigger, setRouteTrigger] = React.useState(false);
   [uploadingFiles, setUploadingFiles] = React.useState({});
   [authenticationValid, setAuthenticationValid] = React.useState(true);
-  [currentRoomId, setCurrentRoomId] = React.useState(homeRoomId);
+  [currentRoomId, setCRId] = React.useState(homeRoomId);
 
   const [bottomSheetOpen, setBottomSheetOpen] = React.useState(false);
   const [connectedIO, setConnectedIO] = React.useState(false);

@@ -35,11 +35,9 @@ export let notifyUrlChanged = undefined
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: 380,
     position: 'fixed',
-    flexGrow: 1,
-    bottom: -56 - 52 - (isMobile() ? 0 : 72),
-    left: 16 + 56 + 16
+    bottom: 16 + 56 + 16 + 16,
+    right: 16
   },
 }))
 
@@ -98,7 +96,7 @@ export default function StoreFam(props) {
                     gotoPage('/app/createbotpackage');
                   }
                   else if (index === 0) {
-                    gotoPage('/app/createbotcategory');
+                    props.onCategoryCreationSelected();
                   }
                 }}
               />
