@@ -121,6 +121,7 @@ let ckeckCode = (wwId, codes) => {
 };
 
 export let openToolbox = () => {};
+export let toggleEditMode = () => {};
 
 export default function BotsBox(props) {
   let forceUpdate = useForceUpdate();
@@ -129,7 +130,30 @@ export default function BotsBox(props) {
   let [menuOpen, setMenuOpen] = React.useState(false);
   let [mySelectedBot, setMySelectedBot] = React.useState(0);
 
-  openToolbox = () => setMenuOpen(true);
+  toggleEditMode = () => setEditMode(!editMode);
+
+  const reloadBotsList = () => {
+    let requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/bot/get_subscriptions", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result));
+        setMyBots(result.bots);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  openToolbox = () => {
+    reloadBotsList();
+    setMenuOpen(true);
+  }
 
   let requestInitGui = (wwId, preview = true) => {
     let requestOptions = {
@@ -172,21 +196,7 @@ export default function BotsBox(props) {
       },
       false
     );
-    let requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: token,
-      },
-      redirect: "follow",
-    };
-    fetch(serverRoot + "/bot/get_subscriptions", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result));
-        setMyBots(result.bots);
-      })
-      .catch((error) => console.log("error", error));
+    reloadBotsList();
   }, []);
 
   useEffect(() => {
@@ -257,69 +267,75 @@ export default function BotsBox(props) {
     registerEvent(
       "gui",
       ({ type, gui: data, widgetId, roomId, widgetWorkerId }) => {
-        if (type === "init") {
-          guis[widgetWorkerId] = data;
-          idDict[widgetWorkerId] = {};
-          memDict[widgetWorkerId] = {};
-          clickEvents[widgetWorkerId] = {};
-          styledContents[widgetWorkerId] = {};
-          mirrors = mirrors.filter((m) => m.widgetWorkerId !== widgetWorkerId);
-          forceUpdate();
-          let requestOptions = {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              token: token,
-            },
-            body: JSON.stringify({
-              widgetWorkerId: widgetWorkerId,
-              preview: false,
-              roomId: roomId,
-            }),
-            redirect: "follow",
-          };
-          fetch(serverRoot + "/bot/notify_gui_base_activated", requestOptions)
-            .then((response) => response.json())
-            .then((result) => {
-              console.log(JSON.stringify(result));
-            })
-            .catch((ex) => console.log(ex));
-        } else if (type === "update") {
-          data.forEach((d) => {
-            if (d.property === "styledContent") {
-              styledContents[widgetWorkerId][d.elId] = d.newValue;
-            }
-            idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
-          });
-          forceUpdate();
-        } else if (type === "mirror") {
-          data.forEach((d) => {
-            d.widgetWorkerId = widgetWorkerId;
-          });
-          mirrors = mirrors.concat(data);
-          forceUpdate();
-        } else if (type === "timer") {
-          let timer = setInterval(() => {
-            data.updates.forEach((d) => {
+        try {
+          if (type === "init") {
+            guis[widgetWorkerId] = data;
+            idDict[widgetWorkerId] = {};
+            memDict[widgetWorkerId] = {};
+            clickEvents[widgetWorkerId] = {};
+            styledContents[widgetWorkerId] = {};
+            mirrors = mirrors.filter(
+              (m) => m.widgetWorkerId !== widgetWorkerId
+            );
+            forceUpdate();
+            let requestOptions = {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                token: token,
+              },
+              body: JSON.stringify({
+                widgetWorkerId: widgetWorkerId,
+                preview: false,
+                roomId: roomId,
+              }),
+              redirect: "follow",
+            };
+            fetch(serverRoot + "/bot/notify_gui_base_activated", requestOptions)
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(JSON.stringify(result));
+              })
+              .catch((ex) => console.log(ex));
+          } else if (type === "update") {
+            data.forEach((d) => {
+              if (d.property === "styledContent") {
+                styledContents[widgetWorkerId][d.elId] = d.newValue;
+              }
               idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
             });
             forceUpdate();
-          }, data.interval);
-          timers[data.timerId] = timer;
-          forceUpdate();
-        } else if (type === "untimer") {
-          let timer = timers[widgetWorkerId][data.timerId];
-          clearInterval(timer);
-          delete timers[widgetWorkerId][data.timerId];
-          forceUpdate();
-        } else if (type === "memorize") {
-          memDict[widgetWorkerId][data.memoryId] = data.value;
-          forceUpdate();
-        } else if (type === "attachClick") {
-          clickEvents[widgetWorkerId][data.elId] = () => {
-            ckeckCode(widgetWorkerId, data.codes);
+          } else if (type === "mirror") {
+            data.forEach((d) => {
+              d.widgetWorkerId = widgetWorkerId;
+            });
+            mirrors = mirrors.concat(data);
             forceUpdate();
-          };
+          } else if (type === "timer") {
+            let timer = setInterval(() => {
+              data.updates.forEach((d) => {
+                idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
+              });
+              forceUpdate();
+            }, data.interval);
+            timers[data.timerId] = timer;
+            forceUpdate();
+          } else if (type === "untimer") {
+            let timer = timers[widgetWorkerId][data.timerId];
+            clearInterval(timer);
+            delete timers[widgetWorkerId][data.timerId];
+            forceUpdate();
+          } else if (type === "memorize") {
+            memDict[widgetWorkerId][data.memoryId] = data.value;
+            forceUpdate();
+          } else if (type === "attachClick") {
+            clickEvents[widgetWorkerId][data.elId] = () => {
+              ckeckCode(widgetWorkerId, data.codes);
+              forceUpdate();
+            };
+          }
+        } catch (error) {
+          console.log(error);
         }
       }
     );
@@ -922,6 +938,7 @@ export default function BotsBox(props) {
                         textAlign: "center",
                         alignItems: "center",
                         justifyContent: "center",
+                        color: colors.text
                       }}
                     >
                       {wp.title}

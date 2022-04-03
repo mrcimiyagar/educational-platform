@@ -24,6 +24,7 @@ import store, { setCurrentStoreNav } from '../../redux/main';
 import Extension from '@material-ui/icons/Extension';
 import {RichAppBar, RichBottomBar} from '../../components/RichComponents';
 import { StylesProvider } from '@material-ui/core';
+import StoreBot from './storeBot';
 
 const useStylesAction = makeStyles({
   /* Styles applied to the root element. */
@@ -108,12 +109,14 @@ export default function StoreDialog(props) {
 
   const [value, setValue] = React.useState(0);
   const [open, setOpen] = React.useState(true);
+  const [showStoreBot, setShowStoreBot] = React.useState(false);
+  const [selectedBotId, setSelectedBotId] = React.useState(undefined);
 
   const handleClose = () => {
     setInTheGame(false);
     setOpen(false);
     setTimeout(() => {
-      popPage();
+      props.onClose();
     }, 750);
   };
 
@@ -428,9 +431,7 @@ export default function StoreDialog(props) {
         <HomeToolbar>
           <AppBar style={{backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}>
             <Toolbar style={{marginTop: 16}}>
-              <StoreSearchbar dialogMode={false} setDrawerOpen={(v) => {
-                  setDrawerOpen(true);
-              }}/>
+              <StoreSearchbar removeIcon={false} dialogMode={true} setDrawerOpen={handleClose}/>
             </Toolbar>
             <Tabs
               value={value}
@@ -470,7 +471,7 @@ export default function StoreDialog(props) {
                   {...{ timeout: counterMini * 500 }}
                   transitionDuration={1000}
                 >
-                  <ImageListItem style={{width: finalWidth, height: finalWidth + 56, marginLeft: 12, marginRight: 12}} key={'store-bot-'+ item.id} cols={1} onClick={() => gotoPage('/app/storebot', {room_id: props.room_id, bot_id: item.id})}>
+                  <ImageListItem style={{width: finalWidth, height: finalWidth + 56, marginLeft: 12, marginRight: 12}} key={'store-bot-'+ item.id} cols={1} onClick={() => {setSelectedBotId(item.id); setShowStoreBot(true);}}>
                     <div style={{width: finalWidth, height: finalWidth, borderRadius: 16, position: 'relative'}}>
                       <img src={'https://icon-library.com/images/bot-icon/bot-icon-5.jpg'} alt={item.title} style={{opacity: 0.65, borderRadius: 16, marginTop: 16, width: finalWidth - 8, height: finalWidth}} />
                       <Card style={{backgroundColor: 'rgba(255, 255, 255, 0.75)', borderRadius: 12, position: 'absolute', top: finalWidth, left: 'calc(50% + 4px)', transform: 'translateX(-50%)', width: 'calc(100% - 32px)', height: 40, position: 'absolute'}}><div style={{position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}}>{item.title}</div></Card>
@@ -482,44 +483,9 @@ export default function StoreDialog(props) {
             </TabPanel>
           );
         })}
-        <Slide
-          direction="up"
-          in={inTheGame}
-          mountOnEnter
-          unmountOnExit
-          {...{ timeout: 1000 }}
-        >
-        <Fab color="secondary" style={{position: 'fixed', bottom: 16 + 72, left: 16}}>
-          <ShoppingCartIcon />
-        </Fab>
-        </Slide>
-        <Slide
-          direction="right"
-          in={inTheGame}
-          mountOnEnter
-          unmountOnExit
-          {...{ timeout: 1000 }}
-        >
-        <Fab size="medium" color="primary" style={{position: 'fixed', bottom: 16 + 72 + 56 + 16, left: 20}} onClick={() => gotoPage('/app/storeads')}>
-          <ViewCompactIcon />
-        </Fab>
-        </Slide>
-        <StoreFam />
-        <div
-          style={{
-            position: 'fixed',
-            right: 16,
-            bottom: isDesktop() ? -8 : 0
-          }}
-        >
-          <Jumper />
-        </div>
         <StoreBottombar/>
-        <SwipeableDrawer anchor='right' open={drawerOpen} onClose={() => setDrawerOpen(false)} PaperProps={{style: {
-            backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}}>
-              {filters}
-        </SwipeableDrawer>
       </div>
+      {(showStoreBot && selectedBotId !== undefined) ? <StoreBot bot_id={selectedBotId} room_id={props.room_id} onClose={() => setShowStoreBot(false)} /> : null}
       </Dialog>
     );
   }

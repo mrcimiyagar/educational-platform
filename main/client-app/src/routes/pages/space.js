@@ -11,6 +11,7 @@ import {
   Tab,
   Tabs,
   Slide,
+  Fab,
 } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { setWallpaper } from "../..";
@@ -22,7 +23,7 @@ import {
   setRoomId,
 } from "../../App";
 import { BoardBox } from "../../modules/boardbox/boardbox";
-import BotsBox, { openToolbox } from "../../modules/botsbox";
+import BotsBox, { openToolbox, toggleEditMode } from "../../modules/botsbox";
 import { TaskBox } from "../../modules/taskbox/taskbox";
 import { UsersBox } from "../../modules/usersbox/usersbox";
 import store, { changeConferenceMode } from "../../redux/main";
@@ -56,6 +57,7 @@ import StoreBot from "./storeBot";
 import StoreFam from "../../components/StoreFam";
 import CreateBotCategoryPage from "./createBotCategory";
 import Workshop from "./workshop";
+import { Edit } from "@material-ui/icons";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -604,6 +606,10 @@ export default function Space(props) {
         <StoreFam onCategoryCreationSelected={() => setSelectedNav(12)} />
       ) : null}
 
+      <Fab onClick={() => toggleEditMode()} style={{backgroundColor: colors.accent, position: 'fixed', left: 16, bottom: 16 + 56 + 16 + 16}}>
+        <Edit />
+      </Fab>
+      
       <SwipeableDrawer
         onClose={() => setMenuOpen(false)}
         open={menuOpen}

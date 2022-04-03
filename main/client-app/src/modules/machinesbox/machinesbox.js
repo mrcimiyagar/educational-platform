@@ -18,6 +18,7 @@ import { registerEvent, room, serverRoot, socket, unregisterEvent, useForceUpdat
 import './style.css'
 import {setPermissionState, togglePermissions} from '../../containers/Sidebar';
 import { gotoPage } from '../../App'
+import StoreDialog from '../../routes/pages/storeDialog'
 
 export let reloadUsersList = undefined
 
@@ -87,6 +88,7 @@ export let MachinesBox = (props) => {
   let [audio, setAudio] = React.useState({});
   const [users, setUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
+  const [showStoreDialog, setShowStoreDialog] = React.useState(false);
   reloadUsersList = () => {
     let requestOptions = {
       method: 'POST',
@@ -268,7 +270,7 @@ export let MachinesBox = (props) => {
           >
             <div style={{ height: 'auto', marginRight: 12, paddingTop: 24 }}>
               <Button style={{width: 'calc(100% - 32px)', color: '#fff', height: 32, marginBottom: 24}}
-                      onClick={() => gotoPage('/app/storedialog', {room_id: props.roomId})} variant={'outlined'}>
+                      onClick={() => setShowStoreDialog(true)} variant={'outlined'}>
                         + افزودن بات
               </Button>
               <div style={{width: '100%', height: 16}}/>
@@ -371,6 +373,7 @@ export let MachinesBox = (props) => {
           </PerfectScrollbar>
         </div>
       </div>
+      {showStoreDialog ? <StoreDialog room_id={props.roomId} onClose={() => setShowStoreDialog(false)} /> : null}
     </div>
   )
 }

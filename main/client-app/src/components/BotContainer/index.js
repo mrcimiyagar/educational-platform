@@ -46,7 +46,9 @@ export default function BotContainer(props) {
           marginTop: el.marginTop,
           marginRight: el.marginRight,
           marginBottom: el.marginBottom,
-          margin: el.margin
+          margin: el.margin,
+          backdropFilter: el.backdropFilter,
+          opacity: el.opacity
         }
         let result = <div/>
         el.realId = props.realIdPrefix + el.id;
