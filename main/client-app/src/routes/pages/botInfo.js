@@ -117,7 +117,7 @@ export default function BotInfoPage(props) {
                 fontSize: 14
               }}
             >
-              آی دی بات : <Typography style={{color: colors.text, fontSize: 10}}><b>{props.botSecret.botId}</b></Typography>
+              آی دی بات : <Typography style={{color: colors.text, fontSize: 10}} onClick={() => {navigator.clipboard.writeText(props.botSecret.botId); alert('کپی شد')}}><b>{props.botSecret.botId}</b></Typography>
             </Typography>
             <br />
             <br />
@@ -135,7 +135,7 @@ export default function BotInfoPage(props) {
                 fontSize: 14
               }}
             >
-              توکن بات : <Typography style={{color: colors.text, fontSize: 10}}><b>{props.botSecret.token}</b></Typography>
+              توکن بات : <Typography style={{color: colors.text, fontSize: 10}} onClick={() => {navigator.clipboard.writeText(props.botSecret.token); alert('کپی شد')}}><b>{props.botSecret.token}</b></Typography>
             </Typography>
           </div>
         </Paper>

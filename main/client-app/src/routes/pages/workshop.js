@@ -377,8 +377,8 @@ function Workshop(props) {
           editMode={false}
           widgetWidth={300}
           widgetHeight={300}
-          widgetX={window.innerWidth / 4 - 225 / 2}
-          widgetY={window.innerHeight / 2 - 175}
+          widgetX={(window.innerWidth - 300) / 2}
+          widgetY={(window.innerHeight - 300) / 2}
           gui={widget1Gui}
         />
         <Fab

@@ -1181,9 +1181,9 @@ router.post(
           ? null
           : await sw.Room.findOne({ where: { id: req.body.roomId } });
       if (
-        req.body.preview === true ||
-        (membership !== undefined && membership !== null) ||
-        (r !== null && r.accessType === "private")
+        req.body.preview === false &&
+        ((membership !== undefined && membership !== null) ||
+        (r !== null && r.accessType === "private"))
       ) {
         widgetWorker = await sw.WidgetWorker.findOne({
           where: { id: req.body.widgetWorkerId, roomId: membership.roomId },
