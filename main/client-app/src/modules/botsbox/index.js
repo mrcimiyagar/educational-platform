@@ -1,30 +1,13 @@
 import {
   Avatar,
   createTheme,
-  Fab,
   Grow,
   Paper,
-  Slide,
   SwipeableDrawer,
-  ThemeProvider,
   Typography,
 } from "@material-ui/core";
-import { Chat } from "@material-ui/icons";
-import Add from "@material-ui/icons/Add";
-import Edit from "@material-ui/icons/Edit";
 import React, { useEffect } from "react";
-import {
-  gotoPage,
-  inTheGame,
-  isDesktop,
-  isInRoom,
-  isMobile,
-  isOnline,
-  isTablet,
-  subscribeGuiChannel,
-} from "../../App";
 import BotContainer from "../../components/BotContainer";
-import BotsBoxSearchbar from "../../components/BotsBoxSearchbar";
 import { colors, token } from "../../util/settings";
 import {
   registerEvent,
@@ -33,7 +16,7 @@ import {
   useForceUpdate,
 } from "../../util/Utils";
 import { Rnd } from "react-rnd";
-import { display } from "@mui/system";
+import { currentRoomId } from "../../App";
 
 var lastScrollTop = 0;
 let idDict = {};
@@ -153,7 +136,7 @@ export default function BotsBox(props) {
   openToolbox = () => {
     reloadBotsList();
     setMenuOpen(true);
-  }
+  };
 
   let requestInitGui = (wwId, preview = true) => {
     let requestOptions = {
@@ -268,71 +251,76 @@ export default function BotsBox(props) {
       "gui",
       ({ type, gui: data, widgetId, roomId, widgetWorkerId }) => {
         try {
-          if (type === "init") {
-            guis[widgetWorkerId] = data;
-            idDict[widgetWorkerId] = {};
-            memDict[widgetWorkerId] = {};
-            clickEvents[widgetWorkerId] = {};
-            styledContents[widgetWorkerId] = {};
-            mirrors = mirrors.filter(
-              (m) => m.widgetWorkerId !== widgetWorkerId
-            );
-            forceUpdate();
-            let requestOptions = {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                token: token,
-              },
-              body: JSON.stringify({
-                widgetWorkerId: widgetWorkerId,
-                preview: false,
-                roomId: roomId,
-              }),
-              redirect: "follow",
-            };
-            fetch(serverRoot + "/bot/notify_gui_base_activated", requestOptions)
-              .then((response) => response.json())
-              .then((result) => {
-                console.log(JSON.stringify(result));
-              })
-              .catch((ex) => console.log(ex));
-          } else if (type === "update") {
-            data.forEach((d) => {
-              if (d.property === "styledContent") {
-                styledContents[widgetWorkerId][d.elId] = d.newValue;
-              }
-              idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
-            });
-            forceUpdate();
-          } else if (type === "mirror") {
-            data.forEach((d) => {
-              d.widgetWorkerId = widgetWorkerId;
-            });
-            mirrors = mirrors.concat(data);
-            forceUpdate();
-          } else if (type === "timer") {
-            let timer = setInterval(() => {
-              data.updates.forEach((d) => {
+          if (currentRoomId === roomId) {
+            if (type === "init") {
+              guis[widgetWorkerId] = data;
+              idDict[widgetWorkerId] = {};
+              memDict[widgetWorkerId] = {};
+              clickEvents[widgetWorkerId] = {};
+              styledContents[widgetWorkerId] = {};
+              mirrors = mirrors.filter(
+                (m) => m.widgetWorkerId !== widgetWorkerId
+              );
+              forceUpdate();
+              let requestOptions = {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  token: token,
+                },
+                body: JSON.stringify({
+                  widgetWorkerId: widgetWorkerId,
+                  preview: false,
+                  roomId: roomId,
+                }),
+                redirect: "follow",
+              };
+              fetch(
+                serverRoot + "/bot/notify_gui_base_activated",
+                requestOptions
+              )
+                .then((response) => response.json())
+                .then((result) => {
+                  console.log(JSON.stringify(result));
+                })
+                .catch((ex) => console.log(ex));
+            } else if (type === "update") {
+              data.forEach((d) => {
+                if (d.property === "styledContent") {
+                  styledContents[widgetWorkerId][d.elId] = d.newValue;
+                }
                 idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
               });
               forceUpdate();
-            }, data.interval);
-            timers[data.timerId] = timer;
-            forceUpdate();
-          } else if (type === "untimer") {
-            let timer = timers[widgetWorkerId][data.timerId];
-            clearInterval(timer);
-            delete timers[widgetWorkerId][data.timerId];
-            forceUpdate();
-          } else if (type === "memorize") {
-            memDict[widgetWorkerId][data.memoryId] = data.value;
-            forceUpdate();
-          } else if (type === "attachClick") {
-            clickEvents[widgetWorkerId][data.elId] = () => {
-              ckeckCode(widgetWorkerId, data.codes);
+            } else if (type === "mirror") {
+              data.forEach((d) => {
+                d.widgetWorkerId = widgetWorkerId;
+              });
+              mirrors = mirrors.concat(data);
               forceUpdate();
-            };
+            } else if (type === "timer") {
+              let timer = setInterval(() => {
+                data.updates.forEach((d) => {
+                  idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
+                });
+                forceUpdate();
+              }, data.interval);
+              timers[data.timerId] = timer;
+              forceUpdate();
+            } else if (type === "untimer") {
+              let timer = timers[widgetWorkerId][data.timerId];
+              clearInterval(timer);
+              delete timers[widgetWorkerId][data.timerId];
+              forceUpdate();
+            } else if (type === "memorize") {
+              memDict[widgetWorkerId][data.memoryId] = data.value;
+              forceUpdate();
+            } else if (type === "attachClick") {
+              clickEvents[widgetWorkerId][data.elId] = () => {
+                ckeckCode(widgetWorkerId, data.codes);
+                forceUpdate();
+              };
+            }
           }
         } catch (error) {
           console.log(error);
@@ -599,213 +587,221 @@ export default function BotsBox(props) {
               );
             } else {
               return ww.id === "whiteboard" ? (
-                <Paper
-                  onClick={() => props.onModuleSelected("whiteboard")}
-                  style={{
-                    width: ww.width === null ? 150 : ww.width,
-                    height: ww.height === null ? 150 : ww.height,
-                    position: "absolute",
-                    left: ww.x,
-                    top: ww.y,
-                    transform: "translateY(+144px)",
-                    borderRadius: 24,
-                    backdropFilter: "blur(10px)",
-                    backgroundColor: "transparent",
-                    backgroundImage:
-                      "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(98, 132, 255, 0.5) 50%, rgba(255, 0, 0, 0.5) 100%)",
-                    display: "flex",
-                  }}
-                >
-                  <div
+                <Grow in={true} {...{ timeout: 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("whiteboard")}
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
+                      width: ww.width === null ? 150 : ww.width,
+                      height: ww.height === null ? 150 : ww.height,
+                      position: "absolute",
+                      left: ww.x,
+                      top: ww.y,
+                      transform: "translateY(+144px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(98, 132, 255, 0.5) 50%, rgba(255, 0, 0, 0.5) 100%)",
+                      display: "flex",
                     }}
                   >
-                    <Avatar
+                    <div
                       style={{
-                        width: 96,
-                        height: 96,
-                        marginLeft: 27,
-                        marginTop: 27,
-                      }}
-                      src={
-                        "https://cdn.dribbble.com/users/64533/screenshots/15988309/media/168ff694237775fe784c3597d481c0df.gif"
-                      }
-                    />
-                    <Typography
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        right: 27,
-                        fontWeight: "bold",
-                        transform: "translateY(-50%)",
-                        color: "#fff",
                         width: "100%",
-                        textAlign: "right",
+                        height: "100%",
+                        position: "relative",
                       }}
                     >
-                      وایت بورد
-                    </Typography>
-                  </div>
-                </Paper>
+                      <Avatar
+                        style={{
+                          width: 96,
+                          height: 96,
+                          marginLeft: 27,
+                          marginTop: 27,
+                        }}
+                        src={
+                          "https://cdn.dribbble.com/users/64533/screenshots/15988309/media/168ff694237775fe784c3597d481c0df.gif"
+                        }
+                      />
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        وایت بورد
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
               ) : ww.id === "taskboard" ? (
-                <Paper
-                  onClick={() => props.onModuleSelected("taskboard")}
-                  style={{
-                    width: ww.width === null ? 150 : ww.width,
-                    height: ww.height === null ? 150 : ww.height,
-                    position: "absolute",
-                    left: ww.x,
-                    top: ww.y,
-                    transform: "translateY(+144px)",
-                    borderRadius: 24,
-                    backdropFilter: "blur(10px)",
-                    backgroundColor: "transparent",
-                    backgroundImage:
-                      "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
-                    display: "flex",
-                  }}
-                >
-                  <div
+                <Grow in={true} {...{ timeout: 2 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("taskboard")}
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
+                      width: ww.width === null ? 150 : ww.width,
+                      height: ww.height === null ? 150 : ww.height,
+                      position: "absolute",
+                      left: ww.x,
+                      top: ww.y,
+                      transform: "translateY(+144px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
+                      display: "flex",
                     }}
                   >
-                    <Avatar
+                    <div
                       style={{
-                        width: 96,
-                        height: 96,
-                        marginLeft: 27,
-                        marginTop: 27,
-                      }}
-                      src={
-                        "https://cdn.dribbble.com/users/2202649/screenshots/13995054/media/b08e2ee6c6aa058abd3bd268e0fdfc07.png"
-                      }
-                    />
-                    <Typography
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        right: 27,
-                        fontWeight: "bold",
-                        transform: "translateY(-50%)",
-                        color: "#fff",
                         width: "100%",
-                        textAlign: "right",
+                        height: "100%",
+                        position: "relative",
                       }}
                     >
-                      تسک بورد
-                    </Typography>
-                  </div>
-                </Paper>
+                      <Avatar
+                        style={{
+                          width: 96,
+                          height: 96,
+                          marginLeft: 27,
+                          marginTop: 27,
+                        }}
+                        src={
+                          "https://cdn.dribbble.com/users/2202649/screenshots/13995054/media/b08e2ee6c6aa058abd3bd268e0fdfc07.png"
+                        }
+                      />
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        تسک بورد
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
               ) : ww.id === "filestorage" ? (
-                <Paper
-                  onClick={() => props.onModuleSelected("filestorage")}
-                  style={{
-                    width: ww.width === null ? 150 : ww.width,
-                    height: ww.height === null ? 150 : ww.height,
-                    position: "absolute",
-                    left: ww.x,
-                    top: ww.y,
-                    transform: "translateY(+144px)",
-                    borderRadius: 24,
-                    backdropFilter: "blur(10px)",
-                    backgroundColor: "transparent",
-                    backgroundImage:
-                      "linear-gradient(225deg, rgba(217, 175, 217, 0.5) 0%, rgba(151, 217, 225, 0.5) 100%)",
-                    display: "flex",
-                  }}
-                >
-                  <div
+                <Grow in={true} {...{ timeout: 3 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("filestorage")}
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
+                      width: ww.width === null ? 150 : ww.width,
+                      height: ww.height === null ? 150 : ww.height,
+                      position: "absolute",
+                      left: ww.x,
+                      top: ww.y,
+                      transform: "translateY(+144px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(225deg, rgba(217, 175, 217, 0.5) 0%, rgba(151, 217, 225, 0.5) 100%)",
+                      display: "flex",
                     }}
                   >
-                    <Avatar
+                    <div
                       style={{
-                        width: 96,
-                        height: 96,
-                        marginLeft: 27,
-                        marginTop: 27,
-                      }}
-                      src={
-                        "https://cdn.dribbble.com/users/59138/screenshots/16532391/media/1e1af62832ee575bd13369b9c93941fc.png"
-                      }
-                    />
-                    <Typography
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        right: 27,
-                        fontWeight: "bold",
-                        transform: "translateY(-50%)",
-                        color: "#fff",
                         width: "100%",
-                        textAlign: "right",
+                        height: "100%",
+                        position: "relative",
                       }}
                     >
-                      فایل ها
-                    </Typography>
-                  </div>
-                </Paper>
+                      <Avatar
+                        style={{
+                          width: 96,
+                          height: 96,
+                          marginLeft: 27,
+                          marginTop: 27,
+                        }}
+                        src={
+                          "https://cdn.dribbble.com/users/59138/screenshots/16532391/media/1e1af62832ee575bd13369b9c93941fc.png"
+                        }
+                      />
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        فایل ها
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
               ) : ww.id === "videochat" ? (
-                <Paper
-                  onClick={() => props.onModuleSelected("videochat")}
-                  style={{
-                    width: ww.width === null ? 150 : ww.width,
-                    height: ww.height === null ? 150 : ww.height,
-                    position: "absolute",
-                    left: ww.x,
-                    top: ww.y,
-                    transform: "translateY(+144px)",
-                    borderRadius: 24,
-                    backdropFilter: "blur(10px)",
-                    backgroundColor: "transparent",
-                    backgroundImage:
-                      "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
-                    display: "flex",
-                  }}
-                >
-                  <div
+                <Grow in={true} {...{ timeout: 4 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("videochat")}
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
+                      width: ww.width === null ? 150 : ww.width,
+                      height: ww.height === null ? 150 : ww.height,
+                      position: "absolute",
+                      left: ww.x,
+                      top: ww.y,
+                      transform: "translateY(+144px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
+                      display: "flex",
                     }}
                   >
-                    <Avatar
+                    <div
                       style={{
-                        width: 96,
-                        height: 96,
-                        marginLeft: 27,
-                        marginTop: 27,
-                      }}
-                      src={
-                        "https://cdn.dribbble.com/users/6230165/screenshots/15935130/media/417730a823332743665a45e34321768b.jpg"
-                      }
-                    />
-                    <Typography
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        right: 27,
-                        fontWeight: "bold",
-                        transform: "translateY(-50%)",
-                        color: "#fff",
                         width: "100%",
-                        textAlign: "right",
+                        height: "100%",
+                        position: "relative",
                       }}
                     >
-                      ویدئو چت
-                    </Typography>
-                  </div>
-                </Paper>
+                      <Avatar
+                        style={{
+                          width: 96,
+                          height: 96,
+                          marginLeft: 27,
+                          marginTop: 27,
+                        }}
+                        src={
+                          "https://cdn.dribbble.com/users/6230165/screenshots/15935130/media/417730a823332743665a45e34321768b.jpg"
+                        }
+                      />
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        ویدئو چت
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
               ) : (
                 <BotContainer
                   step={index}
@@ -938,7 +934,7 @@ export default function BotsBox(props) {
                         textAlign: "center",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: colors.text
+                        color: colors.text,
                       }}
                     >
                       {wp.title}

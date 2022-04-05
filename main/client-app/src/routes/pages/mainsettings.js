@@ -51,7 +51,12 @@ export default function MainSettings(props) {
         bottom: 0,
       }}
     >
-      <MainSettingsPanel onClose={handleClose} />
+      <MainSettingsPanel onClose={handleClose} onDeveloperModeClicked={() => {
+        handleClose();
+        setTimeout(() => {
+          props.onDeveloperModeClicked();
+        }, 1000);
+      }} />
     </Dialog>
   );
 }

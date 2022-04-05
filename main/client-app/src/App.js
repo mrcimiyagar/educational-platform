@@ -559,6 +559,7 @@ MainAppContainer = (props) => {
 
   const [bottomSheetOpen, setBottomSheetOpen] = React.useState(false);
   const [connectedIO, setConnectedIO] = React.useState(false);
+  const [currentRequestingRoomAccessType, setCurrentRequestingRoomAccessType] = React.useState(undefined);
 
   setHistPage = setHp;
   histPage = hp;
@@ -734,7 +735,27 @@ MainAppContainer = (props) => {
             } else if (window.location.pathname === "/app/room") {
               gotoPage("/app/room", params);
             } else {
-              setAuthenticationValid(false);
+              let requestOptions = {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  roomId: currentRoomId,
+                }),
+                redirect: "follow",
+              };
+              fetch(serverRoot + "/room/get_room", requestOptions)
+              .then(res => res.json())
+              .then(result => {
+                setCurrentRequestingRoomAccessType(result.room.accessType);
+                if (result.room.accessType === 'public') {
+                  setAuthenticationValid(true);
+                }
+                else {
+                  setAuthenticationValid(false);
+                }
+              })
             }
           }
         });
@@ -759,14 +780,6 @@ MainAppContainer = (props) => {
             });
           }
           animatePageChange();
-          if (
-            window.location.pathname === "/" ||
-            window.location.pathname === ""
-          ) {
-            gotoPage("/app/home", { tab_index: 0 });
-          } else {
-            gotoPage(window.location.pathname, params);
-          }
         });
       }
     );
@@ -776,7 +789,7 @@ MainAppContainer = (props) => {
     setBottomSheetOpen(value);
   };
 
-  if (!connectedIO) {
+  if (!connectedIO && currentRequestingRoomAccessType !== 'public') {
     return (
       <div style={{ width: "100%", height: "100vh" }}>
         <ColorBase />

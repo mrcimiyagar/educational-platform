@@ -1192,11 +1192,11 @@ export default function Chat(props) {
             height: showEmojiPad ? "calc(100% - 416px)" : "100%",
           }}
         >
-          <div style={{ height: 64 }} />
           <div
             style={{ width: "100%", height: "100%", overflow: "auto" }}
             id={"chatScroller"}
           >
+            <div style={{ height: 32 }} />
             <div id={"messagesContainer"}>{messagesArr}</div>
             <div style={{ width: "100%", height: 160 }} />
           </div>

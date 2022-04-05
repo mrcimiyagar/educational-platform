@@ -405,8 +405,8 @@ export default function SettingsList(props) {
         {...{ timeout: 1000 }}
       >
         <Fab
-          color="secondary"
-          style={{ position: "fixed", bottom: 72 + 16, left: 16, zIndex: 2501 }}
+          style={{ position: "fixed", bottom: 16, left: 16, zIndex: 2501, backgroundColor: colors.accent }}
+          onClick={props.onDeveloperModeClicked}
         >
           <VpnKeyIcon />
         </Fab>

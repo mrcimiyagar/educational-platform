@@ -240,6 +240,7 @@ export default function Space(props) {
           r = await r.json();
           if (r.status === "success") {
             let auth = r.auth;
+            localStorage.setItem('token', r.auth.token);
             window.location.reload();
           }
         } else {
@@ -762,6 +763,9 @@ export default function Space(props) {
           onClose={() => {
             setSelectedNav(undefined);
             setInTheGame(true);
+          }}
+          onDeveloperModeClicked={() => {
+            setSelectedNav(13);
           }}
         />
       ) : null}

@@ -13,10 +13,10 @@ import {
 import { Add, Close } from "@material-ui/icons";
 import React, { useEffect } from "react";
 import { pathConfig, setWallpaper } from "../..";
-import { gotoPage, isDesktop } from "../../App";
+import { currentRoomId, gotoPage, isDesktop } from "../../App";
 import Jumper from "../../components/SearchEngineFam";
 import { colors, token } from "../../util/settings";
-import { registerEvent, serverRoot, useForceUpdate } from "../../util/Utils";
+import { registerEvent, serverRoot, unregisterEvent, useForceUpdate } from "../../util/Utils";
 import WorkshopWallpaper from "../../images/space-wallpaper.png";
 import BotContainer from "../../components/BotContainer";
 import Menu from "@material-ui/icons/Menu";
@@ -250,6 +250,7 @@ function Workshop(props) {
         clearInterval(currentEngineHeartbit);
         currentEngineHeartbit = undefined;
       }
+      unregisterEvent('gui');
     };
   }, []);
 

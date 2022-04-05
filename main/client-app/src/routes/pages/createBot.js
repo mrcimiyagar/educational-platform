@@ -134,7 +134,7 @@ export default function CreateBotPage(props) {
         >
           <div style={{ width: "100%", height: 64 + 16 }} />
           <ProfileEditField
-            placeholder={"بات بات"}
+            placeholder={"عنوان بات"}
             id={"botTitle"}
             variant={"outlined"}
             style={{

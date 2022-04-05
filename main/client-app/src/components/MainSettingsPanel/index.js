@@ -32,7 +32,7 @@ export default function MainSettingsPanel(props) {
 
   return (
     <div className={classes.root}>
-      <SettingsList onClose={props.onClose} />
+      <SettingsList onClose={props.onClose} onDeveloperModeClicked={props.onDeveloperModeClicked} />
     </div>
   );
 }
