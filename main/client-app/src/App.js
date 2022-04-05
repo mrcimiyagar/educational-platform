@@ -94,7 +94,10 @@ export let setBoardFrame = (bf) => {
 
 export let currentRoomId = undefined;
 let setCRId = undefined;
-export let setCurrentRoomId = (id) => {setInTheGame(false); setTimeout(() => setCRId(id), 250);};
+export let setCurrentRoomId = (id) => {
+  setInTheGame(false);
+  setTimeout(() => setCRId(id), 250);
+};
 
 export let currentUserId = 0;
 export let setCurrentUserId = (uId) => {
@@ -184,7 +187,6 @@ gotoPage = (p, params) => {
 
   window.history.pushState("", "", p + (query.length > 0 ? "?" : "") + query);
   if (notifyUrlChanged !== undefined) notifyUrlChanged();
-
 };
 
 gotoPageWithDelay = (p, params) => {
@@ -523,14 +525,20 @@ export let setBottomSheetContent = (value) => {
   bottomSheetContent = value;
   forceUpdate();
 };
-let onBsClose = () => {}
-export let setOnBsClosed = (callback) => {onBsClose = callback;};
+let onBsClose = () => {};
+export let setOnBsClosed = (callback) => {
+  onBsClose = callback;
+};
 
 export let isOnline = true;
 export let authenticationValid = undefined;
 export let setAuthenticationValid = undefined;
 
 MainAppContainer = (props) => {
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  props = Object.fromEntries(urlSearchParams.entries());
+
   window.onunload = () => leaveRoom(() => {});
   window.onbeforeunload = () => leaveRoom(() => {});
 
@@ -545,7 +553,9 @@ MainAppContainer = (props) => {
   [routeTrigger, setRouteTrigger] = React.useState(false);
   [uploadingFiles, setUploadingFiles] = React.useState({});
   [authenticationValid, setAuthenticationValid] = React.useState(true);
-  [currentRoomId, setCRId] = React.useState(homeRoomId);
+  [currentRoomId, setCRId] = React.useState(
+    props.room_id !== undefined ? props.room_id : homeRoomId
+  );
 
   const [bottomSheetOpen, setBottomSheetOpen] = React.useState(false);
   const [connectedIO, setConnectedIO] = React.useState(false);
@@ -800,7 +810,10 @@ MainAppContainer = (props) => {
         anchor="bottom"
         style={{ position: "fixed", zIndex: 99999 }}
         open={bottomSheetOpen}
-        onClose={() => {onBsClose(); setBottomSheetOpen(false);}}
+        onClose={() => {
+          onBsClose();
+          setBottomSheetOpen(false);
+        }}
       >
         <div style={{ margin: 32 }}>{bottomSheetContent}</div>
       </Drawer>

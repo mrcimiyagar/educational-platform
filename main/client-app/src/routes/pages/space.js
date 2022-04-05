@@ -99,7 +99,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(13);
+  const [selectedNav, setSelectedNav] = React.useState(undefined);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const attachScrollCallback = () => {
@@ -664,23 +664,6 @@ export default function Space(props) {
               }}
             >
               <SmartToyOutlinedIcon style={{ fill: colors.text }} />
-            </Avatar>
-            <Avatar
-              onClick={() => {
-                setMenuOpen(false);
-                window.location.href = "/app/room?room_id=1";
-              }}
-              style={{
-                width: 64,
-                height: 64,
-                background: colors.field,
-                position: "absolute",
-                right: 8,
-                bottom: 16 + 64 + 16 + 64 + 16,
-                padding: 8,
-              }}
-            >
-              <HomeOutlinedIcon style={{ fill: colors.text }} />
             </Avatar>
             <Avatar
               onClick={() => {
