@@ -121,7 +121,7 @@
             const src =
               e.data.serverRoot +
               "/file/download_file_thumbnail?fileId=" +
-              e.data.fileId;
+              e.data.fileId + '&roomId=' + e.data.roomId;
             const options = {
               headers: {
                 token: e.data.token,
