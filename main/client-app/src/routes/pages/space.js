@@ -58,6 +58,7 @@ import StoreFam from "../../components/StoreFam";
 import CreateBotCategoryPage from "./createBotCategory";
 import Workshop from "./workshop";
 import { Edit } from "@material-ui/icons";
+import AudioPlayer from "./audioPlayer";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -97,11 +98,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
 });
 
+let openedAudio = undefined;
+
+export let openAudioPlayer = () => {};
+
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
   const [selectedNav, setSelectedNav] = React.useState(undefined);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
+  const [showAudioPlayer, setShowAudioPlayer] = React.useState(false);
+  openAudioPlayer = (roomId, fileId, src) => {
+    openedAudio = {roomId, src, fileId};
+    setShowAudioPlayer(true);
+  };
   const attachScrollCallback = () => {
     const searchScrollView = document.getElementById("botsContainerOuter");
     if (searchScrollView === null) {
@@ -849,6 +859,16 @@ export default function Space(props) {
           onClose={() => {
             setSelectedNav(undefined);
             setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {(showAudioPlayer && openedAudio !== undefined) ? (
+        <AudioPlayer
+          room_id={openedAudio.roomId}
+          src={openedAudio.src}
+          file_id={openedAudio.fileId}
+          onClose={() => {
+            setShowAudioPlayer(false);
           }}
         />
       ) : null}

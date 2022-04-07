@@ -120,6 +120,8 @@ function getOS() {
         if (e.data.sender === 'main') {
           if (e.data.action === 'config') {
 
+            document.getElementById('albumArt').src = e.data.serverRoot + '/file/download_file_thumbnail?fileId=' + e.data.fileId;
+
             var mediaElt = document.getElementById('sound');
 
             let wavesurfer = WaveSurfer.create({
@@ -226,7 +228,8 @@ function getOS() {
               })
               .catch((error) => console.log('error', error))
 
-            var tags = {}
+            /*var tags = {}
+
             window.jsmediatags.read(e.data.src, {
               onSuccess: function (tag) {
                 tags = tag
@@ -246,7 +249,7 @@ function getOS() {
               onError: function (error) {
                 console.log(error)
               },
-            })
+            })*/
           }
         }
       })

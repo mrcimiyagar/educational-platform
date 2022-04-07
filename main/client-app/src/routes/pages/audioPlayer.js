@@ -14,7 +14,7 @@ export default function AudioPlayer(props) {
   registerDialogOpen(setOpen)
   const handleClose = () => {
       setOpen(false);
-      setTimeout(popPage, 250);
+      setTimeout(props.onClose, 250);
   };
 
   return (

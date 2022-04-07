@@ -9,6 +9,7 @@ import { PlayArrowTwoTone } from '@material-ui/icons'
 import React, { useEffect } from 'react'
 import Viewer from 'react-viewer'
 import { gotoPage, isDesktop, isInRoom } from '../../App'
+import { openAudioPlayer } from '../../routes/pages/space'
 import { colors, me, token } from '../../util/settings'
 import { registerEvent, serverRoot, socket, unregisterEvent, useForceUpdate } from '../../util/Utils'
 import Progressbar from '../Progress/Progressbar'
@@ -227,14 +228,10 @@ export default function FilesGrid(props) {
                       ) : props.fileType === 'audio' ? (
                         <IconButton
                           onClick={() => {
-                            gotoPage('/app/audioplayer', {
-                              room_id: props.roomId,
-                              file_id: file.id,
-                              src: file.local
-                                ? file.src
-                                : serverRoot +
-                                  `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`,
-                            })
+                            openAudioPlayer(props.roomId, file.id, file.local
+                              ? file.src
+                              : serverRoot +
+                                `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`);
                           }}
                           style={{
                             backgroundColor: '#fff',
