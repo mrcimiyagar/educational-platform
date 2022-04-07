@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="background-color: transparent;">
+<html lang="en" style="background-color: transparent">
   <head>
     <meta charset="UTF-8" />
     <title>wavesurfer-box</title>
@@ -16,7 +16,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
   </head>
-  <body style="background-color: transparent;">
+  <body style="background-color: transparent">
     <style>
       .btn {
         background-color: DodgerBlue;
@@ -39,7 +39,7 @@
       }
     </style>
 
-    <audio style="display: none;" id="sound" src="" controls="controls"></audio>
+    <audio style="display: none" id="sound" src="" controls="controls"></audio>
 
     <img
       id="albumArt"
@@ -89,144 +89,156 @@
     </div>
 
     <script>
-      
-function getOS() {
-  var userAgent = window.navigator.userAgent,
-      platform = window.navigator.platform,
-      macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
-      windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
-      iosPlatforms = ['iPhone', 'iPad', 'iPod'],
-      os = null;
+      function getOS() {
+        var userAgent = window.navigator.userAgent,
+          platform = window.navigator.platform,
+          macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"],
+          windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"],
+          iosPlatforms = ["iPhone", "iPad", "iPod"],
+          os = null;
 
-  if (macosPlatforms.indexOf(platform) !== -1) {
-    os = 'Mac OS';
-  } else if (iosPlatforms.indexOf(platform) !== -1) {
-    os = 'iOS';
-  } else if (windowsPlatforms.indexOf(platform) !== -1) {
-    os = 'Windows';
-  } else if (/Android/.test(userAgent)) {
-    os = 'Android';
-  } else if (!os && /Linux/.test(platform)) {
-    os = 'Linux';
-  }
+        if (macosPlatforms.indexOf(platform) !== -1) {
+          os = "Mac OS";
+        } else if (iosPlatforms.indexOf(platform) !== -1) {
+          os = "iOS";
+        } else if (windowsPlatforms.indexOf(platform) !== -1) {
+          os = "Windows";
+        } else if (/Android/.test(userAgent)) {
+          os = "Android";
+        } else if (!os && /Linux/.test(platform)) {
+          os = "Linux";
+        }
 
-  return os;
-}
+        return os;
+      }
 
-      window.loop = false
-      window.shuffle = false
-      window.addEventListener('message', (e) => {
-        console.log(e.data)
-        if (e.data.sender === 'main') {
-          if (e.data.action === 'config') {
+      window.loop = false;
+      window.shuffle = false;
+      window.addEventListener("message", (e) => {
+        console.log(e.data);
+        if (e.data.sender === "main") {
+          if (e.data.action === "config") {
+            const src =
+              e.data.serverRoot +
+              "/file/download_file_thumbnail?fileId=" +
+              e.data.fileId;
+            const options = {
+              headers: {
+                token: e.data.token,
+              },
+            };
 
-            document.getElementById('albumArt').src = e.data.serverRoot + '/file/download_file_thumbnail?fileId=' + e.data.fileId;
+            fetch(src, options)
+              .then((res) => res.blob())
+              .then((blob) => {
+                document.getElementById("albumArt").src =
+                  URL.createObjectURL(blob);
+              });
 
-            var mediaElt = document.getElementById('sound');
+            var mediaElt = document.getElementById("sound");
 
             let wavesurfer = WaveSurfer.create({
-              container: document.querySelector('#waveform'),
-              ...(e.data.isDesktop && { waveColor: '#777' }),
+              container: document.querySelector("#waveform"),
+              ...(e.data.isDesktop && { waveColor: "#777" }),
               height: 88,
               barWidth: 2,
               barHeight: 1, // the height of the wave
               barGap: null, // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
-            })
-            window.wavesurfer = wavesurfer
+            });
+            window.wavesurfer = wavesurfer;
 
             window.forward = () => {
               if (wavesurfer.getCurrentTime() + 10 < wavesurfer.getDuration()) {
-                wavesurfer.play(wavesurfer.getCurrentTime() + 10)
-                let playPauseContent = document.getElementById(
-                  'playPauseContent',
-                )
-                playPauseContent.className = 'fa fa-pause'
+                wavesurfer.play(wavesurfer.getCurrentTime() + 10);
+                let playPauseContent =
+                  document.getElementById("playPauseContent");
+                playPauseContent.className = "fa fa-pause";
               }
-            }
+            };
             window.backward = () => {
               if (wavesurfer.getCurrentTime() - 10 > 0) {
-                wavesurfer.play(wavesurfer.getCurrentTime() - 10)
-                let playPauseContent = document.getElementById(
-                  'playPauseContent',
-                )
-                playPauseContent.className = 'fa fa-pause'
+                wavesurfer.play(wavesurfer.getCurrentTime() - 10);
+                let playPauseContent =
+                  document.getElementById("playPauseContent");
+                playPauseContent.className = "fa fa-pause";
               }
-            }
+            };
             window.toggleLoop = () => {
-              window.loop = !window.loop
-              let loopSign = document.getElementById('loopSign')
+              window.loop = !window.loop;
+              let loopSign = document.getElementById("loopSign");
               if (window.loop) {
-                loopSign.style.color = 'yellow'
+                loopSign.style.color = "yellow";
               } else {
-                loopSign.style.color = 'white'
+                loopSign.style.color = "white";
               }
-            }
+            };
             window.toggleShuffle = () => {
-              window.shuffle = !window.shuffle
-              let shuffleSign = document.getElementById('shuffleSign')
+              window.shuffle = !window.shuffle;
+              let shuffleSign = document.getElementById("shuffleSign");
               if (window.shuffle) {
-                shuffleSign.style.color = 'yellow'
+                shuffleSign.style.color = "yellow";
               } else {
-                shuffleSign.style.color = 'white'
+                shuffleSign.style.color = "white";
               }
-            }
+            };
 
             window.wavesurferToggle = () => {
-              let playPauseContent = document.getElementById('playPauseContent')
+              let playPauseContent =
+                document.getElementById("playPauseContent");
               if (wavesurfer.isPlaying()) {
-                wavesurfer.pause()
-                playPauseContent.className = 'fa fa-play'
+                wavesurfer.pause();
+                playPauseContent.className = "fa fa-play";
               } else {
                 wavesurfer.play();
-                playPauseContent.className = 'fa fa-pause'
+                playPauseContent.className = "fa fa-pause";
               }
-            }
+            };
 
             let requestOptions = {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
                 token: e.data.token,
               },
               body: JSON.stringify({
                 fileId: e.data.fileId,
                 roomId: e.data.roomId,
               }),
-              redirect: 'follow',
-            }
+              redirect: "follow",
+            };
             fetch(
-              e.data.serverRoot + '/file/download_audio_preview',
-              requestOptions,
+              e.data.serverRoot + "/file/download_audio_preview",
+              requestOptions
             )
               .then((response) => response.json())
               .then((result) => {
-                console.log(JSON.stringify(result))
+                console.log(JSON.stringify(result));
                 if (result !== undefined) {
-                  wavesurfer.song = e.data.src
-                  wavesurfer.backend.peaks = result.data
+                  wavesurfer.song = e.data.src;
+                  wavesurfer.backend.peaks = result.data;
                   for (let i = 0; i < result.data.length; i++) {
-                    result.data[i] = result.data[i] / 100
+                    result.data[i] = result.data[i] / 100;
                   }
-                  wavesurfer.drawBuffer()
-                  wavesurfer.loaded = false
-                  wavesurfer.on('ready', function () {
-                    wavesurfer.play()
-                  })
-                  wavesurfer.on('finish', function () {
+                  wavesurfer.drawBuffer();
+                  wavesurfer.loaded = false;
+                  wavesurfer.on("ready", function () {
+                    wavesurfer.play();
+                  });
+                  wavesurfer.on("finish", function () {
                     if (window.loop) {
-                      wavesurfer.play(0)
+                      wavesurfer.play(0);
                     } else {
-                      playPauseContent.className = 'fa fa-play'
-                      wavesurfer.seekTo(0)
+                      playPauseContent.className = "fa fa-play";
+                      wavesurfer.seekTo(0);
                     }
-                  })
-                  $('#sound').attr('src', wavesurfer.song);
+                  });
+                  $("#sound").attr("src", wavesurfer.song);
                   wavesurfer.load(mediaElt, wavesurfer.backend.peaks);
 
                   window.wavesurferToggle();
                 }
               })
-              .catch((error) => console.log('error', error))
+              .catch((error) => console.log("error", error));
 
             /*var tags = {}
 
@@ -252,7 +264,7 @@ function getOS() {
             })*/
           }
         }
-      })
+      });
     </script>
   </body>
 </html>
