@@ -11,14 +11,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function VideoPlayer(props) {
 
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  props = Object.fromEntries(urlSearchParams.entries());
-
   const [open, setOpen] = React.useState(true);
   registerDialogOpen(setOpen)
   const handleClose = () => {
       setOpen(false);
-      setTimeout(popPage, 250);
+      setTimeout(props.onClose, 250);
   };
 
   return (

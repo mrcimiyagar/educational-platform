@@ -59,6 +59,7 @@ import CreateBotCategoryPage from "./createBotCategory";
 import Workshop from "./workshop";
 import { Edit } from "@material-ui/icons";
 import AudioPlayer from "./audioPlayer";
+import VideoPlayer from "./videoPlayer";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -99,8 +100,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 let openedAudio = undefined;
-
 export let openAudioPlayer = () => {};
+let openedVideo = undefined;
+export let openVideoPlayer = () => {};
 
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
@@ -108,9 +110,14 @@ export default function Space(props) {
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const [showAudioPlayer, setShowAudioPlayer] = React.useState(false);
+  const [showVideoPlayer, setShowVideoPlayer] = React.useState(false);
   openAudioPlayer = (roomId, fileId, src) => {
     openedAudio = {roomId, src, fileId};
     setShowAudioPlayer(true);
+  };
+  openVideoPlayer = (roomId, fileId) => {
+    openedVideo = {roomId, fileId};
+    setShowVideoPlayer(true);
   };
   const attachScrollCallback = () => {
     const searchScrollView = document.getElementById("botsContainerOuter");
@@ -869,6 +876,16 @@ export default function Space(props) {
           file_id={openedAudio.fileId}
           onClose={() => {
             setShowAudioPlayer(false);
+          }}
+        />
+      ) : null}
+      {(showVideoPlayer && openedVideo !== undefined) ? (
+        <VideoPlayer
+          roomId={openedVideo.roomId}
+          src={openedVideo.src}
+          fileId={openedVideo.fileId}
+          onClose={() => {
+            setShowVideoPlayer(false);
           }}
         />
       ) : null}

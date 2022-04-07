@@ -27,7 +27,7 @@ export default function AudioPlayer(props) {
                 },
             }}
             fullScreen={!isDesktop()} open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <AudioBox roomId={props.room_id} src={props.src} fileId={props.file_id} roomId={props.room_id} handleClose={handleClose}/>
+        <AudioBox src={props.src} fileId={props.file_id} roomId={props.room_id} handleClose={handleClose}/>
       </Dialog>
     )
 }
