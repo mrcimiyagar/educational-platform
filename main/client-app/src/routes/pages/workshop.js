@@ -10,7 +10,7 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { Add, Close } from "@material-ui/icons";
+import { Add, Close, Edit } from "@material-ui/icons";
 import React, { useEffect } from "react";
 import { pathConfig, setWallpaper } from "../..";
 import { currentRoomId, gotoPage, isDesktop } from "../../App";
@@ -111,6 +111,8 @@ let ckeckCode = (codes) => {
     }
   }
 };
+
+let editingBot = undefined;
 
 function Workshop(props) {
   let forceUpdate = useForceUpdate();
@@ -422,12 +424,13 @@ function Workshop(props) {
             >
               {bots.map((bot, index) => {
                 return (
+                  <>
                   <Avatar
                     onClick={() => setMenuMode(index)}
                     style={{
                       width: 56,
                       height: 56,
-                      backgroundColor: "#fff",
+                      backgroundColor: colors.field,
                       marginTop: 12,
                       marginRight: 12,
                     }}
@@ -436,6 +439,10 @@ function Workshop(props) {
                       `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
                     }
                   />
+                  <Typography style={{width: '100%', marginTop: 8, color: colors.text}}>
+                    {bot.title}
+                  </Typography>
+                  </>
                 );
               })}
               <Fab
@@ -520,10 +527,19 @@ function Workshop(props) {
                   <Add />
                 </Fab>
               ) : null}
+              
+              {bots.length > 0 ? (
+                <Fab
+                  style={{ backgroundColor: colors.accent, position: "fixed", left: 16 + 56 + 16, bottom: 16 }}
+                  onClick={() => {editingBot = bots[menuMode]; setShowCreateBot(true);}}
+                >
+                  <Edit />
+                </Fab>
+              ) : null}
             </div>
           </div>
         </SwipeableDrawer>
-        {showCreateBot ? <CreateBotPage onClose={() => setShowCreateBot(false)} /> : null}
+        {showCreateBot ? <CreateBotPage editingBot={editingBot} onClose={() => {editingBot = undefined; setShowCreateBot(false);}} /> : null}
         {(showCreateWidget && selectedBotId !== undefined) ? <CreateWidget bot_id={selectedBotId} onClose={() => setShowCreateWidget(false)} /> : null}
         {(showBotInfo && selectedBotId !== undefined) ? <BotInfoPage forceUpdate={forceUpdate} botSecret={botSecret} setBotSecret={setBotSecret} bot_id={selectedBotId} onClose={() => setShowBotInfo(false)} /> : null}
       </div>

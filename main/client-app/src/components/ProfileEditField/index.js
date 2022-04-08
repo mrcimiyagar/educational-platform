@@ -43,6 +43,7 @@ export default function ProfileEditField(props) {
   return (
     <div className={classes.root} style={props.style}>
       <InputBase
+      disabled={props.disabled}
         type={props.type}
         id={props.id}
         defaultValue={props.defaultValue}

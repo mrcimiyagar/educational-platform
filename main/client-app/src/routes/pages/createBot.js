@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Avatar,
   Fab,
   FormControl,
   InputLabel,
@@ -27,7 +28,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function CreateBotPage(props) {
   let [cats, setCats] = React.useState([]);
-  let [currentcat, setCurrentCat] = React.useState(undefined);
+  let [currentcat, setCurrentCat] = React.useState(
+    props.editingBot !== undefined ? props.editingBot.categoryId : undefined
+  );
 
   useEffect(() => {
     let requestOptions = {
@@ -133,10 +136,30 @@ export default function CreateBotPage(props) {
           }}
         >
           <div style={{ width: "100%", height: 64 + 16 }} />
+          <Avatar
+            style={{
+              width: 112,
+              height: 112,
+              position: "absolute",
+              left: "50%",
+              top: 48 + 56,
+              transform: "translateX(-50%)",
+            }}
+            src={
+              props.editingBot !== undefined
+                ? serverRoot +
+                  `/file/download_bot_avatar?token=${token}&botId=${props.editingBot.id}`
+                : undefined
+            }
+          />
+          <div style={{ width: "100%", height: 112 + 48 }} />
           <ProfileEditField
             placeholder={"عنوان بات"}
             id={"botTitle"}
             variant={"outlined"}
+            defaultValue={
+              props.editingBot !== undefined ? props.editingBot.title : ""
+            }
             style={{
               height: 48,
               width: "calc(100% - 48px)",
@@ -149,6 +172,10 @@ export default function CreateBotPage(props) {
             placeholder={"نام کاربری بات"}
             id={"botUsername"}
             variant={"outlined"}
+            defaultValue={
+              props.editingBot !== undefined ? props.editingBot.username : ""
+            }
+            disabled={props.editingBot !== undefined}
             style={{
               height: 48,
               width: "calc(100% - 48px)",
@@ -168,8 +195,9 @@ export default function CreateBotPage(props) {
               background: colors.field,
               borderRadius: 24,
               paddingLeft: 16,
-              paddingRight: 16
+              paddingRight: 16,
             }}
+            disabled={props.editingBot !== undefined}
           >
             <InputLabel
               id="demo-simple-select-label"
@@ -194,29 +222,54 @@ export default function CreateBotPage(props) {
             color={"secondary"}
             style={{ position: "fixed", bottom: 16, left: 16 }}
             onClick={() => {
-              let requestOptions = {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  token: token,
-                },
-                body: JSON.stringify({
-                  username: document.getElementById("botUsername").value,
-                  title: document.getElementById("botTitle").value,
-                  categoryId: currentcat,
-                }),
-                redirect: "follow",
-              };
-              fetch(serverRoot + "/bot/create_bot", requestOptions)
-                .then((response) => response.json())
-                .then((result) => {
-                  if (result.status === "success") {
-                    updateMyBotsList();
-                    handleClose();
-                  } else {
-                    alert(result.message);
-                  }
-                });
+              if (props.editingBot === undefined) {
+                let requestOptions = {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    token: token,
+                  },
+                  body: JSON.stringify({
+                    username: document.getElementById("botUsername").value,
+                    title: document.getElementById("botTitle").value,
+                    categoryId: currentcat,
+                  }),
+                  redirect: "follow",
+                };
+                fetch(serverRoot + "/bot/create_bot", requestOptions)
+                  .then((response) => response.json())
+                  .then((result) => {
+                    if (result.status === "success") {
+                      updateMyBotsList();
+                      handleClose();
+                    } else {
+                      alert(result.message);
+                    }
+                  });
+              } else {
+                let requestOptions = {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    token: token,
+                  },
+                  body: JSON.stringify({
+                    botId: props.editingBot.id,
+                    title: document.getElementById("botTitle").value,
+                  }),
+                  redirect: "follow",
+                };
+                fetch(serverRoot + "/bot/update_bot", requestOptions)
+                  .then((response) => response.json())
+                  .then((result) => {
+                    if (result.status === "success") {
+                      updateMyBotsList();
+                      handleClose();
+                    } else {
+                      alert(result.message);
+                    }
+                  });
+              }
             }}
           >
             <Done />
