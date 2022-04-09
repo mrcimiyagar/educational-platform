@@ -224,6 +224,7 @@ function Workshop(props) {
             if (d.property === "styledContent") {
               styledContents[d.elId] = d.newValue;
             }
+            if (idDict[d.elId] === undefined) return;
             idDict[d.elId].obj[d.property] = d.newValue;
           });
           setStyledContents(styledContents);
