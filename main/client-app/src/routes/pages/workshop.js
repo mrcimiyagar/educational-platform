@@ -39,6 +39,7 @@ let clickEvents = {};
 let mirrors = [];
 let currentWidgetId = 0;
 let currentEngineHeartbit;
+let clickedElId = undefined;
 
 export let updateMyBotsList = () => {};
 
@@ -100,6 +101,25 @@ let ckeckCode = (codes) => {
         } else if (code.updateType === "memory") {
           memDict[code.memoryId] = code.value;
         }
+      } else if (code.type === 'tellBot') {
+        let requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+          body: JSON.stringify({
+            widgetId: currentWidgetId,
+            elementId: clickedElId,
+            preview: true,
+          }),
+          redirect: "follow",
+        };
+        fetch(serverRoot + "/bot/element_clicked", requestOptions)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result));
+          });
       }
     };
     if (code.delay !== undefined) {
@@ -235,6 +255,7 @@ function Workshop(props) {
           forceUpdate();
         } else if (type === "attachClick") {
           clickEvents[data.elId] = () => {
+            clickedElId = data.elId;
             ckeckCode(data.codes);
             forceUpdate();
           };
