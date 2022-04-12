@@ -755,7 +755,7 @@ MainAppContainer = (props) => {
                 else {
                   setAuthenticationValid(false);
                 }
-              })
+              }).catch(ex => console.error(ex));
             }
           }
         });
@@ -789,7 +789,7 @@ MainAppContainer = (props) => {
     setBottomSheetOpen(value);
   };
 
-  if (!connectedIO && currentRequestingRoomAccessType !== 'public') {
+  if ((currentRequestingRoomAccessType !== 'public') && !connectedIO) {
     return (
       <div style={{ width: "100%", height: "100vh" }}>
         <ColorBase />

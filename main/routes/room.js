@@ -490,6 +490,14 @@ router.post("/get_room", jsonParser, async function (req, res) {
   if (room.accessType === "public") {
     res.send({ status: "success", room: room });
   } else {
+    if (req.headers.token === null) {
+      res.send({
+        status: "error",
+        errorCode: "e0005",
+        message: "membership does not exist.",
+      });
+      return;
+    }
     authenticateMember(req, res, async (membership, session, user) => {
       if (membership === null || membership === undefined) {
         res.send({
