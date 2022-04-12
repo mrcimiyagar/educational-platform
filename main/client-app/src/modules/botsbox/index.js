@@ -28,8 +28,9 @@ let timers = {};
 let guis = {};
 let currentEngineHeartbit;
 let widgets = [];
+let clickedElId = undefined;
 
-let ckeckCode = (wwId, codes) => {
+let ckeckCode = (wwId, codes, widgetId) => {
   for (let i = 0; i < codes.length; i++) {
     let code = codes[i];
     let handler = () => {
@@ -80,7 +81,7 @@ let ckeckCode = (wwId, codes) => {
 
           if (allowed === true) {
             if (condition.then !== undefined) {
-              ckeckCode(wwId, condition.then);
+              ckeckCode(wwId, condition.then, widgetId);
               break;
             }
           }
@@ -91,6 +92,27 @@ let ckeckCode = (wwId, codes) => {
         } else if (code.updateType === "memory") {
           memDict[wwId][code.memoryId] = code.value;
         }
+      } else if (code.type === 'tellBot') {
+        let requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+          body: JSON.stringify({
+            roomId: currentRoomId,
+            widgetWorkerId: wwId,
+            widgetId: widgetId,
+            elementId: clickedElId,
+            preview: false,
+          }),
+          redirect: "follow",
+        };
+        fetch(serverRoot + "/bot/element_clicked", requestOptions)
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(JSON.stringify(result));
+          });
       }
     };
     if (code.delay !== undefined) {
@@ -317,7 +339,8 @@ export default function BotsBox(props) {
               forceUpdate();
             } else if (type === "attachClick") {
               clickEvents[widgetWorkerId][data.elId] = () => {
-                ckeckCode(widgetWorkerId, data.codes);
+                clickedElId = data.elId;
+                ckeckCode(widgetWorkerId, data.codes, widgetId);
                 forceUpdate();
               };
             }
