@@ -748,6 +748,10 @@ MainAppContainer = (props) => {
               fetch(serverRoot + "/room/get_room", requestOptions)
               .then(res => res.json())
               .then(result => {
+                if (result.room === undefined) {
+                  setAuthenticationValid(false);
+                  return;
+                }
                 setCurrentRequestingRoomAccessType(result.room.accessType);
                 if (result.room.accessType === 'public') {
                   setAuthenticationValid(true);
