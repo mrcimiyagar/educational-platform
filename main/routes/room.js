@@ -486,18 +486,18 @@ router.post("/delete_room", jsonParser, async function (req, res) {
 });
 
 router.post("/get_room", jsonParser, async function (req, res) {
+  if (req.body.roomId === undefined || req.body.roomId === null) {
+    res.send({
+      status: "error",
+      errorCode: "e0005",
+      message: "no room specified.",
+    });
+    return;
+  }
   let room = await sw.Room.findOne({ where: { id: req.body.roomId } });
   if (room.accessType === "public") {
     res.send({ status: "success", room: room });
   } else {
-    if (req.body.roomId === undefined || req.body.roomId === null) {
-      res.send({
-        status: "error",
-        errorCode: "e0005",
-        message: "membership does not exist.",
-      });
-      return;
-    }
     authenticateMember(req, res, async (membership, session, user) => {
       if (membership === null || membership === undefined) {
         res.send({
