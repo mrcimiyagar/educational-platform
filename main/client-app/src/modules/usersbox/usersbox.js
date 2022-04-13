@@ -278,7 +278,7 @@ export let UsersBox = (props) => {
             marginBottom: 12,
           }}
         >
-          <Typography variant={'body'} style={{ color: '#fff' }}>
+          <Typography variant={'body'} style={{ color: colors.text }}>
             کاربران ({users.length})
           </Typography>
         </span>

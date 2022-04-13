@@ -169,10 +169,11 @@ export default function RoomSettings(props) {
       <div style={{ width: '100%', height: 112 + 32 + 16 }} />
       <Typography
         style={{
-          color: '#666',
+          color: colors.text,
           position: 'absolute',
           left: '50%',
           transform: 'translateX(-50%)',
+          fontWeight: 'bold'
         }}
       >
         {room.title}

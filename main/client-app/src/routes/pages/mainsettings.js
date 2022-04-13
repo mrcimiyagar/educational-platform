@@ -43,7 +43,6 @@ export default function MainSettings(props) {
       onClose={handleClose}
       TransitionComponent={Transition}
       style={{
-        zIndex: 2501,
         position: "fixed",
         left: 0,
         right: 0,

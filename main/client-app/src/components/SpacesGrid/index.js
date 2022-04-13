@@ -109,7 +109,7 @@ export default function SpacesGrid(props) {
           backgroundColor: "transparent",
           boxShadow: "none",
           backdropFilter: "blur(15px)",
-          backgroundColor: colors.primaryDark,
+          backgroundColor: colors.backSide,
         },
       }}
       fullScreen

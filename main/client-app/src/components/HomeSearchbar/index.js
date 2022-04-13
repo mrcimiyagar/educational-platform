@@ -7,39 +7,40 @@ import SearchIcon from '@material-ui/icons/Search';
 import React from 'react';
 import { isDesktop } from '../../App';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    borderRadius: 24,
-    background: 'rgba(91, 95, 99, 0.5)'
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-  },
-  iconButton: {
-    padding: 10,
-  },
-  divider: {
-    height: 28,
-    margin: 4,
-  },
-}));
-
-const useStylesInput = makeStyles((theme) => ({
-  InputBaseStyle: {
-    "&::placeholder": {
-      color: "#fff",
-      textAlign: 'center'
-    }
-  }
-}));
+import { colors } from '../../util/settings';
 
 export default function HomeSearchbar(props) {
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      padding: '2px 4px',
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%',
+      borderRadius: 24,
+      background: colors.field
+    },
+    input: {
+      marginLeft: theme.spacing(1),
+      flex: 1,
+    },
+    iconButton: {
+      padding: 10,
+    },
+    divider: {
+      height: 28,
+      margin: 4,
+    },
+  }));
+  
+  const useStylesInput = makeStyles((theme) => ({
+    InputBaseStyle: {
+      "&::placeholder": {
+        color: colors.text,
+        textAlign: 'center'
+      }
+    }
+  }));
+  
   const classes = useStyles();
   const classesInput = useStylesInput();
 
@@ -48,7 +49,7 @@ export default function HomeSearchbar(props) {
       {isDesktop() ?
         null :
         <IconButton onClick={() => props.setBackClicked()} className={classes.iconButton} aria-label="menu">
-          <ArrowForwardIcon style={{fill: '#fff'}} />
+          <ArrowForwardIcon style={{fill: colors.icon}} />
         </IconButton>
       }
       <InputBase
@@ -60,10 +61,10 @@ export default function HomeSearchbar(props) {
         classes={{
           input: classesInput.InputBaseStyle
         }}
-        style={{ color: "#fff", marginRight: 8, textAlign: 'center' }}
+        style={{ color: colors.text, marginRight: 8, textAlign: 'center' }}
       />
       <IconButton className={classes.iconButton} aria-label="search">
-        <SearchIcon style={{fill: '#fff'}} />
+        <SearchIcon style={{fill: colors.icon}} />
       </IconButton>
     </div>
   );

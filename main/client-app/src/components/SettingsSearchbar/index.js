@@ -51,7 +51,7 @@ export default function SettingsSearchbar(props) {
   return (
     <div component="form" className={classes.root}>
       <IconButton onClick={() => props.setDrawerOpen()} className={classes.iconButton} aria-label="menu">
-        <ArrowForwardIcon style={{fill: '#fff'}}/>
+        <ArrowForwardIcon style={{fill: colors.icon}}/>
       </IconButton>
       <InputBase
         className={classes.input}
@@ -61,7 +61,7 @@ export default function SettingsSearchbar(props) {
         }}
       />
       <IconButton type="submit" className={classes.iconButton} aria-label="search">
-        <SearchIcon style={{fill: '#fff'}}/>
+        <SearchIcon style={{fill: colors.icon}}/>
       </IconButton>
     </div>
   );

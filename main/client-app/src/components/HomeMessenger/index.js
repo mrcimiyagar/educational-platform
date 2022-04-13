@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
       minWidth: isDesktop() || isTablet() ? 100 : undefined,
       maxWidth: isDesktop() || isTablet() ? 100 : undefined,
       width: isDesktop() || isTablet() ? 100 : undefined,
-      color: '#fff',
+      color: colors.text,
     },
 }));
 
@@ -153,7 +153,7 @@ export default function HomeMessenger(props) {
                 : isTablet()
                 ? 'calc(100% - 168px - 40px)'
                 : 'calc(100% - 128px - 28px)',
-              backgroundColor: colors.primaryDark,
+              backgroundColor: colors.backSide,
               backdropFilter: 'blur(20px)',
               opacity: inTheGame ? 1 : 0,
               transition: 'opacity .5s',

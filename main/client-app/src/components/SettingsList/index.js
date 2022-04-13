@@ -20,18 +20,18 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import WebIcon from "@material-ui/icons/Web";
 import WifiTetheringIcon from "@material-ui/icons/WifiTethering";
 import React, { useEffect } from "react";
-import {
-  inTheGame,
-  isDesktop,
-  setBottomSheetContent,
-  setBSO,
-} from "../../App";
+import { inTheGame, isDesktop, setBottomSheetContent, setBSO } from "../../App";
 import { colors, me, theme, token } from "../../util/settings";
 import SettingsSearchbar from "../SettingsSearchbar";
 import { serverRoot } from "../../util/Utils";
 import { Save } from "@material-ui/icons";
-import WhiteColorTextField from "../WhiteColorTextField";
 import ProfileEditField from "../ProfileEditField";
+import MainSettingsNotifications from "../MainSettingsNotifications";
+import MainSettingsAppearance from "../MainSettingsAppearance";
+import MainSettingsNetwork from "../MainSettingsNetwork";
+import MainSettingsSecurity from "../MainSettingsSecurity";
+import MainSettingsData from "../MainSettingsData";
+import MainSettingsLanguage from "../MainSettingsLanguage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,44 +58,65 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const itemData = [
-  {
-    icon: NotificationsIcon,
-    title: "اعلانات",
-  },
-  {
-    icon: ColorLensIcon,
-    title: "تم",
-  },
-  {
-    icon: WifiTetheringIcon,
-    title: "شبکه",
-  },
-  {
-    icon: SecurityIcon,
-    title: "امنیت",
-  },
-  {
-    icon: WebIcon,
-    title: "ظاهر",
-  },
-  {
-    icon: DataUsageIcon,
-    title: "دیتا",
-  },
-  {
-    icon: LanguageIcon,
-    title: "زبان",
-  },
-];
-
 var lastScrollTop = 0;
 
 export default function SettingsList(props) {
-
   const classes = useStyles();
 
-  let [visibilityAllowed, setVisibilityAllowed] = React.useState(false);
+  const [visibilityAllowed, setVisibilityAllowed] = React.useState(false);
+  const [showNotificationsSettings, setShowNotificationsSettings] =
+    React.useState(false);
+  const [showAppearanceSettings, setShowAppearanceSettings] =
+    React.useState(false);
+  const [showSecuritySettings, setShowSecuritySettings] = React.useState(false);
+  const [showNetworkSettings, setShowNetworkSettings] = React.useState(false);
+  const [showDataSettings, setShowDataSettings] = React.useState(false);
+  const [showLanguageSettings, setShowLanguageSettings] = React.useState(false);
+
+  const itemData = [
+    {
+      icon: NotificationsIcon,
+      title: "اعلانات",
+      onClick: () => {
+        setShowNotificationsSettings(true);
+      },
+    },
+    {
+      icon: ColorLensIcon,
+      title: "ظاهر",
+      onClick: () => {
+        setShowAppearanceSettings(true);
+      },
+    },
+    {
+      icon: WifiTetheringIcon,
+      title: "شبکه",
+      onClick: () => {
+        setShowNetworkSettings(true);
+      },
+    },
+    {
+      icon: SecurityIcon,
+      title: "امنیت",
+      onClick: () => {
+        setShowSecuritySettings(true);
+      },
+    },
+    {
+      icon: DataUsageIcon,
+      title: "دیتا",
+      onClick: () => {
+        setShowDataSettings(true);
+      },
+    },
+    {
+      icon: LanguageIcon,
+      title: "زبان",
+      onClick: () => {
+        setShowLanguageSettings(true);
+      },
+    },
+  ];
 
   useEffect(() => {
     let settingsSearchBarContainer = document.getElementById(
@@ -157,7 +178,7 @@ export default function SettingsList(props) {
           position: "fixed",
           left: "50%",
           top: 32,
-          zIndex: 2501,
+          zIndex: 1,
           direction: "rtl",
         }}
       >
@@ -173,7 +194,7 @@ export default function SettingsList(props) {
           bottom: 0,
           top: 0,
           backdropFilter: "blur(15px)",
-          background: colors.primaryDark,
+          background: colors.backSide,
         }}
       />
       <ImageList
@@ -187,12 +208,10 @@ export default function SettingsList(props) {
             : "100%",
           position: "absolute",
           left: isDesktop() ? 72 + 32 : 0,
-          zIndex: 1,
           opacity: inTheGame && visibilityAllowed ? 1 : 0,
         }}
       >
         <ImageListItem
-          key={"settings-my-profile-tag"}
           cols={2}
           rows={1}
           style={{ marginTop: 48, height: 96 }}
@@ -286,7 +305,7 @@ export default function SettingsList(props) {
                           marginLeft: 16,
                           marginRight: 16,
                           width: "calc(100% - 32px)",
-                          height: 48
+                          height: 48,
                         }}
                       />
                       <ProfileEditField
@@ -298,7 +317,7 @@ export default function SettingsList(props) {
                           marginLeft: 16,
                           marginRight: 16,
                           width: "calc(100% - 32px)",
-                          height: 48
+                          height: 48,
                         }}
                       />
                     </Paper>
@@ -346,6 +365,7 @@ export default function SettingsList(props) {
               style={{
                 padding: 8,
               }}
+              onClick={item.onClick}
             >
               <Grow
                 in={inTheGame}
@@ -391,7 +411,6 @@ export default function SettingsList(props) {
           );
         })}
         <ImageListItem
-          key={"settings-my-profile-tag"}
           cols={2}
           rows={1}
           style={{ marginTop: "100%" }}
@@ -405,12 +424,59 @@ export default function SettingsList(props) {
         {...{ timeout: 1000 }}
       >
         <Fab
-          style={{ position: "fixed", bottom: 16, left: 16, zIndex: 2501, backgroundColor: colors.accent }}
+          style={{
+            position: "fixed",
+            bottom: 16,
+            left: 16,
+            backgroundColor: colors.accent,
+          }}
           onClick={props.onDeveloperModeClicked}
         >
           <VpnKeyIcon />
         </Fab>
       </Slide>
+      {showNotificationsSettings ? (
+        <MainSettingsNotifications
+          onClose={() => {
+            setShowNotificationsSettings(false);
+          }}
+        />
+      ) : null}
+      {showAppearanceSettings ? (
+        <MainSettingsAppearance
+          onClose={() => {
+            setShowAppearanceSettings(false);
+          }}
+        />
+      ) : null}
+      {showNetworkSettings ? (
+        <MainSettingsNetwork
+          onClose={() => {
+            setShowNetworkSettings(false);
+          }}
+        />
+      ) : null}
+      {showSecuritySettings ? (
+        <MainSettingsSecurity
+          onClose={() => {
+            setShowSecuritySettings(false);
+          }}
+        />
+      ) : null}
+      {showDataSettings ? (
+        <MainSettingsData
+          onClose={() => {
+            setShowDataSettings(false);
+          }}
+        />
+      ) : null}
+      {showLanguageSettings ? (
+        <MainSettingsLanguage
+          onClose={() => {
+            setShowLanguageSettings(false);
+          }}
+        />
+      ) : null}
     </div>
   );
 }
