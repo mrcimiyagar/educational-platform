@@ -1,7 +1,7 @@
 import { createTheme } from '@material-ui/core';
 import React from 'react';
 
-const LIGHT_THEME = {
+export const LIGHT_THEME = {
   primaryLight: 'rgba(119, 172, 241, 0.5)',
   primaryMedium: 'rgba(104, 157, 226, 0.85)',
   primaryDark: 'rgba(58, 130, 224, 0.85)',
@@ -16,7 +16,7 @@ const LIGHT_THEME = {
   accentDark: 'rgba(173, 203, 227, 0.65)',
 };
 
-const DARK_THEME = {
+export const DARK_THEME = {
   primaryLight: 'rgba(24, 34, 44, 0.5)',
   primaryMedium: 'rgba(24, 34, 44, 0.85)',
   primaryDark: 'rgba(23, 29, 32, 0.85)',
@@ -28,13 +28,17 @@ const DARK_THEME = {
   accent: 'rgba(255, 193, 7, 1)',
   accent2: 'rgba(0, 51, 103, 1)',
   accentDark: 'rgba(173, 203, 227, 0.65)',
+  backSide: 'rgba(23, 29, 32, 0.5)',
 };
 
-export let theme = undefined
-export let colors = {}
-export let setColors = (c) => {}
+export let theme = undefined;
+export let colors = {};
+export let setColors = (c) => {};
+export let themeMode = undefined;
+export let setThemeMode = (tm) => {};
 export let ColorBase = (props) => {
-  ;[colors, setColors] = React.useState(LIGHT_THEME);
+  ;[themeMode, setThemeMode] = React.useState('light');
+  ;[colors, setColors] = React.useState(themeMode === localStorage.getItem('themeMode') ? LIGHT_THEME : DARK_THEME);
   theme = createTheme({
     palette: {
       primary: {

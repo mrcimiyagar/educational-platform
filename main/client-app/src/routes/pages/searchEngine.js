@@ -7,9 +7,10 @@ import LanguageIcon from "@material-ui/icons/Language";
 import React from "react";
 import { gotoPage } from "../../App";
 import SearchEngineSearchbar from "../../components/SearchEngineSearchbar";
-import SpaceWallpaper from "../../images/space-wallpaper.png";
+import SpaceWallpaperLight from "../../images/space-wallpaper-light.jpg";
+import SpaceWallpaperDark from "../../images/space-wallpaper-dark.png";
 import SearchEngineIcon from "../../images/logo.png";
-import { colors } from "../../util/settings";
+import { colors, themeMode } from "../../util/settings";
 import SearchEngineResults from "./searchEngineResults";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -80,7 +81,7 @@ export default function SearchEngine(props) {
           left: 0,
           top: 0,
         }}
-        src={SpaceWallpaper}
+        src={themeMode === 'light' ? SpaceWallpaperLight : SpaceWallpaperDark}
         alt={"Search Wallpaper"}
       />
       <div className={classes.root}>

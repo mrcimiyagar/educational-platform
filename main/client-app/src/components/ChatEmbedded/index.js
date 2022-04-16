@@ -45,7 +45,7 @@ import {
   useForceUpdate,
 } from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
-import ChatWallpaper from '../../images/chat-wallpaper.png'
+import ChatWallpaper from '../../images/chat-wallpaper-light.jpg'
 import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery'
 import MessageItem from '../MessageItem'

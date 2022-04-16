@@ -15,9 +15,10 @@ import React, { useEffect } from "react";
 import { pathConfig, setWallpaper } from "../..";
 import { currentRoomId, gotoPage, isDesktop } from "../../App";
 import Jumper from "../../components/SearchEngineFam";
-import { colors, token } from "../../util/settings";
+import { colors, themeMode, token } from "../../util/settings";
 import { registerEvent, serverRoot, unregisterEvent, useForceUpdate } from "../../util/Utils";
-import WorkshopWallpaper from "../../images/space-wallpaper.png";
+import WorkshopWallpaperDark from "../../images/space-wallpaper-dark.png";
+import WorkshopWallpaperLight from "../../images/space-wallpaper-light.jpg";
 import BotContainer from "../../components/BotContainer";
 import Menu from "@material-ui/icons/Menu";
 import CachedIcon from "@mui/icons-material/Cached";
@@ -361,7 +362,7 @@ function Workshop(props) {
             left: 0,
             top: 0,
           }}
-          src={WorkshopWallpaper}
+          src={themeMode === 'light' ? WorkshopWallpaperLight : WorkshopWallpaperDark}
           alt={"workshop wallpaper"}
         />
         <AppBar

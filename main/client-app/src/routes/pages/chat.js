@@ -28,7 +28,7 @@ import {
   uploadingFiles,
 } from "../../App";
 import ChatAppBar from "../../components/ChatAppBar";
-import { colors, me, setToken, token } from "../../util/settings";
+import { colors, me, setToken, themeMode, token } from "../../util/settings";
 import {
   ConnectToIo,
   leaveRoom,
@@ -38,7 +38,8 @@ import {
   unregisterEvent,
   useForceUpdate,
 } from "../../util/Utils";
-import SpaceWallpaper from "../../images/chat-wallpaper.png";
+import SpaceWallpaperLight from "../../images/chat-wallpaper-light.jpg";
+import SpaceWallpaperDark from "../../images/chat-wallpaper-dark.png";
 import { setLastMessage, updateChat } from "../../components/HomeMain";
 import $ from "jquery";
 import MessageItem from "../../components/MessageItem";
@@ -1002,7 +1003,7 @@ export default function Chat(props) {
         style={{ position: "fixed", top: -256, opacity: 0 }}
       ></div>
       <CustomImageBox
-        src={SpaceWallpaper}
+        src={themeMode === 'light' ? SpaceWallpaperLight : SpaceWallpaperDark}
         borderRadius={isInMessenger() ? "0 0 0 24px" : 0}
         style={{ position: "fixed" }}
       />

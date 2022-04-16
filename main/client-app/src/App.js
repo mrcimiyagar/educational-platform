@@ -796,7 +796,6 @@ MainAppContainer = (props) => {
   if ((currentRequestingRoomAccessType !== 'public') && !connectedIO) {
     return (
       <div style={{ width: "100%", height: "100vh" }}>
-        <ColorBase />
         <DesktopDetector />
         {authenticationValid ? null : <Authentication />}
       </div>
@@ -813,7 +812,6 @@ MainAppContainer = (props) => {
         direction: "rtl",
       }}
     >
-      <ColorBase />
       <DesktopDetector />
       <Sidebar />
       <Space room_id={currentRoomId} key={currentRoomId} />

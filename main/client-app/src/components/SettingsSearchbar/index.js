@@ -8,33 +8,6 @@ import React from 'react';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {colors} from '../../util/settings';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    backgroundColor: colors.field,
-    backdropFilter: 'blur(10px)',
-    borderRadius: 24
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-    color: '#fff',
-    textAlign: 'center',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  iconButton: {
-    padding: 10,
-  },
-  divider: {
-    height: 28,
-    margin: 4,
-  },
-}));
-
 export default function SettingsSearchbar(props) {
   let useStylesInput = makeStyles((theme) => ({
     InputBaseStyle: {
@@ -43,6 +16,33 @@ export default function SettingsSearchbar(props) {
         textAlign: 'center'
       }
     }
+  }));
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      padding: '2px 4px',
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%',
+      backgroundColor: colors.field,
+      backdropFilter: 'blur(10px)',
+      borderRadius: 24
+    },
+    input: {
+      marginLeft: theme.spacing(1),
+      flex: 1,
+      color: '#fff',
+      textAlign: 'center',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    iconButton: {
+      padding: 10,
+    },
+    divider: {
+      height: 28,
+      margin: 4,
+    },
   }));
 
   const classes = useStyles();

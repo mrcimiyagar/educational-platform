@@ -4,17 +4,14 @@ import React, { Suspense, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import CloudIcon from './images/logo.png'
-import DesktopWallpaper from './images/roomWallpaper.png'
-import RoomWallpaper from './images/desktop-wallpaper.jpg'
-import ChatWallpaper from './images/chat-wallpaper.jpg'
-import ProfileHeader from './images/profile-header.jpeg'
-import LoginWallpaper from './images/login-wallpaper.jpg';
 import store from './redux/main';
 import { setup, socket } from './util/Utils';
 import './notifSystem';
 import { Alert, Snackbar } from '@mui/material';
 import CustomImageBox from './components/CustomImageBox'
-import SpaceWallpaper from './images/space-wallpaper.png';
+import SpaceWallpaperDark from './images/space-wallpaper-dark.png';
+import SpaceWallpaperLight from './images/space-wallpaper-light.jpg';
+import { ColorBase, colors, setThemeMode, themeMode } from './util/settings'
 
 export let pathConfig = {}
 
@@ -48,7 +45,7 @@ let Loading = (props) => {
             textAlign: 'center',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#fff',
+            color: colors.text,
           }}
         >
           جامعه
@@ -85,7 +82,7 @@ let PreLoading = (props) => {
             textAlign: 'center',
             justifyContent: 'center',
             alignItems: 'center',
-            color: '#fff',
+            color: colors.text,
           }}
         >
           جامعه
@@ -142,7 +139,10 @@ export let reloadApp = () => {
 }
 
 let AppContainer = (props) => {
-  ;[wallpaper, setWall] = React.useState({type: 'photo', photo: SpaceWallpaper});
+  if (localStorage.getItem('themeMode') === null) {
+    localStorage.setItem('themeMode', 'light');
+  }
+  ;[wallpaper, setWall] = React.useState({type: 'photo', photo: localStorage.getItem('themeMode') === 'light' ? SpaceWallpaperLight : SpaceWallpaperDark});
   ;[rndKey, setRndKey] = React.useState(1);
   setWallpaper = (w) => {
     if (w.type === wallpaper.type) {
@@ -150,7 +150,7 @@ let AppContainer = (props) => {
       (w.type === 'video' && w.video === wallpaper.video) ||
       (w.type === 'color' && w.color === wallpaper.color)) {
         return;
-      } 
+      }
     }
     setWall(w);
   }
@@ -226,6 +226,7 @@ let AppContainer = (props) => {
   if (!loaded) {
     return (
       <div style={{ width: '100%', height: '100%' }}>
+          <ColorBase />
           <CustomImageBox
             id={'wallpaperImg'}
             src={wallpaper.photo}
@@ -271,6 +272,7 @@ let AppContainer = (props) => {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
+      <ColorBase />
       {wallpaper === undefined || wallpaper === null ? null : wallpaper.type ===
         'photo' ? (
           <CustomImageBox

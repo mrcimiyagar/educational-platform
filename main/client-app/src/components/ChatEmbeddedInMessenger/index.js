@@ -39,7 +39,7 @@ import {
 import { colors, me, setToken, token } from '../../util/settings'
 import { ConnectToIo, registerEvent, serverRoot, socket, unregisterEvent, useForceUpdate } from '../../util/Utils'
 import ChatAppBar from '../ChatAppBar'
-import ChatWallpaper from '../../images/chat-wallpaper.png'
+import ChatWallpaper from '../../images/chat-wallpaper-light.jpg'
 import { setLastMessage, updateChat } from '../../components/HomeMain'
 import $ from 'jquery';
 import html2canvas from 'html2canvas';
