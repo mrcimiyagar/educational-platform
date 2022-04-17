@@ -1,6 +1,7 @@
 import {
   AppBar,
   createTheme,
+  Dialog,
   Fab,
   IconButton,
   Slide,
@@ -38,14 +39,24 @@ import {
 } from "../../util/Utils";
 import "./style.css";
 import { pathConfig } from "../..";
-import { membership } from "../../routes/pages/room";
 
 export let updateConfBox = () => {};
 export let isConfConnected = false;
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="right" ref={ref} {...props} />;
+});
+
 export function ConfBox(props) {
+  const [open, setOpen] = React.useState(true);
   let forceUpdate = useForceUpdate();
   updateConfBox = forceUpdate;
+  const handleClose = () => {
+    setOpen(false);
+    setTimeout(() => {
+      props.onClose();
+    }, 250);
+  };
   unregisterEvent("membership-updated");
   registerEvent("membership-updated", (mem) => {
     if (mem.canActInVideo) {
@@ -125,6 +136,27 @@ export function ConfBox(props) {
   }
 
   return (
+    <Dialog
+      fullScreen
+      open={open}
+      TransitionComponent={Transition}
+      PaperProps={{
+        style: {
+          width: "100%",
+          height: "100%",
+          background: "transparent",
+          backdropFilter: "blur(10px)",
+        },
+      }}
+      style={{
+        background: "transparent",
+        width: "100%",
+        height: "100%",
+        position: "fixed",
+        left: 0,
+        top: 0,
+      }}
+    >
     <div
       id={props.id}
       style={{
@@ -133,8 +165,7 @@ export function ConfBox(props) {
         width: props.currentRoomNav !== 2 ? 450 : "100%",
         height: isDesktop() ? "100%" : "calc(100% - 128px)",
         position: props.currentRoomNav !== 2 ? "fixed" : "relative",
-        direction: "ltr",
-        display: props.style.display,
+        direction: "ltr"
       }}
     >
       <AppBar
@@ -156,90 +187,24 @@ export function ConfBox(props) {
             height: "100%",
             justifyContent: "center",
             textAlign: "center",
+            direction: 'rtl'
           }}
         >
-          <IconButton
-            style={{ width: 32, height: 32, position: "absolute", left: 16 }}
-          >
-            <Search style={{ fill: "#fff" }} />
-          </IconButton>
-          <IconButton
-            style={{
-              width: 32,
-              height: 32,
-              position: "absolute",
-              left: 16 + 32 + 16,
-            }}
-            onClick={() => {
-              props.openDeck();
-            }}
-          >
-            <ViewCarousel style={{ fill: "#fff" }} />
-          </IconButton>
-          <IconButton
-            style={{
-              width: 32,
-              height: 32,
-              position: "absolute",
-              left: 16 + 32 + 16 + 32 + 16,
-            }}
-            onClick={() => {
-              props.openNotes();
-            }}
-          >
-            <Notes style={{ fill: "#fff" }} />
-          </IconButton>
-          <IconButton
-            style={{
-              width: 32,
-              height: 32,
-              position: "absolute",
-              left: 16 + 32 + 16 + 32 + 16 + 32 + 16,
-            }}
-            onClick={() => {
-              props.openPolls();
-            }}
-          >
-            <PollIcon style={{ fill: "#fff" }} />
-          </IconButton>
+        <IconButton
+          onClick={() => {
+            handleClose();
+          }}
+        >
+          <ArrowForward style={{ fill: colors.icon }} />
+        </IconButton>
           <Typography
             variant={"h6"}
-            style={{ color: "#fff", position: "absolute", right: 16 + 32 + 16 }}
+            style={{ color: colors.text, flex: 1, textAlign: 'right' }}
           >
             سالن کنفرانس
           </Typography>
-          <IconButton
-            style={{ width: 32, height: 32, position: "absolute", right: 16 }}
-            onClick={() => {
-              props.setMenuOpen(true);
-            }}
-          >
-            <Menu style={{ fill: "#fff" }} />
-          </IconButton>
         </Toolbar>
       </AppBar>
-
-      {isDesktop() && isInRoom() ? null : (
-        <Slide direction="right" in={inTheGame} mountOnEnter>
-          <Fab
-            color={"secondary"}
-            style={{
-              position: "fixed",
-              bottom: isInRoom() && (isMobile() || isTablet()) ? 72 + 12 : 12,
-              right: 16 + 72,
-              zIndex: 4,
-            }}
-            onClick={() =>
-              gotoPage("/app/chat", {
-                room_id: props.roomId,
-                user_id: props.userId,
-              })
-            }
-          >
-            <Chat />
-          </Fab>
-        </Slide>
-      )}
 
       <iframe
         scrolling="no"
@@ -248,7 +213,7 @@ export function ConfBox(props) {
             {
               sender: "main",
               action: "init",
-              videoAccess: membership.canActInVideo,
+              videoAccess: props.membership.canActInVideo,
               me: me,
               roomId: props.roomId,
             },
@@ -272,5 +237,6 @@ export function ConfBox(props) {
         frameBorder="0"
       ></iframe>
     </div>
+    </Dialog>
   );
 }

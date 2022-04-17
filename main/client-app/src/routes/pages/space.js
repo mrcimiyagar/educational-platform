@@ -60,6 +60,7 @@ import Workshop from "./workshop";
 import { Edit } from "@material-ui/icons";
 import AudioPlayer from "./audioPlayer";
 import VideoPlayer from "./videoPlayer";
+import { ConfBox } from "../../modules/confbox";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -106,7 +107,7 @@ export let openVideoPlayer = () => {};
 
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(undefined);
+  const [selectedNav, setSelectedNav] = React.useState(14);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const [showAudioPlayer, setShowAudioPlayer] = React.useState(false);
@@ -832,6 +833,18 @@ export default function Space(props) {
             setInTheGame(true);
           }}
           roomId={props.room_id}
+        />
+      ) : null}
+      {selectedNav === 14 ? (
+        <ConfBox
+          webcamOn={webcamOn}
+          currentRoomNav={2}
+          roomId={props.room_id}
+          membership={membership}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
         />
       ) : null}
       {selectedNav === 10 ? (

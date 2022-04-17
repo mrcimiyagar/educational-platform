@@ -11,10 +11,8 @@ import {
 } from "@material-ui/core";
 import { ArrowForward, Search } from "@material-ui/icons";
 import React from "react";
-import { isDesktop, popPage, registerDialogOpen } from "../../App";
-import { AudioBox } from "../../modules/audiobox";
+import { isDesktop, registerDialogOpen } from "../../App";
 import { colors, DARK_THEME, LIGHT_THEME, setColors, setThemeMode, themeMode } from "../../util/settings";
-import { useForceUpdate } from "../../util/Utils";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
@@ -86,6 +84,7 @@ export default function MainSettingsAppearance(props) {
           backgroundColor: colors.backSide,
           backdropFilter: "blur(10px)",
           direction: "rtl",
+          overflowX: 'hidden'
         },
       }}
       fullScreen={!isDesktop()}
@@ -116,7 +115,7 @@ export default function MainSettingsAppearance(props) {
       </AppBar>
       <div style={{ width: "100%", height: 80 }} />
       <FormControlLabel
-        style={{ marginRight: 16 }}
+        style={{color: colors.text}}
         control={
           <ThemeSwitch
             defaultChecked={themeMode === 'dark'}

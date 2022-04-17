@@ -1,5 +1,6 @@
 import { Dialog, IconButton, Slide } from '@material-ui/core';
 import { ArrowForwardTwoTone, Close } from '@material-ui/icons';
+import { colors } from '../../util/settings';
 import React from 'react';
 import { popPage, registerDialogOpen } from '../../App';
 import { token } from '../../util/settings';
@@ -20,6 +21,8 @@ export default function VideoPlayer(props) {
 
   return (
     <Dialog
+      style={{background: 'transparent', boxShadow: 'none'}}
+      PaperProps={{style: {background: colors.field}}}
       onTouchStart={(e) => {e.stopPropagation();}}
       fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <div style={{width: '100%', height: '100%'}}>
