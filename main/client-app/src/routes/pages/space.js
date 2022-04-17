@@ -107,7 +107,7 @@ export let openVideoPlayer = () => {};
 
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(14);
+  const [selectedNav, setSelectedNav] = React.useState(undefined);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const [showAudioPlayer, setShowAudioPlayer] = React.useState(false);
@@ -526,6 +526,7 @@ export default function Space(props) {
             } else if (modName === "filestorage") {
               setSelectedNav(9);
             } else if (modName === "videochat") {
+              setSelectedNav(14);
             }
           }}
         />
