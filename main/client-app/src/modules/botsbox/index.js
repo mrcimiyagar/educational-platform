@@ -442,13 +442,24 @@ export default function BotsBox(props) {
             width: "calc(100% - 64px)",
             height: "150px",
           });
+          widgets.push({
+            id: "polling",
+            widgetId: "polling",
+            roomId: props.roomId,
+            bossId: "admin",
+            x: 32,
+            y: 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32,
+            width: "calc(100% - 64px)",
+            height: "150px",
+          });
           forceUpdate();
           result.widgetWorkers.forEach((ww) => {
             if (
               ww.id !== "whiteboard" &&
               ww.id !== "taskboard" &&
               ww.id !== "filestorage" &&
-              ww.id !== "videochat"
+              ww.id !== "videochat" &&
+              ww.id !== "polling"
             ) {
               requestInitGui(ww.id, false);
             }
@@ -821,6 +832,59 @@ export default function BotsBox(props) {
                         }}
                       >
                         ویدئو چت
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
+              ) : ww.id === "polling" ? (
+                <Grow in={true} {...{ timeout: 5 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("polling")}
+                    style={{
+                      width: ww.width === null ? 150 : ww.width,
+                      height: ww.height === null ? 150 : ww.height,
+                      position: "absolute",
+                      left: ww.x,
+                      top: ww.y,
+                      transform: "translateY(+144px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                      "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
+                      display: "flex",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        position: "relative",
+                      }}
+                    >
+                      <Avatar
+                        style={{
+                          width: 96,
+                          height: 96,
+                          marginLeft: 27,
+                          marginTop: 27,
+                        }}
+                        src={'https://cdn.dribbble.com/users/418124/screenshots/16078601/media/6673ebf22f822cbf30a7d8e2c8eff821.png?compress=1&resize=450x338&vertical=top'
+                        }
+                      />
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        رای گیری
                       </Typography>
                     </div>
                   </Paper>

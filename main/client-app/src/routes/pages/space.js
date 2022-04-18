@@ -61,6 +61,7 @@ import { Edit } from "@material-ui/icons";
 import AudioPlayer from "./audioPlayer";
 import VideoPlayer from "./videoPlayer";
 import { ConfBox } from "../../modules/confbox";
+import { PollBox } from "../../modules/pollbox/pollbox";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -527,6 +528,8 @@ export default function Space(props) {
               setSelectedNav(9);
             } else if (modName === "videochat") {
               setSelectedNav(14);
+            } else if (modName === "polling") {
+              setSelectedNav(15);
             }
           }}
         />
@@ -840,6 +843,16 @@ export default function Space(props) {
         <ConfBox
           webcamOn={webcamOn}
           currentRoomNav={2}
+          roomId={props.room_id}
+          membership={membership}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 15 ? (
+        <PollBox
           roomId={props.room_id}
           membership={membership}
           onClose={() => {
