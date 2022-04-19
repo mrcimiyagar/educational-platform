@@ -55,9 +55,9 @@ router.post('/upload_present', jsonParser, async function (req, res) {
         room.presentId = present.id
         room.save()
 
-        let oldPath = files.file.path
-        let newPath = rootPath + '/files/' + file.id
-        fs.copyFileSync(oldPath, newPath)
+        let oldPath = files.file.path;
+        let newPath = rootPath + '/files/' + file.id;
+        fs.copyFileSync(oldPath, newPath);
 
         if (ext === 'pdf') {
           try {
@@ -66,29 +66,23 @@ router.post('/upload_present', jsonParser, async function (req, res) {
               rootPath + '/temp/' + file.id + '_' + '.pdf'
 
             try {
-              fs.unlinkSync(previewFactoryPath)
+              fs.unlinkSync(previewFactoryPath);
             } catch (ex) {}
 
-            fs.copyFileSync(newPath, previewFactoryPath)
+            fs.copyFileSync(newPath, previewFactoryPath);
 
-            for (let i = 0; i < 1000; i++) {
-              if (fs.existsSync(rootPath + '/pdfPages/' + file.id + '.1.png')) {
-                fs.unlinkSync(rootPath + '/pdfPages/' + file.id + '.1.png')
-              }
-            }
+            let PDFParser = require('pdf2json');
+            let pdfParser = new PDFParser();
 
-            let PDFParser = require('pdf2json')
-            let pdfParser = new PDFParser()
-
-            pdfParser.loadPDF(previewFactoryPath) // ex: ./abc.pdf
+            pdfParser.loadPDF(previewFactoryPath); // ex: ./abc.pdf
 
             pdfParser.on('pdfParser_dataReady', (pdfData) => {
               fs.writeFileSync(
                 previewFactoryPath + '.json',
                 JSON.stringify(pdfData),
-              )
-              width = pdfData.formImage.Width / 4.5 // pdf width
-              height = pdfData.formImage.Pages[0].Height / 4.5 // page height
+              );
+              width = pdfData.Pages[0].Width / 4.5; // pdf width
+              height = pdfData.Pages[0].Height / 4.5; // page height
               const options = {
                 density: 100,
                 saveFilename: file.id,
