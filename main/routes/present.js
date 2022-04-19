@@ -260,8 +260,8 @@ router.post('/pick_present', jsonParser, async function (req, res) {
 
             let rawdata = fs.readFileSync(previewFactoryPath + '.json')
             let pdfData = JSON.parse(rawdata)
-            width = pdfData.formImage.Width / 4.5 // pdf width
-            height = pdfData.formImage.Pages[0].Height / 4.5 // page height
+            width = pdfData.Pages[0].Width / 4.5 // pdf width
+            height = pdfData.Pages[0].Height / 4.5 // page height
             const options = {
               density: 100,
               saveFilename: fileId,
@@ -339,8 +339,8 @@ router.post('/swich_page', jsonParser, async function (req, res) {
 
               let rawdata = fs.readFileSync(previewFactoryPath + '.json')
               let pdfData = JSON.parse(rawdata)
-              width = pdfData.formImage.Width / 4.5 // pdf width
-              height = pdfData.formImage.Pages[0].Height / 4.5 // page height
+              width = pdfData.Pages[0].Width / 4.5 // pdf width
+              height = pdfData.Pages[0].Height / 4.5 // page height
               const options = {
                 density: 100,
                 saveFilename: fileId,
@@ -407,8 +407,8 @@ router.post('/get_current_page', jsonParser, async function (req, res) {
 
               let rawdata = fs.readFileSync(previewFactoryPath + '.json')
               let pdfData = JSON.parse(rawdata)
-              width = pdfData.formImage.Width / 4.5 // pdf width
-              height = pdfData.formImage.Pages[0].Height / 4.5 // page height
+              width = pdfData.Pages[0].Width / 4.5 // pdf width
+              height = pdfData.Pages[0].Height / 4.5 // page height
               const options = {
                 density: 100,
                 saveFilename: fileId,
