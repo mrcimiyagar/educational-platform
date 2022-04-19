@@ -71,7 +71,7 @@ router.post('/upload_present', jsonParser, async function (req, res) {
 
             fs.copyFileSync(newPath, previewFactoryPath)
 
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 1000; i++) {
               if (fs.existsSync(rootPath + '/pdfPages/' + file.id + '.1.png')) {
                 fs.unlinkSync(rootPath + '/pdfPages/' + file.id + '.1.png')
               }

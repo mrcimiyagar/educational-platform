@@ -63,6 +63,7 @@ import VideoPlayer from "./videoPlayer";
 import { ConfBox } from "../../modules/confbox";
 import { PollBox } from "../../modules/pollbox/pollbox";
 import NotePage from "./notes";
+import Deck from "./deck";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -109,7 +110,7 @@ export let openVideoPlayer = () => {};
 
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(undefined);
+  const [selectedNav, setSelectedNav] = React.useState(17);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const [showAudioPlayer, setShowAudioPlayer] = React.useState(false);
@@ -867,6 +868,16 @@ export default function Space(props) {
       {selectedNav === 16 ? (
         <NotePage
           room_id={props.room_id}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 17 ? (
+        <Deck
+          room_id={props.room_id}
+          membership={membership}
           onClose={() => {
             setSelectedNav(undefined);
             setInTheGame(true);

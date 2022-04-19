@@ -2,16 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Drawer, Fab, SwipeableDrawer, Typography } from '@material-ui/core'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
-import { useFullScreenHandle } from 'react-full-screen'
-import { Button, Card } from 'reactstrap'
-import PresentsGrid from '../../components/FilesGrid/PresentsGrid'
-import { membership } from '../../routes/pages/room'
+import { Card } from 'reactstrap'
 import { colors, token } from '../../util/settings'
-import { registerEvent, serverRoot, socket, useForceUpdate } from '../../util/Utils'
+import { registerEvent, serverRoot, useForceUpdate } from '../../util/Utils'
 import { useFilePicker } from 'use-file-picker'
 import AddIcon from '@material-ui/icons/Add'
 import FilesGrid from '../../components/FilesGrid/FilesGrid'
-import { isDesktop } from '../../App'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
 let pickingFile = false
@@ -231,9 +227,9 @@ export function PresentBox(props) {
         display: props.style.display === 'none' ? 'none' : 'block',
       }}
     >
-      {membership !== null &&
-      membership !== undefined &&
-      membership.canPresent === true ? (
+      {props.membership !== null &&
+      props.membership !== undefined &&
+      props.membership.canPresent === true ? (
         <SwipeableDrawer
           anchor={'bottom'}
           style={{ minHeight: 200, backgroundColor: '#fff' }}
@@ -332,9 +328,9 @@ export function PresentBox(props) {
         ) : null}
         {files.length > 0 &&
         files[currentPresent].extension === 'pdf' &&
-        membership !== null &&
-        membership !== undefined &&
-        membership.canPresent ? (
+        props.membership !== null &&
+        props.membership !== undefined &&
+        props.membership.canPresent ? (
           <div
             style={{
               display: 'flex',

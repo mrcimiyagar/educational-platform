@@ -11,46 +11,17 @@ import { PresentBox } from '../../modules/presentbox/presentbox'
 import { colors } from '../../util/settings'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />
+  return <Slide direction="right" ref={ref} {...props} />
 })
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    position: 'fixed',
-    bottom: 0,
-    zIndex: 1000,
-    backgroundColor: '#ddd',
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-    fontFamily: 'mainFont',
-  },
-  iconButton: {
-    padding: 10,
-  },
-  divider: {
-    height: 28,
-    margin: 4,
-  },
-}))
-
 export default function Deck(props) {
-
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  props = Object.fromEntries(urlSearchParams.entries());
 
   const [open, setOpen] = React.useState(true)
   const [presentOpen, setPresentMenuOpen] = React.useState(false)
   const handleClose = () => {
     setOpen(false)
-    setTimeout(popPage, 250)
+    setTimeout(props.onClose, 250)
   }
-  let classes = useStyles()
   return (
     <Dialog
       onTouchStart={(e) => {
@@ -83,43 +54,33 @@ export default function Deck(props) {
             height: 64,
             backgroundColor: colors.primaryMedium,
             backdropFilter: 'blur(10px)',
+            direction: 'rtl'
           }}
         >
           <Toolbar
             style={{
               width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-              textAlign: 'center',
+              height: '100%'
             }}
           >
             <IconButton
-              style={{ width: 32, height: 32, position: 'absolute', left: 16 }}
+              onClick={() => handleClose()}
             >
-              <Search style={{ fill: '#fff' }} />
-            </IconButton>
-            <IconButton
-              style={{
-                width: 32,
-                height: 32,
-                position: 'absolute',
-                left: 16 + 32 + 16,
-              }}
-              onClick={() => setPresentMenuOpen(true)}
-            >
-              <ViewListIcon style={{ fill: '#fff' }} />
+              <ArrowForward style={{ fill: colors.icon }} />
             </IconButton>
             <Typography
               variant={'h6'}
-              style={{ position: 'absolute', right: 16 + 32 + 16, color: '#fff' }}
+              style={{ textAlign: 'right', color: colors.text, flex: 1 }}
             >
               تابلو
             </Typography>
             <IconButton
-              style={{ width: 32, height: 32, position: 'absolute', right: 16 }}
-              onClick={() => handleClose()}
+              onClick={() => setPresentMenuOpen(true)}
             >
-              <ArrowForward style={{ fill: '#fff' }} />
+              <ViewListIcon style={{ fill: colors.icon }} />
+            </IconButton>
+            <IconButton>
+              <Search style={{ fill: colors.icon }} />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -128,6 +89,7 @@ export default function Deck(props) {
         >
           <PresentBox
             style={{ display: 'block' }}
+            membership={props.membership}
             setOpen={setPresentMenuOpen}
             presentOpen={presentOpen}
             roomId={props.room_id}
