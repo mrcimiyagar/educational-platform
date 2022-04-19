@@ -62,6 +62,7 @@ import AudioPlayer from "./audioPlayer";
 import VideoPlayer from "./videoPlayer";
 import { ConfBox } from "../../modules/confbox";
 import { PollBox } from "../../modules/pollbox/pollbox";
+import NotePage from "./notes";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -530,6 +531,8 @@ export default function Space(props) {
               setSelectedNav(14);
             } else if (modName === "polling") {
               setSelectedNav(15);
+            } else if (modName === "notes") {
+              setSelectedNav(16);
             }
           }}
         />
@@ -855,6 +858,15 @@ export default function Space(props) {
         <PollBox
           roomId={props.room_id}
           membership={membership}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 16 ? (
+        <NotePage
+          room_id={props.room_id}
           onClose={() => {
             setSelectedNav(undefined);
             setInTheGame(true);

@@ -452,6 +452,16 @@ export default function BotsBox(props) {
             width: "calc(100% - 64px)",
             height: "150px",
           });
+          widgets.push({
+            id: "notes",
+            widgetId: "notes",
+            roomId: props.roomId,
+            bossId: "admin",
+            x: 32,
+            y: 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32,
+            width: "calc(100% - 64px)",
+            height: "150px",
+          });
           forceUpdate();
           result.widgetWorkers.forEach((ww) => {
             if (
@@ -459,7 +469,8 @@ export default function BotsBox(props) {
               ww.id !== "taskboard" &&
               ww.id !== "filestorage" &&
               ww.id !== "videochat" &&
-              ww.id !== "polling"
+              ww.id !== "polling" &&
+              ww.id !== "notes"
             ) {
               requestInitGui(ww.id, false);
             }
@@ -885,6 +896,59 @@ export default function BotsBox(props) {
                         }}
                       >
                         رای گیری
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
+              ) : ww.id === "notes" ? (
+                <Grow in={true} {...{ timeout: 6 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("notes")}
+                    style={{
+                      width: ww.width === null ? 150 : ww.width,
+                      height: ww.height === null ? 150 : ww.height,
+                      position: "absolute",
+                      left: ww.x,
+                      top: ww.y,
+                      transform: "translateY(+144px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                      "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(98, 132, 255, 0.5) 50%, rgba(255, 0, 0, 0.5) 100%)",
+                      display: "flex",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        position: "relative",
+                      }}
+                    >
+                      <Avatar
+                        style={{
+                          width: 96,
+                          height: 96,
+                          marginLeft: 27,
+                          marginTop: 27,
+                        }}
+                        src={'https://cdn.dribbble.com/users/1250/screenshots/17698452/media/a5b291c4347cea266d8dad1b7cde85dc.png?compress=1&resize=450x338&vertical=top'
+                        }
+                      />
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        یادداشت ها
                       </Typography>
                     </div>
                   </Paper>

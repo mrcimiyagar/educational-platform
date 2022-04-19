@@ -9,18 +9,15 @@ import { pathConfig } from '../..';
 import { isDesktop, isMobile, isTablet, popPage } from "../../App";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
+    return <Slide direction="right" ref={ref} {...props} />;
 });
 
 export default function NotePage(props) {
-
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    props = Object.fromEntries(urlSearchParams.entries());
     
     const [open, setOpen] = React.useState(true);
     const handleClose = () => {
         setOpen(false);
-        setTimeout(popPage, 250)
+        setTimeout(props.onClose, 250)
     };
     let rId = props.room_id
     while (rId.length < 22) {
@@ -33,7 +30,8 @@ export default function NotePage(props) {
                 style: {
                     backgroundColor: 'transparent',
                     boxShadow: 'none',
-                    width: isDesktop() ? '85%' : "100%", height: '80%'
+                    width: "100%",
+                    height: '100%'
                 },
             }}
             style={{height: '100%', width: '100%'}}
@@ -49,20 +47,19 @@ export default function NotePage(props) {
                     marginLeft: isDesktop() ? '25%' : undefined,
                     marginRight: isDesktop() ? '25%' : undefined,
                     marginTop: isDesktop() ? '3%' : undefined,
-                    height: 64, 
+                    height: 64,
                     backgroundColor: colors.primaryMedium,
                     backdropFilter: 'blur(10px)',
-                    borderRadius: isDesktop() ? '24px 24px 0 0' : undefined}}>
-                    <Toolbar style={{marginTop: (isDesktop() || isTablet()) ? 0 : 8, width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
-                        <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                        <Typography variant={'h6'} style={{color: '#fff'}}>یادداشت ها</Typography>
-                        <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
+                    direction: 'rtl'
+                }}>
+                    <Toolbar style={{marginTop: (isDesktop() || isTablet()) ? 0 : 8, width: '100%', height: '100%'}}>
+                    <IconButton onClick={() => handleClose()}><ArrowForward style={{fill: colors.icon}}/></IconButton>
+                    <Typography variant={'h6'} style={{color: colors.text, flex: 1, textAlign: 'right'}}>یادداشت ها</Typography>
                     </Toolbar>
                 </AppBar>
-                <div style={{borderRadius: '0 0 24px 24px', width: '100%', height: isMobile() ? '100%' : 'calc(100% - 112px)',
-                marginTop: isMobile() ? 56 : 32, background: 'rgba(255, 255, 255, 0.5)', backdropFilter: 'blur(15px)'}}>
+                <div style={{width: '100%', height: 'calc(100% - 64px)', marginTop: 64}}>
                     <iframe name="notes-frame" src={pathConfig.sharedNotes + '/p/' + rId}
-                        style={{borderRadius: '0 0 24px 24px', width: '100%', height: '100%'}} frameBorder="0"></iframe>
+                        style={{width: '100%', height: '100%'}} frameBorder="0"></iframe>
                 </div>
             </div>
         </Dialog>
