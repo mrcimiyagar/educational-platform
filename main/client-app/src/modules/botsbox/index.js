@@ -462,6 +462,16 @@ export default function BotsBox(props) {
             width: "calc(100% - 64px)",
             height: "150px",
           });
+          widgets.push({
+            id: "deck",
+            widgetId: "deck",
+            roomId: props.roomId,
+            bossId: "admin",
+            x: 32,
+            y: 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32,
+            width: "calc(100% - 64px)",
+            height: "150px",
+          });
           forceUpdate();
           result.widgetWorkers.forEach((ww) => {
             if (
@@ -470,7 +480,8 @@ export default function BotsBox(props) {
               ww.id !== "filestorage" &&
               ww.id !== "videochat" &&
               ww.id !== "polling" &&
-              ww.id !== "notes"
+              ww.id !== "notes" &&
+              ww.id !== "deck"
             ) {
               requestInitGui(ww.id, false);
             }
@@ -949,6 +960,58 @@ export default function BotsBox(props) {
                         }}
                       >
                         یادداشت ها
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
+              )  : ww.id === "deck" ? (
+                <Grow in={true} {...{ timeout: 7 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("deck")}
+                    style={{
+                      width: ww.width === null ? 150 : ww.width,
+                      height: ww.height === null ? 150 : ww.height,
+                      position: "absolute",
+                      left: ww.x,
+                      top: ww.y,
+                      transform: "translateY(+144px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                      "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
+                      display: "flex",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        position: "relative",
+                      }}
+                    >
+                      <Avatar
+                        style={{
+                          width: 96,
+                          height: 96,
+                          marginLeft: 27,
+                          marginTop: 27,
+                        }}
+                        src={'https://cdn.dribbble.com/users/6170281/screenshots/17953880/media/db1652121a9c892b0da71281b27051a9.png?compress=1&resize=400x300&vertical=top'}
+                      />
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        سالن ارائه
                       </Typography>
                     </div>
                   </Paper>

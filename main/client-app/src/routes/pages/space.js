@@ -110,7 +110,7 @@ export let openVideoPlayer = () => {};
 
 export default function Space(props) {
   const [searchBarFixed, setSearchBarFixed] = React.useState(false);
-  const [selectedNav, setSelectedNav] = React.useState(17);
+  const [selectedNav, setSelectedNav] = React.useState(undefined);
   const [thisRoom, setThisRoom] = React.useState(undefined);
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const [showAudioPlayer, setShowAudioPlayer] = React.useState(false);
@@ -534,6 +534,8 @@ export default function Space(props) {
               setSelectedNav(15);
             } else if (modName === "notes") {
               setSelectedNav(16);
+            } else if (modName === "deck") {
+              setSelectedNav(17);
             }
           }}
         />
