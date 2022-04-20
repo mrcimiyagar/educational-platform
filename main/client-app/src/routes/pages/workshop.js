@@ -447,7 +447,7 @@ function Workshop(props) {
             >
               {bots.map((bot, index) => {
                 return (
-                  <>
+                  <div style={{backgroundColor: menuMode === index ? colors.field : 'transparent'}}>
                   <Avatar
                     onClick={() => setMenuMode(index)}
                     style={{
@@ -465,7 +465,7 @@ function Workshop(props) {
                   <Typography style={{width: '100%', marginTop: 8, color: colors.text}}>
                     {bot.title}
                   </Typography>
-                  </>
+                  </div>
                 );
               })}
               <Fab

@@ -11,30 +11,31 @@ import { useForceUpdate } from '../../util/Utils';
 import { RichBottomBar } from '../RichComponents';
 import {StylesProvider} from '@material-ui/core';
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    height: 72,
-    position: 'fixed',
-    bottom: 0,
-    background: "rgba(24, 34, 44, 0.85)",
-    backdropFilter: 'blur(10px)'
-  },
-});
-
-const useStylesAction = makeStyles({
-  /* Styles applied to the root element. */
-  root: {
-    color: '#ddd',
-    '&$selected': {
-      color: '#fff',
-    },
-  },
-  /* Styles applied to the root element if selected. */
-  selected: {},
-});
-
 export default function HomeBottombar() {
+
+  const useStyles = makeStyles({
+    root: {
+      width: '100%',
+      height: 72,
+      position: 'fixed',
+      bottom: 0,
+      background: colors.primaryMedium,
+      backdropFilter: 'blur(10px)'
+    },
+  });
+  
+  const useStylesAction = makeStyles({
+    /* Styles applied to the root element. */
+    root: {
+      color: colors.textPassive,
+      '&$selected': {
+        color: colors.text,
+      },
+    },
+    /* Styles applied to the root element if selected. */
+    selected: {},
+  });
+
   const classes = useStyles();
   const classesAction = useStylesAction();
   let [value, setValue] = React.useState(0);

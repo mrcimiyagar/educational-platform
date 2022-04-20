@@ -40,6 +40,26 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="/manifest.json" />
+
+    <script>
+      window.originalFetch = window.fetch;
+      function wait(delay){
+        return new Promise((resolve) => setTimeout(resolve, delay));
+      }
+      function fetchRetry(url, delay, tries, fetchOptions = {}) {
+        function onError(err){
+          triesLeft = tries - 1;
+          if (!triesLeft){
+            throw err;
+          }
+          return wait(delay).then(() => fetchRetry(url, delay, triesLeft, fetchOptions));
+        }
+        return window.originalFetch(url,fetchOptions).catch(onError);
+      }
+      window.fetch = (url, fetchOptions) => {
+        return fetchRetry(url, 5000, 100, fetchOptions);
+      };
+    </script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.

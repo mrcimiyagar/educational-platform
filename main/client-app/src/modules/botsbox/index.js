@@ -92,7 +92,7 @@ let ckeckCode = (wwId, codes, widgetId) => {
         } else if (code.updateType === "memory") {
           memDict[wwId][code.memoryId] = code.value;
         }
-      } else if (code.type === 'tellBot') {
+      } else if (code.type === "tellBot") {
         let requestOptions = {
           method: "POST",
           headers: {
@@ -468,7 +468,20 @@ export default function BotsBox(props) {
             roomId: props.roomId,
             bossId: "admin",
             x: 32,
-            y: 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32,
+            y:
+              32 +
+              150 +
+              32 +
+              150 +
+              32 +
+              150 +
+              32 +
+              150 +
+              32 +
+              150 +
+              32 +
+              150 +
+              32,
             width: "calc(100% - 64px)",
             height: "150px",
           });
@@ -873,7 +886,7 @@ export default function BotsBox(props) {
                       backdropFilter: "blur(10px)",
                       backgroundColor: "transparent",
                       backgroundImage:
-                      "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
+                        "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
                       display: "flex",
                     }}
                   >
@@ -891,7 +904,8 @@ export default function BotsBox(props) {
                           marginLeft: 27,
                           marginTop: 27,
                         }}
-                        src={'https://cdn.dribbble.com/users/418124/screenshots/16078601/media/6673ebf22f822cbf30a7d8e2c8eff821.png?compress=1&resize=450x338&vertical=top'
+                        src={
+                          "https://cdn.dribbble.com/users/418124/screenshots/16078601/media/6673ebf22f822cbf30a7d8e2c8eff821.png?compress=1&resize=450x338&vertical=top"
                         }
                       />
                       <Typography
@@ -926,7 +940,7 @@ export default function BotsBox(props) {
                       backdropFilter: "blur(10px)",
                       backgroundColor: "transparent",
                       backgroundImage:
-                      "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(98, 132, 255, 0.5) 50%, rgba(255, 0, 0, 0.5) 100%)",
+                        "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(98, 132, 255, 0.5) 50%, rgba(255, 0, 0, 0.5) 100%)",
                       display: "flex",
                     }}
                   >
@@ -944,7 +958,8 @@ export default function BotsBox(props) {
                           marginLeft: 27,
                           marginTop: 27,
                         }}
-                        src={'https://cdn.dribbble.com/users/1250/screenshots/17698452/media/a5b291c4347cea266d8dad1b7cde85dc.png?compress=1&resize=450x338&vertical=top'
+                        src={
+                          "https://cdn.dribbble.com/users/1250/screenshots/17698452/media/a5b291c4347cea266d8dad1b7cde85dc.png?compress=1&resize=450x338&vertical=top"
                         }
                       />
                       <Typography
@@ -964,7 +979,7 @@ export default function BotsBox(props) {
                     </div>
                   </Paper>
                 </Grow>
-              )  : ww.id === "deck" ? (
+              ) : ww.id === "deck" ? (
                 <Grow in={true} {...{ timeout: 7 * 650 }}>
                   <Paper
                     onClick={() => props.onModuleSelected("deck")}
@@ -979,7 +994,7 @@ export default function BotsBox(props) {
                       backdropFilter: "blur(10px)",
                       backgroundColor: "transparent",
                       backgroundImage:
-                      "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
+                        "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
                       display: "flex",
                     }}
                   >
@@ -997,7 +1012,9 @@ export default function BotsBox(props) {
                           marginLeft: 27,
                           marginTop: 27,
                         }}
-                        src={'https://cdn.dribbble.com/users/6170281/screenshots/17953880/media/db1652121a9c892b0da71281b27051a9.png?compress=1&resize=400x300&vertical=top'}
+                        src={
+                          "https://cdn.dribbble.com/users/6170281/screenshots/17953880/media/db1652121a9c892b0da71281b27051a9.png?compress=1&resize=400x300&vertical=top"
+                        }
                       />
                       <Typography
                         style={{
@@ -1072,20 +1089,27 @@ export default function BotsBox(props) {
             }}
           >
             {myBots.map((bot, index) => (
-              <Avatar
-                onClick={() => setMySelectedBot(index)}
-                src={
-                  serverRoot +
-                  `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
-                }
-                style={{
-                  width: 64,
-                  height: 64,
-                  marginLeft: 8,
-                  marginTop: 16,
-                  backgroundColor: "#fff",
-                }}
-              />
+              <div style={{backgroundColor: mySelectedBot === index ? colors.field : 'transparent'}}>
+                <Avatar
+                  onClick={() => setMySelectedBot(index)}
+                  style={{
+                    width: 56,
+                    height: 56,
+                    backgroundColor: colors.field,
+                    marginTop: 12,
+                    marginLeft: 12,
+                  }}
+                  src={
+                    serverRoot +
+                    `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
+                  }
+                />
+                <Typography
+                  style={{ width: "100%", marginTop: 8, color: colors.text }}
+                >
+                  {bot.title}
+                </Typography>
+              </div>
             ))}
           </div>
           <div style={{ width: 280, height: "100%", position: "relative" }}>

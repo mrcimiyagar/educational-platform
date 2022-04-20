@@ -346,7 +346,7 @@ export default function StoreBot(props) {
           setShowCreateComment(true);
         }}
       >
-        <Message style={{ fill: colors.icon }} />
+        <Message style={{ fill: '#fff' }} />
       </Fab>
       <Fab
         style={{
@@ -415,7 +415,7 @@ export default function StoreBot(props) {
           }
         }}
       >
-        <Add style={{ fill: colors.icon }} />
+        <Add style={{ fill: '#fff' }} />
       </Fab>
       {showCreateComment ? (
         <CreateCommentPage
