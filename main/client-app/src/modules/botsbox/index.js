@@ -17,6 +17,7 @@ import {
 } from "../../util/Utils";
 import { Rnd } from "react-rnd";
 import { currentRoomId } from "../../App";
+import WhiteboardIcon from '../../images/whiteboard.png';
 
 var lastScrollTop = 0;
 let idDict = {};
@@ -545,6 +546,297 @@ export default function BotsBox(props) {
           id={"botsContainerInner"}
           style={{ width: "100%", height: 2000, direction: "ltr" }}
         >
+                <Grow in={true} {...{ timeout: 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("whiteboard")}
+                    style={{
+                      width: 'calc(50% - 24px)',
+                      height: 150,
+                      position: "absolute",
+                      left: 16,
+                      top: 16,
+                      transform: "translateY(+128px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      display: "flex",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        position: "relative",
+                      }}
+                    >
+                      <img style={{width: 'calc(100% - 8px)', height: 'calc(100% - 8px)', position: 'absolute', left: 4, top: 0}} alt={'whiteboard'} src={WhiteboardIcon} />
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "calc(100% - 32px)",
+                          left: 0,
+                          fontWeight: "bold",
+                          color: colors.text,
+                          width: "100%"
+                        }}
+                      >
+                        وایت بورد
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
+                <Grow in={true} {...{ timeout: 2 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("taskboard")}
+                    style={{
+                      width: 'calc(50% - 24px)',
+                      height: 150,
+                      position: "absolute",
+                      left: 'calc(50% + 8px)',
+                      top: 16,
+                      transform: "translateY(+128px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
+                      display: "flex",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        position: "relative",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        تسک بورد
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
+                <Grow in={true} {...{ timeout: 3 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("filestorage")}
+                    style={{
+                      width: 'calc(50% - 24px)',
+                      height: 150,
+                      position: "absolute",
+                      left: 16,
+                      top: 16 + 150 + 16,
+                      transform: "translateY(+128px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(225deg, rgba(217, 175, 217, 0.5) 0%, rgba(151, 217, 225, 0.5) 100%)",
+                      display: "flex",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        position: "relative",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        فایل ها
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
+                <Grow in={true} {...{ timeout: 4 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("videochat")}
+                    style={{
+                      width: 'calc(50% - 24px)',
+                      height: 150,
+                      position: "absolute",
+                      left: 'calc(50% + 8px)',
+                      top: 16 + 150 + 16,
+                      transform: "translateY(+128px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
+                      display: "flex",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        position: "relative",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        ویدئو چت
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
+                <Grow in={true} {...{ timeout: 5 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("polling")}
+                    style={{
+                      width: 'calc(50% - 24px)',
+                      height: 150,
+                      position: "absolute",
+                      left: 16,
+                      top: 16 + 150 + 16 + 150 + 16,
+                      transform: "translateY(+128px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
+                      display: "flex",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        position: "relative",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        رای گیری
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
+                <Grow in={true} {...{ timeout: 6 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("notes")}
+                    style={{
+                      width: 'calc(50% - 24px)',
+                      height: 150,
+                      position: "absolute",
+                      left: 'calc(50% + 8px)',
+                      top: 16 + 150 + 16 + 150 + 16,
+                      transform: "translateY(+128px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(98, 132, 255, 0.5) 50%, rgba(255, 0, 0, 0.5) 100%)",
+                      display: "flex",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        position: "relative",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        یادداشت ها
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
+                <Grow in={true} {...{ timeout: 7 * 650 }}>
+                  <Paper
+                    onClick={() => props.onModuleSelected("deck")}
+                    style={{
+                      width: 'calc(50% - 24px)',
+                      height: 150,
+                      position: "absolute",
+                      left: 16,
+                      top: 16 + 150 + 16 + 150 + 16 + 150 + 16,
+                      transform: "translateY(+128px)",
+                      borderRadius: 24,
+                      backdropFilter: "blur(10px)",
+                      backgroundColor: "transparent",
+                      backgroundImage:
+                        "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
+                      display: "flex",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        position: "relative",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: 27,
+                          fontWeight: "bold",
+                          transform: "translateY(-50%)",
+                          color: "#fff",
+                          width: "100%",
+                          textAlign: "right",
+                        }}
+                      >
+                        سالن ارائه
+                      </Typography>
+                    </div>
+                  </Paper>
+                </Grow>
           {widgets.map((ww, index) => {
             if (editMode === true) {
               return (
@@ -655,385 +947,7 @@ export default function BotsBox(props) {
                 </Rnd>
               );
             } else {
-              return ww.id === "whiteboard" ? (
-                <Grow in={true} {...{ timeout: 650 }}>
-                  <Paper
-                    onClick={() => props.onModuleSelected("whiteboard")}
-                    style={{
-                      width: ww.width === null ? 150 : ww.width,
-                      height: ww.height === null ? 150 : ww.height,
-                      position: "absolute",
-                      left: ww.x,
-                      top: ww.y,
-                      transform: "translateY(+144px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(98, 132, 255, 0.5) 50%, rgba(255, 0, 0, 0.5) 100%)",
-                      display: "flex",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Avatar
-                        style={{
-                          width: 96,
-                          height: 96,
-                          marginLeft: 27,
-                          marginTop: 27,
-                        }}
-                        src={
-                          "https://cdn.dribbble.com/users/64533/screenshots/15988309/media/168ff694237775fe784c3597d481c0df.gif"
-                        }
-                      />
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        وایت بورد
-                      </Typography>
-                    </div>
-                  </Paper>
-                </Grow>
-              ) : ww.id === "taskboard" ? (
-                <Grow in={true} {...{ timeout: 2 * 650 }}>
-                  <Paper
-                    onClick={() => props.onModuleSelected("taskboard")}
-                    style={{
-                      width: ww.width === null ? 150 : ww.width,
-                      height: ww.height === null ? 150 : ww.height,
-                      position: "absolute",
-                      left: ww.x,
-                      top: ww.y,
-                      transform: "translateY(+144px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
-                      display: "flex",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Avatar
-                        style={{
-                          width: 96,
-                          height: 96,
-                          marginLeft: 27,
-                          marginTop: 27,
-                        }}
-                        src={
-                          "https://cdn.dribbble.com/users/2202649/screenshots/13995054/media/b08e2ee6c6aa058abd3bd268e0fdfc07.png"
-                        }
-                      />
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        تسک بورد
-                      </Typography>
-                    </div>
-                  </Paper>
-                </Grow>
-              ) : ww.id === "filestorage" ? (
-                <Grow in={true} {...{ timeout: 3 * 650 }}>
-                  <Paper
-                    onClick={() => props.onModuleSelected("filestorage")}
-                    style={{
-                      width: ww.width === null ? 150 : ww.width,
-                      height: ww.height === null ? 150 : ww.height,
-                      position: "absolute",
-                      left: ww.x,
-                      top: ww.y,
-                      transform: "translateY(+144px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(225deg, rgba(217, 175, 217, 0.5) 0%, rgba(151, 217, 225, 0.5) 100%)",
-                      display: "flex",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Avatar
-                        style={{
-                          width: 96,
-                          height: 96,
-                          marginLeft: 27,
-                          marginTop: 27,
-                        }}
-                        src={
-                          "https://cdn.dribbble.com/users/59138/screenshots/16532391/media/1e1af62832ee575bd13369b9c93941fc.png"
-                        }
-                      />
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        فایل ها
-                      </Typography>
-                    </div>
-                  </Paper>
-                </Grow>
-              ) : ww.id === "videochat" ? (
-                <Grow in={true} {...{ timeout: 4 * 650 }}>
-                  <Paper
-                    onClick={() => props.onModuleSelected("videochat")}
-                    style={{
-                      width: ww.width === null ? 150 : ww.width,
-                      height: ww.height === null ? 150 : ww.height,
-                      position: "absolute",
-                      left: ww.x,
-                      top: ww.y,
-                      transform: "translateY(+144px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
-                      display: "flex",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Avatar
-                        style={{
-                          width: 96,
-                          height: 96,
-                          marginLeft: 27,
-                          marginTop: 27,
-                        }}
-                        src={
-                          "https://cdn.dribbble.com/users/6230165/screenshots/15935130/media/417730a823332743665a45e34321768b.jpg"
-                        }
-                      />
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        ویدئو چت
-                      </Typography>
-                    </div>
-                  </Paper>
-                </Grow>
-              ) : ww.id === "polling" ? (
-                <Grow in={true} {...{ timeout: 5 * 650 }}>
-                  <Paper
-                    onClick={() => props.onModuleSelected("polling")}
-                    style={{
-                      width: ww.width === null ? 150 : ww.width,
-                      height: ww.height === null ? 150 : ww.height,
-                      position: "absolute",
-                      left: ww.x,
-                      top: ww.y,
-                      transform: "translateY(+144px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
-                      display: "flex",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Avatar
-                        style={{
-                          width: 96,
-                          height: 96,
-                          marginLeft: 27,
-                          marginTop: 27,
-                        }}
-                        src={
-                          "https://cdn.dribbble.com/users/418124/screenshots/16078601/media/6673ebf22f822cbf30a7d8e2c8eff821.png?compress=1&resize=450x338&vertical=top"
-                        }
-                      />
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        رای گیری
-                      </Typography>
-                    </div>
-                  </Paper>
-                </Grow>
-              ) : ww.id === "notes" ? (
-                <Grow in={true} {...{ timeout: 6 * 650 }}>
-                  <Paper
-                    onClick={() => props.onModuleSelected("notes")}
-                    style={{
-                      width: ww.width === null ? 150 : ww.width,
-                      height: ww.height === null ? 150 : ww.height,
-                      position: "absolute",
-                      left: ww.x,
-                      top: ww.y,
-                      transform: "translateY(+144px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(98, 132, 255, 0.5) 50%, rgba(255, 0, 0, 0.5) 100%)",
-                      display: "flex",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Avatar
-                        style={{
-                          width: 96,
-                          height: 96,
-                          marginLeft: 27,
-                          marginTop: 27,
-                        }}
-                        src={
-                          "https://cdn.dribbble.com/users/1250/screenshots/17698452/media/a5b291c4347cea266d8dad1b7cde85dc.png?compress=1&resize=450x338&vertical=top"
-                        }
-                      />
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        یادداشت ها
-                      </Typography>
-                    </div>
-                  </Paper>
-                </Grow>
-              ) : ww.id === "deck" ? (
-                <Grow in={true} {...{ timeout: 7 * 650 }}>
-                  <Paper
-                    onClick={() => props.onModuleSelected("deck")}
-                    style={{
-                      width: ww.width === null ? 150 : ww.width,
-                      height: ww.height === null ? 150 : ww.height,
-                      position: "absolute",
-                      left: ww.x,
-                      top: ww.y,
-                      transform: "translateY(+144px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
-                      display: "flex",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Avatar
-                        style={{
-                          width: 96,
-                          height: 96,
-                          marginLeft: 27,
-                          marginTop: 27,
-                        }}
-                        src={
-                          "https://cdn.dribbble.com/users/6170281/screenshots/17953880/media/db1652121a9c892b0da71281b27051a9.png?compress=1&resize=400x300&vertical=top"
-                        }
-                      />
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        سالن ارائه
-                      </Typography>
-                    </div>
-                  </Paper>
-                </Grow>
-              ) : (
+              return (
                 <BotContainer
                   step={index}
                   realIdPrefix={"widget_" + ww.id + "_element_"}
