@@ -20,6 +20,10 @@ import { currentRoomId } from "../../App";
 import WhiteboardIcon from '../../images/whiteboard.png';
 import TaskboardIcon from '../../images/taskboard.png';
 import FilesIcon from '../../images/files.png';
+import VoteIcon from '../../images/vote.png';
+import VideochatIcon from '../../images/videochat.png';
+import PresentationIcon from '../../images/presentation.png';
+import NotesIcon from '../../images/notebook.png';
 
 var lastScrollTop = 0;
 let idDict = {};
@@ -562,15 +566,18 @@ export default function BotsBox(props) {
                       display: "flex",
                     }}
                   >
-                    <div
+                    <Paper
                       style={{
                         width: "100%",
                         height: "100%",
                         position: "relative",
+                        backgroundColor: colors.field,
+                        borderRadius: '50%',
+                        backdropFilter: 'blur(10px)'
                       }}
                     >
-                      <img style={{width: 'calc(100% - 8px)', height: 'calc(100% - 8px)', position: 'absolute', left: 4, top: 0}} alt={'whiteboard'} src={WhiteboardIcon} />
-                    </div>
+                      <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={WhiteboardIcon} />
+                    </Paper>
                   </div>
                 </Grow>
                 <Grow in={true} {...{ timeout: 2 * 650 }}>
@@ -587,15 +594,18 @@ export default function BotsBox(props) {
                       display: "flex",
                     }}
                   >
-                    <div
+                    <Paper
                       style={{
                         width: "100%",
                         height: "100%",
                         position: "relative",
+                        backgroundColor: colors.field,
+                        borderRadius: '50%',
+                        backdropFilter: 'blur(10px)'
                       }}
                     >
-                      <img style={{width: 'calc(100% - 8px)', height: 'calc(100% - 8px)', position: 'absolute', left: 4, top: 0}} alt={'whiteboard'} src={TaskboardIcon} />
-                    </div>
+                      <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={TaskboardIcon} />
+                    </Paper>
                   </div>
                 </Grow>
                 <Grow in={true} {...{ timeout: 3 * 650 }}>
@@ -611,19 +621,22 @@ export default function BotsBox(props) {
                       display: "flex",
                     }}
                   >
-                  <div
+                  <Paper
                     style={{
                       width: "100%",
                       height: "100%",
                       position: "relative",
+                      backgroundColor: colors.field,
+                      borderRadius: '50%',
+                      backdropFilter: 'blur(10px)'
                     }}
                   >
-                    <img style={{width: 'calc(100% - 24px)', height: 'calc(100% - 8px)', position: 'absolute', left: 12, top: 0}} alt={'whiteboard'} src={FilesIcon} />
-                  </div>
+                    <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={FilesIcon} />
+                  </Paper>
                   </div>
                 </Grow>
                 <Grow in={true} {...{ timeout: 4 * 650 }}>
-                  <Paper
+                  <div
                     onClick={() => props.onModuleSelected("videochat")}
                     style={{
                       width: 'calc(50% - 24px)',
@@ -632,40 +645,25 @@ export default function BotsBox(props) {
                       left: 'calc(50% + 8px)',
                       top: 16 + 150 + 16,
                       transform: "translateY(+128px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
-                      display: "flex",
+                      display: "flex"
                     }}
                   >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        ویدئو چت
-                      </Typography>
-                    </div>
+                  <Paper
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative",
+                      backgroundColor: colors.field,
+                      borderRadius: '50%',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                  >
+                    <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={VideochatIcon} />
                   </Paper>
+                  </div>
                 </Grow>
                 <Grow in={true} {...{ timeout: 5 * 650 }}>
-                  <Paper
+                  <div
                     onClick={() => props.onModuleSelected("polling")}
                     style={{
                       width: 'calc(50% - 24px)',
@@ -674,40 +672,25 @@ export default function BotsBox(props) {
                       left: 16,
                       top: 16 + 150 + 16 + 150 + 16,
                       transform: "translateY(+128px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
                       display: "flex",
                     }}
                   >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        رای گیری
-                      </Typography>
-                    </div>
+                  <Paper
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative",
+                      backgroundColor: colors.field,
+                      borderRadius: '50%',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                  >
+                    <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={VoteIcon} />
                   </Paper>
+                  </div>
                 </Grow>
                 <Grow in={true} {...{ timeout: 6 * 650 }}>
-                  <Paper
+                  <div
                     onClick={() => props.onModuleSelected("notes")}
                     style={{
                       width: 'calc(50% - 24px)',
@@ -716,40 +699,25 @@ export default function BotsBox(props) {
                       left: 'calc(50% + 8px)',
                       top: 16 + 150 + 16 + 150 + 16,
                       transform: "translateY(+128px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(98, 132, 255, 0.5) 50%, rgba(255, 0, 0, 0.5) 100%)",
                       display: "flex",
                     }}
                   >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        یادداشت ها
-                      </Typography>
-                    </div>
+                  <Paper
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative",
+                      backgroundColor: colors.field,
+                      borderRadius: '50%',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                  >
+                    <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={NotesIcon} />
                   </Paper>
+                  </div>
                 </Grow>
                 <Grow in={true} {...{ timeout: 7 * 650 }}>
-                  <Paper
+                  <div
                     onClick={() => props.onModuleSelected("deck")}
                     style={{
                       width: 'calc(50% - 24px)',
@@ -758,37 +726,22 @@ export default function BotsBox(props) {
                       left: 16,
                       top: 16 + 150 + 16 + 150 + 16 + 150 + 16,
                       transform: "translateY(+128px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(315deg, rgba(133, 255, 189, 0.5) 0%, rgba(255, 251, 125, 0.5) 100%)",
                       display: "flex",
                     }}
                   >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        سالن ارائه
-                      </Typography>
-                    </div>
+                  <Paper
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative",
+                      backgroundColor: colors.field,
+                      borderRadius: '50%',
+                      backdropFilter: 'blur(10px)'
+                    }}
+                  >
+                    <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={PresentationIcon} />
                   </Paper>
+                  </div>
                 </Grow>
           {widgets.map((ww, index) => {
             if (editMode === true) {
