@@ -18,6 +18,8 @@ import {
 import { Rnd } from "react-rnd";
 import { currentRoomId } from "../../App";
 import WhiteboardIcon from '../../images/whiteboard.png';
+import TaskboardIcon from '../../images/taskboard.png';
+import FilesIcon from '../../images/files.png';
 
 var lastScrollTop = 0;
 let idDict = {};
@@ -547,7 +549,7 @@ export default function BotsBox(props) {
           style={{ width: "100%", height: 2000, direction: "ltr" }}
         >
                 <Grow in={true} {...{ timeout: 650 }}>
-                  <Paper
+                  <div
                     onClick={() => props.onModuleSelected("whiteboard")}
                     style={{
                       width: 'calc(50% - 24px)',
@@ -556,8 +558,6 @@ export default function BotsBox(props) {
                       left: 16,
                       top: 16,
                       transform: "translateY(+128px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
                       backgroundColor: "transparent",
                       display: "flex",
                     }}
@@ -570,23 +570,11 @@ export default function BotsBox(props) {
                       }}
                     >
                       <img style={{width: 'calc(100% - 8px)', height: 'calc(100% - 8px)', position: 'absolute', left: 4, top: 0}} alt={'whiteboard'} src={WhiteboardIcon} />
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "calc(100% - 32px)",
-                          left: 0,
-                          fontWeight: "bold",
-                          color: colors.text,
-                          width: "100%"
-                        }}
-                      >
-                        وایت بورد
-                      </Typography>
                     </div>
-                  </Paper>
+                  </div>
                 </Grow>
                 <Grow in={true} {...{ timeout: 2 * 650 }}>
-                  <Paper
+                  <div
                     onClick={() => props.onModuleSelected("taskboard")}
                     style={{
                       width: 'calc(50% - 24px)',
@@ -595,11 +583,7 @@ export default function BotsBox(props) {
                       left: 'calc(50% + 8px)',
                       top: 16,
                       transform: "translateY(+128px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
                       backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(43deg, rgba(65, 88, 208, 0.5) 0%, rgba(200, 80, 192, 0.5) 50%, rgba(255, 204, 112, 0.5) 100%)",
                       display: "flex",
                     }}
                   >
@@ -610,25 +594,12 @@ export default function BotsBox(props) {
                         position: "relative",
                       }}
                     >
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        تسک بورد
-                      </Typography>
+                      <img style={{width: 'calc(100% - 8px)', height: 'calc(100% - 8px)', position: 'absolute', left: 4, top: 0}} alt={'whiteboard'} src={TaskboardIcon} />
                     </div>
-                  </Paper>
+                  </div>
                 </Grow>
                 <Grow in={true} {...{ timeout: 3 * 650 }}>
-                  <Paper
+                  <div
                     onClick={() => props.onModuleSelected("filestorage")}
                     style={{
                       width: 'calc(50% - 24px)',
@@ -637,37 +608,19 @@ export default function BotsBox(props) {
                       left: 16,
                       top: 16 + 150 + 16,
                       transform: "translateY(+128px)",
-                      borderRadius: 24,
-                      backdropFilter: "blur(10px)",
-                      backgroundColor: "transparent",
-                      backgroundImage:
-                        "linear-gradient(225deg, rgba(217, 175, 217, 0.5) 0%, rgba(151, 217, 225, 0.5) 100%)",
                       display: "flex",
                     }}
                   >
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                      }}
-                    >
-                      <Typography
-                        style={{
-                          position: "absolute",
-                          top: "50%",
-                          right: 27,
-                          fontWeight: "bold",
-                          transform: "translateY(-50%)",
-                          color: "#fff",
-                          width: "100%",
-                          textAlign: "right",
-                        }}
-                      >
-                        فایل ها
-                      </Typography>
-                    </div>
-                  </Paper>
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative",
+                    }}
+                  >
+                    <img style={{width: 'calc(100% - 24px)', height: 'calc(100% - 8px)', position: 'absolute', left: 12, top: 0}} alt={'whiteboard'} src={FilesIcon} />
+                  </div>
+                  </div>
                 </Grow>
                 <Grow in={true} {...{ timeout: 4 * 650 }}>
                   <Paper
