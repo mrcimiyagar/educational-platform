@@ -17,13 +17,13 @@ import {
 } from "../../util/Utils";
 import { Rnd } from "react-rnd";
 import { currentRoomId } from "../../App";
-import WhiteboardIcon from '../../images/whiteboard.png';
-import TaskboardIcon from '../../images/taskboard.png';
-import FilesIcon from '../../images/files.png';
-import VoteIcon from '../../images/vote.png';
-import VideochatIcon from '../../images/videochat.png';
-import PresentationIcon from '../../images/presentation.png';
-import NotesIcon from '../../images/notebook.png';
+import WhiteboardIcon from "../../images/whiteboard.png";
+import TaskboardIcon from "../../images/taskboard.png";
+import FilesIcon from "../../images/files.png";
+import VoteIcon from "../../images/vote.png";
+import VideochatIcon from "../../images/videochat.png";
+import PresentationIcon from "../../images/presentation.png";
+import NotesIcon from "../../images/notebook.png";
 
 var lastScrollTop = 0;
 let idDict = {};
@@ -404,104 +404,48 @@ export default function BotsBox(props) {
       }),
       redirect: "follow",
     };
-    fetch(serverRoot + "/bot/get_widget_workers", requestOptions)
+    fetch(serverRoot + "/bot/get_module_workers", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        result.moduleWorkers.forEach((mw) => {
+          widgets.push({
+            id: mw.id,
+            widgetId: mw.type,
+            roomId: props.roomId,
+            bossId: "admin",
+            x: mw.x,
+            y: mw.y,
+            width: "150px",
+            height: "150px",
+          });
+        });
+      });
+    let requestOptions2 = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.roomId,
+      }),
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/bot/get_widget_workers", requestOptions2)
       .then((response) => response.json())
       .then((result) => {
         if (result.status === "success") {
           widgets = result.widgetWorkers;
-          widgets.push({
-            id: "whiteboard",
-            widgetId: "whiteboard",
-            roomId: props.roomId,
-            bossId: "admin",
-            x: 32,
-            y: 32,
-            width: "calc(100% - 64px)",
-            height: "150px",
-          });
-          widgets.push({
-            id: "taskboard",
-            widgetId: "taskboard",
-            roomId: props.roomId,
-            bossId: "admin",
-            x: 32,
-            y: 32 + 150 + 32,
-            width: "calc(100% - 64px)",
-            height: "150px",
-          });
-          widgets.push({
-            id: "filestorage",
-            widgetId: "filestorage",
-            roomId: props.roomId,
-            bossId: "admin",
-            x: 32,
-            y: 32 + 150 + 32 + 150 + 32,
-            width: "calc(100% - 64px)",
-            height: "150px",
-          });
-          widgets.push({
-            id: "videochat",
-            widgetId: "videochat",
-            roomId: props.roomId,
-            bossId: "admin",
-            x: 32,
-            y: 32 + 150 + 32 + 150 + 32 + 150 + 32,
-            width: "calc(100% - 64px)",
-            height: "150px",
-          });
-          widgets.push({
-            id: "polling",
-            widgetId: "polling",
-            roomId: props.roomId,
-            bossId: "admin",
-            x: 32,
-            y: 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32,
-            width: "calc(100% - 64px)",
-            height: "150px",
-          });
-          widgets.push({
-            id: "notes",
-            widgetId: "notes",
-            roomId: props.roomId,
-            bossId: "admin",
-            x: 32,
-            y: 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32 + 150 + 32,
-            width: "calc(100% - 64px)",
-            height: "150px",
-          });
-          widgets.push({
-            id: "deck",
-            widgetId: "deck",
-            roomId: props.roomId,
-            bossId: "admin",
-            x: 32,
-            y:
-              32 +
-              150 +
-              32 +
-              150 +
-              32 +
-              150 +
-              32 +
-              150 +
-              32 +
-              150 +
-              32 +
-              150 +
-              32,
-            width: "calc(100% - 64px)",
-            height: "150px",
-          });
           forceUpdate();
           result.widgetWorkers.forEach((ww) => {
             if (
-              ww.id !== "whiteboard" &&
-              ww.id !== "taskboard" &&
-              ww.id !== "filestorage" &&
-              ww.id !== "videochat" &&
-              ww.id !== "polling" &&
-              ww.id !== "notes" &&
-              ww.id !== "deck"
+              ww.widgetId !== "whiteboard" &&
+              ww.widgetId !== "taskboard" &&
+              ww.widgetId !== "filestorage" &&
+              ww.widgetId !== "videochat" &&
+              ww.widgetId !== "polling" &&
+              ww.widgetId !== "notes" &&
+              ww.widgetId !== "deck"
             ) {
               requestInitGui(ww.id, false);
             }
@@ -552,198 +496,55 @@ export default function BotsBox(props) {
           id={"botsContainerInner"}
           style={{ width: "100%", height: 2000, direction: "ltr" }}
         >
-                <Grow in={true} {...{ timeout: 650 }}>
-                  <div
-                    onClick={() => props.onModuleSelected("whiteboard")}
-                    style={{
-                      width: 'calc(50% - 24px)',
-                      height: 150,
-                      position: "absolute",
-                      left: 16,
-                      top: 16,
-                      transform: "translateY(+128px)",
-                      backgroundColor: "transparent",
-                      display: "flex",
-                    }}
-                  >
-                    <Paper
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                        backgroundColor: colors.field,
-                        borderRadius: '50%',
-                        backdropFilter: 'blur(10px)'
-                      }}
-                    >
-                      <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={WhiteboardIcon} />
-                    </Paper>
-                  </div>
-                </Grow>
-                <Grow in={true} {...{ timeout: 2 * 650 }}>
-                  <div
-                    onClick={() => props.onModuleSelected("taskboard")}
-                    style={{
-                      width: 'calc(50% - 24px)',
-                      height: 150,
-                      position: "absolute",
-                      left: 'calc(50% + 8px)',
-                      top: 16,
-                      transform: "translateY(+128px)",
-                      backgroundColor: "transparent",
-                      display: "flex",
-                    }}
-                  >
-                    <Paper
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        position: "relative",
-                        backgroundColor: colors.field,
-                        borderRadius: '50%',
-                        backdropFilter: 'blur(10px)'
-                      }}
-                    >
-                      <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={TaskboardIcon} />
-                    </Paper>
-                  </div>
-                </Grow>
-                <Grow in={true} {...{ timeout: 3 * 650 }}>
-                  <div
-                    onClick={() => props.onModuleSelected("filestorage")}
-                    style={{
-                      width: 'calc(50% - 24px)',
-                      height: 150,
-                      position: "absolute",
-                      left: 16,
-                      top: 16 + 150 + 16,
-                      transform: "translateY(+128px)",
-                      display: "flex",
-                    }}
-                  >
-                  <Paper
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
-                      backgroundColor: colors.field,
-                      borderRadius: '50%',
-                      backdropFilter: 'blur(10px)'
-                    }}
-                  >
-                    <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={FilesIcon} />
-                  </Paper>
-                  </div>
-                </Grow>
-                <Grow in={true} {...{ timeout: 4 * 650 }}>
-                  <div
-                    onClick={() => props.onModuleSelected("videochat")}
-                    style={{
-                      width: 'calc(50% - 24px)',
-                      height: 150,
-                      position: "absolute",
-                      left: 'calc(50% + 8px)',
-                      top: 16 + 150 + 16,
-                      transform: "translateY(+128px)",
-                      display: "flex"
-                    }}
-                  >
-                  <Paper
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
-                      backgroundColor: colors.field,
-                      borderRadius: '50%',
-                      backdropFilter: 'blur(10px)'
-                    }}
-                  >
-                    <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={VideochatIcon} />
-                  </Paper>
-                  </div>
-                </Grow>
-                <Grow in={true} {...{ timeout: 5 * 650 }}>
-                  <div
-                    onClick={() => props.onModuleSelected("polling")}
-                    style={{
-                      width: 'calc(50% - 24px)',
-                      height: 150,
-                      position: "absolute",
-                      left: 16,
-                      top: 16 + 150 + 16 + 150 + 16,
-                      transform: "translateY(+128px)",
-                      display: "flex",
-                    }}
-                  >
-                  <Paper
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
-                      backgroundColor: colors.field,
-                      borderRadius: '50%',
-                      backdropFilter: 'blur(10px)'
-                    }}
-                  >
-                    <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={VoteIcon} />
-                  </Paper>
-                  </div>
-                </Grow>
-                <Grow in={true} {...{ timeout: 6 * 650 }}>
-                  <div
-                    onClick={() => props.onModuleSelected("notes")}
-                    style={{
-                      width: 'calc(50% - 24px)',
-                      height: 150,
-                      position: "absolute",
-                      left: 'calc(50% + 8px)',
-                      top: 16 + 150 + 16 + 150 + 16,
-                      transform: "translateY(+128px)",
-                      display: "flex",
-                    }}
-                  >
-                  <Paper
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
-                      backgroundColor: colors.field,
-                      borderRadius: '50%',
-                      backdropFilter: 'blur(10px)'
-                    }}
-                  >
-                    <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={NotesIcon} />
-                  </Paper>
-                  </div>
-                </Grow>
-                <Grow in={true} {...{ timeout: 7 * 650 }}>
-                  <div
-                    onClick={() => props.onModuleSelected("deck")}
-                    style={{
-                      width: 'calc(50% - 24px)',
-                      height: 150,
-                      position: "absolute",
-                      left: 16,
-                      top: 16 + 150 + 16 + 150 + 16 + 150 + 16,
-                      transform: "translateY(+128px)",
-                      display: "flex",
-                    }}
-                  >
-                  <Paper
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
-                      backgroundColor: colors.field,
-                      borderRadius: '50%',
-                      backdropFilter: 'blur(10px)'
-                    }}
-                  >
-                    <img style={{width: 'calc(100% - 64px)', height: 'calc(100% - 64px)', position: 'absolute', left: 32, top: 32}} alt={'whiteboard'} src={PresentationIcon} />
-                  </Paper>
-                  </div>
-                </Grow>
           {widgets.map((ww, index) => {
+            if (
+              ww.widgetId === "whiteboard" ||
+              ww.widgetId === "taskboard" ||
+              ww.widgetId === "filestorage" ||
+              ww.widgetId === "videochat" ||
+              ww.widgetId === "polling" ||
+              ww.widgetId === "notes" ||
+              ww.widgetId === "deck"
+            ) {
+              <Grow in={true} {...{ timeout: index * 650 }}>
+                <div
+                  onClick={() => props.onModuleSelected(ww.widgetId)}
+                  style={{
+                    width: "calc(50% - 24px)",
+                    height: 150,
+                    position: "absolute",
+                    left: ww.x,
+                    top: ww.y,
+                    transform: "translateY(+128px)",
+                    backgroundColor: "transparent",
+                    display: "flex",
+                  }}
+                >
+                  <Paper
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      position: "relative",
+                      backgroundColor: colors.field,
+                      borderRadius: "50%",
+                      backdropFilter: "blur(10px)",
+                    }}
+                  >
+                    <img
+                      style={{
+                        width: "calc(100% - 64px)",
+                        height: "calc(100% - 64px)",
+                        position: "absolute",
+                        left: 32,
+                        top: 32,
+                      }}
+                      alt={ww.widgetId}
+                      src={ww.widgetId === 'whiteboard' ? WhiteboardIcon : ww.widgetId === 'taskboard' ? TaskboardIcon : ww.widgetId === 'filestorage' ? FilesIcon : ww.widgetId === 'videochat' ? VideochatIcon : ww.widgetId === 'vote' ? VoteIcon : ww.widgetId === 'notes' ? NotesIcon : ww.widgetId === 'deck' ? PresentationIcon : ''}
+                    />
+                  </Paper>
+                </div>
+              </Grow>;
+            }
             if (editMode === true) {
               return (
                 <Rnd
@@ -909,7 +710,12 @@ export default function BotsBox(props) {
             }}
           >
             {myBots.map((bot, index) => (
-              <div style={{backgroundColor: mySelectedBot === index ? colors.field : 'transparent'}}>
+              <div
+                style={{
+                  backgroundColor:
+                    mySelectedBot === index ? colors.field : "transparent",
+                }}
+              >
                 <Avatar
                   onClick={() => setMySelectedBot(index)}
                   style={{

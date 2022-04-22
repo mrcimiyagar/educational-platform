@@ -40,6 +40,7 @@ let TaskProject;
 let TaskBoard;
 let TaskList;
 let TaskCard;
+let ModuleWorker;
 
 const pgUsername = "postgres";
 const pgPassword = "3g5h165tsK65j1s564L69ka5R168kk37sut5ls3Sk2t";
@@ -98,6 +99,7 @@ module.exports = {
     await prepareP2pExistanceModel();
     await prepareMessageSeenModel();
     await prepareWidgetWorker();
+    await prepareModuleWorkerModel();
 
     let adminAcc = await Account.findOne({ where: { role: "admin" } });
     if (adminAcc === null) {
@@ -1046,4 +1048,27 @@ async function prepareTaskCard() {
   TaskCard.belongsTo(TaskList, { foreignKey: "taskListId" });
   await TaskCard.sync();
   module.exports["TaskCard"] = TaskCard;
+}
+
+async function prepareModuleWorkerModel() {
+  ModuleWorker = sequelizeClient.define(
+    "ModuleWorker",
+    {
+      id: {
+        type: Sequelize.BIGINT,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      type: Sequelize.STRING,
+      roomId: Sequelize.BIGINT,
+      x: Sequelize.INTEGER,
+      y: Sequelize.INTEGER
+    },
+    {
+      freezeTableName: true,
+    }
+  );
+  ModuleWorker.belongsTo(Room, { foreignKey: "roomId" });
+  await ModuleWorker.sync();
+  module.exports["ModuleWorker"] = ModuleWorker;
 }

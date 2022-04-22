@@ -79,6 +79,16 @@ router.post("/get_subscriptions", jsonParser, async function (req, res) {
       where: { id: subscriptions.map((s) => s.botId) },
     });
     let result = [];
+    result.push({
+      id: 'modules',
+      title: modules,
+      widgets: [
+        {
+          id: 'whiteboard',
+          title: 'whiteboard'
+        }
+      ]
+    });
     for (let i = 0; i < bots.length; i++) {
       let bot = bots[i];
       let botCopy = { ...bot };
@@ -1782,6 +1792,81 @@ router.post("/get_widget_workers", jsonParser, async function (req, res) {
       where: { roomId: membership.roomId },
     });
     res.send({ status: "success", widgetWorkers: widgetWorkers });
+  });
+});
+
+router.post("/add_prebuilt_module", jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
+    if (membership === null || membership === undefined) {
+      res.send({
+        status: "error",
+        errorCode: "e1",
+        message: "access denied.",
+      });
+      return;
+    }
+    let mw = await sw.ModuleWorker.create({type: req.body.type, roomId: req.body.roomId, x: req.body.x, y: req.body.y});
+    require("../server").pushToExcept(
+      "room_" + mw.roomId,
+      "module_worker_added",
+      mw,
+      user.id
+    );
+    res.send({ status: "success", moduleWorker: mw });
+  });
+});
+
+router.post("/update_prebuilt_module", jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
+    if (membership === null || membership === undefined) {
+      res.send({
+        status: "error",
+        errorCode: "e1",
+        message: "access denied.",
+      });
+      return;
+    }
+    let mw = await sw.ModuleWorker.findOne({where: {id: req.body.moduleWorkerId, roomId: membership.roomId}});
+    mw.x = req.body.x;
+    mw.y = req.body.y;
+    await mw.save();
+    require("../server").pushToExcept(
+      "room_" + mw.roomId,
+      "module_worker_moved",
+      mw,
+      user.id
+    );
+    res.send({ status: "success" });
+  });
+});
+
+router.post("/get_module_workers", jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user, acc) => {
+    let room =
+      req.body.roomId === undefined
+        ? null
+        : await sw.Room.findOne({ where: { id: req.body.roomId } });
+    if (room !== null && room.accessType === "public") {
+      let moduleWorkers = await sw.ModuleWorker.findAll({
+        raw: true,
+        where: { roomId: req.body.roomId },
+      });
+      res.send({ status: "success", moduleWorkers: moduleWorkers });
+      return;
+    }
+    if (membership === null || membership === undefined) {
+      res.send({
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
+      });
+      return;
+    }
+    let moduleWorkers = await sw.ModuleWorker.findAll({
+      raw: true,
+      where: { roomId: membership.roomId },
+    });
+    res.send({ status: "success", moduleWorkers: moduleWorkers });
   });
 });
 
