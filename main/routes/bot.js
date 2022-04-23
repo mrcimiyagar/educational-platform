@@ -1851,8 +1851,8 @@ router.post("/update_prebuilt_module", jsonParser, async function (req, res) {
       return;
     }
     let mw = await sw.ModuleWorker.findOne({where: {id: req.body.moduleWorkerId, roomId: membership.roomId}});
-    mw.x = req.body.x;
-    mw.y = req.body.y;
+    mw.x = Math.floor(Number(req.body.x));
+    mw.y = Math.floor(Number(req.body.y));
     await mw.save();
     require("../server").pushToExcept(
       "room_" + mw.roomId,
