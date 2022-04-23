@@ -1,4 +1,3 @@
-const { cacheNotification } = require("../src/App");
 
 console.log("Service Worker Loaded...");
 
@@ -10,12 +9,6 @@ self.addEventListener("push", e => {
   self.registration.showNotification(data.title, {
     body: data.body,
     Icon: '/logo512.png'
-  });
-  cacheNotification({
-    title: data.title,
-    text: data.body,
-    Icon: '/logo512.png',
-    time: Date.now()
   });
 });
 
