@@ -86,7 +86,31 @@ router.post("/get_subscriptions", jsonParser, async function (req, res) {
         {
           id: 'whiteboard',
           title: 'whiteboard'
-        }
+        },
+        {
+          id: 'taskboard',
+          title: 'taskboard'
+        },
+        {
+          id: 'filestorage',
+          title: 'filestorage'
+        },
+        {
+          id: 'videochat',
+          title: 'videochat'
+        },
+        {
+          id: 'vote',
+          title: 'vote'
+        },
+        {
+          id: 'notebook',
+          title: 'notebook'
+        },
+        {
+          id: 'deck',
+          title: 'deck'
+        },
       ]
     });
     for (let i = 0; i < bots.length; i++) {

@@ -24,6 +24,7 @@ import VoteIcon from "../../images/vote.png";
 import VideochatIcon from "../../images/videochat.png";
 import PresentationIcon from "../../images/presentation.png";
 import NotesIcon from "../../images/notebook.png";
+import ModulesIcon from "../../images/modules.png";
 
 var lastScrollTop = 0;
 let idDict = {};
@@ -393,6 +394,7 @@ export default function BotsBox(props) {
   });
 
   let updateDesktop = () => {
+    widgets = [];
     let requestOptions = {
       method: "POST",
       headers: {
@@ -407,6 +409,7 @@ export default function BotsBox(props) {
     fetch(serverRoot + "/bot/get_module_workers", requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        if (result.status === 'success') {
         result.moduleWorkers.forEach((mw) => {
           widgets.push({
             id: mw.id,
@@ -419,6 +422,8 @@ export default function BotsBox(props) {
             height: "150px",
           });
         });
+        forceUpdate();
+      }
       });
     let requestOptions2 = {
       method: "POST",
@@ -435,9 +440,8 @@ export default function BotsBox(props) {
       .then((response) => response.json())
       .then((result) => {
         if (result.status === "success") {
-          widgets = result.widgetWorkers;
-          forceUpdate();
           result.widgetWorkers.forEach((ww) => {
+            widgets.push(ww);
             if (
               ww.widgetId !== "whiteboard" &&
               ww.widgetId !== "taskboard" &&
@@ -450,6 +454,7 @@ export default function BotsBox(props) {
               requestInitGui(ww.id, false);
             }
           });
+          forceUpdate();
         }
       })
       .catch((ex) => console.log(ex));
@@ -497,54 +502,6 @@ export default function BotsBox(props) {
           style={{ width: "100%", height: 2000, direction: "ltr" }}
         >
           {widgets.map((ww, index) => {
-            if (
-              ww.widgetId === "whiteboard" ||
-              ww.widgetId === "taskboard" ||
-              ww.widgetId === "filestorage" ||
-              ww.widgetId === "videochat" ||
-              ww.widgetId === "polling" ||
-              ww.widgetId === "notes" ||
-              ww.widgetId === "deck"
-            ) {
-              <Grow in={true} {...{ timeout: index * 650 }}>
-                <div
-                  onClick={() => props.onModuleSelected(ww.widgetId)}
-                  style={{
-                    width: "calc(50% - 24px)",
-                    height: 150,
-                    position: "absolute",
-                    left: ww.x,
-                    top: ww.y,
-                    transform: "translateY(+128px)",
-                    backgroundColor: "transparent",
-                    display: "flex",
-                  }}
-                >
-                  <Paper
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
-                      backgroundColor: colors.field,
-                      borderRadius: "50%",
-                      backdropFilter: "blur(10px)",
-                    }}
-                  >
-                    <img
-                      style={{
-                        width: "calc(100% - 64px)",
-                        height: "calc(100% - 64px)",
-                        position: "absolute",
-                        left: 32,
-                        top: 32,
-                      }}
-                      alt={ww.widgetId}
-                      src={ww.widgetId === 'whiteboard' ? WhiteboardIcon : ww.widgetId === 'taskboard' ? TaskboardIcon : ww.widgetId === 'filestorage' ? FilesIcon : ww.widgetId === 'videochat' ? VideochatIcon : ww.widgetId === 'vote' ? VoteIcon : ww.widgetId === 'notes' ? NotesIcon : ww.widgetId === 'deck' ? PresentationIcon : ''}
-                    />
-                  </Paper>
-                </div>
-              </Grow>;
-            }
             if (editMode === true) {
               return (
                 <Rnd
@@ -558,28 +515,61 @@ export default function BotsBox(props) {
                   onDragStop={(e, d) => {
                     ww.x = d.x;
                     ww.y = d.y;
-                    let requestOptions = {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                        token: token,
-                      },
-                      body: JSON.stringify({
-                        widgetWorkerId: ww.id,
-                        x: d.x,
-                        y: d.y,
-                        width: ww.width,
-                        height: ww.height,
-                      }),
-                      redirect: "follow",
-                    };
-                    fetch(
-                      serverRoot + "/bot/update_widget_worker",
-                      requestOptions
-                    )
-                      .then((response) => response.json())
-                      .then((result) => {})
-                      .catch((ex) => console.log(ex));
+                    if (
+                      ww.widgetId === "whiteboard" ||
+                      ww.widgetId === "taskboard" ||
+                      ww.widgetId === "filestorage" ||
+                      ww.widgetId === "videochat" ||
+                      ww.widgetId === "polling" ||
+                      ww.widgetId === "notes" ||
+                      ww.widgetId === "deck"
+                    ) {
+                      let requestOptions = {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                          token: token,
+                        },
+                        body: JSON.stringify({
+                          roomId: props.roomId,
+                          moduleWorkerId: ww.id,
+                          x: d.x,
+                          y: d.y,
+                        }),
+                        redirect: "follow",
+                      };
+                      fetch(
+                        serverRoot + "/bot/update_prebuilt_module",
+                        requestOptions
+                      )
+                        .then((response) => response.json())
+                        .then((result) => {})
+                        .catch((ex) => console.log(ex));
+                    }
+                    else {
+                      let requestOptions = {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                          token: token,
+                        },
+                        body: JSON.stringify({
+                          widgetWorkerId: ww.id,
+                          x: d.x,
+                          y: d.y,
+                          width: ww.width,
+                          height: ww.height,
+                        }),
+                        redirect: "follow",
+                      };
+                      fetch(
+                        serverRoot + "/bot/update_widget_worker",
+                        requestOptions
+                      )
+                        .then((response) => response.json())
+                        .then((result) => {})
+                        .catch((ex) => console.log(ex));
+                    }
                   }}
                   onResizeStop={(e, direction, ref, delta, position) => {
                     ww.width = Number(
@@ -621,7 +611,189 @@ export default function BotsBox(props) {
                       .then((result) => {})
                       .catch((ex) => console.log(ex));
                   }}
+                  enableResizing={!(
+                    ww.widgetId === "whiteboard" ||
+                    ww.widgetId === "taskboard" ||
+                    ww.widgetId === "filestorage" ||
+                    ww.widgetId === "videochat" ||
+                    ww.widgetId === "polling" ||
+                    ww.widgetId === "notes" ||
+                    ww.widgetId === "deck"
+                  )}
                 >
+                  {
+                    (
+                      ww.widgetId === "whiteboard" ||
+                      ww.widgetId === "taskboard" ||
+                      ww.widgetId === "filestorage" ||
+                      ww.widgetId === "videochat" ||
+                      ww.widgetId === "polling" ||
+                      ww.widgetId === "notes" ||
+                      ww.widgetId === "deck"
+                    ) ? (
+                      <Grow in={true} {...{ timeout: index * 650 }}>
+                        <div
+                          onClick={() => props.onModuleSelected(ww.widgetId)}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            position: "absolute",
+                            left: 0,
+                            top: 0,
+                            transform: "translateY(+128px)",
+                            backgroundColor: "transparent",
+                            display: "flex",
+                          }}
+                        >
+                          <Paper
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              position: "relative",
+                              backgroundColor: colors.field,
+                              borderRadius: "50%",
+                              backdropFilter: "blur(10px)",
+                            }}
+                          >
+                            <img
+                              style={{
+                                width: "calc(100% - 64px)",
+                                height: "calc(100% - 64px)",
+                                position: "absolute",
+                                left: 32,
+                                top: 32,
+                              }}
+                              alt={ww.widgetId}
+                              src={
+                                ww.widgetId === "whiteboard"
+                                  ? WhiteboardIcon
+                                  : ww.widgetId === "taskboard"
+                                  ? TaskboardIcon
+                                  : ww.widgetId === "filestorage"
+                                  ? FilesIcon
+                                  : ww.widgetId === "videochat"
+                                  ? VideochatIcon
+                                  : ww.widgetId === "vote"
+                                  ? VoteIcon
+                                  : ww.widgetId === "notes"
+                                  ? NotesIcon
+                                  : ww.widgetId === "deck"
+                                  ? PresentationIcon
+                                  : ""
+                              }
+                            />
+                          </Paper>
+                        </div>
+                      </Grow>
+                    ) : (
+                  <BotContainer
+                  step={index}
+                  realIdPrefix={"widget_" + ww.id + "_element_"}
+                  widgetWorkerId={ww.id}
+                  isPreview={false}
+                  onIdDictPrepared={(idD) => {
+                    idDict[ww.id] = idD;
+                  }}
+                  onElClick={(elId) => {
+                    if (clickEvents[ww.id][elId] !== undefined) {
+                      clickEvents[ww.id][elId]();
+                    }
+                  }}
+                  editMode={editMode}
+                  widgetWidth={"100%"}
+                  widgetHeight={"100%"}
+                  widgetX={0}
+                  widgetY={0}
+                  gui={guis[ww.id]}
+                />
+                    )
+                  }
+                  {(
+                      ww.widgetId === "whiteboard" ||
+                      ww.widgetId === "taskboard" ||
+                      ww.widgetId === "filestorage" ||
+                      ww.widgetId === "videochat" ||
+                      ww.widgetId === "polling" ||
+                      ww.widgetId === "notes" ||
+                      ww.widgetId === "deck"
+                    ) ? null : (
+                  <Paper
+                    style={{
+                      width: 32,
+                      height: 32,
+                      position: "fixed",
+                      right: -16,
+                      bottom: -16,
+                    }}
+                  />
+                )}
+                </Rnd>
+              );
+            } else {
+              return ((
+                    ww.widgetId === "whiteboard" ||
+                    ww.widgetId === "taskboard" ||
+                    ww.widgetId === "filestorage" ||
+                    ww.widgetId === "videochat" ||
+                    ww.widgetId === "polling" ||
+                    ww.widgetId === "notes" ||
+                    ww.widgetId === "deck"
+                  ) ? (
+                    <Grow in={true} {...{ timeout: index * 650 }}>
+                      <div
+                        onClick={() => props.onModuleSelected(ww.widgetId)}
+                        style={{
+                          width: "calc(50% - 24px)",
+                          height: 150,
+                          position: "absolute",
+                          left: ww.x,
+                          top: ww.y,
+                          transform: "translateY(+128px)",
+                          backgroundColor: "transparent",
+                          display: "flex",
+                        }}
+                      >
+                        <Paper
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            position: "relative",
+                            backgroundColor: colors.field,
+                            borderRadius: "50%",
+                            backdropFilter: "blur(10px)",
+                          }}
+                        >
+                          <img
+                            style={{
+                              width: "calc(100% - 64px)",
+                              height: "calc(100% - 64px)",
+                              position: "absolute",
+                              left: 32,
+                              top: 32,
+                            }}
+                            alt={ww.widgetId}
+                            src={
+                              ww.widgetId === "whiteboard"
+                                ? WhiteboardIcon
+                                : ww.widgetId === "taskboard"
+                                ? TaskboardIcon
+                                : ww.widgetId === "filestorage"
+                                ? FilesIcon
+                                : ww.widgetId === "videochat"
+                                ? VideochatIcon
+                                : ww.widgetId === "vote"
+                                ? VoteIcon
+                                : ww.widgetId === "notes"
+                                ? NotesIcon
+                                : ww.widgetId === "deck"
+                                ? PresentationIcon
+                                : ""
+                            }
+                          />
+                        </Paper>
+                      </div>
+                    </Grow>
+                  ) : (
                   <BotContainer
                     step={index}
                     realIdPrefix={"widget_" + ww.id + "_element_"}
@@ -636,46 +808,13 @@ export default function BotsBox(props) {
                       }
                     }}
                     editMode={editMode}
-                    widgetWidth={"100%"}
-                    widgetHeight={"100%"}
-                    widgetX={0}
-                    widgetY={0}
+                    widgetWidth={ww.width === null ? 150 : ww.width}
+                    widgetHeight={ww.height === null ? 150 : ww.height}
+                    widgetX={ww.x}
+                    widgetY={ww.y}
                     gui={guis[ww.id]}
                   />
-                  <Paper
-                    style={{
-                      width: 32,
-                      height: 32,
-                      position: "fixed",
-                      right: -16,
-                      bottom: -16,
-                    }}
-                  />
-                </Rnd>
-              );
-            } else {
-              return (
-                <BotContainer
-                  step={index}
-                  realIdPrefix={"widget_" + ww.id + "_element_"}
-                  widgetWorkerId={ww.id}
-                  isPreview={false}
-                  onIdDictPrepared={(idD) => {
-                    idDict[ww.id] = idD;
-                  }}
-                  onElClick={(elId) => {
-                    if (clickEvents[ww.id][elId] !== undefined) {
-                      clickEvents[ww.id][elId]();
-                    }
-                  }}
-                  editMode={editMode}
-                  widgetWidth={ww.width === null ? 150 : ww.width}
-                  widgetHeight={ww.height === null ? 150 : ww.height}
-                  widgetX={ww.x}
-                  widgetY={ww.y}
-                  gui={guis[ww.id]}
-                />
-              );
+              ))
             }
           })}
           <div id="ghostpane" style={{ display: "none" }}></div>
@@ -726,8 +865,10 @@ export default function BotsBox(props) {
                     marginLeft: 12,
                   }}
                   src={
-                    serverRoot +
-                    `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
+                    bot.id === "modules"
+                      ? ModulesIcon
+                      : serverRoot +
+                        `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
                   }
                 />
                 <Typography
@@ -744,37 +885,77 @@ export default function BotsBox(props) {
                   <div
                     style={{ width: "100%" }}
                     onClick={() => {
-                      let requestOptions = {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                          token: token,
-                        },
-                        body: JSON.stringify({
-                          botId: myBots[mySelectedBot].id,
-                          roomId: props.roomId,
-                          widgetId: wp.id,
-                          x: 100,
-                          y: 100,
-                          width: 150,
-                          height: 150,
-                        }),
-                        redirect: "follow",
-                      };
-                      fetch(
-                        serverRoot + "/bot/create_widget_worker",
-                        requestOptions
-                      )
-                        .then((response) => response.json())
-                        .then((result) => {
-                          if (result.status === "success") {
-                            updateDesktop();
-                            alert("ربات به میزکار افزوده شد.");
-                          } else {
-                            alert(result.message);
-                          }
-                        })
-                        .catch((ex) => console.log(ex));
+                      if (
+                        wp.id === "whiteboard" ||
+                        wp.id === "taskboard" ||
+                        wp.id === "filestorage" ||
+                        wp.id === "videochat" ||
+                        wp.id === "polling" ||
+                        wp.id === "notes" ||
+                        wp.id === "deck"
+                      ) {
+                        let requestOptions = {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                            token: token,
+                          },
+                          body: JSON.stringify({
+                            roomId: props.roomId,
+                            type: wp.id,
+                            x: 100,
+                            y: 100
+                          }),
+                          redirect: "follow",
+                        };
+                        fetch(
+                          serverRoot + "/bot/add_prebuilt_module",
+                          requestOptions
+                        )
+                          .then((response) => response.json())
+                          .then((result) => {
+                            if (result.status === "success") {
+                              updateDesktop();
+                              alert("ماژول به میزکار افزوده شد.");
+                            } else {
+                              alert(result.message);
+                            }
+                          })
+                          .catch((ex) => console.log(ex));
+                      }
+                      else {
+                        let requestOptions = {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                            token: token,
+                          },
+                          body: JSON.stringify({
+                            botId: myBots[mySelectedBot].id,
+                            roomId: props.roomId,
+                            widgetId: wp.id,
+                            x: 100,
+                            y: 100,
+                            width: 150,
+                            height: 150,
+                          }),
+                          redirect: "follow",
+                        };
+                        fetch(
+                          serverRoot + "/bot/create_widget_worker",
+                          requestOptions
+                        )
+                          .then((response) => response.json())
+                          .then((result) => {
+                            if (result.status === "success") {
+                              updateDesktop();
+                              alert("ربات به میزکار افزوده شد.");
+                            } else {
+                              alert(result.message);
+                            }
+                          })
+                          .catch((ex) => console.log(ex));
+                      }
                     }}
                   >
                     <img
@@ -787,8 +968,22 @@ export default function BotsBox(props) {
                         marginTop: 12,
                       }}
                       src={
-                        serverRoot +
-                        `/file/download_widget_thumbnail?token=${token}&widgetId=${wp.id}`
+                        wp.id === "whiteboard"
+                          ? WhiteboardIcon
+                          : wp.id === "taskboard"
+                          ? TaskboardIcon
+                          : wp.id === "filestorage"
+                          ? FilesIcon
+                          : wp.id === "videochat"
+                          ? VideochatIcon
+                          : wp.id === "vote"
+                          ? VoteIcon
+                          : wp.id === "notes"
+                          ? NotesIcon
+                          : wp.id === "deck"
+                          ? PresentationIcon
+                          : serverRoot +
+                            `/file/download_widget_thumbnail?token=${token}&widgetId=${wp.id}`
                       }
                     />
                     <Typography
