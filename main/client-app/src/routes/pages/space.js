@@ -13,7 +13,7 @@ import {
   Slide,
   Fab,
 } from "@material-ui/core";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { setWallpaper } from "../..";
 import {
   gotoPage,
@@ -768,6 +768,7 @@ export default function Space(props) {
       </SwipeableDrawer>
 
       {authenticationValid ? null : <Authentication />}
+      <Suspense fallback={<div />}>
       {selectedNav === 0 ? (
         <MessengerPage
           tab_index={"0"}
@@ -941,6 +942,7 @@ export default function Space(props) {
           }}
         />
       ) : null}
+      </Suspense>
       {!wallpaperLoaded ? (
         <div
           style={{
