@@ -838,6 +838,7 @@ export default function BotsBox(props) {
             width: 360,
             height: "100%",
             display: "flex",
+            overflow: 'none'
           }}
         >
           <div
@@ -846,6 +847,7 @@ export default function BotsBox(props) {
               width: 80,
               height: "100%",
               background: colors.primaryMedium,
+              overflowY: 'auto'
             }}
           >
             {myBots.map((bot, index) => (
@@ -879,7 +881,8 @@ export default function BotsBox(props) {
               </div>
             ))}
           </div>
-          <div style={{ width: 280, height: "100%", position: "relative" }}>
+          <div style={{ width: 280, height: "100%", position: "relative",
+              overflowY: 'auto' }}>
             {Object.values(myBots).length > 0
               ? myBots[mySelectedBot].widgets.map((wp) => (
                   <div

@@ -436,13 +436,15 @@ function Workshop(props) {
               height: "100%",
               display: "flex",
               direction: "rtl",
+              overflow: 'none'
             }}
           >
             <div
               style={{
                 width: 80,
                 height: "100%",
-                background: colors.primaryDark
+                background: colors.primaryDark,
+                overflowY: 'auto'
               }}
             >
               {bots.map((bot, index) => {
@@ -484,6 +486,7 @@ function Workshop(props) {
               style={{
                 width: 360 - 80,
                 height: "100%",
+                overflowY: 'auto'
               }}
             >
               {bots.length > 0 ? (
