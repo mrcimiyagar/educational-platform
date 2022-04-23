@@ -19,15 +19,6 @@ async function send() {
         let callback = async () => {
           console.log('Service Worker Registered...');
 
-          const data = {
-            type: 'CACHE_URLS',
-            payload: [
-                window.location.href,
-                ...performance.getEntriesByType('resource').map((r) => r.name)
-            ]
-          };
-          reg.installing.postMessage(data);
-
           // Register Push
           console.log('Registering Push...')
           const subscription = await reg.pushManager.subscribe({
