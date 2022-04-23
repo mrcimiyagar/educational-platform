@@ -1,4 +1,4 @@
-import { cacheNotification } from "../src/App";
+const { cacheNotification } = require("../src/App");
 
 console.log("Service Worker Loaded...");
 
