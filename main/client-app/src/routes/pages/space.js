@@ -115,6 +115,7 @@ export default function Space(props) {
   const [wallpaperLoaded, setWallpaperLoaded] = React.useState(false);
   const [showAudioPlayer, setShowAudioPlayer] = React.useState(false);
   const [showVideoPlayer, setShowVideoPlayer] = React.useState(false);
+  const [selectedModuleWorkerId, setSelectedModuleWorkerId] = React.useState(undefined);
   openAudioPlayer = (roomId, fileId, src) => {
     openedAudio = {roomId, src, fileId};
     setShowAudioPlayer(true);
@@ -514,14 +515,12 @@ export default function Space(props) {
         <div style={{ width: "100%", height: 72 + 16 }} />
         <BotsBox
           openMenu={() => setMenuOpen(true)}
-          openDeck={openDeck}
-          openNotes={openNotes}
-          openPolls={openPolls}
           setMenuOpen={setMenuOpen}
           membership={membership}
           roomId={props.room_id}
           style={{ display: "block" }}
-          onModuleSelected={(modName) => {
+          onModuleSelected={(modName, mwId) => {
+            setSelectedModuleWorkerId(mwId);
             if (modName === "whiteboard") {
               setSelectedNav(7);
             } else if (modName === "taskboard") {
@@ -825,7 +824,7 @@ export default function Space(props) {
             setInTheGame(true);
           }}
           membership={membership}
-          roomId={props.room_id}
+          roomId={selectedModuleWorkerId}
         />
       ) : null}
       {selectedNav === 8 ? (
@@ -834,7 +833,7 @@ export default function Space(props) {
             setSelectedNav(undefined);
             setInTheGame(true);
           }}
-          roomId={props.room_id}
+          roomId={selectedModuleWorkerId}
         />
       ) : null}
       {selectedNav === 9 ? (
@@ -843,14 +842,14 @@ export default function Space(props) {
             setSelectedNav(undefined);
             setInTheGame(true);
           }}
-          roomId={props.room_id}
+          roomId={selectedModuleWorkerId}
         />
       ) : null}
       {selectedNav === 14 ? (
         <ConfBox
           webcamOn={webcamOn}
           currentRoomNav={2}
-          roomId={props.room_id}
+          roomId={selectedModuleWorkerId}
           membership={membership}
           onClose={() => {
             setSelectedNav(undefined);
@@ -860,7 +859,7 @@ export default function Space(props) {
       ) : null}
       {selectedNav === 15 ? (
         <PollBox
-          roomId={props.room_id}
+          roomId={selectedModuleWorkerId}
           membership={membership}
           onClose={() => {
             setSelectedNav(undefined);
@@ -870,7 +869,7 @@ export default function Space(props) {
       ) : null}
       {selectedNav === 16 ? (
         <NotePage
-          room_id={props.room_id}
+          room_id={selectedModuleWorkerId}
           onClose={() => {
             setSelectedNav(undefined);
             setInTheGame(true);
@@ -879,7 +878,7 @@ export default function Space(props) {
       ) : null}
       {selectedNav === 17 ? (
         <Deck
-          room_id={props.room_id}
+          room_id={selectedModuleWorkerId}
           membership={membership}
           onClose={() => {
             setSelectedNav(undefined);

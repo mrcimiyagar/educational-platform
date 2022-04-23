@@ -633,7 +633,7 @@ export default function BotsBox(props) {
                     ) ? (
                       <Grow in={true} {...{ timeout: index * 650 }}>
                         <div
-                          onClick={() => props.onModuleSelected(ww.widgetId)}
+                          onClick={() => props.onModuleSelected(ww.widgetId, ww.id)}
                           style={{
                             width: '100%',
                             height: '100%',
@@ -741,7 +741,7 @@ export default function BotsBox(props) {
                   ) ? (
                     <Grow in={true} {...{ timeout: index * 650 }}>
                       <div
-                        onClick={() => props.onModuleSelected(ww.widgetId)}
+                        onClick={() => props.onModuleSelected(ww.widgetId, ww.id)}
                         style={{
                           width: 150,
                           height: 150,
