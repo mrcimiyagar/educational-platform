@@ -100,8 +100,8 @@ router.post("/get_subscriptions", jsonParser, async function (req, res) {
           title: 'videochat'
         },
         {
-          id: 'vote',
-          title: 'vote'
+          id: 'polling',
+          title: 'polling'
         },
         {
           id: 'notes',
