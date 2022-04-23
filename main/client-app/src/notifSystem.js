@@ -36,7 +36,7 @@ async function send() {
             return;
           }
           try {
-            await fetch('https://backend.kasperian.cloud/subscribe', {
+            await fetch('https://society.kasperian.cloud/subscribe', {
               method: 'POST',
               body: JSON.stringify(subscription),
               headers: {

@@ -40,7 +40,12 @@ self.addEventListener('message', (event) => {
 
 self.addEventListener('fetch', (e) => {
   e.respondWith((async () => {
+    try {
     const response = await fetch(e.request);
     return response;
+    } catch(ex) {
+      console.error(ex);
+    }
+    return null;
   })());
 });
