@@ -104,8 +104,8 @@ router.post("/get_subscriptions", jsonParser, async function (req, res) {
           title: 'vote'
         },
         {
-          id: 'notebook',
-          title: 'notebook'
+          id: 'notes',
+          title: 'notes'
         },
         {
           id: 'deck',
