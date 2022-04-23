@@ -673,7 +673,7 @@ export default function BotsBox(props) {
                                   ? FilesIcon
                                   : ww.widgetId === "videochat"
                                   ? VideochatIcon
-                                  : ww.widgetId === "vote"
+                                  : ww.widgetId === "polling"
                                   ? VoteIcon
                                   : ww.widgetId === "notes"
                                   ? NotesIcon
@@ -781,7 +781,7 @@ export default function BotsBox(props) {
                                 ? FilesIcon
                                 : ww.widgetId === "videochat"
                                 ? VideochatIcon
-                                : ww.widgetId === "vote"
+                                : ww.widgetId === "polling"
                                 ? VoteIcon
                                 : ww.widgetId === "notes"
                                 ? NotesIcon
@@ -979,7 +979,7 @@ export default function BotsBox(props) {
                           ? FilesIcon
                           : wp.id === "videochat"
                           ? VideochatIcon
-                          : wp.id === "vote"
+                          : wp.id === "polling"
                           ? VoteIcon
                           : wp.id === "notes"
                           ? NotesIcon
