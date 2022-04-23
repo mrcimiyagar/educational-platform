@@ -12,7 +12,7 @@ self.addEventListener("push", e => {
   });
   notif.onclick = function(){
     window.parent.focus();
-    notification.close();
+    notif.close();
    }
 });
 
