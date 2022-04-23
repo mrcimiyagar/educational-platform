@@ -81,7 +81,7 @@ router.post("/get_subscriptions", jsonParser, async function (req, res) {
     let result = [];
     result.push({
       id: 'modules',
-      title: modules,
+      title: 'modules',
       widgets: [
         {
           id: 'whiteboard',
