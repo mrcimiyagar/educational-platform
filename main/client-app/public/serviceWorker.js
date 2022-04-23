@@ -6,10 +6,14 @@ let cacheName = 'js13kPWA-v2';
 self.addEventListener("push", e => {
   const data = e.data.json();
   console.log("Push Recieved...");
-  self.registration.showNotification(data.title, {
+  let notif = new Notification("Society", {
     body: data.body,
-    Icon: '/logo512.png'
+    icon: '/logo512.png'
   });
+  notif.onclick = function(){
+    window.parent.focus();
+    notification.close();
+   }
 });
 
 self.addEventListener('activate', (e) => {
