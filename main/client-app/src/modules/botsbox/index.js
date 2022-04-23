@@ -743,7 +743,7 @@ export default function BotsBox(props) {
                       <div
                         onClick={() => props.onModuleSelected(ww.widgetId)}
                         style={{
-                          width: "calc(50% - 24px)",
+                          width: 150,
                           height: 150,
                           position: "absolute",
                           left: ww.x,
