@@ -17,14 +17,6 @@ import { Dialog, TextField } from "@mui/material";
 import ProfileEditField from "../../components/ProfileEditField";
 import {setAuthenticationValid} from '../../App';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiFilledInput-root": {
-      background: "rgba(255, 255, 255, 0.5)",
-    },
-  },
-}));
-
 let registeredUsername = "";
 let registeredPassword = "";
 
@@ -246,7 +238,7 @@ export default function Authentication(props) {
                   .catch((error) => console.log("error", error));
               }}
             >
-              <VpnKeyIcon style={{color: colors.text}} />
+              <VpnKeyIcon sstyle={{fill: '#fff'}} />
               <div style={{ marginLeft: 8 }}>ثبت نام</div>
             </Fab>
             <Fab
@@ -395,7 +387,7 @@ export default function Authentication(props) {
                   .catch((error) => console.log("error", error));
               }}
             >
-              <VpnKeyIcon style={{fill: colors.text}} />
+              <VpnKeyIcon style={{fill: '#fff'}} />
               <div style={{ marginLeft: 8 }}>لاگین</div>
             </Fab>
             <Fab
