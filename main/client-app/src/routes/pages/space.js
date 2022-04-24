@@ -859,7 +859,8 @@ export default function Space(props) {
       ) : null}
       {selectedNav === 15 ? (
         <PollBox
-          roomId={selectedModuleWorkerId}
+          roomId={props.room_id}
+          moduleWorkerId={selectedModuleWorkerId}
           membership={membership}
           onClose={() => {
             setSelectedNav(undefined);

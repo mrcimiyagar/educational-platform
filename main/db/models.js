@@ -726,6 +726,7 @@ async function preparePollModel() {
       },
       creatorId: Sequelize.STRING,
       roomId: Sequelize.BIGINT,
+      moduleWorkerId: Sequelize.BIGINT,
       question: Sequelize.STRING,
     },
     {

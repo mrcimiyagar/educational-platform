@@ -26,7 +26,6 @@ import {
   useForceUpdate,
 } from "../../util/Utils";
 import BlackColorTextField from "../../components/BlackColorTextField";
-import { membership } from "../../routes/pages/room";
 
 export let togglePolling = undefined;
 
@@ -64,6 +63,7 @@ export function PollBox(props) {
       },
       body: JSON.stringify({
         roomId: Number(props.roomId),
+        moduleWorkerId: props.moduleWorkerId,
         offset: 0,
         limit: 100,
       }),
@@ -140,6 +140,7 @@ export function PollBox(props) {
       },
       body: JSON.stringify({
         roomId: props.roomId,
+        moduleWorkerId: props.moduleWorkerId,
         pollId: Number(polls[pollIndex].id),
         optionId: Number(polls[pollIndex].options[optionIndex].id),
       }),
@@ -166,16 +167,6 @@ export function PollBox(props) {
       },
       secondary: {
         main: "#000",
-      },
-    },
-  });
-  let theme2 = createTheme({
-    palette: {
-      primary: {
-        main: "rgba(75, 134, 180, 0.75)",
-      },
-      secondary: {
-        main: "#fff",
       },
     },
   });
@@ -212,7 +203,7 @@ export function PollBox(props) {
           width: "100%",
           height: "100%",
           borderRadius: isDesktop() ? "0 0 24px 24px" : undefined,
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
+          backgroundColor: colors.backSide,
           backdropFilter: "blur(15px)",
         }}
       >
@@ -425,6 +416,7 @@ export function PollBox(props) {
                       },
                       body: JSON.stringify({
                         roomId: props.roomId,
+                        moduleWorkerId: props.moduleWorkerId,
                         question: pollQuestion,
                         options: pollOptions.map((o) => o.caption),
                       }),
