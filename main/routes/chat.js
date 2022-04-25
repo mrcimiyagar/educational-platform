@@ -242,6 +242,10 @@ router.post('/create_message', jsonParser, async function (req, res) {
         pushNotification(u.id, 'پیام جدید از ' + u.firstName, msgCopy.text);
       }
     });
+    let workerIds = await sw.Workership.findAll({raw: true, where: {roomId: roomRaw.id}}).map(w => w.botId);
+    workerIds.forEach(wId => {
+      require('../server').signlePushTo(wId, 'message-added', { message: msgCopy });
+    });
     let mems = await sw.Membership.findAll({raw: true, where: {roomId: roomRaw.id}});
     let allUsers = await sw.User.findAll({raw: true, where: {id: mems.map(mem => mem.userId)}});
     let usersDict = {};
