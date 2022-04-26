@@ -344,12 +344,12 @@ export default function Chat(props) {
         
         var m = new SpeechSynthesisUtterance();
         var voices = window.speechSynthesis.getVoices();
-        m.voice = voices[10];
+        m.voice = voices[30];
         m.volume = 1; // From 0 to 1
-        m.rate = 1; // From 0.1 to 10
-        m.pitch = 2; // From 0 to 2
+        m.rate = 0.9; // From 0.1 to 10
+        m.pitch = 1; // From 0 to 2
         m.text = msg.text;
-        m.lang = "en";
+        m.lang = "it";
         speechSynthesis.speak(m);
 
         let isAtEnd = false;
