@@ -65,6 +65,8 @@ export let replaceMessageInTheList = () => {};
 let membership = undefined;
 export let setMembership = () => {};
 
+let lastMsgId = undefined;
+
 let goingToRoom = false;
 let lastLoadCount = 25;
 let messagesDict = {};
@@ -337,7 +339,19 @@ export default function Chat(props) {
   };
   addMessageToList = (msg) => {
     try {
-      if (msg.roomId === props.room_id) {
+      if (msg.roomId === props.room_id && lastMsgId !== msg.id) {
+        lastMsgId = msg.id;
+        
+        var m = new SpeechSynthesisUtterance();
+        var voices = window.speechSynthesis.getVoices();
+        m.voice = voices[10];
+        m.volume = 1; // From 0 to 1
+        m.rate = 1; // From 0.1 to 10
+        m.pitch = 2; // From 0 to 2
+        m.text = msg.text;
+        m.lang = "en";
+        speechSynthesis.speak(m);
+
         let isAtEnd = false;
         let scroller = document.getElementById("chatScroller");
         if (
@@ -1003,7 +1017,7 @@ export default function Chat(props) {
         style={{ position: "fixed", top: -256, opacity: 0 }}
       ></div>
       <CustomImageBox
-        src={themeMode === 'light' ? SpaceWallpaperLight : SpaceWallpaperDark}
+        src={themeMode === "light" ? SpaceWallpaperLight : SpaceWallpaperDark}
         borderRadius={isInMessenger() ? "0 0 0 24px" : 0}
         style={{ position: "fixed" }}
       />
@@ -1216,7 +1230,9 @@ export default function Chat(props) {
             <ArrowDownward />
           </Fab>
         </div>
-        {(showProfile && user !== undefined) ? <Profile onClose={() => setShowProfile(false)} user_id={user.id}/> : null}
+        {showProfile && user !== undefined ? (
+          <Profile onClose={() => setShowProfile(false)} user_id={user.id} />
+        ) : null}
       </div>
     </Dialog>
   );
