@@ -349,7 +349,7 @@ export default function Chat(props) {
         m.rate = 0.9; // From 0.1 to 10
         m.pitch = 1; // From 0 to 2
         m.text = msg.text;
-        m.lang = "it";
+        m.lang = "en";
         speechSynthesis.speak(m);
 
         let isAtEnd = false;
