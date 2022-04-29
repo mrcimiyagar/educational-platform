@@ -198,7 +198,7 @@ export default function Space(props) {
       signal: controller.signal,
     };
 
-    let enterRoomPromise = fetch(
+    let enterRoomPromise = window.originalFetch(
       serverRoot + "/room/enter_room",
       requestOptions2
     );
