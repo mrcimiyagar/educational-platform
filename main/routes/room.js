@@ -585,7 +585,7 @@ router.post("/get_space_rooms", jsonParser, async function (req, res) {
         memberships.forEach(m => {
           memValid[me.roomId] = true;
         });
-        roomsList = roomsList.filter(r => (memValid[r.id] === true || r.hidden === false));
+        roomsList = roomsList.filter(r => (memValid[r.id] === true || r.hidden !== true));
         res.send({ status: "success", rooms: roomsList });
       } else {
         res.send({
