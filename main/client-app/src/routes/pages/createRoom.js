@@ -6,10 +6,13 @@ import { serverRoot } from "../../util/Utils";
 import { reloadRoomsList } from "../../components/RoomTreeBox";
 import ProfileEditField from "../../components/ProfileEditField";
 import { Done } from "@material-ui/icons";
-import PrivatePublicToggle from '../../components/PrivatePublicToggle';
+import PrivatePublicToggle from "../../components/PrivatePublicToggle";
+import ShowHideToggle from "../../components/ShowHideToggle";
 
 export default function CreateRoom(props) {
   const [value, setValue] = React.useState("public");
+  const [hidden, setHidden] = React.useState(false);
+  const [isMine, setIsMine] = React.useState(false);
 
   const handleClose = () => {
     setBSO(false);
@@ -20,6 +23,24 @@ export default function CreateRoom(props) {
   };
 
   useEffect(() => {
+    let requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+      body: JSON.stringify({
+        spaceId: props.spaceId,
+      }),
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/room/is_space_mine", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result));
+        setIsMine(result.isMine);
+      })
+      .catch((error) => console.log("error", error));
     setOnBsClosed(handleClose);
     setBottomSheetContent(
       <div style={{ width: "100%", height: 450, direction: "rtl" }}>
@@ -43,6 +64,7 @@ export default function CreateRoom(props) {
                 chatType: "group",
                 spaceId: props.spaceId,
                 accessType: value,
+                hidden: hidden
               }),
               redirect: "follow",
             };
@@ -51,10 +73,9 @@ export default function CreateRoom(props) {
               .then((result) => {
                 console.log(JSON.stringify(result));
                 if (result.room !== undefined) {
-                  if  (props.reloadDataCallback !== undefined) {
+                  if (props.reloadDataCallback !== undefined) {
                     props.reloadDataCallback();
-                  }
-                  else {
+                  } else {
                     reloadRoomsList();
                   }
                   handleClose();
@@ -91,9 +112,30 @@ export default function CreateRoom(props) {
               paddingRight: 16,
             }}
           />
-          <div style={{width: '100%', textAlign: 'center', justifyContent: 'center', alignItems: 'center', marginTop: 32}}>
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 32,
+            }}
+          >
             <PrivatePublicToggle setParentValue={setValue} />
           </div>
+          {props.spaceId !== undefined && props.spaceId !== null && isMine ? (
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 32,
+              }}
+            >
+              <ShowHideToggle setParentValue={setHidden} />
+            </div>
+          ) : null}
         </Paper>
       </div>
     );

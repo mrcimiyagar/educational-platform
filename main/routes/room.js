@@ -32,6 +32,16 @@ router.post("/is_room_accessible", jsonParser, async function (req, res) {
   });
 });
 
+router.post("/is_space_mine", jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user) => {
+    let spaceSecret = await sw.SpaceSecret.findOne({where: {spaceId: req.body.spaceId}});
+    res.send({
+      status: "success",
+      isMine: (spaceSecret !== null && spaceSecret.ownerId === session.userId)
+    });
+  });
+});
+
 router.post("/update_permissions", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     sw.RoomSecret.findOne({ where: { roomId: membership.roomId } }).then(
@@ -342,6 +352,7 @@ router.post("/create_room", jsonParser, async function (req, res) {
               req.body.participentId !== undefined
                 ? "private"
                 : req.body.accessType,
+              hidden: req.body.hidden
           });
           roomId = room.id;
         } else {

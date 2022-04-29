@@ -612,6 +612,7 @@ async function prepareRoomModel() {
       chatType: Sequelize.STRING,
       avatarId: Sequelize.BIGINT,
       accessType: Sequelize.STRING,
+      hidden: Sequelize.BOOLEAN
     },
     {
       freezeTableName: true,

@@ -33,6 +33,7 @@ import {
   registerEvent,
   serverRoot,
   setRoom,
+  socket,
   unregisterEvent,
   useForceUpdate,
 } from "../../util/Utils";
@@ -272,10 +273,10 @@ export default function Space(props) {
       .catch((error) => console.log("error", error));
   };
 
-  //socket.io.removeAllListeners("reconnect");
-  //socket.io.on("reconnect", () => {
-  //loadData();
-  //});
+  socket.io.removeAllListeners("reconnect");
+  socket.io.on("reconnect", () => {
+    loadData();
+  });
 
   let syncWallpaper = () => {
     let requestOptions = {
