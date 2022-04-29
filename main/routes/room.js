@@ -19,7 +19,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { uuid } = require("uuidv4");
 const fetch = require("node-fetch");
-const { me } = require("../client-app/src/util/settings");
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
