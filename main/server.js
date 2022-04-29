@@ -52,7 +52,7 @@ app.post("/subscribe", jsonParser, async (req, res) => {
     // Send 201 - resource created
     res.status(201).json({});
     // Create payload
-    const payload = JSON.stringify({ title: "به ابر آسمان خوش آمدید." });
+    const payload = JSON.stringify({ body: "به ابر آسمان خوش آمدید." });
     // Pass object into sendNotification
     webpush
         .sendNotification(subscription, payload)

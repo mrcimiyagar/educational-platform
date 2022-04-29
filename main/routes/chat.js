@@ -227,10 +227,10 @@ router.post('/create_message', jsonParser, async function (req, res) {
       author: user,
     };
     let users = getRoomUsers(membership.roomId);
-    let pushNotification = (userId, title, text) => {
+    let pushNotification = (userId, text) => {
       let subscription = usersSubscriptions[userId];
       if (subscription === undefined) return;
-      const payload = JSON.stringify({ title: title, body: text });
+      const payload = JSON.stringify({ body: text });
       webpush
         .sendNotification(subscription, payload)
         .catch((err) => console.error(err));
@@ -239,7 +239,7 @@ router.post('/create_message', jsonParser, async function (req, res) {
     users.forEach((u) => {
       if (u.id !== session.userId) {
         require('../server').signlePushTo(u.id, 'message-added', { msgCopy });
-        pushNotification(u.id, 'پیام جدید از ' + u.firstName, msgCopy.text);
+        pushNotification(u.id, u.firstName + ': ' + msgCopy.text);
       }
     });
     let workerIds = (await sw.Workership.findAll({raw: true, where: {roomId: roomRaw.id}})).map(w => w.botId);
@@ -324,17 +324,17 @@ router.post('/create_bot_message', jsonParser, async function (req, res) {
       author: bot,
     };
     let users = getRoomUsers(workership.roomId);
-    let pushNotification = (userId, title, text) => {
+    let pushNotification = (userId, text) => {
       let subscription = usersSubscriptions[userId];
       if (subscription === undefined) return;
-      const payload = JSON.stringify({ title: title, body: text });
+      const payload = JSON.stringify({ body: text });
       webpush
         .sendNotification(subscription, payload)
         .catch((err) => console.error(err));
     }
     let roomRaw = await sw.Room.findOne({where: {id: workership.roomId}});
     users.forEach((user) => {
-      pushNotification(user.id, 'پیام جدید از ' + user.firstName, msgCopy.text);
+      pushNotification(user.id, user.firstName + ': ' + msgCopy.text);
       require('../server').signlePushTo(user.id, 'message-added', { msgCopy });
     });
     let mems = await sw.Membership.findAll({raw: true, where: {roomId: roomRaw.id}});
