@@ -169,17 +169,13 @@ export let registerEvent = (eventName, func) => {
   try {
     socket.on(eventName, func);
     eventDict[eventName] = func;
-  } catch (ex) {
-    console.error(ex);
-  }
+  } catch (ex) {}
 };
 export let unregisterEvent = (eventName) => {
   try {
     socket.removeAllListeners(eventName);
     delete eventDict[eventName];
-  } catch (ex) {
-    console.error(ex);
-  }
+  } catch (ex) {}
 };
 
 let pingTimer = undefined;

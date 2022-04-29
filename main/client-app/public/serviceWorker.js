@@ -5,6 +5,7 @@ let cacheName = "js13kPWA-v2";
 self.addEventListener("push", (e) => {
   const data = e.data.json();
   console.log("Push Recieved...");
+  self.navigator.setAppBadge(1);
   self.registration.showNotification("Society", {
     body: data.body,
     icon: "/logo512.png",
@@ -21,6 +22,7 @@ self.addEventListener("push", (e) => {
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
   if (event.action === 'openApp') {
+    self.navigator.clearAppBadge();
     self.clients.openWindow('/');
   }
 }, false);
