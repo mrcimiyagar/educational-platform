@@ -12,36 +12,8 @@ import ShowHideToggle from "../../components/ShowHideToggle";
 export default function CreateRoom(props) {
   const [value, setValue] = React.useState("public");
   const [hidden, setHidden] = React.useState(false);
-  const [isMine, setIsMine] = React.useState(false);
 
-  const handleClose = () => {
-    setBSO(false);
-    setTimeout(() => {
-      setBottomSheetContent(null);
-      props.onClose();
-    }, 250);
-  };
-
-  useEffect(() => {
-    let requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: token,
-      },
-      body: JSON.stringify({
-        spaceId: props.spaceId,
-      }),
-      redirect: "follow",
-    };
-    fetch(serverRoot + "/room/is_space_mine", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(JSON.stringify(result));
-        setIsMine(result.isMine);
-      })
-      .catch((error) => console.log("error", error));
-    setOnBsClosed(handleClose);
+  const showSheet = (isMine) => {
     setBottomSheetContent(
       <div style={{ width: "100%", height: 450, direction: "rtl" }}>
         <Fab
@@ -123,7 +95,7 @@ export default function CreateRoom(props) {
           >
             <PrivatePublicToggle setParentValue={setValue} />
           </div>
-          {props.spaceId !== undefined && props.spaceId !== null && isMine ? (
+          {isMine ? (
             <div
               style={{
                 width: "100%",
@@ -140,6 +112,41 @@ export default function CreateRoom(props) {
       </div>
     );
     setBSO(true);
+  };
+
+  const handleClose = () => {
+    setBSO(false);
+    setTimeout(() => {
+      setBottomSheetContent(null);
+      props.onClose();
+    }, 250);
+  };
+
+  useEffect(() => {
+    setOnBsClosed(handleClose);
+    if (props.spaceId === null || props.spaceId === undefined) {
+      showSheet(false);
+    }
+    else {
+      let requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          spaceId: props.spaceId,
+        }),
+        redirect: "follow",
+      };
+      fetch(serverRoot + "/room/is_space_mine", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(JSON.stringify(result));
+          showSheet(result.isMine);
+        })
+        .catch((error) => console.log("error", error));
+    }
   }, []);
   return null;
 }

@@ -19,6 +19,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { uuid } = require("uuidv4");
 const fetch = require("node-fetch");
+const { me } = require("../client-app/src/util/settings");
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
@@ -580,6 +581,12 @@ router.post("/get_space_rooms", jsonParser, async function (req, res) {
           })
         ).length > 0;
       if (isMember) {
+        let memberships = await sw.Membership.findAll({raw: true, where: {roomId: roomsList.map(r => r.id)}});
+        let memValid = {};
+        memberships.forEach(m => {
+          memValid[me.roomId] = true;
+        });
+        roomsList = roomsList.filter(r => (memValid[r.id] === true || r.hidden === false));
         res.send({ status: "success", rooms: roomsList });
       } else {
         res.send({
