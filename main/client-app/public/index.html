@@ -57,7 +57,7 @@
         return window.originalFetch(url,fetchOptions).catch(onError);
       }
       window.fetch = (url, fetchOptions) => {
-        return fetchRetry(url, 5000, 100, fetchOptions);
+        return fetchRetry(url, 10000, 100, fetchOptions);
       };
     </script>
     <!--
