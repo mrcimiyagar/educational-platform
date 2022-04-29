@@ -11,20 +11,16 @@ self.addEventListener("push", (e) => {
     vibrate: [200, 100, 200, 100, 200, 100, 200],
     actions: [
       {
-        action: 'openChat',
-        title: 'Open chat'
+        action: 'openApp',
+        title: 'خانه'
       }
     ]
   });
-  notif.onclick = function () {
-    window.parent.focus();
-    notif.close();
-  };
 });
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-  if (event.action === 'openChat') {
+  if (event.action === 'openApp') {
     self.clients.openWindow('/');
   }
 }, false);
