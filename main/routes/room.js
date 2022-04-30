@@ -649,6 +649,8 @@ router.post("/update_room", jsonParser, async function (req, res) {
           async function (room) {
             room.title = req.body.title;
             room.avatarId = req.body.avatarId;
+            room.hidden = req.body.hidden !== undefined ? req.body.hidden : room.hidden;
+            room.accessType = req.body.accessType !== undefined ? req.body.accessType : room.accessType;
             await room.save();
             let roomSecret = await sw.RoomSecret.findOne({
               where: { roomId: room.id },

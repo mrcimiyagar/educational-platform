@@ -4,7 +4,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import {colors} from '../../util/settings';
 
 export default function ShowHideToggle(props) {
-  const [value, setValue] = React.useState(false);
+  const [value, setValue] = React.useState(props.defaultValue);
 
   const handleChange = (event, v) => {
     setValue(v);

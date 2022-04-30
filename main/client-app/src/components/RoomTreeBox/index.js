@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { Settings } from "@material-ui/icons";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -19,7 +20,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
 import { Add } from "@mui/icons-material";
-import { Fab } from "@mui/material";
+import { Fab, IconButton } from "@mui/material";
 import "chartjs-plugin-datalabels";
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
@@ -98,6 +99,8 @@ function StyledTreeItem(props) {
   const {
     labelText,
     labelIcon: LabelIcon,
+    actionIcon: ActionIcon,
+    action,
     labelInfo,
     color,
     bgColor,
@@ -128,6 +131,17 @@ function StyledTreeItem(props) {
           >
             {labelInfo}
           </Typography>
+          <IconButton onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            action();
+          }}>
+          <ActionIcon
+            color="inherit"
+            className={classes.labelIcon}
+            style={{ color: colors.icon }}
+          />
+          </IconButton>
         </div>
       }
       style={{
@@ -245,6 +259,7 @@ export let RoomTreeBox = (props) => {
   const classes = useStyles();
 
   let [treeData, setTreeData] = React.useState([]);
+  const [isMine, setIsMine] = React.useState(false);
   let processUsers = (rooms) => {
     rooms.forEach((room) => {
       room.expanded = true;
@@ -304,6 +319,27 @@ export let RoomTreeBox = (props) => {
       reloadRoomsList();
     }
   }, [props.room]);
+
+  useEffect(() => {
+    let requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+      body: JSON.stringify({
+        spaceId: props.room.spaceId,
+      }),
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/room/is_space_mine", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(JSON.stringify(result));
+        setIsMine(result.isMine);
+      })
+      .catch((error) => console.log("error", error));
+  }, []);
 
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
@@ -374,6 +410,8 @@ export let RoomTreeBox = (props) => {
                   nodeId={"room-" + room.id}
                   labelText={room.title}
                   labelIcon={AccountBalanceIcon}
+                  actionIcon={Settings}
+                  action={() => props.openEditRoom(room.id)}
                   labelInfo={
                     room.children !== undefined && room.children.length > 0
                       ? room.children.length
@@ -412,11 +450,15 @@ export let RoomTreeBox = (props) => {
           </TreeView>
         </div>
       </div>
-      <Fab style={{backgroundColor: colors.accent, position: 'fixed', left: 16, bottom: 16}} onClick={() => {
-        props.addRoomClicked();
-      }}>
-        <Add />
-      </Fab>
+      {isMine ?
+        (
+          <Fab style={{backgroundColor: colors.accent, position: 'fixed', left: 16, bottom: 16}} onClick={() => {
+            props.addRoomClicked();
+          }}>
+            <Add />
+          </Fab>
+        ) : null 
+      }
     </div>
   );
 };

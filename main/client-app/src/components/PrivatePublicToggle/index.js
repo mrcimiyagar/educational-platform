@@ -4,7 +4,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import {colors} from '../../util/settings';
 
 export default function PrivatePublicToggle(props) {
-  const [value, setValue] = React.useState('public');
+  const [value, setValue] = React.useState(props.defaultValue);
 
   const handleChange = (event, v) => {
     setValue(v);

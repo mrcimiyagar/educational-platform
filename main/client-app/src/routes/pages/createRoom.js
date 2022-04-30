@@ -9,11 +9,15 @@ import { Done } from "@material-ui/icons";
 import PrivatePublicToggle from "../../components/PrivatePublicToggle";
 import ShowHideToggle from "../../components/ShowHideToggle";
 
+let instantIsMine = false, instantTitle = '', instantAccessType = 'public', instantHidden = false;
+
 export default function CreateRoom(props) {
+  const [initTitle, setInitTitle] = React.useState("");
   const [value, setValue] = React.useState("public");
   const [hidden, setHidden] = React.useState(false);
+  const [isMine, setIsMine] = React.useState(false);
 
-  const showSheet = (isMine) => {
+  const showSheet = (it, iat, ih, iim) => {
     setBottomSheetContent(
       <div style={{ width: "100%", height: 450, direction: "rtl" }}>
         <Fab
@@ -36,11 +40,11 @@ export default function CreateRoom(props) {
                 chatType: "group",
                 spaceId: props.spaceId,
                 accessType: value,
-                hidden: hidden
+                hidden: hidden,
               }),
               redirect: "follow",
             };
-            fetch(serverRoot + "/room/create_room", requestOptions)
+            fetch(serverRoot + props.editingRoomId === undefined ? "/room/create_room" : "/room/update_room", requestOptions)
               .then((response) => response.json())
               .then((result) => {
                 console.log(JSON.stringify(result));
@@ -72,6 +76,7 @@ export default function CreateRoom(props) {
         >
           <ProfileEditField
             id="roomCreationTitle"
+            defaultValue={it}
             placeholder="عنوان اتاق"
             style={{
               marginTop: 56,
@@ -93,9 +98,9 @@ export default function CreateRoom(props) {
               marginTop: 32,
             }}
           >
-            <PrivatePublicToggle setParentValue={setValue} />
+            <PrivatePublicToggle setParentValue={setValue} defaultValue={iat} />
           </div>
-          {isMine ? (
+          {iim ? (
             <div
               style={{
                 width: "100%",
@@ -105,7 +110,7 @@ export default function CreateRoom(props) {
                 marginTop: 32,
               }}
             >
-              <ShowHideToggle setParentValue={setHidden} />
+              <ShowHideToggle setParentValue={setHidden} defaultValue={ih} />
             </div>
           ) : null}
         </Paper>
@@ -125,9 +130,41 @@ export default function CreateRoom(props) {
   useEffect(() => {
     setOnBsClosed(handleClose);
     if (props.spaceId === null || props.spaceId === undefined) {
-      showSheet(false);
-    }
-    else {
+      if (props.editingRoomId !== undefined) {
+        let requestOptions = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            roomId: props.editingRoomId,
+          }),
+          redirect: "follow",
+        };
+        fetch(serverRoot + "/room/get_room", requestOptions)
+          .then((res) => res.json())
+          .then((result) => {
+            if (result.room !== undefined && result.room !== null) {
+              setInitTitle(result.room.title);
+              instantTitle = result.room.title;
+              setValue(result.room.accessType);
+              instantAccessType = result.room.accessType;
+              setHidden(result.room.hidden === true);
+              instantHidden = (result.room.hidden === true);
+              setIsMine(false);
+              instantIsMine = false;
+              setTimeout(() => showSheet(instantTitle, instantAccessType, instantHidden, instantIsMine));
+            }
+          });
+      } else {
+        instantTitle = '';
+        instantAccessType = 'public';
+        instantHidden = false;
+        setIsMine(false);
+        instantIsMine = false;
+        setTimeout(() => showSheet(instantTitle, instantAccessType, instantHidden, instantIsMine));
+      }
+    } else {
       let requestOptions = {
         method: "POST",
         headers: {
@@ -139,13 +176,47 @@ export default function CreateRoom(props) {
         }),
         redirect: "follow",
       };
-      fetch(serverRoot + "/room/is_space_mine", requestOptions)
+      let prom1 = fetch(serverRoot + "/room/is_space_mine", requestOptions);
+      prom1
         .then((response) => response.json())
         .then((result) => {
           console.log(JSON.stringify(result));
-          showSheet(result.isMine);
-        })
-        .catch((error) => console.log("error", error));
+          setIsMine(result.isMine);
+          instantIsMine = result.isMine;
+          if (props.editingRoomId === undefined) {
+            instantTitle = '';
+            instantAccessType = 'public';
+            instantHidden = false;
+            setTimeout(() => showSheet(instantTitle, instantAccessType, instantHidden, instantIsMine));
+          }
+        });
+      if (props.editingRoomId !== undefined) {
+        let requestOptions2 = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            roomId: props.editingRoomId,
+          }),
+          redirect: "follow",
+        };
+        let prom2 = fetch(serverRoot + "/room/get_room", requestOptions2);
+        prom2
+          .then((res) => res.json())
+          .then((result) => {
+            console.log(JSON.stringify(result));
+            if (result.room !== undefined && result.room !== null) {
+              setInitTitle(result.room.title);
+              instantTitle = result.room.title;
+              setValue(result.room.accessType);
+              instantAccessType = result.room.accessType;
+              setHidden(result.room.hidden === true);
+              instantHidden = (result.room.hidden === true);
+            }
+          });
+        Promise.all([prom1, prom2]).then(() => setTimeout(() => showSheet(instantTitle, instantAccessType, instantHidden, instantIsMine)));
+      }
     }
   }, []);
   return null;
