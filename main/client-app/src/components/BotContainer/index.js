@@ -49,7 +49,8 @@ export default function BotContainer(props) {
           margin: el.margin,
           backdropFilter: el.backdropFilter,
           opacity: el.opacity,
-          overflow: el.overflow
+          overflow: el.overflow,
+          objectFit: el.objectFit
         }
         let result = <div/>
         el.realId = props.realIdPrefix + el.id;
@@ -99,7 +100,7 @@ export default function BotContainer(props) {
       <Grow in={props.gui !== undefined} {...{ timeout: (props.step + 1) * 650 }}>
         <div id={"widget-pane-" + props.widgetWorkerId + (props.isPreview ? '-preview' : '')}
           style={{width: props.widgetWidth, height: props.widgetHeight, position: 'absolute', left: props.widgetX, top: props.widgetY}}>
-          <div style={{width: '100%', height: '100%', position: 'relative'}}>
+          <div style={{width: '100%', height: '100%', position: 'relative', direction: 'ltr'}}>
             {
               [fullGui]
             }
