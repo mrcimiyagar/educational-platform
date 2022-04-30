@@ -13,8 +13,6 @@ let instantIsMine = false, instantTitle = '', instantAccessType = 'public', inst
 
 export default function CreateRoom(props) {
   const [initTitle, setInitTitle] = React.useState("");
-  const [value, setValue] = React.useState("public");
-  const [hidden, setHidden] = React.useState(false);
   const [isMine, setIsMine] = React.useState(false);
 
   const showSheet = (it, iat, ih, iim) => {
@@ -38,17 +36,18 @@ export default function CreateRoom(props) {
               body: JSON.stringify({
                 title: document.getElementById("roomCreationTitle").value,
                 chatType: "group",
+                roomId: props.editingRoomId,
                 spaceId: props.spaceId,
-                accessType: value,
-                hidden: hidden,
+                accessType: instantAccessType,
+                hidden: instantHidden,
               }),
               redirect: "follow",
             };
-            fetch(serverRoot + props.editingRoomId === undefined ? "/room/create_room" : "/room/update_room", requestOptions)
+            fetch(serverRoot + (props.editingRoomId === undefined ? "/room/create_room" : "/room/update_room"), requestOptions)
               .then((response) => response.json())
               .then((result) => {
                 console.log(JSON.stringify(result));
-                if (result.room !== undefined) {
+                if (result.room !== undefined || props.editingRoomId !== undefined) {
                   if (props.reloadDataCallback !== undefined) {
                     props.reloadDataCallback();
                   } else {
@@ -98,7 +97,7 @@ export default function CreateRoom(props) {
               marginTop: 32,
             }}
           >
-            <PrivatePublicToggle setParentValue={setValue} defaultValue={iat} />
+            <PrivatePublicToggle setParentValue={v => {instantAccessType = v;}} defaultValue={iat} />
           </div>
           {iim ? (
             <div
@@ -110,7 +109,7 @@ export default function CreateRoom(props) {
                 marginTop: 32,
               }}
             >
-              <ShowHideToggle setParentValue={setHidden} defaultValue={ih} />
+              <ShowHideToggle setParentValue={v => {instantHidden = v;}} defaultValue={ih} />
             </div>
           ) : null}
         </Paper>
@@ -147,9 +146,7 @@ export default function CreateRoom(props) {
             if (result.room !== undefined && result.room !== null) {
               setInitTitle(result.room.title);
               instantTitle = result.room.title;
-              setValue(result.room.accessType);
               instantAccessType = result.room.accessType;
-              setHidden(result.room.hidden === true);
               instantHidden = (result.room.hidden === true);
               setIsMine(false);
               instantIsMine = false;
@@ -209,9 +206,7 @@ export default function CreateRoom(props) {
             if (result.room !== undefined && result.room !== null) {
               setInitTitle(result.room.title);
               instantTitle = result.room.title;
-              setValue(result.room.accessType);
               instantAccessType = result.room.accessType;
-              setHidden(result.room.hidden === true);
               instantHidden = (result.room.hidden === true);
             }
           });
