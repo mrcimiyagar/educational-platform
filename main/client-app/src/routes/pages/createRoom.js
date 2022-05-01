@@ -1,6 +1,12 @@
 import { Button, Fab, Paper } from "@material-ui/core";
 import React, { useEffect } from "react";
-import { setBottomSheetContent, setBSO, setOnBsClosed } from "../../App";
+import {
+  currentRoomId,
+  setBottomSheetContent,
+  setBSO,
+  setCurrentRoomId,
+  setOnBsClosed,
+} from "../../App";
 import { colors, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
 import { reloadRoomsList } from "../../components/RoomTreeBox";
@@ -8,8 +14,12 @@ import ProfileEditField from "../../components/ProfileEditField";
 import { Done } from "@material-ui/icons";
 import PrivatePublicToggle from "../../components/PrivatePublicToggle";
 import ShowHideToggle from "../../components/ShowHideToggle";
+import {homeRoomId} from '../../util/settings';
 
-let instantIsMine = false, instantTitle = '', instantAccessType = 'public', instantHidden = false;
+let instantIsMine = false,
+  instantTitle = "",
+  instantAccessType = "public",
+  instantHidden = false;
 
 export default function CreateRoom(props) {
   const [initTitle, setInitTitle] = React.useState("");
@@ -43,11 +53,20 @@ export default function CreateRoom(props) {
               }),
               redirect: "follow",
             };
-            fetch(serverRoot + (props.editingRoomId === undefined ? "/room/create_room" : "/room/update_room"), requestOptions)
+            fetch(
+              serverRoot +
+                (props.editingRoomId === undefined
+                  ? "/room/create_room"
+                  : "/room/update_room"),
+              requestOptions
+            )
               .then((response) => response.json())
               .then((result) => {
                 console.log(JSON.stringify(result));
-                if (result.room !== undefined || props.editingRoomId !== undefined) {
+                if (
+                  result.room !== undefined ||
+                  props.editingRoomId !== undefined
+                ) {
                   if (props.reloadDataCallback !== undefined) {
                     props.reloadDataCallback();
                   } else {
@@ -97,7 +116,12 @@ export default function CreateRoom(props) {
               marginTop: 32,
             }}
           >
-            <PrivatePublicToggle setParentValue={v => {instantAccessType = v;}} defaultValue={iat} />
+            <PrivatePublicToggle
+              setParentValue={(v) => {
+                instantAccessType = v;
+              }}
+              defaultValue={iat}
+            />
           </div>
           {iim ? (
             <div
@@ -109,7 +133,12 @@ export default function CreateRoom(props) {
                 marginTop: 32,
               }}
             >
-              <ShowHideToggle setParentValue={v => {instantHidden = v;}} defaultValue={ih} />
+              <ShowHideToggle
+                setParentValue={(v) => {
+                  instantHidden = v;
+                }}
+                defaultValue={ih}
+              />
             </div>
           ) : null}
           {iim ? (
@@ -122,30 +151,54 @@ export default function CreateRoom(props) {
                 marginTop: 32,
               }}
             >
-              <Button style={{width: 'calc(100% - 64px)', marginLeft: 32, marginRight: 32, height: 56, color: '#fff', borderColor:"#fff"}} variant={'outlined'} onClick={() => {
-                let requestOptions = {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    roomId: props.editingRoomId,
-                  }),
-                  redirect: "follow",
-                };
-                fetch(serverRoot + "/room/delete_room", requestOptions)
-                  .then((res) => res.json())
-                  .then((result) => {
-                    if (result.status === 'success') {
-                      if (props.reloadDataCallback !== undefined) {
-                        props.reloadDataCallback();
-                      } else {
-                        reloadRoomsList();
+              <Button
+                style={{
+                  width: "calc(100% - 64px)",
+                  marginLeft: 32,
+                  marginRight: 32,
+                  height: 56,
+                  color: "#fff",
+                  borderColor: "#fff",
+                }}
+                variant={"outlined"}
+                onClick={() => {
+                  let requestOptions = {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      token: token,
+                    },
+                    body: JSON.stringify({
+                      roomId: props.editingRoomId,
+                    }),
+                    redirect: "follow",
+                  };
+                  fetch(serverRoot + "/room/delete_room", requestOptions)
+                    .then((res) => res.json())
+                    .then((result) => {
+                      if (result.status === "success") {
+                        if (props.reloadDataCallback !== undefined) {
+                          props.reloadDataCallback();
+                        } else {
+                          reloadRoomsList();
+                        }
+                        handleClose();
+                        setTimeout(() => {
+                          if (props.editingRoomId === currentRoomId) {
+                            if (result.spaceMainRoomId !== undefined) {
+                            setCurrentRoomId(result.spaceMainRoomId);
+                            }
+                            else {
+                              setCurrentRoomId(homeRoomId);
+                            }
+                          }
+                        }, 250);
                       }
-                      handleClose();
-                    }
-                  });
-              }}>حذف اتاق</Button>
+                    });
+                }}
+              >
+                حذف اتاق
+              </Button>
             </div>
           ) : null}
         </Paper>
@@ -183,19 +236,33 @@ export default function CreateRoom(props) {
               setInitTitle(result.room.title);
               instantTitle = result.room.title;
               instantAccessType = result.room.accessType;
-              instantHidden = (result.room.hidden === true);
+              instantHidden = result.room.hidden === true;
               setIsMine(false);
               instantIsMine = false;
-              setTimeout(() => showSheet(instantTitle, instantAccessType, instantHidden, instantIsMine));
+              setTimeout(() =>
+                showSheet(
+                  instantTitle,
+                  instantAccessType,
+                  instantHidden,
+                  instantIsMine
+                )
+              );
             }
           });
       } else {
-        instantTitle = '';
-        instantAccessType = 'public';
+        instantTitle = "";
+        instantAccessType = "public";
         instantHidden = false;
         setIsMine(false);
         instantIsMine = false;
-        setTimeout(() => showSheet(instantTitle, instantAccessType, instantHidden, instantIsMine));
+        setTimeout(() =>
+          showSheet(
+            instantTitle,
+            instantAccessType,
+            instantHidden,
+            instantIsMine
+          )
+        );
       }
     } else {
       let requestOptions = {
@@ -217,10 +284,17 @@ export default function CreateRoom(props) {
           setIsMine(result.isMine);
           instantIsMine = result.isMine;
           if (props.editingRoomId === undefined) {
-            instantTitle = '';
-            instantAccessType = 'public';
+            instantTitle = "";
+            instantAccessType = "public";
             instantHidden = false;
-            setTimeout(() => showSheet(instantTitle, instantAccessType, instantHidden, instantIsMine));
+            setTimeout(() =>
+              showSheet(
+                instantTitle,
+                instantAccessType,
+                instantHidden,
+                instantIsMine
+              )
+            );
           }
         });
       if (props.editingRoomId !== undefined) {
@@ -243,10 +317,19 @@ export default function CreateRoom(props) {
               setInitTitle(result.room.title);
               instantTitle = result.room.title;
               instantAccessType = result.room.accessType;
-              instantHidden = (result.room.hidden === true);
+              instantHidden = result.room.hidden === true;
             }
           });
-        Promise.all([prom1, prom2]).then(() => setTimeout(() => showSheet(instantTitle, instantAccessType, instantHidden, instantIsMine)));
+        Promise.all([prom1, prom2]).then(() =>
+          setTimeout(() =>
+            showSheet(
+              instantTitle,
+              instantAccessType,
+              instantHidden,
+              instantIsMine
+            )
+          )
+        );
       }
     }
   }, []);

@@ -498,7 +498,8 @@ router.post("/delete_room", jsonParser, async function (req, res) {
           await room.destroy();
           await sw.P2pExistance.destroy({where: {roomId: room.id}});
           require("../server").pushTo("room_" + room.id, "room-removed", room);
-          res.send({ status: "success" });
+          let space = await sw.Space.findOne({where: {id: room.spaceId}});
+          res.send({ status: "success", spaceMainRoomId: space.mainRoomId });
         }
       }
     }
