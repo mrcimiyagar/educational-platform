@@ -615,6 +615,7 @@ async function prepareRoomModel() {
       hidden: Sequelize.BOOLEAN
     },
     {
+      paranoid: true,
       freezeTableName: true,
     }
   );

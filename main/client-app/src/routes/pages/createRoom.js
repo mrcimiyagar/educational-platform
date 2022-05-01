@@ -1,4 +1,4 @@
-import { Fab, Paper } from "@material-ui/core";
+import { Button, Fab, Paper } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { setBottomSheetContent, setBSO, setOnBsClosed } from "../../App";
 import { colors, token } from "../../util/settings";
@@ -110,6 +110,42 @@ export default function CreateRoom(props) {
               }}
             >
               <ShowHideToggle setParentValue={v => {instantHidden = v;}} defaultValue={ih} />
+            </div>
+          ) : null}
+          {iim ? (
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 32,
+              }}
+            >
+              <Button style={{width: 'calc(100% - 64px)', marginLeft: 32, marginRight: 32, height: 56, color: '#fff', borderColor:"#fff"}} variant={'outlined'} onClick={() => {
+                let requestOptions = {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    roomId: props.editingRoomId,
+                  }),
+                  redirect: "follow",
+                };
+                fetch(serverRoot + "/room/delete_room", requestOptions)
+                  .then((res) => res.json())
+                  .then((result) => {
+                    if (result.status === 'success') {
+                      if (props.reloadDataCallback !== undefined) {
+                        props.reloadDataCallback();
+                      } else {
+                        reloadRoomsList();
+                      }
+                      handleClose();
+                    }
+                  });
+              }}>حذف اتاق</Button>
             </div>
           ) : null}
         </Paper>

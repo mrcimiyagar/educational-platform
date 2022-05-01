@@ -477,21 +477,30 @@ router.post("/delete_room", jsonParser, async function (req, res) {
         });
         return;
       }
-      sw.Room.findOne({
-        where: { id: req.body.roomId, ownerId: req.body.ownerId },
-      }).then(async function (room) {
-        if (room === null) {
-          res.send({
-            status: "error",
-            errorCode: "e0005",
-            message: "room does not exist.",
-          });
-          return;
-        }
+      let room = await sw.Room.findOne({where: {id: req.body.roomId}});
+      if (room === null) {
+        res.send({
+          status: "error",
+          errorCode: "e0005",
+          message: "room does not exist.",
+        });
+        return;
+      }
+      if (room.spaceId === null || room.spaceId === undefined) {
         await room.destroy();
+        await sw.P2pExistance.destroy({where: {roomId: room.id}});
         require("../server").pushTo("room_" + room.id, "room-removed", room);
         res.send({ status: "success" });
-      });
+      }
+      else{ 
+        let spaceSecret = await sw.SpaceSecret.findOne({where: {spaceId: room.spaceId}});
+        if (spaceSecret.ownerId === session.userId) {
+          await room.destroy();
+          await sw.P2pExistance.destroy({where: {roomId: room.id}});
+          require("../server").pushTo("room_" + room.id, "room-removed", room);
+          res.send({ status: "success" });
+        }
+      }
     }
   );
 });
