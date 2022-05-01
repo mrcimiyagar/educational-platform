@@ -155,7 +155,7 @@ export default function MessageItem(props) {
         );
         setBSO(true);
       }}>
-        {message.repliedTo !== undefined ? <Typography>{message.repliedTo.text}</Typography> : null}
+        {(message.repliedTo !== undefined && message.repliedTo !== null) ? <Typography>{message.repliedTo.text}</Typography> : null}
         {message.authorId === me.id ? (
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar
