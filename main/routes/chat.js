@@ -528,9 +528,6 @@ router.post("/get_messages", jsonParser, async function (req, res) {
       breakPoint = messages.length - 1;
     }
 
-    let repliesOnMessage = [];
-    let forwardsOnMessage = [];
-
     breakPoint = Math.min(
       breakPoint,
       messages.length > 10 ? messages.length - 10 : 0
@@ -591,12 +588,12 @@ router.post("/get_messages", jsonParser, async function (req, res) {
         fileId: msg.fileId,
         text: msg.text,
         time: msg.time,
-        repliedTo: await sw.Message.findOne({
+        repliedTo: req.body.repliedTo !== undefined ? await sw.Message.findOne({
           where: { id: req.body.repliedTo, roomId: req.body.roomId },
-        }),
-        forwardedFrom: await sw.Message.findOne({
-          where: { id: req.body.forwardFrom, roomId: req.body.roomId },
-        })
+        }) : null,
+        forwardedFrom: req.body.forwardedFrom !== undefined ? await sw.Message.findOne({
+          where: { id: req.body.forwardedFrom, roomId: req.body.roomId },
+        }) : null
       };
       msgCopy.seen = await sw.MessageSeen.count({
         where: { messageId: msgCopy.id },
