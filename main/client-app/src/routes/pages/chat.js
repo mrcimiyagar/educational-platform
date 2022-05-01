@@ -276,6 +276,8 @@ export default function Chat(props) {
   let [scrollTrigger, setScrollTrigger] = React.useState(false);
   let [scrollAnywayrTrigger, setScrollAnywayrTrigger] = React.useState(false);
   let [showScrollDown, setShowScrollDown] = React.useState(false);
+  const [replyToMessage, setReplyToMessage] = React.useState(undefined);
+  const [forwardFromMessage, setForwardFromMessage] = React.useState(undefined);
 
   let callback = () => {
     let scroller = document.getElementById("chatScroller");
@@ -367,6 +369,8 @@ export default function Chat(props) {
             message={msg}
             setPhotoViewerVisible={setPhotoViewerVisible}
             setCurrentPhotoSrc={setCurrentPhotoSrc}
+            replyReserved={setReplyToMessage}
+            forwardReserved={setForwardFromMessage}
           />
         );
         messagesArr.push(lastMsg);
@@ -434,6 +438,8 @@ export default function Chat(props) {
                       message={message}
                       setPhotoViewerVisible={setPhotoViewerVisible}
                       setCurrentPhotoSrc={setCurrentPhotoSrc}
+                      replyReserved={setReplyToMessage}
+                      forwardReserved={setForwardFromMessage}
                     />
                   );
                   index++;
@@ -592,6 +598,8 @@ export default function Chat(props) {
                             token: token,
                           },
                           body: JSON.stringify({
+                            repliedTo: replyToMessage !== undefined ? replyToMessage.id : undefined,
+                            forwardedFrom: forwardFromMessage !== undefined ? forwardFromMessage.id : undefined,
                             roomId: props.room_id,
                             messageType:
                               dataUrl.name.endsWith(".svg") ||
@@ -763,6 +771,8 @@ export default function Chat(props) {
                       message={message}
                       setPhotoViewerVisible={setPhotoViewerVisible}
                       setCurrentPhotoSrc={setCurrentPhotoSrc}
+                      replyReserved={setReplyToMessage}
+                      forwardReserved={setForwardFromMessage}
                     />
                   );
                   lastId = "message-" + message.id;
@@ -777,6 +787,8 @@ export default function Chat(props) {
                       message={file.message}
                       setPhotoViewerVisible={setPhotoViewerVisible}
                       setCurrentPhotoSrc={setCurrentPhotoSrc}
+                      replyReserved={setReplyToMessage}
+                      forwardReserved={setForwardFromMessage}
                     />
                   );
                   lastId = "message-" + file.message.id;
@@ -906,6 +918,8 @@ export default function Chat(props) {
                   token: token,
                 },
                 body: JSON.stringify({
+                  repliedTo: replyToMessage !== undefined ? replyToMessage.id : undefined,
+                  forwardedFrom: forwardFromMessage !== undefined ? forwardFromMessage.id : undefined,
                   roomId: props.room_id,
                   messageType:
                     dataUrl.name.endsWith(".svg") ||
@@ -1148,6 +1162,8 @@ export default function Chat(props) {
                       token: token,
                     },
                     body: JSON.stringify({
+                      repliedTo: replyToMessage !== undefined ? replyToMessage.id : undefined,
+                      forwardedFrom: forwardFromMessage !== undefined ? forwardFromMessage.id : undefined,
                       roomId: props.room_id,
                       text: document.getElementById("chatText").value,
                       messageType: "text",

@@ -1,14 +1,13 @@
 
-import { Avatar, Fab, Grow, StylesProvider, Typography } from '@material-ui/core'
+import { Avatar, Button, Fab, Grow, Paper, StylesProvider, Typography } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import { ArrowDownward, DoneAll, PlayArrowTwoTone } from '@material-ui/icons'
 import React, { useEffect } from 'react'
-import { cacheFile, fetchFile, gotoPage, inTheGame, popPage, registerDialogOpen, setDialogOpen } from '../../App'
+import { cacheFile, fetchFile, gotoPage, inTheGame, popPage, registerDialogOpen, setBottomSheetContent, setBSO, setDialogOpen } from '../../App'
 import { WaveSurferBox } from '../../components/WaveSurfer'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot, socket, useForceUpdate } from '../../util/Utils'
 import Done from '@material-ui/icons/Done'
-import { RichPaper } from '../RichComponents'
 
 export default function MessageItem(props) {
     let forceUpdate = useForceUpdate();
@@ -92,13 +91,77 @@ export default function MessageItem(props) {
       }
     }, [])
     return (
-      <div key={message.id} id={'message-' + message.id}>
+      <div key={message.id} id={'message-' + message.id} onClick={() => {
+        setBottomSheetContent(
+          <div style={{ width: "100%", height: 450, direction: "rtl" }}>
+            <Paper
+              style={{
+                borderRadius: "24px 24px 0 0",
+                width: "100%",
+                height: "calc(100% - 75px)",
+                position: "absolute",
+                top: 100,
+                left: 0,
+                background: colors.primaryMedium,
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <Button
+                style={{
+                  marginTop: 56,
+                  marginLeft: 32,
+                  marginRight: 32,
+                  width: "calc(100% - 64px)",
+                  height: 48,
+                  color: colors.text,
+                  paddingLeft: 16,
+                  paddingRight: 16,
+                  textAlign: 'right'
+                }}
+                onClick={() => {
+                  props.replyReserved(message);
+                  setBSO(false);
+                  setTimeout(() => {
+                    setBSO(null);
+                  }, 250);
+                }}
+              >
+                پاسخ
+              </Button>
+              <Button
+                style={{
+                  marginTop: 32,
+                  marginLeft: 32,
+                  marginRight: 32,
+                  width: "calc(100% - 64px)",
+                  height: 48,
+                  color: colors.text,
+                  paddingLeft: 16,
+                  paddingRight: 16,
+                  textAlign: 'right'
+                }}
+                onClick={() => {
+                  props.forwardReserved(message);
+                  setBSO(false);
+                  setTimeout(() => {
+                    setBSO(null);
+                  }, 250);
+                }}
+              >
+                فوروارد
+              </Button>
+            </Paper>
+          </div>
+        );
+        setBSO(true);
+      }}>
+        {message.repliedTo !== undefined ? <Typography>{message.repliedTo.text}</Typography> : null}
         {message.authorId === me.id ? (
           <div style={{ position: 'relative', display: 'flex' }}>
             <Avatar
               src={
                 message.author === null ? '' : message.author.creatureType === 'user' ? 
-                  serverRoot + `/file/download_user_avatar?token=${token}&userId=${message.authorId}` : 
+                  serverRoot + `/file/download_user_avatar?token=${token}&userId=${message.authorId}` :
                   serverRoot + `/file/download_bot_avatar?token=${token}&botId=${message.authorId}`
               }
               style={{
