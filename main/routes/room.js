@@ -489,6 +489,7 @@ router.post("/delete_room", jsonParser, async function (req, res) {
       if (room.spaceId === null || room.spaceId === undefined) {
         await room.destroy();
         await sw.P2pExistance.destroy({where: {roomId: room.id}});
+        await sw.Membership.destroy({where: {roomId: room.id}});
         require("../server").pushTo("room_" + room.id, "room-removed", room);
         res.send({ status: "success" });
       }
@@ -497,6 +498,7 @@ router.post("/delete_room", jsonParser, async function (req, res) {
         if (spaceSecret.ownerId === session.userId) {
           await room.destroy();
           await sw.P2pExistance.destroy({where: {roomId: room.id}});
+          await sw.Membership.destroy({where: {roomId: room.id}});
           require("../server").pushTo("room_" + room.id, "room-removed", room);
           let space = await sw.Space.findOne({where: {id: room.spaceId}});
           res.send({ status: "success", spaceMainRoomId: space.mainRoomId });

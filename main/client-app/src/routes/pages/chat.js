@@ -278,6 +278,10 @@ export default function Chat(props) {
   let [showScrollDown, setShowScrollDown] = React.useState(false);
   const [replyToMessage, setReplyToMessage] = React.useState(undefined);
   const [forwardFromMessage, setForwardFromMessage] = React.useState(undefined);
+  
+  const scrollToMessage = (msgId) => {
+    document.getElementById('message-' + msgId).scrollIntoView({ behavior: 'smooth' });
+  };
 
   let callback = () => {
     let scroller = document.getElementById("chatScroller");
@@ -371,6 +375,7 @@ export default function Chat(props) {
             setCurrentPhotoSrc={setCurrentPhotoSrc}
             replyReserved={setReplyToMessage}
             forwardReserved={setForwardFromMessage}
+            scrollToMessage={scrollToMessage}
           />
         );
         messagesArr.push(lastMsg);
@@ -440,6 +445,7 @@ export default function Chat(props) {
                       setCurrentPhotoSrc={setCurrentPhotoSrc}
                       replyReserved={setReplyToMessage}
                       forwardReserved={setForwardFromMessage}
+                      scrollToMessage={scrollToMessage}
                     />
                   );
                   index++;
@@ -773,6 +779,7 @@ export default function Chat(props) {
                       setCurrentPhotoSrc={setCurrentPhotoSrc}
                       replyReserved={setReplyToMessage}
                       forwardReserved={setForwardFromMessage}
+                      scrollToMessage={scrollToMessage}
                     />
                   );
                   lastId = "message-" + message.id;
@@ -789,6 +796,7 @@ export default function Chat(props) {
                       setCurrentPhotoSrc={setCurrentPhotoSrc}
                       replyReserved={setReplyToMessage}
                       forwardReserved={setForwardFromMessage}
+                      scrollToMessage={scrollToMessage}
                     />
                   );
                   lastId = "message-" + file.message.id;

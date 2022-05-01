@@ -229,7 +229,7 @@ router.post("/create_message", jsonParser, async function (req, res) {
     }
     if (req.body.forwardFrom !== undefined) {
       forwardOnMessage = await sw.Message.findOne({
-        where: { id: req.body.forwardedFrom, roomId: req.body.roomId },
+        where: { id: req.body.forwardedFrom },
       });
       if (forwardOnMessage === null) {
         res.send({
@@ -238,6 +238,18 @@ router.post("/create_message", jsonParser, async function (req, res) {
           message: "message to forward does not exist.",
         });
         return;
+      } else {
+        let membershipOfSameRoomMessage = await sw.Membership.findOne({
+          where: { roomId: forwardOnMessage.roomId, userId: session.userId },
+        });
+        if (membershipOfSameRoomMessage === null) {
+          res.send({
+            status: "error",
+            errorCode: "e0005",
+            message: "message to forward does not exist.",
+          });
+          return;
+        }
       }
     }
 
@@ -378,7 +390,7 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
   }
   if (req.body.forwardFrom !== undefined) {
     forwardOnMessage = await sw.Message.findOne({
-      where: { id: req.body.forwardFrom, roomId: req.body.roomId },
+      where: { id: req.body.forwardFrom },
     });
     if (forwardOnMessage === null) {
       res.send({
@@ -387,6 +399,18 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
         message: "message to forward does not exist.",
       });
       return;
+    } else {
+      let membershipOfSameRoomMessage = await sw.Membership.findOne({
+        where: { roomId: forwardOnMessage.roomId, userId: session.userId },
+      });
+      if (membershipOfSameRoomMessage === null) {
+        res.send({
+          status: "error",
+          errorCode: "e0005",
+          message: "message to forward does not exist.",
+        });
+        return;
+      }
     }
   }
 
@@ -588,12 +612,18 @@ router.post("/get_messages", jsonParser, async function (req, res) {
         fileId: msg.fileId,
         text: msg.text,
         time: msg.time,
-        repliedTo: msg.repliedTo !== undefined ? await sw.Message.findOne({
-          where: { id: msg.repliedTo },
-        }) : null,
-        forwardedFrom: msg.forwardedFrom !== undefined ? await sw.Message.findOne({
-          where: { id: msg.forwardedFrom },
-        }) : null
+        repliedTo:
+          msg.repliedTo !== undefined
+            ? await sw.Message.findOne({
+                where: { id: msg.repliedTo },
+              })
+            : null,
+        forwardedFrom:
+          msg.forwardedFrom !== undefined
+            ? await sw.Message.findOne({
+                where: { id: msg.forwardedFrom },
+              })
+            : null,
       };
       msgCopy.seen = await sw.MessageSeen.count({
         where: { messageId: msgCopy.id },

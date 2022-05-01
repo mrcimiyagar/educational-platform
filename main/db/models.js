@@ -684,6 +684,7 @@ async function prepareMembershipModel() {
     },
     {
       freezeTableName: true,
+      paranoid: true
     }
   );
   Membership.belongsTo(User, { foreignKey: "userId" });
