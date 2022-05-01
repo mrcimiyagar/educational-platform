@@ -1152,6 +1152,8 @@ export default function Chat(props) {
                     text: document.getElementById("chatText").value,
                     messageType: "text",
                     author: me,
+                    repliedTo: replyToMessage,
+                    forwardedFrom: forwardFromMessage
                   };
                   addMessageToList(msg);
                   setLastMessage(msg);
