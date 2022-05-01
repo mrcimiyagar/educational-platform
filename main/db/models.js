@@ -707,6 +707,8 @@ async function prepareMessageModel() {
       text: Sequelize.STRING,
       fileId: Sequelize.BIGINT,
       messageType: Sequelize.STRING,
+      repliedTo: Sequelize.BIGINT,
+      forwardedFrom: Sequelize.BIGINT
     },
     {
       freezeTableName: true,
