@@ -528,8 +528,8 @@ router.post("/get_messages", jsonParser, async function (req, res) {
       breakPoint = messages.length - 1;
     }
 
-    let replyOnMessage = undefined;
-    let forwardOnMessage = undefined;
+    let repliesOnMessage = [];
+    let forwardsOnMessage = [];
 
     breakPoint = Math.min(
       breakPoint,
@@ -549,23 +549,6 @@ router.post("/get_messages", jsonParser, async function (req, res) {
             messageId: message.id,
             roomId: message.roomId,
           });
-        }
-      }
-
-      if (message.repliedTo !== undefined && message.repliedTo !== null) {
-        replyOnMessage = await sw.Message.findOne({
-          where: { id: message.repliedTo, roomId: message.roomId },
-        });
-        if (replyOnMessage === null) {
-          replyOnMessage = { text: "پیام پاک شده" };
-        }
-      }
-      if (req.body.forwardFrom !== undefined) {
-        forwardOnMessage = await sw.Message.findOne({
-          where: { id: req.body.forwardFrom, roomId: req.body.roomId },
-        });
-        if (forwardOnMessage === null) {
-          forwardOnMessage = { text: "پیام پاک شده" };
         }
       }
       message.seen = await sw.MessageSeen.count({
@@ -608,8 +591,12 @@ router.post("/get_messages", jsonParser, async function (req, res) {
         fileId: msg.fileId,
         text: msg.text,
         time: msg.time,
-        repliedTo: replyOnMessage,
-        forwardedFrom: forwardOnMessage
+        repliedTo: await sw.Message.findOne({
+          where: { id: req.body.repliedTo, roomId: req.body.roomId },
+        }),
+        forwardedFrom: await sw.Message.findOne({
+          where: { id: req.body.forwardFrom, roomId: req.body.roomId },
+        })
       };
       msgCopy.seen = await sw.MessageSeen.count({
         where: { messageId: msgCopy.id },
