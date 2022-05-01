@@ -588,11 +588,11 @@ router.post("/get_messages", jsonParser, async function (req, res) {
         fileId: msg.fileId,
         text: msg.text,
         time: msg.time,
-        repliedTo: req.body.repliedTo !== undefined ? await sw.Message.findOne({
-          where: { id: req.body.repliedTo, roomId: req.body.roomId },
+        repliedTo: msg.repliedTo !== undefined ? await sw.Message.findOne({
+          where: { id: msg.repliedTo },
         }) : null,
-        forwardedFrom: req.body.forwardedFrom !== undefined ? await sw.Message.findOne({
-          where: { id: req.body.forwardedFrom, roomId: req.body.roomId },
+        forwardedFrom: msg.forwardedFrom !== undefined ? await sw.Message.findOne({
+          where: { id: msg.forwardedFrom },
         }) : null
       };
       msgCopy.seen = await sw.MessageSeen.count({
