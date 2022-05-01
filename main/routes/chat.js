@@ -610,8 +610,8 @@ router.post("/get_messages", jsonParser, async function (req, res) {
         text: msg.text,
         time: msg.time,
       };
-      msgCopy.repliedTo = replyOnMessage;
-      msgCopy.forwardedFrom = forwardOnMessage;
+      msgCopy.repliedTo = message.repliedTo;
+      msgCopy.forwardedFrom = message.forwardedFrom;
       msgCopy.seen = await sw.MessageSeen.count({
         where: { messageId: msgCopy.id },
         distinct: true,
