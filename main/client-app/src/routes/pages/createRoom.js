@@ -14,7 +14,7 @@ import ProfileEditField from "../../components/ProfileEditField";
 import { Done } from "@material-ui/icons";
 import PrivatePublicToggle from "../../components/PrivatePublicToggle";
 import ShowHideToggle from "../../components/ShowHideToggle";
-import {homeRoomId} from '../../util/settings';
+import { homeRoomId } from "../../util/settings";
 
 let instantIsMine = false,
   instantTitle = "",
@@ -141,7 +141,7 @@ export default function CreateRoom(props) {
               />
             </div>
           ) : null}
-          {iim ? (
+          {iim && props.editingRoomId !== undefined ? (
             <div
               style={{
                 width: "100%",
@@ -162,39 +162,40 @@ export default function CreateRoom(props) {
                 }}
                 variant={"outlined"}
                 onClick={() => {
-                  let requestOptions = {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      token: token,
-                    },
-                    body: JSON.stringify({
-                      roomId: props.editingRoomId,
-                    }),
-                    redirect: "follow",
-                  };
-                  fetch(serverRoot + "/room/delete_room", requestOptions)
-                    .then((res) => res.json())
-                    .then((result) => {
-                      if (result.status === "success") {
-                        if (props.reloadDataCallback !== undefined) {
-                          props.reloadDataCallback();
-                        } else {
-                          reloadRoomsList();
-                        }
-                        handleClose();
-                        setTimeout(() => {
-                          if (props.editingRoomId === currentRoomId) {
-                            if (result.spaceMainRoomId !== undefined) {
-                            setCurrentRoomId(result.spaceMainRoomId);
-                            }
-                            else {
-                              setCurrentRoomId(homeRoomId);
-                            }
+                  if (window.confirm("اتاق حذف شود ؟")) {
+                    let requestOptions = {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        token: token,
+                      },
+                      body: JSON.stringify({
+                        roomId: props.editingRoomId,
+                      }),
+                      redirect: "follow",
+                    };
+                    fetch(serverRoot + "/room/delete_room", requestOptions)
+                      .then((res) => res.json())
+                      .then((result) => {
+                        if (result.status === "success") {
+                          if (props.reloadDataCallback !== undefined) {
+                            props.reloadDataCallback();
+                          } else {
+                            reloadRoomsList();
                           }
-                        }, 250);
-                      }
-                    });
+                          handleClose();
+                          setTimeout(() => {
+                            if (props.editingRoomId === currentRoomId) {
+                              if (result.spaceMainRoomId !== undefined) {
+                                setCurrentRoomId(result.spaceMainRoomId);
+                              } else {
+                                setCurrentRoomId(homeRoomId);
+                              }
+                            }
+                          }, 250);
+                        }
+                      });
+                  }
                 }}
               >
                 حذف اتاق
