@@ -72,6 +72,7 @@ module.exports = {
     await prepareSessionModel();
     await prepareSpaceModel();
     await prepareRoomModel();
+    await prepareFileModel();
     await prepareMembershipModel();
     await prepareMessageModel();
     await preparePollModel();
@@ -81,7 +82,9 @@ module.exports = {
     await prepareMySurveyModel();
     await prepareSurveyLabelModel();
     await prepareSurveyCatModel();
+    await preparePresentModel();
     await prepareSpaceSecretModel();
+    await prepareRoomSecretModel();
     await prepareStoreCategoryModel();
     await prepareBotModel();
     await prepareBotSecretModel();
@@ -97,9 +100,6 @@ module.exports = {
     await prepareMessageSeenModel();
     await prepareWidgetWorker();
     await prepareModuleWorkerModel();
-    await prepareFileModel();
-    await preparePresentModel();
-    await prepareRoomSecretModel();
 
     let adminAcc = await Account.findOne({ where: { role: "admin" } });
     if (adminAcc === null) {
@@ -652,7 +652,6 @@ async function prepareFileModel() {
     }
   );
   File.belongsTo(User, { foreignKey: { name: "uploaderId", allowNull: true } });
-  File.belongsTo(ModuleWorker, { foreignKey: { name: "moduleWorkerId", allowNull: true } });
   await File.sync();
   module.exports["File"] = File;
 }
