@@ -81,7 +81,6 @@ module.exports = {
     await prepareMySurveyModel();
     await prepareSurveyLabelModel();
     await prepareSurveyCatModel();
-    await preparePresentModel();
     await prepareSpaceSecretModel();
     await prepareRoomSecretModel();
     await prepareStoreCategoryModel();
@@ -100,6 +99,7 @@ module.exports = {
     await prepareWidgetWorker();
     await prepareModuleWorkerModel();
     await prepareFileModel();
+    await preparePresentModel();
 
     let adminAcc = await Account.findOne({ where: { role: "admin" } });
     if (adminAcc === null) {
