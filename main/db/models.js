@@ -638,7 +638,7 @@ async function prepareFileModel() {
         autoIncrement: true,
       },
       uploaderId: Sequelize.STRING,
-      roomId: Sequelize.BIGINT,
+      moduleWorkerId: Sequelize.BIGINT,
       name: Sequelize.STRING,
       extension: Sequelize.STRING,
       size: Sequelize.BIGINT,
