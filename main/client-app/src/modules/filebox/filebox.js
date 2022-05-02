@@ -281,6 +281,7 @@ export let FileBox = (props) => {
                 files={files.filter((f) => f.fileType === "photo")}
                 setFiles={setFiles}
                 moduleWorkerId={props.moduleWorkerId}
+                roomId={props.roomId}
                 style={{ height: "100%" }}
               />
             </div>
@@ -291,6 +292,7 @@ export let FileBox = (props) => {
                 files={files.filter((f) => f.fileType === "audio")}
                 setFiles={setFiles}
                 moduleWorkerId={props.moduleWorkerId}
+                roomId={props.roomId}
               />
             </div>
             <div style={{ height: "100%" }}>
@@ -300,6 +302,7 @@ export let FileBox = (props) => {
                 files={files.filter((f) => f.fileType === "video")}
                 setFiles={setFiles}
                 moduleWorkerId={props.moduleWorkerId}
+                roomId={props.roomId}
               />
             </div>
             <div style={{ height: "100%" }}>
@@ -309,6 +312,7 @@ export let FileBox = (props) => {
                 files={files.filter((f) => f.fileType === "document")}
                 setFiles={setFiles}
                 moduleWorkerId={props.moduleWorkerId}
+                roomId={props.roomId}
               />
             </div>
           </SwipeableViews>

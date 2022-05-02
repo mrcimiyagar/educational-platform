@@ -22,8 +22,8 @@ function getFilesizeInBytes(filename) {
 }
 
 router.post('/upload_file', jsonParser, async function (req, res) {
-  let ext = req.query.extension
-  let isPresent = Boolean(req.query.isPresent)
+  let ext = req.query.extension;
+  let isPresent = req.query.isPresent === 'true' ? true : false;
   authenticateMember(req, res, async (membership, session, user) => {
     require('../server').pushTo('room_' + membership.roomId, 'uploading', {});
     if (!membership.canUploadFile) {
