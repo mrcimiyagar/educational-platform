@@ -47,6 +47,7 @@ export let FileBox = (props) => {
       },
       body: JSON.stringify({
         moduleWorkerId: props.moduleWorkerId,
+        roomId: props.roomId,
         fileMode:
           fileMode === 0
             ? "photo"
@@ -130,7 +131,7 @@ export let FileBox = (props) => {
           request.open(
             "POST",
             serverRoot +
-              `/file/upload_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&extension=${ext}`
+              `/file/upload_file?token=${token}&roomId=${props.roomId}&moduleWorkerId=${props.moduleWorkerId}&extension=${ext}`
           );
 
           files.push(f);

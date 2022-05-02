@@ -516,6 +516,7 @@ router.post('/get_files', jsonParser, async function (req, res) {
       return;
     }
     sw.File.findAll({
+      raw: true,
       where: {
         moduleWorkerId: mw.id,
         isPreview: false,

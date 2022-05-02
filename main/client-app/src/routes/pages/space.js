@@ -861,6 +861,7 @@ export default function Space(props) {
         {selectedNav === 9 ? (
           <FileBox
             moduleWorkerId={selectedModuleWorkerId}
+            roomId={props.room_id}
             onClose={() => {
               setSelectedNav(undefined);
               setInTheGame(true);
