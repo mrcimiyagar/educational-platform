@@ -239,29 +239,6 @@
                 }
               })
               .catch((error) => console.log("error", error));
-
-            /*var tags = {}
-
-            window.jsmediatags.read(e.data.src, {
-              onSuccess: function (tag) {
-                tags = tag
-                var picture = tags.tags.picture // create reference to track art
-                var base64String = ''
-                for (var i = 0; i < picture.data.length; i++) {
-                  base64String += String.fromCharCode(picture.data[i])
-                }
-                var imageUri =
-                  'data:' +
-                  picture.format +
-                  ';base64,' +
-                  window.btoa(base64String)
-                let albumArt = document.getElementById('albumArt')
-                albumArt.src = imageUri
-              },
-              onError: function (error) {
-                console.log(error)
-              },
-            })*/
           }
         }
       });

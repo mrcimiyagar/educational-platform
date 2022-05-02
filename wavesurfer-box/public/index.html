@@ -68,7 +68,9 @@
       window.addEventListener('message', (e) => {
         console.log(e.data)
         if (e.data.sender === 'main') {
-          window.wavesurferToggle = () => {
+          window.wavesurferToggle = (e) => {
+            e.stopPropagation();
+            e.preventDefault();
             let playPauseContent = document.getElementById('playPauseContent')
             if (wavesurfer.isPlaying()) {
               wavesurfer.pause()
