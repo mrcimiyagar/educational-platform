@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
-import { ArrowDownward, DoneAll, PlayArrowTwoTone } from "@material-ui/icons";
+import { ArrowDownward, DoneAll, MoreVert, PlayArrowTwoTone } from "@material-ui/icons";
 import React, { useEffect } from "react";
 import {
   cacheFile,
@@ -105,7 +105,7 @@ export default function MessageItem(props) {
       }
     }
   }, []);
-  let bottomMargin = 0;
+  let bottomMargin = 8;
   if (message.repliedTo !== undefined && message.repliedTo !== null) {
     bottomMargin += 32;
   }
@@ -165,74 +165,6 @@ export default function MessageItem(props) {
               right: 48,
               backdropFilter: "blur(10px)",
               backgroundColor: colors.primaryMedium,
-            }}
-            onClick={() => {
-              setBottomSheetContent(
-                <div style={{ width: "100%", height: 450, direction: "rtl" }}>
-                  <Paper
-                    style={{
-                      borderRadius: "24px 24px 0 0",
-                      width: "100%",
-                      height: "calc(100% - 75px)",
-                      position: "absolute",
-                      top: 100,
-                      left: 0,
-                      background: colors.primaryMedium,
-                      backdropFilter: "blur(10px)",
-                    }}
-                  >
-                    <Button
-                      style={{
-                        marginTop: 56,
-                        marginLeft: 32,
-                        marginRight: 32,
-                        width: "calc(100% - 64px)",
-                        height: 48,
-                        color: colors.text,
-                        paddingLeft: 16,
-                        paddingRight: 16,
-                        textAlign: "right",
-                        justifyContent: "right",
-                        alignItems: "right",
-                      }}
-                      onClick={() => {
-                        props.replyReserved(message);
-                        setBSO(false);
-                        setTimeout(() => {
-                          setBSO(null);
-                        }, 250);
-                      }}
-                    >
-                      پاسخ
-                    </Button>
-                    <Button
-                      style={{
-                        marginTop: 16,
-                        marginLeft: 32,
-                        marginRight: 32,
-                        width: "calc(100% - 64px)",
-                        height: 48,
-                        color: colors.text,
-                        paddingLeft: 16,
-                        paddingRight: 16,
-                        textAlign: "right",
-                        justifyContent: "right",
-                        alignItems: "right",
-                      }}
-                      onClick={() => {
-                        props.forwardReserved(message);
-                        setBSO(false);
-                        setTimeout(() => {
-                          setBSO(null);
-                        }, 250);
-                      }}
-                    >
-                      فوروارد
-                    </Button>
-                  </Paper>
-                </div>
-              );
-              setBSO(true);
             }}
           >
             <Typography
@@ -484,6 +416,75 @@ export default function MessageItem(props) {
                 ":" +
                 dateTime.getSeconds()}
             </div>
+            <Fab style={{backgroundColor: colors.accent, position: 'absolute', top: -8, left: -8 }} size={'small'}
+            onClick={() => {
+              setBottomSheetContent(
+                <div style={{ width: "100%", height: 450, direction: "rtl" }}>
+                  <Paper
+                    style={{
+                      borderRadius: "24px 24px 0 0",
+                      width: "100%",
+                      height: "calc(100% - 75px)",
+                      position: "absolute",
+                      top: 100,
+                      left: 0,
+                      background: colors.primaryMedium,
+                      backdropFilter: "blur(10px)",
+                    }}
+                  >
+                    <Button
+                      style={{
+                        marginTop: 56,
+                        marginLeft: 32,
+                        marginRight: 32,
+                        width: "calc(100% - 64px)",
+                        height: 48,
+                        color: colors.text,
+                        paddingLeft: 16,
+                        paddingRight: 16,
+                        textAlign: "right",
+                        justifyContent: "right",
+                        alignItems: "right",
+                      }}
+                      onClick={() => {
+                        props.replyReserved(message);
+                        setBSO(false);
+                        setTimeout(() => {
+                          setBSO(null);
+                        }, 250);
+                      }}
+                    >
+                      پاسخ
+                    </Button>
+                    <Button
+                      style={{
+                        marginTop: 16,
+                        marginLeft: 32,
+                        marginRight: 32,
+                        width: "calc(100% - 64px)",
+                        height: 48,
+                        color: colors.text,
+                        paddingLeft: 16,
+                        paddingRight: 16,
+                        textAlign: "right",
+                        justifyContent: "right",
+                        alignItems: "right",
+                      }}
+                      onClick={() => {
+                        props.forwardReserved(message);
+                        setBSO(false);
+                        setTimeout(() => {
+                          setBSO(null);
+                        }, 250);
+                      }}
+                    >
+                      فوروارد
+                    </Button>
+                  </Paper>
+                </div>
+              );
+              setBSO(true);
+            }}><MoreVert /></Fab>
           </div>
           <div
             style={{
