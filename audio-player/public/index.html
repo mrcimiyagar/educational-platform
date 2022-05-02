@@ -1,247 +1,110 @@
-<!DOCTYPE html>
-<html lang="en" style="background-color: transparent">
-  <head>
-    <meta charset="UTF-8" />
-    <title>wavesurfer-box</title>
+<!-- PRESS THE MENU BUTTON TO TRIGGER ANIMATION -->
+<!-- PRESS PLAY BUTTON TO LISTEN THE DEMO SONG -->
 
-    <script src="https://unpkg.com/wavesurfer.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="/jsmediatags.min.js"></script>
-    <script
-      src="https://kit.fontawesome.com/5774b788f3.js"
-      crossorigin="anonymous"
-    ></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-  </head>
-  <body style="background-color: transparent">
-    <style>
-      .btn {
-        background-color: DodgerBlue;
-        width: 56px;
-        height: 56px;
-        border-radius: 100%;
-        background: DodgerBlue;
-        border: none;
-        outline: none;
-        color: #fff;
-        margin: 8px;
-        font-size: 24px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      }
+<!-- As seen on: "https://dribbble.com/shots/2144866-Day-5-Music-Player-Rebound/" -->
 
-      /* Darker background on mouse-over */
-      .btn:hover {
-        background-color: RoyalBlue;
-      }
-    </style>
+<!-- THANK YOU! -->
 
-    <audio style="display: none" id="sound" src="" controls="controls"></audio>
-
-    <img
-      id="albumArt"
-      style="
-        width: 256px;
-        height: 256px;
-        border-radius: 50%;
-        position: absolute;
-        top: 64px;
-        left: calc(50% - 128px);
-      "
-    />
-    <div
-      style="
-        position: absolute;
-        top: calc(64px + 256px + 48px);
-        left: 32px;
-        right: 32px;
-      "
-    >
-      <div id="waveform" />
-    </div>
-    <div
-      style="
-        display: flex;
-        flex-wrap: nowrap;
-        position: absolute;
-        top: 112px;
-        left: calc(50% - 180px);
-      "
-    >
-      <button id="shuffleButton" onclick="toggleShuffle()" class="btn">
-        <i class="fas fa-random" id="shuffleSign"></i>
-      </button>
-      <button id="backwardButton" onclick="backward()" class="btn">
-        <i class="fa fa-backward"></i>
-      </button>
-      <button id="playPauseButton" onclick="wavesurferToggle()" class="btn">
-        <i id="playPauseContent" class="fa fa-play"></i>
-      </button>
-      <button id="forwardButton" onclick="forward()" class="btn">
-        <i class="fa fa-forward"></i>
-      </button>
-      <button id="loopButton" onclick="toggleLoop()" class="btn">
-        <i class="fas fa-undo-alt" id="loopSign"></i>
-      </button>
-    </div>
-
-    <script>
-      function getOS() {
-        var userAgent = window.navigator.userAgent,
-          platform = window.navigator.platform,
-          macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K"],
-          windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"],
-          iosPlatforms = ["iPhone", "iPad", "iPod"],
-          os = null;
-
-        if (macosPlatforms.indexOf(platform) !== -1) {
-          os = "Mac OS";
-        } else if (iosPlatforms.indexOf(platform) !== -1) {
-          os = "iOS";
-        } else if (windowsPlatforms.indexOf(platform) !== -1) {
-          os = "Windows";
-        } else if (/Android/.test(userAgent)) {
-          os = "Android";
-        } else if (!os && /Linux/.test(platform)) {
-          os = "Linux";
-        }
-
-        return os;
-      }
-
-      window.loop = false;
-      window.shuffle = false;
-      window.addEventListener("message", (e) => {
-        console.log(e.data);
-        if (e.data.sender === "main") {
-          if (e.data.action === "config") {
-            const src =
-              e.data.serverRoot +
-              "/file/download_file_thumbnail?fileId=" +
-              e.data.fileId + '&roomId=' + e.data.roomId;
-            const options = {
-              headers: {
-                token: e.data.token,
-              },
-            };
-
-            fetch(src, options)
-              .then((res) => res.blob())
-              .then((blob) => {
-                document.getElementById("albumArt").src =
-                  URL.createObjectURL(blob);
-              });
-
-            var mediaElt = document.getElementById("sound");
-
-            let wavesurfer = WaveSurfer.create({
-              container: document.querySelector("#waveform"),
-              ...(e.data.isDesktop && { waveColor: "#777" }),
-              height: 88,
-              barWidth: 2,
-              barHeight: 1, // the height of the wave
-              barGap: null, // the optional spacing between bars of the wave, if not provided will be calculated in legacy format
-            });
-            window.wavesurfer = wavesurfer;
-
-            window.forward = () => {
-              if (wavesurfer.getCurrentTime() + 10 < wavesurfer.getDuration()) {
-                wavesurfer.play(wavesurfer.getCurrentTime() + 10);
-                let playPauseContent =
-                  document.getElementById("playPauseContent");
-                playPauseContent.className = "fa fa-pause";
-              }
-            };
-            window.backward = () => {
-              if (wavesurfer.getCurrentTime() - 10 > 0) {
-                wavesurfer.play(wavesurfer.getCurrentTime() - 10);
-                let playPauseContent =
-                  document.getElementById("playPauseContent");
-                playPauseContent.className = "fa fa-pause";
-              }
-            };
-            window.toggleLoop = () => {
-              window.loop = !window.loop;
-              let loopSign = document.getElementById("loopSign");
-              if (window.loop) {
-                loopSign.style.color = "yellow";
-              } else {
-                loopSign.style.color = "white";
-              }
-            };
-            window.toggleShuffle = () => {
-              window.shuffle = !window.shuffle;
-              let shuffleSign = document.getElementById("shuffleSign");
-              if (window.shuffle) {
-                shuffleSign.style.color = "yellow";
-              } else {
-                shuffleSign.style.color = "white";
-              }
-            };
-
-            window.wavesurferToggle = () => {
-              let playPauseContent =
-                document.getElementById("playPauseContent");
-              if (wavesurfer.isPlaying()) {
-                wavesurfer.pause();
-                playPauseContent.className = "fa fa-play";
-              } else {
-                wavesurfer.play();
-                playPauseContent.className = "fa fa-pause";
-              }
-            };
-
-            let requestOptions = {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                token: e.data.token,
-              },
-              body: JSON.stringify({
-                fileId: e.data.fileId,
-                roomId: e.data.roomId,
-              }),
-              redirect: "follow",
-            };
-            fetch(
-              e.data.serverRoot + "/file/download_audio_preview",
-              requestOptions
-            )
-              .then((response) => response.json())
-              .then((result) => {
-                console.log(JSON.stringify(result));
-                if (result !== undefined) {
-                  wavesurfer.song = e.data.src;
-                  wavesurfer.backend.peaks = result.data;
-                  for (let i = 0; i < result.data.length; i++) {
-                    result.data[i] = result.data[i] / 100;
-                  }
-                  wavesurfer.drawBuffer();
-                  wavesurfer.loaded = false;
-                  wavesurfer.on("ready", function () {
-                    wavesurfer.play();
-                  });
-                  wavesurfer.on("finish", function () {
-                    if (window.loop) {
-                      wavesurfer.play(0);
-                    } else {
-                      playPauseContent.className = "fa fa-play";
-                      wavesurfer.seekTo(0);
-                    }
-                  });
-                  $("#sound").attr("src", wavesurfer.song);
-                  wavesurfer.load(mediaElt, wavesurfer.backend.peaks);
-
-                  window.wavesurferToggle();
-                }
-              })
-              .catch((error) => console.log("error", error));
-          }
-        }
-      });
-    </script>
-  </body>
-</html>
+<article class="screen">
+    <input type="checkbox" value="None" id="magicButton" name="check" />
+    <label class="main" for="magicButton"></label>
+  
+    <div class="coverImage"></div>
+    <div class="search"></div>
+    <div class="bodyPlayer"></div>
+  
+    <table class="list">
+      <tr class="song">
+        <td class="nr">
+          <h5>1<h5></td>
+                          <td class="title"><h6>Heavydirtysoul<h6></td>
+                          <td class="length"><h5>3:54<h5></td>
+                          <td><input type="checkbox" id="heart"/><label class="zmr" for="heart"></label></td>
+                      </tr>
+                  
+                      <tr class="song">
+                          <td class="nr"><h5>2<h5></td>
+                          <td class="title"><h6 style="color: #ff564c;">StressedOut<h6></td>
+                          <td class="length"><h5>3:22<h5></td>
+                          <td><input type="checkbox" id="heart1" checked /><label class="zmr" for="heart1"></label></td>
+                      </tr>
+                  
+                      <tr class="song">
+                          <td class="nr"><h5>3<h5></td>
+                          <td class="title"><h6>Ride<h6></td>
+                          <td class="length"><h5>3:34<h5></td>
+                          <td><input type="checkbox" id="heart2"/><label class="zmr" for="heart2"></label></td>
+                      </tr>
+                  
+                      <tr class="song">
+                          <td class="nr"><h5>4<h5></td>
+                          <td class="title"><h6>Fairy Local<h6></td>
+                          <td class="length"><h5>3:27<h5></td>
+                          <td><input type="checkbox" id="heart3" checked /><label class="zmr" for="heart3"></label></td>
+                      </tr>
+                      
+                      <tr class="song">
+                          <td class="nr"><h5>5<h5></td>
+                          <td class="title"><h6>Tear in My Heart<h6></td>
+                          <td class="length"><h5>3:08<h5></td>
+                          <td><input type="checkbox" id="heart4"/><label class="zmr" for="heart4"></label></td>
+                      </tr>
+                      
+                      <tr class="song">
+                          <td class="nr"><h5>6<h5></td>
+                          <td class="title"><h6>Lane Boy<h6></td>
+                          <td class="length"><h5>4:13<h5></td>
+                          <td><input type="checkbox" id="heart5"/><label class="zmr" for="heart5"></label></td>
+                      </tr>
+                      
+                      <tr class="song">
+                          <td class="nr"><h5>7<h5></td>
+                          <td class="title"><h6>The Judge<h6></td>
+                          <td class="length"><h5>4:57<h5></td>
+                          <td><input type="checkbox" id="heart6"/><label class="zmr" for="heart6"></label></td>
+                      </tr>
+                      
+                      <tr class="song">
+                          <td class="nr"><h5>8<h5></td>
+                          <td class="title"><h6>Doubt<h6></td>
+                          <td class="length"><h5>3:11<h5></td>
+                          <td><input type="checkbox" id="heart7"/><label class="zmr" for="heart7"></label></td>
+                      </tr>
+                      
+                      <tr class="song">
+                          <td class="nr"><h5>9<h5></td>
+                          <td class="title"><h6>Polarize<h6></td>
+                          <td class="length"><h5>3:46<h5></td>
+                          <td><input type="checkbox" id="heart8"/><label class="zmr" for="heart8"></label></td>
+                      </tr>
+                  </table>
+                  
+                  <div class="shadow"></div>
+                  
+                  <div class="bar"></div>
+                  
+                  <div class="info">
+                      <h4>STRESSED OUT</h4>
+                      <h3>twenty one pilots - Blurryface</h3>
+                  </div>
+  <audio preload="auto" id="audio" controls>
+    <source src="http://www.jplayer.org/audio/mp3/Miaow-02-Hidden.mp3">
+    <source src="http://www.jplayer.org/audio/mp3/Miaow-02-Hidden.ogg">
+      </audio>
+                  <table class="player">
+                      <td><input type="checkbox" id="backward"/><label class="backward" for="backward"></label></td>
+                      <td><input type="checkbox" id="play" title="Play" onclick="togglePlayPause()"/><label class="play" for="play"></label></td>
+                      <td><input type="checkbox" id="forward"/><label class="forward" for="forward"></label></td>
+                  </table>
+                  
+                  <table class="footer">
+                      <td><input type="checkbox" id="love" checked /><label class="love" for="love"></label></td>
+                      <td><input type="checkbox" id="shuffle"/><label class="shuffle" for="shuffle"></label></td>
+                      <td><input type="checkbox" id="repeat" checked /><label class="repeat" for="repeat"></label></td>
+                      <td><input type="checkbox" id="options"/><label class="options" for="options"></label></td>
+                  </table>
+                  
+                  <div class="current"><h2>STRESSED OUT</h2></div>
+                  
+              
+          </article>

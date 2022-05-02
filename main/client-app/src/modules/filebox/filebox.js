@@ -265,7 +265,7 @@ export let FileBox = (props) => {
         <div
           style={{
             height: "100%",
-            backgroundColor: colors.primaryDark
+            backgroundColor: colors.backSide
           }}
         >
           <SwipeableViews
