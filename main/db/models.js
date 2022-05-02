@@ -156,7 +156,7 @@ module.exports = {
         spaceId: home.id,
         accessType: "public",
       });
-      let roomDefaultModuleWorker = await sw.ModuleWorker.create({type: 'filestorage', roomId: room.id, x: 32, y: 32});
+      let roomDefaultModuleWorker = await ModuleWorker.create({type: 'filestorage', roomId: room.id, x: 32, y: 32});
       room.fileStorageId = roomDefaultModuleWorker.id;
       await room.save();
       home.mainRoomId = room.id;
