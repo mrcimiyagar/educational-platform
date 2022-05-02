@@ -118,12 +118,12 @@ export default function Space(props) {
   const [showVideoPlayer, setShowVideoPlayer] = React.useState(false);
   const [selectedModuleWorkerId, setSelectedModuleWorkerId] =
     React.useState(undefined);
-  openAudioPlayer = (roomId, fileId, src) => {
-    openedAudio = { roomId, src, fileId };
+  openAudioPlayer = (moduleWorkerId, fileId, src) => {
+    openedAudio = { moduleWorkerId, src, fileId };
     setShowAudioPlayer(true);
   };
-  openVideoPlayer = (roomId, fileId) => {
-    openedVideo = { roomId, fileId };
+  openVideoPlayer = (moduleWorkerId, fileId) => {
+    openedVideo = { moduleWorkerId, fileId };
     setShowVideoPlayer(true);
   };
   const attachScrollCallback = () => {
@@ -860,6 +860,7 @@ export default function Space(props) {
         ) : null}
         {selectedNav === 9 ? (
           <FileBox
+            moduleWorkerId={selectedModuleWorkerId}
             onClose={() => {
               setSelectedNav(undefined);
               setInTheGame(true);

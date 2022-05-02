@@ -23,7 +23,6 @@ export let FileBox = (props) => {
   const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
     readAs: "DataURL",
   });
-  let roomId = props.roomId;
   const useStyles = makeStyles({
     root: {
       width: "100%",
@@ -47,7 +46,7 @@ export let FileBox = (props) => {
         token: token,
       },
       body: JSON.stringify({
-        roomId: roomId,
+        moduleWorkerId: props.moduleWorkerId,
         fileMode:
           fileMode === 0
             ? "photo"
@@ -131,7 +130,7 @@ export let FileBox = (props) => {
           request.open(
             "POST",
             serverRoot +
-              `/file/upload_file?token=${token}&roomId=${roomId}&extension=${ext}`
+              `/file/upload_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&extension=${ext}`
           );
 
           files.push(f);
@@ -155,7 +154,7 @@ export let FileBox = (props) => {
   }, [loading]);
   useEffect(() => {
     loadFiles();
-  }, props.roomId);
+  }, props.moduleWorkerId);
   return (
     <Dialog
       fullScreen
@@ -280,7 +279,7 @@ export let FileBox = (props) => {
                 fileType={"photo"}
                 files={files.filter((f) => f.fileType === "photo")}
                 setFiles={setFiles}
-                roomId={props.roomId}
+                moduleWorkerId={props.moduleWorkerId}
                 style={{ height: "100%" }}
               />
             </div>
@@ -290,7 +289,7 @@ export let FileBox = (props) => {
                 fileType={"audio"}
                 files={files.filter((f) => f.fileType === "audio")}
                 setFiles={setFiles}
-                roomId={props.roomId}
+                moduleWorkerId={props.moduleWorkerId}
               />
             </div>
             <div style={{ height: "100%" }}>
@@ -299,7 +298,7 @@ export let FileBox = (props) => {
                 fileType={"video"}
                 files={files.filter((f) => f.fileType === "video")}
                 setFiles={setFiles}
-                roomId={props.roomId}
+                moduleWorkerId={props.moduleWorkerId}
               />
             </div>
             <div style={{ height: "100%" }}>
@@ -308,7 +307,7 @@ export let FileBox = (props) => {
                 fileType={"document"}
                 files={files.filter((f) => f.fileType === "document")}
                 setFiles={setFiles}
-                roomId={props.roomId}
+                moduleWorkerId={props.moduleWorkerId}
               />
             </div>
           </SwipeableViews>

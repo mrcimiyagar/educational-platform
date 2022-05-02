@@ -35,7 +35,7 @@ export default function VideoPlayer(props) {
           <video autoPlay id={'video-player'} controls={true} style={{width: '100%', maxWidth: 900, height: 'auto', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}} 
             src={props.src !== undefined ? props.src : 
               serverRoot +
-              `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${props.fileId}`}/>
+              `/file/download_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${props.fileId}`}/>
         </div>
     </Dialog>
   )

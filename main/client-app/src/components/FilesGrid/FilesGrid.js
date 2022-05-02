@@ -83,8 +83,8 @@ export default function FilesGrid(props) {
           serverRoot +
           "/file/download_file_thumbnail?fileId=" +
           file.id +
-          "&roomId=" +
-          props.roomId;
+          "&moduleWorkerId=" +
+          props.moduleWorkerId;
         const options = {
           headers: {
             token: token,
@@ -142,7 +142,7 @@ export default function FilesGrid(props) {
                   id={"downloadLink" + file.id}
                   href={
                     serverRoot +
-                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`
+                    `/file/download_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
                   }
                   download
                   style={{ display: "none" }}
@@ -175,7 +175,7 @@ export default function FilesGrid(props) {
                                 file.local
                                   ? file.src
                                   : serverRoot +
-                                      `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`
+                                      `/file/download_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
                               );
                               setPhotoViewerVisible(true);
                             } else if (
@@ -203,7 +203,7 @@ export default function FilesGrid(props) {
                               ? file.local
                                 ? file.src
                                 : serverRoot +
-                                  `/file/download_file_thumbnail?token=${token}&roomId=${props.roomId}&fileId=${file.id}`
+                                  `/file/download_file_thumbnail?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
                               : covers[index]
                           }
                         />
@@ -211,7 +211,7 @@ export default function FilesGrid(props) {
                       {props.fileType === "video" ? (
                         <IconButton
                           onClick={() => {
-                            openVideoPlayer(props.roomId, file.id);
+                            openVideoPlayer(props.moduleWorkerId, file.id);
                           }}
                           style={{
                             width: 40,
@@ -228,12 +228,12 @@ export default function FilesGrid(props) {
                         <IconButton
                           onClick={() => {
                             openAudioPlayer(
-                              props.roomId,
+                              props.moduleWorkerId,
                               file.id,
                               file.local
                                 ? file.src
                                 : serverRoot +
-                                    `/file/download_file?token=${token}&roomId=${props.roomId}&fileId=${file.id}`
+                                    `/file/download_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
                             );
                           }}
                           style={{
