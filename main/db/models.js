@@ -156,8 +156,11 @@ module.exports = {
         spaceId: home.id,
         accessType: "public",
       });
+      let roomDefaultModuleWorker = await sw.ModuleWorker.create({type: 'filestorage', roomId: room.id, x: 32, y: 32});
+      room.fileStorageId = roomDefaultModuleWorker.id;
+      await room.save();
       home.mainRoomId = room.id;
-      home.save();
+      await home.save();
       let roomSecret = await RoomSecret.create({
         ownerId: user.id,
         roomId: room.id,
@@ -612,7 +615,8 @@ async function prepareRoomModel() {
       chatType: Sequelize.STRING,
       avatarId: Sequelize.BIGINT,
       accessType: Sequelize.STRING,
-      hidden: Sequelize.BOOLEAN
+      hidden: Sequelize.BOOLEAN,
+      fileStorageId: Sequelize.BIGINT
     },
     {
       paranoid: true,

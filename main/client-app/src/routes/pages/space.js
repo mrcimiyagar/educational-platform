@@ -185,7 +185,7 @@ export default function Space(props) {
 
   let enterRoom = (callback) => {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     let requestOptions2 = {
       method: "POST",
@@ -290,6 +290,8 @@ export default function Space(props) {
     }
   };
 
+  reconnection();
+
   let syncWallpaper = () => {
     let requestOptions = {
       method: "POST",
@@ -350,16 +352,6 @@ export default function Space(props) {
       });
     }, 0);
   }, [props.room_id]);
-
-  let openDeck = () => {
-    gotoPage("/app/deck", { room_id: props.room_id });
-  };
-  let openNotes = () => {
-    gotoPage("/app/notes", { room_id: props.room_id });
-  };
-  let openPolls = () => {
-    gotoPage("/app/poll", { room_id: props.room_id });
-  };
 
   useEffect(() => {
     if (attachWebcamOnMessenger !== undefined) {

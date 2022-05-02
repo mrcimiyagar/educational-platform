@@ -22,21 +22,33 @@ function getFilesizeInBytes(filename) {
 }
 
 router.post('/upload_file', jsonParser, async function (req, res) {
-  let token = req.query.token
-  let roomId = Number(req.query.roomId)
   let ext = req.query.extension
   let isPresent = Boolean(req.query.isPresent)
   authenticateMember(req, res, async (membership, session, user) => {
-    require('../server').pushTo('room_' + membership.roomId, 'uploading', {})
+    require('../server').pushTo('room_' + membership.roomId, 'uploading', {});
     if (!membership.canUploadFile) {
       res.send({
         status: 'error',
         errorCode: 'e0005',
         message: 'access denied.',
-      })
-      return
+      });
+      return;
     }
-    let form = new formidable.IncomingForm()
+    let mwId = req.query.moduleWorkerId;
+    if (mwId === undefined) {
+      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      mwId = r.fileStorageId;
+    }
+    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    if (mw === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
+    let form = new formidable.IncomingForm();
     form.parse(req, async function (err, fields, files) {
       if (!fs.existsSync('files')) {
         fs.mkdirSync('files', { recursive: true })
@@ -44,7 +56,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
       let preview = await sw.File.create({
         extension: 'png',
         uploaderId: session.userId,
-        roomId: roomId,
+        moduleWorkerId: mw.id,
         isPreview: true,
         isPresent: isPresent,
         fileType: 'photo',
@@ -52,7 +64,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
       let file = await sw.File.create({
         extension: ext,
         uploaderId: session.userId,
-        roomId: roomId,
+        moduleWorkerId: mw.id,
         previewFileId: preview.id,
         isPreview: false,
         isPresent: isPresent,
@@ -224,8 +236,22 @@ router.post('/download_audio_preview', jsonParser, async function (req, res) {
     return
   }
   authenticateMember(req, res, async (membership, session, user) => {
+    let mwId = req.body.moduleWorkerId;
+    if (mwId === undefined) {
+      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      mwId = r.fileStorageId;
+    }
+    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    if (mw === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
     sw.File.findOne({
-      where: { roomId: membership.roomId, id: req.body.fileId },
+      where: { moduleWorkerId: mw.id, id: req.body.fileId },
     }).then(async (file) => {
       res.sendFile(rootPath + '/files/' + file.previewFileId + '.json')
     })
@@ -234,12 +260,26 @@ router.post('/download_audio_preview', jsonParser, async function (req, res) {
 
 router.get('/download_file_thumbnail', jsonParser, async function (req, res) {
   if (req.query.fileId === undefined) {
-    res.sendStatus(404)
+    res.sendStatus(404);
     return
   }
   authenticateMember(req, res, async (membership, session, user) => {
+    let mwId = req.query.moduleWorkerId;
+    if (mwId === undefined) {
+      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      mwId = r.fileStorageId;
+    }
+    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    if (mw === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
     sw.File.findOne({
-      where: { roomId: membership.roomId, id: req.query.fileId },
+      where: { moduleWorkerId: mw.id, id: req.query.fileId },
     }).then(async (file) => {
       if (fs.existsSync(rootPath + '/files/' + file.previewFileId)) {
         res.sendFile(rootPath + '/files/' + file.previewFileId)
@@ -256,8 +296,22 @@ router.get('/download_file', jsonParser, async function (req, res) {
     return
   }
   authenticateMember(req, res, async (membership, session, user) => {
+    let mwId = req.query.moduleWorkerId;
+    if (mwId === undefined) {
+      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      mwId = r.fileStorageId;
+    }
+    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    if (mw === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
     sw.File.findOne({
-      where: { roomId: membership.roomId, id: req.query.fileId },
+      where: { moduleWorkerId: mw.id, id: req.query.fileId },
     }).then(async (file) => {
       if (file === null) {
         res.sendStatus(404)
@@ -412,8 +466,22 @@ router.post('/remove_file', jsonParser, async function (req, res) {
       })
       return
     }
+    let mwId = req.body.moduleWorkerId;
+    if (mwId === undefined) {
+      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      mwId = r.fileStorageId;
+    }
+    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    if (mw === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
     sw.File.findOne({
-      where: { roomId: membership.roomId, id: req.body.fileId },
+      where: { moduleWorkerId: mw.id, id: req.body.fileId },
     }).then(async function (file) {
       if (file === null) {
         res.send({
@@ -433,9 +501,23 @@ router.post('/remove_file', jsonParser, async function (req, res) {
 
 router.post('/get_files', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
+    let mwId = req.body.moduleWorkerId;
+    if (mwId === undefined) {
+      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      mwId = r.fileStorageId;
+    }
+    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    if (mw === null) {
+      res.send({
+        status: 'error',
+        errorCode: 'e0005',
+        message: 'access denied.',
+      });
+      return;
+    }
     sw.File.findAll({
       where: {
-        roomId: membership.roomId,
+        moduleWorkerId: mw.id,
         isPreview: false,
         isPresent: req.body.isPresent === true ? true : false,
       },

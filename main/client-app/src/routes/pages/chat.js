@@ -1,10 +1,10 @@
-import { Fab } from "@material-ui/core";
+import { Fab, Paper } from "@material-ui/core";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
-import { ArrowDownward } from "@material-ui/icons";
+import { ArrowDownward, Close } from "@material-ui/icons";
 import DescriptionIcon from "@material-ui/icons/Description";
 import EmojiEmotionsIcon from "@material-ui/icons/EmojiEmotions";
 import SendIcon from "@material-ui/icons/Send";
@@ -47,6 +47,7 @@ import store, { changeConferenceMode } from "../../redux/main";
 import "./chat.css";
 import CustomImageBox from "../../components/CustomImageBox";
 import Profile from "./profile";
+import { Typography } from "@mui/material";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
@@ -177,10 +178,22 @@ export default function Chat(props) {
       .catch((error) => console.log("error", error));
   };
 
-  socket.io.removeAllListeners("reconnect");
-  socket.io.on("reconnect", () => {
-    setupRoom();
-  });
+  const reconnection = () => {
+    try {
+      if (socket === undefined || socket === null) {
+        setTimeout(reconnection, 5000);
+      } else {
+        socket.io.removeAllListeners("reconnect");
+        socket.io.on("reconnect", () => {
+          setupRoom();
+        });
+      }
+    } catch (ex) {
+      setTimeout(reconnection, 5000);
+    }
+  };
+
+  reconnection();
 
   useEffect(() => {
     scrollReady3 = false;
@@ -276,11 +289,22 @@ export default function Chat(props) {
   let [scrollTrigger, setScrollTrigger] = React.useState(false);
   let [scrollAnywayrTrigger, setScrollAnywayrTrigger] = React.useState(false);
   let [showScrollDown, setShowScrollDown] = React.useState(false);
-  const [replyToMessage, setReplyToMessage] = React.useState(undefined);
-  const [forwardFromMessage, setForwardFromMessage] = React.useState(undefined);
-  
+  const [replyToMessage, setReplyToMessageInner] = React.useState(undefined);
+  const [forwardFromMessage, setForwardFromMessageInner] =
+    React.useState(undefined);
+
+  const setReplyToMessage = (msg) => {
+    setReplyToMessageInner(msg);
+  };
+
+  const setForwardFromMessage = (msg) => {
+    setForwardFromMessageInner(msg);
+  };
+
   const scrollToMessage = (msgId) => {
-    document.getElementById('message-' + msgId).scrollIntoView({ behavior: 'smooth' });
+    document
+      .getElementById("message-" + msgId)
+      .scrollIntoView({ behavior: "smooth" });
   };
 
   let callback = () => {
@@ -347,7 +371,7 @@ export default function Chat(props) {
     try {
       if (msg.roomId === props.room_id && lastMsgId !== msg.id) {
         lastMsgId = msg.id;
-        
+
         var m = new SpeechSynthesisUtterance();
         var voices = window.speechSynthesis.getVoices();
         m.voice = voices[30];
@@ -604,8 +628,14 @@ export default function Chat(props) {
                             token: token,
                           },
                           body: JSON.stringify({
-                            repliedTo: replyToMessage !== undefined ? replyToMessage.id : undefined,
-                            forwardedFrom: forwardFromMessage !== undefined ? forwardFromMessage.id : undefined,
+                            repliedTo:
+                              replyToMessage !== undefined
+                                ? replyToMessage.id
+                                : undefined,
+                            forwardedFrom:
+                              forwardFromMessage !== undefined
+                                ? forwardFromMessage.id
+                                : undefined,
                             roomId: props.room_id,
                             messageType:
                               dataUrl.name.endsWith(".svg") ||
@@ -638,6 +668,8 @@ export default function Chat(props) {
                           .then((result) => {
                             console.log(JSON.stringify(result));
                             if (result.message !== undefined) {
+                              setReplyToMessage(undefined);
+                              setForwardFromMessage(undefined);
                               cacheMessage(result.message);
                               for (let i = 0; i < messagesArr.length; i++) {
                                 if (
@@ -926,8 +958,14 @@ export default function Chat(props) {
                   token: token,
                 },
                 body: JSON.stringify({
-                  repliedTo: replyToMessage !== undefined ? replyToMessage.id : undefined,
-                  forwardedFrom: forwardFromMessage !== undefined ? forwardFromMessage.id : undefined,
+                  repliedTo:
+                    replyToMessage !== undefined
+                      ? replyToMessage.id
+                      : undefined,
+                  forwardedFrom:
+                    forwardFromMessage !== undefined
+                      ? forwardFromMessage.id
+                      : undefined,
                   roomId: props.room_id,
                   messageType:
                     dataUrl.name.endsWith(".svg") ||
@@ -957,6 +995,8 @@ export default function Chat(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result));
                   if (result.message !== undefined) {
+                    setReplyToMessage(undefined);
+                    setForwardFromMessage(undefined);
                     cacheMessage(result.message);
                     for (let i = 0; i < messagesArr.length; i++) {
                       if (messagesArr[i].key === "message-" + msg.id) {
@@ -1076,7 +1116,10 @@ export default function Chat(props) {
             position: "fixed",
             bottom: (showEmojiPad ? 400 : 0) + "px",
             width: "100%",
-            height: 56,
+            height:
+              (replyToMessage !== undefined ? 40 : 0) +
+              (forwardFromMessage !== undefined ? 40 : 0) +
+              56,
             zIndex: 1000,
             display:
               membership !== undefined &&
@@ -1086,6 +1129,135 @@ export default function Chat(props) {
                 : "none",
           }}
         >
+          {replyToMessage !== undefined ? (
+            <Paper
+              style={{
+                width: "100%",
+                height: 40,
+                position: "relative",
+                backgroundColor: colors.field,
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <div
+                style={{
+                  marginLeft: 16,
+                  marginRight: 16,
+                  display: "flex",
+                  width: "calc(100% - 32px)",
+                  position: "absolute",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                }}
+              >
+                <div
+                  style={{
+                    width: 4,
+                    height: 24,
+                    borderRadius: 1,
+                    backgroundColor: colors.accent,
+                  }}
+                />
+                <div style={{ width: 8, height: "100%" }} />
+                <div
+                  stlye={{
+                    textOverflow: "ellipsis",
+                    maxWidth: window.innerWidth - 56 + "px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                  }}
+                >
+                  {replyToMessage.messageType === "text"
+                    ? replyToMessage.text
+                    : replyToMessage.messageType === "photo"
+                    ? "عکس"
+                    : replyToMessage.messageType === "audio"
+                    ? "صدا"
+                    : replyToMessage.messageType === "video"
+                    ? "ویدئو"
+                    : replyToMessage.messageType === "document"
+                    ? "سند"
+                    : ""}
+                </div>
+                <IconButton
+                  onClick={() => setReplyToMessage(undefined)}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    position: "absolute",
+                    right: 16,
+                  }}
+                >
+                  <Close style={{ fill: colors.icon }} />
+                </IconButton>
+              </div>
+            </Paper>
+          ) : null}
+
+          {forwardFromMessage !== undefined ? (
+            <Paper
+              style={{
+                width: "100%",
+                height: 40,
+                position: "relative",
+                backgroundColor: colors.field,
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <div
+                style={{
+                  marginLeft: 16,
+                  marginRight: 16,
+                  display: "flex",
+                  width: "calc(100% - 32px)",
+                  position: "absolute",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                }}
+              >
+                <div
+                  style={{
+                    width: 4,
+                    height: 24,
+                    borderRadius: 1,
+                    backgroundColor: colors.icon,
+                  }}
+                />
+                <div style={{ width: 8, height: "100%" }} />
+                <div
+                  stlye={{
+                    textOverflow: "ellipsis",
+                    maxWidth: window.innerWidth - 56 + "px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                  }}
+                >
+                  {forwardFromMessage.messageType === "text"
+                    ? forwardFromMessage.text
+                    : forwardFromMessage.messageType === "photo"
+                    ? "عکس"
+                    : forwardFromMessage.messageType === "audio"
+                    ? "صدا"
+                    : forwardFromMessage.messageType === "video"
+                    ? "ویدئو"
+                    : forwardFromMessage.messageType === "document"
+                    ? "سند"
+                    : ""}
+                </div>
+                <IconButton
+                  onClick={() => setForwardFromMessage(undefined)}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    position: "absolute",
+                    right: 16,
+                  }}
+                >
+                  <Close style={{ fill: colors.icon }} />
+                </IconButton>
+              </div>
+            </Paper>
+          ) : null}
           <div
             className={classes.root}
             style={{
@@ -1161,7 +1333,7 @@ export default function Chat(props) {
                     messageType: "text",
                     author: me,
                     repliedTo: replyToMessage,
-                    forwardedFrom: forwardFromMessage
+                    forwardedFrom: forwardFromMessage,
                   };
                   addMessageToList(msg);
                   setLastMessage(msg);
@@ -1172,8 +1344,14 @@ export default function Chat(props) {
                       token: token,
                     },
                     body: JSON.stringify({
-                      repliedTo: replyToMessage !== undefined ? replyToMessage.id : undefined,
-                      forwardedFrom: forwardFromMessage !== undefined ? forwardFromMessage.id : undefined,
+                      repliedTo:
+                        replyToMessage !== undefined
+                          ? replyToMessage.id
+                          : undefined,
+                      forwardedFrom:
+                        forwardFromMessage !== undefined
+                          ? forwardFromMessage.id
+                          : undefined,
                       roomId: props.room_id,
                       text: document.getElementById("chatText").value,
                       messageType: "text",
@@ -1185,6 +1363,8 @@ export default function Chat(props) {
                     .then((result) => {
                       console.log(JSON.stringify(result));
                       if (result.message !== undefined) {
+                        setReplyToMessage(undefined);
+                        setForwardFromMessage(undefined);
                         cacheMessage(result.message);
                         let msgEl = document.getElementById(
                           "message-" + msg.id

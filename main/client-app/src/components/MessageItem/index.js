@@ -105,17 +105,19 @@ export default function MessageItem(props) {
       }
     }
   }, []);
+  let bottomMargin = 0;
+  if (message.repliedTo !== undefined && message.repliedTo !== null) {
+    bottomMargin += 32;
+  }
+  if (message.forwardedFrom !== undefined && message.forwardedFrom !== null) {
+    bottomMargin += 32;
+  }
   return (
     <div
       key={message.id}
       id={"message-" + message.id}
       style={{
-        marginBottom:
-          (message.repliedTo === undefined || message.repliedTo === null) &&
-          (message.forwardedFrom === undefined ||
-            message.forwardedFrom === null)
-            ? 0
-            : 24,
+        marginBottom: bottomMargin,
       }}
       onClick={() => {
         setBottomSheetContent(
@@ -251,12 +253,12 @@ export default function MessageItem(props) {
             <br />
             <div>
               {message.repliedTo !== undefined && message.repliedTo !== null ? (
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "flex", marginBottom: 8 }}>
                   <div
                     style={{
-                      width: 2,
+                      width: 4,
                       height: 24,
-                      borderRadius: "25%",
+                      borderRadius: 1,
                       backgroundColor: colors.accent,
                     }}
                   />
@@ -275,18 +277,28 @@ export default function MessageItem(props) {
                       props.scrollToMessage(message.repliedTo.id);
                     }}
                   >
-                    {message.repliedTo.text}
+                    {message.repliedTo.messageType === "text"
+                      ? message.repliedTo.text
+                      : message.repliedTo.messageType === "photo"
+                      ? "عکس"
+                      : message.repliedTo.messageType === "audio"
+                      ? "صدا"
+                      : message.repliedTo.messageType === "video"
+                      ? "ویدئو"
+                      : message.repliedTo.messageType === "document"
+                      ? "سند"
+                      : ""}
                   </Typography>
                 </div>
               ) : null}
               {message.forwardedFrom !== undefined &&
               message.forwardedFrom !== null ? (
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "flex", marginBottom: 8 }}>
                   <div
                     style={{
-                      width: 2,
+                      width: 4,
                       height: 24,
-                      borderRadius: "25%",
+                      borderRadius: 1,
                       backgroundColor: "#fff",
                     }}
                   />
@@ -309,7 +321,17 @@ export default function MessageItem(props) {
                       }
                     }}
                   >
-                    {message.forwardedFrom.text}
+                    {message.forwardedFrom.messageType === "text"
+                      ? message.forwardedFrom.text
+                      : message.forwardedFrom.messageType === "photo"
+                      ? "عکس"
+                      : message.forwardedFrom.messageType === "audio"
+                      ? "صدا"
+                      : message.forwardedFrom.messageType === "video"
+                      ? "ویدئو"
+                      : message.forwardedFrom.messageType === "document"
+                      ? "سند"
+                      : ""}
                   </Typography>
                 </div>
               ) : null}
@@ -720,12 +742,12 @@ export default function MessageItem(props) {
             <br />
             <div>
               {message.repliedTo !== undefined && message.repliedTo !== null ? (
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "flex", marginBottom: 8 }}>
                   <div
                     style={{
-                      width: 2,
+                      width: 4,
                       height: 24,
-                      borderRadius: "25%",
+                      borderRadius: 1,
                       backgroundColor: colors.accent,
                     }}
                   />
@@ -744,18 +766,28 @@ export default function MessageItem(props) {
                       props.scrollToMessage(message.repliedTo.id);
                     }}
                   >
-                    {message.repliedTo.text}
+                  {message.repliedTo.messageType === "text"
+                    ? message.repliedTo.text
+                    : message.repliedTo.messageType === "photo"
+                    ? "عکس"
+                    : message.repliedTo.messageType === "audio"
+                    ? "صدا"
+                    : message.repliedTo.messageType === "video"
+                    ? "ویدئو"
+                    : message.repliedTo.messageType === "document"
+                    ? "سند"
+                    : ""}
                   </Typography>
                 </div>
               ) : null}
               {message.forwardedFrom !== undefined &&
               message.forwardedFrom !== null ? (
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "flex", marginBottom: 8 }}>
                   <div
                     style={{
-                      width: 2,
+                      width: 4,
                       height: 24,
-                      borderRadius: "25%",
+                      borderRadius: 1,
                       backgroundColor: "#fff",
                     }}
                   />
@@ -778,7 +810,17 @@ export default function MessageItem(props) {
                       }
                     }}
                   >
-                    {message.forwardedFrom.text}
+                  {message.forwardedFrom.messageType === "text"
+                    ? message.forwardedFrom.text
+                    : message.forwardedFrom.messageType === "photo"
+                    ? "عکس"
+                    : message.forwardedFrom.messageType === "audio"
+                    ? "صدا"
+                    : message.forwardedFrom.messageType === "video"
+                    ? "ویدئو"
+                    : message.forwardedFrom.messageType === "document"
+                    ? "سند"
+                    : ""}
                   </Typography>
                 </div>
               ) : null}

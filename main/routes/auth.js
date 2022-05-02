@@ -43,6 +43,9 @@ router.post('/register', jsonParser, async function (req, res) {
         spaceId: home.id,
         accessType: 'private'
     });
+    let roomDefaultModuleWorker = await sw.ModuleWorker.create({type: 'filestorage', roomId: room.id, x: 32, y: 32});
+    room.fileStorageId = roomDefaultModuleWorker.id;
+    await room.save();
     home.mainRoomId = room.id;
     home.save();
     let RoomSecret = await sw.RoomSecret.create({
