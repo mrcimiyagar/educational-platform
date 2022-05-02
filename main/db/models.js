@@ -652,7 +652,7 @@ async function prepareFileModel() {
     }
   );
   File.belongsTo(User, { foreignKey: { name: "uploaderId", allowNull: true } });
-  File.belongsTo(Room, { foreignKey: { name: "roomId", allowNull: true } });
+  File.belongsTo(ModuleWorker, { foreignKey: { name: "moduleWorkerId", allowNull: true } });
   await File.sync();
   module.exports["File"] = File;
 }

@@ -83,6 +83,7 @@ export default function FilesGrid(props) {
           serverRoot +
           "/file/download_file_thumbnail?fileId=" +
           file.id +
+          "&roomId=" + props.roomId +
           "&moduleWorkerId=" +
           props.moduleWorkerId;
         const options = {
@@ -142,7 +143,7 @@ export default function FilesGrid(props) {
                   id={"downloadLink" + file.id}
                   href={
                     serverRoot +
-                    `/file/download_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
+                    `/file/download_file?token=${token}&roomId=${props.roomId}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
                   }
                   download
                   style={{ display: "none" }}
@@ -175,7 +176,7 @@ export default function FilesGrid(props) {
                                 file.local
                                   ? file.src
                                   : serverRoot +
-                                      `/file/download_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
+                                      `/file/download_file?token=${token}&roomId=${props.roomId}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
                               );
                               setPhotoViewerVisible(true);
                             } else if (
@@ -203,7 +204,7 @@ export default function FilesGrid(props) {
                               ? file.local
                                 ? file.src
                                 : serverRoot +
-                                  `/file/download_file_thumbnail?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
+                                  `/file/download_file_thumbnail?token=${token}&roomId=${props.roomId}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
                               : covers[index]
                           }
                         />
@@ -233,7 +234,7 @@ export default function FilesGrid(props) {
                               file.local
                                 ? file.src
                                 : serverRoot +
-                                    `/file/download_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
+                                    `/file/download_file?token=${token}&roomId=${props.roomId}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
                             );
                           }}
                           style={{
