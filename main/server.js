@@ -43,8 +43,8 @@ let firebaseTokens = {};
 
 app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
     let session = await sw.Session.findOne({where: {token: req.headers.token}});
-    firebaseTokens[session.userId] = users[req.body.firebaseToken];
-    fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
+    firebaseTokens[session.userId] = req.body.firebaseToken;
+    let result = await fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json', "Authorization": "Bearer ya29.A0ARrdaM8awKBbDtmaHuVjzkKtURhxs8dAFdoAqfw5OucEdw_SXP8muPRjGkP9dzGRholPJ7Jz-_XFUC-GVZyf-A24mHtkWCCNSqrT_q_5sM4oIVDG5HyAbLpsTXZLTKxLZUJTt7UMqi-dxCCuk5QlO_Q-5hrT" },
       body: JSON.stringify(
@@ -63,15 +63,12 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
             }
           }
       )
-    })
-    .then(res => res.json())
-    .then(async result => {
-      
     });
-    res.send({status: 'success'});
+    result = await result.json();
+    res.send({status: 'success', result});
 });
 const pushNotification = (userId, body) => {
-    fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
+    let result = await fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json', "Authorization": "Bearer ya29.A0ARrdaM923wVFCluJc68FhWcGy6JgsjRUUDzgiXrSzgnKLE_QyscS49zuechb-AP4nOv0DcH9EajaI2uslPoatS-ErUZ4aq3GdRi5JfomozZ3TcLYDZn9ST3Lmuhrl-5gHNfYb9kYIcMvarUQCCb_xJA6G_Pw" },
       body: JSON.stringify(
@@ -90,11 +87,9 @@ const pushNotification = (userId, body) => {
             }
           }
       )
-    })
-    .then(res => res.json())
-    .then(async result => {
-      console.log(result);
     });
+    result = await result.json();
+    console.log(result);
 }
 server.listen(2001);
 socket.setup(server);

@@ -15,41 +15,45 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-let requestOptions = {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  redirect: 'follow',
+const channel4Broadcast = new BroadcastChannel('channel4');
+channel4Broadcast.onmessage = (event) => {
+  let token = event.data.token;
+  let requestOptions = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    redirect: 'follow',
+  }
+  fetch('https://config.kasperian.cloud', requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      messaging.getToken({vapidKey: 'BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k'}).then((currentToken) => {
+        if (currentToken) {
+          let requestOptions = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "token": token
+            },
+            body: JSON.stringify({
+              firebaseToken: currentToken
+            }),
+            redirect: "follow",
+          };
+          fetch(serverRoot + "/registerFirebaseToken", requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              console.log(JSON.stringify(result));
+            });
+        } else {
+          console.log('No registration token available. Request permission to generate one.');
+        }
+      }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+      });;
+    });
 }
-fetch('https://config.kasperian.cloud', requestOptions)
-  .then((response) => response.json())
-  .then((result) => {
-    messaging.getToken({vapidKey: 'BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k'}).then((currentToken) => {
-      if (currentToken) {
-        let requestOptions = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "token": localStorage.getItem('token')
-          },
-          body: JSON.stringify({
-            firebaseToken: currentToken
-          }),
-          redirect: "follow",
-        };
-        fetch(serverRoot + "/registerFirebaseToken", requestOptions)
-          .then((response) => response.json())
-          .then((result) => {
-            console.log(JSON.stringify(result));
-          });
-      } else {
-        console.log('No registration token available. Request permission to generate one.');
-      }
-    }).catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
-    });;
-  });
 
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
