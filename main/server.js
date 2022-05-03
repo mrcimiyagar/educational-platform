@@ -106,6 +106,9 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
       )
     });
     result = await result.json();
+
+    console.log(JSON.stringify(firebaseTokens));
+
     res.send({status: 'success', result});
 });
 const pushNotification = async (userId, body) => {
