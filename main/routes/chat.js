@@ -311,7 +311,7 @@ router.post("/create_message", jsonParser, async function (req, res) {
       let user = allUsers[i];
       if (user.id !== session.userId) {
         const { pushNotification } = require("../server");
-        pushNotification(user.id, user.firstName + ": " + msgCopy.text);
+        await pushNotification(user.id, user.firstName + ": " + msgCopy.text);
         require("../server").signlePushTo(user.id, "chat-list-updated", {
           room: roomRaw,
         });
@@ -454,7 +454,7 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
   for (let i = 0; i < allUsers.length; i++) {
     let user = allUsers[i];
     const { pushNotification } = require("../server");
-    pushNotification(user.id, user.firstName + ": " + msgCopy.text);
+    await pushNotification(user.id, user.firstName + ": " + msgCopy.text);
     require("../server").signlePushTo(user.id, "chat-list-updated", {
       room: roomRaw,
     });
