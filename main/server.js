@@ -134,6 +134,8 @@ const pushNotification = async (userId, body) => {
     console.log('..........................................................................................................');
     console.log('..........................................................................................................');
     console.log('..........................................................................................................');
+    console.log(userId + ' ' + body);
+    console.log(firebaseTokens[userId],)
     let result = await fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + at },
