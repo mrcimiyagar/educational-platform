@@ -62,7 +62,6 @@ async function send() {
               .then((currentToken) => {
                 if (currentToken) {
                   onMessage(messaging, (payload) => {
-                    alert('hello');
                     console.log(
                       "[firebase-messaging-sw.js] Received background message ",
                       payload
