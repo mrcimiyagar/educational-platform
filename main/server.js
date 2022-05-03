@@ -32,6 +32,7 @@ const expressStaticGzip = require('express-static-gzip');
 const { sockets, notifs } = require('./socket');
 const fetch = require('node-fetch');
 const users = require('./users');
+let {google} = require("googleapis");
 
 let jsonParser = bodyParser.json();
 
@@ -40,13 +41,49 @@ app.use(cors());
 let creatures = [];
 
 let firebaseTokens = {};
+let at = undefined;
+
+setInterval(() => {
+
+// Load the service account key JSON file.
+var serviceAccount = require("./serviceAccount.json");
+
+// Define the required scopes.
+var scopes = [
+  "https://www.googleapis.com/auth/userinfo.email",
+  "https://www.googleapis.com/auth/firebase.database"
+];
+
+// Authenticate a JWT client with the service account.
+var jwtClient = new google.auth.JWT(
+  serviceAccount.client_email,
+  null,
+  serviceAccount.private_key,
+  scopes
+);
+
+// Use the JWT client to generate an access token.
+jwtClient.authorize(function(error, tokens) {
+  if (error) {
+    console.log("Error making request to generate access token:", error);
+  } else if (tokens.access_token === null) {
+    console.log("Provided service account does not have permission to generate access tokens");
+  } else {
+    at = tokens.access_token;
+
+    // See the "Using the access token" section below for information
+    // on how to use the access token to send authenticated requests to
+    // the Realtime Database REST API.
+  }
+});
+}, 30 * 60 * 1000);
 
 app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
     let session = await sw.Session.findOne({where: {token: req.headers.token}});
     firebaseTokens[session.userId] = req.body.firebaseToken;
     let result = await fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
       method: 'post',
-      headers: { 'Content-Type': 'application/json', "Authorization": "Bearer ya29.A0ARrdaM923wVFCluJc68FhWcGy6JgsjRUUDzgiXrSzgnKLE_QyscS49zuechb-AP4nOv0DcH9EajaI2uslPoatS-ErUZ4aq3GdRi5JfomozZ3TcLYDZn9ST3Lmuhrl-5gHNfYb9kYIcMvarUQCCb_xJA6G_Pw" },
+      headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + at },
       body: JSON.stringify(
         {
             "message": {
@@ -70,7 +107,7 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
 const pushNotification = async (userId, body) => {
     let result = await fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
       method: 'post',
-      headers: { 'Content-Type': 'application/json', "Authorization": "Bearer ya29.A0ARrdaM923wVFCluJc68FhWcGy6JgsjRUUDzgiXrSzgnKLE_QyscS49zuechb-AP4nOv0DcH9EajaI2uslPoatS-ErUZ4aq3GdRi5JfomozZ3TcLYDZn9ST3Lmuhrl-5gHNfYb9kYIcMvarUQCCb_xJA6G_Pw" },
+      headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + at },
       body: JSON.stringify(
         {
             "message": {
