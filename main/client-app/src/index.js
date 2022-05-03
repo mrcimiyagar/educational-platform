@@ -221,6 +221,7 @@ let AppContainer = (props) => {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
+                    "token": localStorage.getItem('token')
                   },
                   body: JSON.stringify({
                     firebaseToken: currentToken

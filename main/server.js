@@ -62,7 +62,7 @@ app.post("/subscribe", jsonParser, async (req, res) => {
         .catch(err => console.error(err));
 });
 app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
-    firebaseTokens[req.header.token] = rea.body.firebaseToken;
+    firebaseTokens[req.header.token] = req.body.firebaseToken;
     fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
