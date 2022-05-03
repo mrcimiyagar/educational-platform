@@ -69,6 +69,7 @@ jwtClient.authorize(function(error, tokens) {
   } else if (tokens.access_token === null) {
     console.log("Provided service account does not have permission to generate access tokens");
   } else {
+      console.log(tokens.access_token);
     at = tokens.access_token;
 
     // See the "Using the access token" section below for information
