@@ -243,12 +243,6 @@ let AppContainer = (props) => {
                       body: payload.notification.body,
                       icon: "/logo512.png",
                       vibrate: [200, 100, 200, 100, 200, 100, 200],
-                      actions: [
-                        {
-                          action: "openApp",
-                          title: "خانه",
-                        },
-                      ],
                     };
                     let notification = new Notification(
                       notificationTitle,
