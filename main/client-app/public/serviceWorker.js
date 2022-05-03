@@ -2,42 +2,6 @@ console.log("Service Worker Loaded...");
 
 let cacheName = "js13kPWA-v2";
 
-setInterval(() => {
-  const urlBase64ToUint8Array = (base64String) => {
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/')
-  
-    const rawData = window.atob(base64)
-    const outputArray = new Uint8Array(rawData.length)
-  
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i)
-    }
-    return outputArray
-  };
-  const publicVapidKey =
-    'BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s';
-  const subscription = await self.registration.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
-  });
-  console.log('Push Registered...');
-  console.log('Sending Push...');
-  try {
-    await fetch('https://society.kasperian.cloud/subscribe', {
-      method: 'POST',
-      body: JSON.stringify(subscription),
-      headers: {
-        'content-type': 'application/json',
-        token: localStorage.getItem('token'),
-      },
-    });
-  } catch (ex) {
-    console.log(ex);
-  }
-  console.log('Push Sent...');
-}, 2500);
-
 self.addEventListener("push", (e) => {
   const data = e.data.json();
   console.log("Push Recieved...");
