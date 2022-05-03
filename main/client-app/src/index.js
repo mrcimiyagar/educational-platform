@@ -240,7 +240,7 @@ let AppContainer = (props) => {
               console.log('An error occurred while retrieving token. ', err);
             });;
             onMessage(messaging, (payload) => {
-              console.log('Message received. ', payload);
+              alert("hello");
             });
             loaded = true
             setTimeout(() => {
