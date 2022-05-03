@@ -51,7 +51,8 @@ var serviceAccount = require("./serviceAccount.json");
 // Define the required scopes.
 var scopes = [
   "https://www.googleapis.com/auth/userinfo.email",
-  "https://www.googleapis.com/auth/firebase.database"
+  "https://www.googleapis.com/auth/firebase.database",
+  "https://www.googleapis.com/auth/cloud-platform"
 ];
 
 // Authenticate a JWT client with the service account.
