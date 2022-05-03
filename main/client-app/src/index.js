@@ -16,7 +16,7 @@ import { ColorBase, colors, setThemeMode, themeMode } from './util/settings'
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getMessaging, onMessage } from "firebase/messaging";
+import { getMessaging, onMessage, getToken } from "firebase/messaging";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -214,8 +214,8 @@ let AppContainer = (props) => {
           .then((response) => response.json())
           .then((result) => {
             pathConfig = result
-            setup()
-            messaging.getToken({vapidKey: 'BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k'}).then((currentToken) => {
+            setup();
+            getToken(messaging, {vapidKey: 'BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k'}).then((currentToken) => {
               if (currentToken) {
                 let requestOptions = {
                   method: "POST",
