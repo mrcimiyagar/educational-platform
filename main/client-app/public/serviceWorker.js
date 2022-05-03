@@ -2,25 +2,11 @@ console.log("Service Worker Loaded...");
 
 let cacheName = "js13kPWA-v2";
 
-setInterval(() => {
-  self.registration.showNotification("Society", {
-    body: 'hello world !',
-    icon: "/logo512.png",
-    vibrate: [200, 100, 200, 100, 200, 100, 200],
-    actions: [
-      {
-        action: 'openApp',
-        title: 'خانه'
-      }
-    ]
-  });
-}, 2500);
-
 self.addEventListener("push", (e) => {
   const data = e.data.json();
   console.log("Push Recieved...");
   self.navigator.setAppBadge(1);
-  self.registration.showNotification("Society", {
+  e.waitUntil(self.registration.showNotification("Society", {
     body: data.body,
     icon: "/logo512.png",
     vibrate: [200, 100, 200, 100, 200, 100, 200],
@@ -30,7 +16,7 @@ self.addEventListener("push", (e) => {
         title: 'خانه'
       }
     ]
-  });
+  }));
 });
 
 self.addEventListener('notificationclick', function(event) {
