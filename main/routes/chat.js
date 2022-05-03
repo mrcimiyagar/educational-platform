@@ -11,7 +11,6 @@ const {
 const Sequelize = require("sequelize");
 const webpush = require("web-push");
 const users = require("../users");
-const { pushNotification } = require("../server");
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
@@ -281,7 +280,6 @@ router.post("/create_message", jsonParser, async function (req, res) {
     users.forEach((u) => {
       if (u.id !== session.userId) {
         require("../server").signlePushTo(u.id, "message-added", { msgCopy });
-        pushNotification(u.id, u.firstName + ": " + msgCopy.text);
       }
     });
     let workerIds = (
@@ -312,6 +310,8 @@ router.post("/create_message", jsonParser, async function (req, res) {
     for (let i = 0; i < allUsers.length; i++) {
       let user = allUsers[i];
       if (user.id !== session.userId) {
+        const { pushNotification } = require("../server");
+        pushNotification(u.id, u.firstName + ": " + msgCopy.text);
         require("../server").signlePushTo(user.id, "chat-list-updated", {
           room: roomRaw,
         });
@@ -432,7 +432,6 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
   let users = getRoomUsers(workership.roomId);
   let roomRaw = await sw.Room.findOne({ where: { id: workership.roomId } });
   users.forEach((user) => {
-    pushNotification(user.id, user.firstName + ": " + msgCopy.text);
     require("../server").signlePushTo(user.id, "message-added", { msgCopy });
   });
   let mems = await sw.Membership.findAll({
@@ -454,6 +453,8 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
   });
   for (let i = 0; i < allUsers.length; i++) {
     let user = allUsers[i];
+    const { pushNotification } = require("../server");
+    pushNotification(user.id, user.firstName + ": " + msgCopy.text);
     require("../server").signlePushTo(user.id, "chat-list-updated", {
       room: roomRaw,
     });
