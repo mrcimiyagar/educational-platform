@@ -232,7 +232,7 @@ let AppContainer = (props) => {
                 "BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k",
             })
               .then((currentToken) => {
-                if (currentToken) {
+                /*if (currentToken) {
                   onMessage(messaging, (payload) => {
                     alert('hello');
                     console.log(
@@ -273,7 +273,7 @@ let AppContainer = (props) => {
                   console.log(
                     "No registration token available. Request permission to generate one."
                   );
-                }
+                }*/
               })
               .catch((err) => {
                 console.log("An error occurred while retrieving token. ", err);
