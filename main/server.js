@@ -93,7 +93,7 @@ const pushNotification = (userId, body) => {
     })
     .then(res => res.json())
     .then(async result => {
-      
+      console.log(result);
     });
 }
 server.listen(2001);
