@@ -65,7 +65,7 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
     firebaseTokens[req.header.token] = req.body.firebaseToken;
     fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
       method: 'post',
-      headers: { 'Content-Type': 'application/json', "Authorization": "Bearer ya29.A0ARrdaM9UHP-5vBQ3Iuse4Ph9_gb6LeM5oF57mEpxtmTThphloEn8kH5e8jklqOBlXuZALniahm8K1oSglP_mT12lioYQChyk2dou2IZwADXyvf_L1j70EtKHXt4sw37_xUtjIA35NAzd4wjXWh7J2nmd70pm" },
+      headers: { 'Content-Type': 'application/json', "Authorization" "Bearer ya29.A0ARrdaM9UHP-5vBQ3Iuse4Ph9_gb6LeM5oF57mEpxtmTThphloEn8kH5e8jklqOBlXuZALniahm8K1oSglP_mT12lioYQChyk2dou2IZwADXyvf_L1j70EtKHXt4sw37_xUtjIA35NAzd4wjXWh7J2nmd70pm" },
       body: JSON.stringify(
         {
             "message": {
