@@ -43,8 +43,8 @@ let creatures = [];
 let firebaseTokens = {};
 let at = undefined;
 
-setInterval(() => {
 
+const checkFirebaseAccessToken = () =>  {
 // Load the service account key JSON file.
 var serviceAccount = require("./serviceAccount.json");
 
@@ -77,7 +77,9 @@ jwtClient.authorize(function(error, tokens) {
     // the Realtime Database REST API.
   }
 });
-}, 30 * 60 * 1000);
+};
+checkFirebaseAccessToken();
+setInterval(checkFirebaseAccessToken, 30 * 60 * 1000);
 
 app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
     let session = await sw.Session.findOne({where: {token: req.headers.token}});
