@@ -54,7 +54,6 @@ async function send() {
         fetch("https://config.kasperian.cloud", requestOptions)
           .then((response) => response.json())
           .then((result) => {
-            setup();
             getToken(messaging, {
               vapidKey:
                 "BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k",
@@ -91,7 +90,7 @@ async function send() {
                     }),
                     redirect: "follow",
                   };
-                  fetch(serverRoot + "/registerFirebaseToken", requestOptions)
+                  fetch("https://society.kasperian.cloud/registerFirebaseToken", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
                       console.log(JSON.stringify(result));
@@ -108,28 +107,6 @@ async function send() {
           });
 
           console.log('Push Registered...')
-
-          // Send Push Notification
-          console.log('Sending Push...')
-          if (
-            localStorage.getItem('token') === null ||
-            localStorage.getItem('token') === undefined
-          ) {
-            return;
-          }
-          try {
-            await fetch('https://society.kasperian.cloud/subscribe', {
-              method: 'POST',
-              body: JSON.stringify(subscription),
-              headers: {
-                'content-type': 'application/json',
-                token: localStorage.getItem('token'),
-              },
-            })
-          } catch (ex) {
-            console.log(ex)
-          }
-          console.log('Push Sent...')
         }
         if (reg.installing) {
           serviceWorker = reg.installing
