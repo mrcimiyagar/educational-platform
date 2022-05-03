@@ -45,6 +45,7 @@
     "emoji-picker-react": "^3.4.8",
     "emotion": "^11.0.0",
     "fabric": "^4.3.0",
+    "firebase": "^9.7.0",
     "font-awesome": "^4.7.0",
     "formik": "^1.5.1",
     "history": "^5.0.0",

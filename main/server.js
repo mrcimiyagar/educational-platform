@@ -31,12 +31,15 @@ const { usersSubscriptions, getRoomUsers, usersBook } = require('./users');
 const expressStaticGzip = require('express-static-gzip');
 const webpush = require('web-push');
 const { sockets, notifs } = require('./socket');
+const fetch = require('node-fetch');
 
 let jsonParser = bodyParser.json();
 
 app.use(cors());
 
 let creatures = [];
+
+let firebaseTokens = {};
 
 webpush.setVapidDetails(
     "mailto:theprogrammermachine@gmail.com",
@@ -58,7 +61,34 @@ app.post("/subscribe", jsonParser, async (req, res) => {
         .sendNotification(subscription, payload)
         .catch(err => console.error(err));
 });
-
+app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
+    firebaseTokens[req.header.token] = rea.body.firebaseToken;
+    fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        {
+            "message": {
+              "token": req.body.firebaseToken,
+              "notification": {
+                "title": "Background Message Title",
+                "body": "Background message body"
+              },
+              "webpush": {
+                "fcm_options": {
+                  "link": "society.kasperian.cloud"
+                }
+              }
+            }
+          }
+      )
+    })
+    .then(res => res.json())
+    .then(async result => {
+      
+    });
+    res.send({status: 'success'});
+});
 server.listen(2001);
 socket.setup(server);
 

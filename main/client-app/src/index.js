@@ -5,13 +5,37 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import CloudIcon from './images/logo.png'
 import store from './redux/main';
-import { setup, socket } from './util/Utils';
+import { serverRoot, setup, socket } from './util/Utils';
 import './notifSystem';
 import { Alert, Snackbar } from '@mui/material';
 import CustomImageBox from './components/CustomImageBox'
 import SpaceWallpaperDark from './images/space-wallpaper-dark.png';
 import SpaceWallpaperLight from './images/space-wallpaper-light.jpg';
 import { ColorBase, colors, setThemeMode, themeMode } from './util/settings'
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getMessaging, onMessage } from "firebase/messaging";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDGWqgvpAwwwPk1ibxWkF0b80dt8NQllFs",
+  authDomain: "infinity-e17df.firebaseapp.com",
+  projectId: "infinity-e17df",
+  storageBucket: "infinity-e17df.appspot.com",
+  messagingSenderId: "538387159430",
+  appId: "1:538387159430:web:bd74cea2daa5973a947407",
+  measurementId: "G-2PH313X4HV"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const messaging = getMessaging(app);
 
 export let pathConfig = {}
 
@@ -191,6 +215,32 @@ let AppContainer = (props) => {
           .then((result) => {
             pathConfig = result
             setup()
+            messaging.getToken({vapidKey: 'BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k'}).then((currentToken) => {
+              if (currentToken) {
+                let requestOptions = {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    firebaseToken: currentToken
+                  }),
+                  redirect: "follow",
+                };
+                fetch(serverRoot + "/registerFirebaseToken", requestOptions)
+                  .then((response) => response.json())
+                  .then((result) => {
+                    console.log(JSON.stringify(result));
+                  });
+              } else {
+                console.log('No registration token available. Request permission to generate one.');
+              }
+            }).catch((err) => {
+              console.log('An error occurred while retrieving token. ', err);
+            });;
+            onMessage(messaging, (payload) => {
+              console.log('Message received. ', payload);
+            });
             loaded = true
             setTimeout(() => {
               setDisplay('none')
