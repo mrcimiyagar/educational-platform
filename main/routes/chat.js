@@ -311,7 +311,7 @@ router.post("/create_message", jsonParser, async function (req, res) {
       let user = allUsers[i];
       if (user.id !== session.userId) {
         const { pushNotification } = require("../server");
-        pushNotification(u.id, u.firstName + ": " + msgCopy.text);
+        pushNotification(user.id, user.firstName + ": " + msgCopy.text);
         require("../server").signlePushTo(user.id, "chat-list-updated", {
           room: roomRaw,
         });
