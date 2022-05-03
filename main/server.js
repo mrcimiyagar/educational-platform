@@ -46,7 +46,7 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
     firebaseTokens[session.userId] = req.body.firebaseToken;
     let result = await fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
       method: 'post',
-      headers: { 'Content-Type': 'application/json', "Authorization": "Bearer ya29.A0ARrdaM8awKBbDtmaHuVjzkKtURhxs8dAFdoAqfw5OucEdw_SXP8muPRjGkP9dzGRholPJ7Jz-_XFUC-GVZyf-A24mHtkWCCNSqrT_q_5sM4oIVDG5HyAbLpsTXZLTKxLZUJTt7UMqi-dxCCuk5QlO_Q-5hrT" },
+      headers: { 'Content-Type': 'application/json', "Authorization": "Bearer ya29.A0ARrdaM923wVFCluJc68FhWcGy6JgsjRUUDzgiXrSzgnKLE_QyscS49zuechb-AP4nOv0DcH9EajaI2uslPoatS-ErUZ4aq3GdRi5JfomozZ3TcLYDZn9ST3Lmuhrl-5gHNfYb9kYIcMvarUQCCb_xJA6G_Pw" },
       body: JSON.stringify(
         {
             "message": {
