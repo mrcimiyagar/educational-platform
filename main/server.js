@@ -27,11 +27,11 @@ const notif = require('./routes/notifications');
 const cors = require('cors');
 const sw = require('./db/models');
 const bodyParser = require('body-parser');
-const { usersSubscriptions, getRoomUsers, usersBook } = require('./users');
+const { getRoomUsers, usersBook } = require('./users');
 const expressStaticGzip = require('express-static-gzip');
-const webpush = require('web-push');
 const { sockets, notifs } = require('./socket');
 const fetch = require('node-fetch');
+const users = require('./users');
 
 let jsonParser = bodyParser.json();
 
@@ -41,28 +41,9 @@ let creatures = [];
 
 let firebaseTokens = {};
 
-webpush.setVapidDetails(
-    "mailto:theprogrammermachine@gmail.com",
-    'BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s',
-    'ns9sb4bAIZxxVEpqtpFs5xMJ1wo5HyktIKt6k3QnoXI'
-);
-app.post("/subscribe", jsonParser, async (req, res) => {
-    // Get pushSubscription object
-    const subscription = req.body;
-    let session = await sw.Session.findOne({where: {token: req.headers.token}});
-    let user = await sw.User.findOne({where: {id: session.userId}});
-    usersSubscriptions[user.id] = subscription;  
-    // Send 201 - resource created
-    res.status(201).json({});
-    // Create payload
-    const payload = JSON.stringify({ body: "به ابر آسمان خوش آمدید." });
-    // Pass object into sendNotification
-    webpush
-        .sendNotification(subscription, payload)
-        .catch(err => console.error(err));
-});
 app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
-    firebaseTokens[req.header.token] = req.body.firebaseToken;
+    let session = await sw.Session.findOne({where: {token: req.headers.token}});
+    firebaseTokens[session.userId] = users[req.body.firebaseToken];
     fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json', "Authorization": "Bearer ya29.A0ARrdaM8awKBbDtmaHuVjzkKtURhxs8dAFdoAqfw5OucEdw_SXP8muPRjGkP9dzGRholPJ7Jz-_XFUC-GVZyf-A24mHtkWCCNSqrT_q_5sM4oIVDG5HyAbLpsTXZLTKxLZUJTt7UMqi-dxCCuk5QlO_Q-5hrT" },
@@ -71,8 +52,8 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
             "message": {
               "token": req.body.firebaseToken,
               "notification": {
-                "title": "Background Message Title",
-                "body": "Background message body"
+                "title": "Infinity",
+                "body": "به ابر آسمان خوش آمدید."
               },
               "webpush": {
                 "fcm_options": {
@@ -89,6 +70,32 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
     });
     res.send({status: 'success'});
 });
+const pushNotification = (userId, body) => {
+    fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json', "Authorization": "Bearer ya29.A0ARrdaM8awKBbDtmaHuVjzkKtURhxs8dAFdoAqfw5OucEdw_SXP8muPRjGkP9dzGRholPJ7Jz-_XFUC-GVZyf-A24mHtkWCCNSqrT_q_5sM4oIVDG5HyAbLpsTXZLTKxLZUJTt7UMqi-dxCCuk5QlO_Q-5hrT" },
+      body: JSON.stringify(
+        {
+            "message": {
+              "token": firebaseTokens[userId],
+              "notification": {
+                "title": 'Infinity',
+                "body": body
+              },
+              "webpush": {
+                "fcm_options": {
+                  "link": "society.kasperian.cloud"
+                }
+              }
+            }
+          }
+      )
+    })
+    .then(res => res.json())
+    .then(async result => {
+      
+    });
+}
 server.listen(2001);
 socket.setup(server);
 
@@ -260,6 +267,7 @@ models.setup().then(() => {
             if (d.length > 100) d = d.substr(0, 100);
             if (notifs[userId] === undefined) notifs[userId] = [];
             notifs[userId].push({key, data});
-        }
+        },
+        pushNotification: pushNotification
     };
 });

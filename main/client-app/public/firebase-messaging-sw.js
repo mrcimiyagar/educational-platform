@@ -18,12 +18,27 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   // Customize notification here
-  const notificationTitle = 'Background Message Title';
+  const notificationTitle = payload.notification.title;
   const notificationOptions = {
-    body: 'Background Message body.',
-    icon: '/firebase-logo.png'
+    body: payload.notification.body,
+    icon: "/logo512.png",
+    vibrate: [200, 100, 200, 100, 200, 100, 200],
+    actions: [
+      {
+        action: 'openApp',
+        title: 'خانه'
+      }
+    ]
   };
 
   self.registration.showNotification(notificationTitle,
     notificationOptions);
 });
+
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  if (event.action === 'openApp') {
+    self.navigator.clearAppBadge();
+    self.clients.openWindow('/');
+  }
+}, false);

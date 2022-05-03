@@ -11,6 +11,7 @@ const {
 const Sequelize = require("sequelize");
 const webpush = require("web-push");
 const users = require("../users");
+const { pushNotification } = require("../server");
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
@@ -276,14 +277,6 @@ router.post("/create_message", jsonParser, async function (req, res) {
       forwardedFrom: forwardOnMessage,
     };
     let users = getRoomUsers(membership.roomId);
-    let pushNotification = (userId, text) => {
-      let subscription = usersSubscriptions[userId];
-      if (subscription === undefined) return;
-      const payload = JSON.stringify({ body: text });
-      webpush
-        .sendNotification(subscription, payload)
-        .catch((err) => console.error(err));
-    };
     let roomRaw = await sw.Room.findOne({ where: { id: membership.roomId } });
     users.forEach((u) => {
       if (u.id !== session.userId) {
@@ -437,14 +430,6 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
     forwardedFrom: forwardOnMessage,
   };
   let users = getRoomUsers(workership.roomId);
-  let pushNotification = (userId, text) => {
-    let subscription = usersSubscriptions[userId];
-    if (subscription === undefined) return;
-    const payload = JSON.stringify({ body: text });
-    webpush
-      .sendNotification(subscription, payload)
-      .catch((err) => console.error(err));
-  };
   let roomRaw = await sw.Room.findOne({ where: { id: workership.roomId } });
   users.forEach((user) => {
     pushNotification(user.id, user.firstName + ": " + msgCopy.text);

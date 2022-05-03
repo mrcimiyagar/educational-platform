@@ -240,7 +240,21 @@ let AppContainer = (props) => {
               console.log('An error occurred while retrieving token. ', err);
             });;
             onMessage(messaging, (payload) => {
-              alert("hello");
+              console.log('[firebase-messaging-sw.js] Received background message ', payload);
+              const notificationTitle = payload.notification.title;
+              const notificationOptions = {
+                body: payload.notification.body,
+                icon: "/logo512.png",
+                vibrate: [200, 100, 200, 100, 200, 100, 200],
+                actions: [
+                  {
+                    action: 'openApp',
+                    title: 'خانه'
+                  }
+                ]
+              };
+              let notification = new Notification(notificationTitle, notificationOptions);
+              notification.onclick = () => {notification.close();}
             });
             loaded = true
             setTimeout(() => {
