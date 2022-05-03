@@ -107,9 +107,7 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
     });
     result = await result.json();
 
-    console.log(JSON.stringify(firebaseTokens));
-
-    res.send({status: 'success', result});
+    res.send({status: 'success', result, firebaseTokens});
 });
 const pushNotification = async (userId, body) => {
     let result = await fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
