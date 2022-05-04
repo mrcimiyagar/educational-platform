@@ -112,10 +112,10 @@ export default function MessageItem(props) {
   }, []);
   let bottomMargin = 8;
   if (message.repliedTo !== undefined && message.repliedTo !== null) {
-    bottomMargin += 32;
+    bottomMargin += 56;
   }
   if (message.forwardedFrom !== undefined && message.forwardedFrom !== null) {
-    bottomMargin += 32;
+    bottomMargin += 56;
   }
   return (
     <div
@@ -223,13 +223,13 @@ export default function MessageItem(props) {
                     {message.repliedTo.messageType === "text"
                       ? message.repliedTo.text
                       : message.repliedTo.messageType === "photo"
-                      ? "عکس"
+                      ? "عکس 📷"
                       : message.repliedTo.messageType === "audio"
-                      ? "صدا"
+                      ? "صدا 🔊"
                       : message.repliedTo.messageType === "video"
-                      ? "ویدئو"
+                      ? "ویدئو 🎥"
                       : message.repliedTo.messageType === "document"
-                      ? "سند"
+                      ? "سند 📄"
                       : ""}
                   </Typography>
                 </div>
@@ -240,7 +240,7 @@ export default function MessageItem(props) {
                   <div
                     style={{
                       width: 4,
-                      height: 24,
+                      height: 48,
                       borderRadius: 1,
                       backgroundColor: "#fff",
                     }}
@@ -264,16 +264,22 @@ export default function MessageItem(props) {
                       }
                     }}
                   >
+                    {message.forwardedFrom.author === null
+                      ? "anon"
+                      : message.forwardedFrom.author.creatureType === "user"
+                      ? message.forwardedFrom.author.firstName
+                      : message.forwardedFrom.author.title}
+                    <br />
                     {message.forwardedFrom.messageType === "text"
                       ? message.forwardedFrom.text
                       : message.forwardedFrom.messageType === "photo"
-                      ? "عکس"
+                      ? "عکس 📷"
                       : message.forwardedFrom.messageType === "audio"
-                      ? "صدا"
+                      ? "صدا 🔊"
                       : message.forwardedFrom.messageType === "video"
-                      ? "ویدئو"
+                      ? "ویدئو 🎥"
                       : message.forwardedFrom.messageType === "document"
-                      ? "سند"
+                      ? "سند 📄"
                       : ""}
                   </Typography>
                 </div>
@@ -788,16 +794,22 @@ export default function MessageItem(props) {
                       props.scrollToMessage(message.repliedTo.id);
                     }}
                   >
+                    {message.repliedTo.author === null
+                      ? "anon"
+                      : message.repliedTo.author.creatureType === "user"
+                      ? message.repliedTo.author.firstName
+                      : message.repliedTo.author.title}
+                    <br />
                     {message.repliedTo.messageType === "text"
                       ? message.repliedTo.text
                       : message.repliedTo.messageType === "photo"
-                      ? "عکس"
+                      ? "عکس 📷"
                       : message.repliedTo.messageType === "audio"
-                      ? "صدا"
+                      ? "صدا 🔊"
                       : message.repliedTo.messageType === "video"
-                      ? "ویدئو"
+                      ? "ویدئو 🎥"
                       : message.repliedTo.messageType === "document"
-                      ? "سند"
+                      ? "سند 📄"
                       : ""}
                   </Typography>
                 </div>
@@ -808,7 +820,7 @@ export default function MessageItem(props) {
                   <div
                     style={{
                       width: 4,
-                      height: 24,
+                      height: 48,
                       borderRadius: 1,
                       backgroundColor: "#fff",
                     }}
@@ -832,16 +844,22 @@ export default function MessageItem(props) {
                       }
                     }}
                   >
+                    {message.forwardedFrom.author === null
+                      ? "anon"
+                      : message.forwardedFrom.author.creatureType === "user"
+                      ? message.forwardedFrom.author.firstName
+                      : message.forwardedFrom.author.title}
+                    <br />
                     {message.forwardedFrom.messageType === "text"
                       ? message.forwardedFrom.text
                       : message.forwardedFrom.messageType === "photo"
-                      ? "عکس"
+                      ? "عکس 📷"
                       : message.forwardedFrom.messageType === "audio"
-                      ? "صدا"
+                      ? "صدا 🔊"
                       : message.forwardedFrom.messageType === "video"
-                      ? "ویدئو"
+                      ? "ویدئو 🎥"
                       : message.forwardedFrom.messageType === "document"
-                      ? "سند"
+                      ? "سند 📄"
                       : ""}
                   </Typography>
                 </div>
