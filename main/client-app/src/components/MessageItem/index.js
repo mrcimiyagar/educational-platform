@@ -194,7 +194,7 @@ export default function MessageItem(props) {
                   <div
                     style={{
                       width: 4,
-                      height: 24,
+                      height: 48,
                       borderRadius: 1,
                       backgroundColor: colors.accent,
                     }}
@@ -214,6 +214,12 @@ export default function MessageItem(props) {
                       props.scrollToMessage(message.repliedTo.id);
                     }}
                   >
+                    {message.repliedTo.author === null
+                      ? "anon"
+                      : message.repliedTo.author.creatureType === "user"
+                      ? message.repliedTo.author.firstName
+                      : message.repliedTo.author.title}
+                    <br />
                     {message.repliedTo.messageType === "text"
                       ? message.repliedTo.text
                       : message.repliedTo.messageType === "photo"

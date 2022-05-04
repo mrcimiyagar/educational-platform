@@ -170,6 +170,9 @@ models.setup().then(() => {
         });
         creatures = creatures.concat(us.map(u => u.id));
         sw.Bot.findAll({raw: true}).then(bs => {
+            bs.forEach(bot => {
+                usersBook[bot.id] = bot;
+            });
             creatures = creatures.concat(bs.map(b => b.id));
         });
     });

@@ -226,6 +226,22 @@ router.post("/create_message", jsonParser, async function (req, res) {
         });
         return;
       }
+      let aut = await sw.User.findOne({
+        where: { id: replyOnMessage.authorId },
+      });
+      if (aut === null) {
+        aut = await sw.Bot.findOne({ where: { id: replyOnMessage.authorId } });
+      }
+      replyOnMessage = {
+        id: replyOnMessage.id,
+        authorId: replyOnMessage.authorId,
+        time: replyOnMessage.time,
+        roomId: replyOnMessage.roomId,
+        text: replyOnMessage.text,
+        fileId: replyOnMessage.fileId,
+        messageType: replyOnMessage.messageType,
+        author: aut,
+      };
     }
     if (req.body.forwardFrom !== undefined) {
       forwardOnMessage = await sw.Message.findOne({
@@ -250,6 +266,24 @@ router.post("/create_message", jsonParser, async function (req, res) {
           });
           return;
         }
+        let aut = await sw.User.findOne({
+          where: { id: forwardOnMessage.authorId },
+        });
+        if (aut === null) {
+          aut = await sw.Bot.findOne({
+            where: { id: forwardOnMessage.authorId },
+          });
+        }
+        forwardOnMessage = {
+          id: forwardOnMessage.id,
+          authorId: forwardOnMessage.authorId,
+          time: forwardOnMessage.time,
+          roomId: forwardOnMessage.roomId,
+          text: forwardOnMessage.text,
+          fileId: forwardOnMessage.fileId,
+          messageType: forwardOnMessage.messageType,
+          author: aut,
+        };
       }
     }
 
@@ -311,7 +345,22 @@ router.post("/create_message", jsonParser, async function (req, res) {
       let user = allUsers[i];
       if (user.id !== session.userId) {
         const { pushNotification } = require("../server");
-        await pushNotification(user.id, user.firstName + ": " + (msgCopy.messageType === 'text' ? msgCopy.text : msgCopy.messageType === 'photo' ? 'عکس 📷' : msgCopy.messageType === 'audio' ? 'صدا 🔊' : msgCopy.messageType === 'video' ? 'ویدئو 🎥' : msgCopy.messageType === 'document' ? 'سند 📄' : 'نامشخص'));
+        await pushNotification(
+          user.id,
+          user.firstName +
+            ": " +
+            (msgCopy.messageType === "text"
+              ? msgCopy.text
+              : msgCopy.messageType === "photo"
+              ? "عکس 📷"
+              : msgCopy.messageType === "audio"
+              ? "صدا 🔊"
+              : msgCopy.messageType === "video"
+              ? "ویدئو 🎥"
+              : msgCopy.messageType === "document"
+              ? "سند 📄"
+              : "نامشخص")
+        );
         require("../server").signlePushTo(user.id, "chat-list-updated", {
           room: roomRaw,
         });
@@ -380,6 +429,22 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
       });
       return;
     }
+    let aut = await sw.User.findOne({
+      where: { id: replyOnMessage.authorId },
+    });
+    if (aut === null) {
+      aut = await sw.Bot.findOne({ where: { id: replyOnMessage.authorId } });
+    }
+    replyOnMessage = {
+      id: replyOnMessage.id,
+      authorId: replyOnMessage.authorId,
+      time: replyOnMessage.time,
+      roomId: replyOnMessage.roomId,
+      text: replyOnMessage.text,
+      fileId: replyOnMessage.fileId,
+      messageType: replyOnMessage.messageType,
+      author: aut,
+    };
   }
   if (req.body.forwardFrom !== undefined) {
     forwardOnMessage = await sw.Message.findOne({
@@ -404,6 +469,24 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
         });
         return;
       }
+      let aut = await sw.User.findOne({
+        where: { id: forwardOnMessage.authorId },
+      });
+      if (aut === null) {
+        aut = await sw.Bot.findOne({
+          where: { id: forwardOnMessage.authorId },
+        });
+      }
+      forwardOnMessage = {
+        id: forwardOnMessage.id,
+        authorId: forwardOnMessage.authorId,
+        time: forwardOnMessage.time,
+        roomId: forwardOnMessage.roomId,
+        text: forwardOnMessage.text,
+        fileId: forwardOnMessage.fileId,
+        messageType: forwardOnMessage.messageType,
+        author: aut,
+      };
     }
   }
 
@@ -454,7 +537,22 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
   for (let i = 0; i < allUsers.length; i++) {
     let user = allUsers[i];
     const { pushNotification } = require("../server");
-    await pushNotification(user.id, user.firstName + ": " + (msgCopy.messageType === 'text' ? msgCopy.text : msgCopy.messageType === 'photo' ? 'عکس 📷' : msgCopy.messageType === 'audio' ? 'صدا 🔊' : msgCopy.messageType === 'video' ? 'ویدئو 🎥' : msgCopy.messageType === 'document' ? 'سند 📄' : 'نامشخص'));
+    await pushNotification(
+      user.id,
+      user.firstName +
+        ": " +
+        (msgCopy.messageType === "text"
+          ? msgCopy.text
+          : msgCopy.messageType === "photo"
+          ? "عکس 📷"
+          : msgCopy.messageType === "audio"
+          ? "صدا 🔊"
+          : msgCopy.messageType === "video"
+          ? "ویدئو 🎥"
+          : msgCopy.messageType === "document"
+          ? "سند 📄"
+          : "نامشخص")
+    );
     require("../server").signlePushTo(user.id, "chat-list-updated", {
       room: roomRaw,
     });
@@ -588,6 +686,56 @@ router.post("/get_messages", jsonParser, async function (req, res) {
       let msg = fetchedMessages[i];
       let author =
         usersBook[msg.authorId] === undefined ? null : usersBook[msg.authorId];
+      let forwom = msg.forwardedFrom !== undefined
+      ? await sw.Message.findOne({
+          where: { id: msg.forwardedFrom },
+        })
+      : null;
+      if (forwom !== null) {
+        let aut = await sw.User.findOne({
+          where: { id: forwom.authorId },
+        });
+        if (aut === null) {
+          aut = await sw.Bot.findOne({
+            where: { id: forwom.authorId },
+          });
+        }
+        forwom = {
+          id: forwom.id,
+          authorId: forwom.authorId,
+          time: forwom.time,
+          roomId: forwom.roomId,
+          text: forwom.text,
+          fileId: forwom.fileId,
+          messageType: forwom.messageType,
+          author: aut,
+        };
+      }
+      let repom = msg.repliedTo !== undefined
+      ? await sw.Message.findOne({
+          where: { id: msg.repliedTo },
+        })
+      : null;
+      if (repom !== null) {
+        let aut = await sw.User.findOne({
+          where: { id: repom.authorId },
+        });
+        if (aut === null) {
+          aut = await sw.Bot.findOne({
+            where: { id: repom.authorId },
+          });
+        }
+        repom = {
+          id: repom.id,
+          authorId: repom.authorId,
+          time: repom.time,
+          roomId: repom.roomId,
+          text: repom.text,
+          fileId: repom.fileId,
+          messageType: repom.messageType,
+          author: aut,
+        };
+      }
       let msgCopy = {
         id: msg.id,
         authorId: msg.authorId,
@@ -598,18 +746,8 @@ router.post("/get_messages", jsonParser, async function (req, res) {
         fileId: msg.fileId,
         text: msg.text,
         time: msg.time,
-        repliedTo:
-          msg.repliedTo !== undefined
-            ? await sw.Message.findOne({
-                where: { id: msg.repliedTo },
-              })
-            : null,
-        forwardedFrom:
-          msg.forwardedFrom !== undefined
-            ? await sw.Message.findOne({
-                where: { id: msg.forwardedFrom },
-              })
-            : null,
+        repliedTo: repom,
+        forwardedFrom: forwom
       };
       msgCopy.seen = await sw.MessageSeen.count({
         where: { messageId: msgCopy.id },
