@@ -464,14 +464,14 @@ function Core(props) {
           <Card
             id={props.id}
             style={{
-              height: (256 + 128) / 2 + 32,
+              height: 130 + 32,
               marginTop: 16,
               width: '100%',
             }}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex', width: '100%' }}>
-              <div style={{ width: '33%', height: (256 + 128) / 2 }}>
+              <div style={{ width: '33%', height: 130 }}>
                 <Video
                   name={title}
                   id={props.id}
@@ -479,7 +479,7 @@ function Core(props) {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{ width: '66%', height: (256 + 128) / 2 }}>
+              <div style={{ width: '66%', height: 130 }}>
                 <Screen
                   name={title}
                   id={props.id}
@@ -491,7 +491,7 @@ function Core(props) {
                 id={'audio_state_' + props.id}
                 style={{
                   width: 40,
-                  height: (256 + 128) / 2,
+                  height: 130,
                   backgroundColor: 'white',
                 }}
               />
@@ -501,7 +501,7 @@ function Core(props) {
               style={{
                 paddingLeft: 16,
                 paddingRight: 16,
-                transform: 'translateY(-16px)',
+                transform: 'translateY(-32px)',
                 width: '100%',
               }}
             >
@@ -514,7 +514,7 @@ function Core(props) {
           <Card
             id={props.id}
             style={{
-              height: (256 + 128) / 2 + 32,
+              height: 130 + 32,
               marginTop: 16,
               width: '100%',
             }}
@@ -524,7 +524,7 @@ function Core(props) {
               <div
                 style={{
                   width: '33%',
-                  height: (256 + 128) / 2,
+                  height: 130,
                 }}
               >
                 <Video
@@ -535,7 +535,7 @@ function Core(props) {
                   onClick={props.onClick}
                 />
               </div>
-              <div style={{ width: '66%', height: (256 + 128) / 2 }}>
+              <div style={{ width: '66%', height: 130 }}>
                 <Screen
                   name={title}
                   id={props.id}
@@ -547,7 +547,7 @@ function Core(props) {
                 id={'audio_state_' + props.id}
                 style={{
                   width: 40,
-                  height: (256 + 128) / 2,
+                  height: 130,
                   backgroundColor: 'white',
                 }}
               />
@@ -557,7 +557,7 @@ function Core(props) {
               style={{
                 paddingLeft: 16,
                 paddingRight: 16,
-                transform: 'translateY(-16px)',
+                transform: 'translateY(-32px)',
                 width: '100%',
               }}
             >
@@ -572,14 +572,14 @@ function Core(props) {
           <Card
             id={props.id}
             style={{
-              height: (256 + 128) / 2 + 32,
+              height: 130 + 32,
               marginTop: 16,
               width: '100%',
             }}
             onClick={props.onClick}
           >
             <div style={{ display: 'flex', width: '100%' }}>
-              <div style={{ width: '33%', height: (256 + 128) / 2 }}>
+              <div style={{ width: '33%', height: 130 }}>
                 <Video
                   name={title}
                   id={props.id}
@@ -590,7 +590,7 @@ function Core(props) {
               <div
                 style={{
                   width: '66%',
-                  height: (256 + 128) / 2,
+                  height: 130,
                 }}
               >
                 <Screen
@@ -605,7 +605,7 @@ function Core(props) {
                 id={'audio_state_' + props.id}
                 style={{
                   width: 40,
-                  height: (256 + 128) / 2,
+                  height: 130,
                   backgroundColor: 'white',
                 }}
               />
@@ -615,7 +615,7 @@ function Core(props) {
               style={{
                 paddingLeft: 16,
                 paddingRight: 16,
-                transform: 'translateY(-16px)',
+                transform: 'translateY(-32px)',
                 width: '100%',
               }}
             >
@@ -628,7 +628,7 @@ function Core(props) {
           <Card
             id={props.id}
             style={{
-              height: (256 + 128) / 2 + 32,
+              height: 130 + 32,
               marginTop: 16,
               width: '100%',
             }}
@@ -638,7 +638,7 @@ function Core(props) {
               <div
                 style={{
                   width: '33%',
-                  height: (256 + 128) / 2,
+                  height: 130,
                 }}
               >
                 <Video
@@ -652,7 +652,7 @@ function Core(props) {
               <div
                 style={{
                   width: '66%',
-                  height: (256 + 128) / 2,
+                  height: 130,
                 }}
               >
                 <Screen
@@ -667,7 +667,7 @@ function Core(props) {
                 id={'audio_state_' + props.id}
                 style={{
                   width: 40,
-                  height: (256 + 128) / 2,
+                  height: 130,
                   backgroundColor: 'white',
                 }}
               />
@@ -677,7 +677,7 @@ function Core(props) {
               style={{
                 paddingLeft: 16,
                 paddingRight: 16,
-                transform: 'translateY(-16px)',
+                transform: 'translateY(-32px)',
                 width: '100%',
               }}
             >
