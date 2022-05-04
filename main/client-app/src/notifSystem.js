@@ -71,13 +71,13 @@ async function send() {
                       icon: "/logo512.png",
                       vibrate: [200, 100, 200, 100, 200, 100, 200],
                     };
-                    /*Notification.requestPermission(function(result) {
+                    Notification.requestPermission(function(result) {
                       if (result === 'granted') {
                         navigator.serviceWorker.ready.then(function(registration) {
                           registration.showNotification(notificationTitle, notificationOptions);
                         });
                       }
-                    });*/
+                    });
                   });
                   let requestOptions = {
                     method: "POST",
