@@ -116,6 +116,7 @@ const pushNotification = async (userId, body, link) => {
                 "title": 'Infinity',
                 "body": body
               },
+              data: { link: link },
               "webpush": {
                 "fcm_options": {
                   "link": link

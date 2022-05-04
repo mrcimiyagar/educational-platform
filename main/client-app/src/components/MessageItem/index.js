@@ -774,7 +774,7 @@ export default function MessageItem(props) {
                   <div
                     style={{
                       width: 4,
-                      height: 24,
+                      height: 48,
                       borderRadius: 1,
                       backgroundColor: colors.accent,
                     }}
