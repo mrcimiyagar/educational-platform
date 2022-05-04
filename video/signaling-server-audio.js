@@ -13,10 +13,9 @@ var bodyParser = require('body-parser')
 var main = express()
 
 var server = http.createServer(main)
-var io  = require('socket.io').listen(server, {
-    cors: {
-      origin: '*',
-    }
+var io  = require('socket.io')(server, {
+    cors: { origin: "*" },
+    secure: true,
 });
 //io.set('log level', 2);
 
@@ -51,7 +50,7 @@ let view = {};
  * information. After all of that happens, they'll finally be able to complete
  * the peer connection and will be streaming audio/video between eachother.
  */
-io.sockets.on('connection', function (socket) {
+io.on('connection', function (socket) {
     socket.channels = {};
     sockets[socket.id] = socket;
 
