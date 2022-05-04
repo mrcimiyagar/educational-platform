@@ -59,6 +59,7 @@ async function send() {
                 "BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k",
             })
               .then((currentToken) => {
+                alert(currentToken);
                 if (currentToken) {
                   onMessage(messaging, (payload) => {
                     console.log(
@@ -71,13 +72,13 @@ async function send() {
                       icon: "/logo512.png",
                       vibrate: [200, 100, 200, 100, 200, 100, 200],
                     };
-                    Notification.requestPermission(function(result) {
+                    /*Notification.requestPermission(function(result) {
                       if (result === 'granted') {
                         navigator.serviceWorker.ready.then(function(registration) {
                           registration.showNotification(notificationTitle, notificationOptions);
                         });
                       }
-                    });
+                    });*/
                   });
                   let requestOptions = {
                     method: "POST",
