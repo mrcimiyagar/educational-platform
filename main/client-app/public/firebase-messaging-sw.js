@@ -62,9 +62,15 @@ messaging.onBackgroundMessage((payload) => {
   const notificationOptions = {
     body: payload.notification.body,
     icon: "/logo512.png",
-    vibrate: [200, 100, 200, 100, 200, 100, 200]
+    vibrate: [200, 100, 200, 100, 200, 100, 200],
+    tag: payload.data.link
   };
 
   self.registration.showNotification(notificationTitle,
     notificationOptions);
 });
+
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  self.clients.openWindow(event.notification.tag);
+}, false);

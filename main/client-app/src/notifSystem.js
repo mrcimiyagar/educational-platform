@@ -62,7 +62,7 @@ async function send() {
                 if (currentToken) {
                   onMessage(messaging, (payload) => {
                     console.log(
-                      "[firebase-messaging-sw.js] Received background message ",
+                      "[firebase-messaging-sw.js] Received message ",
                       payload
                     );
                     const notificationTitle = payload.notification.title;
@@ -71,13 +71,13 @@ async function send() {
                       icon: "/logo512.png",
                       vibrate: [200, 100, 200, 100, 200, 100, 200],
                     };
-                    Notification.requestPermission(function(result) {
+                    /*Notification.requestPermission(function(result) {
                       if (result === 'granted') {
                         navigator.serviceWorker.ready.then(function(registration) {
                           registration.showNotification(notificationTitle, notificationOptions);
                         });
                       }
-                    });
+                    });*/
                   });
                   let requestOptions = {
                     method: "POST",
