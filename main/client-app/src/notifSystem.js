@@ -62,7 +62,7 @@ async function send() {
                 if (currentToken) {
                   onMessage(messaging, (payload) => {
                     console.log(
-                      "[firebase-messaging-sw.js] Received message ",
+                      "[firebase-messaging-sw.js] Received background message ",
                       payload
                     );
                     const notificationTitle = payload.notification.title;

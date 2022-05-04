@@ -63,7 +63,12 @@ messaging.onBackgroundMessage((payload) => {
     body: payload.notification.body,
     icon: "/logo512.png",
     vibrate: [200, 100, 200, 100, 200, 100, 200],
-    tag: payload.data.link
+    actions: [
+      {
+        action: 'openApp',
+        title: 'باز کردن'
+      }
+    ]
   };
 
   self.registration.showNotification(notificationTitle,
@@ -72,5 +77,8 @@ messaging.onBackgroundMessage((payload) => {
 
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
-  self.clients.openWindow(event.notification.tag);
+  if (event.action === 'openApp') {
+    self.navigator.clearAppBadge();
+    self.clients.openWindow('/');
+  }
 }, false);
