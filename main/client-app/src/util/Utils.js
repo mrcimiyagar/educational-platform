@@ -4,7 +4,6 @@ import { changeSendButtonState } from "../modules/chatbox/chatbox";
 import store, { changeConferenceMode } from "../redux/main";
 import { setMe, token } from "./settings";
 import io from "socket.io-client";
-import { currentRoomId } from "../App";
 
 import { setMembership as smRoom } from "../routes/pages/room";
 import { setMembership as smChat } from "../routes/pages/chat";

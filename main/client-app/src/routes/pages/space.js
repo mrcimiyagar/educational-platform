@@ -877,7 +877,7 @@ export default function Space(props) {
           <ConfBox
             webcamOn={webcamOn}
             currentRoomNav={2}
-            roomId={selectedModuleWorkerId}
+            moduleWorkerId={selectedModuleWorkerId}
             membership={membership}
             onClose={() => {
               setSelectedNav(undefined);

@@ -39,6 +39,7 @@ import {
 } from "../../util/Utils";
 import "./style.css";
 import { pathConfig } from "../..";
+import Core from '../../components/Core';
 
 export let updateConfBox = () => {};
 export let isConfConnected = false;
@@ -206,36 +207,17 @@ export function ConfBox(props) {
         </Toolbar>
       </AppBar>
 
-      <iframe
-        scrolling="no"
-        onLoad={() => {
-          window.frames["conf-video-frame"].postMessage(
-            {
-              sender: "main",
-              action: "init",
-              videoAccess: props.membership.canActInVideo,
-              me: me,
-              roomId: props.roomId,
-            },
-            pathConfig.confClient
-          );
-        }}
-        allowTransparency={true}
-        id={"conf-video-frame"}
-        name="conf-video-frame"
-        src={pathConfig.confClient}
-        allow={"microphone; camera; fullscreen; display-capture"}
-        style={{
+      <div style={{
           right: right,
           top: top,
           position: position,
           width: width,
           height: height,
           marginTop: marginTop,
-          marginBottom: 16,
-        }}
-        frameBorder="0"
-      ></iframe>
+          marginBottom: 16
+      }}>
+        <Core videoAccess={props.membership.canActInVideo} roomId={props.moduleWorkerId} />
+      </div>
     </div>
     </Dialog>
   );
