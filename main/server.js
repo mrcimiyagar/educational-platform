@@ -70,12 +70,8 @@ jwtClient.authorize(function(error, tokens) {
   } else if (tokens.access_token === null) {
     console.log("Provided service account does not have permission to generate access tokens");
   } else {
-      console.log(tokens.access_token);
+    console.log(tokens.access_token);
     at = tokens.access_token;
-
-    // See the "Using the access token" section below for information
-    // on how to use the access token to send authenticated requests to
-    // the Realtime Database REST API.
   }
 });
 };
@@ -95,6 +91,11 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
               "notification": {
                 "title": "Infinity",
                 "body": "به ابر آسمان خوش آمدید."
+              },
+              "webpush": {
+                "fcm_options": {
+                  "link": 'https://society.kasperian.cloud'
+                }
               }
             }
           }
