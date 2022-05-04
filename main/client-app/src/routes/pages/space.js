@@ -354,6 +354,10 @@ export default function Space(props) {
   }, [props.room_id]);
 
   useEffect(() => {
+    setSelectedNav(props.selected_nav);
+  }, [props.selected_nav]);
+
+  useEffect(() => {
     if (attachWebcamOnMessenger !== undefined) {
       window.removeEventListener("message", attachWebcamOnMessenger);
     }

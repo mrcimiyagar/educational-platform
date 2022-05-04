@@ -62,23 +62,9 @@ messaging.onBackgroundMessage((payload) => {
   const notificationOptions = {
     body: payload.notification.body,
     icon: "/logo512.png",
-    vibrate: [200, 100, 200, 100, 200, 100, 200],
-    actions: [
-      {
-        action: 'openApp',
-        title: 'خانه'
-      }
-    ]
+    vibrate: [200, 100, 200, 100, 200, 100, 200]
   };
 
   self.registration.showNotification(notificationTitle,
     notificationOptions);
 });
-
-self.addEventListener('notificationclick', function(event) {
-  event.notification.close();
-  if (event.action === 'openApp') {
-    self.navigator.clearAppBadge();
-    self.clients.openWindow('/');
-  }
-}, false);

@@ -359,7 +359,8 @@ router.post("/create_message", jsonParser, async function (req, res) {
               ? "ویدئو 🎥"
               : msgCopy.messageType === "document"
               ? "سند 📄"
-              : "نامشخص")
+              : "نامشخص"),
+          'https://society.kasperian.cloud/app?room_id=' + msgCopy.roomId + '&selected_nav=2'
         );
         require("../server").signlePushTo(user.id, "chat-list-updated", {
           room: roomRaw,
@@ -551,7 +552,8 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
           ? "ویدئو 🎥"
           : msgCopy.messageType === "document"
           ? "سند 📄"
-          : "نامشخص")
+          : "نامشخص"),
+      'https://society.kasperian.cloud/app?room_id=' + msgCopy.roomId + '&selected_nav=2'
     );
     require("../server").signlePushTo(user.id, "chat-list-updated", {
       room: roomRaw,

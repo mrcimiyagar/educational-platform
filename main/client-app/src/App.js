@@ -556,6 +556,7 @@ MainAppContainer = (props) => {
   [currentRoomId, setCRId] = React.useState(
     props.room_id !== undefined ? props.room_id : homeRoomId
   );
+  const [sn, setSN] = React.useState(Number(props.selected_nav));
 
   const [bottomSheetOpen, setBottomSheetOpen] = React.useState(false);
   const [connectedIO, setConnectedIO] = React.useState(false);
@@ -814,7 +815,7 @@ MainAppContainer = (props) => {
     >
       <DesktopDetector />
       <Sidebar />
-      <Space room_id={currentRoomId} key={currentRoomId} />
+      <Space room_id={currentRoomId} key={currentRoomId} selected_nav={sn} />
       <Drawer
         PaperProps={{
           style: {
