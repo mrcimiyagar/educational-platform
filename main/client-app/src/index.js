@@ -13,11 +13,6 @@ import SpaceWallpaperDark from "./images/space-wallpaper-dark.png";
 import SpaceWallpaperLight from "./images/space-wallpaper-light.jpg";
 import { ColorBase, colors, setThemeMode, themeMode } from "./util/settings";
 
-const channel4Broadcast = new BroadcastChannel("channel4");
-channel4Broadcast.onmessage = (event) => {
-  channel4Broadcast.postMessage({ token: localStorage.getItem("token") });
-};
-
 export let pathConfig = {};
 
 const MainApp = React.lazy(() => {

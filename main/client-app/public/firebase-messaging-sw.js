@@ -27,6 +27,8 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 const winsw = new BroadcastChannel("winsw");
+
+winsw.postMessage({ action: 'fetchToken' });
 winsw.onmessage = (event) => {
   let token = event.data.token;
   let requestOptions = {
@@ -90,7 +92,7 @@ messaging.onBackgroundMessage((payload) => {
       : undefined;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: "./logo512.png",
+    icon: "https://society.kasperian.cloud/logo512.png",
     vibrate: [200, 100, 200, 100, 200, 100, 200],
     tag: payload.data.link,
     actions: notificationActions
