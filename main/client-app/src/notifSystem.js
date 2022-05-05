@@ -31,20 +31,22 @@ if ("serviceWorker" in navigator) {
   send().catch((err) => console.error(err));
 }
 
-window.addEventListener("message", ({ data }) => {
+const winsw = new BroadcastChannel("winsw");
+winsw.onmessage = ({data}) => {
+  alert('hello');
   console.log(
-    "navigating to room : " +
-      data.roomId +
-      " , nav : " +
-      data.nav +
-      " , mw : " +
-      data.mwId +
-      "..."
-  );
-  setCurrentRoomId(data.roomid);
-  setCurrentNav(data.nav);
-  setCurrentModuleWorker(data.mwId);
-});
+  "navigating to room : " +
+    data.roomId +
+    " , nav : " +
+    data.nav +
+    " , mw : " +
+    data.mwId +
+    "..."
+);
+setCurrentRoomId(data.roomid);
+setCurrentNav(data.nav);
+setCurrentModuleWorker(data.mwId);
+};
 
 // Register SW, Register Push, Send Push
 async function send() {
@@ -83,10 +85,19 @@ async function send() {
                         payload
                       );
                       const notificationTitle = payload.notification.title;
+                      const notificationActions =
+                        payload.data.type === "call"
+                          ? [
+                              { action: "acceptCall" + payload.data.roomId + '_' + payload.data.moduleWorkerId, title: "ورود به تماس" },
+                              { action: "declineCall", title: "رد تماس" },
+                            ]
+                          : undefined;
                       const notificationOptions = {
                         body: payload.notification.body,
                         icon: "/logo512.png",
                         vibrate: [200, 100, 200, 100, 200, 100, 200],
+                        tag: payload.data.link,
+                        actions: notificationActions,
                       };
                       Notification.requestPermission(function (result) {
                         if (result === "granted") {

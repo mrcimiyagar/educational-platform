@@ -14,8 +14,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-const channel4Broadcast = new BroadcastChannel("channel4");
-channel4Broadcast.onmessage = (event) => {
+const winsw = new BroadcastChannel("winsw");
+winsw.onmessage = (event) => {
   let token = event.data.token;
   let requestOptions = {
     method: "GET",
@@ -89,6 +89,7 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener(
   "notificationclick",
   function (event) {
+    alert('test');
     event.notification.close();
     if (event.action !== null && event.action !== undefined) {
       if (event.action.startsWith("acceptCall")) {
@@ -111,9 +112,7 @@ self.addEventListener(
               let parts = url.split('_');
               let roomId = Number(parts[0]);
               let mwId = Number(parts[1]);
-              windowClients.forEach(c => {
-                c.postMessage({roomId, nav: 14, mwId});
-              });
+              winsw.postMessage({roomId, mwId, nav: 14})
             }
           });
       }
