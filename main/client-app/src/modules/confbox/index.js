@@ -216,7 +216,7 @@ export function ConfBox(props) {
           marginTop: marginTop,
           marginBottom: 16
       }}>
-        <Core videoAccess={props.membership.canActInVideo} roomId={props.moduleWorkerId} />
+        <Core videoAccess={props.membership.canActInVideo} moduleWorkerId={props.moduleWorkerId} roomId={props.roomId} />
       </div>
     </div>
     </Dialog>

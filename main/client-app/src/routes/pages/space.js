@@ -442,6 +442,10 @@ export default function Space(props) {
     };
   }, [selectedNav]);
 
+  useEffect(() => {
+    setSelectedNav(props.module_worker_id);
+  }, [props.module_worker_id]);
+
   const [open, setOpen] = React.useState(true);
 
   if (!loaded || isObjectEmpty(membership)) {
@@ -878,6 +882,7 @@ export default function Space(props) {
             webcamOn={webcamOn}
             currentRoomNav={2}
             moduleWorkerId={selectedModuleWorkerId}
+            roomId={props.room_id}
             membership={membership}
             onClose={() => {
               setSelectedNav(undefined);

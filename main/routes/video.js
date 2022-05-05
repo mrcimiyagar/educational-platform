@@ -3,9 +3,38 @@ const express = require('express');
 const { Op } = require('sequelize')
 const bodyParser = require('body-parser');
 const { authenticateMember, guestAccsByUserId, guestAccs } = require('../users');
+const { pushNotification } = require('../server');
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
+
+router.post('/notify_calling', jsonParser, async function (req, res) {
+    authenticateMember(req, res, async (membership, session, user, acc) => {
+        if (membership === null || membership === undefined) {
+            res.send({status: 'error', errorCode: 'e005', messsage: 'access denied.'});
+            return;
+        }
+        let mw = await sw.ModuleWorker.findOne({where: {id: req.body.moduleWorkerId, roomId: membership.roomId}});
+        if (mw === null) {
+            res.send({status: 'error', errorCode: 'e005', messsage: 'access denied.'});
+            return;
+        }
+        let members = await sw.Membership.findAll({raw: true, where: {roomId: membership.roomId}});
+        let room = await sw.Room.findOne({where: {id: membership.roomId}});
+        let roomTitle = room.title;
+        let spaceTitle = 'چت خصوصی';
+        if (room.spaceId !== undefined && room.spaceId !== null) {
+            let space = await sw.Space.findOne({where: {id: room.spaceId}});
+            spaceTitle = space.title;
+        }
+        members.forEach(member => {
+            if (member.userId !== session.userId) {
+                await pushNotification(member.userId, `کاربر ${user.firstName + ' ' + user.lastName} وارد تماس در ${spaceTitle + ' -> ' + roomTitle} شده است`, 'https://society.kasperian.cloud/app?room_id=' + membership.roomId + '&selected_nav=14&module_worker_id=' + req.body.moduleWorkerId);
+            }
+        });
+        res.send({status: 'success'});
+    });
+});
 
 router.post('/get_actors', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user) => {

@@ -46,7 +46,7 @@ import VideocamIcon from '@material-ui/icons/Videocam'
 import { Card } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import hark from 'hark'
-import { me } from '../util/settings'
+import { colors, me } from '../util/settings'
 
 function getOS() {
   var userAgent = window.navigator.userAgent,
@@ -1129,7 +1129,7 @@ function Core(props) {
             updateData={onVideoStreamUpdate}
             forceUpdate={forceUpdate}
             userId={me.id}
-            roomId={props.roomId}
+            roomId={props.moduleWorkerId}
             loadedCallback={videoLoadCallback}
           />
           <AudioMedia
@@ -1138,7 +1138,7 @@ function Core(props) {
             updateData={onAudioStreamUpdate}
             forceUpdate={forceUpdate}
             userId={me.id}
-            roomId={props.roomId}
+            roomId={props.moduleWorkerId}
             loadedCallback={audioLoadCallback}
           />
           <ScreenMedia
@@ -1147,7 +1147,7 @@ function Core(props) {
             updateData={onScreenStreamUpdate}
             forceUpdate={forceUpdate}
             userId={me.id}
-            roomId={props.roomId}
+            roomId={props.moduleWorkerId}
             loadedCallback={screenLoadCallback}
           />
       </div>
@@ -1162,8 +1162,24 @@ function Core(props) {
               bottom: 24
             }}
             onClick={() => {
-              instantConnectionFlag = true
-              setConnected(true)
+              instantConnectionFlag = true;
+              setConnected(true);
+              let requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  roomId: props.roomId,
+                  moduleWorkerId: props.moduleWorkerId
+                }),
+                redirect: 'follow',
+              }
+              fetch(pathConfig.mainBackend + '/video/notify_calling', requestOptions)
+                .then((response) => response.json())
+                .then((result) => {
+                  console.log(result);
+                });
             }}
           >
             <CallIcon style={{ fill: '#333' }} />
@@ -1183,7 +1199,7 @@ function Core(props) {
               paddingRight: 16,
               paddingBottom: 24,
               maxWidth: 250,
-              backgroundColor: 'rgba(25, 118, 210, 0.65)',
+              backgroundColor: colors.primaryMedium,
               backdropFilter: 'blur(15px)',
               borderRadius: 24
             }}
