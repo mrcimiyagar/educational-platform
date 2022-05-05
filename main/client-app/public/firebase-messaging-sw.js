@@ -17,6 +17,7 @@ notificationCounter = 1;
 self.addEventListener(
   "notificationclick",
   function (e) {
+    console.log('..........................................................................................................................................');
     e.notification.close();
     self.clients.openWindow(e.notification.tag);
   },
