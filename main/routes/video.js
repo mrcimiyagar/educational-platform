@@ -27,7 +27,7 @@ router.post('/notify_calling', jsonParser, async function (req, res) {
             let space = await sw.Space.findOne({where: {id: room.spaceId}});
             spaceTitle = space.title;
         }
-        members.forEach(member => {
+        members.forEach(async member => {
             if (member.userId !== session.userId) {
                 await pushNotification(member.userId, `کاربر ${user.firstName + ' ' + user.lastName} وارد تماس در ${spaceTitle + ' -> ' + roomTitle} شده است`, 'https://society.kasperian.cloud/app?room_id=' + membership.roomId + '&selected_nav=14&module_worker_id=' + req.body.moduleWorkerId);
             }
