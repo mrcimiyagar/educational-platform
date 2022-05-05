@@ -98,7 +98,8 @@ async function send() {
                         body: payload.notification.body,
                         icon: "/logo512.png",
                         vibrate: [200, 100, 200, 100, 200, 100, 200],
-                        tag: payload.data.link
+                        tag: payload.data.link,
+                        actions: notificationActions
                       };
                       Notification.requestPermission(function (result) {
                         if (result === "granted") {

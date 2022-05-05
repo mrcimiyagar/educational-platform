@@ -16,10 +16,38 @@ notificationCounter = 1;
 
 self.addEventListener(
   "notificationclick",
-  function (e) {
-    console.log('..........................................................................................................................................');
-    e.notification.close();
-    self.clients.openWindow(e.notification.tag);
+  function (event) {
+    event.waitUntil(
+      clients
+        .matchAll({
+          type: "window",
+          includeUncontrolled: true,
+        })
+        .then(function (clientList) {
+          if (event.notification.tag) {
+            let client = null;
+
+            for (let i = 0; i < clientList.length; i++) {
+              let item = clientList[i];
+
+              if (item.url) {
+                client = item;
+                break;
+              }
+            }
+
+            if (client && "navigate" in client) {
+              client.focus();
+              event.notification.close();
+              return client.navigate(event.notification.tag);
+            } else {
+              event.notification.close();
+              // if client doesn't have navigate function, try to open a new browser window
+              return clients.openWindow(event.notification.tag);
+            }
+          }
+        })
+    );
   },
   false
 );
@@ -29,7 +57,7 @@ const messaging = firebase.messaging();
 
 const winsw = new BroadcastChannel("winsw");
 
-winsw.postMessage({ action: 'fetchToken' });
+winsw.postMessage({ action: "fetchToken" });
 winsw.onmessage = (event) => {
   let token = event.data.token;
   let requestOptions = {
@@ -96,7 +124,7 @@ messaging.onBackgroundMessage((payload) => {
     icon: "https://society.kasperian.cloud/logo512.png",
     vibrate: [200, 100, 200, 100, 200, 100, 200],
     tag: payload.data.link,
-    actions: notificationActions
+    actions: notificationActions,
   };
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
