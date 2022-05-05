@@ -92,6 +92,7 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
                 "title": "Infinity",
                 "body": "به ابر آسمان خوش آمدید."
               },
+              data: { type: 'welcome'},
               "webpush": {
                 "fcm_options": {
                   "link": 'https://society.kasperian.cloud'
