@@ -65,7 +65,7 @@ async function send() {
         let callback = async () => {
           console.log("Service Worker Registered...");
 
-          /*let requestOptions = {
+          let requestOptions = {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -144,7 +144,7 @@ async function send() {
                     err
                   );
                 });
-            });*/
+            });
 
           console.log("Push Registered...");
         };
