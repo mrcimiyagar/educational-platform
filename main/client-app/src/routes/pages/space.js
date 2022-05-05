@@ -2,7 +2,7 @@ import { Dialog, Paper } from "@mui/material";
 import SpaceSearchbar from "../../components/SpaceSearchbar";
 import SpaceBottombar from "../../components/SpaceBottombar";
 import Authentication from "./authentication";
-import { authenticationValid, inTheGame } from "../../App";
+import { authenticationValid, inTheGame, openInnerNotif } from "../../App";
 import {
   AppBar,
   Avatar,
@@ -42,7 +42,6 @@ import { MachinesBox } from "../../modules/machinesbox/machinesbox";
 import Chat from "./chat";
 import MessengerPage from "./messenger";
 import MainSettings from "./mainsettings";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import BedroomBabyOutlinedIcon from "@mui/icons-material/BedroomBabyOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
@@ -381,6 +380,7 @@ export default function Space(props) {
     });
 
     console.log("planting destructor...");
+
     return () => {
       leaveRoom(() => {});
     };

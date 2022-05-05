@@ -13,16 +13,25 @@ export default function InnerNotif() {
 
   const { vertical, horizontal, open, text, color } = state;
 
+  let timeoutInstance = undefined;
+
   showInnerNotif = (newState) => {
     setState({ open: true, ...newState });
+    timeoutInstance = setTimeout(() => {
+      handleClose();
+    }, 3000);
   };
 
   const handleClose = () => {
+    if (timeoutInstance !== undefined) {
+      clearTimeout(timeoutInstance);
+      timeoutInstance = undefined;
+    }
     setState({ ...state, open: false });
   };
 
   return (
-    <div>
+    <div style={{position: 'fixed', left: 0, top: 0, zIndex: 99999}}>
       <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
@@ -31,7 +40,9 @@ export default function InnerNotif() {
         key={vertical + horizontal}
         ContentProps={{
           style: {
-            backgroundColor: color
+            backgroundColor: color,
+            color: '#000',
+            width: 200
           }
         }}
       />

@@ -92,7 +92,7 @@ export let openInnerNotif = (text, color) => {
   showInnerNotif({
     text: text,
     color: color,
-    vertical: 'top',
+    vertical: 'bottom',
     horizontal: 'right',
   })
 }
