@@ -1,8 +1,9 @@
-import { setCurrentRoomId, setCurrentNav, setCurrentModuleWorker } from "./App";
+import { setCurrentRoomId, setCurrentNav, setCurrentModuleWorker, openInnerNotif } from "./App";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getMessaging, onMessage, getToken } from "firebase/messaging";
+import { colors } from "./util/settings";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -86,7 +87,8 @@ async function send() {
                         "[firebase-messaging-sw.js] Received message ",
                         payload
                       );
-                      const notificationTitle = payload.data.title;
+                      openInnerNotif(payload.data.body, colors.accent);
+                      /*const notificationTitle = payload.data.title;
                       const notificationActions =
                         payload.data.type === "call"
                           ? [
@@ -112,7 +114,7 @@ async function send() {
                             );
                           });
                         }
-                      });
+                      });*/
                     });
                     let requestOptions = {
                       method: "POST",

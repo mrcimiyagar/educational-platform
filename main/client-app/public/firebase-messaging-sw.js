@@ -24,27 +24,22 @@ self.addEventListener(
           includeUncontrolled: true,
         })
         .then(function (clientList) {
-          if (event.notification.tag) {
-            let client = null;
+          let client = null;
+          for (let i = 0; i < clientList.length; i++) {
+            let item = clientList[i];
 
-            for (let i = 0; i < clientList.length; i++) {
-              let item = clientList[i];
-
-              if (item.url) {
-                client = item;
-                break;
-              }
+            if (item.url) {
+              client = item;
+              break;
             }
-
-            if (client && "navigate" in client) {
-              client.focus();
-              event.notification.close();
-              return client.navigate(event.notification.tag);
-            } else {
-              event.notification.close();
-              // if client doesn't have navigate function, try to open a new browser window
-              return clients.openWindow(event.notification.tag);
-            }
+          }
+          if (client && "navigate" in client) {
+            client.focus();
+            event.notification.close();
+            return client.navigate(event.notification.tag);
+          } else {
+            event.notification.close();
+            return clients.openWindow(event.notification.tag);
           }
         })
     );

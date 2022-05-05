@@ -85,7 +85,17 @@ import CreateWidget from "./routes/pages/createWidget";
 import BotInfoPage from "./routes/pages/botInfo";
 import RoomsListPage from "./routes/pages/roomsList";
 import Space from "./routes/pages/space";
+import InnerNotif, { showInnerNotif } from './components/InnerNotif';
 const PouchDB = require("pouchdb").default;
+
+export let openInnerNotif = (text, color) => {
+  showInnerNotif({
+    text: text,
+    color: color,
+    vertical: 'top',
+    horizontal: 'right',
+  })
+}
 
 export let boardFrame = undefined;
 export let setBoardFrame = (bf) => {
@@ -823,6 +833,7 @@ MainAppContainer = (props) => {
       <DesktopDetector />
       <Sidebar />
       <Space room_id={currentRoomId} key={currentRoomId} selected_nav={sn} module_worker_id={mwId} />
+      <InnerNotif />
       <Drawer
         PaperProps={{
           style: {
