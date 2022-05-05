@@ -1,4 +1,4 @@
-
+import {setCurrentRoomId, setCurrentNav, setCurrentModuleWorker} from './App';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -122,6 +122,12 @@ async function send() {
 
         if (serviceWorker) {
           console.log('sw current state', serviceWorker.state)
+          serviceWorker.addEventListener('message', async function ({data}) {
+            console.log('navigating to room : ' + data.roomId + ' , nav : ' + data.nav + ' , mw : ' + data.mwId + '...');
+            setCurrentRoomId(data.roomid);
+            setCurrentNav(data.nav);
+            setCurrentModuleWorker(data.mwId);
+          })
           if (serviceWorker.state == 'activated') {
             //If push subscription wasnt done yet have to do here
             console.log('sw already activated - Do watever needed here')
