@@ -534,6 +534,9 @@ export let isOnline = true;
 export let authenticationValid = undefined;
 export let setAuthenticationValid = undefined;
 
+export let setCurrentNav = () => {};
+export let setCurrentModuleWorker = () => {};
+
 MainAppContainer = (props) => {
 
   const urlSearchParams = new URLSearchParams(window.location.search);
@@ -558,6 +561,9 @@ MainAppContainer = (props) => {
   );
   const [sn, setSN] = React.useState(Number(props.selected_nav));
   const [mwId, setMwId] = React.useState(Number(props.module_worker_id));
+
+  setCurrentNav = setSN;
+  setCurrentModuleWorker = setMwId;
 
   const [bottomSheetOpen, setBottomSheetOpen] = React.useState(false);
   const [connectedIO, setConnectedIO] = React.useState(false);

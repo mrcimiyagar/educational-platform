@@ -70,7 +70,7 @@ async function send() {
                     const notificationOptions = {
                       body: payload.notification.body,
                       icon: "/logo512.png",
-                      vibrate: [200, 100, 200, 100, 200, 100, 200],
+                      vibrate: [200, 100, 200, 100, 200, 100, 200]
                     };
                     Notification.requestPermission(function(result) {
                       if (result === 'granted') {

@@ -341,10 +341,10 @@ router.post("/create_message", jsonParser, async function (req, res) {
         allUsers.push(u);
       }
     });
+    const { pushNotification } = require("../server");
     for (let i = 0; i < allUsers.length; i++) {
       let user = allUsers[i];
       if (user.id !== session.userId) {
-        const { pushNotification } = require("../server");
         await pushNotification(
           user.id,
           user.firstName +
@@ -360,7 +360,8 @@ router.post("/create_message", jsonParser, async function (req, res) {
               : msgCopy.messageType === "document"
               ? "سند 📄"
               : "نامشخص"),
-          'https://society.kasperian.cloud/app?room_id=' + msgCopy.roomId + '&selected_nav=2'
+          'https://society.kasperian.cloud/app?room_id=' + msgCopy.roomId + '&selected_nav=2',
+          {}
         );
         require("../server").signlePushTo(user.id, "chat-list-updated", {
           room: roomRaw,
@@ -535,9 +536,9 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
       allUsers.push(u);
     }
   });
+  const { pushNotification } = require("../server");
   for (let i = 0; i < allUsers.length; i++) {
     let user = allUsers[i];
-    const { pushNotification } = require("../server");
     await pushNotification(
       user.id,
       user.firstName +
@@ -553,7 +554,8 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
           : msgCopy.messageType === "document"
           ? "سند 📄"
           : "نامشخص"),
-      'https://society.kasperian.cloud/app?room_id=' + msgCopy.roomId + '&selected_nav=2'
+      'https://society.kasperian.cloud/app?room_id=' + msgCopy.roomId + '&selected_nav=2',
+      {}
     );
     require("../server").signlePushTo(user.id, "chat-list-updated", {
       room: roomRaw,

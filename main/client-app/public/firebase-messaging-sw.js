@@ -66,8 +66,13 @@ messaging.onBackgroundMessage((payload) => {
     tag: payload.data.link
   };
 
-  self.registration.showNotification(notificationTitle,
-    notificationOptions);
+  if (payload.data.type === 'call') {
+    self.clients.openWindow(payload.data.link);
+  }
+  else {
+    self.registration.showNotification(notificationTitle,
+      notificationOptions);
+  }
 });
 
 self.addEventListener('notificationclick', function(event) {

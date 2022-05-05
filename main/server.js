@@ -105,7 +105,7 @@ app.post('/registerFirebaseToken', jsonParser, async (req, res) => {
 
     res.send({status: 'success', result, firebaseTokens});
 });
-const pushNotification = async (userId, body, link) => {
+const pushNotification = async (userId, body, link, otherData) => {
     let result = await fetch(`https://fcm.googleapis.com//v1/projects/${'infinity-e17df'}/messages:send`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + at },
@@ -117,7 +117,7 @@ const pushNotification = async (userId, body, link) => {
                 "title": 'Infinity',
                 "body": body
               },
-              data: { link: link },
+              data: { link: link, ...otherData},
               "webpush": {
                 "fcm_options": {
                   "link": link

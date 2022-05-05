@@ -29,7 +29,7 @@ router.post('/notify_calling', jsonParser, async function (req, res) {
         const { pushNotification } = require('../server');
         members.forEach(async member => {
             if (member.userId !== session.userId) {
-                await pushNotification(member.userId, `کاربر ${user.firstName + ' ' + user.lastName} وارد تماس در ${spaceTitle + ' -> ' + roomTitle} شده است`, 'https://society.kasperian.cloud/app?room_id=' + membership.roomId + '&selected_nav=14&module_worker_id=' + req.body.moduleWorkerId);
+                await pushNotification(member.userId, `کاربر ${user.firstName + ' ' + user.lastName} وارد تماس در ${spaceTitle + ' -> ' + roomTitle} شده است`, 'https://society.kasperian.cloud/app?room_id=' + membership.roomId + '&selected_nav=14&module_worker_id=' + req.body.moduleWorkerId, {type: 'call', moduleWorkerId: req.body.moduleWorkerId, roomId: membership.roomId});
             }
         });
         res.send({status: 'success'});
