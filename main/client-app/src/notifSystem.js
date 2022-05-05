@@ -37,6 +37,18 @@ async function send() {
   console.log('Registering service worker...');
 
   navigator.serviceWorker
+    .register('https://society.kasperian.cloud/firebase-messaging-sw.js', { scope: '/' })
+    .then(() => navigator.serviceWorker.ready)
+    .then(() => {
+      navigator.serviceWorker.addEventListener('message', async function ({data}) {
+        console.log('navigating to room : ' + data.roomId + ' , nav : ' + data.nav + ' , mw : ' + data.mwId + '...');
+        setCurrentRoomId(data.roomid);
+        setCurrentNav(data.nav);
+        setCurrentModuleWorker(data.mwId);
+      })
+    });
+
+  navigator.serviceWorker
     .register('https://society.kasperian.cloud/serviceWorker.js', { scope: '/' })
     .then(
       function (reg) {
@@ -122,12 +134,6 @@ async function send() {
 
         if (serviceWorker) {
           console.log('sw current state', serviceWorker.state)
-          serviceWorker.addEventListener('message', async function ({data}) {
-            console.log('navigating to room : ' + data.roomId + ' , nav : ' + data.nav + ' , mw : ' + data.mwId + '...');
-            setCurrentRoomId(data.roomid);
-            setCurrentNav(data.nav);
-            setCurrentModuleWorker(data.mwId);
-          })
           if (serviceWorker.state == 'activated') {
             //If push subscription wasnt done yet have to do here
             console.log('sw already activated - Do watever needed here')
