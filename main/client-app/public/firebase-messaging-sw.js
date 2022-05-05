@@ -11,6 +11,18 @@ const firebaseConfig = {
   measurementId: "G-2PH313X4HV",
 };
 
+let notificationCallbacks = {};
+notificationCounter = 1;
+
+self.addEventListener(
+  "notificationclick",
+  function (e) {
+    e.notification.close();
+    self.clients.openWindow(e.notification.tag);
+  },
+  false
+);
+
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
@@ -72,53 +84,16 @@ messaging.onBackgroundMessage((payload) => {
   const notificationActions =
     payload.data.type === "call"
       ? [
-          { action: "acceptCall" + payload.data.roomId + '_' + payload.data.moduleWorkerId, title: "ورود به تماس" },
+          { action: "acceptCall", title: "ورود به تماس" },
           { action: "declineCall", title: "رد تماس" },
         ]
       : undefined;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: "/logo512.png",
+    icon: "./logo512.png",
     vibrate: [200, 100, 200, 100, 200, 100, 200],
     tag: payload.data.link,
-    actions: notificationActions,
+    actions: notificationActions
   };
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
-
-self.addEventListener(
-  "notificationclick",
-  function (event) {
-    alert('test');
-    event.notification.close();
-    if (event.action !== null && event.action !== undefined) {
-      if (event.action.startsWith("acceptCall")) {
-        let url = event.action.substring("acceptCall".length);
-        clients
-          .matchAll({
-            type: "window",
-            includeUncontrolled: true,
-          })
-          .then(function (windowClients) {
-            var clientIsVisible = false;
-            for (var i = 0; i < windowClients.length; i++) {
-              const windowClient = windowClients[i];
-              if (windowClient.visibilityState === "visible") {
-                clientIsVisible = true;
-                break;
-              }
-            }
-            if (clientIsVisible) {
-              let parts = url.split('_');
-              let roomId = Number(parts[0]);
-              let mwId = Number(parts[1]);
-              winsw.postMessage({roomId, mwId, nav: 14})
-            }
-          });
-      }
-    } else {
-      self.clients.openWindow(event.notification.tag);
-    }
-  },
-  false
-);

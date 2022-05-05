@@ -33,7 +33,6 @@ if ("serviceWorker" in navigator) {
 
 const winsw = new BroadcastChannel("winsw");
 winsw.onmessage = ({data}) => {
-  alert('hello');
   console.log(
   "navigating to room : " +
     data.roomId +
@@ -59,94 +58,9 @@ async function send() {
     })
     .then(
       function (reg) {
+        
         var serviceWorker;
-        let callback = async () => {
-          console.log("Service Worker Registered...");
 
-          let requestOptions = {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            redirect: "follow",
-          };
-          fetch("https://config.kasperian.cloud", requestOptions)
-            .then((response) => response.json())
-            .then((result) => {
-              getToken(messaging, {
-                vapidKey:
-                  "BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k",
-              })
-                .then((currentToken) => {
-                  if (currentToken) {
-                    onMessage(messaging, (payload) => {
-                      console.log(
-                        "[firebase-messaging-sw.js] Received background message ",
-                        payload
-                      );
-                      const notificationTitle = payload.notification.title;
-                      const notificationActions =
-                        payload.data.type === "call"
-                          ? [
-                              { action: "acceptCall" + payload.data.roomId + '_' + payload.data.moduleWorkerId, title: "ورود به تماس" },
-                              { action: "declineCall", title: "رد تماس" },
-                            ]
-                          : undefined;
-                      const notificationOptions = {
-                        body: payload.notification.body,
-                        icon: "/logo512.png",
-                        vibrate: [200, 100, 200, 100, 200, 100, 200],
-                        tag: payload.data.link,
-                        actions: notificationActions,
-                      };
-                      Notification.requestPermission(function (result) {
-                        if (result === "granted") {
-                          navigator.serviceWorker.ready.then(function (
-                            registration
-                          ) {
-                            registration.showNotification(
-                              notificationTitle,
-                              notificationOptions
-                            );
-                          });
-                        }
-                      });
-                    });
-                    let requestOptions = {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                        token: localStorage.getItem("token"),
-                      },
-                      body: JSON.stringify({
-                        firebaseToken: currentToken,
-                      }),
-                      redirect: "follow",
-                    };
-                    fetch(
-                      "https://society.kasperian.cloud/registerFirebaseToken",
-                      requestOptions
-                    )
-                      .then((response) => response.json())
-                      .then((result) => {
-                        console.log(JSON.stringify(result));
-                      });
-                  } else {
-                    console.log(
-                      "No registration token available. Request permission to generate one."
-                    );
-                  }
-                })
-                .catch((err) => {
-                  console.log(
-                    "An error occurred while retrieving token. ",
-                    err
-                  );
-                });
-            });
-
-          console.log("Push Registered...");
-        };
         if (reg.installing) {
           serviceWorker = reg.installing;
           // console.log('Service worker installing');
@@ -163,8 +77,6 @@ async function send() {
           if (serviceWorker.state == "activated") {
             //If push subscription wasnt done yet have to do here
             console.log("sw already activated - Do watever needed here");
-
-            callback();
           }
           serviceWorker.addEventListener("statechange", async function (e) {
             console.log("sw statechange : ", e.target.state);
@@ -173,8 +85,6 @@ async function send() {
               console.log(
                 "Just now activated. now we can subscribe for push notification"
               );
-
-              callback();
             }
           });
         }
