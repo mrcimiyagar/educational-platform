@@ -46,7 +46,7 @@ import VideocamIcon from '@material-ui/icons/Videocam'
 import { Card } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import hark from 'hark'
-import { colors, me } from '../util/settings'
+import { colors, me, token } from '../util/settings'
 
 function getOS() {
   var userAgent = window.navigator.userAgent,
@@ -1168,6 +1168,7 @@ function Core(props) {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
+                  'token': token
                 },
                 body: JSON.stringify({
                   roomId: props.roomId,

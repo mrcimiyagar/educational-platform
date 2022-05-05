@@ -167,7 +167,7 @@
     "wait-on": "^6.0.0"
   },
   "scripts": {
-    "start": "PORT=2002 react-scripts start",
+    "start": "PORT=2002 react-scripts --max_old_space_size=4096 start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

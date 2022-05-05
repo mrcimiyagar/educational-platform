@@ -3,7 +3,6 @@ const express = require('express');
 const { Op } = require('sequelize')
 const bodyParser = require('body-parser');
 const { authenticateMember, guestAccsByUserId, guestAccs } = require('../users');
-const { pushNotification } = require('../server');
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
@@ -27,6 +26,7 @@ router.post('/notify_calling', jsonParser, async function (req, res) {
             let space = await sw.Space.findOne({where: {id: room.spaceId}});
             spaceTitle = space.title;
         }
+        const { pushNotification } = require('../server');
         members.forEach(async member => {
             if (member.userId !== session.userId) {
                 await pushNotification(member.userId, `کاربر ${user.firstName + ' ' + user.lastName} وارد تماس در ${spaceTitle + ' -> ' + roomTitle} شده است`, 'https://society.kasperian.cloud/app?room_id=' + membership.roomId + '&selected_nav=14&module_worker_id=' + req.body.moduleWorkerId);
