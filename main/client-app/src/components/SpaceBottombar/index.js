@@ -3,7 +3,7 @@ import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import Settings from "@material-ui/icons/Settings";
-import { Fab } from "@material-ui/core";
+import { Badge, Fab } from "@material-ui/core";
 import ForumIcon from '@mui/icons-material/Forum';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -59,7 +59,7 @@ export default function SpaceBottombar(props) {
         value={0}
         classes={classesAction}
         label="گفتگو ها"
-        icon={<ForumIcon />}
+        icon={<Badge color="secondary" badgeContent={10}><ForumIcon /></Badge>}
       />
       <BottomNavigationAction
         value={1}
@@ -74,7 +74,9 @@ export default function SpaceBottombar(props) {
         label=""
         icon={
           <Fab color={"secondary"} style={{ marginTop: -56 }}>
-            <ChatBubbleIcon style={{ fill: "#fff" }} />
+            <Badge color="primary" badgeContent={10}>
+              <ChatBubbleIcon style={{ fill: "#fff" }} />
+            </Badge>
           </Fab>
         }
         style={{ marginRight: -24 }}
