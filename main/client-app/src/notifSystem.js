@@ -86,7 +86,7 @@ async function send() {
                         "[firebase-messaging-sw.js] Received message ",
                         payload
                       );
-                      const notificationTitle = payload.notification.title;
+                      const notificationTitle = payload.data.title;
                       const notificationActions =
                         payload.data.type === "call"
                           ? [
@@ -95,7 +95,7 @@ async function send() {
                             ]
                           : undefined;
                       const notificationOptions = {
-                        body: payload.notification.body,
+                        body: payload.data.body,
                         icon: "/logo512.png",
                         vibrate: [200, 100, 200, 100, 200, 100, 200],
                         tag: payload.data.link,

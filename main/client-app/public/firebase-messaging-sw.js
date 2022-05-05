@@ -111,7 +111,7 @@ messaging.onBackgroundMessage((payload) => {
     payload
   );
   // Customize notification here
-  const notificationTitle = payload.notification.title;
+  const notificationTitle = payload.data.title;
   const notificationActions =
     payload.data.type === "call"
       ? [
@@ -120,7 +120,7 @@ messaging.onBackgroundMessage((payload) => {
         ]
       : undefined;
   const notificationOptions = {
-    body: payload.notification.body,
+    body: payload.data.body,
     icon: "https://society.kasperian.cloud/logo512.png",
     vibrate: [200, 100, 200, 100, 200, 100, 200],
     tag: payload.data.link,
