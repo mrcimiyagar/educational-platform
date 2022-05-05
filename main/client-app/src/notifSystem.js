@@ -1,4 +1,4 @@
-import {setCurrentRoomId, setCurrentNav, setCurrentModuleWorker} from './App';
+import { setCurrentRoomId, setCurrentNav, setCurrentModuleWorker } from "./App";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -24,153 +24,170 @@ const analytics = getAnalytics(app);
 const messaging = getMessaging(app);
 
 const publicVapidKey =
-  'BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s'
+  "BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s";
 
 // Check for service worker
-if ('serviceWorker' in navigator) {
-  send().catch((err) => console.error(err))
+if ("serviceWorker" in navigator) {
+  send().catch((err) => console.error(err));
 }
+
+window.addEventListener("message", ({ data }) => {
+  console.log(
+    "navigating to room : " +
+      data.roomId +
+      " , nav : " +
+      data.nav +
+      " , mw : " +
+      data.mwId +
+      "..."
+  );
+  setCurrentRoomId(data.roomid);
+  setCurrentNav(data.nav);
+  setCurrentModuleWorker(data.mwId);
+});
 
 // Register SW, Register Push, Send Push
 async function send() {
   // Register Service Worker
-  console.log('Registering service worker...');
+  console.log("Registering service worker...");
 
   navigator.serviceWorker
-    .register('https://society.kasperian.cloud/firebase-messaging-sw.js', { scope: '/' })
-    .then(() => navigator.serviceWorker.ready)
-    .then(() => {
-      navigator.serviceWorker.addEventListener('message', async function ({data}) {
-        console.log('navigating to room : ' + data.roomId + ' , nav : ' + data.nav + ' , mw : ' + data.mwId + '...');
-        setCurrentRoomId(data.roomid);
-        setCurrentNav(data.nav);
-        setCurrentModuleWorker(data.mwId);
-      })
-    });
-
-  navigator.serviceWorker
-    .register('https://society.kasperian.cloud/serviceWorker.js', { scope: '/' })
+    .register("https://society.kasperian.cloud/serviceWorker.js", {
+      scope: "/",
+    })
     .then(
       function (reg) {
-        var serviceWorker
+        var serviceWorker;
         let callback = async () => {
-          console.log('Service Worker Registered...');
+          console.log("Service Worker Registered...");
 
-        let requestOptions = {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          redirect: "follow",
-        };
-        fetch("https://config.kasperian.cloud", requestOptions)
-          .then((response) => response.json())
-          .then((result) => {
-            getToken(messaging, {
-              vapidKey:
-                "BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k",
-            })
-              .then((currentToken) => {
-                alert(currentToken);
-                if (currentToken) {
-                  onMessage(messaging, (payload) => {
-                    console.log(
-                      "[firebase-messaging-sw.js] Received background message ",
-                      payload
-                    );
-                    const notificationTitle = payload.notification.title;
-                    const notificationOptions = {
-                      body: payload.notification.body,
-                      icon: "/logo512.png",
-                      vibrate: [200, 100, 200, 100, 200, 100, 200]
-                    };
-                    Notification.requestPermission(function(result) {
-                      if (result === 'granted') {
-                        navigator.serviceWorker.ready.then(function(registration) {
-                          registration.showNotification(notificationTitle, notificationOptions);
-                        });
-                      }
-                    });
-                  });
-                  let requestOptions = {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      token: localStorage.getItem("token"),
-                    },
-                    body: JSON.stringify({
-                      firebaseToken: currentToken,
-                    }),
-                    redirect: "follow",
-                  };
-                  fetch("https://society.kasperian.cloud/registerFirebaseToken", requestOptions)
-                    .then((response) => response.json())
-                    .then((result) => {
-                      console.log(JSON.stringify(result));
-                    });
-                } else {
-                  console.log(
-                    "No registration token available. Request permission to generate one."
-                  );
-                }
+          let requestOptions = {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            redirect: "follow",
+          };
+          fetch("https://config.kasperian.cloud", requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+              getToken(messaging, {
+                vapidKey:
+                  "BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k",
               })
-              .catch((err) => {
-                console.log("An error occurred while retrieving token. ", err);
-              });
-          });
+                .then((currentToken) => {
+                  if (currentToken) {
+                    onMessage(messaging, (payload) => {
+                      console.log(
+                        "[firebase-messaging-sw.js] Received background message ",
+                        payload
+                      );
+                      const notificationTitle = payload.notification.title;
+                      const notificationOptions = {
+                        body: payload.notification.body,
+                        icon: "/logo512.png",
+                        vibrate: [200, 100, 200, 100, 200, 100, 200],
+                      };
+                      Notification.requestPermission(function (result) {
+                        if (result === "granted") {
+                          navigator.serviceWorker.ready.then(function (
+                            registration
+                          ) {
+                            registration.showNotification(
+                              notificationTitle,
+                              notificationOptions
+                            );
+                          });
+                        }
+                      });
+                    });
+                    let requestOptions = {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        token: localStorage.getItem("token"),
+                      },
+                      body: JSON.stringify({
+                        firebaseToken: currentToken,
+                      }),
+                      redirect: "follow",
+                    };
+                    fetch(
+                      "https://society.kasperian.cloud/registerFirebaseToken",
+                      requestOptions
+                    )
+                      .then((response) => response.json())
+                      .then((result) => {
+                        console.log(JSON.stringify(result));
+                      });
+                  } else {
+                    console.log(
+                      "No registration token available. Request permission to generate one."
+                    );
+                  }
+                })
+                .catch((err) => {
+                  console.log(
+                    "An error occurred while retrieving token. ",
+                    err
+                  );
+                });
+            });
 
-          console.log('Push Registered...')
-        }
+          console.log("Push Registered...");
+        };
         if (reg.installing) {
-          serviceWorker = reg.installing
+          serviceWorker = reg.installing;
           // console.log('Service worker installing');
         } else if (reg.waiting) {
-          serviceWorker = reg.waiting
+          serviceWorker = reg.waiting;
           // console.log('Service worker installed & waiting');
         } else if (reg.active) {
-          serviceWorker = reg.active
+          serviceWorker = reg.active;
           // console.log('Service worker active');
         }
 
         if (serviceWorker) {
-          console.log('sw current state', serviceWorker.state)
-          if (serviceWorker.state == 'activated') {
+          console.log("sw current state", serviceWorker.state);
+          if (serviceWorker.state == "activated") {
             //If push subscription wasnt done yet have to do here
-            console.log('sw already activated - Do watever needed here')
+            console.log("sw already activated - Do watever needed here");
 
-            callback()
+            callback();
           }
-          serviceWorker.addEventListener('statechange', async function (e) {
-            console.log('sw statechange : ', e.target.state)
-            if (e.target.state == 'activated') {
+          serviceWorker.addEventListener("statechange", async function (e) {
+            console.log("sw statechange : ", e.target.state);
+            if (e.target.state == "activated") {
               // use pushManger for subscribing here.
               console.log(
-                'Just now activated. now we can subscribe for push notification',
-              )
+                "Just now activated. now we can subscribe for push notification"
+              );
 
-              callback()
+              callback();
             }
-          })
+          });
         }
       },
       function (err) {
-        console.error('unsuccessful registration with ', err)
-      },
+        console.error("unsuccessful registration with ", err);
+      }
     )
     .catch((ex) => {
-      console.log(ex)
-    })
+      console.log(ex);
+    });
 }
 
 function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/')
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, "+")
+    .replace(/_/g, "/");
 
-  const rawData = window.atob(base64)
-  const outputArray = new Uint8Array(rawData.length)
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
 
   for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i)
+    outputArray[i] = rawData.charCodeAt(i);
   }
-  return outputArray
+  return outputArray;
 }
