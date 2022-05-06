@@ -202,7 +202,7 @@ router.post("/upload_file", jsonParser, async function (req, res) {
               jsmediatags.read(rootPath + "/temp/" + file.id + "." + ext, {
                 onSuccess: async function (tag) {
                   console.log(tag);
-                  var picture = tags.tags.picture;
+                  var picture = tag.tags.picture;
                   fs.writeFileSync(rootPath + "/files/" + preview.id, picture);
                   require("../server").pushTo(
                     "room_" + membership.roomId,
