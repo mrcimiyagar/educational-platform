@@ -190,9 +190,9 @@ router.get('/download_present', jsonParser, async function (req, res) {
 router.post('/get_presents', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     sw.File.findAll({raw: true,
-      where: { roomId: membership.roomId, moduleWorkerId: req.body.moduleWorkerId, isPreview: false, isPresent: true },
+      where: { roomId: membership.roomId, moduleWorkerId: req.body.moduleWorkerId, isPreview: false, isPresent: true }
     }).then((files) => {
-      sw.Present.findAll({ where: { fileId: files.map((f) => f.id) } }).then(
+      sw.Present.findAll({raw: true, where: { fileId: files.map((f) => f.id) } }).then(
         async function (presents) {
           let data = []
           presents.forEach(p => {
