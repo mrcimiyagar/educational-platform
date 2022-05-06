@@ -11,7 +11,7 @@ const { exec } = require('child_process')
 const { authenticateMember } = require('../users')
 const { fromPath } = require('pdf2pic')
 const genThumbnail = require('simple-thumbnail')
-const mm = require('music-metadata');
+const jsmediatags = require("jsmediatags");
 
 const router = express.Router()
 let jsonParser = bodyParser.json()
@@ -179,8 +179,17 @@ router.post('/upload_file', jsonParser, async function (req, res) {
         ext === 'mpeg' ||
         ext === 'aac'
       ) {
-        const metadata = await mm.parseFile(rootPath + '/files/' + file.id);
-        fs.writeFileSync(rootPath + '/files/' + preview.id, metadata.common.picture.data);
+        jsmediatags.read(rootPath + '/files/' + file.id, {
+          onSuccess: function(tag) {
+            console.log(tag);
+            file.name = tag.tags.title;
+            await file.save();
+            fs.writeFileSync(rootPath + '/files/' + preview.id, tag.tags.picture);
+          },
+          onError: function(error) {
+            console.log(':(', error.type, error.info);
+          }
+        });
         let calculatingGraph = () => {
             exec(
                 `audiowaveform -i ${rootPath + '/temp/' + file.id + '.' + ext} -o ${

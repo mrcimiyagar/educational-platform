@@ -32,6 +32,7 @@
     "get-video-duration": "^4.0.0",
     "glob": "^7.1.6",
     "googleapis": "^100.0.0",
+    "jsmediatags": "^3.9.7",
     "jszip": "^3.6.0",
     "mongoose": "^5.11.12",
     "morgan": "^1.10.0",
