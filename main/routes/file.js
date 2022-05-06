@@ -186,7 +186,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
         new jsmediatags.Reader(rootPath + '/temp/' + file.id + '.' + ext)
           .setTagsToRead(["comment", "track", "lyrics", "picture"])
           .read({
-            onSuccess: function(tag) {
+            onSuccess: async function(tag) {
               console.log(tag);
               file.name = tag.tags.title;
               await file.save();
