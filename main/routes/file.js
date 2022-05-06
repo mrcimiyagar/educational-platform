@@ -203,8 +203,6 @@ router.post("/upload_file", jsonParser, async function (req, res) {
                 onSuccess: async function (tag) {
                   console.log(tag);
                   var picture = tags.tags.picture;
-                  file.name = tag.tags.title;
-                  await file.save();
                   fs.writeFileSync(rootPath + "/files/" + preview.id, picture);
                   require("../server").pushTo(
                     "room_" + membership.roomId,
