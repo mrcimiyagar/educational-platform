@@ -24,7 +24,7 @@ router.post('/upload_present', jsonParser, async function (req, res) {
       return
     }
     let mw = await sw.ModuleWorker.findOne({
-      where: { id: req.body.moduleWorkerId, roomId: membership.roomId },
+      where: { id: req.query.moduleWorkerId, roomId: membership.roomId },
     });
     if (mw === null) {
       res.send({
