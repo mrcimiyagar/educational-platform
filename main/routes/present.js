@@ -23,6 +23,17 @@ router.post('/upload_present', jsonParser, async function (req, res) {
       })
       return
     }
+    let mw = await sw.ModuleWorker.findOne({
+      where: { id: req.body.moduleWorkerId, roomId: membership.roomId },
+    });
+    if (mw === null) {
+      res.send({
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
+      });
+      return;
+    }
     let form = new formidable.IncomingForm()
     form.parse(req, async function (err, fields, files) {
       if (!fs.existsSync('files')) {
@@ -32,6 +43,7 @@ router.post('/upload_present', jsonParser, async function (req, res) {
         extension: 'png',
         uploaderId: session.userId,
         roomId: roomId,
+        moduleWorkerId: mw.id,
         isPreview: true,
         isPresent: false,
         type: 'photo'
@@ -40,6 +52,7 @@ router.post('/upload_present', jsonParser, async function (req, res) {
         extension: ext,
         uploaderId: session.userId,
         roomId: roomId,
+        moduleWorkerId: mw.id,
         previewFileId: preview.id,
         isPreview: false,
         isPresent: true,
@@ -48,6 +61,7 @@ router.post('/upload_present', jsonParser, async function (req, res) {
       let present = await sw.Present.create({
         fileId: file.id,
         roomId: roomId,
+        moduleWorkerId: mw.id,
         pageNumber: 1,
       })
 
@@ -166,7 +180,7 @@ router.post('/upload_present', jsonParser, async function (req, res) {
 router.get('/download_present', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     sw.File.findOne({
-      where: { roomId: membership.roomId, id: req.query.fileId },
+      where: { roomId: membership.roomId, moduleWorkerId: req.body.moduleWorkerId, id: req.query.fileId },
     }).then(async (file) => {
       res.sendFile(rootPath + '/files/' + file.id)
     })
@@ -176,7 +190,7 @@ router.get('/download_present', jsonParser, async function (req, res) {
 router.post('/get_presents', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     sw.File.findAll({
-      where: { roomId: membership.roomId, isPreview: false, isPresent: true },
+      where: { roomId: membership.roomId, moduleWorkerId: req.body.moduleWorkerId, isPreview: false, isPresent: true },
     }).then((files) => {
       sw.Present.findAll({ where: { fileId: files.map((f) => f.id) } }).then(
         async function (presents) {
@@ -209,8 +223,19 @@ router.post('/pick_present', jsonParser, async function (req, res) {
       })
       return
     }
+    let mw = await sw.ModuleWorker.findOne({
+      where: { id: req.body.moduleWorkerId, roomId: membership.roomId },
+    });
+    if (mw === null) {
+      res.send({
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
+      });
+      return;
+    }
     sw.Present.findOne({
-      where: { roomId: membership.roomId, id: req.body.presentId },
+      where: { roomId: membership.roomId, moduleWorkerId: mw.id, id: req.body.presentId },
     }).then(async function (present) {
       if (present === null) {
         res.send({
@@ -300,11 +325,22 @@ router.post('/swich_page', jsonParser, async function (req, res) {
       })
       return
     }
+    let mw = await sw.ModuleWorker.findOne({
+      where: { id: req.body.moduleWorkerId, roomId: membership.roomId },
+    });
+    if (mw === null) {
+      res.send({
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
+      });
+      return;
+    }
     sw.RoomSecret.findOne({ where: { roomId: membership.roomId } }).then(
       async function (room) {
         room.save()
 
-        sw.Present.findOne({ where: { id: room.presentId } }).then(
+        sw.Present.findOne({ where: { id: room.presentId, moduleWorkerId: req.body.moduleWorkerId } }).then(
           (present) => {
             present.pageNumber = req.body.pageNumber
             present.save()
@@ -356,7 +392,7 @@ router.post('/swich_page', jsonParser, async function (req, res) {
                 require('../server').pushTo(
                   'room_' + membership.roomId,
                   'page-switched',
-                  { pn: req.body.pageNumber, image: output.base64 },
+                  { moduleWorkerId: mw.id, pn: req.body.pageNumber, image: output.base64 },
                 )
                 res.send({ status: 'success' })
               })
@@ -375,7 +411,18 @@ router.post('/get_current_page', jsonParser, async function (req, res) {
     sw.RoomSecret.findOne({ where: { roomId: membership.roomId } }).then(
       async function (room) {
         room.save()
-        sw.Present.findOne({ where: { id: room.presentId } }).then(
+        let mw = await sw.ModuleWorker.findOne({
+          where: { id: req.body.moduleWorkerId, roomId: membership.roomId },
+        });
+        if (mw === null) {
+          res.send({
+            status: "error",
+            errorCode: "e0005",
+            message: "access denied.",
+          });
+          return;
+        }
+        sw.Present.findOne({ where: { id: room.presentId,  moduleWorkerId: mw.id } }).then(
           (present) => {
             if (present === null) {
               res.send({ status: 'error', currentPage: '', pageNumber: 1 })

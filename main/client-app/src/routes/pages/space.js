@@ -911,7 +911,8 @@ export default function Space(props) {
         ) : null}
         {selectedNav === 17 ? (
           <Deck
-            room_id={selectedModuleWorkerId}
+            room_id={props.room_id}
+            moduleWorkerId={selectedModuleWorkerId}
             membership={membership}
             onClose={() => {
               setSelectedNav(undefined);

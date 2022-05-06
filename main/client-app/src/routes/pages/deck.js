@@ -93,6 +93,7 @@ export default function Deck(props) {
             setOpen={setPresentMenuOpen}
             presentOpen={presentOpen}
             roomId={props.room_id}
+            moduleWorkerId={props.moduleWorkerId}
           />
         </div>
       </div>

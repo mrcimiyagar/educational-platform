@@ -32,6 +32,7 @@ export function PresentBox(props) {
       },
       body: JSON.stringify({
         roomId: props.roomId,
+        moduleWorkerId: props.moduleWorkerId
       }),
       redirect: 'follow',
     }
@@ -103,7 +104,7 @@ export function PresentBox(props) {
           request.open(
             'POST',
             serverRoot +
-              `/present/upload_present?token=${token}&roomId=${props.roomId}&extension=${ext}&isPresent=true`,
+              `/present/upload_present?token=${token}&roomId=${props.roomId}&moduleWorkerId=${props.moduleWorkerId}&extension=${ext}&isPresent=true`,
           )
 
           files.push(f)
@@ -139,6 +140,7 @@ export function PresentBox(props) {
             roomId: props.roomId,
             presentId: p.id,
             pageNumber: pageNumber,
+            moduleWorkerId: props.moduleWorkerId
           }),
           redirect: 'follow',
         }
@@ -161,6 +163,7 @@ export function PresentBox(props) {
       body: JSON.stringify({
         roomId: props.roomId,
         pageNumber: i,
+        moduleWorkerId: props.moduleWorkerId
       }),
       redirect: 'follow',
     }
@@ -195,6 +198,7 @@ export function PresentBox(props) {
       },
       body: JSON.stringify({
         roomId: props.roomId,
+        moduleWorkerId: props.moduleWorkerId
       }),
       redirect: 'follow',
     }
@@ -255,6 +259,7 @@ export function PresentBox(props) {
                 presents={presents}
                 setPresents={setPresents}
                 roomId={props.roomId}
+                moduleWorkerId={props.moduleWorkerId}
                 fileType={'document'}
                 usedBy={'presents'}
               />
@@ -303,7 +308,7 @@ export function PresentBox(props) {
                   }}
                   src={
                     serverRoot +
-                    `/file/download_file?token=${token}&roomId=${
+                    `/file/download_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&roomId=${
                       props.roomId
                     }&fileId=${files.length > 0 ? files[currentPresent].id : 0}`
                   }
