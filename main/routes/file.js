@@ -193,13 +193,9 @@ router.post("/upload_file", jsonParser, async function (req, res) {
             (error, stdout, stderr) => {
               if (error) {
                 console.log(`error: ${error.message}`);
-                res.send({ status: "success", file: file });
-                return;
               }
               if (stderr) {
                 console.log(`stderr: ${stderr}`);
-                res.send({ status: "success", file: file });
-                return;
               }
               console.log(`stdout: ${stdout}`);
               exec(
@@ -211,13 +207,9 @@ router.post("/upload_file", jsonParser, async function (req, res) {
                 (error, stdout, stderr) => {
                   if (error) {
                     console.log(`error 2: ${error.message}`);
-                    res.send({ status: "success", file: file });
-                    return;
                   }
                   if (stderr) {
                     console.log(`stderr 2: ${stderr}`);
-                    res.send({ status: "success", file: file });
-                    return;
                   }
                   console.log(`stdout 2: ${stdout}`);
                   require("../server").pushTo(
