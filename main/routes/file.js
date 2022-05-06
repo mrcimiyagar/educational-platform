@@ -202,13 +202,19 @@ router.post("/upload_file", jsonParser, async function (req, res) {
               jsmediatags.read(rootPath + "/temp/" + file.id + "." + ext, {
                 onSuccess: async function (tag) {
                   console.log(tag);
-                  var picture = tag.tags.picture.data;
-                  fs.writeFileSync(rootPath + "/files/" + preview.id, Buffer.from(picture));
-                  require("../server").pushTo(
-                    "room_" + membership.roomId,
-                    "file-added",
-                    file
-                  );
+                  let picture = tag.tags.picture;
+                  if (picture) {
+                    let data = picture.data;
+                    fs.writeFileSync(
+                      rootPath + "/files/" + preview.id,
+                      Buffer.from(data)
+                    );
+                    require("../server").pushTo(
+                      "room_" + membership.roomId,
+                      "file-added",
+                      file
+                    );
+                  }
                   res.send({ status: "success", file: file });
                 },
                 onError: function (error) {
@@ -302,8 +308,18 @@ router.get("/download_file_thumbnail", jsonParser, async function (req, res) {
     }).then(async (file) => {
       if (fs.existsSync(rootPath + "/files/" + file.previewFileId)) {
         res.sendFile(rootPath + "/files/" + file.previewFileId);
-      } else {
+      } else if (fs.existsSync(rootPath + "/files/" + file.previewFileId + ".jpg")) {
         res.sendFile(rootPath + "/files/" + file.previewFileId + ".jpg");
+      } else {
+        if (file.fileType === 'photo') {
+          res.sendFile(rootPath + "/files/photo.png");
+        } else if (file.fileType === 'audio') {
+          res.sendFile(rootPath + "/files/audio.png");
+        } else if (file.fileType === 'video') {
+          res.sendFile(rootPath + "/files/video.png");
+        } else {
+          res.sendFile(rootPath + "/files/document.png");
+        }
       }
     });
   });
