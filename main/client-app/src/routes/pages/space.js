@@ -117,12 +117,12 @@ export default function Space(props) {
   const [showVideoPlayer, setShowVideoPlayer] = React.useState(false);
   const [selectedModuleWorkerId, setSelectedModuleWorkerId] =
     React.useState(undefined);
-  openAudioPlayer = (moduleWorkerId, fileId, src) => {
-    openedAudio = { moduleWorkerId, src, fileId };
+  openAudioPlayer = (moduleWorkerId, fileId, src, rId) => {
+    openedAudio = { moduleWorkerId, src, fileId, roomId: rId };
     setShowAudioPlayer(true);
   };
-  openVideoPlayer = (moduleWorkerId, fileId) => {
-    openedVideo = { moduleWorkerId, fileId };
+  openVideoPlayer = (moduleWorkerId, fileId, rId) => {
+    openedVideo = { moduleWorkerId, fileId, roomId: rId };
     setShowVideoPlayer(true);
   };
   const attachScrollCallback = () => {
@@ -157,10 +157,10 @@ export default function Space(props) {
       backgroundColor: colors.primaryMedium,
     },
     indicator: {
-      backgroundColor: "#fff",
+      backgroundColor: colors.oposText,
     },
     tab: {
-      color: "#fff",
+      color: colors.oposText,
       minWidth: isDesktop() || isTablet() ? 100 : undefined,
       maxWidth: isDesktop() || isTablet() ? 100 : undefined,
       width: isDesktop() || isTablet() ? 100 : undefined,
@@ -560,7 +560,7 @@ export default function Space(props) {
           background: colors.primaryMedium,
           borderRadius: 0,
           width: "100%",
-          height: searchBarFixed ? 56 : 80 + 40,
+          height: searchBarFixed ? 56 : 72 + 40,
           backdropFilter: "blur(20px)",
           position: "fixed",
           transform: inTheGame ? "translateY(0px)" : "translateY(-200px)",
@@ -602,26 +602,26 @@ export default function Space(props) {
           <Tab
             classes={{ root: classes.tab }}
             label="میز اسناد x"
-            style={{ marginLeft: 32, color: colors.text }}
+            style={{ marginLeft: 32, color: colors.oposText, fontWeight: 'bold' }}
           />
           <Tab
             classes={{ root: classes.tab }}
-            style={{ color: colors.text }}
+            style={{ color: colors.oposText, fontWeight: 'bold' }}
             label="میز کنفرانس فردا"
           />
           <Tab
             classes={{ root: classes.tab }}
-            style={{ color: colors.text }}
+            style={{ color: colors.oposText, fontWeight: 'bold' }}
             label="میز تست نرم افزار"
           />
           <Tab
             classes={{ root: classes.tab }}
-            style={{ color: colors.text }}
+            style={{ color: colors.oposText, fontWeight: 'bold' }}
             label="میز بازی شطرنج 2"
           />
           <Tab
             classes={{ root: classes.tab }}
-            style={{ color: colors.text }}
+            style={{ color: colors.oposText, fontWeight: 'bold' }}
             label="میز کنفرانس هفته ی بعد"
           />
         </Tabs>
@@ -874,7 +874,6 @@ export default function Space(props) {
               setSelectedNav(undefined);
               setInTheGame(true);
             }}
-            roomId={selectedModuleWorkerId}
           />
         ) : null}
         {selectedNav === 14 ? (
@@ -957,9 +956,10 @@ export default function Space(props) {
         ) : null}
         {showAudioPlayer && openedAudio !== undefined ? (
           <AudioPlayer
-            room_id={openedAudio.roomId}
+            roomId={openedAudio.roomId}
             src={openedAudio.src}
-            file_id={openedAudio.fileId}
+            fileId={openedAudio.fileId}
+            moduleWorkerId={openedAudio.moduleWorkerId}
             onClose={() => {
               setShowAudioPlayer(false);
             }}
@@ -970,6 +970,7 @@ export default function Space(props) {
             roomId={openedVideo.roomId}
             src={openedVideo.src}
             fileId={openedVideo.fileId}
+            moduleWorkerId={openedVideo.moduleWorkerId}
             onClose={() => {
               setShowVideoPlayer(false);
             }}

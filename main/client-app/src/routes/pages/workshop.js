@@ -378,13 +378,13 @@ function Workshop(props) {
         >
           <Toolbar style={{height: 64}}>
             <IconButton onClick={toggleDrawer("right", true)}>
-              <Menu style={{ fill: colors.icon }} />
+              <Menu style={{ fill: colors.oposText }} />
             </IconButton>
-            <Typography variant="h6" style={{ color: colors.text, flex: 1 }}>
+            <Typography variant="h6" style={{ color: colors.oposText, flex: 1 }}>
               کارگاه
             </Typography>
             <IconButton onClick={handleClose}>
-              <Close style={{ fill: colors.icon }} />
+              <Close style={{ fill: colors.oposText }} />
             </IconButton>
           </Toolbar>
         </AppBar>

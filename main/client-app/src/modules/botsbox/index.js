@@ -991,12 +991,12 @@ export default function BotsBox(props) {
                     />
                     <Typography
                       style={{
-                        marginTop: -16,
+                        marginTop: -8,
                         width: "100%",
                         textAlign: "center",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: colors.text,
+                        color: colors.oposText,
                       }}
                     >
                       {wp.title}

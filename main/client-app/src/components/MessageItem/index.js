@@ -163,13 +163,13 @@ export default function MessageItem(props) {
               paddingBottom: 4,
               paddingRight: 16,
               paddingLeft: 16,
-              color: "#fff",
+              color: colors.text,
               borderRadius: "16px 16px 0px 16px",
               position: "absolute",
               marginTop: 8,
               right: 48,
               backdropFilter: "blur(10px)",
-              backgroundColor: colors.primaryMedium,
+              backgroundColor: colors.primaryLight,
             }}
           >
             <Typography
@@ -242,7 +242,7 @@ export default function MessageItem(props) {
                       width: 4,
                       height: 48,
                       borderRadius: 1,
-                      backgroundColor: "#fff",
+                      backgroundColor: colors.text,
                     }}
                   />
                   <Typography
@@ -403,7 +403,7 @@ export default function MessageItem(props) {
                 right: 12,
                 bottom: 8,
                 fontSize: 12,
-                color: "#fff",
+                color: colors.text,
                 display: "flex",
               }}
             >
@@ -452,7 +452,7 @@ export default function MessageItem(props) {
                         position: "absolute",
                         top: 100,
                         left: 0,
-                        background: colors.primaryMedium,
+                        background: colors.primaryLight,
                         backdropFilter: "blur(10px)",
                       }}
                     >
@@ -533,7 +533,7 @@ export default function MessageItem(props) {
               paddingRight: 16,
               paddingLeft: 16,
               marginTop: 8,
-              color: "#fff",
+              color: colors.text,
               borderRadius: "16px 16px 0px 16px",
             }}
           >
@@ -673,7 +673,7 @@ export default function MessageItem(props) {
                 right: 12,
                 bottom: 8,
                 fontSize: 12,
-                color: "#fff",
+                color: colors.text,
                 display: "flex",
               }}
             >
@@ -743,13 +743,13 @@ export default function MessageItem(props) {
               paddingBottom: 4,
               paddingRight: 16,
               paddingLeft: 16,
-              color: "#fff",
+              color: colors.text,
               borderRadius: "16px 16px 16px 0px",
               position: "absolute",
               marginTop: 8,
               left: 48,
               backdropFilter: "blur(10px)",
-              backgroundColor: colors.primaryMedium,
+              backgroundColor: colors.primaryLight,
             }}
           >
             <Typography
@@ -822,7 +822,7 @@ export default function MessageItem(props) {
                       width: 4,
                       height: 48,
                       borderRadius: 1,
-                      backgroundColor: "#fff",
+                      backgroundColor: colors.text,
                     }}
                   />
                   <Typography
@@ -983,7 +983,7 @@ export default function MessageItem(props) {
                 right: 12,
                 bottom: 8,
                 fontSize: 12,
-                color: "#fff",
+                color: colors.text,
                 transform: "translateY(-8px)",
               }}
             >
@@ -1014,7 +1014,7 @@ export default function MessageItem(props) {
                         position: "absolute",
                         top: 100,
                         left: 0,
-                        background: colors.primaryMedium,
+                        background: colors.primaryLight,
                         backdropFilter: "blur(10px)",
                       }}
                     >
@@ -1097,7 +1097,7 @@ export default function MessageItem(props) {
               color: "transparent",
               marginLeft: 16,
               marginTop: 8,
-              color: "#fff",
+              color: colors.text,
               left: 0,
             }}
           >
@@ -1236,7 +1236,7 @@ export default function MessageItem(props) {
                 position: "absolute",
                 right: 12,
                 fontSize: 12,
-                color: "#fff",
+                color: colors.text,
                 transform: "translateY(-8px)",
               }}
             >

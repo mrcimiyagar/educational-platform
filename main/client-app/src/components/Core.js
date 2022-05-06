@@ -47,6 +47,8 @@ import { Card } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import hark from "hark";
 import { colors, me, token } from "../util/settings";
+import {pathConfig} from '..';
+import $ from 'jquery';
 
 function getOS() {
   var userAgent = window.navigator.userAgent,
@@ -216,6 +218,7 @@ let audioCache = {};
 let audioNeedUpdate = {};
 let presenterBackup = undefined;
 let instantConnectionFlag = false;
+var pressTimer;
 
 function Core(props) {
   let theme = createTheme({
@@ -248,7 +251,6 @@ function Core(props) {
   let [audio, setAudio] = React.useState(false);
   let [screen, setScreen] = React.useState(false);
   let [connected, setConnected] = React.useState(false);
-  let [pathConfig, setPathConfig] = React.useState(undefined);
   let [shownVideos, setShownVideos] = React.useState({});
   let [shownAudios, setShownAudios] = React.useState({});
   let [shownScreens, setShownScreens] = React.useState({});
@@ -289,6 +291,28 @@ function Core(props) {
   };
 
   useEffect(() => {
+    instantConnectionFlag = true;
+    setConnected(true);
+    let requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.roomId,
+        moduleWorkerId: props.moduleWorkerId,
+      }),
+      redirect: "follow",
+    };
+    fetch(
+      pathConfig.mainBackend + "/video/notify_calling",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+      });
     setTimeout(() => {
       var DetectRTC = require("detectrtc");
       DetectRTC.load(function () {
@@ -685,21 +709,6 @@ function Core(props) {
   }
 
   useEffect(() => {
-    let requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      redirect: "follow",
-    };
-    fetch("https://config.kasperian.cloud", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        setPathConfig(result);
-      });
-  }, []);
-
-  useEffect(() => {
     if (connected) {
       initVideo();
       initScreen();
@@ -763,10 +772,6 @@ function Core(props) {
   });
   result = tempResult.unique();
 
-  if (pathConfig === undefined) {
-    return <div />;
-  }
-
   let notifyWebcamActivated = () => {
     if (connected && screenOn && presenterBackup !== undefined) {
       setTimeout(() => {
@@ -804,7 +809,7 @@ function Core(props) {
     <div
       style={{
         width: "100%",
-        height: "100vh",
+        height: "100%",
         display: "flex",
         flexwrap: "wrap",
       }}
@@ -812,13 +817,14 @@ function Core(props) {
       <DesktopDetector />
       <video
         id="screenMax"
+        controls
         autoPlay
         style={{
           display: "none",
           position: "absolute",
           transform: sizeMode === "mobile" ? undefined : "translateX(-50%)",
           objectFit: "cover",
-          top: 80,
+          top: 120,
           left:
             (sizeMode === "mobile"
               ? 0
@@ -872,14 +878,15 @@ function Core(props) {
         }}
       ></video>
       <video
-        autoPlay
         id="screenMax2"
+        controls
+        autoPlay
         style={{
           display: "none",
           objectFit: "cover",
           position: "absolute",
           right: 0,
-          top: 0,
+          top: 16,
           width:
             webcamSize === "big" ? 450 : webcamSize === "medium" ? 270 : 150,
           height:
@@ -1094,7 +1101,7 @@ function Core(props) {
             {video ? <VideocamIcon /> : <VideocamOff />}
           </Fab>
           <Fab
-            disabled={!screenLoaded || !screenShareSupported}
+            disabled={!screenShareSupported}
             id="screenButton"
             color={"primary"}
             style={{
@@ -1152,34 +1159,12 @@ function Core(props) {
           id="callButton"
           color={"secondary"}
           style={{
-            display: !connected && videoAccess ? "block" : "none",
+            display: "none",
             position: "fixed",
             left: sizeMode === "mobile" || sizeMode === "tablet" ? 16 : 32,
             bottom: 24,
           }}
           onClick={() => {
-            instantConnectionFlag = true;
-            setConnected(true);
-            let requestOptions = {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                token: token,
-              },
-              body: JSON.stringify({
-                roomId: props.roomId,
-                moduleWorkerId: props.moduleWorkerId,
-              }),
-              redirect: "follow",
-            };
-            fetch(
-              pathConfig.mainBackend + "/video/notify_calling",
-              requestOptions
-            )
-              .then((response) => response.json())
-              .then((result) => {
-                console.log(result);
-              });
           }}
         >
           <CallIcon style={{ fill: "#333" }} />
@@ -1187,7 +1172,7 @@ function Core(props) {
         <Paper
           id="descriptionPanel"
           style={{
-            display: !connected && videoAccess ? "block" : "none",
+            display: "none",
             position: "fixed",
             top: "50%",
             left: sizeMode === "desktop" ? "calc(50% - 225px)" : "50%",

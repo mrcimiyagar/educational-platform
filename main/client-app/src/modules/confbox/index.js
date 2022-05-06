@@ -145,8 +145,7 @@ export function ConfBox(props) {
         style: {
           width: "100%",
           height: "100%",
-          background: colors.backSide,
-          backdropFilter: "blur(10px)",
+          background: 'transparent'
         },
       }}
       style={{
@@ -161,11 +160,8 @@ export function ConfBox(props) {
     <div
       id={props.id}
       style={{
-        right: props.currentRoomNav !== 2 ? 0 : undefined,
-        top: props.currentRoomNav !== 2 ? 0 : undefined,
-        width: props.currentRoomNav !== 2 ? 450 : "100%",
-        height: isDesktop() ? "100%" : "calc(100% - 128px)",
-        position: props.currentRoomNav !== 2 ? "fixed" : "relative",
+        width: "100%",
+        height: "100%",
         direction: "ltr"
       }}
     >
@@ -196,11 +192,11 @@ export function ConfBox(props) {
             handleClose();
           }}
         >
-          <ArrowForward style={{ fill: colors.icon }} />
+          <ArrowForward style={{ fill: colors.oposText }} />
         </IconButton>
           <Typography
             variant={"h6"}
-            style={{ color: colors.text, flex: 1, textAlign: 'right' }}
+            style={{ color: colors.oposText, flex: 1, textAlign: 'right' }}
           >
             سالن کنفرانس
           </Typography>
@@ -208,13 +204,11 @@ export function ConfBox(props) {
       </AppBar>
 
       <div style={{
-          right: right,
-          top: top,
-          position: position,
-          width: width,
-          height: height,
-          marginTop: marginTop,
-          marginBottom: 16
+          width: '100%',
+          height: 'calc(100% - 64px)',
+          marginTop: 64,
+          background: colors.backSide,
+          backdropFilter: "blur(10px)"
       }}>
         <Core videoAccess={props.membership.canActInVideo} moduleWorkerId={props.moduleWorkerId} roomId={props.roomId} />
       </div>

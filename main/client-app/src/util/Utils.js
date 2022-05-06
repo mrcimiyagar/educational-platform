@@ -1,6 +1,5 @@
 import React from "react";
 import { pathConfig, setClientConnected } from "..";
-import { changeSendButtonState } from "../modules/chatbox/chatbox";
 import store, { changeConferenceMode } from "../redux/main";
 import { setMe, token } from "./settings";
 import io from "socket.io-client";

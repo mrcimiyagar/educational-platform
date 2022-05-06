@@ -63,7 +63,7 @@ export default function RoomSettings(props) {
     root: {
       width: '100%',
       direction: 'rtl',
-      backgroundColor: colors.primaryDark,
+      backgroundColor: colors.backSide,
       backdropFilter: 'blur(10px)'
     },
     heading: {
@@ -132,7 +132,7 @@ export default function RoomSettings(props) {
         }}
         PaperProps={{
           style: {
-            background: colors.field,
+            background: colors.backSide,
             backdropFilter: 'blur(10px)'
           }
         }}
@@ -185,7 +185,7 @@ export default function RoomSettings(props) {
           <ListItem
             style={{
               position: 'relative',
-              backgroundColor: colors.primaryMedium,
+              backgroundColor: colors.primaryLight,
             }}
           >
             <ListItemText
@@ -349,7 +349,7 @@ export default function RoomSettings(props) {
             button
             style={{
               position: 'relative',
-              backgroundColor: colors.primaryMedium,
+              backgroundColor: colors.primaryLight,
             }}
           >
             <ListItemText
@@ -453,7 +453,7 @@ export default function RoomSettings(props) {
             button
             style={{
               position: 'relative',
-              backgroundColor: colors.primaryMedium,
+              backgroundColor: colors.primaryLight,
             }}
           >
             <ListItemText
@@ -596,7 +596,7 @@ export default function RoomSettings(props) {
             button
             style={{
               position: 'relative',
-              backgroundColor: colors.primaryMedium,
+              backgroundColor: colors.primaryLight,
             }}
           >
             <ListItemText
@@ -746,7 +746,7 @@ export default function RoomSettings(props) {
             button
             style={{
               position: 'relative',
-              backgroundColor: colors.primaryMedium,
+              backgroundColor: colors.primaryLight,
             }}
           >
             <ListItemText

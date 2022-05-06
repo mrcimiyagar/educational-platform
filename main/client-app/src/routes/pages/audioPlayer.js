@@ -1,25 +1,86 @@
-import { Dialog, IconButton, Slide } from "@material-ui/core";
-import React from "react";
+import { AppBar, Avatar, Dialog, IconButton, Slide, Toolbar, Typography } from "@material-ui/core";
+import React, { useEffect } from "react";
 import { isDesktop, popPage, registerDialogOpen } from "../../App";
 import "./audioPlayer.css";
-import { useForceUpdate } from "../../util/Utils";
-import FastRewindIcon from '@mui/icons-material/FastRewind';
-import FastForwardIcon from '@mui/icons-material/FastForward';
-import { Pause, PlayArrow } from "@material-ui/icons";
+import { serverRoot, useForceUpdate } from "../../util/Utils";
+import FastRewindIcon from "@mui/icons-material/FastRewind";
+import FastForwardIcon from "@mui/icons-material/FastForward";
+import { ArrowForward, Pause, PlayArrow } from "@material-ui/icons";
+import { colors, token } from "../../util/settings";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction="right" ref={ref} {...props} />;
 });
 
 export default function AudioPlayer(props) {
   let forceUpdate = useForceUpdate();
   const [open, setOpen] = React.useState(true);
+  const [albumArtLink, setAlbumArtLink] = React.useState(undefined);
   registerDialogOpen(setOpen);
   const handleClose = () => {
     setOpen(false);
     setTimeout(props.onClose, 250);
   };
   const [playing, setPlaying] = React.useState(false);
+
+  useEffect(() => {
+    const src =
+    serverRoot +
+    "/file/download_file_thumbnail?fileId=" +
+    props.fileId + '&roomId=' + props.roomId + '&moduleWorkerId=' + props.moduleWorkerId;
+  const options = {
+    headers: {
+      token: token,
+    },
+  };
+
+  fetch(src, options)
+    .then((res) => res.blob())
+    .then((blob) => {
+      setAlbumArtLink(URL.createObjectURL(blob));
+    });
+  }, []);
+
+  return (
+    <Dialog
+      onTouchStart={(e) => {
+        e.stopPropagation();
+      }}
+      PaperProps={{
+        style: {
+          direction: 'rtl',
+          backgroundColor: 'transparent',
+          boxShadow: "none",
+          backdropFilter: 'blur(10px)'
+        },
+      }}
+      fullScreen={!isDesktop()}
+      open={open}
+      onClose={handleClose}
+      TransitionComponent={Transition}
+    >
+      <AppBar
+        style={{
+          backgroundColor: colors.primaryMedium,
+          width: "100%",
+          height: 64,
+          position: 'fixed'
+        }}
+      >
+        <Toolbar style={{ width: "100%", marginTop: 4 }}>
+          <IconButton onClick={handleClose}>
+            <ArrowForward style={{ fill: colors.oposText }} />
+          </IconButton>
+          <Typography stlye={{color: colors.oposText, textAlign: 'right', alignItems: 'right', justifyContent: 'right'}}>
+            مدیا پلیر
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <div style={{marginTop: 64, backgroundColor: colors.backSide, width: '100%', height: 'calc(100% - 64px)', position: 'relative'}}>
+        <Avatar style={{width: 200, height: 200}} src={albumArtLink}/>
+      </div>
+    </Dialog>
+  );
 
   return (
     <Dialog
@@ -30,7 +91,7 @@ export default function AudioPlayer(props) {
         style: {
           backgroundColor: "transparent",
           boxShadow: "none",
-          borderRadius: 24
+          borderRadius: 24,
         },
       }}
       fullScreen={!isDesktop()}
@@ -38,7 +99,13 @@ export default function AudioPlayer(props) {
       onClose={handleClose}
       TransitionComponent={Transition}
     >
-      <article className="screen">
+      <article
+        className="screen"
+        style={{
+          backgroundColor: colors.backSide,
+          backdropFilter: "blur(10px)",
+        }}
+      >
         <input
           type="checkbox"
           value="None"
@@ -47,7 +114,7 @@ export default function AudioPlayer(props) {
         ></input>
         <label className="main" for="magicButton"></label>
 
-        <div className="coverImage"></div>
+        <div className="coverImage" style={{ opacity: 0.5 }}></div>
         <div className="search"></div>
         <div className="bodyPlayer"></div>
 
@@ -212,7 +279,7 @@ export default function AudioPlayer(props) {
         <table className="player">
           <td>
             <IconButton>
-              <FastRewindIcon style={{fill: '#fff'}} />
+              <FastRewindIcon style={{ fill: "#fff" }} />
             </IconButton>
           </td>
           <td>
@@ -228,12 +295,16 @@ export default function AudioPlayer(props) {
                 }
               }}
             >
-              {playing ? <Pause style={{fill: '#fff'}} /> : <PlayArrow style={{fill: '#fff'}} />}
+              {playing ? (
+                <Pause style={{ fill: "#fff" }} />
+              ) : (
+                <PlayArrow style={{ fill: "#fff" }} />
+              )}
             </IconButton>
           </td>
           <td>
             <IconButton>
-              <FastForwardIcon style={{fill: '#fff'}} />
+              <FastForwardIcon style={{ fill: "#fff" }} />
             </IconButton>
           </td>
         </table>

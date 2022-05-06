@@ -88,7 +88,7 @@ export default function CreateRoom(props) {
             position: "absolute",
             top: 100,
             left: 0,
-            background: colors.primaryMedium,
+            background: colors.backSide,
             backdropFilter: "blur(10px)",
           }}
         >
@@ -157,8 +157,8 @@ export default function CreateRoom(props) {
                   marginLeft: 32,
                   marginRight: 32,
                   height: 56,
-                  color: "#fff",
-                  borderColor: "#fff",
+                  color: colors.text,
+                  borderColor: colors.text,
                 }}
                 variant={"outlined"}
                 onClick={() => {

@@ -164,7 +164,7 @@ export default function ChatAppBar(props) {
                 style={{ marginRight: -16 }}
                 onClick={() => props.handleClose()}
               >
-                <ArrowForward style={{ fill: colors.icon }} />
+                <ArrowForward style={{ fill: colors.oposText }} />
               </IconButton>
             ) : null}
             <Avatar
@@ -197,7 +197,7 @@ export default function ChatAppBar(props) {
             />
             <Typography
               variant="h6"
-              style={{ fontFamily: 'mainFont', marginRight: 8, color: colors.text }}
+              style={{ fontFamily: 'mainFont', marginRight: 8, color: colors.oposText }}
             >
               {props.user !== undefined && props.user !== null
                 ? props.user.firstName + ' ' + props.user.lastName
@@ -206,7 +206,7 @@ export default function ChatAppBar(props) {
                 : ''}
             </Typography>
             <br />
-            <Typography style={{ color: colors.text, marginRight: 16 }}>
+            <Typography style={{ color: colors.oposText, marginRight: 16 }}>
               {tl.toString()}
             </Typography>
             <div className={classes.search}>
@@ -216,7 +216,7 @@ export default function ChatAppBar(props) {
                     props.viewCallback()
                   }}
                 >
-                  <VisibilityOff style={{ fill: colors.icon }} />
+                  <VisibilityOff style={{ fill: colors.oposText }} />
                 </IconButton>
               )}
               {isInRoom() ? null : (
@@ -226,11 +226,11 @@ export default function ChatAppBar(props) {
                     setCurrentRoomId(props.room.id);
                   }}
                 >
-                  <Roofing style={{ fill: colors.icon }} />
+                  <Roofing style={{ fill: colors.oposText }} />
                 </IconButton>
               )}
               <IconButton>
-                <MoreIcon style={{ fill: colors.icon }} />
+                <MoreIcon style={{ fill: colors.oposText }} />
               </IconButton>
             </div>
           </Toolbar>

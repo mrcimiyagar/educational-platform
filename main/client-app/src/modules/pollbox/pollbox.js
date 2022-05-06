@@ -203,7 +203,6 @@ export function PollBox(props) {
           width: "100%",
           height: "100%",
           borderRadius: isDesktop() ? "0 0 24px 24px" : undefined,
-          backgroundColor: colors.backSide,
           backdropFilter: "blur(15px)",
         }}
       >
@@ -233,11 +232,11 @@ export function PollBox(props) {
             handleClose();
           }}
         >
-          <ArrowForward style={{ fill: colors.icon }} />
+          <ArrowForward style={{ fill: colors.oposText }} />
         </IconButton>
           <Typography
             variant={"h6"}
-            style={{ color: colors.text, flex: 1, textAlign: 'right' }}
+            style={{ color: colors.oposText, flex: 1, textAlign: 'right' }}
           >
             سالن کنفرانس
           </Typography>
@@ -246,10 +245,12 @@ export function PollBox(props) {
         <div
           style={{
             width: "100%",
-            height: "100%",
+            height: "calc(100% - 64px)",
+            backgroundColor: colors.backSide,
+            marginTop: 64
           }}
         >
-          <div style={{ height: "100%", overflowY: "auto", paddingBottom: 64, paddingTop: 64 + 16 }}>
+          <div style={{ height: "100%", overflowY: "auto" }}>
             {polls.map((poll, index) => {
               if (poll.myVote !== undefined && poll.myVote !== null) {
                 let myVoteText = "";
@@ -298,9 +299,10 @@ export function PollBox(props) {
         >
           <div
             style={{
-              background: `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 35%, ${colors.accent} 100%)`,
+              background: colors.primaryLight,
+              backdropFilter: 'blur(10px)',
               width: 360,
-              height: "100vh",
+              height: "100%",
               alignItems: "center",
               justifyContent: "center",
               textAlign: "center",
@@ -309,7 +311,7 @@ export function PollBox(props) {
             <div>
               <Typography
                 variant={"h6"}
-                style={{ color: "#fff", marginTop: 24, marginRight: 16 }}
+                style={{ color: colors.text, marginTop: 24, marginRight: 16 }}
               >
                 افزودن رای گیری جدید
               </Typography>
@@ -319,7 +321,7 @@ export function PollBox(props) {
                 label="متن سوال"
                 variant="outlined"
                 color={"secondary"}
-                style={{ marginRight: 32, marginTop: 24 }}
+                style={{ marginRight: 32, marginTop: 24, color: colors.text }}
                 defaultValue={pollQuestion}
                 onChange={(event) => {
                   setPollQuestion(event.target.value);
@@ -339,7 +341,7 @@ export function PollBox(props) {
                         label={"گزینه ی" + " " + (index + 1)}
                         variant="outlined"
                         color={"secondary"}
-                        style={{ marginRight: 12, marginTop: 16 }}
+                        style={{ marginRight: 12, marginTop: 16, color: colors.text }}
                         defaultValue={pollOptions[index].caption}
                         onChange={(event) => {
                           let options = pollOptions;
@@ -349,7 +351,7 @@ export function PollBox(props) {
                         }}
                       />
                       <IconButton
-                        style={{ color: "#fff" }}
+                        style={{ color: colors.icon }}
                         onClick={() => {
                           let options = pollOptions;
                           options.splice(index, 1);
@@ -367,7 +369,7 @@ export function PollBox(props) {
               <Button
                 variant={"outlined"}
                 style={{
-                  color: "#fff",
+                  color: colors.text,
                   width: 246,
                   height: 56,
                   marginTop: 16,
@@ -396,15 +398,14 @@ export function PollBox(props) {
             >
               <ThemeProvider theme={theme}>
                 <Button
-                  color="secondary"
                   variant={"outlined"}
-                  style={{ margin: 8 }}
+                  style={{ margin: 8, color: colors.text, borderColor: colors.text }}
                   onClick={() => setAddOpen(false)}
                 >
                   لغو
                 </Button>
                 <Button
-                  style={{ margin: 8 }}
+                  style={{ margin: 8, color: colors.text, borderColor: colors.text }}
                   color="secondary"
                   variant={"outlined"}
                   onClick={() => {

@@ -118,6 +118,7 @@ export default function FilesGrid(props) {
         position: "relative",
         overflow: "hidden",
         height: "auto",
+        minHeight: 'calc(100% - 144px)'
       }}
     >
       <div className={classes.root} style={{ height: "auto" }}>
@@ -212,7 +213,7 @@ export default function FilesGrid(props) {
                       {props.fileType === "video" ? (
                         <IconButton
                           onClick={() => {
-                            openVideoPlayer(props.moduleWorkerId, file.id);
+                            openVideoPlayer(props.moduleWorkerId, file.id, props.roomId);
                           }}
                           style={{
                             width: 40,
@@ -234,7 +235,8 @@ export default function FilesGrid(props) {
                               file.local
                                 ? file.src
                                 : serverRoot +
-                                    `/file/download_file?token=${token}&roomId=${props.roomId}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`
+                                    `/file/download_file?token=${token}&roomId=${props.roomId}&moduleWorkerId=${props.moduleWorkerId}&fileId=${file.id}`,
+                              props.roomId
                             );
                           }}
                           style={{

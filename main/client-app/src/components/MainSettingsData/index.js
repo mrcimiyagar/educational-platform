@@ -51,15 +51,15 @@ export default function MainSettingsData(props) {
       >
         <Toolbar style={{ width: "100%", paddingTop: 4 }}>
           <IconButton onClick={handleClose}>
-            <ArrowForward style={{ fill: colors.icon }} />
+            <ArrowForward style={{ fill: colors.oposText }} />
           </IconButton>
           <Typography
-            style={{ color: colors.text, textAlign: "right", flex: 1 }}
+            style={{ color: colors.oposText, textAlign: "right", flex: 1 }}
           >
             زبان
           </Typography>
           <IconButton>
-            <Search style={{ fill: colors.icon }} />
+            <Search style={{ fill: colors.oposText }} />
           </IconButton>
         </Toolbar>
       </AppBar>

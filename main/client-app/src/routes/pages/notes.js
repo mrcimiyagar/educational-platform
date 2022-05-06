@@ -53,8 +53,8 @@ export default function NotePage(props) {
                     direction: 'rtl'
                 }}>
                     <Toolbar style={{marginTop: (isDesktop() || isTablet()) ? 0 : 8, width: '100%', height: '100%'}}>
-                    <IconButton onClick={() => handleClose()}><ArrowForward style={{fill: colors.icon}}/></IconButton>
-                    <Typography variant={'h6'} style={{color: colors.text, flex: 1, textAlign: 'right'}}>یادداشت ها</Typography>
+                    <IconButton onClick={() => handleClose()}><ArrowForward style={{fill: colors.oposText}}/></IconButton>
+                    <Typography variant={'h6'} style={{color: colors.oposText, flex: 1, textAlign: 'right'}}>یادداشت ها</Typography>
                     </Toolbar>
                 </AppBar>
                 <div style={{width: '100%', height: 'calc(100% - 64px)', marginTop: 64}}>

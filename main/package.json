@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "album-art": "^2.0.2",
     "async": "0.2.x",
     "async-lock": "^1.2.6",
     "body-parser": "^1.19.0",

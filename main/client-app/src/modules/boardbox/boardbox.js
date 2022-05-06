@@ -1,9 +1,10 @@
-import { Dialog, IconButton, Slide } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import { AppBar, Dialog, IconButton, Slide, Toolbar } from "@material-ui/core";
+import { ArrowForward, Close } from "@material-ui/icons";
 import { colors } from "../../util/settings";
 import React from "react";
 import { pathConfig } from "../..";
 import "./style.css";
+import { Typography } from "@mui/material";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
@@ -33,6 +34,8 @@ export let BoardBox = (props) => {
         top: 0,
       }}
     >
+      <AppBar style={{backgroundColor: colors.primaryMedium, direction: 'rtl', height: 64}}>
+        <Toolbar style={{paddingTop: 4}}>
       <IconButton
         onClick={() => {
           setOpen(false);
@@ -40,24 +43,21 @@ export let BoardBox = (props) => {
             props.onClose();
           }, 250);
         }}
-        style={{
-          position: "fixed",
-          left: 8,
-          top: 8,
-          width: 40,
-          height: 40,
-          backgroundColor: colors.field,
-        }}
       >
-        <Close style={{ fill: colors.icon }} />
+        <ArrowForward style={{ fill: colors.oposText }} />
       </IconButton>
+      <Typography style={{textAlign: 'right', justifyContent: 'right', alignItems: 'right', color: colors.oposText}}>
+        وایت بورد
+      </Typography>
+        </Toolbar>
+      </AppBar>
       <div
         id={props.id}
         style={{
           backgroundColor: "transparent",
           background: "transparent",
           height: "calc(100% - 56px)",
-          marginTop: 56,
+          marginTop: 64,
           width: "100%",
           position: "relative",
           zIndex: 99999,

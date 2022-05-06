@@ -74,13 +74,13 @@ const useStyles = makeStyles((theme) => ({
       height: '100%',
     },
     indicator: {
-      backgroundColor: '#fff',
+      backgroundColor: colors.oposText,
     },
     tab: {
       minWidth: isDesktop() || isTablet() ? 100 : undefined,
       maxWidth: isDesktop() || isTablet() ? 100 : undefined,
       width: isDesktop() || isTablet() ? 100 : undefined,
-      color: colors.text,
+      color: colors.oposText,
     },
 }));
 
@@ -125,21 +125,25 @@ export default function HomeMessenger(props) {
                   classes={{ root: classes.tab }}
                   icon={<SmartToyOutlinedIcon />}
                   label="ربات ها"
+                  style={{color: colors.oposText}}
                 />
                 <Tab
                   classes={{ root: classes.tab }}
                   icon={<RadioIcon />}
                   label="کانال ها"
+                  style={{color: colors.oposText}}
                 />
                 <Tab
                   classes={{ root: classes.tab }}
                   icon={<GroupIcon />}
                   label="گروه ها"
+                  style={{color: colors.oposText}}
                 />
                 <Tab
                   classes={{ root: classes.tab }}
-                  icon={<ChatIcon />}
+                  icon={<ChatIcon  />}
                   label="چت ها"
+                  style={{color: colors.oposText}}
                 />
               </Tabs>
             </AppBar>

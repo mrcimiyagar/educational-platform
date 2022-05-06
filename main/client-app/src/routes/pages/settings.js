@@ -84,11 +84,11 @@ function SettingsPage(props) {
             <IconButton
               style={{ width: 32, height: 32, position: 'absolute', left: 16 }}
             >
-              <Search style={{ fill: colors.icon }} />
+              <Search style={{ fill: colors.oposText }} />
             </IconButton>
             <Typography
               variant={'h6'}
-              style={{ color: colors.text, position: 'absolute', right: 16 + 32 + 16 }}
+              style={{ color: colors.oposText, position: 'absolute', right: 16 + 32 + 16 }}
             >
               تنظیمات روم
             </Typography>
@@ -96,7 +96,7 @@ function SettingsPage(props) {
               style={{ width: 32, height: 32, position: 'absolute', right: 16 }}
               onClick={() => handleClose()}
             >
-              <ArrowForward style={{ fill: colors.icon }} />
+              <ArrowForward style={{ fill: colors.oposText }} />
             </IconButton>
           </Toolbar>
         </AppBar>

@@ -209,14 +209,14 @@ export let FileBox = (props) => {
                 left: 16,
               }}
             >
-              <Search style={{ fill: "#fff" }} />
+              <Search style={{ fill: colors.oposText }} />
             </IconButton>
             <Typography
               variant={"h6"}
               style={{
                 position: "absolute",
                 right: 16 + 32 + 16,
-                color: "#fff",
+                color: colors.oposText,
               }}
             >
               فایل ها
@@ -235,7 +235,7 @@ export let FileBox = (props) => {
                 }, 250);
               }}
             >
-              <ArrowForward style={{ fill: "#fff" }} />
+              <ArrowForward style={{ fill: colors.oposText }} />
             </IconButton>
           </Toolbar>
           <Tabs
@@ -245,29 +245,29 @@ export let FileBox = (props) => {
             classes={{
               indicator: classes.indicator,
             }}
-            style={{ marginTop: 8, color: "#fff" }}
+            style={{ marginTop: 8, color: colors.oposText }}
           >
-            <Tab icon={<Photo style={{ fill: "#fff" }} />} label="عکس ها" />
+            <Tab icon={<Photo style={{ fill: colors.oposText }} />} label="عکس ها" />
             <Tab
-              icon={<Audiotrack style={{ fill: "#fff" }} />}
+              icon={<Audiotrack style={{ fill: colors.oposText }} />}
               label="صدا ها"
             />
             <Tab
-              icon={<PlayCircleFilled style={{ fill: "#fff" }} />}
+              icon={<PlayCircleFilled style={{ fill: colors.oposText }} />}
               label="ویدئو ها"
             />
             <Tab
-              icon={<InsertDriveFile style={{ fill: "#fff" }} />}
+              icon={<InsertDriveFile style={{ fill: colors.oposText }} />}
               label="سند ها"
             />
           </Tabs>
         </AppBar>
         <div
           style={{
-            height: "100%",
-            backgroundColor: colors.backSide
+            height: "100%"
           }}
         >
+          <div style={{position: 'fixed', top: 72 + 72, backgroundColor: colors.backSide, height: 'calc(100% - 144px)', width: '100%'}} />
           <SwipeableViews
             axis={"x-reverse"}
             index={fileMode}
@@ -275,7 +275,7 @@ export let FileBox = (props) => {
             style={{ height: "100%" }}
           >
             <div style={{ height: "100%" }}>
-              <div style={{height: 112}} />
+              <div style={{height: 72 + 72}} />
               <FilesGrid
                 fileType={"photo"}
                 files={files.filter((f) => f.fileType === "photo")}
@@ -286,7 +286,7 @@ export let FileBox = (props) => {
               />
             </div>
             <div style={{ height: "100%" }}>
-              <div style={{height: 112}} />
+              <div style={{height: 72 + 72}} />
               <FilesGrid
                 fileType={"audio"}
                 files={files.filter((f) => f.fileType === "audio")}
@@ -296,7 +296,7 @@ export let FileBox = (props) => {
               />
             </div>
             <div style={{ height: "100%" }}>
-              <div style={{height: 112}} />
+              <div style={{height: 72 + 72}} />
               <FilesGrid
                 fileType={"video"}
                 files={files.filter((f) => f.fileType === "video")}
@@ -306,7 +306,7 @@ export let FileBox = (props) => {
               />
             </div>
             <div style={{ height: "100%" }}>
-              <div style={{height: 112}} />
+              <div style={{height: 72 + 72}} />
               <FilesGrid
                 fileType={"document"}
                 files={files.filter((f) => f.fileType === "document")}

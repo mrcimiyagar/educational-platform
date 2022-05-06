@@ -66,26 +66,26 @@ export default function Deck(props) {
             <IconButton
               onClick={() => handleClose()}
             >
-              <ArrowForward style={{ fill: colors.icon }} />
+              <ArrowForward style={{ fill: colors.oposText }} />
             </IconButton>
             <Typography
               variant={'h6'}
-              style={{ textAlign: 'right', color: colors.text, flex: 1 }}
+              style={{ textAlign: 'right', color: colors.oposText, flex: 1 }}
             >
               تابلو
             </Typography>
             <IconButton
               onClick={() => setPresentMenuOpen(true)}
             >
-              <ViewListIcon style={{ fill: colors.icon }} />
+              <ViewListIcon style={{ fill: colors.oposText }} />
             </IconButton>
             <IconButton>
-              <Search style={{ fill: colors.icon }} />
+              <Search style={{ fill: colors.oposText }} />
             </IconButton>
           </Toolbar>
         </AppBar>
         <div
-          style={{ width: '100%', height: 'calc(100% - 64px)', marginTop: 72 }}
+          style={{ width: '100%', height: 'calc(100% - 64px)', marginTop: 64 }}
         >
           <PresentBox
             style={{ display: 'block' }}

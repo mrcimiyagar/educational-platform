@@ -3,8 +3,8 @@ import { pathConfig } from "../../index";
 import { colors, me } from "../../util/settings";
 import "./style.css";
 import Dialog from "@material-ui/core/Dialog";
-import { IconButton, Slide } from "@material-ui/core";
-import { Close } from "@material-ui/icons";
+import { AppBar, IconButton, Slide, Toolbar, Typography } from "@material-ui/core";
+import { ArrowForward, Close } from "@material-ui/icons";
 
 let TRANSLATION_TABLE = {
   "Add another lane": "افزودن لیست",
@@ -51,6 +51,8 @@ export let TaskBox = (props) => {
         top: 0,
       }}
     >
+      <AppBar style={{backgroundColor: colors.primaryMedium, direction: 'rtl', height: 64}}>
+        <Toolbar style={{paddingTop: 4}}>
       <IconButton
         onClick={() => {
           setOpen(false);
@@ -58,23 +60,20 @@ export let TaskBox = (props) => {
             props.onClose();
           }, 250);
         }}
-        style={{
-          position: "fixed",
-          left: 8,
-          top: 8,
-          width: 40,
-          height: 40,
-          backgroundColor: colors.field,
-        }}
       >
-        <Close style={{ fill: colors.icon }} />
+        <ArrowForward style={{ fill: colors.oposText }} />
       </IconButton>
+      <Typography style={{textAlign: 'right', justifyContent: 'right', alignItems: 'right', color: colors.oposText}}>
+        تسک بورد
+      </Typography>
+        </Toolbar>
+      </AppBar>
       <div
         id={props.id}
         style={{
           height: "calc(100% - 56px)",
           width: '100%',
-          marginTop: 56,
+          marginTop: 64,
           position: "relative",
           zIndex: 99999,
         }}
