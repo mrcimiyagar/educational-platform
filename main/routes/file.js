@@ -198,28 +198,25 @@ router.post("/upload_file", jsonParser, async function (req, res) {
                 console.log(`stderr: ${stderr}`);
               }
               console.log(`stdout: ${stdout}`);
-              exec(
-                `ffmpeg -an -vcodec copy -i ${
-                  rootPath + "/temp/" + file.id + "." + ext
-                } ${
-                  rootPath + "/files/" + preview.id + ".jpg"
-                }`,
-                (error, stdout, stderr) => {
-                  if (error) {
-                    console.log(`error 2: ${error.message}`);
-                  }
-                  if (stderr) {
-                    console.log(`stderr 2: ${stderr}`);
-                  }
-                  console.log(`stdout 2: ${stdout}`);
+
+              jsmediatags.read(rootPath + "/temp/" + file.id + "." + ext, {
+                onSuccess: async function (tag) {
+                  console.log(tag);
+                  var picture = tags.tags.picture;
+                  file.name = tag.tags.title;
+                  await file.save();
+                  fs.writeFileSync(rootPath + "/files/" + preview.id, picture);
                   require("../server").pushTo(
                     "room_" + membership.roomId,
                     "file-added",
                     file
                   );
                   res.send({ status: "success", file: file });
-                }
-              );
+                },
+                onError: function (error) {
+                  console.log(":(", error.type, error.info);
+                },
+              });
             }
           );
         };
