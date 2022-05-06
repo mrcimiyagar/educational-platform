@@ -199,9 +199,9 @@ router.post("/upload_file", jsonParser, async function (req, res) {
               }
               console.log(`stdout: ${stdout}`);
               exec(
-                `ffmpeg -i ${
+                `ffmpeg -an -vcodec copy -i ${
                   rootPath + "/temp/" + file.id + "." + ext
-                } -an -vcodec copy ${
+                } ${
                   rootPath + "/files/" + preview.id + ".jpg"
                 }`,
                 (error, stdout, stderr) => {
