@@ -183,17 +183,21 @@ router.post('/upload_file', jsonParser, async function (req, res) {
           rootPath + '/files/' + file.id,
           rootPath + '/temp/' + file.id + '.' + ext,
         )
-        jsmediatags.read(rootPath + '/temp/' + file.id + '.' + ext, {
-          onSuccess: async function(tag) {
-            console.log(tag);
-            file.name = tag.tags.title;
-            await file.save();
-            fs.writeFileSync(rootPath + '/files/' + preview.id, tag.tags.picture);
-          },
-          onError: function(error) {
-            console.log(':(', error.type, error.info);
-          }
-        });
+        new jsmediatags.Reader(rootPath + '/temp/' + file.id + '.' + ext)
+          .setTagsToRead(["comment", "track", "lyrics", "picture"])
+          .read({
+            onSuccess: function(tag) {
+              console.log(tag);
+              file.name = tag.tags.title;
+              await file.save();
+              fs.writeFileSync(rootPath + '/files/' + preview.id, tag.tags.picture);
+            },
+            onError: function(error) {
+              if (error.type === "xhr") {
+                console.log("There was a network error: ", error.xhr);
+              }
+            }
+          });
         let calculatingGraph = () => {
             exec(
                 `audiowaveform -i ${rootPath + '/temp/' + file.id + '.' + ext} -o ${
