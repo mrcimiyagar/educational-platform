@@ -1,67 +1,69 @@
-const sw = require('../db/models')
-const express = require('express')
-const tools = require('../tools')
-const Sequelize = require('sequelize')
-const formidable = require('formidable')
-const fs = require('fs')
-const bodyParser = require('body-parser')
-const { rootPath, parentPath } = require('../tools')
-const path = require('path')
-const { exec } = require('child_process')
-const { authenticateMember } = require('../users')
-const { fromPath } = require('pdf2pic')
-const genThumbnail = require('simple-thumbnail')
+const sw = require("../db/models");
+const express = require("express");
+const tools = require("../tools");
+const Sequelize = require("sequelize");
+const formidable = require("formidable");
+const fs = require("fs");
+const bodyParser = require("body-parser");
+const { rootPath, parentPath } = require("../tools");
+const path = require("path");
+const { exec } = require("child_process");
+const { authenticateMember } = require("../users");
+const { fromPath } = require("pdf2pic");
+const genThumbnail = require("simple-thumbnail");
 const jsmediatags = require("jsmediatags");
 
-const router = express.Router()
-let jsonParser = bodyParser.json()
+const router = express.Router();
+let jsonParser = bodyParser.json();
 
 function getFilesizeInBytes(filename) {
-  var stats = fs.statSync(filename)
-  var fileSizeInBytes = stats.size
-  return fileSizeInBytes
+  var stats = fs.statSync(filename);
+  var fileSizeInBytes = stats.size;
+  return fileSizeInBytes;
 }
 
-router.post('/upload_file', jsonParser, async function (req, res) {
+router.post("/upload_file", jsonParser, async function (req, res) {
   let ext = req.query.extension;
-  let isPresent = req.query.isPresent === 'true' ? true : false;
+  let isPresent = req.query.isPresent === "true" ? true : false;
   authenticateMember(req, res, async (membership, session, user) => {
-    require('../server').pushTo('room_' + membership.roomId, 'uploading', {});
+    require("../server").pushTo("room_" + membership.roomId, "uploading", {});
     if (!membership.canUploadFile) {
       res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
       });
       return;
     }
     let mwId = req.query.moduleWorkerId;
     if (mwId === undefined) {
-      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      let r = await sw.Room.findOne({ where: { id: membership.roomId } });
       mwId = r.fileStorageId;
     }
-    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    let mw = await sw.ModuleWorker.findOne({
+      where: { id: mwId, roomId: membership.roomId },
+    });
     if (mw === null) {
       res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
       });
       return;
     }
     let form = new formidable.IncomingForm();
     form.parse(req, async function (err, fields, files) {
-      if (!fs.existsSync('files')) {
-        fs.mkdirSync('files', { recursive: true })
+      if (!fs.existsSync("files")) {
+        fs.mkdirSync("files", { recursive: true });
       }
       let preview = await sw.File.create({
-        extension: 'png',
+        extension: "png",
         uploaderId: session.userId,
         moduleWorkerId: mw.id,
         isPreview: true,
         isPresent: isPresent,
-        fileType: 'photo',
-      })
+        fileType: "photo",
+      });
       let file = await sw.File.create({
         extension: ext,
         uploaderId: session.userId,
@@ -70,259 +72,275 @@ router.post('/upload_file', jsonParser, async function (req, res) {
         isPreview: false,
         isPresent: isPresent,
         fileType:
-          ext === 'png' ||
-          ext === 'jpg' ||
-          ext === 'jpeg' ||
-          ext === 'gif' ||
-          ext === 'svg' ||
-          ext === 'webp'
-            ? 'photo'
-            : ext === 'wav' || ext === 'mpeg' || ext === 'mp3' || ext === 'aac'
-            ? 'audio'
-            : ext === 'webm' ||
-              ext === 'mkv' ||
-              ext === 'flv' ||
-              ext === '3gp' ||
-              ext === 'mp4'
-            ? 'video'
-            : 'document',
-      })
-      let oldPath = files.file.path
-      let newPath = rootPath + '/files/' + file.id
-      fs.copyFileSync(oldPath, newPath)
+          ext === "png" ||
+          ext === "jpg" ||
+          ext === "jpeg" ||
+          ext === "gif" ||
+          ext === "svg" ||
+          ext === "webp"
+            ? "photo"
+            : ext === "wav" || ext === "mpeg" || ext === "mp3" || ext === "aac"
+            ? "audio"
+            : ext === "webm" ||
+              ext === "mkv" ||
+              ext === "flv" ||
+              ext === "3gp" ||
+              ext === "mp4"
+            ? "video"
+            : "document",
+      });
+      let oldPath = files.file.path;
+      let newPath = rootPath + "/files/" + file.id;
+      fs.copyFileSync(oldPath, newPath);
 
-      require('../server').pushTo(
-        'room_' + membership.roomId,
-        'uploading_done',
-        {},
-      )
+      require("../server").pushTo(
+        "room_" + membership.roomId,
+        "uploading_done",
+        {}
+      );
 
-      if (ext === 'pdf') {
-        let previewFactoryPath = rootPath + '/temp/' + file.id + '.pdf'
-        fs.copyFileSync(oldPath, previewFactoryPath)
+      if (ext === "pdf") {
+        let previewFactoryPath = rootPath + "/temp/" + file.id + ".pdf";
+        fs.copyFileSync(oldPath, previewFactoryPath);
       }
 
-      if (ext === 'pdf') {
+      if (ext === "pdf") {
         const options = {
           density: 100,
           saveFilename: file.id,
-          savePath: './pdfPages',
-          format: 'png',
+          savePath: "./pdfPages",
+          format: "png",
           width: 600,
           height: 850,
-        }
+        };
         const convert = fromPath(
-          rootPath + '/temp/' + file.id + '.pdf',
-          options,
-        )
+          rootPath + "/temp/" + file.id + ".pdf",
+          options
+        );
         convert(1, true).then((output) => {
-          console.log('converted successfully.')
+          console.log("converted successfully.");
 
           fs.writeFile(
-            rootPath + '/files/' + preview.id,
+            rootPath + "/files/" + preview.id,
             output.base64,
-            'base64',
+            "base64",
             function (err) {
-              console.log(err)
-            },
-          )
+              console.log(err);
+            }
+          );
 
-          require('../server').pushTo(
-            'room_' + membership.roomId,
-            'file-added',
-            file,
-          )
-          res.send({ status: 'success', file: file })
-        })
+          require("../server").pushTo(
+            "room_" + membership.roomId,
+            "file-added",
+            file
+          );
+          res.send({ status: "success", file: file });
+        });
       } else if (
-        ext === 'webm' ||
-        ext === 'mkv' ||
-        ext === 'flv' ||
-        ext === '3gp'
+        ext === "webm" ||
+        ext === "mkv" ||
+        ext === "flv" ||
+        ext === "3gp"
       ) {
         genThumbnail(
-          'files/' + file.id,
-          'files/' + preview.id + '.jpg',
-          '375x256',
+          "files/" + file.id,
+          "files/" + preview.id + ".jpg",
+          "375x256"
         )
           .then(() => {
-            console.log('done!')
-            require('../server').pushTo(
-              'room_' + membership.roomId,
-              'file-added',
-              file,
-            )
-            res.send({ status: 'success', file: file })
+            console.log("done!");
+            require("../server").pushTo(
+              "room_" + membership.roomId,
+              "file-added",
+              file
+            );
+            res.send({ status: "success", file: file });
           })
-          .catch((err) => console.error(err))
+          .catch((err) => console.error(err));
       } else if (
-        ext === 'png' ||
-        ext === 'jpg' ||
-        ext === 'jpeg' ||
-        ext === 'gif' ||
-        ext === 'svg' ||
-        ext === 'webp'
+        ext === "png" ||
+        ext === "jpg" ||
+        ext === "jpeg" ||
+        ext === "gif" ||
+        ext === "svg" ||
+        ext === "webp"
       ) {
         fs.copyFileSync(
-          rootPath + '/files/' + file.id,
-          rootPath + '/files/' + preview.id,
-        )
-        require('../server').pushTo(
-          'room_' + membership.roomId,
-          'file-added',
-          file,
-        )
-        res.send({ status: 'success', file: file })
+          rootPath + "/files/" + file.id,
+          rootPath + "/files/" + preview.id
+        );
+        require("../server").pushTo(
+          "room_" + membership.roomId,
+          "file-added",
+          file
+        );
+        res.send({ status: "success", file: file });
       } else if (
-        ext === 'wav' ||
-        ext === 'mp3' ||
-        ext === 'mpeg' ||
-        ext === 'aac'
+        ext === "wav" ||
+        ext === "mp3" ||
+        ext === "mpeg" ||
+        ext === "aac"
       ) {
         fs.copyFileSync(
-          rootPath + '/files/' + file.id,
-          rootPath + '/temp/' + file.id + '.' + ext,
-        )
-        new jsmediatags.Reader(rootPath + '/temp/' + file.id + '.' + ext)
-          .setTagsToRead(["comment", "track", "lyrics", "picture"])
-          .read({
-            onSuccess: async function(tag) {
-              console.log(tag);
-              file.name = tag.tags.title;
-              await file.save();
-              fs.writeFileSync(rootPath + '/files/' + preview.id, tag.tags.picture);
-            },
-            onError: function(error) {
-              if (error.type === "xhr") {
-                console.log("There was a network error: ", error.xhr);
-              }
-            }
-          });
+          rootPath + "/files/" + file.id,
+          rootPath + "/temp/" + file.id + "." + ext
+        );
         let calculatingGraph = () => {
-            exec(
-                `audiowaveform -i ${rootPath + '/temp/' + file.id + '.' + ext} -o ${
-                  rootPath + '/files/' + preview.id + '.json'
-                } -b 8 -z 256`,
+          exec(
+            `audiowaveform -i ${rootPath + "/temp/" + file.id + "." + ext} -o ${
+              rootPath + "/files/" + preview.id + ".json"
+            } -b 8 -z 256`,
+            (error, stdout, stderr) => {
+              if (error) {
+                console.log(`error: ${error.message}`);
+                res.send({ status: "success", file: file });
+                return;
+              }
+              if (stderr) {
+                console.log(`stderr: ${stderr}`);
+                res.send({ status: "success", file: file });
+                return;
+              }
+              console.log(`stdout: ${stdout}`);
+              exec(
+                `ffmpeg -i ${
+                  rootPath + "/temp/" + file.id + "." + ext
+                } -an -vcodec copy ${
+                  rootPath + "/files/" + preview.id + ".jpg"
+                }`,
                 (error, stdout, stderr) => {
                   if (error) {
-                    console.log(`error: ${error.message}`)
-                    res.send({ status: 'success', file: file })
-                    return
+                    console.log(`error 2: ${error.message}`);
+                    res.send({ status: "success", file: file });
+                    return;
                   }
                   if (stderr) {
-                    console.log(`stderr: ${stderr}`)
-                    res.send({ status: 'success', file: file })
-                    return
+                    console.log(`stderr 2: ${stderr}`);
+                    res.send({ status: "success", file: file });
+                    return;
                   }
-                  console.log(`stdout: ${stdout}`)
-                  require('../server').pushTo(
-                    'room_' + membership.roomId,
-                    'file-added',
-                    file,
-                  )
-                  res.send({ status: 'success', file: file })
-                },
-              )
-        }
-        if (ext === 'aac') {
-            exec(`ffmpeg -i ${rootPath + '/temp/' + file.id + '.' + ext} -vn -ar 44100 -ac 2 -b:a 192k ${rootPath + '/temp/' + file.id + '.' + 'mp3'}`,
-                (error, stdout, stderr) => {
-                    ext = 'mp3';
-                    calculatingGraph();
-                });
-        }
-        else {
-            calculatingGraph();
+                  console.log(`stdout 2: ${stdout}`);
+                  require("../server").pushTo(
+                    "room_" + membership.roomId,
+                    "file-added",
+                    file
+                  );
+                  res.send({ status: "success", file: file });
+                }
+              );
+            }
+          );
+        };
+        if (ext === "aac") {
+          exec(
+            `ffmpeg -i ${
+              rootPath + "/temp/" + file.id + "." + ext
+            } -vn -ar 44100 -ac 2 -b:a 192k ${
+              rootPath + "/temp/" + file.id + "." + "mp3"
+            }`,
+            (error, stdout, stderr) => {
+              ext = "mp3";
+              calculatingGraph();
+            }
+          );
+        } else {
+          calculatingGraph();
         }
       } else {
-        require('../server').pushTo(
-          'room_' + membership.roomId,
-          'file-added',
-          file,
-        )
-        res.send({ status: 'success', file: file })
+        require("../server").pushTo(
+          "room_" + membership.roomId,
+          "file-added",
+          file
+        );
+        res.send({ status: "success", file: file });
       }
-    })
-  })
-})
+    });
+  });
+});
 
-router.post('/download_audio_preview', jsonParser, async function (req, res) {
+router.post("/download_audio_preview", jsonParser, async function (req, res) {
   if (req.body.fileId === undefined) {
-    res.sendStatus(404)
-    return
+    res.sendStatus(404);
+    return;
   }
   authenticateMember(req, res, async (membership, session, user) => {
     let mwId = req.body.moduleWorkerId;
     if (mwId === undefined) {
-      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      let r = await sw.Room.findOne({ where: { id: membership.roomId } });
       mwId = r.fileStorageId;
     }
-    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    let mw = await sw.ModuleWorker.findOne({
+      where: { id: mwId, roomId: membership.roomId },
+    });
     if (mw === null) {
       res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
       });
       return;
     }
     sw.File.findOne({
       where: { moduleWorkerId: mw.id, id: req.body.fileId },
     }).then(async (file) => {
-      res.sendFile(rootPath + '/files/' + file.previewFileId + '.json')
-    })
-  })
-})
+      res.sendFile(rootPath + "/files/" + file.previewFileId + ".json");
+    });
+  });
+});
 
-router.get('/download_file_thumbnail', jsonParser, async function (req, res) {
+router.get("/download_file_thumbnail", jsonParser, async function (req, res) {
   if (req.query.fileId === undefined) {
     res.sendStatus(404);
-    return
+    return;
   }
   authenticateMember(req, res, async (membership, session, user) => {
     let mwId = req.query.moduleWorkerId;
     if (mwId === undefined) {
-      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      let r = await sw.Room.findOne({ where: { id: membership.roomId } });
       mwId = r.fileStorageId;
     }
-    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    let mw = await sw.ModuleWorker.findOne({
+      where: { id: mwId, roomId: membership.roomId },
+    });
     if (mw === null) {
       res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
       });
       return;
     }
     sw.File.findOne({
       where: { moduleWorkerId: mw.id, id: req.query.fileId },
     }).then(async (file) => {
-      if (fs.existsSync(rootPath + '/files/' + file.previewFileId)) {
-        res.sendFile(rootPath + '/files/' + file.previewFileId)
+      if (fs.existsSync(rootPath + "/files/" + file.previewFileId)) {
+        res.sendFile(rootPath + "/files/" + file.previewFileId);
       } else {
-        res.sendFile(rootPath + '/files/' + file.previewFileId + '.jpg')
+        res.sendFile(rootPath + "/files/" + file.previewFileId + ".jpg");
       }
-    })
-  })
-})
+    });
+  });
+});
 
-router.get('/download_file', jsonParser, async function (req, res) {
+router.get("/download_file", jsonParser, async function (req, res) {
   if (req.query.fileId === undefined) {
-    res.sendStatus(404)
-    return
+    res.sendStatus(404);
+    return;
   }
   authenticateMember(req, res, async (membership, session, user) => {
     let mwId = req.query.moduleWorkerId;
     if (mwId === undefined) {
-      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      let r = await sw.Room.findOne({ where: { id: membership.roomId } });
       mwId = r.fileStorageId;
     }
-    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    let mw = await sw.ModuleWorker.findOne({
+      where: { id: mwId, roomId: membership.roomId },
+    });
     if (mw === null) {
       res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
       });
       return;
     }
@@ -330,19 +348,19 @@ router.get('/download_file', jsonParser, async function (req, res) {
       where: { moduleWorkerId: mw.id, id: req.query.fileId },
     }).then(async (file) => {
       if (file === null) {
-        res.sendStatus(404)
-        return
+        res.sendStatus(404);
+        return;
       }
-      if (fs.existsSync(rootPath + '/files/' + file.id)) {
-        res.sendFile(rootPath + '/files/' + file.id)
+      if (fs.existsSync(rootPath + "/files/" + file.id)) {
+        res.sendFile(rootPath + "/files/" + file.id);
       } else {
-        res.sendFile(rootPath + '/files/' + file.id + '.jpg')
+        res.sendFile(rootPath + "/files/" + file.id + ".jpg");
       }
-    })
-  })
-})
+    });
+  });
+});
 
-router.get('/download_user_avatar', jsonParser, async function (req, res) {
+router.get("/download_user_avatar", jsonParser, async function (req, res) {
   sw.User.findOne({ where: { id: req.query.userId } }).then(async (user) => {
     if (user.avatarId === undefined || user.avatarId === null) {
       let randomAvatarId = -1 * (Math.floor(Math.random() * 10) + 1);
@@ -351,24 +369,24 @@ router.get('/download_user_avatar', jsonParser, async function (req, res) {
       user = await sw.User.findOne({ where: { id: req.query.userId } });
     }
     if (user.avatarId < 0) {
-      res.sendFile(rootPath + `/files/random-avatar${(user.avatarId * -1)}.png`);
+      res.sendFile(rootPath + `/files/random-avatar${user.avatarId * -1}.png`);
       return;
     }
     sw.File.findOne({ where: { id: user.avatarId } }).then(async (file) => {
       if (file === null) {
-        res.sendStatus(404)
-        return
+        res.sendStatus(404);
+        return;
       }
-      if (fs.existsSync(rootPath + '/files/' + file.id)) {
-        res.sendFile(rootPath + '/files/' + file.id)
+      if (fs.existsSync(rootPath + "/files/" + file.id)) {
+        res.sendFile(rootPath + "/files/" + file.id);
       } else {
-        res.sendFile(rootPath + '/files/' + file.id + '.jpg')
+        res.sendFile(rootPath + "/files/" + file.id + ".jpg");
       }
-    })
-  })
-})
+    });
+  });
+});
 
-router.get('/download_widget_thumbnail', jsonParser, async function (req, res) {
+router.get("/download_widget_thumbnail", jsonParser, async function (req, res) {
   let widget = await sw.Widget.findOne({ where: { id: req.query.widgetId } });
   if (widget.thumbnailId === undefined || widget.thumbnailId === null) {
     widget.thumbnailId = -1;
@@ -381,18 +399,18 @@ router.get('/download_widget_thumbnail', jsonParser, async function (req, res) {
   }
   sw.File.findOne({ where: { id: widget.thumbnailId } }).then(async (file) => {
     if (file === null) {
-      res.sendStatus(404)
-      return
+      res.sendStatus(404);
+      return;
     }
-    if (fs.existsSync(rootPath + '/files/' + file.id)) {
-      res.sendFile(rootPath + '/files/' + file.id)
+    if (fs.existsSync(rootPath + "/files/" + file.id)) {
+      res.sendFile(rootPath + "/files/" + file.id);
     } else {
-      res.sendFile(rootPath + '/files/' + file.id + '.jpg')
+      res.sendFile(rootPath + "/files/" + file.id + ".jpg");
     }
-  })
-})
+  });
+});
 
-router.get('/download_bot_avatar', jsonParser, async function (req, res) {
+router.get("/download_bot_avatar", jsonParser, async function (req, res) {
   let bot = await sw.Bot.findOne({ where: { id: req.query.botId } });
   if (bot.avatarId === undefined || bot.avatarId === null) {
     bot.avatarId = -1;
@@ -405,42 +423,42 @@ router.get('/download_bot_avatar', jsonParser, async function (req, res) {
   }
   sw.File.findOne({ where: { id: bot.avatarId } }).then(async (file) => {
     if (file === null) {
-      res.sendStatus(404)
-      return
+      res.sendStatus(404);
+      return;
     }
-    if (fs.existsSync(rootPath + '/files/' + file.id)) {
-      res.sendFile(rootPath + '/files/' + file.id)
+    if (fs.existsSync(rootPath + "/files/" + file.id)) {
+      res.sendFile(rootPath + "/files/" + file.id);
     } else {
-      res.sendFile(rootPath + '/files/' + file.id + '.jpg')
+      res.sendFile(rootPath + "/files/" + file.id + ".jpg");
     }
-  })
-})
+  });
+});
 
-router.get('/download_space_avatar', jsonParser, async function (req, res) {
+router.get("/download_space_avatar", jsonParser, async function (req, res) {
   sw.Space.findOne({ where: { id: req.query.spaceId } }).then(async (space) => {
     if (space.avatarId === undefined) {
-      res.sendStatus(404)
-      return
+      res.sendStatus(404);
+      return;
     }
     sw.File.findOne({ where: { id: space.avatarId } }).then(async (file) => {
       if (file === null) {
-        res.sendStatus(404)
-        return
+        res.sendStatus(404);
+        return;
       }
-      if (fs.existsSync(rootPath + '/files/' + file.id)) {
-        res.sendFile(rootPath + '/files/' + file.id)
+      if (fs.existsSync(rootPath + "/files/" + file.id)) {
+        res.sendFile(rootPath + "/files/" + file.id);
       } else {
-        res.sendFile(rootPath + '/files/' + file.id + '.jpg')
+        res.sendFile(rootPath + "/files/" + file.id + ".jpg");
       }
-    })
-  })
-})
+    });
+  });
+});
 
-router.get('/download_room_avatar', jsonParser, async function (req, res) {
+router.get("/download_room_avatar", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     if (membership === null) {
-      res.sendStatus(404)
-      return
+      res.sendStatus(404);
+      return;
     }
     sw.Room.findOne({ where: { id: req.query.roomId } }).then(async (room) => {
       if (room.avatarId === undefined || room.avatarId === null) {
@@ -449,50 +467,51 @@ router.get('/download_room_avatar', jsonParser, async function (req, res) {
         room = await sw.Room.findOne({ where: { id: req.query.roomId } });
       }
       if (room.avatarId < 0) {
-        if (room.chatType === 'group') {
+        if (room.chatType === "group") {
           res.sendFile(rootPath + `/files/group-image.png`);
-        }
-        else if (room.chatType === 'channel') {
+        } else if (room.chatType === "channel") {
           res.sendFile(rootPath + `/files/channel-image.png`);
         }
         return;
       }
       sw.File.findOne({ where: { id: room.avatarId } }).then(async (file) => {
         if (file === null) {
-          res.sendStatus(404)
-          return
+          res.sendStatus(404);
+          return;
         }
-        if (fs.existsSync(rootPath + '/files/' + file.id)) {
-          res.sendFile(rootPath + '/files/' + file.id)
+        if (fs.existsSync(rootPath + "/files/" + file.id)) {
+          res.sendFile(rootPath + "/files/" + file.id);
         } else {
-          res.sendFile(rootPath + '/files/' + file.id + '.jpg')
+          res.sendFile(rootPath + "/files/" + file.id + ".jpg");
         }
-      })
-    })
-  })
-})
+      });
+    });
+  });
+});
 
-router.post('/remove_file', jsonParser, async function (req, res) {
+router.post("/remove_file", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     if (!membership.canRemoveFile) {
       res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
-      })
-      return
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
+      });
+      return;
     }
     let mwId = req.body.moduleWorkerId;
     if (mwId === undefined) {
-      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      let r = await sw.Room.findOne({ where: { id: membership.roomId } });
       mwId = r.fileStorageId;
     }
-    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    let mw = await sw.ModuleWorker.findOne({
+      where: { id: mwId, roomId: membership.roomId },
+    });
     if (mw === null) {
       res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
       });
       return;
     }
@@ -501,33 +520,35 @@ router.post('/remove_file', jsonParser, async function (req, res) {
     }).then(async function (file) {
       if (file === null) {
         res.send({
-          status: 'error',
-          errorCode: 'e0005',
-          message: 'file does not exist.',
-        })
+          status: "error",
+          errorCode: "e0005",
+          message: "file does not exist.",
+        });
       }
-      await file.destroy()
-      require('../server')
-        .pushTo('room_' + membership.roomId)
-        .emit('file-removed', file)
-      res.send({ status: 'success' })
-    })
-  })
-})
+      await file.destroy();
+      require("../server")
+        .pushTo("room_" + membership.roomId)
+        .emit("file-removed", file);
+      res.send({ status: "success" });
+    });
+  });
+});
 
-router.post('/get_files', jsonParser, async function (req, res) {
+router.post("/get_files", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     let mwId = req.body.moduleWorkerId;
     if (mwId === undefined) {
-      let r = await sw.Room.findOne({where: {id: membership.roomId}});
+      let r = await sw.Room.findOne({ where: { id: membership.roomId } });
       mwId = r.fileStorageId;
     }
-    let mw = await sw.ModuleWorker.findOne({where: {id: mwId, roomId: membership.roomId}});
+    let mw = await sw.ModuleWorker.findOne({
+      where: { id: mwId, roomId: membership.roomId },
+    });
     if (mw === null) {
       res.send({
-        status: 'error',
-        errorCode: 'e0005',
-        message: 'access denied.',
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
       });
       return;
     }
@@ -539,9 +560,9 @@ router.post('/get_files', jsonParser, async function (req, res) {
         isPresent: req.body.isPresent === true ? true : false,
       },
     }).then(async function (files) {
-      res.send({ status: 'success', files: files })
-    })
-  })
-})
+      res.send({ status: "success", files: files });
+    });
+  });
+});
 
-module.exports = router
+module.exports = router;
