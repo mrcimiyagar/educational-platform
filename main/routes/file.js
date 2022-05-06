@@ -180,7 +180,7 @@ router.post('/upload_file', jsonParser, async function (req, res) {
         ext === 'aac'
       ) {
         jsmediatags.read(rootPath + '/files/' + file.id, {
-          onSuccess: function(tag) {
+          onSuccess: async function(tag) {
             console.log(tag);
             file.name = tag.tags.title;
             await file.save();
