@@ -179,7 +179,11 @@ router.post('/upload_file', jsonParser, async function (req, res) {
         ext === 'mpeg' ||
         ext === 'aac'
       ) {
-        jsmediatags.read(rootPath + '/files/' + file.id, {
+        fs.copyFileSync(
+          rootPath + '/files/' + file.id,
+          rootPath + '/temp/' + file.id + '.' + ext,
+        )
+        jsmediatags.read(rootPath + '/temp/' + file.id + '.' + ext, {
           onSuccess: async function(tag) {
             console.log(tag);
             file.name = tag.tags.title;
