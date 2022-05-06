@@ -179,8 +179,17 @@ router.post('/upload_present', jsonParser, async function (req, res) {
 
 router.get('/download_present', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
+    let mw = await sw.ModuleWorker.findOne({where: {roomId: membership.roomId, id: req.body.moduleWorkerId}});
+    if (mw === null) {
+      res.send({
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
+      });
+      return;
+    }
     sw.File.findOne({
-      where: { roomId: membership.roomId, moduleWorkerId: req.body.moduleWorkerId, id: req.query.fileId },
+      where: { moduleWorkerId: req.body.moduleWorkerId, id: req.query.fileId },
     }).then(async (file) => {
       res.sendFile(rootPath + '/files/' + file.id)
     })
@@ -189,8 +198,17 @@ router.get('/download_present', jsonParser, async function (req, res) {
 
 router.post('/get_presents', jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
+    let mw = await sw.ModuleWorker.findOne({where: {roomId: membership.roomId, id: req.body.moduleWorkerId}});
+    if (mw === null) {
+      res.send({
+        status: "error",
+        errorCode: "e0005",
+        message: "access denied.",
+      });
+      return;
+    }
     sw.File.findAll({raw: true,
-      where: { roomId: membership.roomId, moduleWorkerId: req.body.moduleWorkerId, isPreview: false, isPresent: true }
+      where: { moduleWorkerId: req.body.moduleWorkerId, isPreview: false, isPresent: true }
     }).then((files) => {
       sw.Present.findAll({raw: true, where: { fileId: files.map((f) => f.id) } }).then(
         async function (presents) {
@@ -235,9 +253,18 @@ router.post('/pick_present', jsonParser, async function (req, res) {
       return;
     }
     sw.Present.findOne({
-      where: { roomId: membership.roomId, moduleWorkerId: mw.id, id: req.body.presentId },
+      where: { id: req.body.presentId },
     }).then(async function (present) {
       if (present === null) {
+        res.send({
+          status: 'error',
+          errorCode: 'e0005',
+          message: 'presentation does not exist.',
+        })
+        return
+      }
+      let file = await sw.File.findOne({where: {id: present.fileId}});
+      if (file.moduleWorkerId !== mw.id) {
         res.send({
           status: 'error',
           errorCode: 'e0005',
@@ -345,7 +372,6 @@ router.post('/swich_page', jsonParser, async function (req, res) {
             present.pageNumber = req.body.pageNumber
             present.save()
             let fileId = present.fileId
-
             try {
               let newPath = rootPath + '/files/' + fileId
               let previewFactoryPath =
