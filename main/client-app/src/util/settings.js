@@ -15,6 +15,7 @@ export const LIGHT_THEME = {
   accent: 'rgba(255, 193, 7, 1)',
   accent2: 'rgba(0, 51, 103, 1)',
   accentDark: 'rgba(173, 203, 227, 0.65)',
+  nonTransparentPrimaryLight: 'rgba(187, 222, 251, 1)',
 };
 
 export const DARK_THEME = {
@@ -31,6 +32,7 @@ export const DARK_THEME = {
   accent2: 'rgba(0, 51, 103, 1)',
   accentDark: 'rgba(173, 203, 227, 0.65)',
   backSide: 'rgba(23, 29, 32, 0.5)',
+  nonTransparentPrimaryLight: 'rgba(24, 34, 44, 1)',
 };
 
 export let theme = undefined;
