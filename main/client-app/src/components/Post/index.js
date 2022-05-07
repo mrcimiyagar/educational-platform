@@ -22,7 +22,8 @@ export default function Post() {
     root: {
       width: '100%',
       marginTop: 16,
-      backgroundColor: colors.field
+      backgroundColor: colors.field,
+      borderRadius: 16
     },
     media: {
       height: 0,
@@ -68,7 +69,7 @@ export default function Post() {
       />
       <CardMedia
         className={classes.media}
-        image="https://ebazzarbd.com/wp-content/uploads/2021/03/Food.jpg"
+        image="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=164&h=164&fit=crop&auto=format"
         title="Paella dish"
       />
       <CardContent>

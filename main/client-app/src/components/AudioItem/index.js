@@ -40,13 +40,13 @@ export default function AudioItem(props) {
         </ListItemAvatar>
         <ListItemText
           primary="102. Egmont, Op. 84 Overture"
-          style={{textAlign: 'right', width: '100%'}}
+          style={{textAlign: 'right', width: '100%', color: colors.text}}
           secondary={
               <Typography
                 component="span"
                 variant="body2"
                 color="text.primary"
-                style={{display: 'inline', width: '100%', textAlign: 'right' }}
+                style={{display: 'inline', width: '100%', textAlign: 'right', color: colors.text }}
               >
                 Ludwig van Bethoven
               </Typography>

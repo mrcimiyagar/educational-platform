@@ -16,6 +16,7 @@ export default function SearchEngineResultsSearchbar(props) {
       display: "flex",
       alignItems: "center",
       width: "calc(100% - 32px)",
+      height: 48,
       direction: "rtl",
       backdropFilter: "blur(10px)",
       borderRadius: 24,

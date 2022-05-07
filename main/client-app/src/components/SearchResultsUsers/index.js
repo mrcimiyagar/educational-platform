@@ -32,6 +32,7 @@ export default function SearchResultsUsers(props) {
         marginLeft: -8,
         marginRight: -8,
         backgroundColor: colors.field,
+        borderRadius: 16
       }}
     >
       <List className={classes.root}>

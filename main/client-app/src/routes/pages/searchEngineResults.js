@@ -4,6 +4,7 @@ import {
   Dialog,
   ImageList,
   ImageListItem,
+  Paper,
   Slide,
   Toolbar,
   Typography,
@@ -70,14 +71,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function SearchEngineResults(props) {
   const useStyles = makeStyles((theme) => ({
     indicator: {
-      backgroundColor: colors.icon,
+      backgroundColor: colors.oposText,
     },
     imageList: {
       overflow: "auto",
     },
   }));
 
-  document.documentElement.style.overflow = 'hidden';
+  document.documentElement.style.overflow = "hidden";
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -272,45 +273,26 @@ function SearchEngineResults(props) {
           height: "100%",
           position: "fixed",
           left: 0,
-          top: 0
+          top: 0,
         }}
       >
         <div style={{ width: "100%", height: "100%" }}>
-            <AppBar
-              style={{
-                backgroundColor: colors.primaryMedium,
-                backdropFilter: "blur(20px)",
-              }}
-            >
-              <Toolbar style={{ marginTop: 16 }}>
-                <SearchEngineResultsSearchbar
-                  handleClose={handleClose}
-                  onQueryChange={(q) => {
-                    setQuery(q);
-                    fetchTotal();
-                  }}
-                />
-              </Toolbar>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                variant="scrollable"
-                scrollButtons="on"
-                classes={{
-                  indicator: classes.indicator,
+          <AppBar
+            style={{
+              backgroundColor: colors.primaryMedium,
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <Toolbar style={{ marginTop: 16, marginBottom: 16 }}>
+              <SearchEngineResultsSearchbar
+                handleClose={handleClose}
+                onQueryChange={(q) => {
+                  setQuery(q);
+                  fetchTotal();
                 }}
-                style={{ marginTop: 8 }}
-              >
-                <Tab icon={<EmailIcon />} label="پست ها" />
-                <Tab icon={<PeopleIcon />} label="کاربران" />
-                <Tab icon={<RedditIcon />} label="بات ها" />
-                <Tab icon={<AccountBalanceIcon />} label="فضا ها" />
-                <Tab icon={<Photo />} label="عکس ها" />
-                <Tab icon={<Audiotrack />} label="صدا ها" />
-                <Tab icon={<Videocam />} label="ویدئو ها" />
-                <Tab icon={<Chat />} label="پیام ها" />
-              </Tabs>
-            </AppBar>
+              />
+            </Toolbar>
+          </AppBar>
           <SwipeableViews
             axis={"x-reverse"}
             index={value}
@@ -327,7 +309,7 @@ function SearchEngineResults(props) {
                 }}
                 cols={1}
               >
-                <div style={{ width: "100%", height: 112 + 24 }} />
+                <div style={{ width: "100%", height: 80 }} />
                 {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((index) => (
                   <ImageListItem key={"search-post-" + 0} cols={1}>
                     <Post />
@@ -337,11 +319,17 @@ function SearchEngineResults(props) {
               </ImageList>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <div style={{ height: 112 + 24 }} />
-              <SearchResultsUsers data={users} onUserSelected={(userId) => {setSelectedUserId(userId); setShowProfile(true);}}/>
+              <div style={{ height: 80 }} />
+              <SearchResultsUsers
+                data={users}
+                onUserSelected={(userId) => {
+                  setSelectedUserId(userId);
+                  setShowProfile(true);
+                }}
+              />
             </TabPanel>
             <TabPanel value={value} index={2}>
-              <div style={{ height: 88 }} />
+              <div style={{ height: 80 }} />
               <ImageList rowHeight={196} className={classes.imageList} cols={2}>
                 {bots.length > 0 ? (
                   bots.map((bot) => (
@@ -426,7 +414,7 @@ function SearchEngineResults(props) {
                   marginLeft: -16,
                   marginRight: -16,
                   width: "calc(100% + 32px)",
-                  zIndex: 2
+                  zIndex: 2,
                 }}
               >
                 {rooms.length > 0 ? (
@@ -503,7 +491,7 @@ function SearchEngineResults(props) {
               <PhotoGrid data={photos} />
             </TabPanel>
             <TabPanel value={value} index={5}>
-              <div style={{ height: 88 }} />
+              <div style={{ height: 80 }} />
               {audios.length > 0 ? (
                 <ImageList
                   rowHeight={196}
@@ -590,12 +578,79 @@ function SearchEngineResults(props) {
               <SearchResultsVideos data={videos} />
             </TabPanel>
             <TabPanel value={value} index={7}>
-              <div style={{ height: 88 }} />
+              <div style={{ height: 80 }} />
               <SearchResultsMessages data={messages} />
             </TabPanel>
           </SwipeableViews>
+          <Paper
+            style={{
+              borderRadius: "16px 16px 0px 0px",
+              position: "fixed",
+              bottom: 0,
+              width: "100%",
+              backgroundColor: colors.primaryMedium,
+              backdropFilter: "blur(10px)",
+            }}
+          >
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              variant="scrollable"
+              scrollButtons="on"
+              classes={{
+                indicator: classes.indicator,
+              }}
+              style={{color: colors.oposText, direction: 'rtl'}}
+            >
+              <Tab
+                icon={<EmailIcon style={{ fill: colors.oposText }} />}
+                style={{ color: colors.oposText }}
+                label="پست ها"
+              />
+              <Tab
+                icon={<PeopleIcon style={{ fill: colors.oposText }} />}
+                style={{ color: colors.oposText }}
+                label="کاربران"
+              />
+              <Tab
+                icon={<RedditIcon style={{ fill: colors.oposText }} />}
+                style={{ color: colors.oposText }}
+                label="بات ها"
+              />
+              <Tab
+                icon={<AccountBalanceIcon style={{ fill: colors.oposText }} />}
+                style={{ color: colors.oposText }}
+                label="فضا ها"
+              />
+              <Tab
+                icon={<Photo style={{ fill: colors.oposText }} />}
+                style={{ color: colors.oposText }}
+                label="عکس ها"
+              />
+              <Tab
+                icon={<Audiotrack style={{ fill: colors.oposText }} />}
+                style={{ color: colors.oposText }}
+                label="صدا ها"
+              />
+              <Tab
+                icon={<Videocam style={{ fill: colors.oposText }} />}
+                style={{ color: colors.oposText }}
+                label="ویدئو ها"
+              />
+              <Tab
+                icon={<Chat style={{ fill: colors.oposText }} />}
+                style={{ color: colors.oposText }}
+                label="پیام ها"
+              />
+            </Tabs>
+          </Paper>
         </div>
-        {showProfile ? <Profile onClose={() => setShowProfile(false)} user_id={selectedUserId}/> : null}
+        {showProfile ? (
+          <Profile
+            onClose={() => setShowProfile(false)}
+            user_id={selectedUserId}
+          />
+        ) : null}
       </div>
     </Dialog>
   );
