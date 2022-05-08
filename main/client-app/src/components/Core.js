@@ -47,8 +47,268 @@ import { Card } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import hark from "hark";
 import { colors, me, token } from "../util/settings";
-import {pathConfig} from '..';
-import $ from 'jquery';
+import { pathConfig } from "..";
+import './core.css';
+import BubbleUI from "react-bubble-ui";
+import "react-bubble-ui/dist/index.css";
+
+/* 
+function MediaBox(props) {
+    let vs = findValueByPrefix(videos, props.id + "_video");
+    let ss = findValueByPrefix(screens, props.id + "_screen");
+
+    let [title, setTitle] = React.useState("");
+
+    useEffect(() => {
+      let requestOptions2 = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: props.id === "me" ? myUserId : props.id,
+        }),
+        redirect: "follow",
+      };
+      fetch(pathConfig.mainBackend + "/auth/get_user", requestOptions2)
+        .then((response) => response.json())
+        .then((result) => {
+          let user = result.user;
+          setTitle(user.firstName + " " + user.lastName);
+        });
+    }, []);
+
+    if (shownScreens[props.id] === true) {
+      if (shownVideos[props.id] === true) {
+        return (
+          <Card
+            id={props.id}
+            style={{
+              height: 130 + 32,
+              marginTop: 16,
+              width: "100%",
+            }}
+            onClick={props.onClick}
+          >
+            <div style={{ display: "flex", width: "100%" }}>
+              <div style={{ width: "33%", height: 130 }}>
+                <Video
+                  name={title}
+                  id={props.id}
+                  stream={vs !== undefined ? vs.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div style={{ width: "66%", height: 130 }}>
+                <Screen
+                  name={title}
+                  id={props.id}
+                  stream={ss !== undefined ? ss.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div
+                id={"audio_state_" + props.id}
+                style={{
+                  width: 40,
+                  height: 130,
+                  backgroundColor: "white",
+                }}
+              />
+            </div>
+            <br />
+            <div
+              style={{
+                paddingLeft: 16,
+                paddingRight: 16,
+                transform: "translateY(-32px)",
+                width: "100%",
+              }}
+            >
+              {title}
+            </div>
+          </Card>
+        );
+      } else {
+        return (
+          <Card
+            id={props.id}
+            style={{
+              height: 130 + 32,
+              marginTop: 16,
+              width: "100%",
+            }}
+            onClick={props.onClick}
+          >
+            <div style={{ display: "flex", width: "100%" }}>
+              <div
+                style={{
+                  width: "33%",
+                  height: 130,
+                }}
+              >
+                <Video
+                  name={title}
+                  id={props.id}
+                  disabled={true}
+                  stream={vs !== undefined ? vs.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div style={{ width: "66%", height: 130 }}>
+                <Screen
+                  name={title}
+                  id={props.id}
+                  stream={ss !== undefined ? ss.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div
+                id={"audio_state_" + props.id}
+                style={{
+                  width: 40,
+                  height: 130,
+                  backgroundColor: "white",
+                }}
+              />
+            </div>
+            <br />
+            <div
+              style={{
+                paddingLeft: 16,
+                paddingRight: 16,
+                transform: "translateY(-32px)",
+                width: "100%",
+              }}
+            >
+              {title}
+            </div>
+          </Card>
+        );
+      }
+    } else {
+      if (shownVideos[props.id] === true) {
+        return (
+          <Card
+            id={props.id}
+            style={{
+              height: 130 + 32,
+              marginTop: 16,
+              width: "100%",
+            }}
+            onClick={props.onClick}
+          >
+            <div style={{ display: "flex", width: "100%" }}>
+              <div style={{ width: "33%", height: 130 }}>
+                <Video
+                  name={title}
+                  id={props.id}
+                  stream={vs !== undefined ? vs.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div
+                style={{
+                  width: "66%",
+                  height: 130,
+                }}
+              >
+                <Screen
+                  name={title}
+                  id={props.id}
+                  disabled={true}
+                  stream={ss !== undefined ? ss.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div
+                id={"audio_state_" + props.id}
+                style={{
+                  width: 40,
+                  height: 130,
+                  backgroundColor: "white",
+                }}
+              />
+            </div>
+            <br />
+            <div
+              style={{
+                paddingLeft: 16,
+                paddingRight: 16,
+                transform: "translateY(-32px)",
+                width: "100%",
+              }}
+            >
+              {title}
+            </div>
+          </Card>
+        );
+      } else {
+        return (
+          <Card
+            id={props.id}
+            style={{
+              height: 130 + 32,
+              marginTop: 16,
+              width: "100%",
+            }}
+            onClick={props.onClick}
+          >
+            <div style={{ display: "flex", width: "100%" }}>
+              <div
+                style={{
+                  width: "33%",
+                  height: 130,
+                }}
+              >
+                <Video
+                  name={title}
+                  id={props.id}
+                  disabled={true}
+                  stream={vs !== undefined ? vs.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div
+                style={{
+                  width: "66%",
+                  height: 130,
+                }}
+              >
+                <Screen
+                  name={title}
+                  id={props.id}
+                  disabled={true}
+                  stream={ss !== undefined ? ss.value : undefined}
+                  onClick={props.onClick}
+                />
+              </div>
+              <div
+                id={"audio_state_" + props.id}
+                style={{
+                  width: 40,
+                  height: 130,
+                  backgroundColor: "white",
+                }}
+              />
+            </div>
+            <br />
+            <div
+              style={{
+                paddingLeft: 16,
+                paddingRight: 16,
+                transform: "translateY(-32px)",
+                width: "100%",
+              }}
+            >
+              {title}
+            </div>
+          </Card>
+        );
+      }
+    }
+  }
+*/
 
 function getOS() {
   var userAgent = window.navigator.userAgent,
@@ -305,10 +565,7 @@ function Core(props) {
       }),
       redirect: "follow",
     };
-    fetch(
-      pathConfig.mainBackend + "/video/notify_calling",
-      requestOptions
-    )
+    fetch(pathConfig.mainBackend + "/video/notify_calling", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -477,234 +734,44 @@ function Core(props) {
         });
     }, []);
 
-    if (shownScreens[props.id] === true) {
-      if (shownVideos[props.id] === true) {
-        return (
-          <Card
-            id={props.id}
-            style={{
-              height: 130 + 32,
-              marginTop: 16,
-              width: "100%",
-            }}
-            onClick={props.onClick}
-          >
-            <div style={{ display: "flex", width: "100%" }}>
-              <div style={{ width: "33%", height: 130 }}>
-                <Video
-                  name={title}
-                  id={props.id}
-                  stream={vs !== undefined ? vs.value : undefined}
-                  onClick={props.onClick}
-                />
-              </div>
-              <div style={{ width: "66%", height: 130 }}>
-                <Screen
-                  name={title}
-                  id={props.id}
-                  stream={ss !== undefined ? ss.value : undefined}
-                  onClick={props.onClick}
-                />
-              </div>
-              <div
-                id={"audio_state_" + props.id}
-                style={{
-                  width: 40,
-                  height: 130,
-                  backgroundColor: "white",
-                }}
+    if (shownVideos[props.id] === true) {
+      return (
+        <Card
+          id={props.id}
+          style={{
+            height: 162,
+            width: 162,
+            borderRadius: 162 / 2
+          }}
+          onClick={props.onClick}
+        >
+           <Video
+                name={title}
+                id={props.id}
+                stream={vs !== undefined ? vs.value : undefined}
+                onClick={props.onClick}
               />
-            </div>
-            <br />
-            <div
-              style={{
-                paddingLeft: 16,
-                paddingRight: 16,
-                transform: "translateY(-32px)",
-                width: "100%",
-              }}
-            >
-              {title}
-            </div>
-          </Card>
-        );
-      } else {
-        return (
-          <Card
-            id={props.id}
-            style={{
-              height: 130 + 32,
-              marginTop: 16,
-              width: "100%",
-            }}
-            onClick={props.onClick}
-          >
-            <div style={{ display: "flex", width: "100%" }}>
-              <div
-                style={{
-                  width: "33%",
-                  height: 130,
-                }}
-              >
-                <Video
-                  name={title}
-                  id={props.id}
-                  disabled={true}
-                  stream={vs !== undefined ? vs.value : undefined}
-                  onClick={props.onClick}
-                />
-              </div>
-              <div style={{ width: "66%", height: 130 }}>
-                <Screen
-                  name={title}
-                  id={props.id}
-                  stream={ss !== undefined ? ss.value : undefined}
-                  onClick={props.onClick}
-                />
-              </div>
-              <div
-                id={"audio_state_" + props.id}
-                style={{
-                  width: 40,
-                  height: 130,
-                  backgroundColor: "white",
-                }}
-              />
-            </div>
-            <br />
-            <div
-              style={{
-                paddingLeft: 16,
-                paddingRight: 16,
-                transform: "translateY(-32px)",
-                width: "100%",
-              }}
-            >
-              {title}
-            </div>
-          </Card>
-        );
-      }
+        </Card>
+      );
     } else {
-      if (shownVideos[props.id] === true) {
-        return (
-          <Card
-            id={props.id}
-            style={{
-              height: 130 + 32,
-              marginTop: 16,
-              width: "100%",
-            }}
-            onClick={props.onClick}
-          >
-            <div style={{ display: "flex", width: "100%" }}>
-              <div style={{ width: "33%", height: 130 }}>
-                <Video
-                  name={title}
-                  id={props.id}
-                  stream={vs !== undefined ? vs.value : undefined}
-                  onClick={props.onClick}
-                />
-              </div>
-              <div
-                style={{
-                  width: "66%",
-                  height: 130,
-                }}
-              >
-                <Screen
-                  name={title}
-                  id={props.id}
-                  disabled={true}
-                  stream={ss !== undefined ? ss.value : undefined}
-                  onClick={props.onClick}
-                />
-              </div>
-              <div
-                id={"audio_state_" + props.id}
-                style={{
-                  width: 40,
-                  height: 130,
-                  backgroundColor: "white",
-                }}
-              />
-            </div>
-            <br />
-            <div
-              style={{
-                paddingLeft: 16,
-                paddingRight: 16,
-                transform: "translateY(-32px)",
-                width: "100%",
-              }}
-            >
-              {title}
-            </div>
-          </Card>
-        );
-      } else {
-        return (
-          <Card
-            id={props.id}
-            style={{
-              height: 130 + 32,
-              marginTop: 16,
-              width: "100%",
-            }}
-            onClick={props.onClick}
-          >
-            <div style={{ display: "flex", width: "100%" }}>
-              <div
-                style={{
-                  width: "33%",
-                  height: 130,
-                }}
-              >
-                <Video
-                  name={title}
-                  id={props.id}
-                  disabled={true}
-                  stream={vs !== undefined ? vs.value : undefined}
-                  onClick={props.onClick}
-                />
-              </div>
-              <div
-                style={{
-                  width: "66%",
-                  height: 130,
-                }}
-              >
-                <Screen
-                  name={title}
-                  id={props.id}
-                  disabled={true}
-                  stream={ss !== undefined ? ss.value : undefined}
-                  onClick={props.onClick}
-                />
-              </div>
-              <div
-                id={"audio_state_" + props.id}
-                style={{
-                  width: 40,
-                  height: 130,
-                  backgroundColor: "white",
-                }}
-              />
-            </div>
-            <br />
-            <div
-              style={{
-                paddingLeft: 16,
-                paddingRight: 16,
-                transform: "translateY(-32px)",
-                width: "100%",
-              }}
-            >
-              {title}
-            </div>
-          </Card>
-        );
-      }
+      return (
+        <Card
+          id={props.id}
+          style={{
+            height: 130 + 32,
+            width: "100%",
+          }}
+          onClick={props.onClick}
+        >
+        <Video
+          name={title}
+          id={props.id}
+          disabled={true}
+          stream={vs !== undefined ? vs.value : undefined}
+          onClick={props.onClick}
+        />
+        </Card>
+      );
     }
   }
 
@@ -903,6 +970,44 @@ function Core(props) {
           forceUpdate();
         }}
       ></video>
+      <div style={{position: 'fixed', top: 0, left: 0, bottom: 0, right: 0}}>
+      <BubbleUI options={{
+		size: 150,
+		minSize: 40,
+		gutter: 8,
+		provideProps: true,
+		numCols: 6,
+		fringeWidth: 160,
+		yRadius: 200,
+		xRadius: 75,
+		cornerRadius: 50,
+		showGuides: false,
+		compact: true,
+		gravitation: 5
+	}} className="myBubbleUI">
+     {result.map((key) => {
+            if (needUpdate[key] === true || videoCache[key] === undefined) {
+              videoCache[key] = (
+                <MediaBox
+                  id={key}
+                  onClick={() => {
+                    updatePresenter(key);
+                  }}
+                />
+              );
+              delete needUpdate[key];
+            }
+            if (myUserId === key) return null;
+            if (
+              shownVideos[key] !== true &&
+              shownScreens[key] !== true &&
+              shownAudios[key] !== true
+            )
+              return null;
+            return videoCache[key];
+          }).filter(el => (el !== null))}
+	</BubbleUI>
+      </div>
       <Drawer
         variant={pinList ? "permanent" : "temporary"}
         open={listOpen}
@@ -932,10 +1037,6 @@ function Core(props) {
         >
           <IconButton
             onClick={() => {
-              window.parent.postMessage(
-                { sender: "conf", action: "showBottomBar" },
-                pathConfig.mainFrontend
-              );
               setListOpen(false);
             }}
             style={{ padding: 16 }}
@@ -986,146 +1087,135 @@ function Core(props) {
           display: connected && videoAccess && !extWebcam ? "block" : "none",
         }}
       >
-        <ThemeProvider theme={theme2}>
-          <Fab
-            id="listButton"
-            color={"primary"}
-            style={{
-              position: "absolute",
-              left: sizeMode === "mobile" || sizeMode === "tablet" ? 16 : 32,
-              bottom: 24 + 56 + 16 + 56 + 16,
-            }}
-            onClick={() => {
-              window.parent.postMessage(
-                { sender: "conf", action: "hideBottomBar" },
-                pathConfig.mainFrontend
-              );
-              setListOpen(true);
-            }}
-          >
-            <MenuIcon />
-          </Fab>
-          <Fab
-            disabled={!audioLoaded}
-            id="audioButton"
-            color={"primary"}
-            style={{
-              position: "absolute",
-              left: sizeMode === "mobile" || sizeMode === "tablet" ? 16 : 32,
-              bottom: 24 + 56 + 16,
-            }}
-            onClick={() => {
-              if (audio) {
+        <Paper
+          style={{
+            width: "100%",
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            borderRadius: "24px 24px 0px 0px",
+            height: 84,
+            backgroundColor: colors.primaryLight,
+            backdropFilter: 'blur(10px)',
+            textAlign: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingTop: 16
+          }}
+        >
+          <ThemeProvider theme={theme2}>
+            <Fab
+              id="listButton"
+              style={{marginRight: 16, backgroundColor: colors.accent}}
+              onClick={() => {
+                window.parent.postMessage(
+                  { sender: "conf", action: "hideBottomBar" },
+                  pathConfig.mainFrontend
+                );
+                setListOpen(true);
+              }}
+            >
+              <MenuIcon />
+            </Fab>
+            <Fab
+              disabled={!audioLoaded}
+              id="audioButton"
+              style={{marginRight: 16, backgroundColor: colors.accent}}
+              onClick={() => {
+                if (audio) {
+                  endAudio();
+                  setAudio(false);
+                } else {
+                  startAudio();
+                  setAudio(true);
+                }
+                forceUpdate();
+              }}
+            >
+              {audio ? <Mic /> : <MicOff />}
+            </Fab>
+            <Fab
+              id="endCallButton"
+              style={{
+                backgroundColor: "#aa0044",
+                marginRight: 16
+              }}
+              onClick={() => {
+                instantConnectionFlag = false;
+                setConnected(false);
+                window.parent.postMessage(
+                  { sender: "conf", action: "detachWebcamOnMessenger" },
+                  pathConfig.mainFrontend
+                );
+                window.parent.postMessage(
+                  { sender: "conf", action: "notifyWebcamTurnedOff" },
+                  pathConfig.mainFrontend
+                );
+                setScreenOn(false);
+                document.getElementById("screenMax").srcObject = undefined;
+                document.getElementById("screenMax2").srcObject = undefined;
                 endAudio();
-                setAudio(false);
-              } else {
-                startAudio();
-                setAudio(true);
-              }
-              forceUpdate();
-            }}
-          >
-            {audio ? <Mic /> : <MicOff />}
-          </Fab>
-          <Fab
-            id="endCallButton"
-            color={"secondary"}
-            style={{
-              position: "absolute",
-              left: sizeMode === "mobile" || sizeMode === "tablet" ? 16 : 32,
-              bottom: 24,
-              backgroundColor: "#ff3300",
-            }}
-            onClick={() => {
-              instantConnectionFlag = false;
-              setConnected(false);
-              window.parent.postMessage(
-                { sender: "conf", action: "detachWebcamOnMessenger" },
-                pathConfig.mainFrontend
-              );
-              window.parent.postMessage(
-                { sender: "conf", action: "notifyWebcamTurnedOff" },
-                pathConfig.mainFrontend
-              );
-              setScreenOn(false);
-              document.getElementById("screenMax").srcObject = undefined;
-              document.getElementById("screenMax2").srcObject = undefined;
-              endAudio();
-              destructAudioNet();
-              endVideo();
-              destructVideoNet();
-              endScreen();
-              destructScreenNet();
-              setAudioLoaded(false);
-              setVideoLoaded(false);
-              setScreenLoaded(false);
-              setVideos({});
-              setAudios({});
-              setScreens({});
-              setVideo(false);
-              setAudio(false);
-              setScreen(false);
-              setShownVideos({});
-              setShownAudios({});
-              setShownScreens({});
-              setListOpen(false);
-              setExtWebcam(false);
-              forceUpdate();
-            }}
-          >
-            <CallEndIcon />
-          </Fab>
-          <Fab
-            disabled={!videoLoaded}
-            id="camButton"
-            color={"primary"}
-            style={{
-              position: "absolute",
-              left:
-                (screenShareSupported ? 32 + 56 : 0) +
-                (sizeMode === "mobile" || sizeMode === "tablet" ? 0 : 16) +
-                72,
-              bottom: 24,
-            }}
-            onClick={() => {
-              if (video) {
+                destructAudioNet();
                 endVideo();
-                setVideo(false);
-              } else {
-                startVideo();
-                setVideo(true);
-              }
-              forceUpdate();
-            }}
-          >
-            {video ? <VideocamIcon /> : <VideocamOff />}
-          </Fab>
-          <Fab
-            disabled={!screenShareSupported}
-            id="screenButton"
-            color={"primary"}
-            style={{
-              position: "absolute",
-              left:
-                32 +
-                56 +
-                (sizeMode === "mobile" || sizeMode === "tablet" ? 0 : 16),
-              bottom: 24,
-            }}
-            onClick={() => {
-              if (screen) {
+                destructVideoNet();
                 endScreen();
+                destructScreenNet();
+                setAudioLoaded(false);
+                setVideoLoaded(false);
+                setScreenLoaded(false);
+                setVideos({});
+                setAudios({});
+                setScreens({});
+                setVideo(false);
+                setAudio(false);
                 setScreen(false);
-              } else {
-                startScreen();
-                setScreen(true);
-              }
-              forceUpdate();
-            }}
-          >
-            {screen ? <DesktopWindowsIcon /> : <DesktopAccessDisabledIcon />}
-          </Fab>
-        </ThemeProvider>
+                setShownVideos({});
+                setShownAudios({});
+                setShownScreens({});
+                setListOpen(false);
+                setExtWebcam(false);
+                forceUpdate();
+                props.onEnd();
+              }}
+            >
+              <CallEndIcon style={{fill: '#fff'}} />
+            </Fab>
+            <Fab
+              disabled={!videoLoaded}
+              id="camButton"
+              style={{marginRight: 16, backgroundColor: colors.accent}}
+              onClick={() => {
+                if (video) {
+                  endVideo();
+                  setVideo(false);
+                } else {
+                  startVideo();
+                  setVideo(true);
+                }
+                forceUpdate();
+              }}
+            >
+              {video ? <VideocamIcon /> : <VideocamOff />}
+            </Fab>
+            <Fab
+              disabled={!screenShareSupported}
+              id="screenButton"
+              style={{backgroundColor: colors.accent}}
+              onClick={() => {
+                if (screen) {
+                  endScreen();
+                  setScreen(false);
+                } else {
+                  startScreen();
+                  setScreen(true);
+                }
+                forceUpdate();
+              }}
+            >
+              {screen ? <DesktopWindowsIcon /> : <DesktopAccessDisabledIcon />}
+            </Fab>
+          </ThemeProvider>
+        </Paper>
         <VideoMedia
           shownUsers={shownVideos}
           data={videos}
@@ -1164,8 +1254,7 @@ function Core(props) {
             left: sizeMode === "mobile" || sizeMode === "tablet" ? 16 : 32,
             bottom: 24,
           }}
-          onClick={() => {
-          }}
+          onClick={() => {}}
         >
           <CallIcon style={{ fill: "#333" }} />
         </Fab>

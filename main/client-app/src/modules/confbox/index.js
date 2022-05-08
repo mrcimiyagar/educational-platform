@@ -45,7 +45,7 @@ export let updateConfBox = () => {};
 export let isConfConnected = false;
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="right" ref={ref} {...props} />;
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export function ConfBox(props) {
@@ -165,52 +165,13 @@ export function ConfBox(props) {
         direction: "ltr"
       }}
     >
-      <AppBar
-        style={{
-          width: isDesktop() ? 550 : "100%",
-          height: 64,
-          display: props.currentRoomNav !== 2 ? "none" : "block",
-          borderRadius: isDesktop() ? "0 0 24px 24px" : 0,
-          backgroundColor: colors.primaryMedium,
-          backdropFilter: "blur(10px)",
-          position: "fixed",
-          left: isDesktop() && isInRoom() ? "calc(50% - 225px)" : "50%",
-          transform: "translateX(-50%)",
-        }}
-      >
-        <Toolbar
-          style={{
-            width: "100%",
-            height: "100%",
-            justifyContent: "center",
-            textAlign: "center",
-            direction: 'rtl'
-          }}
-        >
-        <IconButton
-          onClick={() => {
-            handleClose();
-          }}
-        >
-          <ArrowForward style={{ fill: colors.oposText }} />
-        </IconButton>
-          <Typography
-            variant={"h6"}
-            style={{ color: colors.oposText, flex: 1, textAlign: 'right' }}
-          >
-            سالن کنفرانس
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
       <div style={{
           width: '100%',
-          height: 'calc(100% - 64px)',
-          marginTop: 64,
+          height: '100%',
           background: colors.backSide,
           backdropFilter: "blur(10px)"
       }}>
-        <Core videoAccess={props.membership.canActInVideo} moduleWorkerId={props.moduleWorkerId} roomId={props.roomId} />
+        <Core onEnd={handleClose} videoAccess={props.membership.canActInVideo} moduleWorkerId={props.moduleWorkerId} roomId={props.roomId} />
       </div>
     </div>
     </Dialog>
