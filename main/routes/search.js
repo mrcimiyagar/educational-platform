@@ -88,7 +88,7 @@ router.post('/search_files', jsonParser, async function (req, res) {
                 roomId: dict[file.moduleWorkerId]
             };
         })
-        res.send({status: 'success', files: files});
+        res.send({status: 'success', files: result});
         
         /*let searchTokens = req.body.query.split(' ')
         for (let i = 0; i < searchTokens.length; i++) {
