@@ -1,22 +1,22 @@
-import AppBar from '@material-ui/core/AppBar'
-import Avatar from '@material-ui/core/Avatar'
-import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import {StylesProvider} from '@material-ui/core'
+import AppBar from "@material-ui/core/AppBar";
+import Avatar from "@material-ui/core/Avatar";
+import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core/styles";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import { StylesProvider } from "@material-ui/core";
 import {
   ArrowForward,
   Attachment,
   RoomRounded,
   Visibility,
   VisibilityOff,
-} from '@material-ui/icons'
-import CallIcon from '@material-ui/icons/Call'
-import MoreIcon from '@material-ui/icons/MoreVert'
-import VideocamIcon from '@material-ui/icons/Videocam'
-import {Roofing} from '@mui/icons-material';
-import React, { useEffect } from 'react'
+} from "@material-ui/icons";
+import CallIcon from "@material-ui/icons/Call";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import VideocamIcon from "@material-ui/icons/Videocam";
+import { Roofing } from "@mui/icons-material";
+import React, { useEffect } from "react";
 import {
   gotoPage,
   histPage,
@@ -26,90 +26,90 @@ import {
   isTablet,
   setCurrentRoomId,
   setInTheGame,
-} from '../../App'
-import { colors, token, me } from '../../util/settings'
+} from "../../App";
+import { colors, token, me } from "../../util/settings";
 import {
   registerEvent,
   serverRoot,
   socket,
   unregisterEvent,
-} from '../../util/Utils'
-import HomeToolbar from '../HomeToolbar'
+} from "../../util/Utils";
+import HomeToolbar from "../HomeToolbar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    direction: 'rtl',
+    direction: "rtl",
   },
   menuButton: {
     marginRight: -16,
   },
   search: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 'auto',
+    width: "auto",
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   inputRoot: {
-    color: 'inherit',
+    color: "inherit",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
       },
     },
   },
-}))
+}));
 
 export default function ChatAppBar(props) {
-  const classes = useStyles()
+  const classes = useStyles();
 
-  let [tl, setTl] = React.useState('')
+  let [tl, setTl] = React.useState("");
 
   useEffect(() => {
     if (socket !== undefined) {
-      unregisterEvent('uploading')
-      unregisterEvent('uploading', () => {
-        setTl('در حال آپلود...')
-      })
-      unregisterEvent('uploading_done')
-      unregisterEvent('uploading_done', () => {
-        setTl('')
-      })
-      unregisterEvent('chat-typing')
-      registerEvent('chat-typing', (typingList) => {
+      unregisterEvent("uploading");
+      unregisterEvent("uploading", () => {
+        setTl("در حال آپلود...");
+      });
+      unregisterEvent("uploading_done");
+      unregisterEvent("uploading_done", () => {
+        setTl("");
+      });
+      unregisterEvent("chat-typing");
+      registerEvent("chat-typing", (typingList) => {
         typingList = typingList.filter((u) => {
           if (u === undefined) return false;
           if (u === me.id) {
-            return false
+            return false;
           }
-          return true
-        })
+          return true;
+        });
         if (typingList.length === 0) {
-          setTl('')
+          setTl("");
         } else {
-          setTl('در حال نوشتن...')
+          setTl("در حال نوشتن...");
         }
-      })
+      });
     }
-  }, [])
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -120,29 +120,30 @@ export default function ChatAppBar(props) {
             width: isDesktop()
               ? isInRoom()
                 ? 450
-                : 'calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px - 16px)'
+                : "calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px - 16px)"
               : isTablet()
               ? isInRoom()
-                ? '100%'
-                : 'calc(100% - 450px)'
-              : '100%',
+                ? "100%"
+                : "calc(100% - 450px)"
+              : "100%",
             borderRadius:
               isTablet() || isMobile()
                 ? 0
-                : window.location.pathname === '/app/chat' || isInRoom()
+                : window.location.pathname === "/app/chat" || isInRoom()
                 ? 0
-                : '24px 0 0 0',
-            position: isDesktop() || isTablet() ? 'fixed' : undefined,
+                : "24px 0 0 0",
+            position: isDesktop() || isTablet() ? "fixed" : undefined,
             top: isDesktop()
               ? isInRoom()
-                ? props.webcamOn === true || (props.webcamOnSecond && props.currentRoomNav !== 2)
+                ? props.webcamOn === true ||
+                  (props.webcamOnSecond && props.currentRoomNav !== 2)
                   ? 300
                   : 0
                 : 32
               : 0,
             left: isInRoom()
               ? isDesktop()
-                ? 'calc(100% - 450px)'
+                ? "calc(100% - 450px)"
                 : 0
               : isDesktop()
               ? 96 + 16
@@ -150,12 +151,12 @@ export default function ChatAppBar(props) {
             paddingTop: 8,
             height: 64,
             backgroundColor: colors.primaryMedium,
-            backdropFilter: 'blur(10px)'
+            backdropFilter: "blur(10px)",
           }}
         >
           <Toolbar
             style={{
-              height: '100%',
+              height: "100%",
               marginTop: isDesktop() || isTablet() ? -8 : 0,
             }}
           >
@@ -175,35 +176,46 @@ export default function ChatAppBar(props) {
               }}
               alt={
                 props.user !== undefined && props.user !== null
-                  ? props.user.firstName + ' ' + props.user.lastName
+                  ? props.user.firstName + " " + props.user.lastName
                   : props.room !== undefined && props.room !== null
                   ? props.room.title
-                  : ''
+                  : ""
               }
               src={
-                props.user !== undefined && props.user !== null ?
-                  serverRoot + `/file/download_user_avatar?token=${token}&userId=${props.user.id}` :
-                  props.room !== undefined && props.room !== null ?
-                    serverRoot + `/file/download_room_avatar?token=${token}&roomId=${props.room.id}` :
-                    ''
+                props.user !== undefined && props.user !== null
+                  ? serverRoot +
+                    `/file/download_user_avatar?token=${token}&userId=${props.user.id}`
+                  : props.room !== undefined && props.room !== null
+                  ? serverRoot +
+                    `/file/download_room_avatar?token=${token}&roomId=${props.room.id}`
+                  : ""
               }
               onClick={() => {
                 if (isInRoom()) return;
-                if (props.room !== undefined && props.room.chatType === 'group' ||
-                    props.room !== undefined && props.room.chatType === 'channel' ||
-                    props.room !== undefined && props.room.chatType === 'bot') return;
+                if (
+                  (props.room !== undefined &&
+                    props.room.chatType === "group") ||
+                  (props.room !== undefined &&
+                    props.room.chatType === "channel") ||
+                  (props.room !== undefined && props.room.chatType === "bot")
+                )
+                  return;
                 props.onUserAvatarClicked();
               }}
             />
             <Typography
               variant="h6"
-              style={{ fontFamily: 'mainFont', marginRight: 8, color: colors.oposText }}
+              style={{
+                fontFamily: "mainFont",
+                marginRight: 8,
+                color: colors.oposText,
+              }}
             >
               {props.user !== undefined && props.user !== null
-                ? props.user.firstName + ' ' + props.user.lastName
+                ? props.user.firstName + " " + props.user.lastName
                 : props.room !== undefined && props.room !== null
                 ? props.room.title
-                : ''}
+                : ""}
             </Typography>
             <br />
             <Typography style={{ color: colors.oposText, marginRight: 16 }}>
@@ -213,22 +225,19 @@ export default function ChatAppBar(props) {
               {props.viewCallback === undefined ? null : (
                 <IconButton
                   onClick={() => {
-                    props.viewCallback()
+                    props.viewCallback();
                   }}
                 >
                   <VisibilityOff style={{ fill: colors.oposText }} />
                 </IconButton>
               )}
-              {isInRoom() ? null : (
-                <IconButton
-                  onClick={() => {
-                    if (props.handleCallClicked !== undefined) props.handleCallClicked();
-                    setCurrentRoomId(props.room.id);
-                  }}
-                >
-                  <Roofing style={{ fill: colors.oposText }} />
-                </IconButton>
-              )}
+              <IconButton
+                onClick={() => {
+                  setCurrentRoomId(props.room.id);
+                }}
+              >
+                <Roofing style={{ fill: colors.oposText }} />
+              </IconButton>
               <IconButton>
                 <MoreIcon style={{ fill: colors.oposText }} />
               </IconButton>
@@ -237,5 +246,5 @@ export default function ChatAppBar(props) {
         </AppBar>
       </HomeToolbar>
     </div>
-  )
+  );
 }
