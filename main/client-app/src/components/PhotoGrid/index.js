@@ -29,19 +29,10 @@ export default function PhotoGrid(props) {
   return (
     <div className={classes.root}>
       {props.data.length > 0 ?
-          <ImageList rowHeight={140} className={classes.imageList} cols={3}>
+          <ImageList variant={'masonry'} className={classes.imageList} cols={3}>
               {props.data.map((photo) => (
                 <ImageListItem key={'search-photo-' + photo.id} cols={1}>
-                  <img src={serverRoot + `/file/download_file?token=${token}&roomId=${photo.roomId}&fileId=${photo.id}`} alt={''} />
-                  <ImageListItemBar
-                    style={{color: '#fff'}}
-                    title={photo['User.firstName'] + ' ' + photo['User.lastName']}
-                    actionIcon={
-                      <IconButton className={classes.icon}>
-                        <Info style={{fill: '#fff'}}/>
-                      </IconButton>
-                    }
-                  />
+                  <img src={serverRoot + `/file/download_file_thumbnail?token=${token}&moduleWorkerId=${photo.moduleWorkerId}&roomId=${photo.roomId}&fileId=${photo.id}`} alt={''} />
                 </ImageListItem>
               ))}
           </ImageList>  :

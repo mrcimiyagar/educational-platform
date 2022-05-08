@@ -75,9 +75,19 @@ router.post('/search_rooms', jsonParser, async function (req, res) {
 router.post('/search_files', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
         //let results = []
-        let mems = await sw.Membership.findAll({raw: true, where: {userId: session.userId}})
-        let mws = await sw.ModuleWorker.findAll({raw: true, where: {roomId: mems.map(mem => mem.roomId)}})
-        let files = await sw.File.findAll({raw: true, include: [{ all: true }], where: {moduleWorkerId: mws.map(mw => mw.id), fileType: req.body.fileType}})
+        let mems = await sw.Membership.findAll({raw: true, where: {userId: session.userId}});
+        let mws = await sw.ModuleWorker.findAll({raw: true, where: {roomId: mems.map(mem => mem.roomId)}});
+        let dict = {};
+        mws.forEach(mw => {
+            dict[mw.id] = mw.roodId;
+        });
+        let files = await sw.File.findAll({raw: true, include: [{ all: true }], where: {moduleWorkerId: mws.map(mw => mw.id), fileType: req.body.fileType}});
+        let result = files.map(file => {
+            return {
+                ...file,
+                roomId: dict[file.moduleWorkerId]
+            };
+        })
         res.send({status: 'success', files: files});
         
         /*let searchTokens = req.body.query.split(' ')
