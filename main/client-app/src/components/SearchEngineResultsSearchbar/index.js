@@ -15,15 +15,18 @@ export default function SearchEngineResultsSearchbar(props) {
       padding: "2px 4px",
       display: "flex",
       alignItems: "center",
-      width: "calc(100% - 32px)",
+      width: "calc(100% - 96px)",
       height: 48,
       direction: "rtl",
       backdropFilter: "blur(10px)",
       borderRadius: 24,
-      marginLeft: 16,
-      marginRight: 16,
+      marginLeft: 48,
+      marginRight: 48,
+      marginTop: 32,
       backgroundColor: colors.field,
-      color: colors.text
+      color: colors.text,
+      position: 'relative',
+      zIndex: 99999
     },
     input: {
       marginLeft: theme.spacing(1),

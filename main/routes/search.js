@@ -76,8 +76,8 @@ router.post('/search_files', jsonParser, async function (req, res) {
     authenticateMember(req, res, async (membership, session, user, acc) => {
         //let results = []
         let mems = await sw.Membership.findAll({raw: true, where: {userId: session.userId}})
-        let rooms = await sw.Room.findAll({raw: true, where: {id: mems.map(mem => mem.roomId)}})
-        let files = await sw.File.findAll({raw: true, include: [{ all: true }], where: {roomId: rooms.map(room => room.id), fileType: req.body.fileType}})
+        let mws = await sw.ModuleWorker.findAll({raw: true, where: {roomId: mems.map(mem => mem.roomId)}})
+        let files = await sw.File.findAll({raw: true, include: [{ all: true }], where: {moduleWorkerId: mws.map(mw => mw.id), fileType: req.body.fileType}})
         res.send({status: 'success', files: files});
         
         /*let searchTokens = req.body.query.split(' ')

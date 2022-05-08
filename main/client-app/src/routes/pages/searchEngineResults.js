@@ -277,27 +277,18 @@ function SearchEngineResults(props) {
         }}
       >
         <div style={{ width: "100%", height: "100%" }}>
-          <AppBar
-            style={{
-              backgroundColor: colors.primaryMedium,
-              backdropFilter: "blur(10px)",
+          <SearchEngineResultsSearchbar
+            handleClose={handleClose}
+            onQueryChange={(q) => {
+              setQuery(q);
+              fetchTotal();
             }}
-          >
-            <Toolbar style={{ marginTop: 16, marginBottom: 16 }}>
-              <SearchEngineResultsSearchbar
-                handleClose={handleClose}
-                onQueryChange={(q) => {
-                  setQuery(q);
-                  fetchTotal();
-                }}
-              />
-            </Toolbar>
-          </AppBar>
+          />
           <SwipeableViews
             axis={"x-reverse"}
             index={value}
             onChangeIndex={handleChangeIndex}
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "100%", height: "100%", position: 'fixed', top: 0 }}
           >
             <TabPanel>
               <ImageList
@@ -407,7 +398,7 @@ function SearchEngineResults(props) {
               <div style={{ height: 80 }} />
               <ImageList
                 rowHeight={200}
-                cols={3}
+                cols={2}
                 gap={1}
                 className={classes.imageList}
                 style={{
@@ -600,7 +591,7 @@ function SearchEngineResults(props) {
               classes={{
                 indicator: classes.indicator,
               }}
-              style={{color: colors.oposText, direction: 'rtl'}}
+              style={{ color: colors.oposText, direction: "rtl" }}
             >
               <Tab
                 icon={<EmailIcon style={{ fill: colors.oposText }} />}
