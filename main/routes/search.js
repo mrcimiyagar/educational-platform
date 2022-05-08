@@ -2,7 +2,7 @@ const sw = require('../db/models')
 const express = require('express')
 const bodyParser = require('body-parser')
 const {User} = require("../db/models")
-const { authenticateMember } = require('../users')
+const { authenticateMember, usersBook } = require('../users')
 const Op = require('sequelize').Op
 
 const router = express.Router();
@@ -116,7 +116,14 @@ router.post('/search_messages', jsonParser, async function (req, res) {
                 text: {[Op.like]: '%' + req.body.query + '%'}
             }
         })
-        res.send({status: 'success', messages: messages});
+        let result = [];
+        messages.forEach(message => {
+            result.push({
+                ...message,
+                author: usersBook[message.authorId]
+            })
+        });
+        res.send({status: 'success', messages: result});
     });
 });
 

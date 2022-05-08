@@ -22,7 +22,7 @@ export default function VideoPlayer(props) {
   return (
     <Dialog
       style={{background: 'transparent', boxShadow: 'none'}}
-      PaperProps={{style: {background: colors.backSide}}}
+      PaperProps={{style: {background: colors.backSide, backdropFilter: 'blur(10px)'}}}
       onTouchStart={(e) => {e.stopPropagation();}}
       fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <div style={{width: '100%', height: '100%'}}>
@@ -32,7 +32,7 @@ export default function VideoPlayer(props) {
           <video autoPlay id={'video-player'} controls={true} style={{width: '100%', maxWidth: 900, height: 'auto', position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)'}} 
             src={props.src !== undefined ? props.src : 
               serverRoot +
-              `/file/download_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${props.fileId}`}/>
+              `/file/download_file?token=${token}&moduleWorkerId=${props.moduleWorkerId}&fileId=${props.fileId}&roomId=${props.roomId}`}/>
         </div>
     </Dialog>
   )
