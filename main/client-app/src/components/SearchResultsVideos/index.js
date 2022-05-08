@@ -97,17 +97,16 @@ export default function SearchResultsVideos(props) {
                 }}
               >
                 <PlayCircleFilledIcon
-                  style={{ width: 96, height: 96, fill: "rgba(0, 0, 0, 0.65)" }}
+                  style={{ width: 96, height: 96, fill: 'rgba(0, 0, 0, 0.65)' }}
                 />
               </IconButton>
               <IconButton style={{ position: "absolute", left: 8, top: 8 }}>
-                <MoreVert style={{ fill: "#fff" }} />
+                <MoreVert style={{ fill: colors.oposText }} />
               </IconButton>
               <ImageListItemBar
                 style={{
-                  color: "#fff",
+                  color: colors.oposText,
                   height: 48,
-                  borderRadius: '0px 0px 24px 24px',
                   marginLeft: 12,
                   marginRight: 12,
                 }}

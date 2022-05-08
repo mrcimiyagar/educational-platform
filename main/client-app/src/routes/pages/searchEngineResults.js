@@ -276,7 +276,7 @@ function SearchEngineResults(props) {
           top: 0,
         }}
       >
-        <div style={{ width: "100%", height: "100%" }}>
+        <div style={{ width: "100%", height: "calc(100% - 32px)" }}>
           <SearchEngineResultsSearchbar
             handleClose={handleClose}
             onQueryChange={(q) => {
@@ -341,7 +341,8 @@ function SearchEngineResults(props) {
                             paddingRight: 24,
                             paddingTop: 16,
                             paddingBottom: 16,
-                            backgroundColor: "#fff",
+                            backgroundColor: colors.field,
+                            backdropFilter: 'blur(10px)',
                             borderRadius: 16,
                             marginTop: 16,
                             marginRight: "5%",
@@ -365,6 +366,7 @@ function SearchEngineResults(props) {
                               top: 156,
                               left: "50%",
                               transform: "translateX(-50%)",
+                              color: colors.text
                             }}
                           >
                             {bot.title}
@@ -434,7 +436,7 @@ function SearchEngineResults(props) {
                         />
                         <Card
                           style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.5)",
+                            backgroundColor: colors.field,
                             borderRadius: 16,
                             width: "95%",
                             height: 72,
@@ -448,6 +450,7 @@ function SearchEngineResults(props) {
                               top: 156,
                               left: "50%",
                               transform: "translateX(-50%)",
+                              color: colors.text
                             }}
                           >
                             {room.title}

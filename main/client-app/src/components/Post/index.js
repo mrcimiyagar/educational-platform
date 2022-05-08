@@ -53,7 +53,7 @@ export default function Post() {
   return (
     <Card className={classes.root}>
       <CardHeader
-        style={{color: colors.text}}
+        style={{color: colors.text, direction: 'rtl'}}
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
             R
@@ -64,8 +64,8 @@ export default function Post() {
             <MoreVertIcon style={{fill: colors.icon}} />
           </IconButton>
         }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={<Typography style={{width: '100%', textAlign: 'right', color: colors.text, marginRight: 12}}>کیهان محمدی</Typography>}
+        subheader={<Typography style={{width: '100%', textAlign: 'right', color: colors.text, marginRight: 12}}>24/01/1401</Typography>}
       />
       <CardMedia
         className={classes.media}

@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import EmptyIcon from '../../images/empty.png';
-import { token } from '../../util/settings';
+import { colors, token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,10 +27,9 @@ export default function SearchResultsMessages(props) {
 
   return props.data.length > 0 ?
     <Paper style={{
-      width: 'calc(100% + 32px)',
-      backgroundColor: 'rgba(255, 255, 255, 0.5)', 
-      marginLeft: -16,
-      marginRight: -16
+      width: '100%',
+      backgroundColor: colors.field, 
+      borderRadius: 16
     }}>
       <List className={classes.root}>
         {props.data.map(message => (
@@ -45,9 +44,9 @@ export default function SearchResultsMessages(props) {
                         <Typography
                           className={classes.inline}
                           color="textPrimary"
-                          style={{position: 'absolute', right: 64}}
+                          style={{position: 'absolute', right: 64, color: colors.text}}
                         >
-                          {message['User.firstName'] + ' ' + message['User.lastName']}
+                          {message.author.firstName + ' ' + message.author.lastName}
                         </Typography>
                       </React.Fragment>
                     }
@@ -56,7 +55,7 @@ export default function SearchResultsMessages(props) {
                         <Typography
                           className={classes.inline}
                           color="textPrimary"
-                          style={{position: 'absolute', right: 64, top: 36}}
+                          style={{position: 'absolute', right: 64, top: 36, color: colors.text}}
                         >
                           {message.text}
                         </Typography>
