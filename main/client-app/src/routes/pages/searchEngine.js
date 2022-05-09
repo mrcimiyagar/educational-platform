@@ -140,7 +140,7 @@ export default function SearchEngine(props) {
             </Fab>
           </div>
         </div>
-        {showResults ? <SearchEngineResults onClose={() => setShowResults(false)}/> : null}
+        {showResults ? <SearchEngineResults onClose={() => setShowResults(false)} onUserSelected={props.onUserSelected}/> : null}
       </div>
     </Dialog>
   );

@@ -9,23 +9,16 @@ import InvitesBox from '../../components/InvitesBox';
 import { colors } from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
+    return <Slide direction="right" ref={ref} {...props} />;
 });
 
-export default function InvitationsListPage(props) {
-
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    props = Object.fromEntries(urlSearchParams.entries());
+export default function InvitationsList(props) {
     
     const [open, setOpen] = React.useState(true);
     const handleClose = () => {
         setOpen(false);
-        setTimeout(popPage, 250)
+        setTimeout(props.onClose, 250);
     };
-
-    useEffect(() => {
-        setInTheGame(true);
-    }, [])
 
     return (
         <Dialog
@@ -38,8 +31,6 @@ export default function InvitationsListPage(props) {
                     overflow: 'hidden'
                 },
             }}
-            fullWidth
-            maxWidth="md"
             fullScreen={!isDesktop()}
             open={open}
             onClose={handleClose} 
@@ -50,16 +41,16 @@ export default function InvitationsListPage(props) {
                     width: '100%',
                     height: 64, 
                     backgroundColor: colors.primaryMedium,
-                    backdropFilter: isDesktop() ? 'blur(15px)' : undefined,
-                    borderRadius: isDesktop() ? '24px 24px 0 0' : undefined}}>
+                    backdropFilter: 'blur(10px)'
+                }}>
                     <Toolbar style={{marginTop: (isDesktop() || isTablet()) ? 0 : 8, width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
-                        <IconButton style={{width: 32, height: 32, position: 'absolute', left: 16}}><Search style={{fill: '#fff'}}/></IconButton>
-                        <Typography variant={'h6'} style={{color: '#fff'}}>دعوت نامه ها</Typography>
-                        <IconButton style={{width: 32, height: 32, position: 'absolute', right: 16}} onClick={() => handleClose()}><ArrowForward style={{fill: '#fff'}}/></IconButton>
+                        <IconButton><Search style={{fill: colors.oposText}}/></IconButton>
+                        <Typography style={{flex: 1}}>دعوت نامه ها</Typography>
+                        <IconButton onClick={() => handleClose()}><ArrowForward style={{fill: colors.oposText}}/></IconButton>
                     </Toolbar>
                 </AppBar>
-                <div style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', width: '100%', height: isDesktop() ? 'calc(100% - 56px)' : '100%', position: 'absolute', top: 56}}>
-                    <InvitesBox roomId={props.room_id} userId={props.user_id}/>
+                <div style={{backgroundColor: colors.backSide, width: '100%', height: 'calc(100% - 64px)', marginTop: 64}}>
+                    <InvitesBox roomId={props.roomId} userId={props.userId}/>
                 </div>
             </div>
         </Dialog>

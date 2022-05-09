@@ -10,6 +10,7 @@ import SmartToyIcon from '@mui/icons-material/SmartToy';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import {colors} from '../../util/settings';
 import { inTheGame } from "../../App";
+import AllInboxIcon from '@mui/icons-material/AllInbox';
 
 const useStyles = makeStyles({
   root: {
@@ -71,8 +72,8 @@ export default function SpaceBottombar(props) {
       <BottomNavigationAction
         value={1}
         classes={classesAction}
-        label="فروشگاه"
-        icon={<StorefrontIcon style={{fill: colors.oposText}} />}
+        label="دعوتنامه ها"
+        icon={<AllInboxIcon style={{fill: colors.oposText}} />}
         style={{ marginRight: -24, color: colors.oposText }}
       />
       <BottomNavigationAction

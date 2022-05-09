@@ -1,20 +1,31 @@
-import { Card, Dialog, Fab, Grow, Slide } from "@material-ui/core";
+import {
+  Button,
+  Card,
+  Dialog,
+  Fab,
+  Grow,
+  Paper,
+  Slide,
+  Typography,
+} from "@material-ui/core";
 import ImageList from "@material-ui/core/ImageList";
 import ImageListItem from "@material-ui/core/ImageListItem";
 import { makeStyles } from "@material-ui/core/styles";
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import React, { useEffect } from "react";
 import {
   cacheSpace,
   fetchSpaces,
   inTheGame,
+  setBottomSheetContent,
+  setBSO,
   setCurrentRoomId,
 } from "../../App";
 import { colors, homeRoomId, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
 import EmptySign from "../EmptySign";
 import SpacesSearchbar from "../SpacesSearchbar";
-import { Add } from "@material-ui/icons";
+import { AccountBalance, Add } from "@material-ui/icons";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import CreateRoom from "../../routes/pages/createRoom";
 import SearchEngine from "../../routes/pages/searchEngine";
@@ -46,7 +57,6 @@ export let closeSpacesGrid = () => {};
 
 export default function SpacesGrid(props) {
   const [open, setOpen] = React.useState(true);
-  const [showGlobe, setShowGlobe] = React.useState(false);
   const handleClose = () => {
     setOpen(false);
     setTimeout(() => {
@@ -131,7 +141,7 @@ export default function SpacesGrid(props) {
         <SpacesSearchbar
           id="spacesSearchBarContainer"
           onBackClicked={handleClose}
-          onGlobeClicked={() => setShowGlobe(true)}
+          onGlobeClicked={() => props.showGlobe()}
           style={{
             transform: `translateX(-50%)`,
             transition: "transform .5s",
@@ -167,10 +177,84 @@ export default function SpacesGrid(props) {
                   cols={1}
                   rows={1}
                   onClick={() => {
-                    handleClose();
-                    setTimeout(() => {
-                      setCurrentRoomId(item.mainRoomId);
-                    }, 250);
+                    let requestOptions = {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        token: token,
+                      },
+                      body: JSON.stringify({
+                        spaceId: item.id,
+                      }),
+                      redirect: "follow",
+                    };
+                    fetch(serverRoot + "/room/get_space_rooms", requestOptions)
+                      .then((res) => res.json())
+                      .then((result) => {
+                        console.log(result)
+                        if (result.rooms !== undefined) {
+                          setBottomSheetContent(
+                            <div
+                              style={{
+                                width: "100%",
+                                height: 450,
+                                direction: "rtl",
+                              }}
+                            >
+                              <Paper
+                                style={{
+                                  borderRadius: "24px 24px 0 0",
+                                  width: "100%",
+                                  height: "calc(100% - 75px)",
+                                  position: "absolute",
+                                  top: 100,
+                                  left: 0,
+                                  background: colors.primaryLight,
+                                  backdropFilter: "blur(10px)",
+                                }}
+                              >
+                                <div style={{ width: "100%", height: 40 }} />
+                                {result.rooms.map((r) => {
+                                  return <Button
+                                    style={{
+                                      marginTop: 16,
+                                      marginLeft: 32,
+                                      marginRight: 32,
+                                      width: "calc(100% - 64px)",
+                                      height: 48,
+                                      color: colors.text,
+                                      paddingLeft: 16,
+                                      paddingRight: 16,
+                                      textAlign: "right",
+                                      justifyContent: "right",
+                                      alignItems: "right",
+                                    }}
+                                    onClick={() => {
+                                      setBSO(false);
+                                      handleClose();
+                                      setTimeout(() => {
+                                        setBottomSheetContent(null);
+                                        setCurrentRoomId(r.id);
+                                      }, 250);
+                                    }}
+                                  >
+                                    <AccountBalance
+                                      style={{ fill: colors.icon }}
+                                    />
+                                    <Typography
+                                      variant="body2"
+                                      style={{ color: colors.text, marginRight: 16 }}
+                                    >
+                                      {r.title}
+                                    </Typography>
+                                  </Button>;
+                                })}
+                              </Paper>
+                            </div>
+                          );
+                          setBSO(true);
+                        }
+                      });
                   }}
                 >
                   <Card
@@ -265,7 +349,6 @@ export default function SpacesGrid(props) {
             }}
           />
         ) : null}
-        {showGlobe ? <SearchEngine onClose={() => setShowGlobe(false)} /> : null}
       </div>
     </Dialog>
   );

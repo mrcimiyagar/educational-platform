@@ -83,8 +83,6 @@ function SearchEngineResults(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [open, setOpen] = React.useState(true);
-  const [showProfile, setShowProfile] = React.useState(false);
-  const [selectedUserId, setSelectedUserId] = React.useState(undefined);
   registerDialogOpen(setOpen);
 
   let [users, setUsers] = React.useState([]);
@@ -314,8 +312,7 @@ function SearchEngineResults(props) {
               <SearchResultsUsers
                 data={users}
                 onUserSelected={(userId) => {
-                  setSelectedUserId(userId);
-                  setShowProfile(true);
+                  props.onUserSelected(userId);
                 }}
               />
             </TabPanel>
@@ -639,12 +636,6 @@ function SearchEngineResults(props) {
             </Tabs>
           </Paper>
         </div>
-        {showProfile ? (
-          <Profile
-            onClose={() => setShowProfile(false)}
-            user_id={selectedUserId}
-          />
-        ) : null}
       </div>
     </Dialog>
   );

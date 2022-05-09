@@ -1,5 +1,5 @@
-import { Avatar, IconButton, Typography } from '@material-ui/core'
-import { VideocamOff } from '@material-ui/icons'
+import { Avatar, Fab, IconButton, Typography } from '@material-ui/core'
+import { GroupAdd, VideocamOff } from '@material-ui/icons'
 import MicIcon from '@material-ui/icons/Mic'
 import MicOffIcon from '@material-ui/icons/MicOff'
 import VideocamIcon from '@material-ui/icons/Videocam'
@@ -126,100 +126,27 @@ export let UsersBox = (props) => {
     }, 500);
   }
   useEffect(() => {
-    window.addEventListener('message', (e) => {
-      if (e.data.sender === 'confvideo') {
-        if (e.data.action === 'takeVideoPermissions') {
-          setVideo(e.data.permissions);
-          forceUpdate();
-        } else if (e.data.action === 'takeVideoPermission') {
-          video[e.data.userId] = e.data.permission;
-          setVideo(video);
-          forceUpdate();
-        }
-        else if (e.data.action === 'takeAudioPermissions') {
-          setAudio(e.data.permissions);
-          forceUpdate();
-        } else if (e.data.action === 'takeAudioPermission') {
-          audio[e.data.userId] = e.data.permission;
-          setAudio(audio);
-          forceUpdate();
-        }
-      }
-    })
     reloadUsersList();
     unregisterEvent('user-entered');
     registerEvent('user-entered', ({ rooms, users, allUsers, pauseds }) => {
-      users.forEach((u) => {
-        if (video[u.id] === undefined) {
-          video[u.id] = false;
-        }
-        else if (audio[u.id] === undefined) {
-          audio[u.id] = false;
-        }
-      })
       if (users !== undefined) setUsers(users);
       if (pauseds !== undefined) setPauseds(pauseds);
       if (allUsers !== undefined) setAllUsers(allUsers);
       usersRef = {allUsers, rooms, users};
       forceUpdate();
-      try {
-        window.frames['conf-video-frame'].postMessage(
-          { sender: 'main', action: 'getVideoPermissions' },
-          pathConfig.videoConfVideo,
-        );
-        window.frames['conf-video-frame'].postMessage(
-          { sender: 'main', action: 'getAudioPermissions' },
-          pathConfig.videoConfVideo,
-        );
-      } catch (ex) {
-        console.log(ex);
-      }
     })
     unregisterEvent('user-exited')
     registerEvent('user-exited', ({ rooms, users, allUsers, pauseds }) => {
-      users.forEach((u) => {
-        if (video[u.id] === undefined) {
-          video[u.id] = false;
-        }
-        else if (audio[u.id] === undefined) {
-          audio[u.id] = false;
-        }
-      })
       if (users !== undefined) setUsers(users);
       if (pauseds !== undefined) setPauseds(pauseds);
       if (allUsers !== undefined) setAllUsers(allUsers);
       usersRef = {allUsers, rooms, users};
       forceUpdate();
-      try {
-        window.frames['conf-video-frame'].postMessage(
-          { sender: 'main', action: 'getVideoPermissions' },
-          pathConfig.videoConfVideo,
-        );
-        window.frames['conf-video-frame'].postMessage(
-          { sender: 'main', action: 'getAudioPermissions' },
-          pathConfig.videoConfVideo,
-        );
-      } catch (ex) {
-        console.log(ex);
-      }
     })
     unregisterEvent('profile_updated');
     registerEvent('profile_updated', (user) => {
       reloadUsersList();
     });
-
-    try {
-      window.frames['conf-video-frame'].postMessage(
-        { sender: 'main', action: 'getVideoPermissions' },
-        pathConfig.videoConfVideo,
-      );
-      window.frames['conf-video-frame'].postMessage(
-        { sender: 'main', action: 'getAudioPermissions' },
-        pathConfig.videoConfVideo,
-      );
-    } catch (ex) {
-      console.log(ex);
-    }
   }, [])
 
   let permsOnClick = (user) => {
@@ -328,63 +255,6 @@ export let UsersBox = (props) => {
                           : user.firstName + ' ' + user.lastName}
                       </p>
                     </div>
-                    {props.membership.canEditVideoSound &&
-                    currentHover === index ? (
-                      <div
-                        style={{
-                          marginTop: -12,
-                          position: 'absolute',
-                          left: 0,
-                          display: 'flex',
-                          backgroundColor: colors.primary,
-                        }}
-                      >
-                        <IconButton
-                          onClick={(e) => {
-                            window.frames['conf-video-frame'].postMessage(
-                              {
-                                sender: 'main',
-                                action: 'switchVideoPermission',
-                                targetId: user.id,
-                                status: !video[user.id],
-                              },
-                              pathConfig.videoConfVideo,
-                            )
-                            video[user.id] = !video[user.id]
-                            setVideo(video)
-                            forceUpdate()
-                          }}
-                        >
-                          {video[user.id] ? (
-                            <VideocamIcon style={{ fill: colors.text }} />
-                          ) : (
-                            <VideocamOff style={{ fill: colors.text }} />
-                          )}
-                        </IconButton>
-                        <IconButton
-                          onClick={(e) => {
-                            window.frames['conf-video-frame'].postMessage(
-                              {
-                                sender: 'main',
-                                action: 'switchAudioPermission',
-                                targetId: user.id,
-                                status: !audio[user.id],
-                              },
-                              pathConfig.videoConfVideo,
-                            )
-                            audio[user.id] = !audio[user.id]
-                            setAudio(audio)
-                            forceUpdate()
-                          }}
-                        >
-                          {audio[user.id] ? (
-                            <MicIcon style={{ fill: colors.text }} />
-                          ) : (
-                            <MicOffIcon style={{ fill: colors.text }} />
-                          )}
-                        </IconButton>
-                      </div>
-                    ) : null}
                   </div>
                 )
               })}

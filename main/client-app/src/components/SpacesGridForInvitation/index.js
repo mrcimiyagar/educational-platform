@@ -6,6 +6,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import React, { useEffect } from "react";
 import { gotoPage, inTheGame, isDesktop } from "../../App";
 import EmptyIcon from "../../images/empty.png";
+import RoomsList from "../../routes/pages/roomsList";
 import { colors, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
 import EmptySign from "../EmptySign";
@@ -42,6 +43,8 @@ export default function SpacesGridForInvitation(props) {
   const classes = useStyles();
 
   let [spaces, setSpaces] = React.useState([]);
+  const [showRooms, setShowRooms] = React.useState(false);
+  const [selectedSpaceId, setSelectedSpaceId] = React.useState(undefined);
 
   useEffect(() => {
     let requestOptions = {
@@ -83,34 +86,8 @@ export default function SpacesGridForInvitation(props) {
                 cols={1}
                 rows={1}
                 onClick={() => {
-                  if (props.canInspectRooms === "true") {
-                    gotoPage("/app/roomslist", {
-                      space_id: item.id,
-                      bot_id: props.bot_id,
-                    });
-                  } else {
-                    let requestOptions = {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                        token: token,
-                      },
-                      body: JSON.stringify({
-                        roomId: item.mainRoomId,
-                        userId: props.userId,
-                      }),
-                      redirect: "follow",
-                    };
-                    fetch(serverRoot + "/room/invite_to_room", requestOptions)
-                      .then((response) => response.json())
-                      .then((result) => {
-                        console.log(JSON.stringify(result));
-                        if (result.invite !== undefined) {
-                          alert("دعوتنامه ارسال شد");
-                        }
-                      })
-                      .catch((error) => console.log("error", error));
-                  }
+                  setSelectedSpaceId(item.id);
+                  setShowRooms(true);
                 }}
               >
                 <Card
@@ -151,6 +128,35 @@ export default function SpacesGridForInvitation(props) {
           <EmptySign />
         )}
       </ImageList>
+      {(showRooms && selectedSpaceId !== undefined) ? (
+        <RoomsList
+          space_id={selectedSpaceId}
+          onRoomSelected={(rId) => {
+            let requestOptions = {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                token: token,
+              },
+              body: JSON.stringify({
+                roomId: rId,
+                userId: props.userId,
+              }),
+              redirect: "follow",
+            };
+            fetch(serverRoot + "/room/invite_to_room", requestOptions)
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(JSON.stringify(result));
+                if (result.invite !== undefined) {
+                  props.handleClose();
+                  alert("دعوتنامه ارسال شد");
+                }
+              })
+              .catch((error) => console.log("error", error));
+          }}
+        />
+      ) : null}
     </div>
   );
 }

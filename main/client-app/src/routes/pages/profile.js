@@ -22,7 +22,7 @@ import {
   setInTheGame,
 } from "../../App";
 import header from "../../images/profile-header.jpeg";
-import { token } from "../../util/settings";
+import { colors, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
 import "./profile.css";
 
@@ -144,10 +144,7 @@ export default function Profile(props) {
                 left: 84,
               }}
               onClick={() => {
-                gotoPage("/app/spaces_list", {
-                  room_id: props.room_id,
-                  user_id: props.user_id,
-                });
+                props.onAddToRoomSelected();
               }}
             >
               <GroupAddIcon style={{ fill: "#fff" }} />
@@ -282,8 +279,7 @@ export default function Profile(props) {
           </Card>
 
           <Fab
-            color={"secondary"}
-            style={{ marginLeft: 32, position: "absolute", top: 348 }}
+            style={{ marginLeft: 32, position: "absolute", top: 364, backgroundColor: colors.accent }}
             onClick={() => {
               let requestOptions = {
                 method: "POST",
@@ -534,10 +530,7 @@ export default function Profile(props) {
                     left: 84,
                   }}
                   onClick={() => {
-                    gotoPage("/app/spaces_list", {
-                      room_id: props.room_id,
-                      user_id: props.user_id,
-                    });
+                    props.onAddToRoomSelected();
                   }}
                 >
                   <GroupAddIcon style={{ fill: "#fff" }} />

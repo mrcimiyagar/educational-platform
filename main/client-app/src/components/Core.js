@@ -974,7 +974,7 @@ function Core(props) {
       <BubbleUI options={{
 		size: 150,
 		minSize: 40,
-		gutter: 8,
+		gutter: 20,
 		provideProps: true,
 		numCols: 6,
 		fringeWidth: 160,

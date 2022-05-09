@@ -27,7 +27,7 @@ import BotsBox, { openToolbox, toggleEditMode } from "../../modules/botsbox";
 import { TaskBox } from "../../modules/taskbox/taskbox";
 import { UsersBox } from "../../modules/usersbox/usersbox";
 import store, { changeConferenceMode } from "../../redux/main";
-import { colors, setToken, token } from "../../util/settings";
+import { colors, me, setToken, token } from "../../util/settings";
 import {
   leaveRoom,
   registerEvent,
@@ -64,6 +64,11 @@ import { ConfBox } from "../../modules/confbox";
 import { PollBox } from "../../modules/pollbox/pollbox";
 import NotePage from "./notes";
 import Deck from "./deck";
+import InvitationsList from "./invitationsList";
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import SearchEngine from "./searchEngine";
+import Profile from "./profile";
+import SpacesList from "./spacesList";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -181,6 +186,10 @@ export default function Space(props) {
   let [webcamOnSecond, setWebcamOnSecond] = React.useState(false);
   const [selectedBotId, setSelectedBotId] = React.useState(undefined);
   const [selectedRoomId, setSelectedRoomId] = React.useState(undefined);
+  const [showGlobe, setShowGlobe] = React.useState(false);
+  const [selectedUserId, setSelectedUserId] = React.useState(undefined);
+  const [showProfile, setShowProfile] = React.useState(false);
+  const [showSpacesList, setShowSpacesList] = React.useState(false);
 
   let enterRoom = (callback) => {
     const controller = new AbortController();
@@ -602,26 +611,30 @@ export default function Space(props) {
           <Tab
             classes={{ root: classes.tab }}
             label="میز اسناد x"
-            style={{ marginLeft: 32, color: colors.oposText, fontWeight: 'bold' }}
+            style={{
+              marginLeft: 32,
+              color: colors.oposText,
+              fontWeight: "bold",
+            }}
           />
           <Tab
             classes={{ root: classes.tab }}
-            style={{ color: colors.oposText, fontWeight: 'bold' }}
+            style={{ color: colors.oposText, fontWeight: "bold" }}
             label="میز کنفرانس فردا"
           />
           <Tab
             classes={{ root: classes.tab }}
-            style={{ color: colors.oposText, fontWeight: 'bold' }}
+            style={{ color: colors.oposText, fontWeight: "bold" }}
             label="میز تست نرم افزار"
           />
           <Tab
             classes={{ root: classes.tab }}
-            style={{ color: colors.oposText, fontWeight: 'bold' }}
+            style={{ color: colors.oposText, fontWeight: "bold" }}
             label="میز بازی شطرنج 2"
           />
           <Tab
             classes={{ root: classes.tab }}
-            style={{ color: colors.oposText, fontWeight: 'bold' }}
+            style={{ color: colors.oposText, fontWeight: "bold" }}
             label="میز کنفرانس هفته ی بعد"
           />
         </Tabs>
@@ -633,10 +646,7 @@ export default function Space(props) {
           if (index === 3) {
             openToolbox();
           } else if (index === 1) {
-            setInTheGame(false);
-            setTimeout(() => {
-              setCurrentRoomId(1);
-            }, 500);
+            setSelectedNav(18);
           } else {
             setSelectedNav(index);
           }
@@ -922,6 +932,7 @@ export default function Space(props) {
         ) : null}
         {selectedNav === 10 ? (
           <SpacesGrid
+          showGlobe={() => setShowGlobe(true)}
             onClose={() => {
               setSelectedNav(undefined);
               setInTheGame(true);
@@ -953,6 +964,30 @@ export default function Space(props) {
               setSelectedNav(undefined);
               setInTheGame(true);
             }}
+          />
+        ) : null}
+        {showGlobe ? <SearchEngine onClose={() => setShowGlobe(false)} onUserSelected={(id) => {setSelectedUserId(id); setShowProfile(true);}} /> : null}
+        {(showProfile && selectedUserId !== undefined) ? (
+          <Profile
+            onClose={() => {setShowProfile(false); setSelectedUserId(undefined);}}
+            user_id={selectedUserId}
+            onAddToRoomSelected={() => {setShowSpacesList(true); setShowProfile(false);}}
+          />
+        ) : null}
+        {selectedNav === 18 ? (
+          <InvitationsList
+            roomId={props.room_id}
+            userId={me.id}
+            onClose={() => {
+              setSelectedNav(undefined);
+              setInTheGame(true);
+            }}
+          />
+        ) : null}
+        {(showSpacesList && selectedUserId !== undefined) ? (
+          <SpacesList
+            onClose={() => {setShowSpacesList(false); setSelectedUserId(undefined);}}
+            user_id={selectedUserId}
           />
         ) : null}
         {showAudioPlayer && openedAudio !== undefined ? (

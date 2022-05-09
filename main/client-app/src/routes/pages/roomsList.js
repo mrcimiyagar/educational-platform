@@ -13,16 +13,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function RoomsListPage(props) {
-
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    props = Object.fromEntries(urlSearchParams.entries());
+export default function RoomsList(props) {
     
     const [rooms, setRooms] = React.useState({});
     const [open, setOpen] = React.useState(true);
     const handleClose = () => {
         setOpen(false);
-        setTimeout(popPage, 250)
+        setTimeout(props.onClose, 250)
     };
 
     useEffect(() => {
@@ -79,28 +76,8 @@ export default function RoomsListPage(props) {
                 </AppBar>
                 <div style={{backgroundColor: 'rgba(255, 255, 255, 0.5)', width: '100%', height: isDesktop() ? 'calc(100% - 56px)' : '100%', position: 'absolute', top: 56}}>
                     <RoomsGridList rooms={rooms} clickCallback={(roomId) => {
-                        let requestOptions2 = {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'token': token
-                            },
-                            body: JSON.stringify({
-                              botId: props.bot_id,
-                              roomId: roomId
-                            }),
-                            redirect: 'follow'
-                        }
-                        fetch(serverRoot + "/bot/create_workership", requestOptions2)
-                            .then(response => response.json())
-                            .then(result => {
-                              console.log(JSON.stringify(result));
-                              if (result.status === 'success') {
-                                  popPage();
-                                  popPage();
-                              }
-                            })
-                            .catch(error => console.log('error', error));
+                        props.onRoomSelected(roomId);
+                        handleClose();
                     }}/>
                 </div>
             </div>
