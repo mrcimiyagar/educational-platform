@@ -1186,18 +1186,7 @@ router.post("/am_i_in_room", jsonParser, async function (req, res) {
 });
 
 router.post("/use_invitation", jsonParser, async function (req, res) {
-  fetch("https://www.google.com/recaptcha/api/siteverify", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `secret=${"6LcA4BMeAAAAAOLSjqZ7XcWYsbg0F_JhLkXlzZLg"}&response=${
-      req.body.recaptchaToken
-    }`,
-  })
-    .then((response) => response.json())
-    .then(async function (result) {
-      console.log(JSON.stringify(result));
-      if (result.success === true) {
-        let invite = resolveInvite(req.body.token);
+  let invite = resolveInvite(req.body.token);
         if (invite.valid || req.body.token === undefined) {
           let user = await sw.User.create({
             id: uuid() + "-" + Date.now(),
@@ -1239,10 +1228,23 @@ router.post("/use_invitation", jsonParser, async function (req, res) {
             message: "invitation invalid",
           });
         }
+
+  /*fetch("https://www.google.com/recaptcha/api/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `secret=${"6LcA4BMeAAAAAOLSjqZ7XcWYsbg0F_JhLkXlzZLg"}&response=${
+      req.body.recaptchaToken
+    }`,
+  })
+    .then((response) => response.json())
+    .then(async function (result) {
+      console.log(JSON.stringify(result));
+      if (result.success === true) {
+        
       } else {
         res.send({ status: "error" });
       }
-    });
+    });*/
 });
 
 router.post("/leave_room", jsonParser, async function (req, res) {

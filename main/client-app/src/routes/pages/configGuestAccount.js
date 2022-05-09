@@ -53,6 +53,10 @@ const useStyles = makeStyles((theme) => ({
 export default function ConfigGuestAccount(props) {
 
   function onChange(value) {
+    
+  }
+
+  useEffect(() => {
     while (props.name === undefined || props.name === null || props.name.length === 0) {
       props.name = window.prompt('نام خود را وارد نمایید', '');
     }
@@ -63,7 +67,6 @@ export default function ConfigGuestAccount(props) {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-          recaptchaToken: value,
           token: props.token,
           name: props.name,
           roomId: props.roomId
@@ -81,7 +84,9 @@ export default function ConfigGuestAccount(props) {
           }, 1000);
         }
       });
-  }
+  }, []);
+
+  return <div />
 
   return (
     <div
