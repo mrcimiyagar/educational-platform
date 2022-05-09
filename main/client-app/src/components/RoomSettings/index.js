@@ -30,6 +30,8 @@ import RoomBackgroundColor from '../../components/RoomBackgroundColor';
 import RoomBackgroundGradient from '../../components/RoomBackgroundGradient';
 import { gotoPage } from '../../App';
 import { colors } from '../../util/settings';
+import GenerateLink from '../../routes/pages/generateLink'
+import { AllInbox, InsertLink } from '@material-ui/icons'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -119,8 +121,9 @@ export default function RoomSettings(props) {
       .catch((error) => console.log('error', error))
   }, [])
 
-  let [subSettingsIndex, setSubSettingsIndex] = React.useState(0)
-  let [menuOpen, setMenuOpen] = React.useState(false)
+  const [subSettingsIndex, setSubSettingsIndex] = React.useState(0);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [showGenerateLink, setShowGenerateLink] = React.useState(false);
 
   return (
     <div className={classes.root}>
@@ -617,7 +620,7 @@ export default function RoomSettings(props) {
           </ListItem>
           <ListItem button style={{ position: 'relative' }}
             onClick={() => {
-              gotoPage('/app/generate_invite_link', {room_id: props.roomId})
+              setShowGenerateLink(true);
             }} >
             <ListItemAvatar>
               <Avatar
@@ -627,7 +630,7 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <LiveHelpIcon style={{ fill: colors.icon }} />
+                <InsertLink style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
@@ -670,7 +673,7 @@ export default function RoomSettings(props) {
                   height: 56,
                 }}
               >
-                <LiveHelpIcon style={{ fill: colors.icon }} />
+                <AllInbox style={{ fill: colors.icon }} />
               </Avatar>
             </ListItemAvatar>
             <ListItemText
@@ -684,7 +687,7 @@ export default function RoomSettings(props) {
                     paddingRight: 16,
                   }}
                 >
-                  دعوتنامه
+                  دعوتنامه ها
                 </Typography>
               }
             />
@@ -700,47 +703,6 @@ export default function RoomSettings(props) {
               <ArrowBackIos style={{ fill: colors.icon }} />
             </IconButton>
           </ListItem>
-          <Divider style={{backgroundColor: colors.field, width: 'calc(100% - 32px)', marginLeft: 16, marginRight: 16}} />
-          <ListItem button style={{ position: 'relative' }}>
-            <ListItemAvatar>
-              <Avatar
-                style={{
-                  backgroundColor: 'transparent',
-                  width: 56,
-                  height: 56,
-                }}
-              >
-                <LiveHelpIcon style={{ fill: colors.icon }} />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <Typography
-                  style={{
-                    color: colors.text,
-                    width: '100%',
-                    textAlign: 'right',
-                    fontSize: 18.5,
-                    paddingRight: 16,
-                  }}
-                >
-                  لیست کل کاربران
-                </Typography>
-              }
-            />
-            <IconButton
-              style={{
-                width: 40,
-                height: 40,
-                position: 'absolute',
-                left: 16,
-                top: 16,
-              }}
-            >
-              <ArrowBackIos style={{ fill: colors.icon }} />
-            </IconButton>
-          </ListItem>
-
           
           <ListItem
             button
@@ -806,6 +768,11 @@ export default function RoomSettings(props) {
           </ListItem>
         </List>
       </div>
+      {showGenerateLink ? (
+        <GenerateLink room_id={props.roomId} onClose={() => {
+          setShowGenerateLink(false);
+        }}/>
+      ) : null}
     </div>
   )
 }

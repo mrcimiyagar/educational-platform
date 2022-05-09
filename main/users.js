@@ -313,7 +313,7 @@ module.exports = {
     return null;
   },
   generateInvite: (roomId) => {
-    let invite = { roomId: roomId, token: uuidv4() };
+    let invite = { roomId: roomId, token: uuid() };
     invites[invite.token] = invite;
     return invite.token;
   },
