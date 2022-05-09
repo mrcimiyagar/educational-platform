@@ -52,9 +52,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ConfigGuestAccount(props) {
 
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  props = Object.fromEntries(urlSearchParams.entries());
-
   function onChange(value) {
     while (props.name === undefined || props.name === null || props.name.length === 0) {
       props.name = window.prompt('نام خود را وارد نمایید', '');

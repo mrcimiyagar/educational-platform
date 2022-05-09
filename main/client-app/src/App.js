@@ -85,17 +85,17 @@ import CreateWidget from "./routes/pages/createWidget";
 import BotInfoPage from "./routes/pages/botInfo";
 import RoomsListPage from "./routes/pages/roomsList";
 import Space from "./routes/pages/space";
-import InnerNotif, { showInnerNotif } from './components/InnerNotif';
+import InnerNotif, { showInnerNotif } from "./components/InnerNotif";
 const PouchDB = require("pouchdb").default;
 
 export let openInnerNotif = (text, color) => {
   showInnerNotif({
     text: text,
     color: color,
-    vertical: 'bottom',
-    horizontal: 'right',
-  })
-}
+    vertical: "bottom",
+    horizontal: "right",
+  });
+};
 
 export let boardFrame = undefined;
 export let setBoardFrame = (bf) => {
@@ -547,8 +547,9 @@ export let setAuthenticationValid = undefined;
 export let setCurrentNav = () => {};
 export let setCurrentModuleWorker = () => {};
 
-MainAppContainer = (props) => {
+let showGuestConfiguration = () => {};
 
+MainAppContainer = (props) => {
   const urlSearchParams = new URLSearchParams(window.location.search);
   props = Object.fromEntries(urlSearchParams.entries());
 
@@ -577,7 +578,15 @@ MainAppContainer = (props) => {
 
   const [bottomSheetOpen, setBottomSheetOpen] = React.useState(false);
   const [connectedIO, setConnectedIO] = React.useState(false);
-  const [currentRequestingRoomAccessType, setCurrentRequestingRoomAccessType] = React.useState(undefined);
+  const [currentRequestingRoomAccessType, setCurrentRequestingRoomAccessType] =
+    React.useState(undefined);
+  const [guestParams, setGuestParams] = React.useState(undefined);
+  const [showGuestGonfig, setShowGuestConfig] = React.useState(false);
+
+  showGuestConfiguration = (p) => {
+    setGuestParams(p);
+    setShowGuestConfig(true);
+  };
 
   setHistPage = setHp;
   histPage = hp;
@@ -749,14 +758,14 @@ MainAppContainer = (props) => {
             localStorage.removeItem("token");
             animatePageChange();
             if (window.location.pathname === "/app/use_invitation") {
-              gotoPage("/app/use_invitation", params);
+              showGuestConfiguration(params);
             } else if (window.location.pathname === "/app/room") {
               gotoPage("/app/room", params);
             } else {
               let requestOptions = {
                 method: "POST",
                 headers: {
-                  "Content-Type": "application/json"
+                  "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                   roomId: currentRoomId,
@@ -764,20 +773,20 @@ MainAppContainer = (props) => {
                 redirect: "follow",
               };
               fetch(serverRoot + "/room/get_room", requestOptions)
-              .then(res => res.json())
-              .then(result => {
-                if (result.room === undefined) {
-                  setAuthenticationValid(false);
-                  return;
-                }
-                setCurrentRequestingRoomAccessType(result.room.accessType);
-                if (result.room.accessType === 'public') {
-                  setAuthenticationValid(true);
-                }
-                else {
-                  setAuthenticationValid(false);
-                }
-              }).catch(ex => console.error(ex));
+                .then((res) => res.json())
+                .then((result) => {
+                  if (result.room === undefined) {
+                    setAuthenticationValid(false);
+                    return;
+                  }
+                  setCurrentRequestingRoomAccessType(result.room.accessType);
+                  if (result.room.accessType === "public") {
+                    setAuthenticationValid(true);
+                  } else {
+                    setAuthenticationValid(false);
+                  }
+                })
+                .catch((ex) => console.error(ex));
             }
           }
         });
@@ -811,7 +820,11 @@ MainAppContainer = (props) => {
     setBottomSheetOpen(value);
   };
 
-  if ((currentRequestingRoomAccessType !== 'public') && !connectedIO) {
+  if (showGuestConfiguration && guestParams !== undefined) {
+    return <ConfigGuestAccount {...guestParams} />;
+  }
+
+  if (currentRequestingRoomAccessType !== "public" && !connectedIO) {
     return (
       <div style={{ width: "100%", height: "100vh" }}>
         <DesktopDetector />
@@ -832,7 +845,12 @@ MainAppContainer = (props) => {
     >
       <DesktopDetector />
       <Sidebar />
-      <Space room_id={currentRoomId} key={currentRoomId} selected_nav={sn} module_worker_id={mwId} />
+      <Space
+        room_id={currentRoomId}
+        key={currentRoomId}
+        selected_nav={sn}
+        module_worker_id={mwId}
+      />
       <InnerNotif />
       <Drawer
         PaperProps={{
