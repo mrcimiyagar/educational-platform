@@ -821,7 +821,11 @@ MainAppContainer = (props) => {
   };
 
   if (showGuestConfiguration && guestParams !== undefined) {
-    return <ConfigGuestAccount {...guestParams} />;
+    return (
+      <div style={{ width: "100%", height: "100vh" }}>
+        <ConfigGuestAccount {...guestParams} />
+      </div>
+    );
   }
 
   if (currentRequestingRoomAccessType !== "public" && !connectedIO) {
