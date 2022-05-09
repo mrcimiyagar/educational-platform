@@ -616,7 +616,8 @@ async function prepareRoomModel() {
       avatarId: Sequelize.BIGINT,
       accessType: Sequelize.STRING,
       hidden: Sequelize.BOOLEAN,
-      fileStorageId: Sequelize.BIGINT
+      fileStorageId: Sequelize.BIGINT,
+      videochatId: Sequelize.BIGINT,
     },
     {
       paranoid: true,

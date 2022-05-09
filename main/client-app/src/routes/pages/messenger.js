@@ -21,6 +21,7 @@ function MessengerPage(props) {
 
   const [open, setOpen] = React.useState(true);
   const [selectedChatId, setSelectedChatId] = React.useState(undefined);
+  const [hidden, setHidden] = React.useState(false);
 
   const handleClose = () => {
     setInTheGame(false);
@@ -52,6 +53,8 @@ function MessengerPage(props) {
           right: 0,
           top: 0,
           bottom: 0,
+          transform: hidden ? 'translateX(+100%)' : 'translateX(0)',
+          transition: 'transform 0.5s'
         }}
       >
         <HomeAppbar
@@ -64,6 +67,8 @@ function MessengerPage(props) {
       </Dialog>
       {selectedChatId !== undefined ? (
         <Chat
+          messengerHidden={(h) => setHidden(h)}
+          chatOpened={props.chatOpened}
           onClose={() => {
             setSelectedChatId(undefined);
             setInTheGame(true);

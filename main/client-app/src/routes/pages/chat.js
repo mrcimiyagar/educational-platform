@@ -48,6 +48,8 @@ import "./chat.css";
 import CustomImageBox from "../../components/CustomImageBox";
 import Profile from "./profile";
 import { Typography } from "@mui/material";
+import { ConfBox } from "../../modules/confbox";
+import { openVideoCall } from "./space";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
@@ -114,16 +116,17 @@ export default function Chat(props) {
 
   document.documentElement.style.overflowY = "hidden";
 
-  let forceUpdate = useForceUpdate();
-  let [messages, setMessages] = React.useState([]);
-  let [photoViewerVisible, setPhotoViewerVisible] = React.useState(false);
-  let [currentPhotoSrc, setCurrentPhotoSrc] = React.useState("");
-  let [user, setUser] = React.useState(undefined);
-  let [room, setRoom] = React.useState(undefined);
+  const forceUpdate = useForceUpdate();
+  const [messages, setMessages] = React.useState([]);
+  const [photoViewerVisible, setPhotoViewerVisible] = React.useState(false);
+  const [currentPhotoSrc, setCurrentPhotoSrc] = React.useState("");
+  const [user, setUser] = React.useState(undefined);
+  const [room, setRoom] = React.useState(undefined);
   const [open, setOpen] = React.useState(true);
   const [showEmojiPad, setShowEmojiPad] = React.useState(false);
   const [showProfile, setShowProfile] = React.useState(false);
-  let [pickingFile, setPickingFile] = React.useState(false);
+  const [pickingFile, setPickingFile] = React.useState(false);
+  const [showConf, setShowConf] = React.useState(false);
   [membership, setMembership] = React.useState({});
 
   let setupRoom = () => {
@@ -1071,7 +1074,11 @@ export default function Chat(props) {
       open={open}
       onClose={handleClose}
       TransitionComponent={Transition}
-      style={{ zIndex: 2501 }}
+      style={{
+        zIndex: 2501,
+        transform: showConf ? 'translateX(+100%)' : 'translateX(0)',
+        transition: 'transform 0.5s'
+      }}
     >
       <div
         contenteditable="true"
@@ -1106,8 +1113,14 @@ export default function Chat(props) {
           handleClose={handleClose}
           user={user}
           room={room}
-          handleCallClicked={() => {
+          handleRoomClicked={() => {
             goingToRoom = true;
+          }}
+          handleCallClicked={() => {
+            setShowConf(true);
+            if (props.messengerHidden !== undefined) {
+              props.messengerHidden(true);
+            }
           }}
           onUserAvatarClicked={() => setShowProfile(true)}
         />
@@ -1440,6 +1453,21 @@ export default function Chat(props) {
           <Profile onClose={() => setShowProfile(false)} user_id={user.id} />
         ) : null}
       </div>
+      {showConf ? (
+          <ConfBox
+            webcamOn={false}
+            currentRoomNav={2}
+            moduleWorkerId={room.videochatId}
+            roomId={props.room_id}
+            membership={membership}
+            onClose={() => {
+              setShowConf(false);
+              if (props.messengerHidden !== undefined) {
+                props.messengerHidden(false);
+              }
+            }}
+          />
+      ) : null}
     </Dialog>
   );
 }

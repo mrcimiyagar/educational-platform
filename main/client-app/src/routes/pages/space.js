@@ -31,6 +31,7 @@ import { colors, me, setToken, token } from "../../util/settings";
 import {
   leaveRoom,
   registerEvent,
+  room,
   serverRoot,
   setRoom,
   socket,

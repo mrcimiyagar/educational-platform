@@ -9,6 +9,7 @@ import {
   ArrowForward,
   Attachment,
   RoomRounded,
+  VideoCall,
   Visibility,
   VisibilityOff,
 } from "@material-ui/icons";
@@ -222,15 +223,13 @@ export default function ChatAppBar(props) {
               {tl.toString()}
             </Typography>
             <div className={classes.search}>
-              {props.viewCallback === undefined ? null : (
                 <IconButton
                   onClick={() => {
-                    props.viewCallback();
+                    props.handleCallClicked();
                   }}
                 >
-                  <VisibilityOff style={{ fill: colors.oposText }} />
+                  <VideoCall style={{ fill: colors.oposText }} />
                 </IconButton>
-              )}
               <IconButton
                 onClick={() => {
                   setCurrentRoomId(props.room.id);

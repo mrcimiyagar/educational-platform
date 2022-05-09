@@ -146,8 +146,9 @@ export default function GroupChats(props) {
                             position: 'absolute',
                             direction: 'ltr',
                             transform: 'translateY(8px)',
+                            color: colors.text,
                           }}
-                          icon={<Photo style={{ borderRadius: 4 }} />}
+                          icon={<Photo style={{ borderRadius: 4, fill: colors.icon }} />}
                           label="عکس"
                           color="primary"
                           size={'small'}
@@ -160,8 +161,9 @@ export default function GroupChats(props) {
                             position: 'absolute',
                             direction: 'ltr',
                             transform: 'translateY(8px)',
+                            color: colors.text,
                           }}
-                          icon={<Audiotrack style={{ borderRadius: 4 }} />}
+                          icon={<Audiotrack style={{ borderRadius: 4, fill: colors.icon }} />}
                           label="صدا"
                           color="primary"
                           size={'small'}
@@ -174,8 +176,9 @@ export default function GroupChats(props) {
                             position: 'absolute',
                             direction: 'ltr',
                             transform: 'translateY(8px)',
+                            color: colors.text,
                           }}
-                          icon={<Videocam style={{ borderRadius: 4 }} />}
+                          icon={<Videocam style={{ borderRadius: 4, fill: colors.icon }} />}
                           label="ویدئو"
                           color="primary"
                           size={'small'}
@@ -189,7 +192,7 @@ export default function GroupChats(props) {
                             position: 'absolute',
                             width: '100%',
                             textAlign: 'right',
-                            color: '#fff',
+                            color: colors.text,
                             fontSize: 14,
                           }}
                         >

@@ -13,9 +13,12 @@ export function WaveSurferBox(props) {
   const [audioPeaks, setAudioPeaks] = React.useState([]);
   const [playing, setPlaying] = React.useState(false);
   useEffect(() => {
-    document.getElementById("audioController" + props.fileId).onended = function() {
-      document.getElementById("audioController" + props.fileId).currentTime = 0;
-    };
+    document.getElementById("audioController" + props.fileId).onended =
+      function () {
+        document.getElementById(
+          "audioController" + props.fileId
+        ).currentTime = 0;
+      };
     let requestOptions = {
       method: "POST",
       headers: {
@@ -37,16 +40,22 @@ export function WaveSurferBox(props) {
             result.data[i] = result.data[i] / 100;
           }
           setAudioPeaks(result.data);
-          setDur(
-            document.getElementById("audioController" + props.fileId).duration
-          );
+          try {
+            setDur(
+              document.getElementById("audioController" + props.fileId).duration
+            );
+          } catch (ex) {}
         }
       });
     let timer = setInterval(() => {
-      setPos(
-        document.getElementById("audioController" + props.fileId).currentTime
-      );
-      setPlaying(!(document.getElementById("audioController" + props.fileId).paused));
+      try {
+        setPos(
+          document.getElementById("audioController" + props.fileId).currentTime
+        );
+        setPlaying(
+          !document.getElementById("audioController" + props.fileId).paused
+        );
+      } catch (ex) {}
     }, 250);
     return () => clearInterval(timer);
   }, []);
@@ -57,15 +66,19 @@ export function WaveSurferBox(props) {
         src={props.src}
         style={{ display: "none" }}
       />
-      <Fab style={{ backgroundColor: colors.accent, width: 56, height: 56 }} onClick={() => {
-        if (playing) {
-          document.getElementById("audioController" + props.fileId).pause();
-        }
-        else {
-          document.getElementById("audioController" + props.fileId).play();
-        }
-      }}>
-        {playing ? <Pause/> : <PlayArrow/>}
+      <Fab
+        style={{ backgroundColor: colors.accent, width: 56, height: 56 }}
+        onClick={() => {
+          try {
+            if (playing) {
+              document.getElementById("audioController" + props.fileId).pause();
+            } else {
+              document.getElementById("audioController" + props.fileId).play();
+            }
+          } catch (ex) {}
+        }}
+      >
+        {playing ? <Pause /> : <PlayArrow />}
       </Fab>
       <div style={{ width: "calc(100% - 72px)" }}>
         <Waveform
@@ -76,9 +89,11 @@ export function WaveSurferBox(props) {
           duration={dur}
           onClick={(sec) => {
             setPos(sec);
-            document.getElementById(
-              "audioController" + props.fileId
-            ).currentTime = sec;
+            try {
+              document.getElementById(
+                "audioController" + props.fileId
+              ).currentTime = sec;
+            } catch (ex) {}
           }}
           color="#fff"
           progressGradientColors={[

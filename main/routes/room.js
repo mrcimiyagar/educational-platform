@@ -355,7 +355,9 @@ router.post("/create_room", jsonParser, async function (req, res) {
               hidden: req.body.hidden
           });
           let roomDefaultModuleWorker = await sw.ModuleWorker.create({type: 'filestorage', roomId: room.id, x: 32, y: 32});
+          let roomDefaultModuleWorker2 = await sw.ModuleWorker.create({type: 'videochat', roomId: room.id, x: 32, y: 32 + 150 + 32});
           room.fileStorageId = roomDefaultModuleWorker.id;
+          room.videochatId = roomDefaultModuleWorker2.id;
           await room.save();
           roomId = room.id;
         } else {
@@ -369,7 +371,9 @@ router.post("/create_room", jsonParser, async function (req, res) {
                 : req.body.accessType,
           });
           let roomDefaultModuleWorker = await sw.ModuleWorker.create({type: 'filestorage', roomId: room.id, x: 32, y: 32});
+          let roomDefaultModuleWorker2 = await sw.ModuleWorker.create({type: 'videochat', roomId: room.id, x: 32, y: 32 + 150 + 32});
           room.fileStorageId = roomDefaultModuleWorker.id;
+          room.videochatId = roomDefaultModuleWorker2.id;
           await room.save();
           roomId = room.id;
         }
@@ -392,7 +396,9 @@ router.post("/create_room", jsonParser, async function (req, res) {
               : req.body.accessType,
         });
         let roomDefaultModuleWorker = await sw.ModuleWorker.create({type: 'filestorage', roomId: room.id, x: 32, y: 32});
+        let roomDefaultModuleWorker2 = await sw.ModuleWorker.create({type: 'videochat', roomId: room.id, x: 32, y: 32 + 150 + 32});
         room.fileStorageId = roomDefaultModuleWorker.id;
+        room.videochatId = roomDefaultModuleWorker2.id;
         await room.save();
         space.mainRoomId = room.id;
         space.save();
