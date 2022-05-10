@@ -119,7 +119,7 @@ module.exports = {
                   let user = acc.user;
                   if (user !== null) {
                     userToSocketMap[user.id] = soc;
-                    if (metadata[user.id] === undefined) {
+                    if (metadata[user.id] === undefined || metadata[user.id].socket === undefined) {
                       metadata[user.id] = { socket: soc, user: user, timer: undefined };
                     }
                     netState[user.id] = true;
@@ -155,7 +155,7 @@ module.exports = {
                 });
                 if (user !== null) {
                   userToSocketMap[user.id] = soc;
-                  if (metadata[user.id] === undefined) {
+                  if (metadata[user.id] === undefined || metadata[user.id].socket === undefined) {
                     metadata[user.id] = { socket: soc, user: user, timer: undefined };
                   }
                   netState[user.id] = true;
