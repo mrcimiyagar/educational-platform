@@ -9,14 +9,17 @@ let netState = {};
 
 let disconnectWebsocket = (user) => {
   if (metadata[user.id] === undefined) return;
-  metadata[user.id].socket.forEach(conObj => {
-    let roomId = conObj.roomId;
-    netState[user.id] = false;
-    models.Room.findOne({ where: { id: roomId } }).then((room) => {
-      removeUser(roomId, user.id);
-      if (room !== null) {
-        models.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
-          async (rooms) => {
+  if (metadata[user.id].socket !== undefined) {
+    metadata[user.id].socket.forEach((conObj) => {
+      let roomId = conObj.roomId;
+      netState[user.id] = false;
+      models.Room.findOne({ where: { id: roomId } }).then((room) => {
+        removeUser(roomId, user.id);
+        if (room !== null) {
+          models.Room.findAll({
+            raw: true,
+            where: { spaceId: room.spaceId },
+          }).then(async (rooms) => {
             for (let i = 0; i < rooms.length; i++) {
               let room = rooms[i];
               removeUser(room.id, user.id);
@@ -38,11 +41,11 @@ let disconnectWebsocket = (user) => {
                 });
               });
             });
-          }
-        );
-      }
+          });
+        }
+      });
     });
-  });
+  }
 };
 
 let metadata = {};
@@ -119,8 +122,15 @@ module.exports = {
                   let user = acc.user;
                   if (user !== null) {
                     userToSocketMap[user.id] = soc;
-                    if (metadata[user.id] === undefined || metadata[user.id].socket === undefined) {
-                      metadata[user.id] = { socket: soc, user: user, timer: undefined };
+                    if (
+                      metadata[user.id] === undefined ||
+                      metadata[user.id].socket === undefined
+                    ) {
+                      metadata[user.id] = {
+                        socket: soc,
+                        user: user,
+                        timer: undefined,
+                      };
                     }
                     netState[user.id] = true;
                     sockets[user.id] = soc;
@@ -134,7 +144,7 @@ module.exports = {
                       if (socketRooms[user.id] === undefined) {
                         socketRooms[user.id] = [];
                       }
-                      socketRooms[user.id].forEach(rId => {
+                      socketRooms[user.id].forEach((rId) => {
                         soc.join("room_" + rId);
                         addUser(rId, user);
                       });
@@ -155,8 +165,15 @@ module.exports = {
                 });
                 if (user !== null) {
                   userToSocketMap[user.id] = soc;
-                  if (metadata[user.id] === undefined || metadata[user.id].socket === undefined) {
-                    metadata[user.id] = { socket: soc, user: user, timer: undefined };
+                  if (
+                    metadata[user.id] === undefined ||
+                    metadata[user.id].socket === undefined
+                  ) {
+                    metadata[user.id] = {
+                      socket: soc,
+                      user: user,
+                      timer: undefined,
+                    };
                   }
                   netState[user.id] = true;
                   sockets[user.id] = soc;
@@ -170,7 +187,7 @@ module.exports = {
                     if (socketRooms[user.id] === undefined) {
                       socketRooms[user.id] = [];
                     }
-                    socketRooms[user.id].forEach(rId => {
+                    socketRooms[user.id].forEach((rId) => {
                       soc.join("room_" + rId);
                       addUser(rId, user);
                     });
@@ -203,7 +220,11 @@ module.exports = {
                 if (bot !== null) {
                   userToSocketMap[bot.id] = soc;
                   if (metadata[bot.id] === undefined) {
-                    metadata[bot.id] = { socket: soc, user: bot, timer: undefined };
+                    metadata[bot.id] = {
+                      socket: soc,
+                      user: bot,
+                      timer: undefined,
+                    };
                   }
                   netState[bot.id] = true;
                   sockets[bot.id] = soc;
