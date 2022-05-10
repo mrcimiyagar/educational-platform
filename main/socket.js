@@ -8,44 +8,41 @@ let notifs = {};
 let netState = {};
 
 let disconnectWebsocket = (user) => {
-  if (metadata[user.id] === undefined) return;
-  if (metadata[user.id].socket !== undefined) {
-    metadata[user.id].socket.forEach((conObj) => {
-      let roomId = conObj.roomId;
-      netState[user.id] = false;
-      models.Room.findOne({ where: { id: roomId } }).then((room) => {
-        removeUser(roomId, user.id);
-        if (room !== null) {
-          models.Room.findAll({
+  if (socketRooms[user.id] === undefined) return;
+  socketRooms[user.id].forEach((roomId) => {
+    netState[user.id] = false;
+    models.Room.findOne({ where: { id: roomId } }).then((room) => {
+      removeUser(roomId, user.id);
+      if (room !== null) {
+        models.Room.findAll({
+          raw: true,
+          where: { spaceId: room.spaceId },
+        }).then(async (rooms) => {
+          for (let i = 0; i < rooms.length; i++) {
+            let room = rooms[i];
+            removeUser(room.id, user.id);
+            room.users = getRoomUsers(room.id);
+          }
+          models.Membership.findAll({
             raw: true,
-            where: { spaceId: room.spaceId },
-          }).then(async (rooms) => {
-            for (let i = 0; i < rooms.length; i++) {
-              let room = rooms[i];
-              removeUser(room.id, user.id);
-              room.users = getRoomUsers(room.id);
-            }
-            models.Membership.findAll({
+            where: { roomId: roomId },
+          }).then(async (memberships) => {
+            models.User.findAll({
               raw: true,
-              where: { roomId: roomId },
-            }).then(async (memberships) => {
-              models.User.findAll({
-                raw: true,
-                where: { id: memberships.map((mem) => mem.userId) },
-              }).then(async (users) => {
-                require("./server").pushTo("room_" + roomId, "user-exited", {
-                  rooms: rooms,
-                  pauseds: [],
-                  users: getRoomUsers(roomId),
-                  allUsers: users,
-                });
+              where: { id: memberships.map((mem) => mem.userId) },
+            }).then(async (users) => {
+              require("./server").pushTo("room_" + roomId, "user-exited", {
+                rooms: rooms,
+                pauseds: [],
+                users: getRoomUsers(roomId),
+                allUsers: users,
               });
             });
           });
-        }
-      });
+        });
+      }
     });
-  }
+  });
 };
 
 let metadata = {};
