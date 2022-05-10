@@ -859,7 +859,7 @@ router.post("/enter_room", jsonParser, async function (req, res) {
     }
     if (
       socketRooms[membership.userId].filter((rId) => rId === membership.roomId)
-        .length > 0
+        .length === 0
     ) {
       socketRooms[membership.userId].push(membership.roomId);
       addUser(membership.roomId, user);
