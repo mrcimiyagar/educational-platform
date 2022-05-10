@@ -132,7 +132,7 @@ module.exports = {
                     }, 6000);
                     soc.on("ping", () => {
                       if (socketRooms[user.id] === undefined) {
-                        socketRooms[user.idd] = [];
+                        socketRooms[user.id] = [];
                       }
                       socketRooms[user.id].forEach(rId => {
                         soc.join("room_" + rId);
@@ -168,7 +168,7 @@ module.exports = {
                   }, 6000);
                   soc.on("ping", () => {
                     if (socketRooms[user.id] === undefined) {
-                      socketRooms[user.idd] = [];
+                      socketRooms[user.id] = [];
                     }
                     socketRooms[user.id].forEach(rId => {
                       soc.join("room_" + rId);
