@@ -902,6 +902,7 @@ router.post("/exit_room", jsonParser, async function (req, res) {
       }
       let roomId = membership.roomId;
       removeUser(roomId, user.id);
+      socketRooms[user.id] = socketRooms[user.id].filter(rId => rId !== roomId);
       sw.Room.findOne({ where: { id: roomId } }).then(async (room) => {
         sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
           async (rooms) => {
