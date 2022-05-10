@@ -18,19 +18,16 @@ import {
   inTheGame,
   isDesktop,
   isInMessenger,
-  isInRoom,
   isMobile,
   isTablet,
   setInTheGame,
 } from "../../App";
-import ChatEmbedded from "../../components/ChatEmbedded";
 import store from "../../redux/main";
 import { setColors, colors, token } from "../../util/settings";
 import { serverRoot, useForceUpdate } from "../../util/Utils";
 import AllChats from "../AllChats";
 import BotChats from "../BotChats";
 import ChannelChats from "../ChannelChats";
-import ChatEmbeddedInMessenger from "../ChatEmbeddedInMessenger";
 import GroupChats from "../GroupChats";
 import HomeBottombar from "../HomeBottombar";
 import HomeDrawer from "../HomeDrawer";
@@ -41,7 +38,6 @@ import HomeToolbar from "../HomeToolbar";
 import Jumper from "../SearchEngineFam";
 import SpacesGrid from "../SpacesGrid";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
-import HomePage from "../../routes/pages/home";
 import HomeMessenger from "../HomeMessenger";
 import { RocketLaunch } from "@mui/icons-material";
 
@@ -75,9 +71,8 @@ TabPanel.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    marginRight: isDesktop() && isInRoom() ? 256 + 32 + 32 + 8 + 64 : undefined,
-    width: isDesktop() && isInRoom() ? 450 : "100%",
-    maxWidth: isDesktop() && isInRoom() ? 450 : "100%",
+    width: "100%",
+    maxWidth: "100%",
     height: "100%",
   },
   indicator: {

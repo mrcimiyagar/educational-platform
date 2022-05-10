@@ -52,7 +52,6 @@ import { RoomTreeBox } from "../../components/RoomTreeBox";
 import CreateRoom from "./createRoom";
 import Hypnosis from "react-cssfx-loading/lib/Hypnosis";
 import { FileBox } from "../../modules/filebox/filebox";
-import { setCurrentRoomId, currentRoomId } from "../../App";
 import SpacesGrid from "../../components/SpacesGrid";
 import StoreBot from "./storeBot";
 import StoreFam from "../../components/StoreFam";
@@ -66,10 +65,11 @@ import { PollBox } from "../../modules/pollbox/pollbox";
 import NotePage from "./notes";
 import Deck from "./deck";
 import InvitationsList from "./invitationsList";
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import SearchEngine from "./searchEngine";
 import Profile from "./profile";
 import SpacesList from "./spacesList";
+import CustomImageBox from "../../components/CustomImageBox";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -94,7 +94,6 @@ export let membership = undefined;
 export let setMembership = () => {};
 
 let attachWebcamOnMessenger = undefined;
-let roomId = undefined;
 
 let oldSt = 0;
 
@@ -153,8 +152,6 @@ export default function Space(props) {
   };
   useEffect(() => attachScrollCallback(), []);
 
-  roomId = props.room_id;
-
   const useStyles = makeStyles({
     root: {
       width: "100%",
@@ -167,9 +164,6 @@ export default function Space(props) {
     },
     tab: {
       color: colors.oposText,
-      minWidth: isDesktop() || isTablet() ? 100 : undefined,
-      maxWidth: isDesktop() || isTablet() ? 100 : undefined,
-      width: isDesktop() || isTablet() ? 100 : undefined,
     },
   });
 
@@ -191,6 +185,7 @@ export default function Space(props) {
   const [selectedUserId, setSelectedUserId] = React.useState(undefined);
   const [showProfile, setShowProfile] = React.useState(false);
   const [showSpacesList, setShowSpacesList] = React.useState(false);
+  const [roomWallpaper, setRoomWallpaper] = React.useState(null);
 
   let enterRoom = (callback) => {
     const controller = new AbortController();
@@ -327,21 +322,21 @@ export default function Space(props) {
           let wall = JSON.parse(result.wallpaper);
           if (wall === undefined || wall === null) return;
           if (wall.type === "photo") {
-            setWallpaper({
+            setRoomWallpaper({
               type: "photo",
               photo:
                 serverRoot +
                 `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
             });
           } else if (wall.type === "video") {
-            setWallpaper({
+            setRoomWallpaper({
               type: "video",
               video:
                 serverRoot +
                 `/file/download_file?token=${token}&roomId=${props.room_id}&fileId=${wall.photoId}`,
             });
           } else if (wall.type === "color") {
-            setWallpaper(wall);
+            setRoomWallpaper(wall);
           }
         }
         setTimeout(() => {
@@ -352,8 +347,6 @@ export default function Space(props) {
   };
 
   useEffect(() => {
-    roomId = props.room_id;
-    setRoomId(roomId);
     setTimeout(() => {
       loadData(() => {
         setLoaded(true);
@@ -512,18 +505,59 @@ export default function Space(props) {
     );
   }
 
-  let ui = (
+  return (
     <div
       style={{
         width: "100%",
         height: "100%",
-        position: "fixed",
-        left: 0,
-        top: 0,
         overflow: "hidden",
         direction: "rtl",
+        position: "relative",
+        display: props.show ? "block" : "none",
       }}
     >
+      {roomWallpaper === undefined ||
+      roomWallpaper === null ? null : roomWallpaper.type === "photo" ? (
+        <CustomImageBox
+          src={roomWallpaper.photo}
+          style={{
+            position: "fixed",
+            left: 0,
+            top: 56,
+            width: "100%",
+            height: "100%",
+            objectFit:
+              roomWallpaper.fitType === undefined
+                ? "cover"
+                : roomWallpaper.fitType,
+          }}
+        />
+      ) : roomWallpaper.type === "video" ? (
+        <video
+          loop
+          autoPlay
+          src={roomWallpaper.video}
+          style={{
+            position: "fixed",
+            left: 0,
+            top: 56,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+      ) : roomWallpaper.type === "color" ? (
+        <div
+          style={{
+            backgroundColor: roomWallpaper.color,
+            position: "fixed",
+            left: 0,
+            top: 56,
+            width: "100%",
+            height: "100%",
+          }}
+        />
+      ) : null}
       <div
         id="searchScrollView"
         style={{
@@ -531,12 +565,12 @@ export default function Space(props) {
           height: "100%",
           position: "fixed",
           left: 0,
-          top: 0,
+          top: 56,
           overflow: "auto",
         }}
       >
-        <div style={{ width: "100%", height: 72 + 16 }} />
         <BotsBox
+          id={props.room_id}
           openMenu={() => setMenuOpen(true)}
           setMenuOpen={setMenuOpen}
           membership={membership}
@@ -564,82 +598,23 @@ export default function Space(props) {
         <div style={{ width: "100%", height: 72 + 16 }} />
       </div>
 
-      <AppBar
-        position={"fixed"}
-        style={{
-          background: colors.primaryMedium,
-          borderRadius: 0,
-          width: "100%",
-          height: searchBarFixed ? 56 : 72 + 40,
-          backdropFilter: "blur(20px)",
-          position: "fixed",
-          transform: inTheGame ? "translateY(0px)" : "translateY(-200px)",
-          transition: "height .25s, transform .5s",
+      <SpaceSearchbar
+        backable={props.backable}
+        fixed={searchBarFixed}
+        onSpacesClicked={() => {
+          setSelectedNav(10);
         }}
-      >
-        <SpaceSearchbar
-          backable={props.backable}
-          fixed={searchBarFixed}
-          onSpacesClicked={() => {
-            setSelectedNav(10);
-          }}
-          onMenuClicked={() => {
-            if (props.backable === true) {
-              setOpen(false);
-              setTimeout(() => {
-                props.onClose();
-              }, 250);
-            } else {
-              setMenuOpen(true);
-            }
-          }}
-        />
-
-        <Tabs
-          variant={"scrollable"}
-          value={0}
-          onChange={props.handleChange}
-          classes={{
-            indicator: classes.indicator,
-          }}
-          style={{
-            marginTop: 8,
-            direction: "ltr",
-            opacity: searchBarFixed ? 0 : 1,
-            transition: "opacity .25s",
-          }}
-        >
-          <Tab
-            classes={{ root: classes.tab }}
-            label="میز اسناد x"
-            style={{
-              marginLeft: 32,
-              color: colors.oposText,
-              fontWeight: "bold",
-            }}
-          />
-          <Tab
-            classes={{ root: classes.tab }}
-            style={{ color: colors.oposText, fontWeight: "bold" }}
-            label="میز کنفرانس فردا"
-          />
-          <Tab
-            classes={{ root: classes.tab }}
-            style={{ color: colors.oposText, fontWeight: "bold" }}
-            label="میز تست نرم افزار"
-          />
-          <Tab
-            classes={{ root: classes.tab }}
-            style={{ color: colors.oposText, fontWeight: "bold" }}
-            label="میز بازی شطرنج 2"
-          />
-          <Tab
-            classes={{ root: classes.tab }}
-            style={{ color: colors.oposText, fontWeight: "bold" }}
-            label="میز کنفرانس هفته ی بعد"
-          />
-        </Tabs>
-      </AppBar>
+        onMenuClicked={() => {
+          if (props.backable === true) {
+            setOpen(false);
+            setTimeout(() => {
+              props.onClose();
+            }, 250);
+          } else {
+            setMenuOpen(true);
+          }
+        }}
+      />
 
       <SpaceBottombar
         fixed={searchBarFixed}
@@ -654,7 +629,7 @@ export default function Space(props) {
         }}
       />
 
-      {currentRoomId === 1 ? (
+      {props.room_id === 1 ? (
         <StoreFam onCategoryCreationSelected={() => setSelectedNav(12)} />
       ) : null}
 
@@ -783,6 +758,7 @@ export default function Space(props) {
             ) : menuMode === 2 ? (
               thisRoom !== undefined ? (
                 <RoomTreeBox
+                  membership={membership}
                   openEditRoom={(selectedRoomId) => {
                     setSelectedRoomId(selectedRoomId);
                     setMenuOpen(false);
@@ -807,213 +783,228 @@ export default function Space(props) {
       </SwipeableDrawer>
 
       {authenticationValid ? null : <Authentication />}
-      <Suspense fallback={<div />}>
-        {selectedNav === 0 ? (
-          <MessengerPage
-            tab_index={"0"}
+      {selectedNav === 0 ? (
+        <MessengerPage
+          tab_index={"0"}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 2 ? (
+        <Chat
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+          room_id={props.room_id}
+        />
+      ) : null}
+      {selectedNav === 4 ? (
+        <MainSettings
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+          onDeveloperModeClicked={() => {
+            setSelectedNav(13);
+          }}
+        />
+      ) : null}
+      {selectedNav === 5 ? (
+        <SettingsPage
+          room_id={props.room_id}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 6 ? (
+        thisRoom !== undefined ? (
+          <CreateRoom
+            spaceId={thisRoom.spaceId}
+            editingRoomId={selectedRoomId}
             onClose={() => {
               setSelectedNav(undefined);
               setInTheGame(true);
             }}
           />
-        ) : null}
-        {selectedNav === 2 ? (
-          <Chat
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-            room_id={props.room_id}
-          />
-        ) : null}
-        {selectedNav === 4 ? (
-          <MainSettings
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-            onDeveloperModeClicked={() => {
-              setSelectedNav(13);
-            }}
-          />
-        ) : null}
-        {selectedNav === 5 ? (
-          <SettingsPage
-            room_id={props.room_id}
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-          />
-        ) : null}
-        {selectedNav === 6 ? (
-          thisRoom !== undefined ? (
-            <CreateRoom
-              spaceId={thisRoom.spaceId}
-              editingRoomId={selectedRoomId}
-              onClose={() => {
-                setSelectedNav(undefined);
-                setInTheGame(true);
-              }}
-            />
-          ) : null
-        ) : null}
-        {selectedNav === 7 ? (
-          <BoardBox
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-            membership={membership}
-            roomId={selectedModuleWorkerId}
-          />
-        ) : null}
-        {selectedNav === 8 ? (
-          <TaskBox
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-            roomId={selectedModuleWorkerId}
-          />
-        ) : null}
-        {selectedNav === 9 ? (
-          <FileBox
-            moduleWorkerId={selectedModuleWorkerId}
-            roomId={props.room_id}
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-          />
-        ) : null}
-        {selectedNav === 14 ? (
-          <ConfBox
-            webcamOn={webcamOn}
-            currentRoomNav={2}
-            moduleWorkerId={selectedModuleWorkerId}
-            roomId={props.room_id}
-            membership={membership}
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-          />
-        ) : null}
-        {selectedNav === 15 ? (
-          <PollBox
-            roomId={props.room_id}
-            moduleWorkerId={selectedModuleWorkerId}
-            membership={membership}
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-          />
-        ) : null}
-        {selectedNav === 16 ? (
-          <NotePage
-            room_id={selectedModuleWorkerId}
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-          />
-        ) : null}
-        {selectedNav === 17 ? (
-          <Deck
-            room_id={props.room_id}
-            moduleWorkerId={selectedModuleWorkerId}
-            membership={membership}
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-          />
-        ) : null}
-        {selectedNav === 10 ? (
-          <SpacesGrid
+        ) : null
+      ) : null}
+      {selectedNav === 7 ? (
+        <BoardBox
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+          membership={membership}
+          roomId={selectedModuleWorkerId}
+        />
+      ) : null}
+      {selectedNav === 8 ? (
+        <TaskBox
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+          roomId={selectedModuleWorkerId}
+        />
+      ) : null}
+      {selectedNav === 9 ? (
+        <FileBox
+          moduleWorkerId={selectedModuleWorkerId}
+          roomId={props.room_id}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 14 ? (
+        <ConfBox
+          webcamOn={webcamOn}
+          currentRoomNav={2}
+          moduleWorkerId={selectedModuleWorkerId}
+          roomId={props.room_id}
+          membership={membership}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 15 ? (
+        <PollBox
+          roomId={props.room_id}
+          moduleWorkerId={selectedModuleWorkerId}
+          membership={membership}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 16 ? (
+        <NotePage
+          room_id={selectedModuleWorkerId}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 17 ? (
+        <Deck
+          room_id={props.room_id}
+          moduleWorkerId={selectedModuleWorkerId}
+          membership={membership}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 10 ? (
+        <SpacesGrid
           showGlobe={() => setShowGlobe(true)}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 11 ? (
+        selectedBotId !== undefined ? (
+          <StoreBot
+            bot_id={selectedBotId}
             onClose={() => {
               setSelectedNav(undefined);
               setInTheGame(true);
             }}
           />
-        ) : null}
-        {selectedNav === 11 ? (
-          selectedBotId !== undefined ? (
-            <StoreBot
-              bot_id={selectedBotId}
-              onClose={() => {
-                setSelectedNav(undefined);
-                setInTheGame(true);
-              }}
-            />
-          ) : null
-        ) : null}
-        {selectedNav === 12 ? (
-          <CreateBotCategoryPage
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-          />
-        ) : null}
-        {selectedNav === 13 ? (
-          <Workshop
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-          />
-        ) : null}
-        {showGlobe ? <SearchEngine onClose={() => setShowGlobe(false)} onUserSelected={(id) => {setSelectedUserId(id); setShowProfile(true);}} /> : null}
-        {(showProfile && selectedUserId !== undefined) ? (
-          <Profile
-            onClose={() => {setShowProfile(false); setSelectedUserId(undefined);}}
-            user_id={selectedUserId}
-            onAddToRoomSelected={() => {setShowSpacesList(true); setShowProfile(false);}}
-          />
-        ) : null}
-        {selectedNav === 18 ? (
-          <InvitationsList
-            roomId={props.room_id}
-            userId={me.id}
-            onClose={() => {
-              setSelectedNav(undefined);
-              setInTheGame(true);
-            }}
-          />
-        ) : null}
-        {(showSpacesList && selectedUserId !== undefined) ? (
-          <SpacesList
-            onClose={() => {setShowSpacesList(false); setSelectedUserId(undefined);}}
-            user_id={selectedUserId}
-          />
-        ) : null}
-        {showAudioPlayer && openedAudio !== undefined ? (
-          <AudioPlayer
-            roomId={openedAudio.roomId}
-            src={openedAudio.src}
-            fileId={openedAudio.fileId}
-            moduleWorkerId={openedAudio.moduleWorkerId}
-            onClose={() => {
-              setShowAudioPlayer(false);
-            }}
-          />
-        ) : null}
-        {showVideoPlayer && openedVideo !== undefined ? (
-          <VideoPlayer
-            roomId={openedVideo.roomId}
-            src={openedVideo.src}
-            fileId={openedVideo.fileId}
-            moduleWorkerId={openedVideo.moduleWorkerId}
-            onClose={() => {
-              setShowVideoPlayer(false);
-            }}
-          />
-        ) : null}
-      </Suspense>
+        ) : null
+      ) : null}
+      {selectedNav === 12 ? (
+        <CreateBotCategoryPage
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {selectedNav === 13 ? (
+        <Workshop
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {showGlobe ? (
+        <SearchEngine
+          onClose={() => setShowGlobe(false)}
+          onUserSelected={(id) => {
+            setSelectedUserId(id);
+            setShowProfile(true);
+          }}
+        />
+      ) : null}
+      {showProfile && selectedUserId !== undefined ? (
+        <Profile
+          onClose={() => {
+            setShowProfile(false);
+            setSelectedUserId(undefined);
+          }}
+          user_id={selectedUserId}
+          onAddToRoomSelected={() => {
+            setShowSpacesList(true);
+            setShowProfile(false);
+          }}
+        />
+      ) : null}
+      {selectedNav === 18 ? (
+        <InvitationsList
+          roomId={props.room_id}
+          userId={me.id}
+          onClose={() => {
+            setSelectedNav(undefined);
+            setInTheGame(true);
+          }}
+        />
+      ) : null}
+      {showSpacesList && selectedUserId !== undefined ? (
+        <SpacesList
+          onClose={() => {
+            setShowSpacesList(false);
+            setSelectedUserId(undefined);
+          }}
+          user_id={selectedUserId}
+        />
+      ) : null}
+      {showAudioPlayer && openedAudio !== undefined ? (
+        <AudioPlayer
+          roomId={openedAudio.roomId}
+          src={openedAudio.src}
+          fileId={openedAudio.fileId}
+          moduleWorkerId={openedAudio.moduleWorkerId}
+          onClose={() => {
+            setShowAudioPlayer(false);
+          }}
+        />
+      ) : null}
+      {showVideoPlayer && openedVideo !== undefined ? (
+        <VideoPlayer
+          roomId={openedVideo.roomId}
+          src={openedVideo.src}
+          fileId={openedVideo.fileId}
+          moduleWorkerId={openedVideo.moduleWorkerId}
+          onClose={() => {
+            setShowVideoPlayer(false);
+          }}
+        />
+      ) : null}
       {!wallpaperLoaded ? (
         <div
           style={{
@@ -1064,36 +1055,4 @@ export default function Space(props) {
       <TriggerInTheGame />
     </div>
   );
-
-  if (props.backable === true) {
-    return (
-      <Dialog
-        fullScreen
-        hideBackdrop={true}
-        open={open}
-        TransitionComponent={Transition}
-        PaperProps={{
-          style: {
-            width: "100%",
-            height: "100%",
-            background: "transparent",
-            boxShadow: "none",
-          },
-        }}
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "fixed",
-          left: 0,
-          top: 0,
-          background: "transparent",
-          boxShadow: "none",
-        }}
-      >
-        {ui}
-      </Dialog>
-    );
-  } else {
-    return ui;
-  }
 }

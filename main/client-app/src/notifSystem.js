@@ -1,5 +1,4 @@
-import { setCurrentRoomId, setCurrentNav, setCurrentModuleWorker, openInnerNotif } from "./App";
-// Import the functions you need from the SDKs you need
+import { openInnerNotif } from "./App";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getMessaging, onMessage, getToken } from "firebase/messaging";
@@ -36,20 +35,6 @@ const winsw = new BroadcastChannel("winsw");
 winsw.onmessage = (event) => {
   winsw.postMessage({ token: localStorage.getItem("token") });
 };
-/*winsw.onmessage = ({data}) => {
-  console.log(
-  "navigating to room : " +
-    data.roomId +
-    " , nav : " +
-    data.nav +
-    " , mw : " +
-    data.mwId +
-    "..."
-);
-setCurrentRoomId(data.roomid);
-setCurrentNav(data.nav);
-setCurrentModuleWorker(data.mwId);
-};*/
 
 // Register SW, Register Push, Send Push
 async function send() {

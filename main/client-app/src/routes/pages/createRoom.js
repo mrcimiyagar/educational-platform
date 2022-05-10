@@ -1,11 +1,11 @@
 import { Button, Fab, Paper } from "@material-ui/core";
 import React, { useEffect } from "react";
 import {
-  currentRoomId,
+  removeTab,
   setBottomSheetContent,
   setBSO,
-  setCurrentRoomId,
   setOnBsClosed,
+  tabs,
 } from "../../App";
 import { colors, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
@@ -185,12 +185,9 @@ export default function CreateRoom(props) {
                           }
                           handleClose();
                           setTimeout(() => {
-                            if (props.editingRoomId === currentRoomId) {
-                              if (result.spaceMainRoomId !== undefined) {
-                                setCurrentRoomId(result.spaceMainRoomId);
-                              } else {
-                                setCurrentRoomId(homeRoomId);
-                              }
+                            let removingTabs = tabs.filter(tab => tab === props.editingRoomId);
+                            if (removingTabs.length > 0) {
+                              removeTab(props.editingRoomId);
                             }
                           }, 250);
                         }

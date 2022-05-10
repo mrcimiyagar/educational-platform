@@ -16,7 +16,7 @@ import Language from '@material-ui/icons/Language'
 import SettingsIcon from '@material-ui/icons/Settings'
 import clsx from 'clsx'
 import React from 'react'
-import { gotoPage, isDesktop, isInRoom } from '../../App'
+import { gotoPage, isDesktop } from '../../App'
 import { colors, me, token } from '../../util/settings'
 import { serverRoot } from '../../util/Utils'
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -189,63 +189,6 @@ function HomeDrawer(props) {
             <div style={{ height: 24 }} />
             {list('right')}
           </SwipeableDrawer>
-        ) : null}
-        {isDesktop() ? (
-          <Drawer
-            anchor={'right'}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            style={{ zIndex: 2499 }}
-            variant={isInRoom() ? "temporary" : "permanent"}
-            open={!isInRoom()}
-          >
-            <div
-              onClick={() => {
-                props.setOpen(false)
-                gotoPage('/app/userprofile', { user_id: me.id })
-              }}
-            >
-              <Avatar
-                style={{
-                  width: 56,
-                  height: 56,
-                  marginTop: 64,
-                  marginRight: 16,
-                }}
-                src={
-                  serverRoot +
-                  `/file/download_user_avatar?token=${token}&userId=${me.id}`
-                }
-              />
-              <div style={{ position: 'relative' }}>
-                <Typography
-                  style={{
-                    marginTop: -48,
-                    position: 'absolute',
-                    right: 84,
-                    bottom: 24,
-                    color: '#fff',
-                  }}
-                >
-                  {me.firstName + ' ' + me.lastName}
-                </Typography>
-                <Typography
-                  variant={'subtitle2'}
-                  style={{
-                    position: 'absolute',
-                    right: 84,
-                    bottom: 0,
-                    color: '#fff',
-                  }}
-                >
-                  {me.username}
-                </Typography>
-              </div>
-            </div>
-            <div style={{ height: 24 }} />
-            {list('right')}
-          </Drawer>
         ) : null}
       </nav>
     </div>

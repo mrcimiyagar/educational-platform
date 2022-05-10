@@ -13,29 +13,21 @@ import React, { useEffect } from 'react';
 import { setWallpaper } from '../..';
 import DesktopWallpaper from '../../images/desktop-wallpaper.jpg';
 import {
-  currentRoomId,
-  currentUserId,
   inTheGame,
   isDesktop,
-  isInMessenger,
-  isInRoom,
   isMobile,
   isTablet,
   setInTheGame,
 } from '../../App';
-import ChatEmbedded from '../../components/ChatEmbedded';
 import { setColors, colors, token } from '../../util/settings';
 import AllChats from '../AllChats';
 import BotChats from '../BotChats';
 import ChannelChats from '../ChannelChats';
-import ChatEmbeddedInMessenger from '../ChatEmbeddedInMessenger';
 import GroupChats from '../GroupChats';
 import HomeSearchbar from '../HomeSearchbar';
 import HomeToolbar from '../HomeToolbar';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import { leaveRoom, serverRoot, useForceUpdate } from '../../util/Utils';
-import {setMembership as setMCE} from '../ChatEmbedded';
-import {setMembership as setMCEIM} from '../ChatEmbeddedInMessenger';
 import MainWallpaper from '../../images/home-wallpaper2.jpg';
 
 function TabPanel(props) {
@@ -70,9 +62,8 @@ export default function HomeMessenger(props) {
     const useStyles = makeStyles((theme) => ({
       root: {
         flexGrow: 1,
-        marginRight: isDesktop() && isInRoom() ? 256 + 32 + 32 + 8 + 64 : undefined,
-        width: isDesktop() && isInRoom() ? 450 : '100%',
-        maxWidth: isDesktop() && isInRoom() ? 450 : '100%',
+        width: '100%',
+        maxWidth: '100%',
         height: '100%',
       },
       indicator: {
@@ -95,11 +86,6 @@ export default function HomeMessenger(props) {
           <HomeToolbar inTheGame={inTheGame}>
             <AppBar
               style={{
-                borderRadius: !isDesktop()
-                  ? undefined
-                  : currentRoomId === undefined
-                  ? '24px 24px 0 0'
-                  : '0 24px 0 0',
                 marginRight: isDesktop() ? 256 + 32 + 32 + 64 : undefined,
                 marginTop: isDesktop() ? 32 : undefined,
                 width: isDesktop() || isTablet() ? 450 : '100%',
@@ -162,13 +148,7 @@ export default function HomeMessenger(props) {
               transition: 'opacity .5s',
               marginLeft: isMobile() ? -8 : undefined,
               marginRight: isMobile() || isDesktop() ? -8 : undefined,
-              marginTop: isDesktop() ? 128 : 96,
-              borderRadius:
-                isTablet() || isMobile()
-                  ? 0
-                  : currentRoomId === undefined
-                  ? '0 0 24px 24px'
-                  : '0 0 24px 0',
+              marginTop: isDesktop() ? 128 : 96
             }}
           >
             <TabPanel
@@ -260,29 +240,6 @@ export default function HomeMessenger(props) {
               </div>
             </TabPanel>
           </div>
-          {isDesktop() && isInMessenger() ? (
-            <ChatEmbeddedInMessenger
-              key={'chat1'}
-              roomId={currentRoomId}
-              userId={currentUserId}
-            />
-          ) : isTablet() ? (
-            <div
-              style={{
-                width: 'calc(100% - 450px)',
-                height: '100%',
-                position: 'fixed',
-                left: 0,
-                top: 0,
-              }}
-            >
-              <ChatEmbedded
-                key={'chat2'}
-                roomId={currentRoomId}
-                userId={currentUserId}
-              />
-            </div>
-          ) : null}
           <Slide direction="right" in={inTheGame} mountOnEnter unmountOnExit {...{timeout: 1000}}>
               <Fab
                 color="secondary"

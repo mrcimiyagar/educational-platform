@@ -12,7 +12,6 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction'
 import React from 'react'
 import {
   animatePageChange,
-  currentRoomId,
   db,
   gotoPage,
   histPage,

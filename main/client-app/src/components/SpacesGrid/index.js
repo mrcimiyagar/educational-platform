@@ -14,12 +14,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import React, { useEffect } from "react";
 import {
+  addTab,
   cacheSpace,
   fetchSpaces,
   inTheGame,
   setBottomSheetContent,
   setBSO,
-  setCurrentRoomId,
 } from "../../App";
 import { colors, homeRoomId, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
@@ -234,7 +234,7 @@ export default function SpacesGrid(props) {
                                       handleClose();
                                       setTimeout(() => {
                                         setBottomSheetContent(null);
-                                        setCurrentRoomId(r.id);
+                                        addTab(r.id);
                                       }, 250);
                                     }}
                                   >
@@ -308,7 +308,7 @@ export default function SpacesGrid(props) {
           onClick={() => {
             handleClose();
             setTimeout(() => {
-              setCurrentRoomId(homeRoomId);
+              addTab(homeRoomId);
             }, 250);
           }}
         >
@@ -324,7 +324,7 @@ export default function SpacesGrid(props) {
           onClick={() => {
             handleClose();
             setTimeout(() => {
-              setCurrentRoomId(1);
+              addTab(1);
             }, 250);
           }}
         >

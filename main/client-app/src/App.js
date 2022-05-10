@@ -2,7 +2,10 @@ import {
   createTheme,
   Dialog,
   Drawer,
+  makeStyles,
   StylesProvider,
+  Tab,
+  Tabs,
   ThemeProvider,
 } from "@material-ui/core";
 import React, { useEffect } from "react";
@@ -21,8 +24,6 @@ import NotePage from "./routes/pages/notes";
 import PhotoViewer from "./routes/pages/photoViewer";
 import PollPage from "./routes/pages/polls";
 import Profile from "./routes/pages/profile";
-import RoomPage from "./routes/pages/room";
-import RoomsTree from "./routes/pages/roomsTree";
 import SearchEngine from "./routes/pages/searchEngine";
 import SearchEngineResults from "./routes/pages/searchEngineResults";
 import Store from "./routes/pages/store";
@@ -56,14 +57,6 @@ import {
   validateToken,
 } from "./util/Utils";
 import { ifServerOnline, pathConfig, setDisplay2, setWallpaper } from ".";
-import {
-  addMessageToList2,
-  replaceMessageInTheList2,
-} from "./components/ChatEmbeddedInMessenger";
-import {
-  addMessageToList3,
-  replaceMessageInTheList3,
-} from "./components/ChatEmbedded";
 import { addNewChat, setLastMessage, updateChat } from "./components/HomeMain";
 import GenerateLink from "./routes/pages/generateLink";
 import GenerateInvitation from "./routes/pages/invitationsList";
@@ -86,6 +79,7 @@ import BotInfoPage from "./routes/pages/botInfo";
 import RoomsListPage from "./routes/pages/roomsList";
 import Space from "./routes/pages/space";
 import InnerNotif, { showInnerNotif } from "./components/InnerNotif";
+import SwipeableViews from "react-swipeable-views";
 const PouchDB = require("pouchdb").default;
 
 export let openInnerNotif = (text, color) => {
@@ -102,11 +96,20 @@ export let setBoardFrame = (bf) => {
   boardFrame = bf;
 };
 
-export let currentRoomId = undefined;
-let setCRId = undefined;
-export let setCurrentRoomId = (id) => {
-  setInTheGame(false);
-  setTimeout(() => setCRId(id), 250);
+export let currentTab = undefined;
+export let setCurrentTab = undefined;
+
+export let tabs = undefined;
+let setTabs = undefined;
+export let addTab = (rId) => {
+  tabs.push(rId);
+  setTabs(tabs);
+  setCurrentTab(tabs.length - 1);
+};
+export let removeTab = (rId) => {
+  let tempTabs = [...tabs].filter((tab) => tab !== rId);
+  setTabs(tempTabs);
+  setCurrentTab(tabs.length - 1);
 };
 
 export let currentUserId = 0;
@@ -131,37 +134,7 @@ export let isTablet = () => {
 export let isMobile = () => {
   return sizeMode === "mobile";
 };
-export let isInRoom = () => {
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  let entries = Object.fromEntries(urlSearchParams.entries());
-  let counter = series.length - 1;
-  while (counter >= 0) {
-    if (series[counter] in pages) {
-      if (
-        series[counter] === "/app/room" ||
-        (series[counter] === "/app/home" && entries.tab_index === "4")
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    counter--;
-  }
-  return false;
-};
 export let isInMessenger = () => {
-  let counter = series.length - 1;
-  while (counter >= 0) {
-    if (series[counter] in pages) {
-      if (series[counter] === "/app/home") {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    counter--;
-  }
   return false;
 };
 export let series = [];
@@ -273,12 +246,6 @@ let DesktopDetector = () => {
   return <div />;
 };
 
-export let roomId = 0;
-export let setRoomId = (ri) => {
-  if (ri === undefined || ri === null) return;
-  roomId = ri;
-};
-
 export let user = undefined;
 export let setUser = (ri) => {
   user = ri;
@@ -287,43 +254,6 @@ export let setUser = (ri) => {
 export let query = "";
 export let setQuery = (ri) => {
   query = ri;
-};
-
-let dialogs = {
-  "/app/chat": Chat,
-  "/app/storebot": StoreBot,
-  "/app/storeads": StoreAds,
-  "/app/photoviewer": PhotoViewer,
-  "/app/poll": PollPage,
-  "/app/notes": NotePage,
-  "/app/deck": DeckPage,
-  "/app/searchengineresults": SearchEngineResults,
-  "/app/userprofile": Profile,
-  "/app/createroom": CreateRoom,
-  "/app/roomstree": RoomsTree,
-  "/app/audioplayer": AudioPlayer,
-  "/app/settings": SettingsPage,
-  "/app/videoplayer": VideoPlayer,
-  "/app/generate_invite_link": GenerateLink,
-  "/app/generate_invitation": GenerateInvitation,
-  "/app/spaces_list": SpacesListPage,
-  "/app/createbot": CreateBotPage,
-  "/app/createbotcategory": CreateBotCategoryPage,
-  "/app/storedialog": StoreDialog,
-  "/app/createcomment": CreateComment,
-  "/app/createwidget": CreateWidget,
-  "/app/botinfo": BotInfoPage,
-  "/app/roomslist": RoomsListPage,
-  "/app/rocket": Rocket,
-};
-let pages = {
-  "/app/store": Store,
-  "/app/home": MessengerPage,
-  "/app/room": RoomPage,
-  "/app/searchengine": SearchEngine,
-  "/app/auth": Authentication,
-  "/app/use_invitation": ConfigGuestAccount,
-  "/app/workshop": Workshop,
 };
 
 export let setDialogOpen = null;
@@ -567,9 +497,18 @@ MainAppContainer = (props) => {
   [routeTrigger, setRouteTrigger] = React.useState(false);
   [uploadingFiles, setUploadingFiles] = React.useState({});
   [authenticationValid, setAuthenticationValid] = React.useState(true);
-  [currentRoomId, setCRId] = React.useState(
-    props.room_id !== undefined ? props.room_id : homeRoomId
-  );
+
+  const useStyles = makeStyles({
+    indicator: {
+      backgroundColor: colors.oposText,
+    },
+    tab: {
+      color: colors.oposText,
+    },
+  });
+
+  let classes = useStyles();
+
   const [sn, setSN] = React.useState(Number(props.selected_nav));
   const [mwId, setMwId] = React.useState(Number(props.module_worker_id));
 
@@ -582,6 +521,8 @@ MainAppContainer = (props) => {
     React.useState(undefined);
   const [guestParams, setGuestParams] = React.useState(undefined);
   const [showGuestGonfig, setShowGuestConfig] = React.useState(false);
+  [currentTab, setCurrentTab] = React.useState(0);
+  [tabs, setTabs] = React.useState([homeRoomId]);
 
   showGuestConfiguration = (p) => {
     setGuestParams(p);
@@ -597,43 +538,11 @@ MainAppContainer = (props) => {
     }, 250);
   };
   useEffect(() => {
-    if (histPage === "/app/searchengine") {
-      setWallpaper({ type: "color", color: colors.accentDark });
-    }
-  }, [histPage]);
-  window.onpopstate = function (e) {
-    e.preventDefault();
-    if (setDialogOpen !== null) {
-      setDialogOpen(false);
-    }
-    setTimeout(popPage, 250);
-  };
-  let P = undefined;
-  let D = undefined;
-  let pQuery = undefined;
-  let dQuery = undefined;
-  if (series[series.length - 1] in pages) {
-    P = pages[series[series.length - 1]];
-    pQuery = paramsSeries[paramsSeries.length - 1];
-  } else {
-    if (series[series.length - 1] in dialogs) {
-      D = dialogs[series[series.length - 1]];
-      dQuery = paramsSeries[paramsSeries.length - 1];
-      let counter = series.length - 2;
-      while (counter >= 0) {
-        if (series[counter] in pages) {
-          P = pages[series[counter]];
-          pQuery = paramsSeries[counter];
-          break;
-        }
-        counter--;
-      }
-    }
-  }
-  useEffect(() => {
     setDisplay2("none");
   }, []);
   useEffect(() => {
+    tabs[0] = props.room_id !== undefined ? props.room_id : homeRoomId;
+    setTabs(tabs);
     ifServerOnline(
       () => {
         isOnline = true;
@@ -666,8 +575,6 @@ MainAppContainer = (props) => {
           registerEvent("message-added", ({ msgCopy }) => {
             if (me.id !== msgCopy.authorId) {
               addMessageToList(msgCopy);
-              addMessageToList2(msgCopy);
-              addMessageToList3(msgCopy);
               setLastMessage(msgCopy);
               updateMessageSeen(msgCopy);
               updateMessageSeen2(msgCopy);
@@ -698,8 +605,6 @@ MainAppContainer = (props) => {
           unregisterEvent("message-seen");
           registerEvent("message-seen", ({ messages }) => {
             messages.forEach((msg) => replaceMessageInTheList(msg));
-            messages.forEach((msg) => replaceMessageInTheList2(msg));
-            messages.forEach((msg) => replaceMessageInTheList3(msg));
             messages.forEach((msg) => updateMessageSeen(msg));
             messages.forEach((msg) => updateMessageSeen2(msg));
             messages.forEach((msg) => updateMessageSeen3(msg));
@@ -768,7 +673,7 @@ MainAppContainer = (props) => {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  roomId: currentRoomId,
+                  roomId: tabs[0],
                 }),
                 redirect: "follow",
               };
@@ -849,12 +754,44 @@ MainAppContainer = (props) => {
     >
       <DesktopDetector />
       <Sidebar />
-      <Space
-        room_id={currentRoomId}
-        key={currentRoomId}
-        selected_nav={sn}
-        module_worker_id={mwId}
-      />
+      <Tabs
+        variant={"scrollable"}
+        value={currentTab}
+        onChange={(event, newValue) => {
+          setCurrentTab(newValue);
+        }}
+        classes={{
+          indicator: classes.indicator,
+        }}
+        style={{
+          direction: "rtl",
+          height: 56,
+          backgroundColor: colors.primaryMedium,
+          backdropFilter: "blur(10px)",
+        }}
+      >
+        {tabs.map((tab, tabIndex) => (
+          <Tab
+            classes={{ root: classes.tab }}
+            style={{ color: colors.oposText, fontWeight: "bold" }}
+            label={tab}
+            value={tabIndex}
+          />
+        ))}
+      </Tabs>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "relative",
+        }}
+      >
+        {tabs.map((tab, tabIndex) => (
+          <div style={{ width: "100%", height: "calc(100% - 56px)", position: 'fixed', left: 0, top: 56 }}>
+            <Space selected_nav={sn} module_worker_id={mwId} room_id={tab} show={tabIndex === currentTab} index={tabIndex} />
+          </div>
+        ))}
+      </div>
       <InnerNotif />
       <Drawer
         PaperProps={{

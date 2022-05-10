@@ -30,7 +30,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import SortableTree from "react-sortable-tree";
 import "react-sortable-tree/style.css";
 import "react-table/react-table.css";
-import { isDesktop, setCurrentRoomId, setInTheGame } from "../../App";
+import { addTab, isDesktop, setInTheGame } from "../../App";
 import { NotificationManager } from "../../components/ReactNotifications";
 import { colors, me, token } from "../../util/settings";
 import {
@@ -436,7 +436,7 @@ export let RoomTreeBox = (props) => {
                         if (result.canAccess === true) {
                           setInTheGame(false);
                           setTimeout(() => {
-                            setCurrentRoomId(room.id);
+                            addTab(room.id);
                           }, 500);
                         }
                       })

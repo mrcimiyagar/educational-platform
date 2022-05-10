@@ -16,7 +16,7 @@ import { Add, ArrowForward } from "@material-ui/icons";
 import CloseIcon from "@material-ui/icons/Close";
 import React, { useEffect } from "react";
 import Poll from "react-polls";
-import { isDesktop, isInRoom } from "../../App";
+import { isDesktop } from "../../App";
 import { colors, token } from "../../util/settings";
 import {
   registerEvent,
@@ -214,7 +214,7 @@ export function PollBox(props) {
           backgroundColor: colors.primaryMedium,
           backdropFilter: "blur(10px)",
           position: "fixed",
-          left: isDesktop() && isInRoom() ? "calc(50% - 225px)" : "50%",
+          left: "50%",
           transform: "translateX(-50%)",
         }}
       >

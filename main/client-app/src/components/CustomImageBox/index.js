@@ -14,6 +14,7 @@ export default function CustomImageBox(props) {
       };
       var imgLarge = new Image();
       imgLarge.src = placeholder.dataset.large;
+      imgLarge.style.height = '100%';
       imgLarge.style.objectFit = (props.style === undefined || props.style.objectFit === undefined) ? 'fit' : props.style.objectFit;
       imgLarge.onload = function () {
         imgLarge.classList.add('loaded');

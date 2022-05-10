@@ -16,7 +16,6 @@ import {
   useForceUpdate,
 } from "../../util/Utils";
 import { Rnd } from "react-rnd";
-import { currentRoomId } from "../../App";
 import WhiteboardIcon from "../../images/whiteboard.png";
 import TaskboardIcon from "../../images/taskboard.png";
 import FilesIcon from "../../images/files.png";
@@ -26,19 +25,9 @@ import PresentationIcon from "../../images/presentation.png";
 import NotesIcon from "../../images/notebook.png";
 import ModulesIcon from "../../images/modules.png";
 
-var lastScrollTop = 0;
-let idDict = {};
-let memDict = {};
-let clickEvents = {};
-let mirrors = [];
-let styledContents = {};
-let timers = {};
-let guis = {};
-let currentEngineHeartbit;
-let widgets = [];
 let clickedElId = undefined;
 
-let ckeckCode = (wwId, codes, widgetId) => {
+let ckeckCode = (wwId, codes, widgetId, roomId, idDict, setIdDict, memDict, setMemDict) => {
   for (let i = 0; i < codes.length; i++) {
     let code = codes[i];
     let handler = () => {
@@ -89,7 +78,7 @@ let ckeckCode = (wwId, codes, widgetId) => {
 
           if (allowed === true) {
             if (condition.then !== undefined) {
-              ckeckCode(wwId, condition.then, widgetId);
+              ckeckCode(wwId, condition.then, widgetId, roomId, idDict, setIdDict, memDict, setMemDict);
               break;
             }
           }
@@ -97,8 +86,10 @@ let ckeckCode = (wwId, codes, widgetId) => {
       } else if (code.type === "straight") {
         if (code.updateType === "gui") {
           idDict[wwId][code.elId].obj[code.property] = code.newValue;
+          setIdDict(idDict);
         } else if (code.updateType === "memory") {
           memDict[wwId][code.memoryId] = code.value;
+          setMemDict(memDict);
         }
       } else if (code.type === "tellBot") {
         let requestOptions = {
@@ -108,7 +99,7 @@ let ckeckCode = (wwId, codes, widgetId) => {
             token: token,
           },
           body: JSON.stringify({
-            roomId: currentRoomId,
+            roomId: roomId,
             widgetWorkerId: wwId,
             widgetId: widgetId,
             elementId: clickedElId,
@@ -136,12 +127,23 @@ let ckeckCode = (wwId, codes, widgetId) => {
 export let openToolbox = () => {};
 export let toggleEditMode = () => {};
 
+let styledContents = {};
+let guis = {};
+
 export default function BotsBox(props) {
   let forceUpdate = useForceUpdate();
   let [editMode, setEditMode] = React.useState(false);
   let [myBots, setMyBots] = React.useState([]);
   let [menuOpen, setMenuOpen] = React.useState(false);
   let [mySelectedBot, setMySelectedBot] = React.useState(0);
+  
+  let [lastScrollTop, setLastScrollTop] = React.useState(0);
+  let [idDict, setIdDict] = React.useState({});
+  let [memDict, setMemDict] = React.useState({});
+  let [clickEvents, setClickEvents] = React.useState({});
+  let [mirrors, setMirrors] = React.useState([]);
+  let [timers, setTimers] = React.useState({});
+  let [widgets, setWidgets] = React.useState([]);
 
   toggleEditMode = () => setEditMode(!editMode);
 
@@ -191,8 +193,8 @@ export default function BotsBox(props) {
   };
 
   useEffect(() => {
-    let element = document.getElementById("botsContainerOuter");
-    let botsSearchbar = document.getElementById("botsSearchbar");
+    let element = document.getElementById("botsContainerOuter" + props.id);
+    let botsSearchbar = document.getElementById("botsSearchbar" + props.id);
     botsSearchbar.style.transform = "translateY(-100px)";
     element.addEventListener(
       "scroll",
@@ -205,7 +207,7 @@ export default function BotsBox(props) {
           botsSearchbar.style.transform = "translateY(0)";
           botsSearchbar.style.transition = "transform .5s";
         }
-        lastScrollTop = st <= 0 ? 0 : st;
+        setLastScrollTop(st <= 0 ? 0 : st);
       },
       false
     );
@@ -213,7 +215,7 @@ export default function BotsBox(props) {
   }, []);
 
   useEffect(() => {
-    currentEngineHeartbit = setInterval(() => {
+    let currentEngineHeartbit = setInterval(() => {
       try {
         mirrors.forEach((mirror) => {
           let timeNow =
@@ -228,6 +230,7 @@ export default function BotsBox(props) {
           varCont = varCont.replace("@" + mirror.variable.id, timeNow);
           idDict[mirror.widgetWorkerId][mirror.elId].obj[mirror.property] =
             varCont;
+          setIdDict(idDict);
         });
         forceUpdate();
       } catch (ex) {
@@ -246,6 +249,7 @@ export default function BotsBox(props) {
       }
       if (!found) {
         widgets.push(ww);
+        setWidgets(widgets);
         forceUpdate();
         requestInitGui(ww.id, false);
       }
@@ -256,6 +260,7 @@ export default function BotsBox(props) {
       for (let i = 0; i < widgets.length; i++) {
         if (widgets[i].id === wwId) {
           widgets.splice(i);
+          setWidgets(widgets);
           break;
         }
       }
@@ -270,6 +275,7 @@ export default function BotsBox(props) {
           widgets[i].y = ww.y;
           widgets[i].width = ww.width;
           widgets[i].height = ww.height;
+          setWidgets(widgets);
           forceUpdate();
           break;
         }
@@ -281,16 +287,20 @@ export default function BotsBox(props) {
       "gui",
       ({ type, gui: data, widgetId, roomId, widgetWorkerId }) => {
         try {
-          if (currentRoomId === roomId) {
+          if (props.roomId === roomId) {
             if (type === "init") {
               guis[widgetWorkerId] = data;
               idDict[widgetWorkerId] = {};
+              setIdDict(idDict);
               memDict[widgetWorkerId] = {};
+              setMemDict(memDict);
               clickEvents[widgetWorkerId] = {};
+              setClickEvents(clickEvents);
               styledContents[widgetWorkerId] = {};
               mirrors = mirrors.filter(
                 (m) => m.widgetWorkerId !== widgetWorkerId
               );
+              setMirrors(mirrors);
               forceUpdate();
               let requestOptions = {
                 method: "POST",
@@ -320,6 +330,7 @@ export default function BotsBox(props) {
                   styledContents[widgetWorkerId][d.elId] = d.newValue;
                 }
                 idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
+                setIdDict(idDict);
               });
               forceUpdate();
             } else if (type === "mirror") {
@@ -327,30 +338,36 @@ export default function BotsBox(props) {
                 d.widgetWorkerId = widgetWorkerId;
               });
               mirrors = mirrors.concat(data);
+              setMirrors(mirrors);
               forceUpdate();
             } else if (type === "timer") {
               let timer = setInterval(() => {
                 data.updates.forEach((d) => {
                   idDict[widgetWorkerId][d.elId].obj[d.property] = d.newValue;
+                  setIdDict(idDict);
                 });
                 forceUpdate();
               }, data.interval);
               timers[data.timerId] = timer;
+              setTimers(timers);
               forceUpdate();
             } else if (type === "untimer") {
               let timer = timers[widgetWorkerId][data.timerId];
               clearInterval(timer);
               delete timers[widgetWorkerId][data.timerId];
+              setTimers(timers);
               forceUpdate();
             } else if (type === "memorize") {
               memDict[widgetWorkerId][data.memoryId] = data.value;
+              setMemDict(memDict);
               forceUpdate();
             } else if (type === "attachClick") {
               clickEvents[widgetWorkerId][data.elId] = () => {
                 clickedElId = data.elId;
-                ckeckCode(widgetWorkerId, data.codes, widgetId);
+                ckeckCode(widgetWorkerId, data.codes, widgetId, props.roomId, idDict, setIdDict, memDict, setMemDict);
                 forceUpdate();
               };
+              setClickEvents(clickEvents);
             }
           }
         } catch (error) {
@@ -359,7 +376,7 @@ export default function BotsBox(props) {
       }
     );
 
-    let botsSearchbar = document.getElementById("botsSearchbar");
+    let botsSearchbar = document.getElementById("botsSearchbar" + props.id);
     botsSearchbar.style.transform = "translateY(0)";
     botsSearchbar.style.transition = "transform .5s";
 
@@ -390,11 +407,13 @@ export default function BotsBox(props) {
       let varCont = mirror.value;
       varCont = varCont.replace("@" + mirror.variable.id, fetchedDataOfMemory);
       idDict[mirror.widgetWorkerId][mirror.elId].obj[mirror.property] = varCont;
+      setIdDict(idDict);
     }
   });
 
   let updateDesktop = () => {
     widgets = [];
+    setWidgets(widgets);
     let requestOptions = {
       method: "POST",
       headers: {
@@ -422,6 +441,7 @@ export default function BotsBox(props) {
             height: "150px",
           });
         });
+        setWidgets(widgets);
         forceUpdate();
       }
       });
@@ -454,6 +474,7 @@ export default function BotsBox(props) {
               requestInitGui(ww.id, false);
             }
           });
+          setWidgets(widgets);
           forceUpdate();
         }
       })
@@ -472,11 +493,11 @@ export default function BotsBox(props) {
 
   return (
     <div
-      id={props.id}
+      id={'botsBox' + props.id}
       style={{ width: "100%", height: "100%", display: props.style.display }}
     >
       <div
-        id={"botsSearchbar"}
+        id={"botsSearchbar" + props.id}
         style={{
           width: "75%",
           position: "absolute",
@@ -486,7 +507,7 @@ export default function BotsBox(props) {
         }}
       ></div>
       <div
-        id={"botsContainerOuter"}
+        id={"botsContainerOuter" + props.id}
         style={{
           width: "100%",
           height: "100%",
@@ -498,7 +519,7 @@ export default function BotsBox(props) {
         }}
       >
         <div
-          id={"botsContainerInner"}
+          id={"botsContainerInner" + props.id}
           style={{ width: "100%", height: 2000, direction: "ltr" }}
         >
           {widgets.map((ww, index) => {
@@ -693,6 +714,7 @@ export default function BotsBox(props) {
                   isPreview={false}
                   onIdDictPrepared={(idD) => {
                     idDict[ww.id] = idD;
+                    setIdDict(idDict);
                   }}
                   onElClick={(elId) => {
                     if (clickEvents[ww.id][elId] !== undefined) {
@@ -801,6 +823,7 @@ export default function BotsBox(props) {
                     isPreview={false}
                     onIdDictPrepared={(idD) => {
                       idDict[ww.id] = idD;
+                      setIdDict(idDict);
                     }}
                     onElClick={(elId) => {
                       if (clickEvents[ww.id][elId] !== undefined) {

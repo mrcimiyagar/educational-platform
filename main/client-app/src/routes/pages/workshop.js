@@ -12,9 +12,6 @@ import {
 } from "@material-ui/core";
 import { Add, Close, Edit } from "@material-ui/icons";
 import React, { useEffect } from "react";
-import { pathConfig, setWallpaper } from "../..";
-import { currentRoomId, gotoPage, isDesktop } from "../../App";
-import Jumper from "../../components/SearchEngineFam";
 import { colors, themeMode, token } from "../../util/settings";
 import { registerEvent, serverRoot, unregisterEvent, useForceUpdate } from "../../util/Utils";
 import WorkshopWallpaperDark from "../../images/space-wallpaper-dark.png";

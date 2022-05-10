@@ -19,13 +19,12 @@ import VideocamIcon from "@material-ui/icons/Videocam";
 import { Roofing } from "@mui/icons-material";
 import React, { useEffect } from "react";
 import {
+  addTab,
   gotoPage,
   histPage,
   isDesktop,
-  isInRoom,
   isMobile,
   isTablet,
-  setCurrentRoomId,
   setInTheGame,
 } from "../../App";
 import { colors, token, me } from "../../util/settings";
@@ -118,37 +117,10 @@ export default function ChatAppBar(props) {
         <AppBar
           position="fixed"
           style={{
-            width: isDesktop()
-              ? isInRoom()
-                ? 450
-                : "calc(100% - 658px - 96px - 208px - 96px - 48px + 180px - 4px - 16px)"
-              : isTablet()
-              ? isInRoom()
-                ? "100%"
-                : "calc(100% - 450px)"
-              : "100%",
-            borderRadius:
-              isTablet() || isMobile()
-                ? 0
-                : window.location.pathname === "/app/chat" || isInRoom()
-                ? 0
-                : "24px 0 0 0",
+            width: "100%",
             position: isDesktop() || isTablet() ? "fixed" : undefined,
-            top: isDesktop()
-              ? isInRoom()
-                ? props.webcamOn === true ||
-                  (props.webcamOnSecond && props.currentRoomNav !== 2)
-                  ? 300
-                  : 0
-                : 32
-              : 0,
-            left: isInRoom()
-              ? isDesktop()
-                ? "calc(100% - 450px)"
-                : 0
-              : isDesktop()
-              ? 96 + 16
-              : 0,
+            top: 0,
+            left: 0,
             paddingTop: 8,
             height: 64,
             backgroundColor: colors.primaryMedium,
@@ -161,14 +133,12 @@ export default function ChatAppBar(props) {
               marginTop: isDesktop() || isTablet() ? -8 : 0,
             }}
           >
-            {isMobile() || (isTablet() && isInRoom()) ? (
-              <IconButton
+            <IconButton
                 style={{ marginRight: -16 }}
                 onClick={() => props.handleClose()}
               >
                 <ArrowForward style={{ fill: colors.oposText }} />
               </IconButton>
-            ) : null}
             <Avatar
               style={{
                 width: 28,
@@ -192,7 +162,6 @@ export default function ChatAppBar(props) {
                   : ""
               }
               onClick={() => {
-                if (isInRoom()) return;
                 if (
                   (props.room !== undefined &&
                     props.room.chatType === "group") ||
@@ -232,7 +201,7 @@ export default function ChatAppBar(props) {
                 </IconButton>
               <IconButton
                 onClick={() => {
-                  setCurrentRoomId(props.room.id);
+                  addTab(props.room.id);
                 }}
               >
                 <Roofing style={{ fill: colors.oposText }} />

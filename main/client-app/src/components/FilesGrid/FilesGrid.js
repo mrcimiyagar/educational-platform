@@ -8,7 +8,7 @@ import {
 import { PlayArrowTwoTone } from "@material-ui/icons";
 import React, { useEffect } from "react";
 import Viewer from "react-viewer";
-import { gotoPage, isDesktop, isInRoom } from "../../App";
+import { gotoPage, isDesktop } from "../../App";
 import { openAudioPlayer, openVideoPlayer } from "../../routes/pages/space";
 import { colors, me, token } from "../../util/settings";
 import {
@@ -28,10 +28,8 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     height: "calc(100vh - 112px - 88px)",
     paddingTop: 24,
-    marginTop: isDesktop() && isInRoom() ? 64 : 16,
-    width: isDesktop() && isInRoom() ? "calc(100% - 64px)" : "100%",
-    marginRight: isDesktop() && isInRoom() ? 32 : undefined,
-    marginLeft: isDesktop() && isInRoom() ? 32 : undefined,
+    marginTop: 16,
+    width: "100%"
   },
   imageList: {
     paddingTop: 16,

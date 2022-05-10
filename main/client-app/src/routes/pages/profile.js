@@ -12,13 +12,12 @@ import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import SearchIcon from "@material-ui/icons/Search";
 import React, { useEffect } from "react";
 import {
+  addTab,
   gotoPage,
   isDesktop,
   isMobile,
   isTablet,
-  popPage,
   registerDialogOpen,
-  setCurrentRoomId,
   setInTheGame,
 } from "../../App";
 import header from "../../images/profile-header.jpeg";
@@ -660,7 +659,7 @@ export default function Profile(props) {
                 .then((result) => {
                   console.log(JSON.stringify(result));
                   if (result.room !== undefined) {
-                    setCurrentRoomId(result.room.id);
+                    addTab(result.room.id);
                   }
                 })
                 .catch((error) => console.log("error", error));
