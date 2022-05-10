@@ -1,4 +1,4 @@
-const { sockets, metadata } = require("../socket");
+const { metadata, socketRooms } = require("../socket");
 const sw = require("../db/models");
 const {
   addUser,
@@ -34,10 +34,12 @@ router.post("/is_room_accessible", jsonParser, async function (req, res) {
 
 router.post("/is_space_mine", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
-    let spaceSecret = await sw.SpaceSecret.findOne({where: {spaceId: req.body.spaceId}});
+    let spaceSecret = await sw.SpaceSecret.findOne({
+      where: { spaceId: req.body.spaceId },
+    });
     res.send({
       status: "success",
-      isMine: (spaceSecret !== null && spaceSecret.ownerId === session.userId)
+      isMine: spaceSecret !== null && spaceSecret.ownerId === session.userId,
     });
   });
 });
@@ -352,10 +354,20 @@ router.post("/create_room", jsonParser, async function (req, res) {
               req.body.participentId !== undefined
                 ? "private"
                 : req.body.accessType,
-              hidden: req.body.hidden
+            hidden: req.body.hidden,
           });
-          let roomDefaultModuleWorker = await sw.ModuleWorker.create({type: 'filestorage', roomId: room.id, x: 32, y: 32});
-          let roomDefaultModuleWorker2 = await sw.ModuleWorker.create({type: 'videochat', roomId: room.id, x: 32, y: 32 + 150 + 32});
+          let roomDefaultModuleWorker = await sw.ModuleWorker.create({
+            type: "filestorage",
+            roomId: room.id,
+            x: 32,
+            y: 32,
+          });
+          let roomDefaultModuleWorker2 = await sw.ModuleWorker.create({
+            type: "videochat",
+            roomId: room.id,
+            x: 32,
+            y: 32 + 150 + 32,
+          });
           room.fileStorageId = roomDefaultModuleWorker.id;
           room.videochatId = roomDefaultModuleWorker2.id;
           await room.save();
@@ -370,8 +382,18 @@ router.post("/create_room", jsonParser, async function (req, res) {
                 ? "private"
                 : req.body.accessType,
           });
-          let roomDefaultModuleWorker = await sw.ModuleWorker.create({type: 'filestorage', roomId: room.id, x: 32, y: 32});
-          let roomDefaultModuleWorker2 = await sw.ModuleWorker.create({type: 'videochat', roomId: room.id, x: 32, y: 32 + 150 + 32});
+          let roomDefaultModuleWorker = await sw.ModuleWorker.create({
+            type: "filestorage",
+            roomId: room.id,
+            x: 32,
+            y: 32,
+          });
+          let roomDefaultModuleWorker2 = await sw.ModuleWorker.create({
+            type: "videochat",
+            roomId: room.id,
+            x: 32,
+            y: 32 + 150 + 32,
+          });
           room.fileStorageId = roomDefaultModuleWorker.id;
           room.videochatId = roomDefaultModuleWorker2.id;
           await room.save();
@@ -395,8 +417,18 @@ router.post("/create_room", jsonParser, async function (req, res) {
               ? "private"
               : req.body.accessType,
         });
-        let roomDefaultModuleWorker = await sw.ModuleWorker.create({type: 'filestorage', roomId: room.id, x: 32, y: 32});
-        let roomDefaultModuleWorker2 = await sw.ModuleWorker.create({type: 'videochat', roomId: room.id, x: 32, y: 32 + 150 + 32});
+        let roomDefaultModuleWorker = await sw.ModuleWorker.create({
+          type: "filestorage",
+          roomId: room.id,
+          x: 32,
+          y: 32,
+        });
+        let roomDefaultModuleWorker2 = await sw.ModuleWorker.create({
+          type: "videochat",
+          roomId: room.id,
+          x: 32,
+          y: 32 + 150 + 32,
+        });
         room.fileStorageId = roomDefaultModuleWorker.id;
         room.videochatId = roomDefaultModuleWorker2.id;
         await room.save();
@@ -492,7 +524,7 @@ router.post("/delete_room", jsonParser, async function (req, res) {
         });
         return;
       }
-      let room = await sw.Room.findOne({where: {id: req.body.roomId}});
+      let room = await sw.Room.findOne({ where: { id: req.body.roomId } });
       if (room === null) {
         res.send({
           status: "error",
@@ -503,19 +535,20 @@ router.post("/delete_room", jsonParser, async function (req, res) {
       }
       if (room.spaceId === null || room.spaceId === undefined) {
         await room.destroy();
-        await sw.P2pExistance.destroy({where: {roomId: room.id}});
-        await sw.Membership.destroy({where: {roomId: room.id}});
+        await sw.P2pExistance.destroy({ where: { roomId: room.id } });
+        await sw.Membership.destroy({ where: { roomId: room.id } });
         require("../server").pushTo("room_" + room.id, "room-removed", room);
         res.send({ status: "success" });
-      }
-      else{ 
-        let spaceSecret = await sw.SpaceSecret.findOne({where: {spaceId: room.spaceId}});
+      } else {
+        let spaceSecret = await sw.SpaceSecret.findOne({
+          where: { spaceId: room.spaceId },
+        });
         if (spaceSecret.ownerId === session.userId) {
           await room.destroy();
-          await sw.P2pExistance.destroy({where: {roomId: room.id}});
-          await sw.Membership.destroy({where: {roomId: room.id}});
+          await sw.P2pExistance.destroy({ where: { roomId: room.id } });
+          await sw.Membership.destroy({ where: { roomId: room.id } });
           require("../server").pushTo("room_" + room.id, "room-removed", room);
-          let space = await sw.Space.findOne({where: {id: room.spaceId}});
+          let space = await sw.Space.findOne({ where: { id: room.spaceId } });
           res.send({ status: "success", spaceMainRoomId: space.mainRoomId });
         }
       }
@@ -607,12 +640,17 @@ router.post("/get_space_rooms", jsonParser, async function (req, res) {
           })
         ).length > 0;
       if (isMember) {
-        let memberships = await sw.Membership.findAll({raw: true, where: {roomId: roomsList.map(r => r.id)}});
+        let memberships = await sw.Membership.findAll({
+          raw: true,
+          where: { roomId: roomsList.map((r) => r.id) },
+        });
         let memValid = {};
-        memberships.forEach(m => {
+        memberships.forEach((m) => {
           memValid[m.roomId] = true;
         });
-        roomsList = roomsList.filter(r => (memValid[r.id] === true || r.hidden !== true));
+        roomsList = roomsList.filter(
+          (r) => memValid[r.id] === true || r.hidden !== true
+        );
         res.send({ status: "success", rooms: roomsList });
       } else {
         res.send({
@@ -676,8 +714,12 @@ router.post("/update_room", jsonParser, async function (req, res) {
           async function (room) {
             room.title = req.body.title;
             room.avatarId = req.body.avatarId;
-            room.hidden = req.body.hidden !== undefined ? req.body.hidden : room.hidden;
-            room.accessType = req.body.accessType !== undefined ? req.body.accessType : room.accessType;
+            room.hidden =
+              req.body.hidden !== undefined ? req.body.hidden : room.hidden;
+            room.accessType =
+              req.body.accessType !== undefined
+                ? req.body.accessType
+                : room.accessType;
             await room.save();
             let roomSecret = await sw.RoomSecret.findOne({
               where: { roomId: room.id },
@@ -768,26 +810,28 @@ router.post("/get_spaces", jsonParser, async function (req, res) {
         });
         return;
       }
-      sw.Membership.findAll({ raw: true, where: { userId: session.userId } }).then(
-        async function (memberships) {
-          sw.Room.findAll({ raw: true,
-            where: { id: memberships.map((m) => m.roomId) },
-          }).then(async function (rooms) {
-            sw.Space.findAll({
-              raw: true,
-              where: {
-                id: rooms
-                  .map((r) => r.spaceId)
-                  .filter((value) => {
-                    return value !== null;
-                  }),
-              },
-            }).then(function (spaces) {
-              res.send({ status: "success", spaces: spaces });
-            });
+      sw.Membership.findAll({
+        raw: true,
+        where: { userId: session.userId },
+      }).then(async function (memberships) {
+        sw.Room.findAll({
+          raw: true,
+          where: { id: memberships.map((m) => m.roomId) },
+        }).then(async function (rooms) {
+          sw.Space.findAll({
+            raw: true,
+            where: {
+              id: rooms
+                .map((r) => r.spaceId)
+                .filter((value) => {
+                  return value !== null;
+                }),
+            },
+          }).then(function (spaces) {
+            res.send({ status: "success", spaces: spaces });
           });
-        }
-      );
+        });
+      });
     }
   );
 });
@@ -810,92 +854,19 @@ router.post("/enter_room", jsonParser, async function (req, res) {
       return;
     }
 
-    let s = sockets[user.id];
-    if (s === undefined) {
-      throw "socket not found !";
+    if (socketRooms[membership.userId] === undefined) {
+      socketRooms[membership.userId] = [];
     }
-    let roomId = metadata[membership.userId].roomId;
-
-    if (membership.roomId === roomId) {
-      let room = await sw.Room.findOne({
-        where: { id: membership.roomId },
-      });
-      let rooms = await sw.Room.findAll({
-        raw: true,
-        where: { spaceId: room.spaceId },
-      });
-      for (let i = 0; i < rooms.length; i++) {
-        let room = rooms[i];
-        room.users = getRoomUsers(room.id);
-      }
-      let memberships = await sw.Membership.findAll({
-        raw: true,
-        where: { roomId: membership.roomId },
-      });
-      let users = await sw.User.findAll({
-        raw: true,
-        where: { id: memberships.map((mem) => mem.userId) },
-      });
-      if (require("../socket").pauseds[membership.roomId] === undefined) {
-        require("../socket").pauseds[membership.roomId] = {};
-      }
-      require("../server").pushTo("room_" + membership.roomId, "user-entered", {
-        rooms: rooms,
-        pauseds: Object.values(
-          require("../socket").pauseds[membership.roomId]
-        ).map((v) => v.user),
-        users: getRoomUsers(membership.roomId),
-        allUsers: users,
-      });
-      res.send({ status: "success", membership: membership });
-      return;
+    if (
+      socketRooms[membership.userId].filter((rId) => rId === membership.roomId)
+        .length > 0
+    ) {
+      socketRooms[membership.userId].push(membership.roomId);
+      addUser(membership.roomId, user);
     }
 
-    if (sockets[user.id] !== undefined) {
-      sockets[user.id].leave();
-    }
-    if (metadata[membership.userId] !== undefined) {
-      metadata[membership.userId].roomId = 0;
-    }
-    removeUser(roomId, user.id);
-
-    if (roomId !== undefined && roomId !== null && roomId !== 0) {
-      let room = await sw.Room.findOne({ where: { spaceId: roomId } });
-      let rooms = await sw.Room.findAll({
-        raw: true,
-        where: { spaceId: room.spaceId },
-      });
-      for (let i = 0; i < rooms.length; i++) {
-        let room = rooms[i];
-        room.users = getRoomUsers(room.id);
-      }
-      let memberships = await sw.Membership.findAll({
-        raw: true,
-        where: { roomId: roomId },
-      });
-      let users = await sw.User.findAll({
-        raw: true,
-        where: { id: memberships.map((mem) => mem.userId) },
-      });
-      if (require("../socket").pauseds[roomId] === undefined) {
-        require("../socket").pauseds[roomId] = {};
-      }
-      require("../server").pushTo("room_" + roomId, "user-exited", {
-        rooms: rooms,
-        pauseds: Object.values(require("../socket").pauseds[roomId]).map(
-          (v) => v.user
-        ),
-        users: getRoomUsers(roomId),
-        allUsers: users,
-      });
-    }
-
-    s.join("room_" + membership.roomId);
-    metadata[membership.userId].roomId = membership.roomId;
-    addUser(membership.roomId, user);
-
-    room = await sw.Room.findOne({ where: { id: membership.roomId } });
-    rooms = await sw.Room.findAll({
+    let room = await sw.Room.findOne({ where: { id: membership.roomId } });
+    let rooms = await sw.Room.findAll({
       raw: true,
       where: { spaceId: room.spaceId },
     });
@@ -903,22 +874,17 @@ router.post("/enter_room", jsonParser, async function (req, res) {
       let room = rooms[i];
       room.users = getRoomUsers(room.id);
     }
-    memberships = await sw.Membership.findAll({
+    let memberships = await sw.Membership.findAll({
       raw: true,
       where: { roomId: membership.roomId },
     });
-    users = await sw.User.findAll({
+    let users = await sw.User.findAll({
       raw: true,
       where: { id: memberships.map((mem) => mem.userId) },
     });
-    if (require("../socket").pauseds[membership.roomId] === undefined) {
-      require("../socket").pauseds[membership.roomId] = {};
-    }
     require("../server").pushTo("room_" + membership.roomId, "user-entered", {
       rooms: rooms,
-      pauseds: Object.values(
-        require("../socket").pauseds[membership.roomId]
-      ).map((v) => v.user),
+      pauseds: [],
       users: getRoomUsers(membership.roomId),
       allUsers: users,
     });
@@ -929,21 +895,12 @@ router.post("/enter_room", jsonParser, async function (req, res) {
 
 router.post("/exit_room", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
-    if (
-      metadata[user.id] !== undefined &&
-      metadata[user.id].roomId !== undefined
-    ) {
-      let roomId = metadata[user.id].roomId;
-      if (sockets[user.id] !== undefined) {
-        sockets[user.id].leave();
+    if (socketRooms[user.id] !== undefined) {
+      if (membership === null && membership === undefined) {
+        res.send({ status: "success" });
+        return;
       }
-      if (
-        membership !== null &&
-        membership !== undefined &&
-        metadata[membership.userId] !== undefined
-      ) {
-        metadata[membership.userId].roomId = 0;
-      }
+      let roomId = membership.roomId;
       removeUser(roomId, user.id);
       sw.Room.findOne({ where: { id: roomId } }).then(async (room) => {
         sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
@@ -1187,47 +1144,47 @@ router.post("/am_i_in_room", jsonParser, async function (req, res) {
 
 router.post("/use_invitation", jsonParser, async function (req, res) {
   let invite = resolveInvite(req.body.token);
-        if (invite.valid || req.body.token === undefined) {
-          let user = await sw.User.create({
-            id: uuid() + "-" + Date.now(),
-            firstName: req.body.name,
-            lastName: "",
-            username: tools.makeRandomCode(32),
-            isGuest: true,
-          });
-          usersBook[user.id] = user;
-          const { newCreatureId } = require("../server");
-          newCreatureId(user.id);
-          let acc = {
-            id: user.id,
-            roomId: !invite.valid ? req.body.roomId : invite.roomId,
-            user: user,
-            userId: user.id,
-            isGuest: true,
-            ...tools.defaultPermissions,
-            themeColor: tools.lightTheme,
-            token: tools.makeRandomCode(64),
-          };
-          addUser(invite.valid ? invite.roomId : req.body.roomId, user);
-          addGuestAcc(acc);
-          let room = await sw.Room.findOne({ id: acc.roomId });
-          require("../server").pushTo(
-            "room_" + (invite.valid ? invite.roomId : req.body.roomId),
-            "user_joined",
-            { user, room }
-          );
-          res.send({
-            status: "success",
-            token: acc.token,
-            roomId: invite.valid ? invite.roomId : req.body.roomId,
-          });
-        } else {
-          res.send({
-            status: "error",
-            errorCode: "e005",
-            message: "invitation invalid",
-          });
-        }
+  if (invite.valid || req.body.token === undefined) {
+    let user = await sw.User.create({
+      id: uuid() + "-" + Date.now(),
+      firstName: req.body.name,
+      lastName: "",
+      username: tools.makeRandomCode(32),
+      isGuest: true,
+    });
+    usersBook[user.id] = user;
+    const { newCreatureId } = require("../server");
+    newCreatureId(user.id);
+    let acc = {
+      id: user.id,
+      roomId: !invite.valid ? req.body.roomId : invite.roomId,
+      user: user,
+      userId: user.id,
+      isGuest: true,
+      ...tools.defaultPermissions,
+      themeColor: tools.lightTheme,
+      token: tools.makeRandomCode(64),
+    };
+    addUser(invite.valid ? invite.roomId : req.body.roomId, user);
+    addGuestAcc(acc);
+    let room = await sw.Room.findOne({ id: acc.roomId });
+    require("../server").pushTo(
+      "room_" + (invite.valid ? invite.roomId : req.body.roomId),
+      "user_joined",
+      { user, room }
+    );
+    res.send({
+      status: "success",
+      token: acc.token,
+      roomId: invite.valid ? invite.roomId : req.body.roomId,
+    });
+  } else {
+    res.send({
+      status: "error",
+      errorCode: "e005",
+      message: "invitation invalid",
+    });
+  }
 
   /*fetch("https://www.google.com/recaptcha/api/siteverify", {
     method: "POST",
@@ -1315,7 +1272,9 @@ router.post("/get_room_users", jsonParser, async function (req, res) {
               ) {
                 require("../socket").pauseds[membership.roomId] = {};
               }
-              let onlineUsers = getRoomUsers(membership.roomId).map(u => usersBook[u.id]);
+              let onlineUsers = getRoomUsers(membership.roomId).map(
+                (u) => usersBook[u.id]
+              );
               res.send({
                 status: "success",
                 rooms: rooms,
@@ -1337,12 +1296,13 @@ router.post("/check_room_access", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     if (membership === null || membership === undefined) {
       res.send({
-        status: "success", canAccess: false
+        status: "success",
+        canAccess: false,
       });
-    }
-    else {
+    } else {
       res.send({
-        status: "success", canAccess: true
+        status: "success",
+        canAccess: true,
       });
     }
   });
@@ -1427,7 +1387,9 @@ router.post("/move_user", jsonParser, async function (req, res) {
               }
             });
           } else {
-            let space = await sw.Space.findOne({ where: { id: req.body.spaceId } });
+            let space = await sw.Space.findOne({
+              where: { id: req.body.spaceId },
+            });
             fromMems.forEach((fm) => {
               if (fm.roomId !== space.mainRoomId) {
                 fm.destroy();
