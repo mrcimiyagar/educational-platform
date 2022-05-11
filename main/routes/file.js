@@ -372,7 +372,7 @@ router.get("/download_user_avatar", jsonParser, async function (req, res) {
       user = await sw.User.findOne({ where: { id: req.query.userId } });
     }
     if (user.avatarId < 0) {
-      res.sendFile(rootPath + `/files/random-avatar${user.avatarId * -1}.png`);
+      res.sendFile(rootPath + `/files/user-avatars/${user.avatarId * -1}.png`);
       return;
     }
     sw.File.findOne({ where: { id: user.avatarId } }).then(async (file) => {
