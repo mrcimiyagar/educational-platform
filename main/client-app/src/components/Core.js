@@ -27,6 +27,9 @@ import {
   IconButton,
   Paper,
   Typography,
+  Dialog,
+  Slide,
+  Toolbar,
 } from "@material-ui/core";
 import DesktopWindowsIcon from "@material-ui/icons/DesktopWindows";
 import DesktopAccessDisabledIcon from "@material-ui/icons/DesktopAccessDisabled";
@@ -48,7 +51,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import hark from "hark";
 import { colors, me, token } from "../util/settings";
 import { pathConfig } from "..";
-import './core.css';
+import "./core.css";
 import BubbleUI from "react-bubble-ui";
 import "react-bubble-ui/dist/index.css";
 
@@ -480,6 +483,10 @@ let presenterBackup = undefined;
 let instantConnectionFlag = false;
 var pressTimer;
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="right" ref={ref} {...props} />;
+});
+
 function Core(props) {
   let theme = createTheme({
     palette: {
@@ -523,6 +530,8 @@ function Core(props) {
   let [pinList, setPinList] = React.useState(false);
   let [webcamSize, setWebcamSize] = React.useState("big");
   let [videoAccess, setVideoAccess] = React.useState(props.videoAccess);
+  let [specific, setSpecific] = React.useState(false);
+  let [specificOpen, setSpecificOpen] = React.useState(false);
 
   let DesktopDetector = () => {
     useEffect(() => {
@@ -739,18 +748,20 @@ function Core(props) {
         <Card
           id={props.id}
           style={{
-            height: 162,
-            width: 162,
-            borderRadius: 162 / 2
+            height: "calc(100% - 24px)",
+            width: "calc(100% - 24px)",
+            borderRadius: "50%",
+            marginLeft: 12,
+            marginTop: 12,
           }}
           onClick={props.onClick}
         >
-           <Video
-                name={title}
-                id={props.id}
-                stream={vs !== undefined ? vs.value : undefined}
-                onClick={props.onClick}
-              />
+          <Video
+            name={title}
+            id={props.id}
+            stream={vs !== undefined ? vs.value : undefined}
+            onClick={props.onClick}
+          />
         </Card>
       );
     } else {
@@ -758,18 +769,21 @@ function Core(props) {
         <Card
           id={props.id}
           style={{
-            height: 130 + 32,
-            width: "100%",
+            height: "calc(100% - 24px)",
+            width: "calc(100% - 24px)",
+            borderRadius: "50%",
+            marginLeft: 12,
+            marginTop: 12,
           }}
           onClick={props.onClick}
         >
-        <Video
-          name={title}
-          id={props.id}
-          disabled={true}
-          stream={vs !== undefined ? vs.value : undefined}
-          onClick={props.onClick}
-        />
+          <Video
+            name={title}
+            id={props.id}
+            disabled={true}
+            stream={vs !== undefined ? vs.value : undefined}
+            onClick={props.onClick}
+          />
         </Card>
       );
     }
@@ -970,43 +984,59 @@ function Core(props) {
           forceUpdate();
         }}
       ></video>
-      <div style={{position: 'fixed', top: 0, left: 0, bottom: 0, right: 0}}>
-      <BubbleUI options={{
-		size: 150,
-		minSize: 40,
-		gutter: 20,
-		provideProps: true,
-		numCols: 6,
-		fringeWidth: 160,
-		yRadius: 200,
-		xRadius: 75,
-		cornerRadius: 50,
-		showGuides: false,
-		compact: true,
-		gravitation: 5
-	}} className="myBubbleUI">
-     {result.map((key) => {
-            if (needUpdate[key] === true || videoCache[key] === undefined) {
-              videoCache[key] = (
-                <MediaBox
-                  id={key}
-                  onClick={() => {
-                    updatePresenter(key);
-                  }}
-                />
-              );
-              delete needUpdate[key];
-            }
-            if (myUserId === key) return null;
-            if (
-              shownVideos[key] !== true &&
-              shownScreens[key] !== true &&
-              shownAudios[key] !== true
-            )
-              return null;
-            return videoCache[key];
-          }).filter(el => (el !== null))}
-	</BubbleUI>
+      <div style={{ position: "fixed", top: 0, left: 0, bottom: 0, right: 0 }}>
+        <BubbleUI
+          options={{
+            size: 150,
+            minSize: 40,
+            gutter: 20,
+            provideProps: true,
+            numCols: 6,
+            fringeWidth: 160,
+            yRadius: 200,
+            xRadius: 75,
+            cornerRadius: 50,
+            showGuides: false,
+            compact: true,
+            gravitation: 5,
+          }}
+          className="myBubbleUI"
+        >
+          {result
+            .map((key) => {
+              if (needUpdate[key] === true || videoCache[key] === undefined) {
+                videoCache[key] = (
+                  <div
+                    className="child"
+                    style={{
+                      backgroundColor: getRandomColor(),
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  >
+                    <MediaBox
+                      id={key}
+                      onClick={() => {
+                        setSpecific(true);
+                        setSpecificOpen(true);
+                        //updatePresenter(key);
+                      }}
+                    />
+                  </div>
+                );
+                delete needUpdate[key];
+              }
+              if (myUserId === key) return null;
+              if (
+                shownVideos[key] !== true &&
+                shownScreens[key] !== true &&
+                shownAudios[key] !== true
+              )
+                return null;
+              return videoCache[key];
+            })
+            .filter((el) => el !== null)}
+        </BubbleUI>
       </div>
       <Drawer
         variant={pinList ? "permanent" : "temporary"}
@@ -1096,17 +1126,17 @@ function Core(props) {
             borderRadius: "24px 24px 0px 0px",
             height: 84,
             backgroundColor: colors.primaryLight,
-            backdropFilter: 'blur(10px)',
-            textAlign: 'center',
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingTop: 16
+            backdropFilter: "blur(10px)",
+            textAlign: "center",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: 16,
           }}
         >
           <ThemeProvider theme={theme2}>
             <Fab
               id="listButton"
-              style={{marginRight: 16, backgroundColor: colors.accent}}
+              style={{ marginRight: 16, backgroundColor: colors.accent }}
               onClick={() => {
                 window.parent.postMessage(
                   { sender: "conf", action: "hideBottomBar" },
@@ -1120,7 +1150,7 @@ function Core(props) {
             <Fab
               disabled={!audioLoaded}
               id="audioButton"
-              style={{marginRight: 16, backgroundColor: colors.accent}}
+              style={{ marginRight: 16, backgroundColor: colors.accent }}
               onClick={() => {
                 if (audio) {
                   endAudio();
@@ -1138,7 +1168,7 @@ function Core(props) {
               id="endCallButton"
               style={{
                 backgroundColor: "#aa0044",
-                marginRight: 16
+                marginRight: 16,
               }}
               onClick={() => {
                 instantConnectionFlag = false;
@@ -1178,12 +1208,12 @@ function Core(props) {
                 props.onEnd();
               }}
             >
-              <CallEndIcon style={{fill: '#fff'}} />
+              <CallEndIcon style={{ fill: "#fff" }} />
             </Fab>
             <Fab
               disabled={!videoLoaded}
               id="camButton"
-              style={{marginRight: 16, backgroundColor: colors.accent}}
+              style={{ marginRight: 16, backgroundColor: colors.accent }}
               onClick={() => {
                 if (video) {
                   endVideo();
@@ -1200,7 +1230,7 @@ function Core(props) {
             <Fab
               disabled={!screenShareSupported}
               id="screenButton"
-              style={{backgroundColor: colors.accent}}
+              style={{ backgroundColor: colors.accent }}
               onClick={() => {
                 if (screen) {
                   endScreen();
@@ -1292,6 +1322,35 @@ function Core(props) {
           </Typography>
         </Paper>
       </ThemeProvider>
+      {specific ? (
+        <Dialog
+          TransitionComponent={Transition}
+          open={specificOpen}
+          style={{ position: "fixed", left: 0, top: 0 }}
+          PaperProps={{
+            style: {
+              backgroundColor: colors.backSide,
+              boxShadow: "none",
+              backdropFilter: "blur(10px)",
+            },
+          }}
+          fullScreen
+        >
+          <Toolbar style={{ direction: "rtl" }}>
+            <div style={{ flex: 1 }} />
+            <IconButton
+              onClick={() => {
+                setSpecificOpen(false);
+                setTimeout(() => {
+                  setSpecific(false);
+                }, 250);
+              }}
+            >
+              <Close style={{ fill: colors.icon }} />
+            </IconButton>
+          </Toolbar>
+        </Dialog>
+      ) : null}
     </div>
   );
 }
