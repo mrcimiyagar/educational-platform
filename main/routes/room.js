@@ -565,7 +565,10 @@ router.post("/get_room", jsonParser, async function (req, res) {
     });
     return;
   }
-  let room = await sw.Room.findOne({ raw: true, where: { id: req.body.roomId } });
+  let room = await sw.Room.findOne({
+    raw: true,
+    where: { id: req.body.roomId },
+  });
   if (room.accessType === "public") {
     res.send({ status: "success", room: room });
   } else {
@@ -598,10 +601,18 @@ router.post("/get_room", jsonParser, async function (req, res) {
             where: { id: members[0].userId },
           }).firstName;
         }
-        let roomCopy = { ...room, title: participentName };
+        let roomCopy = {
+          id: room.id,
+          title: participentName,
+          avatarId: room.avatarId,
+          chatType: room.chatType,
+          fileStorageId: room.fileStorageId,
+          videochatId: room.videochatId,
+          hidden: room.hidden,
+          spaceId: room.spaceId,
+        };
         res.send({ status: "success", room: roomCopy });
-      }
-      else {
+      } else {
         res.send({ status: "success", room: room });
       }
     });
