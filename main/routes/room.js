@@ -565,7 +565,7 @@ router.post("/get_room", jsonParser, async function (req, res) {
     });
     return;
   }
-  let room = await sw.Room.findOne({ where: { id: req.body.roomId } });
+  let room = await sw.Room.findOne({ raw: true, where: { id: req.body.roomId } });
   if (room.accessType === "public") {
     res.send({ status: "success", room: room });
   } else {
