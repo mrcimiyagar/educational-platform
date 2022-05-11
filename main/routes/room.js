@@ -598,9 +598,12 @@ router.post("/get_room", jsonParser, async function (req, res) {
             where: { id: members[0].userId },
           }).firstName;
         }
-        room = { ...room, title: participentName };
+        let roomCopy = { ...room, title: participentName };
+        res.send({ status: "success", room: roomCopy });
       }
-      res.send({ status: "success", room: room });
+      else {
+        res.send({ status: "success", room: room });
+      }
     });
   }
 });
