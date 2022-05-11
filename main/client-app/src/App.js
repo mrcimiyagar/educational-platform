@@ -118,7 +118,7 @@ export let addTab = (rId) => {
     .then((response) => response.json())
     .then(async (result) => {
       console.log(JSON.stringify(result));
-      tabs.push({roomId: rId, title: result.room.title});
+      tabs.push({roomId: rId, title: result.room.title, chatType: result.room.chatType, participentId: result.room.participentId});
       setTabs(tabs);
       setCurrentTab(tabs.length - 1);
     });
@@ -796,8 +796,12 @@ MainAppContainer = (props) => {
               <img
                 style={{ width: 72, height: 72, borderRadius: 16 }}
                 src={
-                  serverRoot +
-                  `/file/download_room_avatar?token=${token}&roomId=${tab.roomId}`
+                  tab.chatType === 'p2p' ?
+                  (serverRoot +
+                    `/file/download_user_avatar?userId=${tab.participentId}`)
+                  : 
+                  (serverRoot +
+                  `/file/download_room_avatar?token=${token}&roomId=${tab.roomId}`)
                 }
               />
             }

@@ -587,6 +587,7 @@ router.post("/get_room", jsonParser, async function (req, res) {
         });
         let participentName = "...";
         let avatarId = -1;
+        let uId = undefined;
         if (members.length >= 2) {
           let u = await sw.User.findOne({
             where: {
@@ -596,12 +597,14 @@ router.post("/get_room", jsonParser, async function (req, res) {
                   : members[0].userId,
             },
           });
+          uId = u.id;
           participentName = u.firstName;
           avatarId = u.avatarId;
         } else {
           let u = await sw.User.findOne({
             where: { id: members[0].userId },
           });
+          uId = u.id;
           participentName = u.firstName;
           avatarId = u.avatarId;
         }
@@ -614,6 +617,7 @@ router.post("/get_room", jsonParser, async function (req, res) {
           videochatId: room.videochatId,
           hidden: room.hidden,
           spaceId: room.spaceId,
+          participentId: uId
         };
         res.send({ status: "success", room: roomCopy });
       } else {
