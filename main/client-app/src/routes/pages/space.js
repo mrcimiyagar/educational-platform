@@ -523,7 +523,7 @@ export default function Space(props) {
           style={{
             position: "fixed",
             left: 0,
-            top: 56,
+            top: 116,
             width: "100%",
             height: "100%",
             objectFit:
@@ -540,7 +540,7 @@ export default function Space(props) {
           style={{
             position: "fixed",
             left: 0,
-            top: 56,
+            top: 116,
             width: "100%",
             height: "100%",
             objectFit: "cover",
@@ -552,7 +552,7 @@ export default function Space(props) {
             backgroundColor: roomWallpaper.color,
             position: "fixed",
             left: 0,
-            top: 56,
+            top: 116,
             width: "100%",
             height: "100%",
           }}
@@ -565,7 +565,7 @@ export default function Space(props) {
           height: "100%",
           position: "fixed",
           left: 0,
-          top: 56,
+          top: 116,
           overflow: "auto",
         }}
       >

@@ -765,7 +765,6 @@ MainAppContainer = (props) => {
         }}
         style={{
           direction: "rtl",
-          height: 56,
           backgroundColor: colors.primaryMedium,
           backdropFilter: "blur(10px)",
         }}
@@ -774,9 +773,10 @@ MainAppContainer = (props) => {
           <Tab
             classes={{ root: classes.tab }}
             style={{ color: colors.oposText, fontWeight: "bold" }}
+            label={tab}
             icon={
               <img
-                style={{ width: 40, height: 40, borderRadius: 12 }}
+                style={{ width: 72, height: 72, borderRadius: 16 }}
                 src={
                   serverRoot +
                   `/file/download_room_avatar?token=${token}&roomId=${tab}`
@@ -801,7 +801,8 @@ MainAppContainer = (props) => {
               height: "calc(100% - 56px)",
               position: "fixed",
               left: 0,
-              top: 56,
+              top: 116,
+              display: tabIndex === currentTab ? "block" : "none",
             }}
           >
             <Space
