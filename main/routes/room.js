@@ -590,7 +590,7 @@ router.post("/get_room", jsonParser, async function (req, res) {
           participentName = (await sw.User.findOne({
             where: {
               id:
-                members[0].id === user.id
+                members[0].userId === user.id
                   ? members[1].userId
                   : members[0].userId,
             },
