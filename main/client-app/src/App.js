@@ -690,7 +690,7 @@ MainAppContainer = (props) => {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  roomId: tabs[0],
+                  roomId: tabs[0].roomId,
                 }),
                 redirect: "follow",
               };
