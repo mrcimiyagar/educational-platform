@@ -102,12 +102,29 @@ export let setCurrentTab = undefined;
 export let tabs = undefined;
 let setTabs = undefined;
 export let addTab = (rId) => {
-  tabs.push(rId);
-  setTabs(tabs);
-  setCurrentTab(tabs.length - 1);
+  let requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      token: token,
+    },
+    body: JSON.stringify({
+      roomId: rId,
+    }),
+    redirect: "follow",
+  };
+  let getRoomPromise = fetch(serverRoot + "/room/get_room", requestOptions);
+  getRoomPromise
+    .then((response) => response.json())
+    .then(async (result) => {
+      console.log(JSON.stringify(result));
+      tabs.push({roomId: rId, title: result.room.title});
+      setTabs(tabs);
+      setCurrentTab(tabs.length - 1);
+    });
 };
 export let removeTab = (rId) => {
-  let tempTabs = [...tabs].filter((tab) => tab !== rId);
+  let tempTabs = [...tabs].filter((tab) => tab.roomId !== rId);
   setTabs(tempTabs);
   setCurrentTab(tabs.length - 1);
 };
@@ -522,7 +539,7 @@ MainAppContainer = (props) => {
   const [guestParams, setGuestParams] = React.useState(undefined);
   const [showGuestGonfig, setShowGuestConfig] = React.useState(false);
   [currentTab, setCurrentTab] = React.useState(0);
-  [tabs, setTabs] = React.useState([homeRoomId]);
+  [tabs, setTabs] = React.useState([{roomId: props.room_id !== undefined ? props.room_id : homeRoomId, title: 'خانه'}]);
 
   showGuestConfiguration = (p) => {
     setGuestParams(p);
@@ -541,7 +558,7 @@ MainAppContainer = (props) => {
     setDisplay2("none");
   }, []);
   useEffect(() => {
-    tabs[0] = props.room_id !== undefined ? props.room_id : homeRoomId;
+    tabs[0] = {roomId: props.room_id !== undefined ? props.room_id : homeRoomId, title: 'خانه'};
     setTabs(tabs);
     ifServerOnline(
       () => {
@@ -773,13 +790,13 @@ MainAppContainer = (props) => {
           <Tab
             classes={{ root: classes.tab }}
             style={{ color: colors.oposText, fontWeight: "bold" }}
-            label={tab}
+            label={tab.title}
             icon={
               <img
                 style={{ width: 72, height: 72, borderRadius: 16 }}
                 src={
                   serverRoot +
-                  `/file/download_room_avatar?token=${token}&roomId=${tab}`
+                  `/file/download_room_avatar?token=${token}&roomId=${tab.roomId}`
                 }
               />
             }
@@ -808,7 +825,7 @@ MainAppContainer = (props) => {
             <Space
               selected_nav={sn}
               module_worker_id={mwId}
-              room_id={tab}
+              room_id={tab.roomId}
               show={tabIndex === currentTab}
               index={tabIndex}
             />

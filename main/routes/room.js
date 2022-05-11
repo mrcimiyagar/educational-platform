@@ -578,8 +578,30 @@ router.post("/get_room", jsonParser, async function (req, res) {
         });
         return;
       }
+      if (room.spaceId === null || room.spaceId === undefined) {
+        let members = await sw.Membership.findAll({
+          raw: true,
+          where: { roomId: room.id },
+        });
+        let participentName = "...";
+        if (members.length >= 2) {
+          participentName = await sw.User.findOne({
+            where: {
+              id:
+                members[0].id === user.id
+                  ? members[1].userId
+                  : members[0].userId,
+            },
+          });
+        } else {
+          participentName = await sw.User.findOne({
+            where: { id: members[0].userId },
+          });
+        }
+        room = { ...room, title: participentName };
+      }
+      res.send({ status: "success", room: room });
     });
-    res.send({ status: "success", room: room });
   }
 });
 
@@ -902,7 +924,9 @@ router.post("/exit_room", jsonParser, async function (req, res) {
       }
       let roomId = membership.roomId;
       removeUser(roomId, user.id);
-      socketRooms[user.id] = socketRooms[user.id].filter(rId => rId !== roomId);
+      socketRooms[user.id] = socketRooms[user.id].filter(
+        (rId) => rId !== roomId
+      );
       sw.Room.findOne({ where: { id: roomId } }).then(async (room) => {
         sw.Room.findAll({ raw: true, where: { spaceId: room.spaceId } }).then(
           async (rooms) => {
