@@ -471,7 +471,15 @@ router.get("/download_room_avatar", jsonParser, async function (req, res) {
         room = await sw.Room.findOne({ where: { id: req.query.roomId } });
       }
       if (room.avatarId < 0) {
-        res.sendFile(rootPath + `/files/room-avatars/` + (-1 * room.avatarId));
+        if (fs.existsSync(rootPath + `/files/room-avatars/` + (-1 * room.avatarId) + '.gif')) {
+          res.sendFile(rootPath + `/files/room-avatars/` + (-1 * room.avatarId)+ '.gif');
+        }
+        else if (fs.existsSync(rootPath + `/files/room-avatars/` + (-1 * room.avatarId) + '.webp')) {
+          res.sendFile(rootPath + `/files/room-avatars/` + (-1 * room.avatarId) + '.webp');
+        }
+        else {
+          res.sendFile(rootPath + `/files/room-avatars/` + (-1 * room.avatarId));
+        }
         return;
       }
       sw.File.findOne({ where: { id: room.avatarId } }).then(async (file) => {
