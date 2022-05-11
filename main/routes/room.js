@@ -588,7 +588,7 @@ router.post("/get_room", jsonParser, async function (req, res) {
         });
         let participentName = "...";
         if (members.length >= 2) {
-          participentName = await sw.User.findOne({
+          participentName = await sw.User.findOne({raw: true,
             where: {
               id:
                 members[0].id === user.id
@@ -597,7 +597,7 @@ router.post("/get_room", jsonParser, async function (req, res) {
             },
           }).firstName;
         } else {
-          participentName = await sw.User.findOne({
+          participentName = await sw.User.findOne({raw: true,
             where: { id: members[0].userId },
           }).firstName;
         }
