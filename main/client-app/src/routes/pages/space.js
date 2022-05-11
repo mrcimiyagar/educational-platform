@@ -523,9 +523,9 @@ export default function Space(props) {
           style={{
             position: "fixed",
             left: 0,
-            top: 116,
+            top: 120,
             width: "100%",
-            height: "100%",
+            height: "calc(100% - 112px)",
             objectFit:
               roomWallpaper.fitType === undefined
                 ? "cover"
@@ -540,9 +540,9 @@ export default function Space(props) {
           style={{
             position: "fixed",
             left: 0,
-            top: 116,
+            top: 120,
             width: "100%",
-            height: "100%",
+            height: "calc(100% - 112px)",
             objectFit: "cover",
           }}
         />
@@ -552,9 +552,9 @@ export default function Space(props) {
             backgroundColor: roomWallpaper.color,
             position: "fixed",
             left: 0,
-            top: 116,
+            top: 120,
             width: "100%",
-            height: "100%",
+            height: "calc(100% - 112px)",
           }}
         />
       ) : null}
@@ -562,10 +562,10 @@ export default function Space(props) {
         id="searchScrollView"
         style={{
           width: "100%",
-          height: "100%",
+          height: "calc(100% - 112px)",
           position: "fixed",
           left: 0,
-          top: 116,
+          top: 120,
           overflow: "auto",
         }}
       >

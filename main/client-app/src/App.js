@@ -784,6 +784,7 @@ MainAppContainer = (props) => {
           direction: "rtl",
           backgroundColor: colors.primaryMedium,
           backdropFilter: "blur(10px)",
+          height: 120
         }}
       >
         {tabs.map((tab, tabIndex) => (
@@ -818,7 +819,7 @@ MainAppContainer = (props) => {
               height: "calc(100% - 56px)",
               position: "fixed",
               left: 0,
-              top: 116,
+              top: 120,
               display: tabIndex === currentTab ? "block" : "none",
             }}
           >

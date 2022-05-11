@@ -586,24 +586,29 @@ router.post("/get_room", jsonParser, async function (req, res) {
           where: { roomId: room.id },
         });
         let participentName = "...";
+        let avatarId = -1;
         if (members.length >= 2) {
-          participentName = (await sw.User.findOne({
+          let u = await sw.User.findOne({
             where: {
               id:
                 members[0].userId === user.id
                   ? members[1].userId
                   : members[0].userId,
             },
-          })).firstName;
+          });
+          participentName = u.firstName;
+          avatarId = u.avatarId;
         } else {
-          participentName = (await sw.User.findOne({
+          let u = await sw.User.findOne({
             where: { id: members[0].userId },
-          })).firstName;
+          });
+          participentName = u.firstName;
+          avatarId = u.avatarId;
         }
         let roomCopy = {
           id: room.id,
           title: participentName,
-          avatarId: room.avatarId,
+          avatarId: avatarId,
           chatType: room.chatType,
           fileStorageId: room.fileStorageId,
           videochatId: room.videochatId,
