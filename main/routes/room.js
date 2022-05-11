@@ -566,7 +566,6 @@ router.post("/get_room", jsonParser, async function (req, res) {
     return;
   }
   let room = await sw.Room.findOne({
-    raw: true,
     where: { id: req.body.roomId },
   });
   if (room.accessType === "public") {
@@ -588,18 +587,18 @@ router.post("/get_room", jsonParser, async function (req, res) {
         });
         let participentName = "...";
         if (members.length >= 2) {
-          participentName = await sw.User.findOne({raw: true,
+          participentName = (await sw.User.findOne({
             where: {
               id:
                 members[0].id === user.id
                   ? members[1].userId
                   : members[0].userId,
             },
-          }).firstName;
+          })).firstName;
         } else {
-          participentName = await sw.User.findOne({raw: true,
+          participentName = (await sw.User.findOne({
             where: { id: members[0].userId },
-          }).firstName;
+          })).firstName;
         }
         let roomCopy = {
           id: room.id,
