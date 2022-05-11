@@ -83,7 +83,7 @@ winsw.onmessage = (event) => {
               }),
               redirect: "follow",
             };
-            fetch(serverRoot + "/registerFirebaseToken", requestOptions)
+            fetch("https://society.kasperian.cloud/registerFirebaseToken", requestOptions)
               .then((response) => response.json())
               .then((result) => {
                 console.log(JSON.stringify(result));
