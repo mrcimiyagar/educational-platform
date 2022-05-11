@@ -465,16 +465,13 @@ router.get("/download_room_avatar", jsonParser, async function (req, res) {
     }
     sw.Room.findOne({ where: { id: req.query.roomId } }).then(async (room) => {
       if (room.avatarId === undefined || room.avatarId === null) {
-        room.avatarId = -1;
+        let randomAvatarId = -1 * (Math.floor(Math.random() * 13) + 1);
+        room.avatarId = randomAvatarId;
         await room.save();
         room = await sw.Room.findOne({ where: { id: req.query.roomId } });
       }
       if (room.avatarId < 0) {
-        if (room.chatType === "group") {
-          res.sendFile(rootPath + `/files/group-image.png`);
-        } else if (room.chatType === "channel") {
-          res.sendFile(rootPath + `/files/channel-image.png`);
-        }
+        res.sendFile(rootPath + `/files/room-avatars/` + (-1 * room.avatarId));
         return;
       }
       sw.File.findOne({ where: { id: room.avatarId } }).then(async (file) => {

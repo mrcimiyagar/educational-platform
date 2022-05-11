@@ -774,7 +774,15 @@ MainAppContainer = (props) => {
           <Tab
             classes={{ root: classes.tab }}
             style={{ color: colors.oposText, fontWeight: "bold" }}
-            label={tab}
+            icon={
+              <img
+                style={{ width: 40, height: 40, borderRadius: 12 }}
+                src={
+                  serverRoot +
+                  `/file/download_room_avatar?token=${token}&roomId=${tab}`
+                }
+              />
+            }
             value={tabIndex}
           />
         ))}
@@ -787,8 +795,22 @@ MainAppContainer = (props) => {
         }}
       >
         {tabs.map((tab, tabIndex) => (
-          <div style={{ width: "100%", height: "calc(100% - 56px)", position: 'fixed', left: 0, top: 56 }}>
-            <Space selected_nav={sn} module_worker_id={mwId} room_id={tab} show={tabIndex === currentTab} index={tabIndex} />
+          <div
+            style={{
+              width: "100%",
+              height: "calc(100% - 56px)",
+              position: "fixed",
+              left: 0,
+              top: 56,
+            }}
+          >
+            <Space
+              selected_nav={sn}
+              module_worker_id={mwId}
+              room_id={tab}
+              show={tabIndex === currentTab}
+              index={tabIndex}
+            />
           </div>
         ))}
       </div>

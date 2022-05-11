@@ -6,7 +6,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import TravelExplore from "@mui/icons-material/TravelExplore";
 import { colors } from "../../util/settings";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Paper } from "@material-ui/core";
 import { ArrowForward } from "@material-ui/icons";
 
 export default function SpaceSearchbar(props) {
@@ -20,19 +20,21 @@ export default function SpaceSearchbar(props) {
   }));
   let classes = useStyles();
   return (
-    <div
+    <Paper
       style={{
         display: "flex",
         alignItems: "center",
         marginTop: 16,
-        marginLeft: props.fixed ? 56 : 32,
-        marginRight: props.fixed ? 56 : 32,
-        width: props.fixed ? "calc(100% - 112px)" : "calc(100% - 64px)",
+        marginLeft: 32,
+        marginRight: 32,
+        width: "calc(100% - 64px)",
         borderRadius: 24,
         background: colors.field,
-        height: props.fixed ? 24 : 40,
+        backdropFilter: 'blur(10px)',
+        height: 48,
+        transform: props.fixed ? 'translateY(-300px)' : 'translateY(+16px)',
         transition:
-          "width .25s, height .25s, margin-left .25s, margin-right .25s",
+          "transform .5s",
       }}
     >
       <IconButton
@@ -40,12 +42,10 @@ export default function SpaceSearchbar(props) {
         aria-label="menu"
         style={{
           marginRight: 16,
-          opacity: props.fixed ? 0 : 1,
-          transition: "opacity .25s",
         }}
         onClick={props.onMenuClicked}
       >
-        {props.backable === true ? <ArrowForward style={{ fill: colors.text }} /> : <MenuIcon style={{ fill: colors.text }} />}
+        <MenuIcon style={{ fill: colors.text }} />
       </IconButton>
       <InputBase
         sx={{ ml: 1, flex: 1 }}
@@ -61,8 +61,6 @@ export default function SpaceSearchbar(props) {
         style={{
           fill: "#fff",
           marginLeft: 8,
-          opacity: props.fixed ? 0 : 1,
-          transition: "opacity .25s",
         }}
       >
         <SearchIcon style={{ fill: colors.text }} />
@@ -72,14 +70,12 @@ export default function SpaceSearchbar(props) {
         aria-label="directions"
         style={{
           fill: colors.text,
-          opacity: props.fixed ? 0 : 1,
-          transition: "opacity .25s",
           marginLeft: 8
         }}
         onClick={() => props.onSpacesClicked()}
       >
         <TravelExplore style={{fill: colors.accent}} />
       </IconButton>
-    </div>
+    </Paper>
   );
 }

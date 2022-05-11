@@ -142,26 +142,8 @@ let AppContainer = (props) => {
   if (localStorage.getItem("themeMode") === null) {
     localStorage.setItem("themeMode", "light");
   }
-  [wallpaper, setWall] = React.useState({
-    type: "photo",
-    photo:
-      localStorage.getItem("themeMode") === "light"
-        ? SpaceWallpaperLight
-        : SpaceWallpaperDark,
-  });
   [rndKey, setRndKey] = React.useState(1);
-  setWallpaper = (w) => {
-    if (w.type === wallpaper.type) {
-      if (
-        (w.type === "photo" && w.photo === wallpaper.photo) ||
-        (w.type === "video" && w.video === wallpaper.video) ||
-        (w.type === "color" && w.color === wallpaper.color)
-      ) {
-        return;
-      }
-    }
-    setWall(w);
-  };
+  setWallpaper = (w) => {};
   let [connected, setConnected] = React.useState(false);
   let [disconnectionAlert, setDisconnectAlert] = React.useState(false);
   let [opacity, setOpacity] = React.useState(0);
@@ -236,55 +218,19 @@ let AppContainer = (props) => {
         <ColorBase />
         <CustomImageBox
           id={"wallpaperImg"}
-          src={wallpaper.photo}
+          src={
+            localStorage.getItem("themeMode") === "light"
+              ? SpaceWallpaperLight
+              : SpaceWallpaperDark
+          }
           style={{
-            display:
-              wallpaper !== undefined &&
-              wallpaper !== null &&
-              wallpaper.type === "photo"
-                ? "block"
-                : "none",
+            display: "block",
             position: "fixed",
             left: 0,
             top: 0,
             width: "100%",
             height: "100%",
             objectFit: "cover",
-          }}
-        />
-        <video
-          loop
-          autoPlay
-          src={wallpaper.video}
-          style={{
-            display:
-              wallpaper !== undefined &&
-              wallpaper !== null &&
-              wallpaper.type === "video"
-                ? "block"
-                : "none",
-            position: "fixed",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
-        <div
-          style={{
-            display:
-              wallpaper !== undefined &&
-              wallpaper !== null &&
-              wallpaper.type === "color"
-                ? "block"
-                : "none",
-            backgroundColor: wallpaper.color,
-            position: "fixed",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
           }}
         />
         <PreLoading />
@@ -295,46 +241,21 @@ let AppContainer = (props) => {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <ColorBase />
-      {wallpaper === undefined || wallpaper === null ? null : wallpaper.type ===
-        "photo" ? (
-        <CustomImageBox
-          src={wallpaper.photo}
-          style={{
-            position: "fixed",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-            objectFit:
-              wallpaper.fitType === undefined ? "cover" : wallpaper.fitType,
-          }}
-        />
-      ) : wallpaper.type === "video" ? (
-        <video
-          loop
-          autoPlay
-          src={wallpaper.video}
-          style={{
-            position: "fixed",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
-      ) : wallpaper.type === "color" ? (
-        <div
-          style={{
-            backgroundColor: wallpaper.color,
-            position: "fixed",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        />
-      ) : null}
+      <CustomImageBox
+        src={
+          localStorage.getItem("themeMode") === "light"
+            ? SpaceWallpaperLight
+            : SpaceWallpaperDark
+        }
+        style={{
+          position: "fixed",
+          left: 0,
+          top: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+        }}
+      />
       <Suspense fallback={loading}>
         <MainApp />
       </Suspense>

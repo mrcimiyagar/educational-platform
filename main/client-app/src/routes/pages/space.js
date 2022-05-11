@@ -131,7 +131,7 @@ export default function Space(props) {
     setShowVideoPlayer(true);
   };
   const attachScrollCallback = () => {
-    const searchScrollView = document.getElementById("botsContainerOuter");
+    const searchScrollView = document.getElementById("botsContainerOuter" + props.room_id);
     if (searchScrollView === null) {
       setTimeout(() => attachScrollCallback(), 500);
     } else {
@@ -599,7 +599,6 @@ export default function Space(props) {
       </div>
 
       <SpaceSearchbar
-        backable={props.backable}
         fixed={searchBarFixed}
         onSpacesClicked={() => {
           setSelectedNav(10);
