@@ -6,6 +6,7 @@ import MessageIcon from '@material-ui/icons/Message';
 import React, { useEffect } from 'react';
 import { popPage, registerDialogOpen } from '../../App';
 import SpacesSearchbar from '../../components/StoreAdsSearchbar';
+import {colors} from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -80,7 +81,7 @@ export default function StoreAds() {
                     boxShadow: 'none',
                 },
             }}
-            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: 'blur(10px)'}}>
+            fullScreen open={open} onClose={handleClose} TransitionComponent={Transition} style={{backdropFilter: colors.blur}}>
     <div className={classes.root}>
       <div id={'adsSearchbar'} style={{width: '75%', position: 'fixed', right: '12.5%', top: 32, zIndex: 3}}>
         <SpacesSearchbar handleClose={handleClose}/>

@@ -168,7 +168,7 @@ export default function MessageItem(props) {
               position: "absolute",
               marginTop: 8,
               right: 48,
-              backdropFilter: "blur(10px)",
+              backdropFilter: colors.blur,
               backgroundColor: colors.primaryLight,
             }}
           >
@@ -453,7 +453,7 @@ export default function MessageItem(props) {
                         top: 100,
                         left: 0,
                         background: colors.primaryLight,
-                        backdropFilter: "blur(10px)",
+                        backdropFilter: colors.blur,
                       }}
                     >
                       <Button
@@ -748,7 +748,7 @@ export default function MessageItem(props) {
               position: "absolute",
               marginTop: 8,
               left: 48,
-              backdropFilter: "blur(10px)",
+              backdropFilter: colors.blur,
               backgroundColor: colors.primaryLight,
             }}
           >
@@ -1015,7 +1015,7 @@ export default function MessageItem(props) {
                         top: 100,
                         left: 0,
                         background: colors.primaryLight,
-                        backdropFilter: "blur(10px)",
+                        backdropFilter: colors.blur,
                       }}
                     >
                       <Button

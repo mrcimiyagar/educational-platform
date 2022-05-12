@@ -476,7 +476,7 @@ export default function Space(props) {
                 top: "50%",
                 transform: "translate(-50%, -50%)",
                 backgroundColor: colors.field,
-                backdropFilter: "blur(15px)",
+                backdropFilter: colors.blur,
               }}
             >
               <div
@@ -650,8 +650,8 @@ export default function Space(props) {
         anchor={"right"}
         PaperProps={{
           style: {
-            background: colors.primaryLight,
-            backdropFilter: "blur(10px)",
+            background: colors.field,
+            backdropFilter: colors.blur,
           },
         }}
         keepMounted={true}
@@ -668,7 +668,7 @@ export default function Space(props) {
             style={{
               width: 80,
               height: "100%",
-              background: colors.primaryLight,
+              background: colors.backSide,
             }}
           >
             <Avatar
@@ -1026,7 +1026,7 @@ export default function Space(props) {
               top: "50%",
               transform: "translate(-50%, -50%)",
               backgroundColor: colors.field,
-              backdropFilter: "blur(15px)",
+              backdropFilter: colors.blur,
             }}
           >
             <div

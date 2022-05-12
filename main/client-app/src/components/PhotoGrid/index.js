@@ -8,6 +8,7 @@ import React from 'react';
 import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
+import {colors} from '../../util/settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,7 +37,7 @@ export default function PhotoGrid(props) {
                 </ImageListItem>
               ))}
           </ImageList>  :
-          <div style={{width: 'calc(100% - 96px)', height: '100%', marginLeft: 48, marginRight: 48, marginTop: 80, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: 'blur(10px)', borderRadius: '50%'}}>
+          <div style={{width: 'calc(100% - 96px)', height: '100%', marginLeft: 48, marginRight: 48, marginTop: 80, backgroundColor: 'rgba(255, 255, 255, 0.25)', backdropFilter: colors.blur, borderRadius: '50%'}}>
             <img alt={''} src={EmptyIcon} style={{width: '100%', height: '100%', padding: 64}}/>
           </div>
       }

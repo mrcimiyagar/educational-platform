@@ -90,7 +90,7 @@ export default function HomeMessenger(props) {
                 marginTop: isDesktop() ? 32 : undefined,
                 width: isDesktop() || isTablet() ? 450 : '100%',
                 backgroundColor: colors.primaryMedium,
-                backdropFilter: 'blur(10px)'
+                backdropFilter: colors.blur
               }}
             >
               <Toolbar style={{ marginTop: 16, direction: 'rtl' }}>
@@ -143,7 +143,7 @@ export default function HomeMessenger(props) {
                 ? 'calc(100% - 168px - 40px)'
                 : 'calc(100% - 128px - 28px)',
               backgroundColor: colors.backSide,
-              backdropFilter: 'blur(20px)',
+              backdropFilter: colors.blur,
               opacity: inTheGame ? 1 : 0,
               transition: 'opacity .5s',
               marginLeft: isMobile() ? -8 : undefined,

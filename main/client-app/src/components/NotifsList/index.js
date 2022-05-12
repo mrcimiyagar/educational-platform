@@ -12,6 +12,7 @@ import EmptyIcon from '../../images/empty.png';
 import { token } from '../../util/settings';
 import { serverRoot } from '../../util/Utils';
 import EmptySign from '../EmptySign';
+import {colors} from '../../util/settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,7 +56,7 @@ export default function NotifsList() {
         {notifs.map(notif => {
           let dateTime = new Date(Number(notif.time));
           return (<div style={{width: '100%'}}>
-            <ListItem alignItems="flex-start" style={{borderRadius: 16, backgroundColor: 'rgba(200, 10, 120, 0.5)', marginTop: 8, marginRight: -24, width: 'calc(100% + 48px)', backdropFilter: 'blur(10px)'}}>
+            <ListItem alignItems="flex-start" style={{borderRadius: 16, backgroundColor: 'rgba(200, 10, 120, 0.5)', marginTop: 8, marginRight: -24, width: 'calc(100% + 48px)', backdropFilter: colors.blur}}>
               <ListItemAvatar>
                 <Avatar alt="notification avatar" src={notif.icon} />
               </ListItemAvatar>

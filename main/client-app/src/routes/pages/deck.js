@@ -29,7 +29,7 @@ export default function Deck(props) {
       }}
       PaperProps={{
         style: {
-          backgroundColor: 'transparent',
+          backgroundColor: colors.backSide,
           boxShadow: 'none',
         },
       }}
@@ -37,7 +37,7 @@ export default function Deck(props) {
       open={open}
       onClose={handleClose}
       TransitionComponent={Transition}
-      style={{ backdropFilter: 'blur(10px)' }}
+      style={{ backdropFilter: colors.blur }}
     >
       <div
         style={{
@@ -53,7 +53,7 @@ export default function Deck(props) {
             width: '100%',
             height: 64,
             backgroundColor: colors.primaryMedium,
-            backdropFilter: 'blur(10px)',
+            backdropFilter: colors.blur,
             direction: 'rtl'
           }}
         >

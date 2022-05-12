@@ -49,7 +49,7 @@ export default function NotePage(props) {
                     marginTop: isDesktop() ? '3%' : undefined,
                     height: 64,
                     backgroundColor: colors.primaryMedium,
-                    backdropFilter: 'blur(10px)',
+                    backdropFilter: colors.blur,
                     direction: 'rtl'
                 }}>
                     <Toolbar style={{marginTop: (isDesktop() || isTablet()) ? 0 : 8, width: '100%', height: '100%'}}>

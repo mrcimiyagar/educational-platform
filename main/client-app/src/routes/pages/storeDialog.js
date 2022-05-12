@@ -290,7 +290,7 @@ export default function StoreDialog(props) {
                 width: isMobile() ? '100%' : 'calc(85% - 312px)',
                 height: isMobile() ? '100%' : '75%',
                 backgroundColor: 'rgba(255, 255, 255, 0.35)',
-                backdropFilter: 'blur(10px)',
+                backdropFilter: colors.blur,
                 borderRadius: isMobile() ? 0 : 24,
                 overflow: 'hidden',
                 direction: 'rtl'
@@ -305,7 +305,7 @@ export default function StoreDialog(props) {
               <ImageList rowHeight={finalWidth + 56} className={classes.imageList} cols={finalColsCount} style={{marginLeft: 16, marginRight: 16, width: 'calc(100% - 32px)'}}>
                 {cat.packages.map((item) => (
                   <ImageListItem key={'store-package-'+ item.id} cols={3} style={{position: 'relative', marginTop: 8}}>
-                    <div style={{width: '100%', height: '100%', backdropFilter: 'blur(10px)', position: 'absolute', left: 0, top: 0}}></div>
+                    <div style={{width: '100%', height: '100%', backdropFilter: colors.blur, position: 'absolute', left: 0, top: 0}}></div>
                     <img src={item.coverUrl} alt={item.title} style={{borderRadius: 16, opacity: '0.65', width: '100%', height: '100%'}} />
                   </ImageListItem>
                 ))}
@@ -353,7 +353,7 @@ export default function StoreDialog(props) {
         <StoreFam />
       </div>
       </Dialog>
-      <AppBar style={{backdropFilter: 'blur(10px)', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+      <AppBar style={{backdropFilter: colors.blur, alignItems: 'center', justifyContent: 'center', textAlign: 'center',
                         backgroundColor: colors.primaryMedium, position: 'fixed', top: inTheGame ? 0 : -200,
                         left: '50%', transform: 'translateX(-50%)', width: 'auto', maxWidth: 750,
                         zIndex: 99999, borderRadius: '0px 0px 24px 24px', transition: 'top .5s'}}>
@@ -404,7 +404,7 @@ export default function StoreDialog(props) {
           style={{zIndex: 99999, width: 280, height: '90%', borderRadius: 24, position: 'fixed',
                   right: inTheGame ? 32 : (-200 - 280), transition: 'right .5s', top: '50%',
                   transform: 'translateY(-50%)', backgroundColor: colors.primaryMedium,
-                  backdropFilter: 'blur(10px)'}}
+                  backdropFilter: colors.blur}}
       >
         {filters}
       </Paper>
@@ -426,10 +426,10 @@ export default function StoreDialog(props) {
       >
       <div className={classes.root} style={{
         backgroundColor: 'rgba(255, 255, 255, 0.35)',
-        backdropFilter: 'blur(10px)'
+        backdropFilter: colors.blur
       }}>
         <HomeToolbar>
-          <AppBar style={{backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}>
+          <AppBar style={{backgroundColor: colors.primaryMedium, backdropFilter: colors.blur}}>
             <Toolbar style={{marginTop: 16}}>
               <StoreSearchbar removeIcon={false} dialogMode={true} setDrawerOpen={handleClose}/>
             </Toolbar>
@@ -460,7 +460,7 @@ export default function StoreDialog(props) {
               <ImageList rowHeight={finalWidth + 56} className={classes.imageList} cols={finalColsCount} style={{marginLeft: 16, marginRight: 16, width: 'calc(100% - 32px)'}}>
                 {cat.packages.map((item) => (
                   <ImageListItem key={'store-package-'+ item.id} cols={3} style={{position: 'relative', marginTop: 8}}>
-                    <div style={{width: '100%', height: '100%', backdropFilter: 'blur(10px)', position: 'absolute', left: 0, top: 0}}></div>
+                    <div style={{width: '100%', height: '100%', backdropFilter: colors.blur, position: 'absolute', left: 0, top: 0}}></div>
                     <img src={item.coverUrl} alt={item.title} style={{borderRadius: 16, opacity: '0.65', width: '100%', height: '100%'}} />
                   </ImageListItem>
                 ))}

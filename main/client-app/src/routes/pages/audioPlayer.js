@@ -131,7 +131,7 @@ export default function AudioPlayer(props) {
           direction: "rtl",
           backgroundColor: "transparent",
           boxShadow: "none",
-          backdropFilter: "blur(10px)",
+          backdropFilter: colors.blur,
         },
       }}
       fullScreen={!isDesktop()}
@@ -264,7 +264,7 @@ export default function AudioPlayer(props) {
               display: "flex",
               bottom: 0,
               backgroundColor: colors.primaryMedium,
-              backdropFilter: 'blur(10px)',
+              backdropFilter: colors.blur,
               borderRadius: '24px 24px 0px 0px'
             }}
           >

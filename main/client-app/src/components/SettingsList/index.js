@@ -193,7 +193,7 @@ export default function SettingsList(props) {
           top: 0,
           bottom: 0,
           top: 0,
-          backdropFilter: "blur(15px)",
+          backdropFilter: colors.blur,
           background: colors.backSide,
         }}
       />
@@ -293,7 +293,7 @@ export default function SettingsList(props) {
                         top: 100,
                         left: 0,
                         background: colors.primaryMedium,
-                        backdropFilter: "blur(10px)",
+                        backdropFilter: colors.blur,
                       }}
                     >
                       <ProfileEditField
@@ -335,7 +335,7 @@ export default function SettingsList(props) {
                 transform: "translateY(24px)",
                 display: "flex",
                 backgroundColor: colors.field,
-                backdropFilter: "blur(10px)",
+                backdropFilter: colors.blur,
               }}
             >
               <div style={{ padding: 8, width: 48, height: 48 }}>
@@ -378,7 +378,7 @@ export default function SettingsList(props) {
                     width: "100%",
                     height: "100%",
                     backgroundColor: colors.field,
-                    backdropFilter: "blur(10px)",
+                    backdropFilter: colors.blur,
                     borderRadius: 16,
                   }}
                 >

@@ -49,7 +49,7 @@ export default function AudioPlayerTabs(props) {
   return (
     <Box
       sx={{ flexGrow: 1, display: 'flex', height: 176 }}
-      style={{backgroundColor: colors.backSide, backdropFilter: 'blur(10px)'}}
+      style={{backgroundColor: colors.backSide, backdropFilter: colors.blur}}
     >
       <Tabs
         orientation="vertical"

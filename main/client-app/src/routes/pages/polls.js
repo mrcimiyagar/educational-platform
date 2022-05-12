@@ -65,7 +65,7 @@ export default function PollPage(props) {
                     width: '100%',
                     height: 64,
                     backgroundColor: colors.primaryMedium,
-                    backdropFilter: 'blur(10px)',
+                    backdropFilter: colors.blur,
                     borderRadius: isDesktop() ? '24px 24px 0 0' : undefined
                 }}>
                     <Toolbar style={{width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>

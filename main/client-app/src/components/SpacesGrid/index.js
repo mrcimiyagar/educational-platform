@@ -118,7 +118,7 @@ export default function SpacesGrid(props) {
         style: {
           backgroundColor: "transparent",
           boxShadow: "none",
-          backdropFilter: "blur(15px)",
+          backdropFilter: colors.blur,
           backgroundColor: colors.backSide,
         },
       }}
@@ -210,7 +210,7 @@ export default function SpacesGrid(props) {
                                   top: 100,
                                   left: 0,
                                   background: colors.primaryLight,
-                                  backdropFilter: "blur(10px)",
+                                  backdropFilter: colors.blur,
                                 }}
                               >
                                 <div style={{ width: "100%", height: 40 }} />
@@ -261,7 +261,7 @@ export default function SpacesGrid(props) {
                     style={{
                       position: "relative",
                       margin: 4,
-                      backdropFilter: "blur(10px)",
+                      backdropFilter: colors.blur,
                       backgroundColor: colors.field,
                       borderRadius: 16,
                     }}

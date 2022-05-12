@@ -77,7 +77,7 @@ export default function GenerateLink(props) {
       TransitionComponent={Transition}
       style={{
         zIndex: 2501,
-        backdropFilter: isDesktop() ? undefined : "blur(10px)",
+        backdropFilter: isDesktop() ? undefined : colors.blur,
       }}
     >
       <div

@@ -18,7 +18,7 @@ export default function SearchEngineSearchbar(props) {
       width: 'calc(100% - 64px)',
       maxWidth: 350,
       backgroundColor: colors.field,
-      backdropFilter: 'blur(10px)',
+      backdropFilter: colors.blur,
       position: 'absolute',
       left: '50%',
       top: '35%',

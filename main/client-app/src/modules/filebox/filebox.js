@@ -166,7 +166,7 @@ export let FileBox = (props) => {
           width: "100%",
           height: "100%",
           background: "transparent",
-          backdropFilter: "blur(10px)",
+          backdropFilter: colors.blur,
         },
       }}
       style={{
@@ -190,7 +190,7 @@ export let FileBox = (props) => {
             width: "100%",
             height: 72 + 72,
             backgroundColor: colors.primaryMedium,
-            backdropFilter: "blur(10px)",
+            backdropFilter: colors.blur,
           }}
         >
           <Toolbar

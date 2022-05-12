@@ -169,7 +169,7 @@ export function ConfBox(props) {
           width: '100%',
           height: '100%',
           background: colors.backSide,
-          backdropFilter: "blur(10px)"
+          backdropFilter: colors.blur
       }}>
         <Core onEnd={handleClose} videoAccess={props.membership.canActInVideo} moduleWorkerId={props.moduleWorkerId} roomId={props.roomId} />
       </div>

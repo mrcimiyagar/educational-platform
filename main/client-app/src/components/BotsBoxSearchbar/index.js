@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     ...((isDesktop() || isTablet()) && {maxWidth: 450}),
     backgroundColor: 'rgba(255, 255, 255, 0.65)',
-    backdropFilter: 'blur(10px)',
+    backdropFilter: colors.blur,
     ...((isDesktop()|| isTablet()) && {marginRight: 'calc(50% - 225px)'}),
   },
   input: {

@@ -18,7 +18,7 @@ export default function SearchEngineResultsSearchbar(props) {
       width: "calc(100% - 96px)",
       height: 48,
       direction: "rtl",
-      backdropFilter: "blur(10px)",
+      backdropFilter: colors.blur,
       borderRadius: 24,
       marginLeft: 48,
       marginRight: 48,

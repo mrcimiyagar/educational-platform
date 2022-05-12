@@ -166,7 +166,7 @@ export default function StoreDialog() {
                 width: isMobile() ? '100%' : '75%',
                 height: isMobile() ? '100%' : '75%',
                 backgroundColor: 'rgba(255, 255, 255, 0.35)',
-                backdropFilter: 'blur(10px)',
+                backdropFilter: colors.blur,
                 borderRadius: isMobile() ? 0 : 24,
                 overflow: 'hidden',
                 direction: 'rtl'
@@ -286,7 +286,7 @@ export default function StoreDialog() {
       >
       <div className={classes.root} style={{
         backgroundColor: 'rgba(255, 255, 255, 0.35)',
-        backdropFilter: 'blur(10px)'
+        backdropFilter: colors.blur
       }}>
         <HomeToolbar>
           <AppBar style={{backgroundColor: colors.primaryMedium}}>
@@ -325,7 +325,7 @@ export default function StoreDialog() {
               <ImageList rowHeight={finalWidth + 56} className={classes.imageList} cols={finalColsCount} style={{marginLeft: 16, marginRight: 16, width: 'calc(100% - 32px)'}}>
                 {cat.packages.map((item) => (
                   <ImageListItem key={'store-package-'+ item.id} cols={3} style={{position: 'relative', marginTop: 8}}>
-                    <div style={{width: '100%', height: '100%', backdropFilter: 'blur(10px)', position: 'absolute', left: 0, top: 0}}></div>
+                    <div style={{width: '100%', height: '100%', backdropFilter: colors.blur, position: 'absolute', left: 0, top: 0}}></div>
                     <img src={item.coverUrl} alt={item.title} style={{borderRadius: 16, opacity: '0.65', width: '100%', height: '100%'}} />
                   </ImageListItem>
                 ))}

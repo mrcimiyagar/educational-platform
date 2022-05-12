@@ -101,7 +101,7 @@ export default function SearchResultsUsers(props) {
         marginRight: 48,
         marginTop: 80,
         backgroundColor: "rgba(255, 255, 255, 0.25)",
-        backdropFilter: "blur(10px)",
+        backdropFilter: colors.blur,
         borderRadius: "50%",
       }}
     >

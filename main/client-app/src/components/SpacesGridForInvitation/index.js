@@ -94,7 +94,7 @@ export default function SpacesGridForInvitation(props) {
                   style={{
                     position: "relative",
                     margin: 4,
-                    backdropFilter: "blur(10px)",
+                    backdropFilter: colors.blur,
                     backgroundColor: colors.field,
                     borderRadius: 16,
                   }}

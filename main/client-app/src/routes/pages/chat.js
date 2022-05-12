@@ -1149,7 +1149,7 @@ export default function Chat(props) {
                 height: 40,
                 position: "relative",
                 backgroundColor: colors.field,
-                backdropFilter: "blur(10px)",
+                backdropFilter: colors.blur,
               }}
             >
               <div
@@ -1214,7 +1214,7 @@ export default function Chat(props) {
                 height: 40,
                 position: "relative",
                 backgroundColor: colors.field,
-                backdropFilter: "blur(10px)",
+                backdropFilter: colors.blur,
               }}
             >
               <div
@@ -1277,7 +1277,7 @@ export default function Chat(props) {
               height: 56,
               bottom: inTheGame ? (showEmojiPad ? 416 : 0) : -72,
               transition: "bottom .5s",
-              backdropFilter: "blur(10px)",
+              backdropFilter: colors.blur,
             }}
           >
             <IconButton

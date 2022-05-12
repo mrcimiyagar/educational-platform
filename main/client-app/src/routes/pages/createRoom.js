@@ -89,7 +89,7 @@ export default function CreateRoom(props) {
             top: 100,
             left: 0,
             background: colors.backSide,
-            backdropFilter: "blur(10px)",
+            backdropFilter: colors.blur,
           }}
         >
           <ProfileEditField

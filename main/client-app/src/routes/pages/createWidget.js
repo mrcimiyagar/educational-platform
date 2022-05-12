@@ -54,7 +54,7 @@ export default function CreateWidget(props) {
       onClose={handleClose}
       TransitionComponent={Transition}
       style={{
-        backdropFilter: isMobile() || isTablet() ? "blur(10px)" : undefined,
+        backdropFilter: isMobile() || isTablet() ? colors.blur : undefined,
       }}
     >
       <div
@@ -74,7 +74,7 @@ export default function CreateWidget(props) {
             width: "100%",
             height: 64,
             background: colors.primaryMedium,
-            backdropFilter: "blur(10px)",
+            backdropFilter: colors.blur,
             borderRadius: isDesktop() ? "24px 24px 0 0" : undefined,
           }}
         >
@@ -101,7 +101,7 @@ export default function CreateWidget(props) {
         <div
           style={{
             borderRadius: isDesktop() ? "0 0 24px 24px" : undefined,
-            backdropFilter: "blur(15px)",
+            backdropFilter: colors.blur,
             backgroundColor: colors.primaryDark,
             width: "100%",
             height: isDesktop() ? "calc(100% - 72px)" : "100%",

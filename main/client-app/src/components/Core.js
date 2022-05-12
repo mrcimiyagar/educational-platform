@@ -1028,7 +1028,7 @@ function Core(props) {
             borderRadius: "24px 24px 0px 0px",
             height: 84,
             backgroundColor: colors.primaryLight,
-            backdropFilter: "blur(10px)",
+            backdropFilter: colors.blur,
             textAlign: "center",
             justifyContent: "center",
             alignItems: "center",
@@ -1196,7 +1196,7 @@ function Core(props) {
             paddingBottom: 24,
             maxWidth: 250,
             backgroundColor: colors.primaryMedium,
-            backdropFilter: "blur(15px)",
+            backdropFilter: colors.blur,
             borderRadius: 24,
           }}
         >
@@ -1223,7 +1223,7 @@ function Core(props) {
             style: {
               backgroundColor: colors.backSide,
               boxShadow: "none",
-              backdropFilter: "blur(10px)",
+              backdropFilter: colors.blur,
             },
           }}
           fullScreen

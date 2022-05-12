@@ -82,7 +82,7 @@ export default function MainSettingsAppearance(props) {
       PaperProps={{
         style: {
           backgroundColor: colors.backSide,
-          backdropFilter: "blur(10px)",
+          backdropFilter: colors.blur,
           direction: "rtl",
           overflowX: 'hidden'
         },

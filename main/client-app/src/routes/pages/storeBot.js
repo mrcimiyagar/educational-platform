@@ -188,7 +188,7 @@ export default function StoreBot(props) {
         style: {
           backgroundColor: colors.primaryMedium,
           boxShadow: "none",
-          backdropFilter: "blur(10px)",
+          backdropFilter: colors.blur,
           width: isMobile() ? "100%" : 700,
           height: isMobile() ? "100%" : 800,
           borderRadius: isMobile() ? 0 : 24,

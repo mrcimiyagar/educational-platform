@@ -22,7 +22,7 @@ export default function VideoPlayer(props) {
   return (
     <Dialog
       style={{background: 'transparent', boxShadow: 'none'}}
-      PaperProps={{style: {background: colors.backSide, backdropFilter: 'blur(10px)'}}}
+      PaperProps={{style: {background: colors.backSide, backdropFilter: colors.blur}}}
       onTouchStart={(e) => {e.stopPropagation();}}
       fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <div style={{width: '100%', height: '100%'}}>

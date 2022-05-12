@@ -39,7 +39,7 @@ export let TaskBox = (props) => {
           width: "100%",
           height: "100%",
           background: "transparent",
-          backdropFilter: 'blur(10px)'
+          backdropFilter: colors.blur
         },
       }}
       style={{

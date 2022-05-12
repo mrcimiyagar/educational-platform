@@ -1,6 +1,7 @@
 
 import React, { useEffect } from 'react';
 import './style.css';
+import {colors} from '../../util/settings';
 
 export default function CustomImageBox(props) {
     const [randId, setRandId] = React.useState(Math.random() + '_' + Date.now() + '_' + Math.random());
@@ -31,7 +32,7 @@ export default function CustomImageBox(props) {
             left: 0,
             right: 0,
             bottom: 0,
-            backdropFilter: 'blur(10px)',
+            backdropFilter: colors.blur,
             objectFit: 'fit',
             backgroundColor: 'transparent',
             ...props.style

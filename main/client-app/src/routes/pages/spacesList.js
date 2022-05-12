@@ -36,13 +36,13 @@ export default function SpacesList(props) {
       onClose={handleClose}
       TransitionComponent={Transition}
       style={{
-        backdropFilter: isMobile() || isTablet() ? "blur(10px)" : undefined,
+        backdropFilter: isMobile() || isTablet() ? colors.blur : undefined,
       }}
     >
       <div
         style={{
-          backdropFilter: isDesktop() ? "blur(10px)" : undefined,
-          backdropFilter: isDesktop() ? "blur(10px)" : undefined,
+          backdropFilter: isDesktop() ? colors.blur : undefined,
+          backdropFilter: isDesktop() ? colors.blur : undefined,
           width: "100%",
           height: "100%",
           ...((isMobile() || isTablet()) && {
@@ -57,7 +57,7 @@ export default function SpacesList(props) {
           style={{
             width: "100%",
             height: 64,
-            backdropFilter: "blur(10px)",
+            backdropFilter: colors.blur,
             backgroundColor: colors.primaryMedium,
             borderRadius: isDesktop() ? "24px 24px 0 0" : undefined,
           }}

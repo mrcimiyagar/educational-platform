@@ -20,7 +20,7 @@ export default function HomeBottombar() {
       position: 'fixed',
       bottom: 0,
       background: colors.primaryMedium,
-      backdropFilter: 'blur(10px)'
+      backdropFilter: colors.blur
     },
   });
   

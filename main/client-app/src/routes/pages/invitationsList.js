@@ -35,13 +35,13 @@ export default function InvitationsList(props) {
             open={open}
             onClose={handleClose} 
             TransitionComponent={Transition}
-            style={{backdropFilter: (isMobile() || isTablet()) ? 'blur(10px)' : undefined}}>
-            <div style={{backdropFilter: isDesktop() ? 'blur(10px)' : undefined, backdropFilter: isDesktop() ? 'blur(10px)' : undefined, width: "100%", height: '100%', ...((isMobile() || isTablet()) && {position: "absolute", top: 0, left: 0})}}>
+            style={{backdropFilter: (isMobile() || isTablet()) ? colors.blur : undefined}}>
+            <div style={{backdropFilter: isDesktop() ? colors.blur : undefined, backdropFilter: isDesktop() ? colors.blur : undefined, width: "100%", height: '100%', ...((isMobile() || isTablet()) && {position: "absolute", top: 0, left: 0})}}>
                 <AppBar position={'fixed'} style={{
                     width: '100%',
                     height: 64, 
                     backgroundColor: colors.primaryMedium,
-                    backdropFilter: 'blur(10px)'
+                    backdropFilter: colors.blur
                 }}>
                     <Toolbar style={{marginTop: (isDesktop() || isTablet()) ? 0 : 8, width: '100%', height: '100%', justifyContent: 'center', textAlign: 'center'}}>
                         <IconButton><Search style={{fill: colors.oposText}}/></IconButton>

@@ -11,6 +11,7 @@ import { serverRoot } from '../../util/Utils';
 import EmptySign from '../EmptySign';
 import HomeToolbar from '../HomeToolbar';
 import SpacesSearchbar from '../SpacesSearchbar';
+import {colors} from '../../util/settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +52,7 @@ export default function RoomsGridList(props) {
           <ImageListItem key={room.avatarId} cols={1} rows={1} onClick={() => {
             if (props.clickCallback !== undefined) props.clickCallback(room.id);
           }}>
-            <Card style={{position: 'relative', margin: 4, backdropFilter: 'blur(10px)', backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 16}}>
+            <Card style={{position: 'relative', margin: 4, backdropFilter: colors.blur, backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: 16}}>
                 <img src={'https://cdn.dribbble.com/users/6093092/screenshots/15548423/media/54c06b30c11db3ffd26b25c83ab9a737.jpg'} alt={room.title} style={{borderRadius: 16, width: '100%', height: 210}} />
                 <div style={{width: '100%', height: '100%', paddingTop: 8, paddingBottom: 12, textAlign: 'center', justifyContent: 'center', alignItems: 'center'}}>{room.title}</div>
             </Card>

@@ -389,17 +389,6 @@ export default function BotsBox(props) {
     };
   }, []);
 
-  let theme = createTheme({
-    palette: {
-      primary: {
-        main: "#BBDEFB",
-      },
-      secondary: {
-        main: "#FFC107",
-      },
-    },
-  });
-
   mirrors.forEach((mirror) => {
     if (mirror.variable.from === "variable") {
       let fetchedDataOfMemory =
@@ -673,7 +662,7 @@ export default function BotsBox(props) {
                               position: "relative",
                               backgroundColor: colors.field,
                               borderRadius: "50%",
-                              backdropFilter: "blur(10px)",
+                              backdropFilter: colors.blur,
                             }}
                           >
                             <img
@@ -782,7 +771,7 @@ export default function BotsBox(props) {
                             position: "relative",
                             backgroundColor: colors.field,
                             borderRadius: "50%",
-                            backdropFilter: "blur(10px)",
+                            backdropFilter: colors.blur,
                           }}
                         >
                           <img
@@ -850,8 +839,8 @@ export default function BotsBox(props) {
         style={{ direction: "ltr", position: "fixed", zIndex: 99999 }}
         PaperProps={{
           style: {
-            background: colors.primaryMedium,
-            backdropFilter: "blur(15px)",
+            background: colors.field,
+            backdropFilter: colors.blur,
           },
         }}
         keepMounted={true}
@@ -869,7 +858,7 @@ export default function BotsBox(props) {
               position: "relative",
               width: 80,
               height: "100%",
-              background: colors.primaryMedium,
+              background: colors.backSide,
               overflowY: 'auto'
             }}
           >
@@ -1019,7 +1008,7 @@ export default function BotsBox(props) {
                         textAlign: "center",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: colors.oposText,
+                        color: colors.text,
                       }}
                     >
                       {wp.title}

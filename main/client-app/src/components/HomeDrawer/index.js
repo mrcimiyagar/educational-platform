@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     background:
       `linear-gradient(135deg, ${colors.primaryDark} 0%, ${colors.primaryMedium} 35%, ${colors.accent} 100%)`,
-    backdropFilter: 'blur(10px)',
+    backdropFilter: colors.blur,
     margin: isDesktop() ? 32 : 0,
     height: isDesktop() ? 'calc(100% - 64px)' : '100%',
     borderRadius: isDesktop() ? 24 : 0,

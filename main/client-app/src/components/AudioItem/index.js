@@ -33,7 +33,7 @@ export default function AudioItem(props) {
 
   }, []);
   return (
-    <List style={{ width: '100%', backgroundColor: colors.backSide, backdropFilter: 'blur(10px)' }}>
+    <List style={{ width: '100%', backgroundColor: colors.backSide, backdropFilter: colors.blur }}>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
           <Avatar alt="Remy Sharp" src={albumArtLink} />

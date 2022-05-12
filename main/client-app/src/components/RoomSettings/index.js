@@ -66,7 +66,7 @@ export default function RoomSettings(props) {
       width: '100%',
       direction: 'rtl',
       backgroundColor: colors.backSide,
-      backdropFilter: 'blur(10px)'
+      backdropFilter: colors.blur
     },
     heading: {
       fontSize: theme.typography.pxToRem(15),
@@ -136,7 +136,7 @@ export default function RoomSettings(props) {
         PaperProps={{
           style: {
             background: colors.backSide,
-            backdropFilter: 'blur(10px)'
+            backdropFilter: colors.blur
           }
         }}
         anchor={'bottom'}

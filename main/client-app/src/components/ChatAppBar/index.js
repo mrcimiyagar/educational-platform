@@ -124,7 +124,7 @@ export default function ChatAppBar(props) {
             paddingTop: 8,
             height: 64,
             backgroundColor: colors.primaryMedium,
-            backdropFilter: "blur(10px)",
+            backdropFilter: colors.blur,
           }}
         >
           <Toolbar

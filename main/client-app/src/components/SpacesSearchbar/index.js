@@ -24,7 +24,7 @@ export default function SpacesSearchbar(props) {
       left: '50%',
       transform: 'translateX(-50%)',
       backgroundColor: colors.field,
-      backdropFilter: 'blur(15px)',
+      backdropFilter: colors.blur,
       borderRadius: 24
     },
     input: {

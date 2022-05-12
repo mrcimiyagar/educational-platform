@@ -252,7 +252,7 @@ function SearchEngineResults(props) {
           width: "100%",
           height: "100%",
           background: "transparent",
-          backdropFilter: "blur(10px)",
+          backdropFilter: colors.blur,
         },
       }}
       style={{
@@ -339,7 +339,7 @@ function SearchEngineResults(props) {
                             paddingTop: 16,
                             paddingBottom: 16,
                             backgroundColor: colors.field,
-                            backdropFilter: 'blur(10px)',
+                            backdropFilter: colors.blur,
                             borderRadius: 16,
                             marginTop: 16,
                             marginRight: "5%",
@@ -381,7 +381,7 @@ function SearchEngineResults(props) {
                       marginRight: 48,
                       marginTop: 80,
                       backgroundColor: "rgba(255, 255, 255, 0.25)",
-                      backdropFilter: "blur(10px)",
+                      backdropFilter: colors.blur,
                       borderRadius: "50%",
                     }}
                   >
@@ -465,7 +465,7 @@ function SearchEngineResults(props) {
                       marginRight: 48,
                       marginTop: 80,
                       backgroundColor: "rgba(255, 255, 255, 0.25)",
-                      backdropFilter: "blur(10px)",
+                      backdropFilter: colors.blur,
                       borderRadius: "50%",
                     }}
                   >
@@ -553,7 +553,7 @@ function SearchEngineResults(props) {
                     marginRight: 48,
                     marginTop: 80,
                     backgroundColor: "rgba(255, 255, 255, 0.25)",
-                    backdropFilter: "blur(10px)",
+                    backdropFilter: colors.blur,
                     borderRadius: "50%",
                   }}
                 >
@@ -580,7 +580,7 @@ function SearchEngineResults(props) {
               bottom: 0,
               width: "100%",
               backgroundColor: colors.primaryMedium,
-              backdropFilter: "blur(10px)",
+              backdropFilter: colors.blur,
             }}
           >
             <Tabs

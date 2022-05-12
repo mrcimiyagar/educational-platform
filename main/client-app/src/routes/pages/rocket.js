@@ -68,7 +68,7 @@ export default function Rocket(props) {
       open={open}
       onClose={handleClose}
       TransitionComponent={Transition}
-      style={{ backdropFilter: 'blur(10px)', zIndex: 99999, position: 'fixed' }}
+      style={{ backdropFilter: colors.blur, zIndex: 99999, position: 'fixed' }}
     >
       <div
         style={{

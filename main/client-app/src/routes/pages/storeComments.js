@@ -100,7 +100,7 @@ export default function StoreBot(props) {
                 style: {
                     backgroundColor: 'rgba(255, 255, 255, 0.25)',
                     boxShadow: 'none',
-                    backdropFilter: 'blur(10px)',
+                    backdropFilter: colors.blur,
                     width: isMobile() ? '100%' : 500,
                     height: isMobile() ? '100%' : 600,
                     borderRadius: isMobile() ? 0 : 24

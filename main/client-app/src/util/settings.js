@@ -16,6 +16,25 @@ export const LIGHT_THEME = {
   accent2: 'rgba(0, 51, 103, 1)',
   accentDark: 'rgba(173, 203, 227, 0.65)',
   nonTransparentPrimaryLight: 'rgba(187, 222, 251, 1)',
+  blur: 'blur(10px)'
+};
+
+export const LIGHT_THEME_SOLID = {
+  primaryLight: 'rgba(187, 222, 251, 1)',
+  primaryMedium: 'rgba(25, 117, 210, 1)',
+  primaryDark: 'rgba(25, 117, 210, 1)',
+  secondary: 'rgba(255, 193, 7, 1)',
+  backSide: 'rgba(215, 215, 215, 1)',
+  text: '#000',
+  textPassive: '#111',
+  oposText: '#fff',
+  field: "rgba(245, 245, 245, 1)",
+  icon: '#000',
+  accent: 'rgba(255, 193, 7, 1)',
+  accent2: 'rgba(0, 51, 103, 1)',
+  accentDark: 'rgba(173, 203, 227, 1)',
+  nonTransparentPrimaryLight: 'rgba(187, 222, 251, 1)',
+  blur: undefined
 };
 
 export const DARK_THEME = {
@@ -42,7 +61,7 @@ export let themeMode = undefined;
 export let setThemeMode = (tm) => {};
 export let ColorBase = (props) => {
   ;[themeMode, setThemeMode] = React.useState('light');
-  ;[colors, setColors] = React.useState(themeMode === localStorage.getItem('themeMode') ? LIGHT_THEME : DARK_THEME);
+  ;[colors, setColors] = React.useState(themeMode === localStorage.getItem('themeMode') ? LIGHT_THEME_SOLID : DARK_THEME);
   theme = createTheme({
     palette: {
       primary: {

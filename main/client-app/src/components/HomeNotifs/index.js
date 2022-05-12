@@ -101,7 +101,7 @@ export default function HomeNotifs() {
 
   return (
     <div className={classes.root} id="notifsAppBarScroller">
-        <AppBar id="notifsAppBarContainer" position={'fixed'} style={{borderRadius: (isMobile() || isTablet()) ? 0 : '0 0 24px 24px', paddingLeft: 24, paddingRight: 24, maxWidth: isDesktop() ? 600 : '100%', transform: isDesktop() ? 'transformX(-50%), translateY(-100px)' : 'translateY(-100px)', transition: 'transform .5s', left: isDesktop() ? 'calc(50% - 480px)' : 0, backgroundColor: colors.primaryMedium, backdropFilter: 'blur(10px)'}}>
+        <AppBar id="notifsAppBarContainer" position={'fixed'} style={{borderRadius: (isMobile() || isTablet()) ? 0 : '0 0 24px 24px', paddingLeft: 24, paddingRight: 24, maxWidth: isDesktop() ? 600 : '100%', transform: isDesktop() ? 'transformX(-50%), translateY(-100px)' : 'translateY(-100px)', transition: 'transform .5s', left: isDesktop() ? 'calc(50% - 480px)' : 0, backgroundColor: colors.primaryMedium, backdropFilter: colors.blur}}>
           <Tabs
             variant="fullWidth"
             value={value}
@@ -116,7 +116,7 @@ export default function HomeNotifs() {
           </Tabs>
         </AppBar>
       <div style={{width: '100%', height: (isMobile() || isTablet()) ? 'calc(100% - 144px)' : '100%', marginTop: (isMobile() || isTablet()) ?  76 : 0,
-                   background: colors.accentDark, backdropFilter: 'blur(15px)',
+                   background: colors.accentDark, backdropFilter: colors.blur,
                    backgroundColor: colors.accentDark, opacity: (inTheGame && visibilityAllowed) ? 1 : 0, transition: 'opacity 1s'}}>
         <TabPanel value={value} index={0}>
           <Container>

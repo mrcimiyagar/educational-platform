@@ -30,7 +30,7 @@ export default function SpaceSearchbar(props) {
         width: "calc(100% - 64px)",
         borderRadius: 24,
         background: colors.field,
-        backdropFilter: 'blur(10px)',
+        backdropFilter: colors.blur,
         height: 48,
         transform: props.fixed ? 'translateY(-300px)' : 'translateY(+16px)',
         transition:

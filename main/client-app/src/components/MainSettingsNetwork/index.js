@@ -33,7 +33,7 @@ export default function MainSettingsNetwork(props) {
       PaperProps={{
         style: {
           backgroundColor: colors.primaryDark,
-          backdropFilter: "blur(10px)",
+          backdropFilter: colors.blur,
           direction: 'rtl'
         },
       }}

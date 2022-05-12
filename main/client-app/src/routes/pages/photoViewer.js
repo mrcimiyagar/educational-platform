@@ -5,6 +5,7 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import { PhotoConsumer, PhotoProvider } from 'react-photo-view';
 import 'react-photo-view/dist/index.css';
 import { popPage } from '../../App';
+import {colors} from '../../util/settings';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -27,8 +28,8 @@ function PhotoViewer(props) {
             boxShadow: 'none',
           },
         }}
-        open={open} fullScreen={true} TransitionComponent={Transition} style={{backdropFilter: 'blur(5px)'}} >
-          <AppBar style={{direction: 'rtl', height: 64, position: 'fixed', left: 0, top: 0, backdropFilter: 'blur(10px)', background: 'white', backgroundColor: 'rgba(255, 255, 255, 0.25)'}}>
+        open={open} fullScreen={true} TransitionComponent={Transition} style={{backdropFilter: colors.blur}} >
+          <AppBar style={{direction: 'rtl', height: 64, position: 'fixed', left: 0, top: 0, backdropFilter: colors.blur, background: 'white', backgroundColor: 'rgba(255, 255, 255, 0.25)'}}>
             <Toolbar style={{height: 64}}>
               <IconButton onClick={() => {setOpen(false); setTimeout(popPage, 250);}}>
                 <ArrowForwardTwoTone style={{width: 32, height: 32, fill: '#fff'}}/>

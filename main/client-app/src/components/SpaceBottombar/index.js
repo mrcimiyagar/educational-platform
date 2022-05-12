@@ -40,7 +40,7 @@ export default function SpaceBottombar(props) {
     <Paper
     style={{
       backgroundColor: colors.primaryMedium,
-      backdropFilter: "blur(10px)",
+      backdropFilter: colors.blur,
       width: "calc(100% - 48px)",
       height: 64,
       borderRadius: 32,

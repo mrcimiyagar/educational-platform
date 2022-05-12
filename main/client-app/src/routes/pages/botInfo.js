@@ -91,7 +91,7 @@ export default function BotInfoPage(props) {
             top: 100,
             left: 0,
             background: colors.primaryMedium,
-            backdropFilter: "blur(10px)",
+            backdropFilter: colors.blur,
           }}
         >
           <div

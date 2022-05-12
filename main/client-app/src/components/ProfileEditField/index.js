@@ -11,7 +11,7 @@ export default function ProfileEditField(props) {
       alignItems: "center",
       width: "100%",
       backgroundColor: colors.field,
-      backdropFilter: "blur(10px)",
+      backdropFilter: colors.blur,
       borderRadius: 24,
     },
     input: {

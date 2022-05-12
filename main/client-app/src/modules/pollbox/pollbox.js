@@ -186,7 +186,7 @@ export function PollBox(props) {
           width: "100%",
           height: "100%",
           background: "transparent",
-          backdropFilter: "blur(10px)",
+          backdropFilter: colors.blur,
         },
       }}
       style={{
@@ -203,7 +203,7 @@ export function PollBox(props) {
           width: "100%",
           height: "100%",
           borderRadius: isDesktop() ? "0 0 24px 24px" : undefined,
-          backdropFilter: "blur(15px)",
+          backdropFilter: colors.blur,
         }}
       >
       <AppBar
@@ -212,7 +212,7 @@ export function PollBox(props) {
           height: 64,
           borderRadius: isDesktop() ? "0 0 24px 24px" : 0,
           backgroundColor: colors.primaryMedium,
-          backdropFilter: "blur(10px)",
+          backdropFilter: colors.blur,
           position: "fixed",
           left: "50%",
           transform: "translateX(-50%)",
@@ -300,7 +300,7 @@ export function PollBox(props) {
           <div
             style={{
               background: colors.primaryLight,
-              backdropFilter: 'blur(10px)',
+              backdropFilter: colors.blur,
               width: 360,
               height: "100%",
               alignItems: "center",

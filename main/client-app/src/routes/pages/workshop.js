@@ -370,7 +370,7 @@ function Workshop(props) {
             position: "fixed",
             right: 0,
             backgroundColor: colors.primaryMedium,
-            backdropFilter: 'blur(10px)'
+            backdropFilter: colors.blur
           }}
         >
           <Toolbar style={{height: 64}}>
@@ -422,7 +422,7 @@ function Workshop(props) {
           PaperProps={{
             style: {
               background: colors.primaryMedium,
-              backdropFilter: "blur(10px)",
+              backdropFilter: colors.blur,
             },
           }}
           keepMounted={true}

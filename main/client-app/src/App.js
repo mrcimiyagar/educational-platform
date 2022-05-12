@@ -790,7 +790,7 @@ MainAppContainer = (props) => {
           width: "100%",
           height: 120,
           backgroundColor: colors.primaryMedium,
-          backdropFilter: "blur(10px)",
+          backdropFilter: colors.blur,
         }}
       >
         <Tabs
