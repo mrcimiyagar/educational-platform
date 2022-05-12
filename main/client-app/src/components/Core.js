@@ -532,6 +532,7 @@ function Core(props) {
   let [videoAccess, setVideoAccess] = React.useState(props.videoAccess);
   let [specific, setSpecific] = React.useState(false);
   let [specificOpen, setSpecificOpen] = React.useState(false);
+  let [openedCam, setOpenedCam] = React.useState(undefined);
 
   let DesktopDetector = () => {
     useEffect(() => {
@@ -593,14 +594,7 @@ function Core(props) {
       setPresenter(presenter === "me" ? myUserId : presenter);
       if (shownVideos[presenter] !== true && shownScreens[presenter] !== true) {
         setScreenOn(false);
-        window.parent.postMessage(
-          { sender: "conf", action: "detachWebcamOnMessenger" },
-          pathConfig.mainFrontend
-        );
-        window.parent.postMessage(
-          { sender: "conf", action: "notifyWebcamTurnedOff" },
-          pathConfig.mainFrontend
-        );
+
         document.getElementById("screenMax").srcObject = undefined;
         document.getElementById("screenMax").style.display = "none";
 
@@ -611,14 +605,7 @@ function Core(props) {
         shownScreens[presenter] !== true
       ) {
         setScreenOn(true);
-        window.parent.postMessage(
-          { sender: "conf", action: "detachWebcamOnMessenger" },
-          pathConfig.mainFrontend
-        );
-        window.parent.postMessage(
-          { sender: "conf", action: "notifyWebcamTurnedOn" },
-          pathConfig.mainFrontend
-        );
+
         let streamPack = findValueByPrefix(videos, presenter + "_video");
         if (streamPack !== undefined) {
           document.getElementById("screenMax").srcObject = streamPack.value;
@@ -638,14 +625,7 @@ function Core(props) {
         shownScreens[presenter] === true
       ) {
         setScreenOn(true);
-        window.parent.postMessage(
-          { sender: "conf", action: "detachWebcamOnMessenger" },
-          pathConfig.mainFrontend
-        );
-        window.parent.postMessage(
-          { sender: "conf", action: "notifyWebcamTurnedOff" },
-          pathConfig.mainFrontend
-        );
+
         let streamPack = findValueByPrefix(screens, presenter + "_screen");
         if (streamPack !== undefined) {
           document.getElementById("screenMax").srcObject = streamPack.value;
@@ -665,14 +645,7 @@ function Core(props) {
         shownScreens[presenter] === true
       ) {
         setScreenOn(true);
-        window.parent.postMessage(
-          { sender: "conf", action: "attachWebcamOnMessenger" },
-          pathConfig.mainFrontend
-        );
-        window.parent.postMessage(
-          { sender: "conf", action: "notifyWebcamTurnedOn" },
-          pathConfig.mainFrontend
-        );
+
         let streamPack = findValueByPrefix(screens, presenter + "_screen");
         let streamPack2 = findValueByPrefix(videos, presenter + "_video");
         if (streamPack !== undefined && extWebcam !== true) {
@@ -813,17 +786,7 @@ function Core(props) {
       setVideoAccess(false);
       instantConnectionFlag = false;
       setConnected(false);
-      window.parent.postMessage(
-        { sender: "conf", action: "detachWebcamOnMessenger" },
-        pathConfig.mainFrontend
-      );
-      window.parent.postMessage(
-        { sender: "conf", action: "notifyWebcamTurnedOff" },
-        pathConfig.mainFrontend
-      );
       setScreenOn(false);
-      document.getElementById("screenMax").srcObject = undefined;
-      document.getElementById("screenMax2").srcObject = undefined;
       endAudio();
       destructAudioNet();
       endVideo();
@@ -896,94 +859,6 @@ function Core(props) {
       }}
     >
       <DesktopDetector />
-      <video
-        id="screenMax"
-        controls
-        autoPlay
-        style={{
-          display: "none",
-          position: "absolute",
-          transform: sizeMode === "mobile" ? undefined : "translateX(-50%)",
-          objectFit: "cover",
-          top: 120,
-          left:
-            (sizeMode === "mobile"
-              ? 0
-              : (pinList
-                  ? window.innerWidth > 500
-                    ? 330 - 112
-                    : window.innerWidth - 112
-                  : 0) +
-                (window.innerWidth / 2 -
-                  (sizeMode === "desktop" ||
-                  (sizeMode === "tablet" &&
-                    shownScreens[presenterBackup] === true &&
-                    shownVideos[presenterBackup] === true)
-                    ? 225
-                    : sizeMode === "mobile"
-                    ? 112
-                    : 0) +
-                  32) +
-                (450 -
-                  (webcamSize === "big"
-                    ? 450
-                    : webcamSize === "medium"
-                    ? 270
-                    : 150)) /
-                  2) + "px",
-          width:
-            (sizeMode === "mobile"
-              ? window.innerWidth
-              : ((pinList
-                  ? window.innerWidth > 500
-                    ? -1 * (500 - 112)
-                    : -1 * (window.innerWidth - 112)
-                  : 0) +
-                (shownScreens[presenterBackup] === true)
-                  ? window.innerWidth -
-                    176 -
-                    (sizeMode === "desktop"
-                      ? 450
-                      : shownVideos[presenterBackup] === true
-                      ? 350
-                      : 0)
-                  : window.innerWidth / 2 -
-                    (sizeMode === "desktop" ? 225 : 0)) +
-                (450 -
-                  (webcamSize === "big"
-                    ? 450
-                    : webcamSize === "medium"
-                    ? 270
-                    : 150))) + "px",
-          height: "auto",
-        }}
-      ></video>
-      <video
-        id="screenMax2"
-        controls
-        autoPlay
-        style={{
-          display: "none",
-          objectFit: "cover",
-          position: "absolute",
-          right: 0,
-          top: 16,
-          width:
-            webcamSize === "big" ? 450 : webcamSize === "medium" ? 270 : 150,
-          height:
-            webcamSize === "big" ? 300 : webcamSize === "medium" ? 180 : 100,
-        }}
-        onClick={() => {
-          if (webcamSize === "big") {
-            setWebcamSize("medium");
-          } else if (webcamSize === "medium") {
-            setWebcamSize("small");
-          } else if (webcamSize === "small") {
-            setWebcamSize("big");
-          }
-          forceUpdate();
-        }}
-      ></video>
       <div style={{ position: "fixed", top: 0, left: 0, bottom: 0, right: 0 }}>
         <BubbleUI
           options={{
@@ -1017,8 +892,35 @@ function Core(props) {
                     <MediaBox
                       id={key}
                       onClick={() => {
+                        setOpenedCam(key);
                         setSpecific(true);
                         setSpecificOpen(true);
+                        setTimeout(() => {
+                          let webcamStream = findValueByPrefix(
+                            videos,
+                            key + "_video"
+                          );
+                          document.getElementById("specificWebcam").srcObject =
+                            webcamStream !== undefined
+                              ? webcamStream.value
+                              : undefined;
+                          let screenStream = findValueByPrefix(
+                            screens,
+                            key + "_screen"
+                          );
+                          document.getElementById("specificScreen").srcObject =
+                            screenStream !== undefined
+                              ? screenStream.value
+                              : undefined;
+                          let myWebcamStream = findValueByPrefix(
+                            videos,
+                            "me_video"
+                          );
+                          document.getElementById("myWebcam").srcObject =
+                            myWebcamStream !== undefined
+                              ? myWebcamStream.value
+                              : undefined;
+                        }, 1000);
                         //updatePresenter(key);
                       }}
                     />
@@ -1173,17 +1075,7 @@ function Core(props) {
               onClick={() => {
                 instantConnectionFlag = false;
                 setConnected(false);
-                window.parent.postMessage(
-                  { sender: "conf", action: "detachWebcamOnMessenger" },
-                  pathConfig.mainFrontend
-                );
-                window.parent.postMessage(
-                  { sender: "conf", action: "notifyWebcamTurnedOff" },
-                  pathConfig.mainFrontend
-                );
                 setScreenOn(false);
-                document.getElementById("screenMax").srcObject = undefined;
-                document.getElementById("screenMax2").srcObject = undefined;
                 endAudio();
                 destructAudioNet();
                 endVideo();
@@ -1343,12 +1235,59 @@ function Core(props) {
                 setSpecificOpen(false);
                 setTimeout(() => {
                   setSpecific(false);
+                  setOpenedCam(undefined);
                 }, 250);
               }}
             >
               <Close style={{ fill: colors.icon }} />
             </IconButton>
           </Toolbar>
+          <video
+            id="specificWebcam"
+            controls={false}
+            autoPlay
+            style={{
+              objectFit: "cover",
+              width: "calc(100% - 64px)",
+              height: window.innerWidth - 64 + "px",
+              marginLeft: 32,
+              marginRight: 32,
+              marginTop: 32,
+              borderRadius: "24px 24px 0px 0px",
+              backgroundColor: colors.field,
+            }}
+          ></video>
+          <video
+            id="specificScreen"
+            controls={false}
+            autoPlay
+            style={{
+              objectFit: "cover",
+              width: "calc(100% - 64px)",
+              height: "auto",
+              marginLeft: 32,
+              marginRight: 32,
+              marginTop: 4,
+              borderRadius: "0px 0px 24px 24px",
+              backgroundColor: colors.field,
+            }}
+          ></video>
+          <video
+            id="myWebcam"
+            controls={false}
+            autoPlay
+            style={{
+              objectFit: "cover",
+              width: 162,
+              height: 162,
+              position: "fixed",
+              bottom: 32,
+              left: "50%",
+              transform: "translateX(-50%)",
+              borderRadius: "50%",
+              backgroundColor: colors.field,
+            }}
+          ></video>
         </Dialog>
       ) : null}
     </div>

@@ -1,4 +1,5 @@
 import {
+  AppBar,
   createTheme,
   Dialog,
   Drawer,
@@ -118,7 +119,12 @@ export let addTab = (rId) => {
     .then((response) => response.json())
     .then(async (result) => {
       console.log(JSON.stringify(result));
-      tabs.push({roomId: rId, title: result.room.title, chatType: result.room.chatType, participentId: result.room.participentId});
+      tabs.push({
+        roomId: rId,
+        title: result.room.title,
+        chatType: result.room.chatType,
+        participentId: result.room.participentId,
+      });
       setTabs(tabs);
       setCurrentTab(tabs.length - 1);
     });
@@ -539,7 +545,12 @@ MainAppContainer = (props) => {
   const [guestParams, setGuestParams] = React.useState(undefined);
   const [showGuestGonfig, setShowGuestConfig] = React.useState(false);
   [currentTab, setCurrentTab] = React.useState(0);
-  [tabs, setTabs] = React.useState([{roomId: props.room_id !== undefined ? props.room_id : homeRoomId, title: 'خانه'}]);
+  [tabs, setTabs] = React.useState([
+    {
+      roomId: props.room_id !== undefined ? props.room_id : homeRoomId,
+      title: "خانه",
+    },
+  ]);
 
   showGuestConfiguration = (p) => {
     setGuestParams(p);
@@ -558,7 +569,10 @@ MainAppContainer = (props) => {
     setDisplay2("none");
   }, []);
   useEffect(() => {
-    tabs[0] = {roomId: props.room_id !== undefined ? props.room_id : homeRoomId, title: 'خانه'};
+    tabs[0] = {
+      roomId: props.room_id !== undefined ? props.room_id : homeRoomId,
+      title: "خانه",
+    };
     setTabs(tabs);
     ifServerOnline(
       () => {
@@ -771,44 +785,50 @@ MainAppContainer = (props) => {
     >
       <DesktopDetector />
       <Sidebar />
-      <Tabs
-        variant={"scrollable"}
-        value={currentTab}
-        onChange={(event, newValue) => {
-          setCurrentTab(newValue);
-        }}
-        classes={{
-          indicator: classes.indicator,
-        }}
+      <AppBar
         style={{
-          direction: "rtl",
+          width: "100%",
+          height: 120,
           backgroundColor: colors.primaryMedium,
           backdropFilter: "blur(10px)",
-          height: 120
         }}
       >
-        {tabs.map((tab, tabIndex) => (
-          <Tab
-            classes={{ root: classes.tab }}
-            style={{ color: colors.oposText, fontWeight: "bold" }}
-            label={tab.title}
-            icon={
-              <img
-                style={{ width: 72, height: 72, borderRadius: 16 }}
-                src={
-                  tab.chatType === 'p2p' ?
-                  (serverRoot +
-                    `/file/download_user_avatar?userId=${tab.participentId}`)
-                  : 
-                  (serverRoot +
-                  `/file/download_room_avatar?token=${token}&roomId=${tab.roomId}`)
-                }
-              />
-            }
-            value={tabIndex}
-          />
-        ))}
-      </Tabs>
+        <Tabs
+          variant={"scrollable"}
+          value={currentTab}
+          onChange={(event, newValue) => {
+            setCurrentTab(newValue);
+          }}
+          classes={{
+            indicator: classes.indicator,
+          }}
+          style={{
+            direction: "rtl",
+            height: "100%",
+          }}
+        >
+          {tabs.map((tab, tabIndex) => (
+            <Tab
+              classes={{ root: classes.tab }}
+              style={{ color: colors.oposText, fontWeight: "bold" }}
+              label={tab.title}
+              icon={
+                <img
+                  style={{ width: 72, height: 72, borderRadius: 16 }}
+                  src={
+                    tab.chatType === "p2p"
+                      ? serverRoot +
+                        `/file/download_user_avatar?userId=${tab.participentId}`
+                      : serverRoot +
+                        `/file/download_room_avatar?token=${token}&roomId=${tab.roomId}`
+                  }
+                />
+              }
+              value={tabIndex}
+            />
+          ))}
+        </Tabs>
+      </AppBar>
       <div
         style={{
           width: "100%",
