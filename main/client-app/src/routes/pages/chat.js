@@ -151,6 +151,10 @@ export default function Chat(props) {
         if (isOnline) ConnectToIo(token, () => {});
         unregisterEvent("view-updated");
         registerEvent("view-updated", (v) => {});
+        unregisterEvent("edit_message");
+        registerEvent("edit_message", (msg) => {
+          replaceMessageInTheList(msg);
+        });
         window.scrollTo(0, 0);
         store.dispatch(changeConferenceMode(true));
       })
@@ -295,7 +299,7 @@ export default function Chat(props) {
   const [replyToMessage, setReplyToMessageInner] = React.useState(undefined);
   const [forwardFromMessage, setForwardFromMessageInner] =
     React.useState(undefined);
-    const [editingMessage, setEditingMessageInner] = React.useState(undefined);
+  const [editingMessage, setEditingMessageInner] = React.useState(undefined);
 
   const setReplyToMessage = (msg) => {
     setReplyToMessageInner(msg);
@@ -309,9 +313,7 @@ export default function Chat(props) {
     setEditingMessageInner(msg);
   };
 
-  const deleteMessage = (msg) => {
-
-  };
+  const deleteMessage = (msg) => {};
 
   const scrollToMessage = (msgId) => {
     document
@@ -367,7 +369,12 @@ export default function Chat(props) {
       let messageNotSeen = document.getElementById(
         "message-not-seen-" + msg.id
       );
-      if (messageSeen !== null && messageNotSeen !== null) {
+      let messageText = document.getElementById("message-text-" + msg.id);
+      if (
+        messageSeen !== null &&
+        messageNotSeen !== null &&
+        messageText !== null
+      ) {
         if (msg.seen > 0) {
           messageSeen.style.display = "block";
           messageNotSeen.style.display = "none";
@@ -375,6 +382,7 @@ export default function Chat(props) {
           messageSeen.style.display = "none";
           messageNotSeen.style.display = "block";
         }
+        messageText.innerHTML = msg.text;
         forceUpdate();
       }
     }
@@ -1091,8 +1099,8 @@ export default function Chat(props) {
       TransitionComponent={Transition}
       style={{
         zIndex: 2501,
-        transform: showConf ? 'translateX(+100%)' : 'translateX(0)',
-        transition: 'transform 0.5s'
+        transform: showConf ? "translateX(+100%)" : "translateX(0)",
+        transition: "transform 0.5s",
       }}
     >
       <div
@@ -1430,8 +1438,10 @@ export default function Chat(props) {
                     repliedTo: replyToMessage,
                     forwardedFrom: forwardFromMessage,
                   };
-                  addMessageToList(msg);
-                  setLastMessage(msg);
+                  if (editingMessage === undefined) {
+                    addMessageToList(msg);
+                    setLastMessage(msg);
+                  }
                   let requestOptions = {
                     method: "POST",
                     headers: {
@@ -1439,7 +1449,10 @@ export default function Chat(props) {
                       token: token,
                     },
                     body: JSON.stringify({
-                      messageId: editingMessage !== undefined ? editingMessage.id : undefined,
+                      messageId:
+                        editingMessage !== undefined
+                          ? editingMessage.id
+                          : undefined,
                       repliedTo:
                         replyToMessage !== undefined
                           ? replyToMessage.id
@@ -1454,30 +1467,38 @@ export default function Chat(props) {
                     }),
                     redirect: "follow",
                   };
-                  fetch(serverRoot + (editingMessage === undefined ? "/chat/create_message" : "/chat/update_message"), requestOptions)
+                  fetch(
+                    serverRoot +
+                      (editingMessage === undefined
+                        ? "/chat/create_message"
+                        : "/chat/update_message"),
+                    requestOptions
+                  )
                     .then((response) => response.json())
                     .then((result) => {
                       console.log(JSON.stringify(result));
                       if (result.message !== undefined) {
                         setReplyToMessage(undefined);
                         setForwardFromMessage(undefined);
-                        setEditingMessage(undefined);
                         cacheMessage(result.message);
-                        let msgEl = document.getElementById(
-                          "message-" + msg.id
-                        );
-                        let msgSeenEl = document.getElementById(
-                          "message-seen-" + msg.id
-                        );
-                        let msgNotSeenEl = document.getElementById(
-                          "message-not-seen-" + msg.id
-                        );
-                        msgEl.id = "message-" + result.message.id;
-                        msgSeenEl.id = "message-seen-" + result.message.id;
-                        msgNotSeenEl.id =
-                          "message-not-seen-" + result.message.id;
-                        msg.id = result.message.id;
-                        forceUpdate();
+                        if (editingMessage === undefined) {
+                          let msgEl = document.getElementById(
+                            "message-" + msg.id
+                          );
+                          let msgSeenEl = document.getElementById(
+                            "message-seen-" + msg.id
+                          );
+                          let msgNotSeenEl = document.getElementById(
+                            "message-not-seen-" + msg.id
+                          );
+                          msgEl.id = "message-" + result.message.id;
+                          msgSeenEl.id = "message-seen-" + result.message.id;
+                          msgNotSeenEl.id =
+                            "message-not-seen-" + result.message.id;
+                          msg.id = result.message.id;
+                          forceUpdate();
+                        }
+                        setEditingMessage(undefined);
                       }
                     })
                     .catch((error) => console.log("error", error));
@@ -1538,19 +1559,19 @@ export default function Chat(props) {
         ) : null}
       </div>
       {showConf ? (
-          <ConfBox
-            webcamOn={false}
-            currentRoomNav={2}
-            moduleWorkerId={room.videochatId}
-            roomId={props.room_id}
-            membership={membership}
-            onClose={() => {
-              setShowConf(false);
-              if (props.messengerHidden !== undefined) {
-                props.messengerHidden(false);
-              }
-            }}
-          />
+        <ConfBox
+          webcamOn={false}
+          currentRoomNav={2}
+          moduleWorkerId={room.videochatId}
+          roomId={props.room_id}
+          membership={membership}
+          onClose={() => {
+            setShowConf(false);
+            if (props.messengerHidden !== undefined) {
+              props.messengerHidden(false);
+            }
+          }}
+        />
       ) : null}
     </Dialog>
   );

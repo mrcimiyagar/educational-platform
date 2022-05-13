@@ -341,7 +341,7 @@ router.post("/create_message", jsonParser, async function (req, res) {
         allUsers.push(u);
       }
     });
-    const { pushNotification } = require("../server");
+    const { pushNotification, pushTo } = require("../server");
     for (let i = 0; i < allUsers.length; i++) {
       let user = allUsers[i];
       if (user.id !== session.userId) {
@@ -360,7 +360,9 @@ router.post("/create_message", jsonParser, async function (req, res) {
               : msgCopy.messageType === "document"
               ? "سند 📄"
               : "نامشخص"),
-          'https://society.kasperian.cloud/app?room_id=' + msgCopy.roomId + '&selected_nav=2',
+          "https://society.kasperian.cloud/app?room_id=" +
+            msgCopy.roomId +
+            "&selected_nav=2",
           {}
         );
         require("../server").signlePushTo(user.id, "chat-list-updated", {
@@ -554,7 +556,9 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
           : msgCopy.messageType === "document"
           ? "سند 📄"
           : "نامشخص"),
-      'https://society.kasperian.cloud/app?room_id=' + msgCopy.roomId + '&selected_nav=2',
+      "https://society.kasperian.cloud/app?room_id=" +
+        msgCopy.roomId +
+        "&selected_nav=2",
       {}
     );
     require("../server").signlePushTo(user.id, "chat-list-updated", {
@@ -690,11 +694,12 @@ router.post("/get_messages", jsonParser, async function (req, res) {
       let msg = fetchedMessages[i];
       let author =
         usersBook[msg.authorId] === undefined ? null : usersBook[msg.authorId];
-      let forwom = msg.forwardedFrom !== undefined
-      ? await sw.Message.findOne({
-          where: { id: msg.forwardedFrom },
-        })
-      : null;
+      let forwom =
+        msg.forwardedFrom !== undefined
+          ? await sw.Message.findOne({
+              where: { id: msg.forwardedFrom },
+            })
+          : null;
       if (forwom !== null) {
         let aut = await sw.User.findOne({
           where: { id: forwom.authorId },
@@ -715,11 +720,12 @@ router.post("/get_messages", jsonParser, async function (req, res) {
           author: aut,
         };
       }
-      let repom = msg.repliedTo !== undefined
-      ? await sw.Message.findOne({
-          where: { id: msg.repliedTo },
-        })
-      : null;
+      let repom =
+        msg.repliedTo !== undefined
+          ? await sw.Message.findOne({
+              where: { id: msg.repliedTo },
+            })
+          : null;
       if (repom !== null) {
         let aut = await sw.User.findOne({
           where: { id: repom.authorId },
@@ -751,7 +757,7 @@ router.post("/get_messages", jsonParser, async function (req, res) {
         text: msg.text,
         time: msg.time,
         repliedTo: repom,
-        forwardedFrom: forwom
+        forwardedFrom: forwom,
       };
       msgCopy.seen = await sw.MessageSeen.count({
         where: { messageId: msgCopy.id },
@@ -767,7 +773,11 @@ router.post("/get_messages", jsonParser, async function (req, res) {
 router.post("/update_message", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
     sw.Message.findOne({
-      where: { id: req.body.messageId, roomId: membership.roomId, authorId: user.id },
+      where: {
+        id: req.body.messageId,
+        roomId: membership.roomId,
+        authorId: user.id,
+      },
     }).then(async function (msg) {
       if (msg === null) {
         res.send({
@@ -779,7 +789,23 @@ router.post("/update_message", jsonParser, async function (req, res) {
       }
       msg.text = req.body.text;
       await msg.save();
-      io.to("room_" + membership.roomId).emit("edit_message", msg);
+      let users = getRoomUsers(membership.roomId);
+      users.forEach((u) => {
+        if (u.id !== session.userId) {
+          require("../server").signlePushTo(u.id, "edit_message", { msg });
+        }
+      });
+      let workerIds = (
+        await sw.Workership.findAll({
+          raw: true,
+          where: { roomId: membership.roomId },
+        })
+      ).map((w) => w.botId);
+      workerIds.forEach((wId) => {
+        require("../server").signlePushTo(wId, "edit_message", {
+          message: msg,
+        });
+      });
       res.send({ status: "success" });
     });
   });
