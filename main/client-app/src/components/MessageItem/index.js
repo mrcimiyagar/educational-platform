@@ -1169,7 +1169,7 @@ export default function MessageItem(props) {
             <br />
             <div>
               {message.messageType === "text" ? (
-                <div style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+                <div id={'message-text-' + message.id} style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
                   {message.text}
                 </div>
               ) : message.messageType === "audio" ? (

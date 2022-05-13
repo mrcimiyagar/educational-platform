@@ -129,6 +129,12 @@ export default function Chat(props) {
   const [showConf, setShowConf] = React.useState(false);
   [membership, setMembership] = React.useState({});
 
+  useEffect(() => {
+    registerEvent("edit_message", ({ msg }) => {
+      replaceMessageInTheList(msg);
+    });
+  }, []);
+
   let setupRoom = () => {
     let requestOptions = {
       method: "POST",
@@ -151,10 +157,6 @@ export default function Chat(props) {
         if (isOnline) ConnectToIo(token, () => {});
         unregisterEvent("view-updated");
         registerEvent("view-updated", (v) => {});
-        unregisterEvent("edit_message");
-        registerEvent("edit_message", (msg) => {
-          replaceMessageInTheList(msg);
-        });
         window.scrollTo(0, 0);
         store.dispatch(changeConferenceMode(true));
       })
@@ -1498,7 +1500,11 @@ export default function Chat(props) {
                           msg.id = result.message.id;
                           forceUpdate();
                         }
-                        setEditingMessage(undefined);
+                      } else {
+                        if (editingMessage !== undefined) {
+                          setEditingMessage(undefined);
+                          forceUpdate();
+                        }
                       }
                     })
                     .catch((error) => console.log("error", error));
