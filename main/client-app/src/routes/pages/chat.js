@@ -133,6 +133,12 @@ export default function Chat(props) {
     registerEvent("edit_message", ({ msg }) => {
       replaceMessageInTheList(msg);
     });
+    registerEvent('message-removed', msg => {
+      let messageElement = document.getElementById("message-" + msg.id);
+      if (messageElement !== null) {
+        messageElement.remove();
+      }
+    });
   }, []);
 
   let setupRoom = () => {
@@ -315,7 +321,25 @@ export default function Chat(props) {
     setEditingMessageInner(msg);
   };
 
-  const deleteMessage = (msg) => {};
+  const deleteMessage = (msg) => {
+    let requestOptions3 = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+      body: JSON.stringify({
+        roomId: props.room_id,
+        messageId: msg.id
+      }),
+      redirect: "follow",
+    };
+    fetch(serverRoot + "/chat/delete_message", requestOptions3)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+      });
+  };
 
   const scrollToMessage = (msgId) => {
     document
@@ -422,6 +446,7 @@ export default function Chat(props) {
             replyReserved={setReplyToMessage}
             forwardReserved={setForwardFromMessage}
             editReserved={setEditingMessage}
+            deleted={deleteMessage}
             scrollToMessage={scrollToMessage}
           />
         );
@@ -493,6 +518,7 @@ export default function Chat(props) {
                       replyReserved={setReplyToMessage}
                       forwardReserved={setForwardFromMessage}
                       editReserved={setEditingMessage}
+                      deleted={deleteMessage}
                       scrollToMessage={scrollToMessage}
                     />
                   );
@@ -837,6 +863,7 @@ export default function Chat(props) {
                       replyReserved={setReplyToMessage}
                       forwardReserved={setForwardFromMessage}
                       editReserved={setEditingMessage}
+                      deleted={deleteMessage}
                       scrollToMessage={scrollToMessage}
                     />
                   );
@@ -855,6 +882,7 @@ export default function Chat(props) {
                       replyReserved={setReplyToMessage}
                       forwardReserved={setForwardFromMessage}
                       editReserved={setEditingMessage}
+                      deleted={deleteMessage}
                       scrollToMessage={scrollToMessage}
                     />
                   );

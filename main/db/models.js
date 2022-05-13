@@ -717,6 +717,7 @@ async function prepareMessageModel() {
     },
     {
       freezeTableName: true,
+      paranoid: true
     }
   );
   Message.belongsTo(Room, { foreignKey: "roomId" });

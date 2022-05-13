@@ -570,14 +570,6 @@ router.post("/create_bot_message", jsonParser, async function (req, res) {
 
 router.post("/delete_message", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
-    if (!membership.canRemoveOwnMessage) {
-      res.send({
-        status: "error",
-        errorCode: "e0005",
-        message: "access denied.",
-      });
-      return;
-    }
     sw.Message.findOne({
       where: {
         id: req.body.messageId,
@@ -598,6 +590,21 @@ router.post("/delete_message", jsonParser, async function (req, res) {
         "message-removed",
         msg
       );
+      let users = getRoomUsers(membership.roomId);
+      users.forEach((u) => {
+        require("../server").signlePushTo(u.id, "message-removed", { msg });
+      });
+      let workerIds = (
+        await sw.Workership.findAll({
+          raw: true,
+          where: { roomId: membership.roomId },
+        })
+      ).map((w) => w.botId);
+      workerIds.forEach((wId) => {
+        require("../server").signlePushTo(wId, "message-removed", {
+          message: msg,
+        });
+      });
       res.send({ status: "success" });
     });
   });
