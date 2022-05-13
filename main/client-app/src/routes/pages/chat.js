@@ -318,6 +318,9 @@ export default function Chat(props) {
   };
 
   const setEditingMessage = (msg) => {
+    if (msg !== undefined) {
+      document.getElementById('chatText').value = msg.text;
+    }
     setEditingMessageInner(msg);
   };
 

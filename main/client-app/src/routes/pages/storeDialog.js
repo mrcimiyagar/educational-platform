@@ -289,7 +289,7 @@ export default function StoreDialog(props) {
                 minWidth: isMobile() ? '100%' : 'calc(85% - 312px)',
                 width: isMobile() ? '100%' : 'calc(85% - 312px)',
                 height: isMobile() ? '100%' : '75%',
-                backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                backgroundColor: colors.backSide,
                 backdropFilter: colors.blur,
                 borderRadius: isMobile() ? 0 : 24,
                 overflow: 'hidden',
@@ -396,8 +396,8 @@ export default function StoreDialog(props) {
           className={classes.rootBB}
           style={{zIndex: 99999, width: 300, height: 80, borderRadius: 40, position: 'fixed', left: inTheGame ? 32 : -200, transition: 'left .5s', top: '50%', transform: 'translateY(-50%) rotateZ(90deg)', backgroundColor: colors.primaryMedium}}
       >
-          <BottomNavigationAction value={0} classes={classesAction} style={{transform: 'rotateZ(-90deg)'}} label="اپ بات ها" icon={<Extension />}/>
-          <BottomNavigationAction value={1} classes={classesAction} style={{transform: 'rotateZ(-90deg)'}} label="گیم بات ها" icon={<SportsEsports />} />
+          <BottomNavigationAction value={0} classes={classesAction} style={{transform: 'rotateZ(-90deg)', color: colors.oposText}} label="اپ بات ها" icon={<Extension style={{fill: colors.oposText}} />}/>
+          <BottomNavigationAction value={1} classes={classesAction} style={{transform: 'rotateZ(-90deg)', color: colors.oposText}} label="گیم بات ها" icon={<SportsEsports style={{fill: colors.oposText}} />} />
       </BottomNavigation>
       <Paper
           className={classes.rootBB}
@@ -420,7 +420,8 @@ export default function StoreDialog(props) {
                 height: '100%',
                 overflow: 'hidden',
                 direction: 'rtl',
-                backgroundColor: 'transparent',
+                backgroundColor: colors.backSide,
+                backdropFilter: colors.blur,
                 direction: 'rtl'
               }}}
       >

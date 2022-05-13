@@ -269,7 +269,7 @@ export let MachinesBox = (props) => {
             option={{ suppressScrollX: true, wheelPropagation: false }}
           >
             <div style={{ height: 'auto', marginRight: 12, paddingTop: 24 }}>
-              <Button style={{width: 'calc(100% - 32px)', color: '#fff', height: 32, marginBottom: 24}}
+              <Button style={{width: 'calc(100% - 32px)', color: colors.text, height: 32, marginBottom: 24}}
                       onClick={() => setShowStoreDialog(true)} variant={'outlined'}>
                         + افزودن بات
               </Button>

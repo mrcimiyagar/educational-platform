@@ -26,45 +26,6 @@ import SportsEsports from '@material-ui/icons/SportsEsports';
 import DesktopWallpaper from '../../images/desktop-wallpaper.jpg';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    height: 'auto',
-    position: 'absolute',
-    overflow: 'auto',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0
-  },
-  imageList: {
-    paddingTop: 96,
-    width: '100%',
-    height: 'auto',
-    paddingRight: -8,
-    // Promote the list into its own layer in Chrome. This cost memory, but helps keep FPS high.
-    transform: 'translateZ(0)',
-  },
-  icon: {
-    color: 'white',
-  },
-  indicator: {
-    backgroundColor: 'white',
-  },
-}));
-
-const useStylesAction = makeStyles({
-  /* Styles applied to the root element. */
-  root: {
-    color: '#ddd',
-    '&$selected': {
-      color: '#fff',
-    },
-  },
-  /* Styles applied to the root element if selected. */
-  selected: {},
-});
-
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -105,6 +66,42 @@ const actions = [
 export default function Store(props) {
 
   document.documentElement.style.overflow = 'hidden';
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      width: '100%',
+      height: 'auto',
+      position: 'absolute',
+      overflow: 'auto',
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0
+    },
+    imageList: {
+      paddingTop: 96,
+      width: '100%',
+      height: 'auto',
+      paddingRight: -8,
+      // Promote the list into its own layer in Chrome. This cost memory, but helps keep FPS high.
+      transform: 'translateZ(0)',
+    },
+    indicator: {
+      backgroundColor: 'white',
+    },
+  }));
+  
+  const useStylesAction = makeStyles({
+    /* Styles applied to the root element. */
+    root: {
+      color: '#ddd',
+      '&$selected': {
+        color: colors.oposText,
+      },
+    },
+    /* Styles applied to the root element if selected. */
+    selected: {},
+  });
 
   const classes = useStyles();
   let forceUpdate = useForceUpdate()
@@ -284,13 +281,6 @@ export default function Store(props) {
   if (isDesktop() || isTablet()) {
     return (
       <div style={{width: '100%', height: '100%', direction: 'rtl'}}>
-      <Fab
-        onClick={() => gotoPage("/app/rocket")}
-        ariaLabel=""
-        style={{position: 'fixed', right: 280 + 80, bottom: 24 + 40, zIndex: 99999}}
-      >
-        <RocketLaunchIcon />
-      </Fab>
       <Dialog TransitionComponent={Transition} fullScreen={isMobile()} open={open}
               style={{width: '100%', height: '100%'}}
               PaperProps={{style: {
@@ -298,7 +288,7 @@ export default function Store(props) {
                 minWidth: isMobile() ? '100%' : 'calc(85% - 200px)',
                 width: isMobile() ? '100%' : 'calc(85% - 200px)',
                 height: isMobile() ? '100%' : '75%',
-                backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                backgroundColor: colors.backSide,
                 backdropFilter: colors.blur,
                 borderRadius: isMobile() ? 0 : 24,
                 overflow: 'hidden',
@@ -401,8 +391,8 @@ export default function Store(props) {
           className={classes.rootBB}
           style={{zIndex: 99999, width: 300, height: 80, borderRadius: 40, position: 'fixed', left: inTheGame ? -64 : -200, transition: 'left .5s', top: '50%', transform: 'translateY(-50%) rotateZ(90deg)', backgroundColor: colors.primaryMedium}}
       >
-          <BottomNavigationAction value={0} classes={classesAction} style={{transform: 'rotateZ(-90deg)'}} label="اپ بات ها" icon={<Extension />}/>
-          <BottomNavigationAction value={1} classes={classesAction} style={{transform: 'rotateZ(-90deg)'}} label="گیم بات ها" icon={<SportsEsports />} />
+          <BottomNavigationAction value={0} classes={classesAction} style={{transform: 'rotateZ(-90deg)', color: colors.oposText}} label="اپ بات ها" icon={<Extension style={{fill: colors.oposText}} />}/>
+          <BottomNavigationAction value={1} classes={classesAction} style={{transform: 'rotateZ(-90deg)', color: colors.oposText}} label="گیم بات ها" icon={<SportsEsports style={{fill: colors.oposText}} />} />
       </BottomNavigation>
       <Paper
           className={classes.rootBB}
