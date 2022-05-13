@@ -219,8 +219,12 @@ export default function CreateBotPage(props) {
             </Select>
           </FormControl>
           <Fab
-            color={"secondary"}
-            style={{ position: "fixed", bottom: 16, left: 16 }}
+            style={{
+              position: "fixed",
+              bottom: 16,
+              left: 16,
+              backgroundColor: colors.accent,
+            }}
             onClick={() => {
               if (props.editingBot === undefined) {
                 let requestOptions = {
@@ -260,6 +264,41 @@ export default function CreateBotPage(props) {
                   redirect: "follow",
                 };
                 fetch(serverRoot + "/bot/update_bot", requestOptions)
+                  .then((response) => response.json())
+                  .then((result) => {
+                    if (result.status === "success") {
+                      updateMyBotsList();
+                      handleClose();
+                    } else {
+                      alert(result.message);
+                    }
+                  });
+              }
+            }}
+          >
+            <Done />
+          </Fab>
+          <Fab
+            style={{
+              position: "fixed",
+              bottom: 16,
+              left: 16 + 56 + 16,
+              backgroundColor: colors.accent,
+            }}
+            onClick={() => {
+              if (window.prompt("آیا میخواهید بات حذف شود ؟")) {
+                let requestOptions = {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    token: token,
+                  },
+                  body: JSON.stringify({
+                    botId: props.editingBot.id,
+                  }),
+                  redirect: "follow",
+                };
+                fetch(serverRoot + "/bot/delete_bot", requestOptions)
                   .then((response) => response.json())
                   .then((result) => {
                     if (result.status === "success") {

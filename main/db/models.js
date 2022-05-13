@@ -395,6 +395,7 @@ async function prepareBotModel() {
     },
     {
       freezeTableName: true,
+      paranoid: true
     }
   );
   Bot.belongsTo(StoreCategory, { foreignKey: "categoryId" });
@@ -417,6 +418,7 @@ async function prepareBotSecretModel() {
     },
     {
       freezeTableName: true,
+      paranoid: true
     }
   );
   BotSecret.belongsTo(Bot, { foreignKey: "botId" });
