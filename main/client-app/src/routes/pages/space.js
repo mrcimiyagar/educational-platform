@@ -1,4 +1,4 @@
-import { Dialog, Paper } from "@mui/material";
+import { Dialog, Paper, Typography } from "@mui/material";
 import SpaceSearchbar from "../../components/SpaceSearchbar";
 import SpaceBottombar from "../../components/SpaceBottombar";
 import Authentication from "./authentication";
@@ -473,6 +473,7 @@ export default function Space(props) {
         .then((result) => {
           console.log(JSON.stringify(result));
           if (result.bots !== undefined) {
+            result.bots.unshift({}, {});
             setAllBots(result.bots);
           }
         })
@@ -593,55 +594,66 @@ export default function Space(props) {
           }}
         />
       ) : null}
-      <div
-        id="searchScrollView"
-        style={{
-          width: "100%",
-          height: "calc(100% - 112px)",
-          position: "fixed",
-          left: 0,
-          top: 120,
-          overflow: "auto",
-        }}
-      >
-        <BotsBox
-          id={props.room_id}
-          openMenu={() => setMenuOpen(true)}
-          setMenuOpen={setMenuOpen}
-          membership={membership}
-          roomId={props.room_id}
-          style={{ display: "block" }}
-          onModuleSelected={(modName, mwId) => {
-            setSelectedModuleWorkerId(mwId);
-            if (modName === "whiteboard") {
-              setSelectedNav(7);
-            } else if (modName === "taskboard") {
-              setSelectedNav(8);
-            } else if (modName === "filestorage") {
-              setSelectedNav(9);
-            } else if (modName === "videochat") {
-              setSelectedNav(14);
-            } else if (modName === "polling") {
-              setSelectedNav(15);
-            } else if (modName === "notes") {
-              setSelectedNav(16);
-            } else if (modName === "deck") {
-              setSelectedNav(17);
-            }
+      {props.room_id === 1 ? null : (
+        <div
+          id="searchScrollView"
+          style={{
+            width: "100%",
+            height: "calc(100% - 112px)",
+            position: "fixed",
+            left: 0,
+            top: 120,
+            overflow: "auto",
           }}
-        />
-        <div style={{ width: "100%", height: 72 + 16 }} />
-      </div>
-
+        >
+          <BotsBox
+            id={props.room_id}
+            openMenu={() => setMenuOpen(true)}
+            setMenuOpen={setMenuOpen}
+            membership={membership}
+            roomId={props.room_id}
+            style={{ display: "block" }}
+            onModuleSelected={(modName, mwId) => {
+              setSelectedModuleWorkerId(mwId);
+              if (modName === "whiteboard") {
+                setSelectedNav(7);
+              } else if (modName === "taskboard") {
+                setSelectedNav(8);
+              } else if (modName === "filestorage") {
+                setSelectedNav(9);
+              } else if (modName === "videochat") {
+                setSelectedNav(14);
+              } else if (modName === "polling") {
+                setSelectedNav(15);
+              } else if (modName === "notes") {
+                setSelectedNav(16);
+              } else if (modName === "deck") {
+                setSelectedNav(17);
+              }
+            }}
+          />
+          <div style={{ width: "100%", height: 72 + 16 }} />
+        </div>
+      )}
+      ;
       {props.room_id === 1 ? (
         <BubbleUI
-          style={{ width: "100%", height: '100%', direction: "ltr", position: 'fixed', left: 0, top: 0, bottom: 0, right: 0 }}
+          style={{
+            width: "100%",
+            height: "100%",
+            direction: "ltr",
+            position: "fixed",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            right: 0
+          }}
           options={{
             size: 180,
             minSize: 30,
             gutter: 2,
             provideProps: true,
-            numCols: 6,
+            numCols: 3,
             fringeWidth: 100,
             yRadius: 250,
             xRadius: 150,
@@ -652,11 +664,23 @@ export default function Space(props) {
           }}
           className="myBubbleUI"
         >
-          {[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-            19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-          ]
-            .map((key) => {
+          {allBots
+            .map((bot) => {
+              if (bot.id === undefined) {
+                return (
+                  <div
+                    className="child"
+                    style={{
+                      width: 144,
+                      height: 300,
+                      position: 'relative'
+                    }}
+                    key={bot.id}
+                  >
+                    
+                  </div>
+                );
+              }
               return (
                 <div
                   className="child"
@@ -664,21 +688,29 @@ export default function Space(props) {
                     width: 144,
                     height: 144,
                     backgroundColor: getRandomColor(),
+                    position: 'relative'
                   }}
-                  key={key}
+                  key={bot.id}
                 >
-                  
+                  <Avatar
+                    style={{ width: 96, height: 96, positionP: 'fixed', left: '50%', top: 8, transform: 'translateX(-50%)' }}
+                    src={
+                      serverRoot +
+                      `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
+                    }
+                  />
+                  <Typography style={{color: colors.oposTex, marginTop: 8}}>
+                    {bot.title}
+                  </Typography>
                 </div>
               );
             })
             .filter((el) => el !== null)}
         </BubbleUI>
       ) : null}
-
       {props.room_id === 1 ? (
         <StoreFam onCategoryCreationSelected={() => setSelectedNav(12)} />
       ) : null}
-
       <SpaceSearchbar
         fixed={searchBarFixed}
         onSpacesClicked={() => {
@@ -695,7 +727,6 @@ export default function Space(props) {
           }
         }}
       />
-
       <SpaceBottombar
         fixed={searchBarFixed}
         setCurrentRoomNav={(index) => {
@@ -708,7 +739,6 @@ export default function Space(props) {
           }
         }}
       />
-
       <Fab
         onClick={() => toggleEditMode()}
         style={{
@@ -720,7 +750,6 @@ export default function Space(props) {
       >
         <Edit />
       </Fab>
-
       <SwipeableDrawer
         onClose={() => setMenuOpen(false)}
         open={menuOpen}
@@ -857,7 +886,6 @@ export default function Space(props) {
           </div>
         </div>
       </SwipeableDrawer>
-
       {authenticationValid ? null : <Authentication />}
       {selectedNav === 0 ? (
         <MessengerPage

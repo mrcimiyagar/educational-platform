@@ -416,12 +416,13 @@ router.get("/download_widget_thumbnail", jsonParser, async function (req, res) {
 router.get("/download_bot_avatar", jsonParser, async function (req, res) {
   let bot = await sw.Bot.findOne({ where: { id: req.query.botId } });
   if (bot.avatarId === undefined || bot.avatarId === null) {
-    bot.avatarId = -1;
+    let randomAvatarId = -1 * (Math.floor(Math.random() * 10) + 1);
+    bot.avatarId = randomAvatarId;
     await bot.save();
     bot = await sw.Bot.findOne({ where: { id: req.query.botId } });
   }
   if (bot.avatarId < 0) {
-    res.sendFile(rootPath + `/files/bot-image.png`);
+    res.sendFile(rootPath + `/files/bot-avatars/${bot.avatarId * -1}.jpeg`);
     return;
   }
   sw.File.findOne({ where: { id: bot.avatarId } }).then(async (file) => {
