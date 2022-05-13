@@ -26,8 +26,8 @@ import header from "../../images/profile-header.jpeg";
 import { colors, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
 import "./profile.css";
-import Wallpaper from '../../images/profile-background.webp';
-import { Call, ChatBubble } from "@material-ui/icons";
+import Wallpaper from "../../images/profile-background.webp";
+import { Call, ChatBubble, DynamicFeed, PersonAdd } from "@material-ui/icons";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
@@ -439,9 +439,48 @@ export default function Profile(props) {
           zIndex: 99999,
         }}
       >
-        <img alt={'profile-background'} src={Wallpaper} style={{position: 'fixed', left: 0, top: 0, width: '100%', height: '100%', objectFit: 'cover'}} />
-        <Typography style={{color: colors.text, marginTop: 112 + 225 + 32, width: 'calc(100% - 64px)', marginLeft: 32, marginRight: 32, position: 'relative', zIndex: 2}}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla gravida tortor vel tellus scelerisque, nec dapibus leo eleifend. Phasellus blandit risus non est dapibus, vel gravida nunc sollicitudin. Mauris auctor eros vel leo pharetra fringilla. Vestibulum nec dictum ante.
+        <img
+          alt={"profile-background"}
+          src={Wallpaper}
+          style={{
+            position: "fixed",
+            left: 0,
+            top: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+        <Typography
+          style={{
+            color: colors.text,
+            fontWeight: "bold",
+            fontSize: 16,
+            marginTop: 112 + 225 + 32,
+            width: "calc(100% - 64px)",
+            marginLeft: 32,
+            marginRight: 32,
+            position: "relative",
+            zIndex: 2,
+          }}
+        >
+          {user.firstName + " " + user.lastName}
+        </Typography>
+        <Typography
+          style={{
+            color: colors.text,
+            marginTop: 16,
+            width: "calc(100% - 64px)",
+            marginLeft: 32,
+            marginRight: 32,
+            position: "relative",
+            zIndex: 2,
+          }}
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla gravida
+          tortor vel tellus scelerisque, nec dapibus leo eleifend. Phasellus
+          blandit risus non est dapibus, vel gravida nunc sollicitudin. Mauris
+          auctor eros vel leo pharetra fringilla. Vestibulum nec dictum ante.
         </Typography>
         <Card
           style={{
@@ -451,10 +490,10 @@ export default function Profile(props) {
             height: 225,
             position: "absolute",
             top: 112,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            backgroundColor: 'rgba(255, 255, 255, 0.25)',
-            backdropFilter: 'blur(10px)'
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "rgba(255, 255, 255, 0.25)",
+            backdropFilter: "blur(10px)",
           }}
         >
           <Avatar
@@ -465,13 +504,18 @@ export default function Profile(props) {
             }
           />
         </Card>
-        <Toolbar style={{ width: "100%", position: "absolute", top: 8, direction: 'rtl' }}>
-          <IconButton
-            onClick={handleClose}
-          >
+        <Toolbar
+          style={{
+            width: "100%",
+            position: "absolute",
+            top: 8,
+            direction: "rtl",
+          }}
+        >
+          <IconButton onClick={handleClose}>
             <ArrowForwardIcon style={{ fill: colors.icon }} />
           </IconButton>
-          <div style={{flex: 1}} />
+          <div style={{ flex: 1 }} />
           <IconButton
             onClick={() => {
               props.onAddToRoomSelected();
@@ -481,7 +525,13 @@ export default function Profile(props) {
           </IconButton>
         </Toolbar>
         <Fab
-          style={{ backgroundColor: colors.accent, position: "fixed", left: 32, bottom: 32, zIndex: 2 }}
+          style={{
+            backgroundColor: colors.accent,
+            position: "fixed",
+            left: 32,
+            bottom: 32,
+            zIndex: 2,
+          }}
           onClick={() => {
             let requestOptions = {
               method: "POST",
@@ -510,12 +560,44 @@ export default function Profile(props) {
           <ChatBubble />
         </Fab>
         <Fab
-          style={{ backgroundColor: colors.accent, position: "fixed", left: 32 + 56 + 16, bottom: 32, zIndex: 2 }}
-          onClick={() => {
-           
+          style={{
+            backgroundColor: colors.accent,
+            position: "fixed",
+            left: 32 + 56 + 16,
+            bottom: 32,
+            zIndex: 2,
           }}
+          onClick={() => {}}
         >
           <Call />
+        </Fab>
+        <Fab
+          variant="extended"
+          style={{
+            backgroundColor: colors.accent,
+            position: "fixed",
+            left: 32 + 56 + 16 + 56 + 16,
+            bottom: 32,
+            zIndex: 2,
+          }}
+        >
+          <DynamicFeed />
+          <div style={{ width: 8 }} />
+          <Typography style={{fontWeight: 'bold'}}>
+          بلاگ من
+          </Typography>
+        </Fab>
+        <Fab
+          style={{
+            backgroundColor: colors.accent,
+            position: "fixed",
+            left: 32,
+            bottom: 32 + 56 + 16,
+            zIndex: 2,
+          }}
+          onClick={() => {}}
+        >
+          <PersonAdd />
         </Fab>
       </Dialog>
     );

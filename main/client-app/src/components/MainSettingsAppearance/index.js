@@ -12,7 +12,18 @@ import {
 import { ArrowForward, Search } from "@material-ui/icons";
 import React from "react";
 import { isDesktop, registerDialogOpen } from "../../App";
-import { colors, DARK_THEME, LIGHT_THEME, setColors, setThemeMode, themeMode } from "../../util/settings";
+import {
+  colors,
+  DARK_THEME,
+  DARK_THEME_SOLID,
+  LIGHT_THEME,
+  LIGHT_THEME_SOLID,
+  setColors,
+  setThemeBlur,
+  setThemeMode,
+  themeBlur,
+  themeMode,
+} from "../../util/settings";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
@@ -72,7 +83,8 @@ export default function MainSettingsAppearance(props) {
     setOpen(false);
     setTimeout(props.onClose, 250);
   };
-  const [dark, setDark] = React.useState(themeMode === 'dark');
+  const [dark, setDark] = React.useState(themeMode === "dark");
+  const [blur, setBlur] = React.useState(themeBlur === "true");
 
   return (
     <Dialog
@@ -84,7 +96,7 @@ export default function MainSettingsAppearance(props) {
           backgroundColor: colors.backSide,
           backdropFilter: colors.blur,
           direction: "rtl",
-          overflowX: 'hidden'
+          overflowX: "hidden",
         },
       }}
       fullScreen={!isDesktop()}
@@ -115,15 +127,42 @@ export default function MainSettingsAppearance(props) {
       </AppBar>
       <div style={{ width: "100%", height: 80 }} />
       <FormControlLabel
-        style={{color: colors.text}}
+        style={{ color: colors.text }}
         control={
           <ThemeSwitch
-            defaultChecked={themeMode === 'dark'}
+            defaultChecked={themeMode === "dark"}
             checked={dark}
-            onChange={(event) => {setDark(event.target.checked); localStorage.setItem('themeMode', event.target.checked ? 'dark' : 'light'); setThemeMode(event.target.checked ? 'dark' : 'light'); setColors(event.target.checked ? DARK_THEME : LIGHT_THEME);} }
+            onChange={(event) => {
+              setDark(event.target.checked);
+              localStorage.setItem(
+                "themeMode",
+                event.target.checked ? "dark" : "light"
+              );
+              setThemeMode(event.target.checked ? "dark" : "light");
+              setColors(event.target.checked ? DARK_THEME : LIGHT_THEME);
+            }}
           />
         }
         label="تم"
+      />
+      <FormControlLabel
+        style={{ color: colors.text, marginTop: 16 }}
+        control={
+          <Switch
+            checked={blur}
+            onChange={(event) => {
+              setBlur(event.target.checked);
+              localStorage.setItem(
+                "themeBlur",
+                event.target.checked ? "true" : "false"
+              );
+              setThemeBlur(event.target.checked ? "true" : "false");
+              setColors(event.target.checked ? (dark ? DARK_THEME : LIGHT_THEME) : (dark ? DARK_THEME_SOLID : LIGHT_THEME_SOLID));
+            }}
+            inputProps={{ "aria-label": "controlled" }}
+          />
+        }
+        label="شیشه ای"
       />
     </Dialog>
   );

@@ -145,11 +145,10 @@ export default function GroupChats(props) {
                             position: 'absolute',
                             direction: 'ltr',
                             transform: 'translateY(8px)',
-                            color: colors.text,
+                            backgroundColor: colors.accent
                           }}
-                          icon={<Photo style={{ borderRadius: 4, fill: colors.icon }} />}
+                          icon={<Photo style={{ borderRadius: 4 }} />}
                           label="عکس"
-                          color="primary"
                           size={'small'}
                         />
                       ) : chat.lastMessage.messageType === 'audio' ? (
@@ -160,11 +159,10 @@ export default function GroupChats(props) {
                             position: 'absolute',
                             direction: 'ltr',
                             transform: 'translateY(8px)',
-                            color: colors.text,
+                            backgroundColor: colors.accent
                           }}
-                          icon={<Audiotrack style={{ borderRadius: 4, fill: colors.icon }} />}
+                          icon={<Audiotrack style={{ borderRadius: 4 }} />}
                           label="صدا"
-                          color="primary"
                           size={'small'}
                         />
                       ) : chat.lastMessage.messageType === 'video' ? (
@@ -175,11 +173,10 @@ export default function GroupChats(props) {
                             position: 'absolute',
                             direction: 'ltr',
                             transform: 'translateY(8px)',
-                            color: colors.text,
+                            backgroundColor: colors.accent
                           }}
-                          icon={<Videocam style={{ borderRadius: 4, fill: colors.icon }} />}
+                          icon={<Videocam style={{ borderRadius: 4 }} />}
                           label="ویدئو"
-                          color="primary"
                           size={'small'}
                         />
                       ) : (

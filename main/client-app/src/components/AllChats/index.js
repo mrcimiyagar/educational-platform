@@ -128,10 +128,10 @@ export default function AllChats(props) {
                           top: 0,
                           direction: 'ltr',
                           transform: 'translateY(8px)',
+                          backgroundColor: colors.accent
                         }}
                         icon={<Photo style={{ borderRadius: 4 }} />}
                         label="عکس"
-                        color="primary"
                         size={'small'}
                       />
                     ) : chat.lastMessage.messageType === 'audio' ? (
@@ -142,10 +142,10 @@ export default function AllChats(props) {
                           top: 0,
                           direction: 'ltr',
                           transform: 'translateY(8px)',
+                          backgroundColor: colors.accent
                         }}
                         icon={<Audiotrack style={{ borderRadius: 4 }} />}
                         label="صدا"
-                        color="primary"
                         size={'small'}
                       />
                     ) : chat.lastMessage.messageType === 'video' ? (
@@ -156,10 +156,10 @@ export default function AllChats(props) {
                           top: 0,
                           direction: 'ltr',
                           transform: 'translateY(8px)',
+                          backgroundColor: colors.accent
                         }}
                         icon={<Videocam style={{ borderRadius: 4 }} />}
                         label="ویدئو"
-                        color="primary"
                         size={'small'}
                       />
                     ) : (

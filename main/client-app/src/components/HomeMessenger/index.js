@@ -242,7 +242,6 @@ export default function HomeMessenger(props) {
           </div>
           <Slide direction="right" in={inTheGame} mountOnEnter unmountOnExit {...{timeout: 1000}}>
               <Fab
-                color="secondary"
                 style={{
                   position: 'fixed',
                   bottom: isDesktop() ? 48 : isTablet() ? 104 : 24,
@@ -252,6 +251,7 @@ export default function HomeMessenger(props) {
                     : isTablet()
                     ? 450 - 56 - 16 - 16
                     : undefined,
+                  backgroundColor: colors.accent
                 }}
               >
                 <EditIcon />

@@ -142,6 +142,9 @@ let AppContainer = (props) => {
   if (localStorage.getItem("themeMode") === null) {
     localStorage.setItem("themeMode", "light");
   }
+  if (localStorage.getItem("themeBlur") === null) {
+    localStorage.setItem("themeBlur", "false");
+  }
   [rndKey, setRndKey] = React.useState(1);
   setWallpaper = (w) => {};
   let [connected, setConnected] = React.useState(false);

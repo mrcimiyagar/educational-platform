@@ -283,8 +283,7 @@ export function PollBox(props) {
           </div>
           {canAddPoll === true ? (
             <Fab
-              color={"secondary"}
-              style={{ position: "fixed", bottom: 16, left: 16 }}
+              style={{ position: "fixed", bottom: 16, left: 16, backgroundColor: colors.accent }}
               onClick={() => setAddOpen(true)}
             >
               <Add />
