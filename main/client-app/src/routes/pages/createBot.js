@@ -21,7 +21,7 @@ import ProfileEditField from "../../components/ProfileEditField";
 import { colors, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
 import { updateMyBotsList } from "./workshop";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
@@ -279,41 +279,43 @@ export default function CreateBotPage(props) {
           >
             <Done />
           </Fab>
-          <Fab
-            style={{
-              position: "fixed",
-              bottom: 16,
-              left: 16 + 56 + 16,
-              backgroundColor: colors.accent,
-            }}
-            onClick={() => {
-              if (window.prompt("آیا میخواهید بات حذف شود ؟")) {
-                let requestOptions = {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    token: token,
-                  },
-                  body: JSON.stringify({
-                    botId: props.editingBot.id,
-                  }),
-                  redirect: "follow",
-                };
-                fetch(serverRoot + "/bot/delete_bot", requestOptions)
-                  .then((response) => response.json())
-                  .then((result) => {
-                    if (result.status === "success") {
-                      updateMyBotsList();
-                      handleClose();
-                    } else {
-                      alert(result.message);
-                    }
-                  });
-              }
-            }}
-          >
-            <DeleteOutlineIcon />
-          </Fab>
+          {props.editingBot !== undefined ? (
+            <Fab
+              style={{
+                position: "fixed",
+                bottom: 16,
+                left: 16 + 56 + 16,
+                backgroundColor: colors.accent,
+              }}
+              onClick={() => {
+                if (window.prompt("آیا میخواهید بات حذف شود ؟")) {
+                  let requestOptions = {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      token: token,
+                    },
+                    body: JSON.stringify({
+                      botId: props.editingBot.id,
+                    }),
+                    redirect: "follow",
+                  };
+                  fetch(serverRoot + "/bot/delete_bot", requestOptions)
+                    .then((response) => response.json())
+                    .then((result) => {
+                      if (result.status === "success") {
+                        updateMyBotsList();
+                        handleClose();
+                      } else {
+                        alert(result.message);
+                      }
+                    });
+                }
+              }}
+            >
+              <DeleteOutlineIcon />
+            </Fab>
+          ) : null}
         </div>
       </div>
     </Dialog>
