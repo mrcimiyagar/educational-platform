@@ -691,6 +691,10 @@ export default function Space(props) {
                     position: 'relative'
                   }}
                   key={bot.id}
+                  onClick={() => {
+                    setSelectedBotId(bot.id);
+                    setSelectedNav(19);
+                  }}
                 >
                   <Avatar
                     style={{ width: 96, height: 96, positionP: 'fixed', left: '50%', top: 8, transform: 'translateX(-50%)' }}
@@ -1077,6 +1081,12 @@ export default function Space(props) {
             setInTheGame(true);
           }}
         />
+      ) : null}
+      {selectedNav === 19 && selectedBotId !== undefined ? (
+        <StoreBot room_id={props.room_id} bot_id={selectedBotId} onClose={() => {
+          setSelectedNav(undefined);
+          setInTheGame(true);
+        }}/>
       ) : null}
       {showSpacesList && selectedUserId !== undefined ? (
         <SpacesList

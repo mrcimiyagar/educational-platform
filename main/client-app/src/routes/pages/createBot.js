@@ -116,14 +116,14 @@ export default function CreateBotPage(props) {
               textAlign: "center",
             }}
           >
-            <Typography variant={"h6"} style={{ color: colors.text }}>
+            <Typography variant={"h6"} style={{ color: colors.oposText }}>
               ساخت بات
             </Typography>
             <IconButton
               style={{ width: 32, height: 32, position: "absolute", right: 16 }}
               onClick={() => handleClose()}
             >
-              <ArrowForward style={{ fill: colors.icon }} />
+              <ArrowForward style={{ fill: colors.oposText }} />
             </IconButton>
           </Toolbar>
         </AppBar>

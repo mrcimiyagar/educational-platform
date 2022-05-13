@@ -3,6 +3,7 @@ import {
   Button,
   Fab,
   IconButton,
+  ImageList,
   ImageListItem,
   Paper,
   Typography,
@@ -128,6 +129,10 @@ export let MachinesBox = (props) => {
       })
       .catch((error) => console.log("error", error));
   };
+
+  useEffect(() => {
+    reloadUsersList();
+  }, []);
 
   let onlineDict = {};
 
@@ -283,6 +288,7 @@ export let MachinesBox = (props) => {
             .then((result) => {
               console.log(JSON.stringify(result));
               if (result.status === "success") {
+                result.bots = result.bots.filter((b) => b.id !== "modules");
                 setBots(result.bots);
                 setBottomSheetContent(
                   <div
@@ -319,6 +325,7 @@ export let MachinesBox = (props) => {
                         borderRadius: "24px 24px 0 0",
                         width: "100%",
                         height: "calc(100% - 56px)",
+                        display: "flex",
                         position: "absolute",
                         top: 56,
                         left: 0,
@@ -327,93 +334,89 @@ export let MachinesBox = (props) => {
                         zIndex: 1,
                       }}
                     >
-                      {bots.map((item) => {
-                        return (
-                          <ImageListItem
-                            style={{
-                              width: 84,
-                              height: 112,
-                              marginLeft: 12,
-                              marginRight: 12,
-                            }}
-                            key={"store-bot-" + item.id}
-                            cols={1}
-                            onClick={() => {
-                              let requestOptions2 = {
-                                method: "POST",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                  token: token,
-                                },
-                                body: JSON.stringify({
-                                  botId: item.id,
-                                  roomId: props.roomId,
-                                }),
-                                redirect: "follow",
-                              };
-                              fetch(
-                                serverRoot + "/bot/create_workership",
-                                requestOptions2
-                              )
-                                .then((response) => response.json())
-                                .then((result) => {
-                                  console.log(JSON.stringify(result));
-                                  if (result.status === "success") {
-                                    alert("ربات با موفقیت به روم اضافه شد.");
-                                  }
-                                })
-                                .catch((error) => console.log("error", error));
-                            }}
-                          >
-                            <div
+                      <ImageList
+                        cols={3}
+                        style={{
+                          overflowY: "auto",
+                          textAlign: "center",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <ImageListItem cols={3} style={{ height: 40 }} />
+                        {result.bots.map((item) => {
+                          return (
+                            <ImageListItem
                               style={{
-                                width: 84,
-                                height: 84,
-                                borderRadius: 16,
-                                position: "relative",
+                                width: 112,
+                                height: 144,
+                                marginLeft: 8,
+                                marginRight: 8,
+                                margintop: 12,
+                              }}
+                              key={"store-bot-" + item.id}
+                              cols={1}
+                              onClick={() => {
+                                let requestOptions2 = {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                    token: token,
+                                  },
+                                  body: JSON.stringify({
+                                    botId: item.id,
+                                    roomId: props.roomId,
+                                  }),
+                                  redirect: "follow",
+                                };
+                                fetch(
+                                  serverRoot + "/bot/create_workership",
+                                  requestOptions2
+                                )
+                                  .then((response) => response.json())
+                                  .then((result) => {
+                                    console.log(JSON.stringify(result));
+                                    if (result.status === "success") {
+                                      alert("ربات با موفقیت به روم اضافه شد.");
+                                      reloadUsersList();
+                                    }
+                                  })
+                                  .catch((error) =>
+                                    console.log("error", error)
+                                  );
                               }}
                             >
-                              <img
-                                src={
-                                  "https://icon-library.com/images/bot-icon/bot-icon-5.jpg"
-                                }
-                                alt={item.title}
+                              <div
                                 style={{
-                                  opacity: 0.65,
-                                  borderRadius: 16,
-                                  marginTop: 16,
-                                  width: 84,
-                                  height: 84,
-                                }}
-                              />
-                              <Card
-                                style={{
-                                  backgroundColor: "rgba(255, 255, 255, 0.75)",
-                                  borderRadius: 12,
-                                  position: "absolute",
-                                  top: 84,
-                                  left: "calc(50% + 4px)",
-                                  transform: "translateX(-50%)",
-                                  width: "calc(100% - 32px)",
-                                  height: 40,
-                                  position: "absolute",
+                                  width: 112,
+                                  height: 144,
                                 }}
                               >
-                                <div
+                                <Avatar
+                                  src={
+                                    serverRoot +
+                                    `/file/download_bot_avatar?token=${token}&botId=${item.id}`
+                                  }
+                                  alt={item.title}
                                   style={{
-                                    position: "absolute",
-                                    left: "50%",
-                                    top: "50%",
-                                    transform: "translate(-50%, -50%)",
+                                    width: 112,
+                                    height: 112,
+                                  }}
+                                />
+                                <Typography
+                                  style={{
+                                    width: "100%",
+                                    color: colors.text,
+                                    height: 32
                                   }}
                                 >
                                   {item.title}
-                                </div>
-                              </Card>
-                            </div>
-                          </ImageListItem>
-                        );
-                      })}
+                                </Typography>
+                              </div>
+                            </ImageListItem>
+                          );
+                        })}
+                      </ImageList>
                     </Paper>
                   </div>
                 );
