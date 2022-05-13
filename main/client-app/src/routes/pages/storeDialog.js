@@ -207,7 +207,7 @@ export default function StoreDialog(props) {
         }
       })
       .catch(error => console.log('error', error));
-  }, [])
+  }, []);
 
   let counter = 0;
 

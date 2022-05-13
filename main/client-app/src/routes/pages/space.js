@@ -70,6 +70,9 @@ import SearchEngine from "./searchEngine";
 import Profile from "./profile";
 import SpacesList from "./spacesList";
 import CustomImageBox from "../../components/CustomImageBox";
+import BubbleUI from "react-bubble-ui";
+import "react-bubble-ui/dist/index.css";
+import './space.css';
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -131,7 +134,9 @@ export default function Space(props) {
     setShowVideoPlayer(true);
   };
   const attachScrollCallback = () => {
-    const searchScrollView = document.getElementById("botsContainerOuter" + props.room_id);
+    const searchScrollView = document.getElementById(
+      "botsContainerOuter" + props.room_id
+    );
     if (searchScrollView === null) {
       setTimeout(() => attachScrollCallback(), 500);
     } else {
@@ -450,6 +455,29 @@ export default function Space(props) {
   }, [props.module_worker_id]);
 
   const [open, setOpen] = React.useState(true);
+  const [allBots, setAllBots] = React.useState([]);
+
+  useEffect(() => {
+    if (props.room_id === 1){
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      redirect: 'follow'
+    }
+    fetch(serverRoot + "/bot/get_bots", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(JSON.stringify(result));
+        if (result.bots !== undefined) {
+          setAllBots(result.bots);
+        }
+      })
+      .catch(error => console.log('error', error));
+    }
+  }, []);
 
   if (!loaded || isObjectEmpty(membership)) {
     return (
@@ -504,6 +532,12 @@ export default function Space(props) {
       </div>
     );
   }
+
+  const getRandomColor = () => {
+    return `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
+      Math.random() * 255
+    )}, ${Math.floor(Math.random() * 255)}, 1)`;
+  };
 
   return (
     <div
@@ -627,6 +661,43 @@ export default function Space(props) {
           }
         }}
       />
+
+      {props.room_id === 1 ? (
+        <BubbleUI
+        options={{
+          size: 150,
+          minSize: 40,
+          gutter: 20,
+          provideProps: true,
+          numCols: 6,
+          fringeWidth: 160,
+          yRadius: 200,
+          xRadius: 75,
+          cornerRadius: 50,
+          showGuides: false,
+          compact: true,
+          gravitation: 5,
+        }}
+        className="myBubbleUI"
+      >
+        {allBots
+          .map((key) => {
+            return (
+              <div
+                  className="child"
+                  style={{
+                    backgroundColor: getRandomColor(),
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                
+                </div>
+            );
+          })
+          .filter((el) => el !== null)}
+      </BubbleUI>
+      ) : null}
 
       {props.room_id === 1 ? (
         <StoreFam onCategoryCreationSelected={() => setSelectedNav(12)} />

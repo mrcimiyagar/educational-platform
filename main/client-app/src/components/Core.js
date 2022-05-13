@@ -366,7 +366,7 @@ Array.prototype.unique = function () {
 function getRandomColor() {
   return `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
     Math.random() * 255
-  )}, ${Math.floor(Math.random() * 255)}, 0.5)`;
+  )}, ${Math.floor(Math.random() * 255)}, 1)`;
 }
 
 function Video(props) {

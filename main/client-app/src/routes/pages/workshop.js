@@ -421,7 +421,7 @@ function Workshop(props) {
           anchor={"right"}
           PaperProps={{
             style: {
-              background: colors.primaryMedium,
+              background: 'transparent',
               backdropFilter: colors.blur,
             },
           }}
@@ -440,7 +440,7 @@ function Workshop(props) {
               style={{
                 width: 80,
                 height: "100%",
-                background: colors.primaryDark,
+                background: colors.field,
                 overflowY: 'auto'
               }}
             >
@@ -483,7 +483,8 @@ function Workshop(props) {
               style={{
                 width: 360 - 80,
                 height: "100%",
-                overflowY: 'auto'
+                overflowY: 'auto',
+                backgroundColor: colors.backSide
               }}
             >
               {bots.length > 0 ? (
@@ -544,7 +545,7 @@ function Workshop(props) {
                 : null}
               {bots.length > 0 ? (
                 <Fab
-                  style={{ backgroundColor: colors.accent, position: "fixed", left: 16, bottom: 16 }}
+                  style={{ backgroundColor: colors.accent, position: "fixed", left: 48, bottom: 16 }}
                   onClick={() => {setSelectedBotId(bots[menuMode].id); setShowCreateWidget(true);}}
                 >
                   <Add />
@@ -553,7 +554,7 @@ function Workshop(props) {
               
               {bots.length > 0 ? (
                 <Fab
-                  style={{ backgroundColor: colors.accent, position: "fixed", left: 16 + 56 + 16, bottom: 16 }}
+                  style={{ backgroundColor: colors.accent, position: "fixed", left: 48 + 56 + 16, bottom: 16 }}
                   onClick={() => {editingBot = bots[menuMode]; setShowCreateBot(true);}}
                 >
                   <Edit />

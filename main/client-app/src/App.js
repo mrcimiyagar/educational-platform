@@ -873,7 +873,7 @@ MainAppContainer = (props) => {
           setBottomSheetOpen(false);
         }}
       >
-        <div style={{ margin: 32 }}>{bottomSheetContent}</div>
+        {bottomSheetContent}
       </Drawer>
     </div>
   );

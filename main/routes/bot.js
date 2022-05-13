@@ -80,38 +80,38 @@ router.post("/get_subscriptions", jsonParser, async function (req, res) {
     });
     let result = [];
     result.push({
-      id: 'modules',
-      title: 'modules',
+      id: "modules",
+      title: "modules",
       widgets: [
         {
-          id: 'whiteboard',
-          title: 'whiteboard'
+          id: "whiteboard",
+          title: "whiteboard",
         },
         {
-          id: 'taskboard',
-          title: 'taskboard'
+          id: "taskboard",
+          title: "taskboard",
         },
         {
-          id: 'filestorage',
-          title: 'filestorage'
+          id: "filestorage",
+          title: "filestorage",
         },
         {
-          id: 'videochat',
-          title: 'videochat'
+          id: "videochat",
+          title: "videochat",
         },
         {
-          id: 'polling',
-          title: 'polling'
+          id: "polling",
+          title: "polling",
         },
         {
-          id: 'notes',
-          title: 'notes'
+          id: "notes",
+          title: "notes",
         },
         {
-          id: 'deck',
-          title: 'deck'
+          id: "deck",
+          title: "deck",
         },
-      ]
+      ],
     });
     for (let i = 0; i < bots.length; i++) {
       let bot = bots[i];
@@ -317,12 +317,17 @@ router.post("/update_bot", jsonParser, async function (req, res) {
 
 router.post("/get_bots", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user, acc) => {
-    let bots = await sw.Bot.findAll({
-      raw: true,
-      where: {
-        categoryId: req.body.categoryId,
-      },
-    });
+    let bots =
+      req.body.categoryId !== undefined
+        ? await sw.Bot.findAll({
+            raw: true,
+            where: {
+              categoryId: req.body.categoryId,
+            },
+          })
+        : await sw.Bot.findAll({
+            raw: true,
+          });
     res.send({ status: "success", bots: bots });
   });
 });
@@ -335,7 +340,7 @@ router.post("/get_bot_by_id", jsonParser, async function (req, res) {
   });
   sw.Comment.findAll({
     raw: true,
-    where: {botId: req.body.botId},
+    where: { botId: req.body.botId },
     attributes: [[Sequelize.fn("AVG", Sequelize.col("rating")), "rating"]],
   }).then((data) => {
     res.send({ status: "success", bot: bot, rating: data.rating });
@@ -1012,7 +1017,7 @@ router.post("/request_initial_gui", jsonParser, async function (req, res) {
           userId: user.id,
           preview: req.body.preview,
           roomId: req.body.roomId,
-          widgetWorkerId: req.body.widgetWorkerId
+          widgetWorkerId: req.body.widgetWorkerId,
         },
         true
       );
@@ -1216,7 +1221,7 @@ router.post(
       if (
         req.body.preview === false &&
         ((membership !== undefined && membership !== null) ||
-        (r !== null && r.accessType === "private"))
+          (r !== null && r.accessType === "private"))
       ) {
         widgetWorker = await sw.WidgetWorker.findOne({
           where: { id: req.body.widgetWorkerId, roomId: membership.roomId },
@@ -1266,7 +1271,7 @@ router.post("/element_clicked", jsonParser, async function (req, res) {
     if (
       req.body.preview === false &&
       ((membership !== undefined && membership !== null) ||
-      (r !== null && r.accessType === "private"))
+        (r !== null && r.accessType === "private"))
     ) {
       widgetWorker = await sw.WidgetWorker.findOne({
         where: { id: req.body.widgetWorkerId, roomId: membership.roomId },
@@ -1298,14 +1303,13 @@ router.post("/element_clicked", jsonParser, async function (req, res) {
         widgetWorkerId:
           widgetWorker === undefined ? undefined : widgetWorker.id,
         preview: req.body.preview,
-        elementId: req.body.elementId
+        elementId: req.body.elementId,
       },
       true
     );
     res.send({ status: "success" });
   });
-}
-);
+});
 
 router.post("/create_ad", jsonParser, async function (req, res) {
   let roomId = -1;
@@ -1829,7 +1833,12 @@ router.post("/add_prebuilt_module", jsonParser, async function (req, res) {
       });
       return;
     }
-    let mw = await sw.ModuleWorker.create({type: req.body.type, roomId: req.body.roomId, x: req.body.x, y: req.body.y});
+    let mw = await sw.ModuleWorker.create({
+      type: req.body.type,
+      roomId: req.body.roomId,
+      x: req.body.x,
+      y: req.body.y,
+    });
     require("../server").pushToExcept(
       "room_" + mw.roomId,
       "module_worker_added",
@@ -1850,7 +1859,9 @@ router.post("/update_prebuilt_module", jsonParser, async function (req, res) {
       });
       return;
     }
-    let mw = await sw.ModuleWorker.findOne({where: {id: req.body.moduleWorkerId, roomId: membership.roomId}});
+    let mw = await sw.ModuleWorker.findOne({
+      where: { id: req.body.moduleWorkerId, roomId: membership.roomId },
+    });
     mw.x = Math.floor(Number(req.body.x));
     mw.y = Math.floor(Number(req.body.y));
     await mw.save();
