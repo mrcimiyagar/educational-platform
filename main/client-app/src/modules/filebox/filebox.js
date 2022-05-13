@@ -317,8 +317,7 @@ export let FileBox = (props) => {
             </div>
           </SwipeableViews>
           <Fab
-            color="secondary"
-            style={{ position: "fixed", bottom: 24, left: 24 }}
+            style={{ position: "fixed", bottom: 24, left: 24, backgroundColor: colors.accent }}
             onClick={() => {
               pickingFile = true;
               openFileSelector();

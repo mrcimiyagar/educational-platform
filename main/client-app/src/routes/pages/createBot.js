@@ -21,6 +21,7 @@ import ProfileEditField from "../../components/ProfileEditField";
 import { colors, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
 import { updateMyBotsList } from "./workshop";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
@@ -130,7 +131,7 @@ export default function CreateBotPage(props) {
           style={{
             borderRadius: isDesktop() ? "0 0 24px 24px" : undefined,
             backdropFilter: colors.blur,
-            backgroundColor: colors.primaryDark,
+            backgroundColor: colors.backSide,
             width: "100%",
             height: isDesktop() ? "calc(100% - 72px)" : "100%",
           }}
@@ -311,7 +312,7 @@ export default function CreateBotPage(props) {
               }
             }}
           >
-            <Done />
+            <DeleteOutlineIcon />
           </Fab>
         </div>
       </div>
