@@ -791,9 +791,7 @@ router.post("/update_message", jsonParser, async function (req, res) {
       await msg.save();
       let users = getRoomUsers(membership.roomId);
       users.forEach((u) => {
-        if (u.id !== session.userId) {
-          require("../server").signlePushTo(u.id, "edit_message", { msg });
-        }
+        require("../server").signlePushTo(u.id, "edit_message", { msg });
       });
       let workerIds = (
         await sw.Workership.findAll({
