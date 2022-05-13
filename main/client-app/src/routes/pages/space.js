@@ -72,7 +72,8 @@ import SpacesList from "./spacesList";
 import CustomImageBox from "../../components/CustomImageBox";
 import BubbleUI from "react-bubble-ui";
 import "react-bubble-ui/dist/index.css";
-import './space.css';
+import "./space.css";
+import { borderRadius } from "@mui/system";
 
 let accessChangeCallback = undefined;
 export let notifyMeOnAccessChange = (callback) => {
@@ -458,24 +459,24 @@ export default function Space(props) {
   const [allBots, setAllBots] = React.useState([]);
 
   useEffect(() => {
-    if (props.room_id === 1){
-    let requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'token': token
-      },
-      redirect: 'follow'
-    }
-    fetch(serverRoot + "/bot/get_bots", requestOptions)
-      .then(response => response.json())
-      .then(result => {
-        console.log(JSON.stringify(result));
-        if (result.bots !== undefined) {
-          setAllBots(result.bots);
-        }
-      })
-      .catch(error => console.log('error', error));
+    if (props.room_id === 1) {
+      let requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        redirect: "follow",
+      };
+      fetch(serverRoot + "/bot/get_bots", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(JSON.stringify(result));
+          if (result.bots !== undefined) {
+            setAllBots(result.bots);
+          }
+        })
+        .catch((error) => console.log("error", error));
     }
   }, []);
 
@@ -632,6 +633,52 @@ export default function Space(props) {
         <div style={{ width: "100%", height: 72 + 16 }} />
       </div>
 
+      {props.room_id === 1 ? (
+        <BubbleUI
+          style={{ width: "100%", height: '100%', direction: "ltr", position: 'fixed', left: 0, top: 0, bottom: 0, right: 0 }}
+          options={{
+            size: 180,
+            minSize: 30,
+            gutter: 2,
+            provideProps: true,
+            numCols: 6,
+            fringeWidth: 100,
+            yRadius: 250,
+            xRadius: 150,
+            cornerRadius: 50,
+            showGuides: false,
+            compact: true,
+            gravitation: 5,
+          }}
+          className="myBubbleUI"
+        >
+          {[
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+            19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+          ]
+            .map((key) => {
+              return (
+                <div
+                  className="child"
+                  style={{
+                    width: 144,
+                    height: 144,
+                    backgroundColor: getRandomColor(),
+                  }}
+                  key={key}
+                >
+                  
+                </div>
+              );
+            })
+            .filter((el) => el !== null)}
+        </BubbleUI>
+      ) : null}
+
+      {props.room_id === 1 ? (
+        <StoreFam onCategoryCreationSelected={() => setSelectedNav(12)} />
+      ) : null}
+
       <SpaceSearchbar
         fixed={searchBarFixed}
         onSpacesClicked={() => {
@@ -661,47 +708,6 @@ export default function Space(props) {
           }
         }}
       />
-
-      {props.room_id === 1 ? (
-        <BubbleUI
-        options={{
-          size: 150,
-          minSize: 40,
-          gutter: 20,
-          provideProps: true,
-          numCols: 6,
-          fringeWidth: 160,
-          yRadius: 200,
-          xRadius: 75,
-          cornerRadius: 50,
-          showGuides: false,
-          compact: true,
-          gravitation: 5,
-        }}
-        className="myBubbleUI"
-      >
-        {allBots
-          .map((key) => {
-            return (
-              <div
-                  className="child"
-                  style={{
-                    backgroundColor: getRandomColor(),
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                
-                </div>
-            );
-          })
-          .filter((el) => el !== null)}
-      </BubbleUI>
-      ) : null}
-
-      {props.room_id === 1 ? (
-        <StoreFam onCategoryCreationSelected={() => setSelectedNav(12)} />
-      ) : null}
 
       <Fab
         onClick={() => toggleEditMode()}
