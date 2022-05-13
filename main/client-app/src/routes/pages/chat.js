@@ -295,6 +295,7 @@ export default function Chat(props) {
   const [replyToMessage, setReplyToMessageInner] = React.useState(undefined);
   const [forwardFromMessage, setForwardFromMessageInner] =
     React.useState(undefined);
+    const [editingMessage, setEditingMessageInner] = React.useState(undefined);
 
   const setReplyToMessage = (msg) => {
     setReplyToMessageInner(msg);
@@ -302,6 +303,14 @@ export default function Chat(props) {
 
   const setForwardFromMessage = (msg) => {
     setForwardFromMessageInner(msg);
+  };
+
+  const setEditingMessage = (msg) => {
+    setEditingMessageInner(msg);
+  };
+
+  const deleteMessage = (msg) => {
+
   };
 
   const scrollToMessage = (msgId) => {
@@ -402,6 +411,7 @@ export default function Chat(props) {
             setCurrentPhotoSrc={setCurrentPhotoSrc}
             replyReserved={setReplyToMessage}
             forwardReserved={setForwardFromMessage}
+            editReserved={setEditingMessage}
             scrollToMessage={scrollToMessage}
           />
         );
@@ -472,6 +482,7 @@ export default function Chat(props) {
                       setCurrentPhotoSrc={setCurrentPhotoSrc}
                       replyReserved={setReplyToMessage}
                       forwardReserved={setForwardFromMessage}
+                      editReserved={setEditingMessage}
                       scrollToMessage={scrollToMessage}
                     />
                   );
@@ -673,6 +684,7 @@ export default function Chat(props) {
                             if (result.message !== undefined) {
                               setReplyToMessage(undefined);
                               setForwardFromMessage(undefined);
+                              setEditingMessage(undefined);
                               cacheMessage(result.message);
                               for (let i = 0; i < messagesArr.length; i++) {
                                 if (
@@ -814,6 +826,7 @@ export default function Chat(props) {
                       setCurrentPhotoSrc={setCurrentPhotoSrc}
                       replyReserved={setReplyToMessage}
                       forwardReserved={setForwardFromMessage}
+                      editReserved={setEditingMessage}
                       scrollToMessage={scrollToMessage}
                     />
                   );
@@ -831,6 +844,7 @@ export default function Chat(props) {
                       setCurrentPhotoSrc={setCurrentPhotoSrc}
                       replyReserved={setReplyToMessage}
                       forwardReserved={setForwardFromMessage}
+                      editReserved={setEditingMessage}
                       scrollToMessage={scrollToMessage}
                     />
                   );
@@ -1000,6 +1014,7 @@ export default function Chat(props) {
                   if (result.message !== undefined) {
                     setReplyToMessage(undefined);
                     setForwardFromMessage(undefined);
+                    setEditingMessage(undefined);
                     cacheMessage(result.message);
                     for (let i = 0; i < messagesArr.length; i++) {
                       if (messagesArr[i].key === "message-" + msg.id) {
@@ -1132,6 +1147,7 @@ export default function Chat(props) {
             height:
               (replyToMessage !== undefined ? 40 : 0) +
               (forwardFromMessage !== undefined ? 40 : 0) +
+              (editingMessage !== undefined ? 40 : 0) +
               56,
             zIndex: 1000,
             display:
@@ -1271,6 +1287,72 @@ export default function Chat(props) {
               </div>
             </Paper>
           ) : null}
+
+          {editingMessage !== undefined ? (
+            <Paper
+              style={{
+                width: "100%",
+                height: 40,
+                position: "relative",
+                backgroundColor: colors.field,
+                backdropFilter: colors.blur,
+              }}
+            >
+              <div
+                style={{
+                  marginLeft: 16,
+                  marginRight: 16,
+                  display: "flex",
+                  width: "calc(100% - 32px)",
+                  position: "absolute",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                }}
+              >
+                <div
+                  style={{
+                    width: 4,
+                    height: 24,
+                    borderRadius: 1,
+                    backgroundColor: colors.accent2,
+                  }}
+                />
+                <div style={{ width: 8, height: "100%" }} />
+                <div
+                  stlye={{
+                    textOverflow: "ellipsis",
+                    maxWidth: window.innerWidth - 56 + "px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                  }}
+                >
+                  {editingMessage.messageType === "text"
+                    ? editingMessage.text
+                    : editingMessage.messageType === "photo"
+                    ? "عکس"
+                    : editingMessage.messageType === "audio"
+                    ? "صدا"
+                    : editingMessage.messageType === "video"
+                    ? "ویدئو"
+                    : editingMessage.messageType === "document"
+                    ? "سند"
+                    : ""}
+                </div>
+                <IconButton
+                  onClick={() => setEditingMessage(undefined)}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    position: "absolute",
+                    right: 16,
+                  }}
+                >
+                  <Close style={{ fill: colors.icon }} />
+                </IconButton>
+              </div>
+            </Paper>
+          ) : null}
+
           <div
             className={classes.root}
             style={{
@@ -1357,6 +1439,7 @@ export default function Chat(props) {
                       token: token,
                     },
                     body: JSON.stringify({
+                      messageId: editingMessage !== undefined ? editingMessage.id : undefined,
                       repliedTo:
                         replyToMessage !== undefined
                           ? replyToMessage.id
@@ -1371,13 +1454,14 @@ export default function Chat(props) {
                     }),
                     redirect: "follow",
                   };
-                  fetch(serverRoot + "/chat/create_message", requestOptions)
+                  fetch(serverRoot + (editingMessage === undefined ? "/chat/create_message" : "/chat/update_message"), requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
                       console.log(JSON.stringify(result));
                       if (result.message !== undefined) {
                         setReplyToMessage(undefined);
                         setForwardFromMessage(undefined);
+                        setEditingMessage(undefined);
                         cacheMessage(result.message);
                         let msgEl = document.getElementById(
                           "message-" + msg.id

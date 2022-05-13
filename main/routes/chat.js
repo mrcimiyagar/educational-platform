@@ -766,16 +766,8 @@ router.post("/get_messages", jsonParser, async function (req, res) {
 
 router.post("/update_message", jsonParser, async function (req, res) {
   authenticateMember(req, res, async (membership, session, user) => {
-    if (!membership.canEditOwnMessage) {
-      res.send({
-        status: "error",
-        errorCode: "e0005",
-        message: "access denied.",
-      });
-      return;
-    }
     sw.Message.findOne({
-      where: { id: req.body.messageId, roomId: membership.roomId },
+      where: { id: req.body.messageId, roomId: membership.roomId, authorId: user.id },
     }).then(async function (msg) {
       if (msg === null) {
         res.send({
@@ -786,7 +778,6 @@ router.post("/update_message", jsonParser, async function (req, res) {
         return;
       }
       msg.text = req.body.text;
-      msg.fileId = req.body.fileId;
       await msg.save();
       io.to("room_" + membership.roomId).emit("edit_message", msg);
       res.send({ status: "success" });

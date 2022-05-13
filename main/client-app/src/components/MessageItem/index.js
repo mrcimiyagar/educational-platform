@@ -504,6 +504,56 @@ export default function MessageItem(props) {
                       >
                         فوروارد
                       </Button>
+                      <Button
+                        style={{
+                          marginTop: 16,
+                          marginLeft: 32,
+                          marginRight: 32,
+                          width: "calc(100% - 64px)",
+                          height: 48,
+                          color: colors.text,
+                          paddingLeft: 16,
+                          paddingRight: 16,
+                          textAlign: "right",
+                          justifyContent: "right",
+                          alignItems: "right",
+                        }}
+                        onClick={() => {
+                          props.editReserved(message);
+                          props.forwardReserved(undefined);
+                          props.replyReserved(undefined); 
+                          setBSO(false);
+                          setTimeout(() => {
+                            setBSO(null);
+                          }, 250);
+                        }}
+                      >
+                        ویرایش
+                      </Button>
+                      <Button
+                        style={{
+                          marginTop: 16,
+                          marginLeft: 32,
+                          marginRight: 32,
+                          width: "calc(100% - 64px)",
+                          height: 48,
+                          color: colors.text,
+                          paddingLeft: 16,
+                          paddingRight: 16,
+                          textAlign: "right",
+                          justifyContent: "right",
+                          alignItems: "right",
+                        }}
+                        onClick={() => {
+                          props.deleted(message);
+                          setBSO(false);
+                          setTimeout(() => {
+                            setBSO(null);
+                          }, 250);
+                        }}
+                      >
+                        حذف
+                      </Button>
                     </Paper>
                   </div>
                 );
