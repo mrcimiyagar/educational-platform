@@ -4,7 +4,8 @@ const bodyParser = require("body-parser");
 const { authenticateMember, isUserInRoom, usersBook } = require("../users");
 const tools = require("../tools");
 const { uuid } = require("uuidv4");
-const formidable = require("formidable")
+const formidable = require("formidable");
+const fs = require("fs");
 
 const router = express.Router();
 let jsonParser = bodyParser.json();

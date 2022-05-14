@@ -212,7 +212,7 @@ export default function CreateBotPage(props) {
             src={
               props.editingBot !== undefined
                 ? serverRoot +
-                  `/bot/download_bot_avatar?token=${token}&botId=${props.editingBot.id}`
+                  `/file/download_bot_avatar?token=${token}&botId=${props.editingBot.id}`
                 : undefined
             }
           />
@@ -301,7 +301,7 @@ export default function CreateBotPage(props) {
                     let request = new XMLHttpRequest();
                     request.open(
                       "POST",
-                      serverRoot + `/file/upload_bot_avatar?token=${token}`
+                      serverRoot + `/bot/upload_bot_avatar?token=${token}`
                     );
                     let f = {
                       progress: 0,
