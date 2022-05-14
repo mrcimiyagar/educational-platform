@@ -6,6 +6,7 @@ const tools = require("../tools");
 const { uuid } = require("uuidv4");
 const formidable = require("formidable");
 const fs = require("fs");
+const { rootPath } = require("../tools");
 
 const router = express.Router();
 let jsonParser = bodyParser.json();
