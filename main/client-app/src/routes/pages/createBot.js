@@ -212,7 +212,7 @@ export default function CreateBotPage(props) {
             src={
               props.editingBot !== undefined
                 ? serverRoot +
-                  `/file/download_bot_avatar?token=${token}&botId=${props.editingBot.id}`
+                  `/bot/download_bot_avatar?token=${token}&botId=${props.editingBot.id}`
                 : undefined
             }
           />
