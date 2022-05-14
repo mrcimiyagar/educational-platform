@@ -280,6 +280,9 @@ router.post("/delete_bot", jsonParser, async function (req, res) {
       return;
     }
     let bot = await sw.Bot.findOne({ where: { id: botSecret.botId } });
+    await Widget.destroy({
+      where: { botId: bot.id },
+    });
     await botSecret.destroy();
     await bot.destroy();
     require("../server").pushTo("aseman-bot-store", "bot-deleted", bot);
