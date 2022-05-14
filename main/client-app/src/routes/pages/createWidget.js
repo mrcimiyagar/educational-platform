@@ -87,14 +87,14 @@ export default function CreateWidget(props) {
               textAlign: "center",
             }}
           >
-            <Typography variant={"h6"} style={{ color: colors.text }}>
+            <Typography variant={"h6"} style={{ color: colors.oposText }}>
               ساخت ویجت
             </Typography>
             <IconButton
               style={{ width: 32, height: 32, position: "absolute", right: 16 }}
               onClick={() => handleClose()}
             >
-              <ArrowForward style={{ fill: colors.icon }} />
+              <ArrowForward style={{ fill: colors.oposText }} />
             </IconButton>
           </Toolbar>
         </AppBar>
@@ -102,7 +102,7 @@ export default function CreateWidget(props) {
           style={{
             borderRadius: isDesktop() ? "0 0 24px 24px" : undefined,
             backdropFilter: colors.blur,
-            backgroundColor: colors.primaryDark,
+            backgroundColor: colors.backSide,
             width: "100%",
             height: isDesktop() ? "calc(100% - 72px)" : "100%",
           }}
