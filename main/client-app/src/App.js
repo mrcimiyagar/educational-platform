@@ -695,8 +695,6 @@ MainAppContainer = (props) => {
             animatePageChange();
             if (window.location.pathname === "/app/use_invitation") {
               showGuestConfiguration(params);
-            } else if (window.location.pathname === "/app/room") {
-              gotoPage("/app/room", params);
             } else {
               let requestOptions = {
                 method: "POST",
