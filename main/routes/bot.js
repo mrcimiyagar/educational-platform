@@ -280,6 +280,10 @@ router.post("/delete_bot", jsonParser, async function (req, res) {
       return;
     }
     let bot = await sw.Bot.findOne({ where: { id: botSecret.botId } });
+    let widgets = await sw.Widget.findOne({ where: { id: bot.id } });
+    await sw.WidgetWorker.destroy({
+      where: { widgetId: widgets.map(wid => wid.id) },
+    });
     await Widget.destroy({
       where: { botId: bot.id },
     });
