@@ -472,6 +472,7 @@ async function prepareWidgetModel() {
     },
     {
       freezeTableName: true,
+      paranoid: true
     }
   );
   Widget.belongsTo(Bot, { foreignKey: "botId" });

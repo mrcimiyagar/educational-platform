@@ -458,7 +458,7 @@ function Workshop(props) {
                     }}
                     src={
                       serverRoot +
-                      `/file/download_bot_avatar?token=${token}&botId=${bot.id}`
+                      `/file/download_bot_avatar?token=${token}&botId=${bot.id}&update=${new Date().getMilliseconds()}`
                     }
                   />
                   <Typography style={{width: '100%', marginTop: 8, color: colors.text}}>

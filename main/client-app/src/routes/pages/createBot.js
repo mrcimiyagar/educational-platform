@@ -77,7 +77,7 @@ export default function CreateBotPage(props) {
           token: token,
         },
         body: JSON.stringify({
-          fileId: fileId,
+          avatarId: fileId,
           username:
             document.getElementById("botUsername").value,
           title: document.getElementById("botTitle").value,
@@ -103,7 +103,7 @@ export default function CreateBotPage(props) {
           token: token,
         },
         body: JSON.stringify({
-          fileId: fileId,
+          avatarId: fileId,
           botId: props.editingBot.id,
           title: document.getElementById("botTitle").value,
         }),
@@ -212,7 +212,7 @@ export default function CreateBotPage(props) {
             src={
               props.editingBot !== undefined
                 ? serverRoot +
-                  `/file/download_bot_avatar?token=${token}&botId=${props.editingBot.id}`
+                  `/file/download_bot_avatar?token=${token}&botId=${props.editingBot.id}&update=${new Date().getMilliseconds()}`
                 : undefined
             }
           />
@@ -348,7 +348,7 @@ export default function CreateBotPage(props) {
                 backgroundColor: colors.accent,
               }}
               onClick={() => {
-                if (window.prompt("آیا میخواهید بات حذف شود ؟")) {
+                if (window.confirm("آیا میخواهید بات حذف شود ؟")) {
                   let requestOptions = {
                     method: "POST",
                     headers: {
