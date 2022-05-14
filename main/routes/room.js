@@ -568,6 +568,14 @@ router.post("/get_room", jsonParser, async function (req, res) {
   let room = await sw.Room.findOne({
     where: { id: req.body.roomId },
   });
+  if (room === null) {
+    res.send({
+      status: "error",
+      errorCode: "e0005",
+      message: "room does not exist.",
+    });
+    return;
+  }
   if (room.accessType === "public") {
     res.send({ status: "success", room: room });
   } else {
