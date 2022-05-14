@@ -20,7 +20,7 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import WebIcon from "@material-ui/icons/Web";
 import WifiTetheringIcon from "@material-ui/icons/WifiTethering";
 import React, { useEffect } from "react";
-import { inTheGame, isDesktop, setBottomSheetContent, setBSO } from "../../App";
+import { inTheGame, isDesktop, setBottomSheetContent, setBSO, setOnBsClosed } from "../../App";
 import { colors, me, theme, token } from "../../util/settings";
 import SettingsSearchbar from "../SettingsSearchbar";
 import { serverRoot } from "../../util/Utils";
@@ -219,8 +219,9 @@ export default function SettingsList(props) {
           <Grow in={inTheGame} {...{ timeout: 1000 }} transitionDuration={1000}>
             <Card
               onClick={() => {
+                setOnBsClosed(() => {});
                 setBottomSheetContent(
-                  <div style={{ width: "100%", height: 300 }}>
+                  <div style={{ width: "100%", height: 400 }}>
                     <Avatar
                       style={{
                         zIndex: 99999,
@@ -242,7 +243,7 @@ export default function SettingsList(props) {
                           zIndex: 99999,
                           position: "absolute",
                           left: "calc(50% - 150px)",
-                          transform: "translate(-50%, 47px)",
+                          transform: "translate(-50%, 72px)",
                         }}
                         onClick={() => {
                           let requestOptions = {

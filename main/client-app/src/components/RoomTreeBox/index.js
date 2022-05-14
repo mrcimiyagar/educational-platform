@@ -452,7 +452,7 @@ export let RoomTreeBox = (props) => {
       </div>
       {isMine ?
         (
-          <Fab style={{backgroundColor: colors.accent, position: 'fixed', left: 16, bottom: 16}} onClick={() => {
+          <Fab style={{backgroundColor: colors.accent, position: 'fixed', left: 48, bottom: 16}} onClick={() => {
             props.addRoomClicked();
           }}>
             <Add />

@@ -270,7 +270,7 @@ export let MachinesBox = (props) => {
       <Fab
         style={{
           position: "fixed",
-          left: 48,
+          left: 56,
           bottom: 16,
           backgroundColor: colors.accent,
         }}

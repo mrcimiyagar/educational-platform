@@ -1905,4 +1905,25 @@ router.post("/get_module_workers", jsonParser, async function (req, res) {
   });
 });
 
+router.post("/upload_bot_avatar", jsonParser, async function (req, res) {
+  authenticateMember(req, res, async (membership, session, user) => {
+    let form = new formidable.IncomingForm();
+    form.parse(req, async function (err, fields, files) {
+      if (!fs.existsSync("files")) {
+        fs.mkdirSync("files", { recursive: true });
+      }
+      let file = await sw.File.create({
+        uploaderId: session.userId,
+        isPreview: false,
+        isPresent: false,
+      });
+      let oldPath = files.file.path;
+      let newPath = rootPath + "/files/" + file.id;
+      fs.copyFileSync(oldPath, newPath);
+
+      res.send({ status: "success", file: file });
+    });
+  });
+});
+
 module.exports = router;

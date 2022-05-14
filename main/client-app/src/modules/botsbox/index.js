@@ -193,24 +193,6 @@ export default function BotsBox(props) {
   };
 
   useEffect(() => {
-    let element = document.getElementById("botsContainerOuter" + props.id);
-    let botsSearchbar = document.getElementById("botsSearchbar" + props.id);
-    botsSearchbar.style.transform = "translateY(-100px)";
-    element.addEventListener(
-      "scroll",
-      function () {
-        var st = element.scrollTop;
-        if (st > lastScrollTop) {
-          botsSearchbar.style.transform = "translateY(-100px)";
-          botsSearchbar.style.transition = "transform .5s";
-        } else {
-          botsSearchbar.style.transform = "translateY(0)";
-          botsSearchbar.style.transition = "transform .5s";
-        }
-        setLastScrollTop(st <= 0 ? 0 : st);
-      },
-      false
-    );
     reloadBotsList();
   }, []);
 
@@ -376,10 +358,6 @@ export default function BotsBox(props) {
       }
     );
 
-    let botsSearchbar = document.getElementById("botsSearchbar" + props.id);
-    botsSearchbar.style.transform = "translateY(0)";
-    botsSearchbar.style.transition = "transform .5s";
-
     updateDesktop();
 
     return () => {
@@ -485,16 +463,6 @@ export default function BotsBox(props) {
       id={'botsBox' + props.id}
       style={{ width: "100%", height: "100%", display: props.style.display }}
     >
-      <div
-        id={"botsSearchbar" + props.id}
-        style={{
-          width: "75%",
-          position: "absolute",
-          right: "12.5%",
-          top: 32,
-          zIndex: 3,
-        }}
-      ></div>
       <div
         id={"botsContainerOuter" + props.id}
         style={{

@@ -599,7 +599,7 @@ export default function Space(props) {
           id="searchScrollView"
           style={{
             width: "100%",
-            height: "calc(100% - 112px)",
+            height: "calc(100% - 120px)",
             position: "fixed",
             left: 0,
             top: 120,
@@ -641,12 +641,7 @@ export default function Space(props) {
           style={{
             width: "100%",
             height: "100%",
-            direction: "ltr",
-            position: "fixed",
-            left: 0,
-            top: 0,
-            bottom: 0,
-            right: 0
+            direction: "ltr"
           }}
           options={{
             size: 180,

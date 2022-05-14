@@ -766,7 +766,7 @@ MainAppContainer = (props) => {
 
   if (currentRequestingRoomAccessType !== "public" && !connectedIO) {
     return (
-      <div style={{ width: "100%", height: "100vh" }}>
+      <div style={{ width: "100%", height: "100%" }}>
         <DesktopDetector />
         {authenticationValid ? null : <Authentication />}
       </div>
@@ -777,9 +777,9 @@ MainAppContainer = (props) => {
     <div
       style={{
         width: window.innerWidth + "px",
-        minHeight: "100vh",
-        height: "100vh",
-        maxHeight: "100vh",
+        minHeight: "100%",
+        height: "100%",
+        maxHeight: "100%",
         direction: "rtl",
       }}
     >
@@ -840,7 +840,7 @@ MainAppContainer = (props) => {
           <div
             style={{
               width: "100%",
-              height: "calc(100% - 56px)",
+              height: "calc(100% - 120px)",
               position: "fixed",
               left: 0,
               top: 120,

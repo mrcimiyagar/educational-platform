@@ -22,13 +22,18 @@ import { colors, token } from "../../util/settings";
 import { serverRoot } from "../../util/Utils";
 import { updateMyBotsList } from "./workshop";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { useFilePicker } from "use-file-picker";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="right" ref={ref} {...props} />;
 });
 
 export default function CreateBotPage(props) {
+  const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
+    readAs: "DataURL",
+  });
   let [cats, setCats] = React.useState([]);
+  const [pickingFile, setPickingFile] = React.useState(false);
   let [currentcat, setCurrentCat] = React.useState(
     props.editingBot !== undefined ? props.editingBot.categoryId : undefined
   );
@@ -61,6 +66,60 @@ export default function CreateBotPage(props) {
   };
   const handleChange = (event) => {
     setCurrentCat(event.target.value);
+  };
+
+  const createTheBot = (fileId) => {
+    if (props.editingBot === undefined) {
+      let requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          fileId: fileId,
+          username:
+            document.getElementById("botUsername").value,
+          title: document.getElementById("botTitle").value,
+          categoryId: currentcat,
+        }),
+        redirect: "follow",
+      };
+      fetch(serverRoot + "/bot/create_bot", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.status === "success") {
+            updateMyBotsList();
+            handleClose();
+          } else {
+            alert(result.message);
+          }
+        });
+    } else {
+      let requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          fileId: fileId,
+          botId: props.editingBot.id,
+          title: document.getElementById("botTitle").value,
+        }),
+        redirect: "follow",
+      };
+      fetch(serverRoot + "/bot/update_bot", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.status === "success") {
+            updateMyBotsList();
+            handleClose();
+          } else {
+            alert(result.message);
+          }
+        });
+    }
   };
 
   return (
@@ -146,6 +205,10 @@ export default function CreateBotPage(props) {
               top: 48 + 56,
               transform: "translateX(-50%)",
             }}
+            onClick={() => {
+              setPickingFile(true);
+              openFileSelector();
+            }}
             src={
               props.editingBot !== undefined
                 ? serverRoot +
@@ -227,53 +290,50 @@ export default function CreateBotPage(props) {
               backgroundColor: colors.accent,
             }}
             onClick={() => {
-              if (props.editingBot === undefined) {
-                let requestOptions = {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    token: token,
-                  },
-                  body: JSON.stringify({
-                    username: document.getElementById("botUsername").value,
-                    title: document.getElementById("botTitle").value,
-                    categoryId: currentcat,
-                  }),
-                  redirect: "follow",
-                };
-                fetch(serverRoot + "/bot/create_bot", requestOptions)
-                  .then((response) => response.json())
-                  .then((result) => {
-                    if (result.status === "success") {
-                      updateMyBotsList();
-                      handleClose();
-                    } else {
-                      alert(result.message);
+              if (!loading && pickingFile) {
+                setPickingFile(false);
+                let dataUrl = filesContent[0];
+                fetch(dataUrl.content)
+                  .then((res) => res.blob())
+                  .then((file) => {
+                    let data = new FormData();
+                    data.append("file", file);
+                    let request = new XMLHttpRequest();
+                    request.open(
+                      "POST",
+                      serverRoot + `/file/upload_bot_avatar?token=${token}`
+                    );
+                    let f = {
+                      progress: 0,
+                      name: file.name,
+                      size: file.size,
+                      local: true,
+                    };
+                    request.upload.addEventListener("progress", function (e) {
+                      let percent_completed = (e.loaded * 100) / e.total;
+                      f.progress = percent_completed;
+                      if (percent_completed === 100) {
+                        f.local = false;
+                      }
+                      //forceUpdate();
+                    });
+                    request.onreadystatechange = function () {
+                      if (request.readyState == XMLHttpRequest.DONE) {
+                        createTheBot(JSON.parse(request.responseText).file.id);
+                      }
+                    };
+                    if (FileReader) {
+                      let fr = new FileReader();
+
+                      fr.onload = function () {
+                        f.src = fr.result;
+                      };
+                      fr.readAsDataURL(file);
                     }
+                    request.send(data);
                   });
               } else {
-                let requestOptions = {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    token: token,
-                  },
-                  body: JSON.stringify({
-                    botId: props.editingBot.id,
-                    title: document.getElementById("botTitle").value,
-                  }),
-                  redirect: "follow",
-                };
-                fetch(serverRoot + "/bot/update_bot", requestOptions)
-                  .then((response) => response.json())
-                  .then((result) => {
-                    if (result.status === "success") {
-                      updateMyBotsList();
-                      handleClose();
-                    } else {
-                      alert(result.message);
-                    }
-                  });
+                createTheBot();
               }
             }}
           >

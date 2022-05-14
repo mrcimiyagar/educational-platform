@@ -33,7 +33,7 @@ export default function CreateRoom(props) {
             zIndex: 99999,
             position: "absolute",
             left: "calc(50% - 150px)",
-            transform: "translate(-50%, 47px)",
+            transform: "translate(-50%, 72px)",
             backgroundColor: colors.accent,
           }}
           onClick={() => {
@@ -221,6 +221,7 @@ export default function CreateRoom(props) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            token: token
           },
           body: JSON.stringify({
             roomId: props.editingRoomId,
@@ -300,6 +301,7 @@ export default function CreateRoom(props) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            token: token
           },
           body: JSON.stringify({
             roomId: props.editingRoomId,
