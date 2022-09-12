@@ -1252,7 +1252,7 @@ router.post("/use_invitation", jsonParser, async function (req, res) {
   /*fetch("https://www.google.com/recaptcha/api/siteverify", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `secret=${"6LcA4BMeAAAAAOLSjqZ7XcWYsbg0F_JhLkXlzZLg"}&response=${
+    body: `secret=${"-"}&response=${
       req.body.recaptchaToken
     }`,
   })
