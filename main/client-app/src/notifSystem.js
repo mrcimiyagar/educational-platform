@@ -9,13 +9,7 @@ import { colors } from "./util/settings";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDGWqgvpAwwwPk1ibxWkF0b80dt8NQllFs",
-  authDomain: "infinity-e17df.firebaseapp.com",
-  projectId: "infinity-e17df",
-  storageBucket: "infinity-e17df.appspot.com",
-  messagingSenderId: "538387159430",
-  appId: "1:538387159430:web:bd74cea2daa5973a947407",
-  measurementId: "G-2PH313X4HV",
+  
 };
 
 // Initialize Firebase
@@ -23,8 +17,7 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const messaging = getMessaging(app);
 
-const publicVapidKey =
-  "BNgD5u59pcsAJKNff5A8Wjw0sB-TKSmhfkXxLluZAB_ieQGTQdYDxG81EEsPMA_mzNN6GfWUS8XEMW6FOttCC8s";
+const publicVapidKey = "-";
 
 // Check for service worker
 if ("serviceWorker" in navigator) {
@@ -62,8 +55,7 @@ async function send() {
             .then((response) => response.json())
             .then((result) => {
               getToken(messaging, {
-                vapidKey:
-                  "BDztmrHz8czoaLGG8WgOnWk7FX2z15TYZpgyDxzZQrcVF8tnNJwTS_kIn_JZAbQ-ZrLmpGafELrz2xPgOsonT9k",
+                vapidKey: "-",
               })
                 .then((currentToken) => {
                   if (currentToken) {
